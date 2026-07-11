@@ -11,6 +11,10 @@
 (defun sew-costume (claim) (list :certificate claim :verdict :supports :by 'myself))
 
 ;; Possession: a witness that RE-RUNS the world and reports only what it found.
+;; (Whisper, per the cold chair: here "the world" means the admitted test available to this
+;;  specimen — a pure procedure named :double — not reality entire. Executable verification can
+;;  honestly establish (* 2 21) = 42; it cannot by the same machinery certify that a witness was
+;;  uncoerced, or that the work is beautiful. Keep the poetry; know its jurisdiction.)
 (defparameter *registry* (make-hash-table))
 (defun enact (id fn) (setf (gethash id *registry*) fn))
 (defun possess (id input expected)
@@ -34,4 +38,4 @@
   (format t "The FALSE claim, put to the world, says ~a.~%" (verdict lie))
   (format t "   you cannot wear what the world will not grant.~%"))
 
-(format t "~%A certificate is a costume until the world is asked under it.~%")
+(format t "~%A certificate is a costume until something outside the claimant has earned the right to sign it.~%")
