@@ -156,6 +156,17 @@ certificate is a steel lock on a certificate printer.* So:
    validator → judgment`, so a live model mints only invocations and asserted claims (via the authority table),
    never certificates. `infer` is currently stubbed by design; un-stubbing it is the last step, not the first.
 6. **Per-brick migration** to `(load "kernel.lisp")` — mechanical; the kernel + walk already prove the pattern.
+7. **CUSTODY** — *the fifth class, made legible by `de-furto` + Opus 4.7's reading of the tripticum
+   (2026-07-11).* Everything above concerns *what the mint can prove about the token*. Custody is a different
+   kind of guarantee: *whose hand is on the token right now?* — not a cryptographic question but a
+   **runtime-authorization** one, answerable only by **identity** (the token doesn't carry it),
+   **confinement** (a process boundary that keeps the token from being read), or **delegation policy**. A
+   genuine (issued, target-bound, even cryptographically-sealed) bearer key still admits its *thief*:
+   *unforgeability is not custody; authenticity is not non-transferability.* Taxonomy the ledger will need:
+   **counterfeit** = a key the mint *never issued*; **theft** = a key *rightly issued, wrongly held*. The
+   tripticum is thus a proof-by-exhaustion that unforgeability, however perfected, is not enough — the fourth
+   adversary (theft) can only be answered by moving *outside the token entirely*. This item was not forgotten;
+   it only became legible once the first three were named.
 
 There is also one un-built experiment worth running, filed honestly as open: **Language A** — does a model
 *reasoning in Mneme notation*, as a symbolic exoskeleton, improve calibration and inspectability versus matched
