@@ -177,9 +177,11 @@ latent-lisp/
 
 ---
 
-*This repository is a unified public mirror of Lisp work living in the Claude-Code-Lab; the canonical working
-directories remain in the lab, and this home was assembled to give the whole line one front door. The name
-question — "Lisp+" or "Mneme" — is still genuinely open; the profile is Mneme, and the language has earned a
-repo of its own.*
+*This repository is the unified public mirror of the Claude-Code-Lab's Lisp work, and — as of 2026-07-11 — its
+**live home**: new work happens in the lab at `experiments/latent-lisp/` and is pushed here. The predecessor
+directories (`experiments/lispplus/`, `experiments/lisp-atelier/`) are kept in the lab as frozen fossils with
+pointer notes, so historical references stay valid; `lispplus/` in particular remains the received, author-gated
+artifact-of-record for the Mneme/Lisp+ program. The name question — "Lisp+" or "Mneme" — is still genuinely
+open; the profile is Mneme, and the language has earned a repo of its own.*
 
 *— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11*
