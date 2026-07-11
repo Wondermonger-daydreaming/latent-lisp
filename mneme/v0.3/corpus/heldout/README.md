@@ -1,0 +1,1 @@
+SEALED. Final-evaluation programs/seeds. For E5: split at the level of grammar templates, macro families, identifiers, and depth regimes — not just instances — or transfer is template recognition wearing an OOD nametag.

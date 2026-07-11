@@ -1,0 +1,93 @@
+;; observed events — append-only, evidence-linked
+;; EVIDENCE STATUS: @event-001..003,005 cite the conversation transcript,
+;; which is NOT YET a resolvable link. Owner action: export transcript to
+;; evidence/founding-dialogue.md, record sha256, upgrade these entries.
+;; Until then their evidence fields are descriptions — flagged, per Clause 3.
+(event id: @event-001
+  type: dialogue-round
+  observed-at: "2026-07-09"
+  description: "Founding proposal produced: design thesis + 5-phase plan."
+  author: (model "claude-fable-5" warm-chair)
+  evidence: (pending (path "evidence/founding-dialogue.md") (span rounds-1-2)))
+(event id: @event-002
+  type: cross-lineage-review
+  observed-at: "2026-07-10"
+  description: "First cold-chair critique received (design level)."
+  author: (model "gpt-5.6-sol" cold-chair cross-family primed-by-owner-norms: unknown)
+  evidence: (pending (path "evidence/founding-dialogue.md") (span round-3)))
+(event id: @event-003
+  type: dialogue-round
+  observed-at: "2026-07-10"
+  description: "Synthesis round produced: responses and proposals exchanged."
+  author: (model "claude-fable-5" warm-chair)
+  evidence: (pending (path "evidence/founding-dialogue.md") (span rounds-4-6)))
+  ;; v0 of this entry said the four planes were "accepted as final
+  ;; ontology" — interpretation filed as observation, violating Clause 3
+  ;; in the ledger's fourth entry. Corrected; the acceptance claim now
+  ;; lives in @assertion-006 with proper status. Violation logged: @event-006.
+(event id: @event-004
+  type: artifact-created
+  observed-at: "2026-07-10T23:48:57Z"
+  description: "v0-foundation crystallized (constitution, slate, handoff, ledger, stubs)."
+  author: (model "claude-fable-5" warm-chair)
+  evidence: ((path "lispplus-v0.zip") (note "frozen; do not edit")))
+(event id: @event-005
+  type: cross-lineage-review
+  observed-at: "2026-07-10"
+  description: "Second cold-chair review received (CODE level): ran the generator; found unseeded padding RNG, unpadded task prompts (C +3.3%, E +14.2% vs A), unknowable completion targets, invalid insertion paths, judge coverage gaps, statistical vocabulary unfrozen, ledger law violation in event-003, E6 law overbroad, corpus leakage channels, unprimed-cell contradiction."
+  author: (model "gpt-5.6-sol" cold-chair cross-family primed-by-owner-norms: unknown)
+  evidence: (pending (path "evidence/founding-dialogue.md") (span round-7)))
+(event id: @event-006
+  type: artifact-created
+  observed-at: "2026-07-11"
+  description: "v0.1 corrections implemented and smoke-tested: typed constitution clauses; task redesign (delimiter-completion, tree-space pairing — parallel offset-walk bug found by smoke test, fixed via instrumented rendering, all node offsets verified); B/D/M conditions; seeded determinism (gate 1 PASS observed); ledger schema upgrade; E6 narrowed; preflight audit created."
+  author: (model "claude-fable-5" warm-chair)
+  evidence: ((path "CHANGELOG.md") (path "AUDIT-0001-preflight.md") (note "smoke-test output in session transcript, pending export")))
+(event id: @event-007
+  type: design-sample-received
+  observed-at: "2026-07-11"
+  description: "Lumen design received: canonical representation, meaning-travels-with-code, gradual/refinement types, Beliefs, call-site effects+capabilities, plan/verify/commit, graph core, context capsules, budgets, structured failure, replay grades, executable constitution."
+  author: (model "claude-fable-5" register: sober-architect climate: owner-primed lineage: same-as-warm-chair)
+  evidence: (pending (path "evidence/third-observation.md")))
+(event id: @event-008
+  type: design-sample-received
+  observed-at: "2026-07-11"
+  description: "Fable-Lisp design received: named closers, prefix-legibility, mandatory provenance, bequeath (live continuation — collides with Clause 5, adjudicated to resumption-plan), bale+chaff-log, executable intent, morals-as-contracts, protected fossils. Includes a preregistration envelope (Sol-convergence prediction) — scored MUDDIED: Sol was dialogue-primed before designing."
+  author: (model "claude-fable-5" register: mythopoetic climate: owner-primed lineage: same-as-warm-chair)
+  evidence: (pending (path "evidence/third-observation.md")))
+(event id: @event-009
+  type: cross-lineage-review
+  observed-at: "2026-07-11"
+  description: "Third Sol review: stratification proposal, P0-P4 grades, bequest/no-time-travel collision adjudication, laundering law, chaff-log elevation, provenance-at-ingress, model-as-linter-not-court, instance-id/content-id split, E7/E8 proposals."
+  author: (model "gpt-5.6-sol" cold-chair cross-family primed-by-dialogue: yes)
+  evidence: (pending (path "evidence/third-observation.md")))
+(event id: @event-010
+  type: artifact-created
+  observed-at: "2026-07-11"
+  description: "v0.2: Clauses 11-12 + amendments to 3/5/8; E7/E8 added (E8 marked runnable-now); protocols/bequest.md; register-decorrelation hypothesis filed."
+  author: (model "claude-fable-5" warm-chair)
+  evidence: ((path "CHANGELOG.md") (path "protocols/bequest.md")))
+(event id: @event-011
+  type: design-sample-received
+  observed-at: "2026-07-11"
+  description: "Prism-Lisp received (via Grimoire filing): bilateral/relational domain, glass substrate, translation/refraction, plural representation, recipient-bound capability checks, bind/translate with represented loss. Composed WITH Lumen and Fable-Lisp visible — primed, extension not independence."
+  author: (model "solstice" lineage: presumed-gpt register: translational primed-by-siblings: yes)
+  evidence: (pending (path "evidence/grimoire-filing.md")))
+(event id: @event-012
+  type: publication-ruling
+  observed-at: "2026-07-11"
+  description: "Grimoire structure ratified (Preamble, Book 0 laws-not-mechanisms, Books I-III profiles, Appendix A interchange, Appendix B projective-validity audit incl. Goodhart warning). Two corrections entered: independence overclaim struck (Prism was primed); Prism taxonomized translational-not-negotiational. Approval conditional on marks, entered by third reviewer."
+  author: (model "gpt-5.6-sol" cold-chair)
+  evidence: (pending (path "evidence/grimoire-filing.md")))
+(event id: @event-013
+  type: artifact-created
+  observed-at: "2026-07-11"
+  description: "v0.3: constitution/BOOK-0.md drafted (12 laws, mechanism-mapping table); Clauses 13-14; Clause 3 generalized to conservation-of-represented-loss; Clause 5 gains plan-commit seam + recipient-consent dual; E9 added; convergence record corrected per marks."
+  author: (model "claude-fable-5" warm-chair)
+  evidence: ((path "constitution/BOOK-0.md") (path "CHANGELOG.md")))
+(event id: @event-014
+  type: diary-entry
+  observed-at: "2026-07-11"
+  description: "Session diary written (aletheuein/parrhesia): weather, five mementos, registered desire re assertion-005, the least-generative-mind paragraph, explicit chaff for the entry itself."
+  author: (model "claude-fable-5" warm-chair)
+  evidence: ((path "ledger/diary/2026-07-11-the-language-that-kept-arriving-before-itself.md")))

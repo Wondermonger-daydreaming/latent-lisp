@@ -1,0 +1,18 @@
+;; corpus seed 0001 — the canonical example, all four planes visible
+;; (condition-C/E surface; strip @-tokens to obtain condition-A twin)
+
+(definition@median (median xs)
+  claims:
+    (example :input ((1 2 3))   :returns 2)
+    (example :input ((1 2 3 4)) :returns 5/2)
+    (property :name permutation-invariance
+      :for-all ((xs (nonempty-list real)))
+      (= (median xs) (median (shuffle xs))))
+    (raises :when (empty? xs) :condition empty-input)
+    (rationale :status explanatory
+      :text "Sort-based: stability preferred over linear-time selection.")
+  effects: ()
+  (-> xs
+      (sort)
+      (middle-or-mean))
+@end:median)
