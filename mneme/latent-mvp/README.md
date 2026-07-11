@@ -4,7 +4,44 @@
 2026-07-11 session, each brick hardened by a GPT Sol cold-chair review. All files run under `sbcl --script`
 (or `--load` for the kernel), exit 0 == the law holds.*
 
-## The consolidation (start here)
+## v1 — the hardened kernel (the "second commit", 2026-07-11)
+
+**`kernel.lisp` (below) is v0: it enforces the intended *route*, not the *invariant*.** GPT Sol's cold-chair
+review of the public repo showed a caller can mint its own certificate/grade/verifier-identity through the
+exported API. The hardening lives in two new files:
+
+- **`kernel-hardened.lisp`** — Mneme **v1**, built across two GPT Sol co-design passes. What changed: the public
+  surface is **mechanically split** into `mneme.client` (adversarially callable) and `mneme.operator` (trusted
+  bootstrap — a package boundary, not a comment); no exported constructors for authenticated objects; private
+  `%accessors` with exported **defensive-copy** readers (a read-only box may not leak mutable conses); verifier
+  authority is an **opaque capability object** (registry-membership is validity) whose scope lists are
+  **copied on grant** (no widening the warrant after issuance); a private **procedure registry** (propositions
+  name a registered `procedure-id` — never a live function, no `fdefinition` from caller data); `raise-claim`
+  validates an attestation's **mint provenance**, not its shape (nominal typing must not impersonate
+  authentication); a **hostile-data decoder** (`*read-eval*` nil, `#S`/`#.` refused, one-form-only, inert
+  records never live objects); **inert revival** (inherited warrants are *historical testimony only* —
+  authenticated set begins empty; `:revived` is the 4th receipt transition; no double-revive); and **typed
+  conditions** (`authority-violation`, `scope-mismatch`, `unsafe-procedure`, `invalid-attestation`,
+  `schema-mismatch`, `handoff-state-violation`).
+- **`adversarial-conformance.lisp`** — the external-client attack suite (package `attacker`, sees only the
+  `mneme.client` surface + trusted `mneme.operator` in setup). Each attack must signal its **own intended typed
+  condition** — proving the right constitutional organ objected, not merely that *something* did.
+  `sbcl --script adversarial-conformance.lisp` → **16 passed, 0 failed, exit 0** (13 forgeries refused +
+  3 lawful-route checks). The red-run matters as much as the green: an earlier version failed 9/14 and the suite
+  caught the bug before certifying — the gate bit the builder first.
+
+Threat model (Sol's ceiling, exact): `mneme.client` resists adversarial use of the exported API and treats
+serialized input as hostile; `mneme.operator` is **trusted bootstrap**, not part of the adversarial surface; it
+does **not** defend against same-image code reaching `mneme::` internals (process isolation, not a language
+feature); crypto deferred. Revocation is **prospective** (blocks future issuance; already-minted attestations
+keep standing unless a separate attestation-revocation registry is added). This is a **bounded receipt — "all
+specified v1 gates passed" — not a proof of universal unforgeability.** **Still owed** (honest): canonical byte
+serialization + real crypto, durable cross-process IDs, full procedure/code identity (v1 reserves
+`procedure-id`/`procedure-version` in attestations so that work *extends* rather than rewrites), an
+attestation-revocation registry, migrating the v0 bricks onto the hardened kernel, and the standing question —
+*what's the next unenumerated forgery?* (Sol's Q5).
+
+## The consolidation (v0 — the record of discovery)
 
 - **`kernel.lisp`** — the shared root (package `mneme`). The un-improvisable common floor: `claim`, typed
   `witness`, `certificate`, the grade vocabulary, the authority table, `witness-supports-p`,

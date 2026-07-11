@@ -25,13 +25,17 @@ fluency is not "the program crashes" — it is **"the claim wears a check's cost
 runtime that compiles the lab's deposition doctrine into an evaluator: on the **lawful route**, "I verified
 this" cannot be raised to a graded claim without a *certificate* — a bare assertion has no standing.
 
-> **Threat model, stated honestly (v0):** Mneme currently disciplines a **cooperative caller** — it makes the
-> lawful, checkable route *precise*, not yet *unforgeable*. A mischievous client can still mint its own
-> certificate through the raw exported constructors; the invariant is enforced by convention, not by the type
-> system. Closing that seam — semantic unforgeability through the supported API, before any cryptography — is the
-> next build (item 0 of **What's owed**, below), on GPT Sol's cold-chair ranking. The earlier phrasing here — "it
-> *fails to parse*" — was aspirational, not yet true, and has been corrected: a claim that overstates its own
-> standing is exactly the thing this project exists to catch.
+> **Threat model, stated honestly.** *v0* (`mneme/latent-mvp/kernel.lisp`) disciplined a **cooperative caller**
+> — the lawful route was precise but forgeable through the raw exported constructors. *v1*
+> (`mneme/latent-mvp/kernel-hardened.lisp`, 2026-07-11) closes that seam: authenticated state cannot be minted
+> through the client surface. The public API is **mechanically split** into `mneme.client` (adversarial) and
+> `mneme.operator` (trusted bootstrap), and an external-client suite proves **13 forgeries refused + 3
+> lawful-route checks — each gate firing its own typed condition** (`adversarial-conformance.lisp` → 16 passed,
+> 0 failed). The ceiling is stated exactly: `mneme.client` resists adversarial use of the exported API and treats
+> serialized input as hostile; it does **not** defend against same-image code reaching `mneme::` internals
+> (process isolation, not a language feature), and cryptography is a later milestone. This is a **bounded receipt,
+> not a universal theorem.** The earlier front-page phrasing — "it *fails to parse*" — was aspirational and has
+> been corrected: a claim that overstates its own standing is exactly the thing this project exists to catch.
 
 Start at `mneme/latent-mvp/kernel.lisp` — the shared root (package `mneme`, ~50 exports): typed `claim` and
 `witness`, `certificate`, the grade vocabulary, the authority table, `witness-supports-p`,
@@ -128,17 +132,15 @@ cold-chair review of this public repo** (`corpus/voices/received/2026-07-11-gpts
 in the lab). Sol's ruling: *semantic authority must come before cryptography — SHA-256 on a caller-forged
 certificate is a steel lock on a certificate printer.* So:
 
-0. **Semantic unforgeability through the supported API** (Sol's #1, and now ours). Today a mischievous caller
-   can mint a valid-looking certificate/grade through the raw exported constructors (`make-certificate`,
-   `make-claim`, `setf claim-grade`) and a caller-supplied verifier *label* is trusted as if it were a
-   capability. Close it: don't export raw constructors for authenticated objects; split *claimed* from
-   *authenticated* records at the type level; hide mutable accessors; mint certificates only via a private
-   constructor held by a verifier capability; run conformance from a **separate client package** using only
-   exported symbols; add adversarial tests (direct grade mutation, forged certificate, forged `:verified`
-   status, spoofed verifier). Also fix the **revival contradiction** — `freeze`→`mneme-revive` currently
-   preserves the grade, so an `:executed` claim crosses the gap still `:executed`, violating Law 6; a revived
-   claim must carry its old grade as *historical testimony* with an **empty** effective authenticated set until
-   the successor re-verifies.
+0. **Semantic unforgeability through the supported API** — **✅ BUILT (v1, 2026-07-11):**
+   `mneme/latent-mvp/kernel-hardened.lisp` + `adversarial-conformance.lisp` (16/0). Client/operator packages
+   split mechanically; no exported constructors for authenticated objects; defensive-copy readers; opaque
+   verifier capabilities (scope lists copied on grant); private procedure registry (no `fdefinition` from caller
+   data); `raise-claim` validates mint provenance not shape; hostile-data decoder; inert revival (inherited
+   warrants are historical testimony only; `:revived` is the 4th receipt transition); typed conditions. The
+   **revival contradiction is fixed** — a revived claim's authenticated set begins empty; standing is re-earned
+   only via `replay-and-attest`. *Still open under this item:* an **attestation-revocation registry** (v1
+   revocation is prospective only), and migrating the v0 bricks onto the hardened kernel.
 1. **Real crypto** — canonical byte serialization + SHA-256 + HMAC/signatures, replacing the pedagogical
    digests (`md5`/`sxhash`/FNV-class — fine for specimens, forgeable by a real attacker). *After #0, not before.*
 2. **Durable identity** — UUIDs / store-issued monotone IDs instead of `gensym`; digests stable across process
