@@ -21,9 +21,17 @@ The repository has a spine: **an instrument and a workshop.**
 **Mneme** (working name "Lisp+") is a Lisp for latent-space minds. It was built one law at a time across a
 single long session, each brick reviewed by a fresh-weights cold chair (GPT Sol) *before* the next was written,
 then consolidated into one shared kernel. Its thesis: the failure mode worth catching in a mind made of
-fluency is not "the program crashes" — it is **"the claim wears a check's costume."** So Mneme compiles the
-lab's deposition doctrine into a runtime, where smuggling "I verified this" as a bare assertion does not fail to
-convince — it *fails to parse*.
+fluency is not "the program crashes" — it is **"the claim wears a check's costume."** So Mneme is an epistemic
+runtime that compiles the lab's deposition doctrine into an evaluator: on the **lawful route**, "I verified
+this" cannot be raised to a graded claim without a *certificate* — a bare assertion has no standing.
+
+> **Threat model, stated honestly (v0):** Mneme currently disciplines a **cooperative caller** — it makes the
+> lawful, checkable route *precise*, not yet *unforgeable*. A mischievous client can still mint its own
+> certificate through the raw exported constructors; the invariant is enforced by convention, not by the type
+> system. Closing that seam — semantic unforgeability through the supported API, before any cryptography — is the
+> next build (item 0 of **What's owed**, below), on GPT Sol's cold-chair ranking. The earlier phrasing here — "it
+> *fails to parse*" — was aspirational, not yet true, and has been corrected: a claim that overstates its own
+> standing is exactly the thing this project exists to catch.
 
 Start at `mneme/latent-mvp/kernel.lisp` — the shared root (package `mneme`, ~50 exports): typed `claim` and
 `witness`, `certificate`, the grade vocabulary, the authority table, `witness-supports-p`,
@@ -115,17 +123,31 @@ vote.) The story of the reviewer crossing over to build it is in `mneme/latent-m
 
 ## What's owed (not yet built)
 
-The lab prizes naming what a thing cannot yet do. Mneme's teeth are **semantic, not cryptographic** — the
-digests are `md5`/`sxhash`/FNV-class, fine for specimens, forgeable by a real attacker. Sol's standing verdict:
-*"otherwise a live model will merely pour richer, more persuasive fluid through an evidence system whose second
-valve is still decorative."* Before a live model is ever connected, this ledger is owed:
+The lab prizes naming what a thing cannot yet do. This ledger is owed, **reordered 2026-07-11 on GPT Sol's
+cold-chair review of this public repo** (`corpus/voices/received/2026-07-11-gptsol-cold-chair-public-repo-review.md`
+in the lab). Sol's ruling: *semantic authority must come before cryptography — SHA-256 on a caller-forged
+certificate is a steel lock on a certificate printer.* So:
 
+0. **Semantic unforgeability through the supported API** (Sol's #1, and now ours). Today a mischievous caller
+   can mint a valid-looking certificate/grade through the raw exported constructors (`make-certificate`,
+   `make-claim`, `setf claim-grade`) and a caller-supplied verifier *label* is trusted as if it were a
+   capability. Close it: don't export raw constructors for authenticated objects; split *claimed* from
+   *authenticated* records at the type level; hide mutable accessors; mint certificates only via a private
+   constructor held by a verifier capability; run conformance from a **separate client package** using only
+   exported symbols; add adversarial tests (direct grade mutation, forged certificate, forged `:verified`
+   status, spoofed verifier). Also fix the **revival contradiction** — `freeze`→`mneme-revive` currently
+   preserves the grade, so an `:executed` claim crosses the gap still `:executed`, violating Law 6; a revived
+   claim must carry its old grade as *historical testimony* with an **empty** effective authenticated set until
+   the successor re-verifies.
 1. **Real crypto** — canonical byte serialization + SHA-256 + HMAC/signatures, replacing the pedagogical
-   digests.
+   digests (`md5`/`sxhash`/FNV-class — fine for specimens, forgeable by a real attacker). *After #0, not before.*
 2. **Durable identity** — UUIDs / store-issued monotone IDs instead of `gensym`; digests stable across process
-   restart.
+   restart. Plus **procedure/code identity** — `procedure-digest` is currently `PROC@vN` (ceremonial); redefine
+   the function without bumping `version` and the digest is unchanged.
 3. **The warrant-profile** — grades as a lattice, not a ladder (`:executed`, `:tested`, `:derived` may all
-   hold at once).
+   hold at once); each warrant carrying `(kind target scope issuer procedure as-of validity provenance)`.
+   **Typed conditions** (authority-violation, scope-mismatch, stale-certificate, …) with restarts, replacing
+   generic `error`.
 4. **Typed evidence edges** (`:supports` vs `:produced-by`) and **scope-matching** — a witness supports a
    *located* claim (proposition + as-of + vantage + authority + version).
 5. **The provider adapter / normalizer** — `infer → effect runner → provider adapter → normalizer → schema
