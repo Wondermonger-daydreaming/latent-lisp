@@ -1,0 +1,40 @@
+{"gen":0,"best_error":7.700000,"median_error":38.700000,"mean_size":30.547,"best_hits":1,"best_how":"seed","best_tree":"(+ (% (* X X) (* X 0)) X)"}
+{"gen":1,"best_error":7.407781,"median_error":28.700000,"mean_size":14.947,"best_hits":2,"best_how":"mutation","best_tree":"(- (+ X 1) (% X (- (- (* 2 2) (* -1 X)) -1)))"}
+{"gen":2,"best_error":0.000000,"median_error":22.439459,"mean_size":16.607,"best_hits":21,"best_how":"crossover","best_tree":"(+ (+ X 1) (* X X))"}
+{"gen":3,"best_error":0.000000,"median_error":15.665239,"mean_size":17.587,"best_hits":21,"best_how":"elite","best_tree":"(+ (+ X 1) (* X X))"}
+{"gen":4,"best_error":0.000000,"median_error":11.010184,"mean_size":16.600,"best_hits":21,"best_how":"elite","best_tree":"(+ (+ X 1) (* X X))"}
+{"gen":5,"best_error":0.000000,"median_error":11.000000,"mean_size":18.700,"best_hits":21,"best_how":"elite","best_tree":"(+ (+ X 1) (* X X))"}
+{"gen":6,"best_error":0.000000,"median_error":11.000000,"mean_size":16.647,"best_hits":21,"best_how":"elite","best_tree":"(+ (+ X 1) (* X X))"}
+{"gen":7,"best_error":0.000000,"median_error":11.000000,"mean_size":17.573,"best_hits":21,"best_how":"elite","best_tree":"(+ (+ X 1) (* X X))"}
+{"gen":8,"best_error":0.000000,"median_error":11.000000,"mean_size":18.340,"best_hits":21,"best_how":"elite","best_tree":"(+ (+ X 1) (* X X))"}
+{"gen":9,"best_error":0.000000,"median_error":11.000000,"mean_size":17.153,"best_hits":21,"best_how":"crossover","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":10,"best_error":0.000000,"median_error":8.381250,"mean_size":17.680,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":11,"best_error":0.000000,"median_error":7.700000,"mean_size":16.660,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":12,"best_error":0.000000,"median_error":9.168521,"mean_size":16.787,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":13,"best_error":0.000000,"median_error":7.700000,"mean_size":18.133,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":14,"best_error":0.000000,"median_error":7.700000,"mean_size":18.013,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":15,"best_error":0.000000,"median_error":7.700000,"mean_size":18.780,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":16,"best_error":0.000000,"median_error":7.700000,"mean_size":18.787,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":17,"best_error":0.000000,"median_error":7.700000,"mean_size":17.953,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":18,"best_error":0.000000,"median_error":7.700000,"mean_size":17.827,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":19,"best_error":0.000000,"median_error":11.000000,"mean_size":16.920,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":20,"best_error":0.000000,"median_error":0.000000,"mean_size":17.347,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":21,"best_error":0.000000,"median_error":2.750000,"mean_size":17.240,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":22,"best_error":0.000000,"median_error":0.687500,"mean_size":17.893,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":23,"best_error":0.000000,"median_error":0.000000,"mean_size":18.960,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":24,"best_error":0.000000,"median_error":0.000000,"mean_size":20.373,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":25,"best_error":0.000000,"median_error":0.000000,"mean_size":20.313,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":26,"best_error":0.000000,"median_error":0.000000,"mean_size":20.647,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":27,"best_error":0.000000,"median_error":0.000000,"mean_size":20.593,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":28,"best_error":0.000000,"median_error":0.000000,"mean_size":20.220,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":29,"best_error":0.000000,"median_error":0.000000,"mean_size":20.947,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":30,"best_error":0.000000,"median_error":0.000000,"mean_size":21.607,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":31,"best_error":0.000000,"median_error":0.000000,"mean_size":22.393,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":32,"best_error":0.000000,"median_error":0.000000,"mean_size":23.867,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":33,"best_error":0.000000,"median_error":0.000000,"mean_size":24.107,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":34,"best_error":0.000000,"median_error":0.000000,"mean_size":24.433,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":35,"best_error":0.000000,"median_error":0.000000,"mean_size":24.773,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":36,"best_error":0.000000,"median_error":0.000000,"mean_size":26.247,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":37,"best_error":0.000000,"median_error":0.000000,"mean_size":26.900,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":38,"best_error":0.000000,"median_error":0.000000,"mean_size":26.707,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
+{"gen":39,"best_error":0.000000,"median_error":0.000000,"mean_size":27.667,"best_hits":21,"best_how":"elite","best_tree":"(+ (* X (+ X (% X X))) (% X X))"}
