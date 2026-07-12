@@ -33,9 +33,13 @@
 (defpackage #:process-a (:use #:cl))
 (in-package #:process-a)
 
+(defun as-dir (s) (if (and (plusp (length s)) (char= (char s (1- (length s))) #\/))
+                      s (concatenate 'string s "/")))
 (defparameter *store*
-  (or (second sb-ext:*posix-argv*) "/tmp/mneme-boundary-store/")
-  "Directory both processes share ONLY through files. Passed by run-boundary.sh.")
+  (as-dir (or (second sb-ext:*posix-argv*) "/tmp/mneme-boundary-store/"))
+  "Directory both processes share ONLY through files. Passed by run-boundary.sh.
+   Coerced to directory form so artifacts land INSIDE it (trailing-slash matters to
+   merge-pathnames — without it the store name is read as a file and files scatter).")
 
 (defun sreplace (old new s)
   "Structure-preserving hand-edit: replace the first OLD with NEW inside string S.
@@ -49,7 +53,7 @@
     (write-string text out))
   path)
 
-(format t "~&=== PROCESS A (freezer, pid ~a) — image opens ===~%" (sb-posix:getpid))
+(format t "~&=== PROCESS A (freezer, pid ~a) — image opens ===~%" (sb-unix:unix-getpid))
 
 ;;; ── operator bootstrap (trusted; happens ONLY in this image, dies at exit) ──────
 (mneme.operator:register-procedure :double (lambda (x) (* 2 x)) :version 1)
