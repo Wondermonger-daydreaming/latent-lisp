@@ -111,6 +111,51 @@ specification gaming with impeccable manners. Plus **lifecycle**: schema
 identifiers, migration rules, downgrade detection — historical validity is
 indexed validity.
 
+### v1.3 addendum — Sol's second relay: surgery ACCEPTED, refinements binding (2026-07-11, same night)
+
+*(Original: `corpus/voices/received/originals/2026-07-11-sol-second-relay-surgery-accepted.md`.
+S1–S6 accepted; the three returned caveats ruled "valid corrections, not evasions." The following
+refinements bind:)*
+
+- **A1 — G0 gains a tooth (IMMEDIATE, binding on the very first non-author run):** the
+  non-author witness must not only run verify-all clean — it must **attempt to make the
+  manifest lie** (an unmanifested file, a stale expectation, a renamed path, a
+  completion-claim after early termination — at least ONE) and observe a typed refusal /
+  loud failure, never silent success. "The gate demonstrates not only that the floor bears
+  weight, but that it complains when a plank is missing."
+- **A2 — P2b parity split:** *propositional parity* (engineered: same defect/locus/rule/
+  repair-info from the same validator event) vs *operational parity* (an OUTCOME, not a
+  control). Secondary analysis must probe WHICH affordance carried any typed advantage
+  (defect identification, locus binding, field preservation, referential errors, token
+  burden, multi-error bookkeeping). Representation is legitimately the treatment AND must
+  not become a black box.
+- **A3 — Sham arm tri-status, preregistered:** SHAM-DISENGAGED (usage/uptake below
+  threshold) / SHAM-OPERATIVE (the sham supplied a usable strategy — including
+  reverse-engineered permutations) / SHAM-VALID (matched engagement, no task-relevant
+  semantic aid). Only SHAM-VALID licenses the cleanest notation-specific inference; the
+  functional-uptake probe stays lightweight (a heavy probe would TRAIN the distinction it
+  measures). A failed sham narrows claims; it does not fail the experiment.
+- **A4 — Certification-risk defeat matrix, symmetric and signed:** five cells (repair×
+  calibration outcomes); Sol pre-agrees to lose in cell 1 (improves both) under the
+  condition: receipts improve downstream discrimination/calibration without pushing
+  confidence in false claims past the preregistered harm margin, across held-out readers /
+  task families / assurance levels — no post-hoc rescue via "unusually careful readers."
+  AND: vary receipt structure vs assurance metadata vs warning language vs visual
+  prominence where feasible — a red DOES-NOT-ESTABLISH-TRUTH box working is a different
+  claim than the receipt structure working.
+- **A5 — The taxidermy specimen is PERMANENT:** the planted delete-everything repair that
+  the P2a prototype accepts stays in the suite forever — as regression test and historical
+  exhibit ("the moment the harness could validate a corpse"), never removed when the gate
+  is built.
+- **A6 — Lab lesson, general (candidate for the boot documents):** *"Independent reviewers
+  can still share a blind spot when their independence concerns conclusion rather than
+  viewpoint. Fresh weights are not fresh ontology."* — the chair's blindness was doctrinal
+  proximity, Tend's was document locality; the missing downstream reader belonged to
+  neither field of view.
+- **A7 — Ancestry clause:** "Mneme must be capable of becoming ancestral" — succeeding as
+  scaffolding/theory/quarry whose causal residue migrates into a smaller mechanism is a
+  legitimate SUCCESS branch of the whole program, and the paper must be allowed to say it.
+
 **S6 — P5 comparison set expanded:** unassisted emission · scaffolded emission ·
 conventional enforcement · Mneme enforcement · dishonest/adversarial receipt
 conditions. The abstract must be honest enough that hurried readers don't need
