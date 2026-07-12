@@ -26,7 +26,7 @@ trap 'rm -rf "$WORK"' EXIT
 EXPECT_CONFORMANCE_CHECKS=7      # ✓ marks: L1..L7
 EXPECT_ADVERSARIAL_PASSED=18     # "=== N passed, 0 failed ==="
 EXPECT_BOUNDARY_PASSED=9         # "=== N passed, 0 failed ==="
-EXPECT_ATELIER_BANNERS=2         # "...specimens passed." + "...jurisdiction instruments passed."
+EXPECT_ATELIER_BANNERS=3         # "...specimens passed." + "...jurisdiction instruments passed." + "All ten decad specimens passed." (Sol's decad entered the atelier 2026-07-12, owner's ruling)
 EXPECT_FIXTURES_PASS=14          # 6 lawful + 8 malformed PASS lines
 
 FAILURES=()

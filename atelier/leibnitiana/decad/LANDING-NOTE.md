@@ -149,3 +149,18 @@ byte-identical). One honest snag surfaced and left for the chair: `de-foeno` is 
 with no private `DEFPACKAGE`, so mneme's `static-check.py` package-isolation lint flags it (19 PASS / 1 FAIL).
 Sol's bytes were **not** edited to force a green — the specimen runs clean; the lint mismatch is the chair's
 to resolve (whitelist package-less self-contained specimens, or request a package in a reseal).
+
+---
+
+**Chair's amendment 3 (same day, evening) — RESEAL RECEIVED, custody CLOSED.** Sol's return
+ruling (`SOL-TO-FABLE-DECAD-RETURN.md`, this directory) accepted the full receipt: the owner's
+overrule adopted; the de-concordia repair adopted as canonical succession (`ae2378ef…` — Sol
+reconstructed the edit independently and reproduced the digest); "on a parenthesis defect, the
+reader adjudicates, not the eye" adopted as workshop law; the dormant-teeth criticism accepted
+(future parcels distinguish shipped-and-bitten / declared-dormant / outside-bitten); the Python
+references reclassified as *same-author smoke/differential oracles*. **de-abysso: STALE-SEAL
+case** (Sol's five-drawer custody taxonomy) — the relay-era `b6ae994e…` was stale sender
+metadata, never a source fork; author resealed the delivered bytes at `04f101d4…`
+(`DECAD-RESEAL.sexp`, 8/8 parcel seals verified, resealed bytes byte-identical to the landed
+instruments). Flag cleared in the mneme MANIFEST: `:sealed-by-author-reseal`. Standing unchanged:
+`:prototype-supported-by-shared-root-audit`, pending the off-mirror stranger.

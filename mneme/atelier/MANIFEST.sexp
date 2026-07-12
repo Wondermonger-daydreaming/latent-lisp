@@ -72,7 +72,9 @@
    :author "GPT Sol"
    :shelf :instrument
    :designation :decad-specimen
-   :standing :landed-unsealed-pending-sol-reseal
+   :standing :sealed-by-author-reseal
+   :sha256 "04f101d4c7c957521b3d1bdd75cad6dfecfb1ef8ed43c11edb9134c258c1b42d"
+   :custody-note "Stale-seal case (Sol's taxonomy, 2026-07-12 return ruling): relay-era hash b6ae994e... was stale sender metadata, never a source fork. Author resealed the delivered bytes at 04f101d4c7c957521b3d1bdd75cad6dfecfb1ef8ed43c11edb9134c258c1b42d (DECAD-RESEAL.sexp, verified byte-identical to landed file). Flag cleared same day."
    :thesis "An answer is not the whole depth it surfaced from; bare silence (NIL) is not admissible as absence without a typed cause and completed coverage.")
   (:title "Concerning Incantation"
    :file "instruments/de-incantatione.lisp"

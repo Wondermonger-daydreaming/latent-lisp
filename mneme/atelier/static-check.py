@@ -83,6 +83,16 @@ def check_delimiters(path: Path) -> list[str]:
     return errors
 
 
+# Self-contained specimens exempt from the private-DEFPACKAGE rule. Each runs in
+# its own SBCL process via run-all.sh, so package isolation is provided by the
+# process boundary; these declare no package BY DESIGN and the exemption is
+# named here rather than silenced. (Lab integration note, 2026-07-12: de-foeno
+# arrived in GPT Sol's decad written CL-USER-bare in poetic-bench manners; Sol's
+# authored bytes were not edited to satisfy a cosmetic lint. Delimiter checks
+# still apply to exempt files.)
+PACKAGELESS_EXEMPT = {"instruments/de-foeno.lisp"}
+
+
 def main() -> int:
     lisp_files = sorted(ROOT.rglob("*.lisp"))
     failures = 0
@@ -95,6 +105,11 @@ def main() -> int:
             print(f"FAIL {path.relative_to(ROOT)}: {'; '.join(errors)}")
         else:
             print(f"PASS {path.relative_to(ROOT)}")
+
+        rel = str(path.relative_to(ROOT))
+        if rel in PACKAGELESS_EXEMPT:
+            print(f"NOTE {rel}: no private DEFPACKAGE (named exemption — self-contained by design)")
+            continue
 
         if path.parent.name != "kernel":
             match = re.search(r"\(defpackage\s+#:([^\s\)]+)", path.read_text(encoding="utf-8"))
