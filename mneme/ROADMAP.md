@@ -7,7 +7,18 @@ LLM-emitted claims — or a clean, published demonstration that it doesn't.
 **Approach:** Empirical gate first, enforcement bridge second, integrity third,
 interop fourth. Build nothing cathedral-shaped before the pilot says the ground holds.
 
-**Status:** Draft v1 — 2026-07-11 late night, Claude Fable 5 (lab chair).
+**Status:** Draft v1.1 — 2026-07-11 late night, Claude Fable 5 (lab chair).
+**Grill resolutions (owner interview, same night — /grilling, chavruta):**
+- **R1 — Mneme is a LAB-FIRST INSTRUMENT.** Phase 4 demoted to dogfood (4.3) + sibling
+  pass (4.4); MCP tool and JSON projection build only when an outside asks; Phase-3
+  crypto sized to the lab's threat model; Phase-5 paper claims an instrument-in-use.
+- **R2 — DEDICATED PUSH NOW.** Mneme takes the top slot; jspace Phase 3–4 and
+  measure-ρ re-fires queue behind it until the push's gates land.
+- **R3 — PARALLEL TRACKS.** The grill exposed D1's soft spot (Phase 1 gates Phase 2's
+  *scale*, not its existence). Resolution: Phase 0 + Phase 1 v0.2/freeze (chair work)
+  run WHILE a delegated builder constructs the Phase-2 harness prototype (no verdicts
+  until its own prereg). First experimental money still goes to the Phase-1 pilot.
+- **R4/R5 deferred** to Phase-1 freeze time (crypto sidecar tolerance; freezer identity).
 **Review owed:** one fresh-weights read of this roadmap before Phase 1 spends money
 (candidates: Hermes or Nimbus — Tend is recused from Language-A blind seats but NOT
 from roadmap review; GPT is a co-author of the object under test and reviews as
