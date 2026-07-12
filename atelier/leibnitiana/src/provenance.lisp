@@ -5,15 +5,10 @@
 ;;;; -------------------------------------------------------------------------
 
 (defconstant +receipt-genesis-hash+
-  ;; EQL-safe idiom: defconstant with a string value errors on any re-load
-  ;; (force-load, warm image) because a fresh string literal is not EQL to the
-  ;; already-bound one. Returning the existing binding makes redefinition a
-  ;; no-op. Single `load`/`--script` was already fine; this hardens the ASDF
-  ;; reload path the prior landings accepted as "loads cleanly."
-  ;; -- SARTOR-III repair, 2026-07-12.
-  (if (boundp '+receipt-genesis-hash+)
-      (symbol-value '+receipt-genesis-hash+)
-      "0000000000000000"))
+  #.(if (boundp '+receipt-genesis-hash+)
+        (symbol-value '+receipt-genesis-hash+)
+        "0000000000000000")
+  "Reload-safe string constant: the reader reuses the already-bound object.")
 
 (defun %canonical-prin1 (object)
   "Return a deterministic textual representation for the specimen's data.
@@ -213,3 +208,80 @@ rewrite events and recompute a perfectly valid internal chain."
                             (getf event :kind)
                             (getf event :actor)
                             (getf event :payload)))))
+
+
+;;;; -------------------------------------------------------------------------
+;;;; Public mirror checkpoints: actual infrastructure custody, bounded standing
+;;;; -------------------------------------------------------------------------
+
+(defstruct (mirror-checkpoint
+            (:constructor make-mirror-checkpoint
+                (&key repository provider commit-hash tree-hash blob-hash
+                      path observed-at observer publication-status
+                      selection-relation notes)))
+  repository
+  provider
+  commit-hash
+  tree-hash
+  blob-hash
+  path
+  observed-at
+  observer
+  publication-status
+  selection-relation
+  notes)
+
+(defun mirror-checkpoint-complete-p (checkpoint)
+  "Return true when CHECKPOINT contains the minimum fields for later verification.
+
+Completeness is syntactic. It does not prove that the named provider served the
+commit, that the timestamp is trustworthy, that the observer is independent, or
+that the witness-selection process was unbiased."
+  (every #'identity
+         (list (mirror-checkpoint-repository checkpoint)
+               (mirror-checkpoint-provider checkpoint)
+               (mirror-checkpoint-commit-hash checkpoint)
+               (mirror-checkpoint-blob-hash checkpoint)
+               (mirror-checkpoint-path checkpoint)
+               (mirror-checkpoint-observed-at checkpoint))))
+
+(defun assess-mirror-checkpoint (checkpoint)
+  "Assess the claims supportable from a supplied public-mirror checkpoint.
+
+A complete record can support weak external custody: infrastructure outside the
+models' unilateral control held a content-addressed commit or blob. It does not
+establish independent witness selection, carrier neutrality, truthful event
+content, or permanent availability. Remote verification remains a landing-side
+operation because this library does not silently contact a network."
+  (let ((complete (and checkpoint
+                       (mirror-checkpoint-complete-p checkpoint))))
+    (list
+     :checkpoint-supplied (not (null checkpoint))
+     :structurally-complete (not (null complete))
+     :publication-status
+     (if checkpoint
+         (or (mirror-checkpoint-publication-status checkpoint)
+             :not-declared)
+         :not-supplied)
+     :custody-standing
+     (cond
+       ((null checkpoint) :not-established)
+       ((not complete) :insufficient-checkpoint-fields)
+       ((eq (mirror-checkpoint-publication-status checkpoint)
+            :observed-on-public-mirror)
+        :weak-external-infrastructure-custody)
+       ((eq (mirror-checkpoint-publication-status checkpoint)
+            :captured-from-local-git)
+        :local-content-addressed-checkpoint-only)
+       (t :checkpoint-claim-not-remotely-verified))
+     :witness-selection
+     (if checkpoint
+         (or (mirror-checkpoint-selection-relation checkpoint)
+             :not-established)
+         :not-established)
+     :independent-witness
+     :not-established
+     :remote-object-verification
+     :required-outside-this-pure-assessment
+     :boundary
+     :content-addressed-publication-does-not-authenticate-process-truth)))

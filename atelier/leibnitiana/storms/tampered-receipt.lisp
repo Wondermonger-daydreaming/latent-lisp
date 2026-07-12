@@ -32,6 +32,14 @@
                   :payload (copy-tree (getf event :payload))))
           (receipt-log-events log)))
 
+
+(defun naively-edit-cato-in-place (log)
+  "Mutate Cato's stored payload without recomputing any event hashes."
+  (let* ((event (second (receipt-log-events log)))
+         (payload (getf event :payload)))
+    (setf (getf payload :position) :peace)
+    log))
+
 (defun rewrite-cato-as-peace (log)
   "Return a freshly rechained log in which Cato's original WAR became PEACE."
   (let ((bare (bare-events-from-log log)))
@@ -50,22 +58,17 @@
   (check (getf original-report :internally-valid)
          "the original log is internally self-consistent")
 
-  (print-section "NAIVE EDIT BREAKS THE STORED CHAIN")
-  ;; Blade 1 (promised in this file's header but previously absent from the
-  ;; executable — restored by SARTOR-III, 2026-07-12): edit an old event's
-  ;; payload IN PLACE without recomputing any hash. The stored event-hash no
-  ;; longer matches its material, so internal verification fails immediately.
-  ;; This is the easy case; the hard case (full recompute) follows below.
-  (let* ((naive (make-original-log))
-         (victim (second (receipt-log-events naive))))
-    (setf (getf victim :payload) (list :position :peace :attempt 1))
-    (let ((naive-report (verify-receipt-log naive)))
-      (format t "Naively edited verification: ~S~%" naive-report)
-      (check (not (getf naive-report :internally-valid))
-             "editing a stored event without rechaining breaks internal verification")
-      (check (find :event-hash-mismatch (getf naive-report :failures)
-                   :key (lambda (f) (getf f :failure)) :test #'eq)
-             "the broken chain is reported as an event-hash mismatch")))
+  (print-section "NAIVE IN-PLACE EDIT, STORED HASHES UNCHANGED")
+  (let* ((naive (naively-edit-cato-in-place (make-original-log)))
+         (naive-report (verify-receipt-log naive))
+         (failures (getf naive-report :failures)))
+    (format t "Naively edited verification: ~S~%" naive-report)
+    (check (not (getf naive-report :internally-valid))
+           "an in-place payload edit breaks internal verification")
+    (check (find :event-hash-mismatch failures
+                 :key (lambda (failure) (getf failure :failure))
+                 :test #'eq)
+           "the naive edit is exposed as an event-hash mismatch"))
 
   (print-section "REWRITTEN HISTORY, FULLY RECHAINED")
   (let* ((forged (rewrite-cato-as-peace original))

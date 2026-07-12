@@ -58,6 +58,22 @@
    #:verify-custody-checkpoint
    #:rebuild-receipt-log
 
+   ;; Public mirror checkpoints
+   #:mirror-checkpoint
+   #:make-mirror-checkpoint
+   #:mirror-checkpoint-repository
+   #:mirror-checkpoint-provider
+   #:mirror-checkpoint-commit-hash
+   #:mirror-checkpoint-tree-hash
+   #:mirror-checkpoint-blob-hash
+   #:mirror-checkpoint-path
+   #:mirror-checkpoint-observed-at
+   #:mirror-checkpoint-observer
+   #:mirror-checkpoint-publication-status
+   #:mirror-checkpoint-selection-relation
+   #:mirror-checkpoint-complete-p
+   #:assess-mirror-checkpoint
+
    ;; Small conformance helpers
    #:check
    #:check-equal

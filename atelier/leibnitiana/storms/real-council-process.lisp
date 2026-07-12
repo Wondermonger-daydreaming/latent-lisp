@@ -95,7 +95,8 @@
      :verbatim-or-edited
      :known-alternatives-omitted
      :retries-requested
-     :selection-note-if-volunteered)
+     :selection-note-if-volunteered
+     :outsider-selection-lineage-if-volunteered)
     :non-requirements
     (:private-thoughts
      :comprehensive-activity-log

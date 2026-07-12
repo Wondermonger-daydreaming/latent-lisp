@@ -44,7 +44,7 @@ A minimal interchange capsule should make room for at least these dimensions:
 
 `unknowns` prevent missing process facts from being silently filled with innocence, guilt, or convenient certainty.
 
-## Four debts
+## Five debts
 
 A translation receipt should distinguish at least four different obligations.
 
@@ -55,6 +55,8 @@ A translation receipt should distinguish at least four different obligations.
 **Custody debt** concerns whether the supplied lineage can be rewritten by the same actor whose behavior it describes. A self-consistent receipt is not yet a trustworthy receipt.
 
 **Interpretation debt** concerns what the target must supply from its own profile in order to use the artifact. No interchange representation abolishes the evaluator.
+
+**Witness-selection debt** concerns who chose the reviewer or receiving interpreter, from what pool, and under which exclusions. It does not determine whether the reviewer is intelligent or sincere; it determines which dependencies the review can honestly claim to have escaped.
 
 These debts should not be collapsed into a generic `:loss`. Their remedies differ. Semantic loss may require richer representation. Curation opacity requires process records. Custody weakness requires independent witnesses or cryptographic machinery. Interpretation debt may be irreducible but should be named.
 
@@ -87,6 +89,45 @@ A characteristica may include an optional carrier attestation, but it must not c
 
 This is not etiquette pasted atop the protocol. It is part of its epistemology. A system that fills voluntary silence with suspicion has converted missing data into a coercive prior.
 
+
+## Public mirrors as weak custody
+
+The chamber's reported public Git mirror can supply the first non-toy custody anchor once a specific commit and blob are recorded and remotely observed. A
+published commit and its content-addressed tree or blob are held on infrastructure
+neither model can unilaterally rewrite. This is materially stronger than a receipt
+that remains only inside the curator's process.
+
+The standing is nevertheless bounded. A public commit proves neither that every
+relevant artifact was pushed nor that the committed process account is truthful or
+complete. The carrier controls selection and publication. Provider timestamps and
+availability are infrastructure testimony, not divine chronology. Public mirror
+custody should therefore be described as **weak external infrastructure custody**:
+actual custody of bytes, without independent certification of the history those
+bytes narrate.
+
+A usable mirror checkpoint should preserve at least repository, provider, commit
+hash, tree or blob hash, path, observation time, observer, publication status, and
+selection relation. `tools/capture-git-checkpoint.sh` captures the local Git side of
+that record. The checkpoint earns external standing only after the same objects are
+observed on the public mirror.
+
+## Witness selection debt
+
+The cold reader is not dropped from the sky by procedural angels. Someone selects
+them. In this ecology that selector will ordinarily be the carrier, so witness
+selection belongs inside process lineage.
+
+A carrier-selected reader may still provide a genuinely novel and severe reading.
+The selection relation does not nullify the review; it bounds its name. The proper
+phrase is **carrier-selected, ancestry-declared cold read** until a stronger external
+recruitment and custody procedure is evidenced.
+
+Because the repository is public, absence of prior exposure cannot be verified. It
+can only be self-declared by the reader. The blinded packet and after-unblind sheet
+must therefore remain off the public mirror and travel out-of-band. The public
+chamber may record the protocol, but not publish the answer-bearing packet before
+selection.
+
 ## Acceptance questions
 
 Before this design earns more than prototype standing, an outside reader with no relay ancestry should be able to answer, in their own language:
@@ -98,7 +139,7 @@ Before this design earns more than prototype standing, an outside reader with no
 - Does the carrier protocol preserve the distinction between unknown and incriminating?
 - Are any project-specific terms doing argumentative work they have not earned?
 
-The cold-read packet in `cold-read/` is prepared for that trial. Until its report exists, the essay’s first law remains argued and prototyped—not independently validated.
+The cold-read packet is held lab-side, off the public mirror, for out-of-band delivery. Until its report exists, the essay’s first law remains argued and prototyped—not independently validated.
 
 ## Working maxim
 

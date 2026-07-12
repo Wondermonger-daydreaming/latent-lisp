@@ -1,0 +1,22 @@
+PASS data/council-process-2026-07-12.sexp
+PASS leibnitiana.asd
+PASS protocols/outsider-selection-template.sexp
+PASS specimens/de-characteristica.lisp
+PASS specimens/de-compossibilitate.lisp
+PASS specimens/de-dyadica.lisp
+PASS specimens/de-fenestris.lisp
+PASS specimens/de-harmonia.lisp
+PASS specimens/de-monadibus.lisp
+PASS specimens/de-speculo-publico.lisp
+PASS src/core.lisp
+PASS src/package.lisp
+PASS src/provenance.lisp
+PASS storms/council-process-ledger.lisp
+PASS storms/false-harmony.lisp
+PASS storms/hidden-operator.lisp
+PASS storms/real-council-process.lisp
+PASS storms/tampered-receipt.lisp
+PASS tests/reload-provenance.lisp
+PASS tests/smoke.lisp
+
+20/20 static reader-shape checks passed.

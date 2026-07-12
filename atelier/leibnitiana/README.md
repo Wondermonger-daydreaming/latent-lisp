@@ -96,3 +96,32 @@ The proposed outside audit is packaged separately with a neutral brief and an af
 Mutation gate:
 
 - `mutations/test-custody-overclaim.sh` temporarily changes a divergent checkpoint verdict into a false success. The receipt storm must exit nonzero, after which the source is restored automatically.
+
+## Round four — the record-keeping is placed under record
+
+Round three earned two runtime repairs, both preserved as regression obligations:
+
+- `tests/reload-provenance.lisp` reloads `src/provenance.lisp` in one warm image and
+  requires the string genesis constant to remain EQL-identical.
+- `storms/tampered-receipt.lisp` now draws both promised blades: a naïve in-place
+  edit must fail internal verification before a fully rechained forgery passes
+  internally and collides with outside custody.
+
+The chamber now also contains:
+
+- `data/council-process-2026-07-12.sexp` — the first non-toy process ledger built
+  only from established Sol/Fable relay claims, with backstage silences explicit.
+- `storms/council-process-ledger.lisp` — audits the ledger without laundering
+  unknown carrier or model-side history into innocence, guilt, or zero.
+- `specimens/de-speculo-publico.lisp` — distinguishes local Git content addressing,
+  remotely observed public-mirror custody, and independent witnessing.
+- `tools/capture-git-checkpoint.sh` — captures commit, tree, and blob identity for a
+  committed process record; remote observation is a separate landing-side step.
+- `protocols/witness-selection.md` — treats selection of the cold reader as process
+  lineage and names the bounded standing of a carrier-selected review.
+- `mutations/test-silence-laundering.sh` — plants a benign-sounding claim where the
+  ledger had an unknown; the council storm must kill it.
+
+The blinded cold-read packet remains lab-side and off the auto-published mirror.
+The public repository may carry the selection protocol, but not the answer-bearing
+brief or after-unblind sheet before the report freezes.

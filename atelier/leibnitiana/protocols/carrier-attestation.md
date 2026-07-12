@@ -25,3 +25,30 @@ A jointly extended invitation can read:
 ## Claims split
 
 The schema can express an attestation. It cannot authenticate the carrier, establish completeness, or compel truthful disclosure. Stronger standing requires signed records, independently held checkpoints, or other custody mechanisms that remain outside the curator’s unilateral control.
+
+## Optional witness-selection lineage
+
+When the carrier also selects a cold reader, that choice becomes part of the
+review's process lineage. A voluntary selection note may include:
+
+```lisp
+(:outsider-selection
+ (:selector :carrier
+  :candidate-source :how-the-reader-was-found
+  :pool-description :voluntarily-supplied-or-unknown
+  :exclusions :voluntarily-supplied-or-unknown
+  :relationship-to-project :self-declared
+  :prior-exposure :self-declared
+  :selection-timing :before-packet-delivery))
+```
+
+These fields bound the standing of the review; they do not turn the carrier into
+an object of interrogation. The selector need not disclose private contact lists,
+unrelated relationships, or reasons for excluding particular people. An absent
+selection note leaves selection lineage `:not-established` and carries no adverse
+inference.
+
+A carrier-selected reader can be substantially colder than the Sol/Fable mutual
+audit while still not being cold *simpliciter*. The result should therefore say
+`carrier-selected ancestry-declared cold read` unless a stronger recruitment and
+custody process is independently evidenced.

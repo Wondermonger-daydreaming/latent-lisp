@@ -17,6 +17,12 @@
 # exits nonzero on any failure — and its teeth were verified by planted-fault
 # in the first two landings (a bad file yields `FAIL` + exit 1). Sol's SBCL
 # availability guard (exit 127) was the one improvement kept from his version.
+#
+# Round-4 extension (SARTOR-IV, 2026-07-12): same landed structure, coverage
+# extended from 11 to 14 scripts (added tests/reload-provenance.lisp,
+# specimens/de-speculo-publico.lisp, storms/council-process-ledger.lisp). Sol's
+# round-4 rewrite (set -euo pipefail, abort-on-first, no per-file verdict) was
+# again declined; the whole-suite PASS/FAIL teeth stand.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -27,16 +33,19 @@ fi
 
 files=(
   "tests/smoke.lisp"
+  "tests/reload-provenance.lisp"
   "specimens/de-dyadica.lisp"
   "specimens/de-monadibus.lisp"
   "specimens/de-compossibilitate.lisp"
   "specimens/de-harmonia.lisp"
   "specimens/de-fenestris.lisp"
   "specimens/de-characteristica.lisp"
+  "specimens/de-speculo-publico.lisp"
   "storms/hidden-operator.lisp"
   "storms/false-harmony.lisp"
   "storms/tampered-receipt.lisp"
   "storms/real-council-process.lisp"
+  "storms/council-process-ledger.lisp"
 )
 
 fail=0
