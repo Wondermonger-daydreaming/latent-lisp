@@ -26,19 +26,26 @@ exported API. The hardening lives in two new files:
 - **`adversarial-conformance.lisp`** — the external-client attack suite (package `attacker`, sees only the
   `mneme.client` surface + trusted `mneme.operator` in setup). Each attack must signal its **own intended typed
   condition** — proving the right constitutional organ objected, not merely that *something* did.
-  `sbcl --script adversarial-conformance.lisp` → **16 passed, 0 failed, exit 0** (13 forgeries refused +
+  `sbcl --script adversarial-conformance.lisp` → **18 passed, 0 failed, exit 0** (15 forgeries refused +
   3 lawful-route checks). The red-run matters as much as the green: an earlier version failed 9/14 and the suite
-  caught the bug before certifying — the gate bit the builder first.
+  caught the bug before certifying — the gate bit the builder first. (A14/A15 — the retrospective-revocation
+  gates — were planted red the same way: A15 survived until the `raise-claim` revocation-registry guard was
+  added, proving the guard, not the validity-flip alone, is load-bearing for cascade revocation.)
 
 Threat model (Sol's ceiling, exact): `mneme.client` resists adversarial use of the exported API and treats
 serialized input as hostile; `mneme.operator` is **trusted bootstrap**, not part of the adversarial surface; it
 does **not** defend against same-image code reaching `mneme::` internals (process isolation, not a language
-feature); crypto deferred. Revocation is **prospective** (blocks future issuance; already-minted attestations
-keep standing unless a separate attestation-revocation registry is added). This is a **bounded receipt — "all
-specified v1 gates passed" — not a proof of universal unforgeability.** **Still owed** (honest): canonical byte
-serialization + real crypto, durable cross-process IDs, full procedure/code identity (v1 reserves
-`procedure-id`/`procedure-version` in attestations so that work *extends* rather than rewrites), an
-attestation-revocation registry, migrating the v0 bricks onto the hardened kernel, and the standing question —
+feature); crypto deferred. Revocation is now **both prospective and retrospective**: `revoke-authority` still
+blocks future issuance, and a new operator op `revoke-attestation` (plus a `raise-claim` revocation-registry
+guard) voids *already-minted* warrants so they can no longer raise — and revoking a verifier **cascades** to
+every warrant it minted (each attestation records its minting cap-token). This closes the attestation-revocation
+debt for the *raise* step within one image; it does **not** retroactively un-authenticate claims already raised
+(claims are immutable value objects with no central registry to sweep — named, not solved), and revocation does
+not survive serialization (revived warrants are inert predecessor data anyway). This is a **bounded receipt —
+"all specified v1 gates passed" — not a proof of universal unforgeability.** **Still owed** (honest): canonical
+byte serialization + real crypto, durable cross-process IDs (still `gensym`), full procedure/code identity (v1
+reserves `procedure-id`/`procedure-version` in attestations so that work *extends* rather than rewrites),
+retroactive claim-level revocation, migrating the v0 bricks onto the hardened kernel, and the standing question —
 *what's the next unenumerated forgery?* (Sol's Q5).
 
 ## The consolidation (v0 — the record of discovery)

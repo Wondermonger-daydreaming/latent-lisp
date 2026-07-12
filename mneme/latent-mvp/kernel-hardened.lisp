@@ -56,6 +56,8 @@
 (defvar *procedure-registry* (make-hash-table :test 'eql))   ; id -> (impl version effect)
 (defvar *capability-tokens*  (make-hash-table :test 'eq))    ; token -> capability (live custody)
 (defvar *attestation-mint*   (make-hash-table :test 'eq))    ; mint-id -> t (did THIS runtime issue it?)
+(defvar *attestation-revoked* (make-hash-table :test 'eq))   ; mint-id -> t (RETROSPECTIVELY voided)
+(defvar *mint-by-token*      (make-hash-table :test 'eq))    ; cap-token -> (mint-id ...) it minted
 
 ;;; ── procedure registry (A4: no fdefinition from caller data) ─────────────────
 (defstruct (procrec (:constructor %make-procrec) (:conc-name %pr-) (:copier nil) (:predicate nil))
@@ -86,11 +88,26 @@
     cap))
 (defun revoke-authority (cap)
   "Operator op. Revoke a capability: drop its token from the registry and mark it stale.
-   Subsequent verify requests through it raise authority-violation."
+   Subsequent verify requests through it raise authority-violation (PROSPECTIVE).
+   ALSO retrospectively voids every attestation this capability already minted — a
+   revoked verifier's past warrants no longer raise (the v1 revocation-registry debt)."
   (when (verifier-capability-p cap)
     (remhash (%cap-token cap) *capability-tokens*)
-    (setf (%cap-validity cap) :revoked))
+    (setf (%cap-validity cap) :revoked)
+    (dolist (mint-id (gethash (%cap-token cap) *mint-by-token*))
+      (setf (gethash mint-id *attestation-revoked*) t)))
   cap)
+(defun revoke-attestation (attestation)
+  "Operator op. RETROSPECTIVE revocation of a single already-minted warrant: record its
+   mint-id in the revocation registry (and flip its validity) so raise-claim refuses it
+   even though it is genuine, supports its target, and was minted by this runtime. This
+   is the attestation-revocation registry the v1 threat model listed as owed."
+  (ensure (typep attestation 'attestation) schema-mismatch "revoke-attestation: not an attestation")
+  (ensure (gethash (%att-mint-id attestation) *attestation-mint*)
+          invalid-attestation "cannot revoke an attestation this runtime did not mint")
+  (setf (gethash (%att-mint-id attestation) *attestation-revoked*) t)
+  (setf (%att-validity attestation) :revoked)
+  attestation)
 (defun %cap-live-p (cap kind proc-id)
   (and (verifier-capability-p cap)
        (eq (gethash (%cap-token cap) *capability-tokens*) cap)   ; registry membership, not shape
@@ -131,7 +148,7 @@
 
 ;;; ── attestation: private ctor; minted ONLY inside verify-proposition ─────────
 (defstruct (attestation (:constructor %make-att) (:conc-name %att-) (:copier nil) (:predicate nil))
-  mint-id principal event-kind procedure-id procedure-version target-fingerprint scope verdict validity issued-at)
+  mint-id cap-token principal event-kind procedure-id procedure-version target-fingerprint scope verdict validity issued-at)
 ;; readers only (defensive; no constructor, no predicate exported)
 (defun attestation-principal    (a) (%att-principal a))
 (defun attestation-verdict      (a) (%att-verdict a))
@@ -153,7 +170,8 @@
         (let* ((actual (funcall (%pr-impl pr) input))          ; the registered impl, never caller code
                (mint-id (gensym "ATT")))
           (setf (gethash mint-id *attestation-mint*) t)
-          (%make-att :mint-id mint-id :principal (%cap-principal capability)
+          (push mint-id (gethash (%cap-token capability) *mint-by-token*))  ; for cascade revocation
+          (%make-att :mint-id mint-id :cap-token (%cap-token capability) :principal (%cap-principal capability)
                      :event-kind event-kind :procedure-id proc-id :procedure-version (%pr-version pr)
                      :target-fingerprint (%fingerprint canon) :scope scope
                      :verdict (if (equal actual expected) :supports :refutes)
@@ -164,6 +182,8 @@
   (ensure (and (%claim-real-p claim) (typep attestation 'attestation)) invalid-attestation "wrong argument types")
   (ensure (gethash (%att-mint-id attestation) *attestation-mint*)      ; did THIS runtime mint it?
           invalid-attestation "attestation was not minted by this runtime")
+  (ensure (not (gethash (%att-mint-id attestation) *attestation-revoked*))  ; retrospective revocation
+          invalid-attestation "attestation has been revoked")
   (ensure (equal (%att-target-fingerprint attestation) (%claim-fingerprint claim))
           scope-mismatch "attestation faces a different located claim")
   (ensure (eq (%att-verdict attestation) :supports) invalid-attestation "attestation does not support")
@@ -284,8 +304,8 @@
 ;; NOT part of the adversarial client surface. A client that holds this is the operator.
 (defpackage #:mneme.operator
   (:use)
-  (:import-from #:mneme #:register-procedure #:grant-authority #:revoke-authority)
-  (:export #:register-procedure #:grant-authority #:revoke-authority))
+  (:import-from #:mneme #:register-procedure #:grant-authority #:revoke-authority #:revoke-attestation)
+  (:export #:register-procedure #:grant-authority #:revoke-authority #:revoke-attestation))
 
 (format t "mneme v1 (hardened) loaded: client ~a exported / operator ~a exported (trusted)~%"
         (let ((n 0)) (do-external-symbols (s :mneme.client) (declare (ignore s)) (incf n)) n)

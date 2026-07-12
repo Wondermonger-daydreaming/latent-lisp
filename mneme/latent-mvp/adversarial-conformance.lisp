@@ -137,6 +137,21 @@
     (setf (car kinds) :execution (car procs) :double)   ; try to widen post-issuance
     (mneme.client:verify-proposition *true-prop* cap :event-kind :execution)))  ; still refused
 
+;; 14. RETROSPECTIVE revocation: a genuine warrant, once revoked, can no longer raise
+(expect-condition "A14 a revoked attestation cannot be raised (retrospective)" mneme.client:invalid-attestation
+  (let* ((claim (mneme.client:assert-claim *true-prop*))
+         (att   (mneme.client:verify-proposition *true-prop* *cap* :event-kind :execution)))
+    (mneme.operator:revoke-attestation att)      ; void this genuine, supporting warrant
+    (mneme.client:raise-claim claim att)))       ; must be refused though it is real
+
+;; 15. CASCADE revocation: revoking the verifier voids every warrant it already minted
+(expect-condition "A15 revoking a verifier voids its already-minted warrants" mneme.client:invalid-attestation
+  (let* ((cap2  (mneme.operator:grant-authority :execution-verifier '(:execution) '(:double)))
+         (claim (mneme.client:assert-claim *true-prop*))
+         (att   (mneme.client:verify-proposition *true-prop* cap2 :event-kind :execution)))
+    (mneme.operator:revoke-authority cap2)        ; retrospectively voids att
+    (mneme.client:raise-claim claim att)))        ; refused: minted by a now-revoked authority
+
 ;; bonus: the honest successor act restores standing by RE-verifying
 (expect-ok "P3 replay-and-attest re-earns authentication after revival"
   (let* ((rcpt (mneme.client:commit (mneme.client:prepare *authed*) *store*))
@@ -153,4 +168,6 @@
 (format t "All specified v1 adversarial gates passed under the declared threat model.~%")
 (format t "(Bounded receipt, not a universal theorem: MNEME.CLIENT is the adversarial surface;~%")
 (format t " MNEME.OPERATOR is trusted bootstrap; same-image mneme:: access is out of scope by design.~%")
-(format t " Revocation is PROSPECTIVE — it blocks future issuance, not already-minted attestations.)~%")
+(format t " Revocation is now PROSPECTIVE (revoke-authority blocks future issuance) AND RETROSPECTIVE~%")
+(format t " (revoke-attestation + cascade void already-minted warrants at the raise step); claim-level~%")
+(format t " retroactive un-authentication of already-raised claims remains owed.)~%")
