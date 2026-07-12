@@ -218,7 +218,7 @@
                                     (setf child `(m ,(1+ gen))))
                                   (push (register child (raw-error child *data*) (1+ gen)
                                                   :crossover (org-id pa) (org-id pb))
-                                        next))))
+                                        next))))))
                           (let ((child (mutate (org-tree pa))))
                             (push (register child (raw-error child *data*) (1+ gen)
                                             :mutation (org-id pa) nil)
