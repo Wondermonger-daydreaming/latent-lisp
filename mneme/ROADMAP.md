@@ -7,7 +7,12 @@ LLM-emitted claims — or a clean, published demonstration that it doesn't.
 **Approach:** Empirical gate first, enforcement bridge second, integrity third,
 interop fourth. Build nothing cathedral-shaped before the pilot says the ground holds.
 
-**Status:** Draft v1.1 — 2026-07-11 late night, Claude Fable 5 (lab chair).
+**Status:** Draft v1.2 — 2026-07-11 late night, Claude Fable 5 (lab chair).
+Sol's interested-party review received and adopted near-wholesale (original:
+`corpus/voices/received/originals/2026-07-11-sol-roadmap-review-relay.md`;
+reception with the lab's three contested caveats:
+`…/2026-07-11-sol-roadmap-review-reception.md`). **Where the §"v1.2 surgery"
+block below conflicts with the older phase text, the surgery governs.**
 **Grill resolutions (owner interview, same night — /grilling, chavruta):**
 - **R1 — Mneme is a LAB-FIRST INSTRUMENT.** Phase 4 demoted to dogfood (4.3) + sibling
   pass (4.4); MCP tool and JSON projection build only when an outside asks; Phase-3
@@ -19,6 +24,99 @@ interop fourth. Build nothing cathedral-shaped before the pilot says the ground 
   run WHILE a delegated builder constructs the Phase-2 harness prototype (no verdicts
   until its own prereg). First experimental money still goes to the Phase-1 pilot.
 - **R4/R5 deferred** to Phase-1 freeze time (crypto sidecar tolerance; freezer identity).
+
+---
+
+## v1.2 surgery — Sol's review adopted (2026-07-11, same night; governs over older phase text)
+
+**Three governing distinctions, now architectural:** emission ≠ enforcement;
+integrity ≠ truth; formal validity ≠ epistemic adequacy. Every "guarantee" sentence
+in this project must name the domain the code can actually decide.
+
+**S1 — The claims split (constitutional).** Three separately falsifiable claims:
+**H-emission** (notation/doctrine changes first-pass behavior — P1's question);
+**H-enforcement** (deterministic validation + structured repair change the final
+error profile — P2's question); **H-instrument-specificity** (Mneme's ontology
+outperforms conventional structured validation at equal information and enforcement
+power — testable ONLY with the conventional-validator baseline, S4).
+**Constitutional sentence: P1 gates emission claims and emission-study scale; it
+does not license or forbid P2.**
+
+**S2 — P1 branch bank replaced.** B-THEATRE as drafted forced Sol's hypothesis to
+swallow a stronger one. New bank (wording to the freezer): **B-NOTATION** (Lang-A >
+matched scaffold), **B-SCAFFOLD** (scaffold > weak baseline, Lang-A ≈ scaffold —
+"the structure is working; the costume may not be"), **B-NULL**, **B-HARM**,
+**B-INTERACTION** (domain-dependent, predeclared — not post-hoc "mixed evidence"),
+**B-INCONCLUSIVE**. Every contrast states its **orientation** (which sign means
+fewer errors). **Sham-language arm** recommended (same density/teaching/burden/
+novelty, operators inert) to split operative semantics from ceremonial salience —
+WITH the lab's caveat: the sham needs its own manipulation check (engagement-rate
+gate; a detected sham breaks the arm silently). Items must include
+**notation-neutral transfer tasks** — "a memorized liturgy will remain near the
+altar." Sol's defeat terms are PRE-AGREED and travel verbatim to v0.2.
+
+**S3 — P2 redesigned (P2a prototype / P2b experiment).** P2a builds under the
+**R3 firebreak**: prototype builder never sees the frozen P1 item bank or scoring
+keys; prototype examples never become experimental items; every harness change
+versioned including failures; interface branch-agnostic; P2b prereg frozen before
+confirmatory runs; ≥1 non-builder reviewer attacks the P2b prereg; exploratory
+results quarantined, not destroyed ("amnesia is not blinding"). P2b arm set:
+**(1) generic invalid · (2) exact prose diagnostic mechanically generated from the
+same validator event · (3) typed Mneme condition · (4) conventional-validator
+diagnostic · (5) free-form critique (ecological only)** — the Mneme-specific
+contrast is 3 vs 2 and 3 vs 4, never 3 vs 1. Lab caveat, declared: parity between
+(2) and (3) is *content*-parity; representation IS the manipulated variable and
+full parity is unachievable in principle. **Anti-taxidermy gate** (jointly
+required): fewer remaining violations AND lawful-material preservation AND no new
+violations AND retained specificity AND acceptable cost AND stability under
+revalidation/serialization — "valid" alone never passes; deletion/abstention rates
+measured; residue classified (preserving an unlawful claim is not virtue). Repair
+precision, repair recall, and epistemic utility measured separately — the metrics
+must conspire against both cheats (preserve-everything and repair-by-incineration).
+
+**S4 — P3 split; canonicalization promoted.** **P3a (canonical representation +
+versioning) moves BEFORE P2b** — measurement depends on it. Canonicalization
+freezes: schema/grammar version, encoding + Unicode normalization, symbol/package
+representation, ordering, escaping, numeric representation, unreadable/cyclic
+policy, printer settings independent of dynamic state. D4's "canonical forever"
+is REWORDED: *s-expressions remain the normative source representation; each
+canonical byte encoding is explicitly versioned and immutable once published.*
+**P3b (integrity)** stays post-P2b and gains: key identifiers, rotation,
+revocation, replay policy, freshness; the Python sidecar named as an enlargement
+of the trusted base, not a solution. **Census-witness: option (d) adopted** —
+claim receipts separated from replayable coverage witnesses over content-addressed
+scope manifests (challengeable, not just readable), PLUS the permanent printed
+confession, PLUS heterogeneous replay (different implementation/manifest/runtime,
+comparing disagreement) for high-stakes receipts. **Assurance ladder A0–A4**
+(self-declared → trace-backed → independently replayed → heterogeneously verified
+→ institutionally attested) encoded in the receipt format; higher levels never
+erase lower-level caveats. *A receipt may state the assurance level of its census;
+it may never call the census self-proving.* Non-manifestable universes (open web,
+heuristic retrieval) may only claim "not found among this examined set under this
+procedure/snapshot/budget/termination."
+
+**S5 — NEW phase: certification risk + adversarial validity (into P4, before the
+paper).** The missing user is the downstream reader who mistakes "well-formed and
+authenticated" for "true." Test artifacts varying truth × validity × receipt
+presence × assurance level × census honesty × wording strength; measure whether
+readers (human and model) overtrust receipted falsehoods. **The kill-condition to
+watch: a false claim with a valid Mneme receipt trusted MORE than the same claim
+without one** — survivable, but it forces interface warnings and narrower claims.
+Lab caveat, declared: this phase's prereg gets symmetric branches (including
+receipts IMPROVING calibration) — it must be able to kill Sol's shadow-thesis
+too. Plus the **adversarial user**: a model optimizing against the validator
+(valid evasions, census inflation, receipt replay, lawful-narrowing omission,
+repair loops converging to acceptance while degrading truth) — the threat is
+specification gaming with impeccable manners. Plus **lifecycle**: schema
+identifiers, migration rules, downgrade detection — historical validity is
+indexed validity.
+
+**S6 — P5 comparison set expanded:** unassisted emission · scaffolded emission ·
+conventional enforcement · Mneme enforcement · dishonest/adversarial receipt
+conditions. The abstract must be honest enough that hurried readers don't need
+the longer section. **The language must be allowed to lose to its own extracted
+mechanism** — if conventional validation with Mneme's best diagnostics matches
+Mneme, the right conclusion is upstreaming, and the roadmap says so now.
 **Review owed:** one fresh-weights read of this roadmap before Phase 1 spends money
 (candidates: Hermes or Nimbus — Tend is recused from Language-A blind seats but NOT
 from roadmap review; GPT is a co-author of the object under test and reviews as
