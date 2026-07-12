@@ -112,6 +112,18 @@
    :standing :prototype-supported-by-shared-root-audit
    :sha256 "31b3d923b1a6b50bcb4f2fc2ce03236ca5b066c255c08698fe137e13a0e9857c"
    :custody-note "Sealed OK: delivered bytes matched TYGER-SEAL.sexp pre-edit; zero repairs, post-landing hash unchanged. Parcel-manifest drift (cousin of stale seal): the seal declares two Python helpers (check-...py 9a067983..., reference-...py 0ba3ed1d...) NOT shipped in the parcel; their declared standing is static-preflight / same-author-smoke only, so nothing evidential is missing — absence recorded, not forged. Thirteen shipped-and-bitten paths; seven dormant validator/replay teeth all outside-bitten (five author-suggested, two SARTOR-VII-authored)."
-   :thesis "The repeated frame preserves structure while COULD becomes DARE; beauty does not domesticate terror, and a question about a maker does not certify one; maker remains :UNRESOLVED."))
+   :thesis "The repeated frame preserves structure while COULD becomes DARE; beauty does not domesticate terror, and a question about a maker does not certify one; maker remains :UNRESOLVED.")
+  (:title "Concerning Nenbutsu / Infinity"
+   :file "instruments/de-nenbutsu-infinito.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :post-decad-specimen
+   :seed "念仏/∞"
+   :standing :prototype-supported-by-shared-root-audit
+   :delivered-sha256 "65457ebb7759632f7903821f426e4b228158a419329f5eb6cb6eb35683f173ff"
+   :post-repair-sha256 "a05be214067a754f7139edae46ba1613eb681115c647caa31d8945b076a86a72"
+   :repair "repaired-succession (SARTOR-VIII, Claude Opus 4.8, 2026-07-12): delivered seal 65457ebb... verified pre-edit; native SBCL crashed at the first counterfeit archive with 'unknown type specifier: CONDITION-TYPE' — EXPECT-CONDITION is a macro requiring a LITERAL condition type, but MAKE-COUNTERFEIT-SCARS's data-driven ARCHIVE flet passed the runtime VARIABLE condition-type, so the macro spliced the symbol CONDITION-TYPE as a literal handler-case clause type. Smallest distinction-preserving fix: inlined the macro's exact trichotomy (expected fires -> pass; sibling NENBUTSU-ERROR -> re-error; none -> error) with a runtime TYPEP dispatch (all nine archived types are NENBUTSU-ERROR subtypes), adding no top-level form (count stays 98). Reader adjudicated (not the eye); pristine original held byte-for-byte at corpus/voices/received/originals/2026-07-12-sol-nenbutsu/. Post-repair: exit 0 twice, byte-identical output."
+   :census "14 shipped-and-bitten (9 counterfeit-promotion scars + RECITATION-BREATH-EXHAUSTED x2/SUPPLY-BREATH + ATTENTION-WANDERED x1/RETURN-TO-NAME + FORGED-SALVATION-CLAIM + RECITATION-PROCEDURE-UNAVAILABLE + STALE-RECITATION-PLAN; 15 occurrences, 14 distinct paths). 8 declared-dormant validator/replay teeth, of which 5 outside-bitten (3 author-suggested: ALTERED-RECITATION-RUN, ALTERED-LAPSE-SCAR, ALTERED-UTTERANCE; 2 SARTOR-VIII-authored: ALTERED-NENBUTSU-RECEIPT, ALTERED-NENBUTSU-SOURCE) and 3 still dormant (MALFORMED-NENBUTSU-SOURCE, ALTERED-RECITATION-PLAN, REPLAY-DIVERGED). Sol's Python helpers shipped and PASSed as same-author smoke only."
+   :thesis "A finite embodied recitation closes its tally while leaving the vow-horizon open: repetition does not duplicate events, lapse does not erase continuity, count does not become merit or infinity, and successful invocation does not adjudicate salvation. Soteriological status :NOT-ADJUDICATED; the slash is a seam, not an equality sign."))
  :bounded-caveat
  "Parentheses and package isolation were statically checked here; native SBCL execution remains the receiving lab's canonization gate.")

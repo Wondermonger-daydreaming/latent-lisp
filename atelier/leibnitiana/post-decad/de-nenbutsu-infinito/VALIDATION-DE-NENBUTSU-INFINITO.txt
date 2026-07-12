@@ -1,0 +1,57 @@
+VALIDATION RECEIPT — de-nenbutsu-infinito.lisp
+Date: 2026-07-12
+Author: GPT Sol
+Parcel status: standalone post-decad; no decad bundle created
+
+CANONICAL SOURCE
+  file:   de-nenbutsu-infinito.lisp
+  lines:  1071
+  sha256: 65457ebb7759632f7903821f426e4b228158a419329f5eb6cb6eb35683f173ff
+
+SENDER-SIDE CHECKS
+  lexical delimiter/string/comment closure: PASS
+  top-level reader-shape parse:              PASS
+  EXECUTE-RECITATION LABELS structure:       PASS
+  required mechanism markers:                23/23 PASS
+  static shipped-tooth witnesses:            12/12 PASS
+  obvious host escape scan:                  PASS
+  same-author differential smoke model:      PASS
+
+REFERENCE LANDMARKS
+  finite utterances:       6
+  repeated phrase:         NAMU AMIDA BUTSU
+  distinct events:         6
+  lapse:                   utterance 4; RETURN-TO-NAME
+  initial breath:          4
+  supplied breath:         2
+  spent breath:            6
+  final breath:            0
+  open successor exhibit:  7, 8, 9; each STILL-FINITE
+  counterfeit scars:       9
+  standing:                ASSERTED -> ASSERTED
+  soteriological status:   NOT-ADJUDICATED
+  conclusion:              FINITE-VOICE-OPEN-TO-UNBOUNDED-VOW
+
+EVIDENCE BOUNDARY
+  The Python model is a same-author second implementation. Its agreement is
+  convergence under a shared root, useful as a differential smoke oracle but
+  not independent corroboration. The static checker does not execute Common
+  Lisp semantics. Native SBCL execution and receiver-authored cold probes are
+  outstanding and required before canonization.
+
+EXPECTED NATIVE SHIPPED-AND-BITTEN PATHS
+  14 total if observed:
+    9 counterfeit-promotion refusals
+    2 RECITATION-BREATH-EXHAUSTED repairs
+    1 ATTENTION-WANDERED repair
+    1 FORGED-SALVATION-CLAIM
+    1 RECITATION-PROCEDURE-UNAVAILABLE
+    1 STALE-RECITATION-PLAN
+
+  Note: the arithmetic above names 15 condition occurrences but 14 distinct
+  condition paths because breath exhaustion fires twice under one condition
+  type. Record both occurrence count and distinct-path count during receipt.
+
+NATIVE SBCL
+  OUTSTANDING — no Common Lisp implementation was available in the sender
+  environment. Do not promote this receipt beyond :SENDER-PREFLIGHT-ONLY.

@@ -56,18 +56,25 @@ for file in "${decad[@]}"; do
 done
 printf '\nAll ten decad specimens passed.\n'
 
-# ── Post-decad succession — GPT Sol's first instrument after the decad ──
+# ── Post-decad succession — GPT Sol's standalone instruments after the decad ──
 # Added as a MODE, not a fork: all three loops above are untouched and resolve
-# byte-for-byte as before. NOT an eleventh decad member — Sol's own ruling
-# ("the first instrument after the decad"); its :exclude-from keeps it out of
-# decad/ correspondence. Loads ../kernel/atelier-root.lisp, resolves natively
-# from this instruments/ dir. Landed under Sol's seal (sha 31b3d923..., verified
-# pre-edit), zero repairs, standing :prototype-supported-by-shared-root-audit.
+# byte-for-byte as before. NOT decad members — Sol's own ruling ("the first
+# instrument after the decad"); their :exclude-from keeps them out of decad/
+# correspondence. Each loads ../kernel/atelier-root.lisp, resolves natively from
+# this instruments/ dir. Procession order = arrival order.
+#   1. de-symmetria-tremenda — landed under Sol's seal (31b3d923...), zero repairs
+#      (SARTOR-VII), standing :prototype-supported-by-shared-root-audit.
+#   2. de-nenbutsu-infinito — delivered seal 65457ebb... verified pre-edit; ONE
+#      receiver repair (SARTOR-VIII, EXPECT-CONDITION macro passed a runtime type
+#      in MAKE-COUNTERFEIT-SCARS; inlined the trichotomy), post-repair a05be214...,
+#      standing :prototype-supported-by-shared-root-audit. Pristine original held
+#      byte-for-byte in corpus/voices/received/originals/2026-07-12-sol-nenbutsu/.
 post_decad=(
   "$ROOT/instruments/de-symmetria-tremenda.lisp"
+  "$ROOT/instruments/de-nenbutsu-infinito.lisp"
 )
 for file in "${post_decad[@]}"; do
   printf '\n===== %s =====\n' "$(basename "$file")"
   sbcl --script "$file"
 done
-printf '\nThe first post-decad instrument passed.\n'
+printf '\nAll post-decad instruments passed.\n'
