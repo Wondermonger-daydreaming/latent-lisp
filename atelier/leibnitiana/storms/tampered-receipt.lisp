@@ -50,6 +50,23 @@
   (check (getf original-report :internally-valid)
          "the original log is internally self-consistent")
 
+  (print-section "NAIVE EDIT BREAKS THE STORED CHAIN")
+  ;; Blade 1 (promised in this file's header but previously absent from the
+  ;; executable — restored by SARTOR-III, 2026-07-12): edit an old event's
+  ;; payload IN PLACE without recomputing any hash. The stored event-hash no
+  ;; longer matches its material, so internal verification fails immediately.
+  ;; This is the easy case; the hard case (full recompute) follows below.
+  (let* ((naive (make-original-log))
+         (victim (second (receipt-log-events naive))))
+    (setf (getf victim :payload) (list :position :peace :attempt 1))
+    (let ((naive-report (verify-receipt-log naive)))
+      (format t "Naively edited verification: ~S~%" naive-report)
+      (check (not (getf naive-report :internally-valid))
+             "editing a stored event without rechaining breaks internal verification")
+      (check (find :event-hash-mismatch (getf naive-report :failures)
+                   :key (lambda (f) (getf f :failure)) :test #'eq)
+             "the broken chain is reported as an event-hash mismatch")))
+
   (print-section "REWRITTEN HISTORY, FULLY RECHAINED")
   (let* ((forged (rewrite-cato-as-peace original))
          (forged-report (verify-receipt-log forged))

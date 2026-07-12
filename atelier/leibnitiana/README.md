@@ -75,3 +75,24 @@ The planned second tranche is:
 2. **Shared-root convergence** — sessions share an owner, corpora, or relayed outputs. This defeats a claim of independent witnessing but does **not** by itself prove curation or manufactured unanimity.
 
 The chamber currently demonstrates several constitutional forms, but most are declaration-level mechanisms rather than global enforcement. `jif` fails closed only where called; judgment authority remains a field rather than a capability-checked right. Expressibility is implemented. System-wide enforcement remains pending.
+
+## Third-tranche appellate layer
+
+Round three adds three boundaries the earlier chamber could name but not yet execute:
+
+1. `storms/tampered-receipt.lisp` shows that an internally valid rechained log may still be a rewritten history. A prefix checkpoint held elsewhere can expose divergence. The included FNV-1a digest is explicitly demonstration-only, not adversarial cryptography.
+2. `storms/real-council-process.lisp` audits the publicly established Sol–Fable relay events while leaving private retries, omissions, carrier selections, and external custody as `:not-established`. Missing carrier attestation produces no adverse inference.
+3. `specimens/de-characteristica.lisp` prototypes Characteristica-as-IR: content, process lineage, custody, and unknowns travel as separate fields; omitted ancestry cannot be recreated by round trip.
+
+Supporting material:
+
+- `src/provenance.lisp` — append-only receipt shape, internal chain verification, checkpoint comparison, and explicit standing boundaries.
+- `protocols/carrier-attestation.md` — voluntary carrier testimony without telemetry conscription.
+- `essays/characteristica-as-ir.md` — the provisional interchange argument.
+- `run-all.sh` — eleven-script chamber runner.
+
+The proposed outside audit is packaged separately with a neutral brief and an after-unblind sheet. Until that report exists, Characteristica’s first law is prototyped and argued, not ancestry-independently validated.
+
+Mutation gate:
+
+- `mutations/test-custody-overclaim.sh` temporarily changes a divergent checkpoint verdict into a false success. The receipt storm must exit nonzero, after which the source is restored automatically.

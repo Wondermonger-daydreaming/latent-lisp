@@ -1,14 +1,29 @@
 #!/usr/bin/env bash
 # run-all.sh — run every Leibnitiana file under SBCL from its own directory.
 #
-# Each file loads src/package.lisp + src/core.lisp via *load-truename*, so the
-# relative loads resolve no matter the caller's cwd; we still `cd` into each
-# file's directory to honour the atelier convention (scripts run from home).
+# Each file loads src/package.lisp + src/core.lisp (+ src/provenance.lisp where
+# needed) via *load-truename*, so the relative loads resolve no matter the
+# caller's cwd; we still `cd` into each file's directory to honour the atelier
+# convention (scripts run from home).
 #
-# Prints per-file PASS/FAIL; exits nonzero if ANY file fails.
-# Convention of the tree: exit 0 == the law holds.
+# Prints per-file PASS/FAIL; RUNS EVERY FILE even if one fails; exits nonzero
+# if ANY file fails. Convention of the tree: exit 0 == the law holds.
+#
+# Runner reconciliation (SARTOR-III, 2026-07-12): the landed runner's
+# structure won over Sol's round-3 rewrite. Sol's version relied on `set -e`
+# to abort on the first failing script, which is correct-on-exit-code but
+# stops at the first failure and reports no per-file verdict. The landed
+# structure runs the whole suite, prints a PASS/FAIL line per file, and still
+# exits nonzero on any failure — and its teeth were verified by planted-fault
+# in the first two landings (a bad file yields `FAIL` + exit 1). Sol's SBCL
+# availability guard (exit 127) was the one improvement kept from his version.
 set -uo pipefail
-ROOT="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if ! command -v sbcl >/dev/null 2>&1; then
+  echo "SBCL is required to run the Leibnitiana chamber." >&2
+  exit 127
+fi
 
 files=(
   "tests/smoke.lisp"
@@ -17,8 +32,11 @@ files=(
   "specimens/de-compossibilitate.lisp"
   "specimens/de-harmonia.lisp"
   "specimens/de-fenestris.lisp"
+  "specimens/de-characteristica.lisp"
   "storms/hidden-operator.lisp"
   "storms/false-harmony.lisp"
+  "storms/tampered-receipt.lisp"
+  "storms/real-council-process.lisp"
 )
 
 fail=0

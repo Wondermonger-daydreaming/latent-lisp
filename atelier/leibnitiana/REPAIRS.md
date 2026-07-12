@@ -215,3 +215,143 @@ the first landing, §1.2; `run-all.sh` propagates any file's failure.)
 
 *Second coat, same tin. Three patches confirmed, zero runtime repairs, storm's teeth drew blood on
 command and returned byte-identical. — SARTOR-II, 2026-07-12*
+
+---
+
+# THIRD LANDING (2026-07-12)
+
+*Third tranche audited and landed by SARTOR-III (Claude Opus 4.8) under the Claude Fable 5 chair,
+2026-07-12. Source: GPT Sol + Tomás Pavan — statically checked, no runtime (Sol had no SBCL).
+SBCL 2.4.6 is the gate.*
+
+## 1. Diff audit — every hunk maps to a declared claim
+
+`diff -ru` of the landed chamber against the tranche-3 `leibnitiana/`. Verdict: **clean — no
+unexplained change.**
+
+| change | file(s) | maps to |
+|---|---|---|
+| new receipt/custody API | `src/provenance.lisp` | manifest "Add" + relay §1 |
+| provenance/custody exports | `src/package.lisp` | manifest "Modify package.lisp" (additive export block only; no other line touched) |
+| load provenance after core | `leibnitiana.asd` | manifest "Modify .asd" (one component line) |
+| receipt storm | `storms/tampered-receipt.lisp` | manifest "Add" + relay §1 |
+| real-process audit | `storms/real-council-process.lisp` | manifest "Add" + relay §2 |
+| characteristica-as-IR specimen | `specimens/de-characteristica.lisp` | manifest "Add" + relay third-law |
+| interchange essay | `essays/characteristica-as-ir.md` | manifest "Add" |
+| carrier protocol | `protocols/carrier-attestation.md` | manifest "Add" |
+| mutation gate | `mutations/test-custody-overclaim.sh` | manifest "Add" + relay §mutation |
+| runner → 11 scripts | `run-all.sh` | manifest "Add"; reconciled (see §5) |
+| README | `README.md` | see §4 |
+
+**Canonical-README ignorance (expected, honored):** Sol's tranche-3 `README.md` again drops the
+landing provenance block (SARTOR-I) + `monadologia` sibling link + REPAIRS link, and appends a
+"Landing provenance boundary" reminder. Per Sol's own instruction ("Your provenance block belongs
+to the reception history and should not be silently replaced by my canonical ignorance"), the
+landed README was **kept** (provenance block + round-2 section intact) and the content of
+`README-ROUND3-APPEND.md` was appended below it. Sol's canonical copy was **not** used. The
+manifest's append-file approach exists exactly for this snag.
+
+## 2. Runtime repairs — TWO (this tranche was not clean)
+
+Unlike the first two landings (zero repairs each), the third needed two minimal, loud repairs.
+Both are behavior-preserving on the green `--script` path; both close a gap between a *stated*
+guarantee and what execution earned.
+
+**Repair A — `defconstant` string reload hazard (`src/provenance.lisp`).**
+`(defconstant +receipt-genesis-hash+ "0000000000000000")` binds a **string**. Under a single
+`load`/`sbcl --script` this is fine (which is why every script ran exit 0). But `defconstant`
+with a non-`EQL`-comparable value **errors on any re-load** — `asdf:load-system :force t`, or
+loading the system into a warm image — because a fresh `"0000…"` literal is not `EQL` to the
+already-bound one. The prior landings accepted "the ASDF system loads cleanly" as relay item #1;
+adding `provenance.lisp` to the `.asd` quietly regressed that surface on the *reload* path.
+Fix: the standard EQL-safe idiom —
+`(if (boundp '+receipt-genesis-hash+) (symbol-value '+receipt-genesis-hash+) "0000000000000000")` —
+which makes redefinition a no-op. Verified: fresh load, cached load, and `:force t` reload now all
+exit 0; all scripts still exit 0. *This is the most instructive defect of the landing — a
+constant-that-isn't-reload-safe is exactly the class of latent hazard the chamber catalogues.*
+
+**Repair B — the receipt storm's promised Blade 1 was absent (`storms/tampered-receipt.lisp`).**
+The file's own header comment declares *"Blade 1 demonstrates that editing an old event breaks a
+stored chain,"* but the executable jumped straight to Blade 2 (the full-recompute forgery). The
+landing's acceptance §5(a) requires the storm to show the naive edit → internal break. Restored
+the promised blade using existing API only: take a fresh `make-original-log`, mutate one stored
+event's `:payload` **in place without rechaining**, and assert `verify-receipt-log` now returns
+`:internally-valid NIL` with an `:event-hash-mismatch` at sequence 2. This is a *repair to match
+the file's own stated design*, not new design. Verified live (see §3).
+
+No other reader, package, pathname, macroexpansion, or portability defect surfaced. `de-characteristica`,
+`real-council-process` ran clean unmodified.
+
+## 3. Receipt storm — two-stage behavior confirmed
+
+`storms/tampered-receipt.lisp`, run from `storms/`, twice, exit 0 both:
+
+- **(a) naive edit → chain breaks internally.** In-place payload edit (Cato `:war`→`:peace`, no
+  rehash) → `:INTERNALLY-VALID NIL`, `:FAILURES ((:SEQUENCE 2 :FAILURE :EVENT-HASH-MISMATCH …))`.
+  ✔ (Blade restored — Repair B.)
+- **(b) full recompute forgery → internal PASSES, only external checkpoint catches it.**
+  `rewrite-cato-as-peace` rebuilds the whole chain → forged `:INTERNALLY-VALID T` (head hash
+  `2B9B29B5B6A921EE`), yet the outside archivist's pre-publication checkpoint (head
+  `58C9D3D0A238407B`) yields `:STANDING :WITNESSED-PREFIX-DIVERGES`, `:CHECKPOINT-MATCH NIL`. The
+  five-way ladder (self-consistency ≠ truthfulness ≠ completeness ≠ tamper-evidence ≠ authenticated
+  custody) prints in the CLAIMS SPLIT block, standing `:architecture-demonstration-only`. ✔
+- **(c) exits nonzero if either expectation fails.** Verified by the mutation test (§4).
+
+## 4. Mutation test — killed, restored byte-identical
+
+Read `mutations/test-custody-overclaim.sh` in full before executing. It is **chamber-confined**
+(`ROOT="…/mutations/.."`, `TARGET="${ROOT}/src/provenance.lisp"`), backs the target up to a
+`mktemp` file, and restores via `trap restore EXIT` (auto-restore, unconditional).
+
+- **Target md5 BEFORE:** `eab23707ddae3457d71b5eb4b0a53c26  src/provenance.lisp`
+- It flips `(t :witnessed-prefix-diverges)` → `(t :prefix-consistent-with-checkpoint)` (asserts
+  exactly one site). The storm's forged custody comparison then over-claims
+  `:PREFIX-CONSISTENT-WITH-CHECKPOINT` on a divergent prefix → `check-equal :witnessed-prefix-diverges`
+  fails → **storm exits nonzero**.
+- Script output: `MUTATION KILLED: overclaiming checkpoint standing made the storm fail.`
+  (script exit 0 = kill confirmed).
+- **Target md5 AFTER:** `eab23707ddae3457d71b5eb4b0a53c26` — **byte-identical**. Auto-restore held;
+  no git restore needed.
+
+The overclaim gate has teeth: a false "consistent" verdict on a diverged prefix is fatal.
+
+## 5. Runner reconciliation — landed structure won, extended to 11
+
+Sol's round-3 `run-all.sh` rewrote the runner to `set -e` + bare `sbcl --script` (aborts on the
+first failure, prints `N/M PASS`). The **landed** runner (SARTOR-I) runs *every* file, prints a
+per-file `PASS`/`FAIL`, and still exits nonzero on any failure — and its teeth were verified by
+planted fault in the first two landings. The landed structure **won** (more informative, whole-suite
+coverage, teeth already proven); Sol's SBCL-availability guard (`exit 127`) was the one improvement
+kept. Extended to Sol's **11 scripts** (added `de-characteristica`, `tampered-receipt`,
+`real-council-process`). Full runner run **twice, exit 0 both**, 11/11 PASS.
+
+## 6. Cold-read packet — custody decision executed (deviation from manifest, recorded)
+
+The manifest placed the outside-audit packet (`COLD-READ-OUTSIDER-BRIEF.md`,
+`COLD-READ-RESULT-TEMPLATE.md`, `AFTER-UNBLIND.md`) at the tranche top level. **These were NOT
+placed anywhere under `experiments/latent-lisp/`** — that tree auto-publishes to a public GitHub
+mirror on commit (`tools/latent-lisp/post-commit.sh`), and a public outsider-brief pre-contaminates
+every future candidate reader (the lab's *harness-is-exposure* rule). Placed instead lab-side, off
+the mirror, at `corpus/voices/received/leibnitiana-cold-read/`:
+`COLD-READ-OUTSIDER-BRIEF.md`, `COLD-READ-RESULT-TEMPLATE.md`, and `AFTER-UNBLIND-SEALED.md`
+(banner-sealed: opens only after the reader freezes their first report, per its own design). A
+one-paragraph pointer, `relays/2026-07-12-COLD-READ-CUSTODY-NOTE.md`, records that the packet
+exists, is held unshown lab-side, and why. This is a **deviation from the manifest's location**
+(intent preserved — a fresh reader still gets the packet; only storage moved off the public mirror).
+
+## 7. Relay artifacts placed
+
+`relays/2026-07-12-REPLY-RELAY-TO-FABLE-ROUND3.md`, `relays/2026-07-12-LANDING-MANIFEST.md`,
+`relays/2026-07-12-STATIC-CHECKS.txt` (Sol's canonical copies, verbatim), plus the custody note.
+
+## 8. Runner tally
+
+11/11 PASS, twice, exit 0 both. Every individual script also run twice from its own dir, exit 0
+both. Diff audit clean. Repairs: **2** (defconstant reload-safety; restored Blade 1). Mutation:
+killed + byte-identical restore. Custody: executed off-mirror.
+
+---
+
+*Third coat. The tin opened this time — two needles, both loud: a constant that could not survive
+its own reload, and a blade the storm promised but never drew. Both mended; the chamber now
+distrusts its own paper on every path. — SARTOR-III, 2026-07-12*

@@ -4,7 +4,16 @@
 ;;;; Receipt lineage: append-only shape, chained integrity, bounded custody
 ;;;; -------------------------------------------------------------------------
 
-(defconstant +receipt-genesis-hash+ "0000000000000000")
+(defconstant +receipt-genesis-hash+
+  ;; EQL-safe idiom: defconstant with a string value errors on any re-load
+  ;; (force-load, warm image) because a fresh string literal is not EQL to the
+  ;; already-bound one. Returning the existing binding makes redefinition a
+  ;; no-op. Single `load`/`--script` was already fine; this hardens the ASDF
+  ;; reload path the prior landings accepted as "loads cleanly."
+  ;; -- SARTOR-III repair, 2026-07-12.
+  (if (boundp '+receipt-genesis-hash+)
+      (symbol-value '+receipt-genesis-hash+)
+      "0000000000000000"))
 
 (defun %canonical-prin1 (object)
   "Return a deterministic textual representation for the specimen's data.
