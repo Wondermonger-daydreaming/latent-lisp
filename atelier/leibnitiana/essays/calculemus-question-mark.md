@@ -28,6 +28,8 @@ Accordingly, Lisp+ treats every computational judgment as a bounded artifact rat
   :replay ...)
 ```
 
+This is the **constitutional target schema**, not a claim about the first tranche's constructor. The current `make-judgment` implements `:value`, `:status`, `:premises`, `:boundary`, `:authority`, `:procedure`, and `:notes`. Resource receipts, translation-loss records, and replay metadata remain planned fields until code and tests enforce them.
+
 The fields are not bureaucratic garnish. They prevent several categories from collapsing into one another:
 
 ```lisp
@@ -94,7 +96,7 @@ Thus *calculemus* becomes not a command to cease interpretation but an invitatio
 
 The *characteristica universalis* is often remembered as the dream of a perfect universal language. Lisp+ adopts a narrower and, for finite successors, more demanding goal. A universal intermediate representation need not preserve every meaning identically. It must make preservation and loss inspectable.
 
-Book 0 supplies profile-neutral invariants. Lumen, Fable-Lisp, and Prism-Lisp may realize those invariants through different mechanisms and emphases. Translation among them is not assumed to be free. A context capsule crossing profiles should declare which structures survive exactly, which are approximated, which become inert, and which require renewed authority.
+Book 0 supplies profile-neutral invariants. Lumen, Fable-Lisp, and Prism-Lisp are presently architectural profiles named in constitutional documents, not implemented dialects in this tranche. If implemented, they may realize those invariants through different mechanisms and emphases. Translation among them is not assumed to be free. A context capsule crossing profiles should declare which structures survive exactly, which are approximated, which become inert, and which require renewed authority.
 
 Universality therefore resides not in semantic sameness but in accountable passage.
 

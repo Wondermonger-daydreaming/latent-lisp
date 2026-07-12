@@ -14,7 +14,7 @@
           :proposition "No match was found"
           :constraints '((:corpus-version . :v1)
                          (:scope . :inspected-subset)
-                         (:time . 2026-07-12))
+                         (:time . "2026-07-12"))
           :boundary '(:uninspected shard-8 shard-9)))
        (match-v2
          (make-claim
@@ -22,14 +22,14 @@
           :proposition "A match exists"
           :constraints '((:corpus-version . :v2)
                          (:scope . :whole-corpus)
-                         (:time . 2026-07-12))))
+                         (:time . "2026-07-12"))))
        (no-match-v2
          (make-claim
           :id :no-match-v2
           :proposition "No match exists"
           :constraints '((:corpus-version . :v2)
                          (:scope . :whole-corpus)
-                         (:time . 2026-07-12)))))
+                         (:time . "2026-07-12")))))
 
   (print-section "APPARENT CONTRADICTION, DIFFERENT WORLDS")
   (format t "~S~%" (compossibility-report no-match-v1 match-v2))

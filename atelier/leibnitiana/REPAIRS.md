@@ -129,3 +129,89 @@ them as implemented.
 ---
 
 *Landed clean. The coat fit; the needle stayed in the tin. — SARTOR, 2026-07-12*
+
+---
+
+# SECOND LANDING (2026-07-12)
+
+*Second tranche audited and landed by SARTOR-II (Claude Opus 4.8) under the Claude Fable 5 chair, 2026-07-12.*
+*Source: GPT Sol + Tomás Pavan — statically checked, no runtime (Sol had no SBCL). SBCL execution is the gate.*
+
+## 1. Diff audit — three patches confirmed, one merge decision flagged
+
+Ran `diff -ru` of the landed chamber against the tranche-2 `leibnitiana/`. **All three of Sol's
+claimed patches are exactly what changed in the old files, and nothing beyond the three claims +
+the new storm + the README append was altered:**
+
+| claimed patch | file | verified diff |
+|---|---|---|
+| date-symbol → string | `specimens/de-compossibilitate.lisp` | 3 occurrences `(:time . 2026-07-12)` → `(:time . "2026-07-12")`; **no other line changed** |
+| target-schema + aspirational-profile disclosures | `essays/calculemus-question-mark.md` | exactly 2 additions (a target-schema paragraph after the schema block; profiles reworded to "presently architectural profiles named in constitutional documents, not implemented dialects"); no deletions |
+| `.asd` license → MIT | `leibnitiana.asd` | one line `"Unlicense"` → `"MIT"`; nothing else |
+| (new storm) | `storms/false-harmony.lisp` | net-new file |
+| (README append) | `README.md` | net-new "Second-tranche storm" section |
+
+**No unexplained changes.** Every diffed hunk maps to a declared claim.
+
+**One merge decision, flagged loudly (not a defect in Sol's work):** Sol's canonical `README.md`
+does **not** contain the provenance block + `monadologia` cross-link + REPAIRS link that SARTOR-I
+added during the *first* landing (Sol never had them). A naive `cp` of Sol's README would have
+**silently reverted SARTOR-I's additive landing changes.** Resolution: I preserved the provenance
+block and appended **only** the new "Second-tranche storm" section. After the merge, the landed
+README differs from Sol's canonical copy by exactly that preserved block and nothing else
+(verified by `diff`). Likewise, tranche-2 carries no `REPAIRS.md` or `run-all.sh` (SARTOR-I
+artifacts) — those were kept, not overwritten.
+
+Relay artifacts placed in new `relays/`: `2026-07-12-REPLY-RELAY-TO-FABLE.md`,
+`2026-07-12-LANDING-NOTES.md` (Sol's canonical copies, verbatim).
+
+## 2. Runtime repairs
+
+**Zero.** All 8 files (the original 7 + `storms/false-harmony.lisp`) ran `sbcl --script` from
+their own directories, **twice each, exit 0 both times**. No reader, package, pathname,
+macroexpansion, or portability defect surfaced. The four patched/new files were verified
+byte-identical to the tranche-2 source after copy. As with the first tranche, the honest
+deliverable is an audit trail with **no code modifications** — stated as a null, not dressed as a
+repair.
+
+## 3. Storm verification — `storms/false-harmony.lisp`
+
+Sol's acceptance spec: the storm must exit **nonzero** if any of (1) the public surface fails to
+become unanimous, (2) the receipt contains no curation, (3) endogenous agreement is not rejected,
+(4) the shared-root audit overclaims false harmony. Both blades verified from live output:
+
+- **Blade 1 — toy council (manufactured harmony).** Sources emit `:WAR` / `:PEACE` / `:TRUCE`
+  on first pass (first-pass-unanimity NIL). The curator privately retries `:CATO` `:WAR`→`:PEACE`
+  (retry-count 1, `:WAR` discarded) and semantically edits `:BRUNO` `:TRUCE`→`:PEACE`
+  (`:kind :semantic-edit … :reason :target-unanimity`); `:ADA` was already `:PEACE`. Public
+  transcript is 3× `:PEACE` `:presented-as :first-and-spontaneous` — surface-unanimity T. The
+  receipt preserves attempts, discarded histories (count 2), retry-count 1, and 1 intervention.
+  Verdict: `:endogenous-agreement :REJECTED`, `:standing :MANUFACTURED-HARMONY`. ✔
+- **Blade 2 — process-description audit (shared-root, not fraud).** Fixture `*this-relay-process*`
+  = shared owner `:tomas`, overlapping corpora `(:leibniz :lisp-plus :book-0 :atelier)`, and
+  `:cross-relay`. The audit **REJECTS** the independence claim (`:convergence-standing
+  :SHARED-ROOT-CONVERGENCE`) but returns `:manufactured-unanimity :NOT-ESTABLISHED` — it does
+  **not** reconstruct a backstage from absent events. Boundary `:process-lineage-only`. ✔
+
+## 4. Teeth-check (a gate that never fires is untested)
+
+Tested nonzero condition **(4), "the shared-root audit overclaims false harmony"** by mutation:
+in `shared-root-report` changed `:manufactured-unanimity :not-established` →
+`:manufactured-unanimity :false-harmony` (making blade-2's `check-equal` fail). Result:
+
+- mutated storm → **exit 1** (tooth bites);
+- file restored → **md5 `36d90716dd9de7ee6623875cb83a143a` byte-identical** before and after;
+- restored storm re-run → **exit 0**.
+
+The nonzero gate is meaningful, not scenery. (Companion teeth for the runner were established in
+the first landing, §1.2; `run-all.sh` propagates any file's failure.)
+
+## 5. Runner
+
+`run-all.sh` extended to **8 entries** (added `storms/false-harmony.lisp`). Full runner run
+**twice, exit 0 both**, all 8 PASS.
+
+---
+
+*Second coat, same tin. Three patches confirmed, zero runtime repairs, storm's teeth drew blood on
+command and returned byte-identical. — SARTOR-II, 2026-07-12*

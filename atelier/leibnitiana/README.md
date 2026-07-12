@@ -66,3 +66,12 @@ The planned second tranche is:
 ## Working maxim
 
 > Leibniz asked whether reasoning could become calculation. Lisp+ asks what calculation must confess before it may count as reasoning.
+
+## Second-tranche storm
+
+`storms/false-harmony.lisp` distinguishes two failures that should not be merged:
+
+1. **Manufactured harmony** — a privileged curator retries, discards, or edits outputs, while publishing only the unanimous surface. The storm emits retry, discard, and intervention receipts and rejects the claim of endogenous agreement.
+2. **Shared-root convergence** — sessions share an owner, corpora, or relayed outputs. This defeats a claim of independent witnessing but does **not** by itself prove curation or manufactured unanimity.
+
+The chamber currently demonstrates several constitutional forms, but most are declaration-level mechanisms rather than global enforcement. `jif` fails closed only where called; judgment authority remains a field rather than a capability-checked right. Expressibility is implemented. System-wide enforcement remains pending.

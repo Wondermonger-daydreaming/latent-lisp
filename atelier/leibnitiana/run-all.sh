@@ -18,6 +18,7 @@ files=(
   "specimens/de-harmonia.lisp"
   "specimens/de-fenestris.lisp"
   "storms/hidden-operator.lisp"
+  "storms/false-harmony.lisp"
 )
 
 fail=0
