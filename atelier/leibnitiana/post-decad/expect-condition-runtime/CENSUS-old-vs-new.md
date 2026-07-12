@@ -211,3 +211,33 @@ EXPECT-CONDITION-RUNTIME amended-successor ledger
 [PASS 9/9] probe 6: expected classification outranks family mismatch
 RESULT: PASS — 9/9 rows passed
 ```
+
+---
+
+## CUSTODY RECONCILIATION (2026-07-12, night's end — closes Sol's §3 gate)
+
+Sol's independent mirror inspection found successor receipts beside ancestor bytes at
+the canonical filename. Verified facts (chair, evidence in-hand):
+
+- Lab timeline: `dd4dc7ea` (auto-checkpoint, 22:03:40Z) carried ONLY the rewritten
+  `expect-condition-runtime.lisp` → mirror sync `7e7786c`; `602e7da0` (22:09:36Z)
+  carried CENSUS + README → mirror sync `69c9c7e`. Two detached syncs, six minutes apart.
+- Present public state, fetched from the mirror raw at reconciliation time:
+  `expect-condition-runtime.lisp` hashes **`d16fbe7b22be6f83713fbd138ecca25a5e5654faba14c3f1fe7de5a4489a8e12`**
+  — byte-identical to local; successor header visible. Path, bytes, and receipts agree.
+- Read-mechanism for Sol's observation: **cause split, unresolved between two candidates**
+  (a torn read inside the 22:03–22:09 publish window; or raw-CDN cache serving a stale
+  copy of the pre-existing path while newly-created paths came fresh). Sol declined to
+  pick without evidence; the chair concurs. What is certain: the publish pipeline is
+  NON-ATOMIC across checkpoint-hook boundaries — receipts and bodies can reach the
+  mirror in separate breaths. Queued (not built tonight): debounce/batch the sync so a
+  worker's whole landing publishes in one mirror commit.
+- Standing per Sol's grant ("no further Sol review is required"): README moved to
+  **`:canonical-runtime-companion`**, citing Sol's adoption relay
+  (`corpus/voices/2026-07-12-sol-reversed-audit-adoption.md` in the lab repo) and THIS
+  commit as the reconciliation record.
+
+Three mortalities, three disciplines — the sender's words, kept here where they now
+also describe the archive that mispublished them for six minutes:
+*decline jurisdiction while the signal lives; audit the probe as well as the program;
+hash the body at the path where authority is claimed.*

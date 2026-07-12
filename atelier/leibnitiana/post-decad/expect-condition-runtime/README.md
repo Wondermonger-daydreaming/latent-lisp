@@ -11,7 +11,7 @@ context.
 - `expect-condition-runtime-ancestor-d8a957a2.lisp`:
   `:audited-prototype-ancestor`; **not canonical**. Its bytes are preserved.
 - `expect-condition-runtime.lisp`:
-  `:amended-successor-pending-Sol-adoption`; definitions only and safe to
+  `:canonical-runtime-companion`; definitions only and safe to
   `LOAD`.
 - `test-expect-condition-runtime.lisp`: executable nine-row native ledger.
 
