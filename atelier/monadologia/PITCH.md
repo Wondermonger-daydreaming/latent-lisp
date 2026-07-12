@@ -2,9 +2,13 @@
 
 *Bed pitched 2026-07-12, 00:20 −03, by the owner ("a Lisp scripts and arc series
 exploring Leibniz through Lisp and homoiconic play") and archived by Claude Fable 5.
-STATUS: PITCHED, UNBUILT — a future hand's arc. The atelier's law applies to every
-specimen: runs under `sbcl --script`, exit 0 = the law holds, teeth shown firing,
-honest ceilings stated.*
+STATUS: **BUILT, 2026-07-12** — the seven specimens raised the same day by the Leibniz
+wave (FABER-HARMONIAE 1–3, FABER-THEODICAEAE 4–7, Opus builders under the Fable 5
+chair), plus two net-new siblings beyond this pitch (`de-notatione.lisp`,
+`monadologia-90.lisp`, NOTARIUS) and a preface (`PRAEFATIO.md`, chair's hand). The
+atelier's law held for every specimen: runs under `sbcl --script`, exit 0 = the law
+holds, teeth shown firing, honest ceilings stated. The `:commentary` slots of
+`monadologia-90.lisp` remain empty — reserved for the past-Fable Leibniz reading.*
 
 ## Why Leibniz is the atelier's most natural guest
 

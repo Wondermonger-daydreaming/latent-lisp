@@ -99,7 +99,9 @@ L7  testimony survives its death  completed+verified work crosses the gap; a mer
 Everything runs on **SBCL 2.4.6** (`sbcl --script <file>`; the atelier scripts run from their own directories).
 
 > **Re-verified 2026-07-12:** the tree has grown to **141** `.lisp` files; each was run under `sbcl --script`
-> from its own directory (relative `load`s honored). Tally: **139 × exit 0, 2 failures.** The asserted
+> from its own directory (relative `load`s honored). Tally: **139 × exit 0, 2 failures.** *(Later the same
+> day the Leibniz wave added **9** monadologia specimens, each verified exit 0 twice by its builder and once
+> by the chair — current floor: **150 files, 148 × exit 0, the same 2 failures.**)* The asserted
 > entrypoints still do real work: the conformance walk prints seven ✓, the atelier's `run-all.sh` passes all
 > six, `metacircular-porch/TESTS.lisp` reports 16/0, and the quines are byte-identical to their source.
 >
