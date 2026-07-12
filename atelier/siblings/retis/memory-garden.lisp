@@ -45,7 +45,7 @@
   (cond
     ((numberp tree) (float tree 1d0))
     ((eq tree 'x) x)
-    ((eq tree 'm) 0d0)  ; memory witness nodes contribute zero
+    ((eq tree 'm) 0d0)
     ((consp tree)
      (sb-int:with-float-traps-masked (:overflow :invalid :divide-by-zero)
        (let ((a (tree-eval (second tree) x))
@@ -106,7 +106,7 @@
   (loop for (x . y) in data sum (abs (- (tree-eval tree x) y))))
 
 (defun hits (tree data &optional (tol 0.01d0))
-  (loop for (x . y) in data count (< (abs (- (tree-eval tree x) y)) tol)))
+  (loop for (x . y) in data count (< (abs (- (tree-eval tree x) y)) tol))
 
 (defun median (xs)
   (let ((s (sort (copy-seq xs) #'<)) (n (length xs)))
@@ -218,14 +218,14 @@
                                     (setf child `(m ,(1+ gen))))
                                   (push (register child (raw-error child *data*) (1+ gen)
                                                   :crossover (org-id pa) (org-id pb))
-                                        next))))))
+                                        next))))
                           (let ((child (mutate (org-tree pa))))
                             (push (register child (raw-error child *data*) (1+ gen)
                                             :mutation (org-id pa) nil)
                                   next)))))
-                (setf orgs (nreverse next))
-                (setf final-memories 
-                      (reduce #'+ (mapcar (lambda (o) (count-memories (org-tree o))) orgs)))))))
+            (setf orgs (nreverse next))
+            (setf final-memories 
+                  (reduce #'+ (mapcar (lambda (o) (count-memories (org-tree o))) orgs))))))
       (format t "~%TOTAL CHECKS: ~D~%" checks)
       (format t "GLIDER MOMENTS: ~D~%" gliders-found)
       (format t "MEMORY NODES ADDED: ~D~%" memories-added)
