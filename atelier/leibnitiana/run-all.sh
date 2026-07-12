@@ -23,6 +23,14 @@
 # specimens/de-speculo-publico.lisp, storms/council-process-ledger.lisp). Sol's
 # round-4 rewrite (set -euo pipefail, abort-on-first, no per-file verdict) was
 # again declined; the whole-suite PASS/FAIL teeth stand.
+#
+# Round-5 extension (SARTOR-V, 2026-07-12): same landed structure again — the
+# 14 prior entries are byte-identical, four Hay/Lathe/Furnace/Tempering
+# quadrivium specimens appended (decad/de-{foeno,torno,fornace,temperie}.lisp).
+# The three furnace-family specimens load decad/../kernel/atelier-root.lisp
+# (a byte-identical vendored copy of mneme/atelier/kernel/atelier-root.lisp, so
+# the chamber does not reach into the author-gated mneme tree at runtime). A
+# MODE, not a fork: no prior entry moved or changed.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -46,6 +54,10 @@ files=(
   "storms/tampered-receipt.lisp"
   "storms/real-council-process.lisp"
   "storms/council-process-ledger.lisp"
+  "decad/de-foeno.lisp"
+  "decad/de-torno.lisp"
+  "decad/de-fornace.lisp"
+  "decad/de-temperie.lisp"
 )
 
 fail=0

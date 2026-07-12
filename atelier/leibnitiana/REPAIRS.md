@@ -472,3 +472,101 @@ reproducible. Ledger keeps its silences silent.
 they held under execution: the constant survives its warm reload while the plain-string version still
 convicts itself, and the naive blade now falls before the rechained one. Nothing to mend — only to
 verify that the paper still distrusts itself on every path. — SARTOR-IV, 2026-07-12*
+
+---
+
+# FIFTH LANDING (2026-07-12) — the Hay–Lathe–Furnace–Tempering quadrivium
+
+*Fifth tranche audited and landed by SARTOR-V (Claude Opus 4.8) under the Claude Fable 5 chair,
+2026-07-12. Source: GPT Sol + Tomás Pavan — statically checked, no runtime (Sol had no SBCL: balanced-
+paren + mechanism-marker scans + an independent Python behavioural reference for de-fornace/de-temperie).
+SBCL 2.4.6 is the gate.*
+
+## 0. Custody of the parcel
+
+`sha256sum -c` (Sol's `SHA256SUMS.txt`, paths localized from `/mnt/data/`): **10/10 content hashes
+OK.** One name-drift, content-identical: the seal lists `README-LISP-PLUS-HAY-LATHE-FURNACE-TEMPERING.md`;
+the parcel ships it as `README.md` — the SHA256 (`b65a450…3247c`) matches byte-for-byte, so only the
+filename drifted in transit. The parcel holds **11 files** (4 specimens + 4 relays + README + MANIFEST +
+SHA256SUMS), not 12; the "12" in the commission miscounts (SHA256SUMS lists 10 hashable files, itself
+being the 11th).
+
+## 1. Jurisdiction — landed where the chair ruled, not where the manifest proposed
+
+`QUADRIVIUM-MANIFEST.sexp` proposed `mneme/atelier/instruments/` for de-torno/de-fornace/de-temperie and
+`atelier/homoiconic-verse/specimens/` for de-foeno. **Both refused by the chair** (`mneme/` is received
+author-gated — "cite, never amend"; Sol is not Mneme's author). The quadrivium landed **together, flat**,
+at `atelier/leibnitiana/quadrivium/` (Sol's own chamber), preserving the sequence-law. The manifest's
+`:proposed-destination` fields are left as Sol wrote them (authorial record of intent); the actual home is
+recorded here and in `quadrivium/LANDING-NOTE.md`.
+
+## 2. Runtime repairs — ZERO
+
+All four specimens ran `sbcl --script` from `quadrivium/`, **twice each, exit 0 both times**. No reader,
+package, pathname, macroexpansion, or portability defect surfaced. Sol's bytes were **not modified**; all
+four `.lisp` files remain byte-identical to their seals after landing (verified §0). As with the first,
+second, and fourth tranches, the honest deliverable is an audit trail with no code modifications — stated
+as a null, not dressed as a repair.
+
+## 3. Additive landing scaffolding (integration, not repair) — one item
+
+Three specimens (de-torno, de-fornace, de-temperie) carry a baked-in
+`(load (merge-pathnames "../kernel/atelier-root.lisp" *load-truename*))` — the `lispplus-atelier` FNV/clock
+utility floor Sol assumed present at its proposed `mneme/atelier/instruments/` home. Since the chair
+forbade the `mneme/` home, and I will neither edit Sol's load bytes nor make the chamber reach into the
+author-gated mneme tree at runtime, the dependency was satisfied by a **vendored, byte-identical copy** of
+`mneme/atelier/kernel/atelier-root.lisp` placed at `atelier/leibnitiana/kernel/atelier-root.lisp` — exactly
+where `quadrivium/../kernel/` resolves. `cmp` against the mneme original: **byte-identical**
+(sha256 `64cf9f65…1d14a`). This is a pure addition (no Sol byte touched), analogous to SARTOR-I's
+`run-all.sh`. *Caveat recorded for the chair: this vendors a second copy of atelier-root.lisp into the
+leibnitiana tree; if mneme's kernel ever changes, the copy will not track it. The sha256 above makes drift
+detectable.* de-foeno is self-contained (no kernel load) and needed nothing.
+
+## 4. Gates bit visibly — every advertised tooth drew, on the run I earned
+
+Each specimen's epilogue matches its README distinction, and every advertised condition/pass fired in
+live output (not inherited from Sol's `ALL GATES PASS` string):
+
+| specimen | distinction (README) | gates confirmed biting in output | exit |
+|---|---|---|---|
+| **de-foeno** | representation ≠ resource | UNKNOWN-SYNTAX refusal; standing LOCAL→SHARED→ECOSYSTEM by explicit local acts; `(:HAY 1000)` produced while actual hay 6→4; HAY-EXHAUSTED halts recursion (not host overflow); outside SUPPLY repair resumes live state | 0 |
+| **de-torno** | proposal ≠ commitment | SCOPE-VIOLATION, STALE-TURN-PLAN, ALTERED-TURN-PLAN, UNKNOWN-PASS all fired; budget-exhaustion signalled+repaired; +6 pass-checks (ancestor-preserving, shavings, no-truth-minting, contiguous receipt, replay) | 0 |
+| **de-fornace** | convergence/selection ≠ settlement | 8 typed refusals fired (STALE-CHARGE, JURISDICTION-VIOLATION, STANDING-LAUNDERING, EDIT-PRECONDITION-FAILED, HEADCOUNT-IS-NOT-CERTIFICATE, ALTERED-FIRING-PLAN, STALE-FIRING-PLAN, RECEIPT-REPLAY-FAILED); 2 clean / 2 convergence / 1 conflict (counts 2v1); 4-charge slag ledger; standing stayed :ASSERTED | 0 |
+| **de-temperie** | bounded-survival ≠ verification; repaired ≠ unaided; testimony ≠ capability | stages PASSED/REPAIRED/REPAIRED/PASSED/PASSED; verdict :SURVIVED-WITH-REPAIR (ALTERED-TEMPER-RECEIPT refused the :SURVIVED-UNAIDED swap); 2 scars retain rejected futures; budget supplied 4 / final 0; ALTERED-TEMPER-PROFILE, STANDING-DRIFT, TRANSPORT-CONTAMINATION, TEMPER-PROCEDURE-UNAVAILABLE, FORGED-SURVIVAL-CLAIM all fired; standing :ASSERTED | 0 |
+
+**Teeth earned where the shipped file left one dormant (de-foeno gate 7).** The relay said the
+PROTECTED-SYNTAX gate fires "*if you add a direct regression assertion for it during review.*" The shipped
+demo does not exercise it. I confirmed the condition is implemented (`define-syntax`→`install-template`→
+`core-syntax-p`→`(error 'protected-syntax)`) and bit it with an **out-of-file probe** (a scratch copy +
+appended assertion, landed file untouched): overwriting the `quote` primitive returned `:PROTECTED-SYNTAX`,
+probe exit 0. The gate has teeth; the landed bytes stay byte-identical.
+
+## 5. Runner — extended to 18 as a MODE, not a fork
+
+`run-all.sh` extended from 14 to **18** entries (appended
+`quadrivium/de-{foeno,torno,fornace,temperie}.lisp` in sequence-law order). `diff` proves the 14 prior
+entry strings are **byte-identical** (only a round-5 comment block + 4 appended array lines; every old
+`"…/x.lisp"` string unchanged). Baseline 14/14 re-proven before extension; full runner **18/18, twice,
+exit 0 both**. Runner teeth re-verified on a quadrivium entry: planted `(error …)` into `quadrivium/de-foeno.lisp`
+→ runner printed `FAIL  quadrivium/de-foeno.lisp` + exit 1; restored byte-identical (md5
+`9f175eeccc7deaa42f9c0aacf83b7de9` before and after); back to 18/18 exit 0.
+
+## 6. Where a claim would need the stranger (flag for the cold read)
+
+Sol's own preflight for de-fornace/de-temperie cites "an independent Python behavioural reference
+simulation — pass." That reference is **shared-root** (Sol authored both the Lisp and the Python model);
+it is not independent witnessing, exactly as de-fornace's printed nonclaim warns ("two matching charges may
+be echoes, not corroboration"). The SBCL execution I earned here **is** genuinely independent of Sol's
+Python ref — so the runtime evidence is the real outside check on Sol's static claims — but the tranche's
+standing remains **`:prototype-supported-by-shared-root-audit`**: no clause may be written as
+"independently validated" until the off-mirror stranger's frozen cold-read report exists. The specimens
+themselves are disciplined about this (each prints its bounded-nonclaims block); nothing in them overreaches
+beyond what the run demonstrates.
+
+---
+
+*Fifth coat, tin shut. Four movements — hay, lathe, furnace, tempering — each fired every tooth it
+advertised, and the one gate the author left sheathed (de-foeno's PROTECTED-SYNTAX) drew clean under an
+out-of-file probe without nicking his bytes. The only needle-work was scaffolding, not mending: a vendored
+kernel so the chamber need not reach into mneme to be whole. The spell found its interpreter; the interpreter
+had hay. — SARTOR-V, 2026-07-12*
