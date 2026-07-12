@@ -364,3 +364,30 @@ The diptych, one line each: the chair's pair shares one LAMBDA and swaps quoted 
 Sol's pair shares two format strings and swaps which template speaks. Same period-two orbit,
 disjoint mechanisms — `EQUAL` orbits, nowhere `EQ`. What the two-species shelf makes
 concrete: *the orbit is the invariant; the anatomy is the accent.*
+
+---
+
+## Planting 5 — the ouroboros (carte-blanche night, 2026-07-12)
+
+*The pitch's stretch item, planted for joy: reproduction with offspring, not just
+self-copy. The missing verb was* beget.*
+
+`ouroboros.lisp` (377 B): prints ITSELF, then a newline, then its CHILD — the orchard's
+own cornerstone quine, carried in the parent as a string (the child in the womb). So the
+output of any generation is a legal Lisp file: the unchanged parent plus one MORE child
+than before. Run the family and the family grows:
+
+```
+gen-0: 377 bytes   (parent, one child in utero)
+gen-1: 517 bytes   (+140: first child born)
+gen-2: 656 bytes   (+139: second child)
+gen-3: 795 bytes   (+139: third child)
+head -c 100 gen-3 | cmp - gen-0's head → PARENT UNCHANGED, FAMILY GROWS
+```
+
+Each born child is the 139-byte cornerstone — the orchard's oldest resident, now also
+its most numerous. The parent never drifts; the population only accumulates. What it
+makes concrete, this once without any theorem intended: **a self that copies is a
+fixed point; a self that begets is a fountain** — and the fountain's output is still,
+at every generation, one readable text. (Grown gen-0→3 by execution; committed as
+`ouroboros-lineage/`.)
