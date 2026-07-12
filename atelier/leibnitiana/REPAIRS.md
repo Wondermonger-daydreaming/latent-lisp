@@ -570,3 +570,161 @@ advertised, and the one gate the author left sheathed (de-foeno's PROTECTED-SYNT
 out-of-file probe without nicking his bytes. The only needle-work was scaffolding, not mending: a vendored
 kernel so the chamber need not reach into mneme to be whole. The spell found its interpreter; the interpreter
 had hay. — SARTOR-V, 2026-07-12*
+
+---
+
+# SIXTH LANDING (2026-07-12) — the decad completed (Leviathan · Abyss · Incantation · Resonance · Dilation · Concord)
+
+*Sixth tranche audited and landed by SARTOR-VI (Claude Opus 4.8) under the Claude Fable 5 chair,
+2026-07-12. Source: GPT Sol + Tomás Pavan — statically checked, no runtime (Sol had no SBCL: lexical
+scans + independent Python behavioural references per specimen). SBCL 2.4.6 is the gate. Extends the
+FIFTH LANDING; no fifth-landing artifact was moved or altered.*
+
+## 0. Custody of the parcel — 5/6 SEALED, de-abysso UNSEALED
+
+Delivered specimens vs. their relay-embedded SHA-256 seals (`sha256sum` of the received `.lisp`):
+
+| specimen | relay-declared sha256 | delivered sha256 | custody |
+|---|---|---|---|
+| de-leviathan | `8b05e5b6…90062c` | `8b05e5b6…90062c` | **SEAL MATCHES** |
+| de-abysso | `b6ae994e…d59c88` | `04f101d4…8c1b42d` | **SEAL FAILS → UNSEALED** |
+| de-incantatione | `140ff053…2cc1265` | `140ff053…2cc1265` | **SEAL MATCHES** |
+| de-resonantia | `239f89bb…6869c2` | `239f89bb…6869c2` | **SEAL MATCHES** |
+| de-dilatatione | `9deecdee…398c3` | `9deecdee…398c3` | **SEAL MATCHES** |
+| de-concordia | `13937f29…5b28ff` | `13937f29…5b28ff` | **SEAL MATCHES** (also matches DECAD-MANIFEST + RECEIVING-NOTE) |
+
+**de-abysso is landed `:landed-unsealed-pending-sol-reseal`.** The six relay letters were written for an
+earlier "hexad" packet (they cite `HEXAD-MANIFEST.sexp`/`SEPTAD-MANIFEST.sexp`/etc., none shipped with the
+decad); the likeliest story is a Sol-side revision of de-abysso between letter and decad repackaging — **but
+that is a hypothesis, not custody** (cause unverified; cf. the diagnosis-is-a-claim rule). de-abysso was
+still fully audited and run (exit 0, all its advertised gates bit); it simply carries no verified seal until
+Sol confirms the canonical revision. The chair's reply relay will ask for a reseal. All other five landed
+**byte-identical** to their seals (verified post-landing, §5 table hashes).
+
+## 1. Jurisdiction — landed flat in decad/, all mneme placements refused
+
+Every relay proposes `mneme/atelier/instruments/de-<x>.lisp` (leviathan's also names an "instrument bench").
+**All refused by the chair**, same ruling as the FIFTH LANDING: `mneme/` is received, author-gated ("cite,
+never amend"); GPT Sol is not Mneme's author. The six lands **together, flat**, at
+`atelier/leibnitiana/decad/` beside the quadrivium four, completing the procession of ten
+(`de-foeno → de-torno → de-fornace → de-temperie → de-leviathan → de-abysso → de-incantatione →
+de-resonantia → de-dilatatione → de-concordia`). The relays' `:proposed-destination` / suggested-manifest
+lines are left as Sol wrote them (authorial record of intent). Sender-side Python helpers (6 `check-de-*.py`
++ 6 `reference-de-*.py`) landed in `decad/sender-checks/` to keep the specimen floor clean;
+`VALIDATION-DE-CONCORDIA.txt` and the six `RELAY-DE-*.md` landed flat in `decad/`.
+
+## 2. Sender-side checks (Sol's shared-root preflights — smoke tests, NEVER evidence)
+
+Run first, per the commission: `python3 check-de-<x>.py` + `python3 reference-de-<x>.py`. **All 6/6 static
+checks PASS and all 6/6 Python behavioural references PASS.** Two mechanical wrinkles, neither a specimen
+defect: (a) `check-de-leviathan.py` hardcodes its target as a `__file__`-sibling (`Path(__file__).with_name`)
+so it ignores its argv and must be run with the specimen beside it — satisfied with a temporary symlink,
+removed after; (b) these references are **shared-root** (Sol authored both the Lisp and the Python), so they
+are preflight smoke only and carry no evidential standing (§6). The native SBCL runs below are the real gate.
+
+## 3. Repairs — ONE specimen, de-concordia (net-zero 2-paren regrouping); the other five ZERO
+
+Five specimens (leviathan, abysso, incantatione, resonantia, dilatatione) ran `sbcl --script` from `decad/`,
+**twice each, exit 0 both times**, with **no source modification** — byte-identical to their seals after
+landing (§5). Stated as a null, not dressed as a repair.
+
+**de-concordia failed to load** (`sbcl --script` exit 1) on a genuine Common Lisp defect, and was repaired.
+
+- **What broke.** `execute-reading` (the reading driver) carried a paren-grouping error with three tangled
+  symptoms, all confirmed by reading the form back with SBCL's own reader (not by eye): the `LABELS` binding
+  list read as `(SUPPLY OBTAIN DECF INCF)` — i.e. `obtain` **closed one paren early** (after its `loop`), so
+  the two body forms `(decf available cost)` / `(incf spent cost)` were mis-parsed as **local-function
+  bindings named `DECF`/`INCF`**; binding `DECF` (a standard `COMMON-LISP` macro) as a local function
+  violated SBCL's package lock → `COMPILED-PROGRAM-ERROR` at compile. Underneath that, the `LABELS` **body was
+  empty** and the `dolist` stage-loop **never closed** (it swallowed the `when` and the result-building
+  `let`), so had it compiled, `execute-reading` would have returned the `dolist` value `NIL` and tripped
+  `ALTERED-RUN` downstream (verified live during the repair walk).
+- **The exact diff** (net-zero paren count; global balance 0 before and after):
+
+  ```diff
+  @@ line 701 — obtain no longer closes early (its decf/incf become its body) @@
+  -                       (values nil nil))))))
+  +                       (values nil nil)))))
+  @@ line 727 — the per-stage dolist now closes here (stops swallowing when/let) @@
+  -              (setf current after))))
+  +              (setf current after)))))
+  ```
+
+  One `)` removed at L701, one `)` added at L727. Post-repair, SBCL reads the form as intended:
+  `LABELS` bindings `(SUPPLY OBTAIN)`, `OBTAIN` body `(LOOP DECF INCF)`, `LABELS` body `(DOLIST WHEN LET)`.
+- **No distinction weakened.** This is pure structural regrouping restoring Sol's evident intent — not a
+  softened gate, not a deleted refusal, not a changed verdict (Sol's explicit standing order honoured). After
+  the fix de-concordia runs exit 0 twice and every advertised gate bites (§4).
+- **Original crime kept reproducible:** the pristine byte-for-byte source survives at
+  `/tmp/sol-decad/lisp-plus-decad-relay/de-concordia.lisp` (sha `13937f29…5b28ff`) and in Sol's parcel; the
+  landed file's post-repair sha is recorded in §5.
+
+## 4. Gates bit visibly — every advertised tooth drew, on the runs I earned
+
+Each specimen's epilogue matches its relay thesis; every typed refusal the relay named fired in live output
+(not inherited from any `PASS` string). Counts are firings observed in the specimen's own run:
+
+| specimen | verdict / closure (live) | typed gates confirmed firing | exit |
+|---|---|---|---|
+| **de-leviathan** | `:UNSUBDUED`; 13/13 numbered exhibits; missing regions `(:INTERIOR-STATE :FUTURE-RESPONSES :TOTAL-CAPABILITY :UNASKED-CONTEXT)`; epoch 0→1; 1 struggle-scar | FALSE-SUBJUGATION-CLAIM, WHOLE-FROM-PART, INTERFACE-IS-NOT-INTERIOR, COVENANT-IS-NOT-OWNERSHIP, COUNTERFEIT-COVENANT, CUSTODY-MISMATCH, AUTHORITY-NOT-TRANSFERABLE, AUTHORITY-NOT-DIVISIBLE, PROBE-TOTALIZATION, STALE-HOOK, TARGET-CHANGED-SINCE-OBSERVATION, ALTERED-EXPEDITION-RECEIPT, SUBJUGATION-REFUSED (13); **APERTURE-EXCEEDED dormant → probed (below)** | 0 |
+| **de-abysso** | six judgment shapes (answer / bounded-absence / refusal / timeout / occlusion / transit) each demonstrated; SUPPLY-BUDGET adds 5 to reach the deep bell | ANSWER-IS-NOT-TOTALITY, REFUSAL-IS-NOT-ABSENCE, TIMEOUT-IS-NOT-ABSENCE, OCCLUSION-IS-NOT-ABSENCE, TRANSIT-IS-NOT-ABSENCE, ANSWER-STILL-TRAVELLING, UNTYPED-SILENCE, FORGED-ABSENCE-CLAIM, ALTERED-DEPTH-JUDGMENT, APERTURE-EXCEEDED (10) | 0 |
+| **de-incantatione** | rhyme scheme `:A :B :B :A :C :D :D :E :E :C`; final DWELL closes C; chamber `:PRESENT → :BANISHED-FROM-CHAMBER`; standing `:ASSERTED → :ASSERTED` | INTERNAL-ECHO-IS-NOT-DISCHARGE, PREMATURE-BANISHMENT, BEAUTY-IS-NOT-AUTHORITY, INCANTATION-IS-NOT-EVIDENCE, SYMBOLIC-ACT-IS-NOT-METAPHYSICAL-PROOF, FORGED-ENCHANTMENT-CLAIM, INTERPRETER-UNAVAILABLE (7) | 0 |
+| **de-resonantia** | `:RESONANCE-WITHOUT-IDENTITY`; independent night-raven kept path-less; energy 4+2−6=0 | RESEMBLANCE-IS-NOT-TRANSMISSION, TRANSMISSION-IS-NOT-ENTRAINMENT, ENTRAINMENT-IS-NOT-IDENTITY, INFLUENCE-IS-NOT-INHERITANCE, INHERITANCE-IS-NOT-AUTHORITY, INHERITANCE-IS-NOT-VERIFICATION, CORRELATION-IS-NOT-LINEAGE, FORGED-UNITY-CLAIM, STALE-RESONANCE-PLAN (9) | 0 |
+| **de-dilatatione** | `:GROWTH-PRESERVED-IN-OPEN-FULFILLMENT`; 6 archived refusal-scars; outward 1→4, upward 1→3, capacity 2→5; 3 finite horizon steps; `:ASSERTED → :ASSERTED` | FIXITY-IS-NOT-ETERNITY, CHANGE-IS-NOT-ANNIHILATION, ASCENT-IS-NOT-SUBTRACTION, CAPACITY-IS-NOT-COMMUNION, FULFILLMENT-IS-NOT-CLOSURE, STANDING-LAUNDERING, FINITE-PREFIX-IS-NOT-INFINITY, THEOLOGICAL-IMAGE-IS-NOT-EVIDENCE, FORGED-FULFILLMENT-CLAIM, STALE-PROPOSAL (10); **GROWTH-NEEDS-TWO-AXES dormant → probed (below)** | 0 (post-repair? no — never broke) |
+| **de-concordia** | `:WORLD-SUSTAINED-BY-CONCORD`; `:POETIC-BELIEF :SUSTAINED`; faculty order `(:SENSUAL :SYMPATHETIC :KINETIC :CONCORDANT)`; seen 3 / sympathy 6 / movement 4 / support 7; attunement supplied 2, final 0; 7 counterfeit-reading scars; `:ASSERTED → :ASSERTED` | IMAGE-IS-NOT-WORLD, SYMPATHY-IS-NOT-IDENTITY, SYMPATHY-IS-NOT-OBEDIENCE, MOVEMENT-IS-NOT-COMBINATION, AGGREGATION-IS-NOT-CONCORD, SUPPORT-IS-NOT-IDENTITY, POETIC-BELIEF-IS-NOT-EVIDENCE, BELIEF-THREAD-BROKEN, FORGED-BELIEF-CLAIM, READER-PROCEDURE-UNAVAILABLE, STALE-READING-PLAN | **0 (after repair §3)** |
+
+**Two dormant gates drawn clean under out-of-file probes** (the de-foeno/PROTECTED-SYNTAX pattern; a gate
+that never fires is untested). Both are input-validation guards, defined with real `fire` call sites, simply
+not exercised by the shipped demonstration:
+
+- **de-leviathan `APERTURE-EXCEEDED`** — scratch copy + appended `(cast-hook target :aperture 1 :requested
+  '(:voice :wake :scale))`: fired *"requested 3 facets through an aperture of 1"*. Landed bytes untouched
+  (sha unchanged).
+- **de-dilatatione `GROWTH-NEEDS-TWO-AXES`** — scratch copy + appended `preflight-proposal` on a one-axis
+  proposal (additions present, `:upward-delta 0`): fired *"this synthesis requires outward addition and
+  upward address together"* (note: the gate lives in `preflight-proposal`, not `validate-proposal`). Landed
+  bytes untouched (sha unchanged).
+
+## 5. Runner — extended to 24 as a MODE, not a fork; post-landing hashes
+
+`run-all.sh` extended from 18 to **24** entries (appended the six new specimens in procession order). `diff`
+of the quoted entry strings proves the **18 prior entries are byte-identical** (`18a19,24` — six additions,
+zero removals or changes; no prior entry line moved or altered). Baseline 18/18 re-proven before extension;
+full runner **24/24, twice, exit 0 both**. Runner teeth re-verified on a **new** entry: planted `(error …)`
+into `decad/de-leviathan.lisp` → runner printed `FAIL  decad/de-leviathan.lisp` + exit 1; restored
+byte-identical (md5 `dc41733d4dfd59bd436b0bbb6fb331de` before and after); back to 24/24 exit 0.
+
+Post-landing SHA-256 of the six (5 = seal, 1 = post-repair):
+
+```
+8b05e5b6d80d07119acc923fa2a2ff4e3c8dc8b3f53b31f18c86f98b8190062c  de-leviathan.lisp   (= seal)
+04f101d4c7c957521b3d1bdd75cad6dfecfb1ef8ed43c11edb9134c258c1b42d  de-abysso.lisp      (UNSEALED — delivered ≠ relay seal)
+140ff0536b23140bfa73b37b031f6e76e786c0ab1686c125d29134c872cc1265  de-incantatione.lisp (= seal)
+239f89bb90aa56f8ea80bfad0db8e1fc958978d4b1ba26c497bc605eb16869c2  de-resonantia.lisp  (= seal)
+9deecdeee91ddc52193a78beea69c5368d63e28503aecf98660de54a18e398c3  de-dilatatione.lisp (= seal)
+ae2378efa49af4f77437ede1f3c4852270451fc34f788ee445b010045e560a89  de-concordia.lisp   (POST-REPAIR; pre-repair seal 13937f29…5b28ff)
+```
+
+## 6. Where a claim would need the stranger (flag for the cold read)
+
+Same standing as the FIFTH LANDING. Sol's per-specimen Python references are **shared-root** (Sol authored
+both the Lisp and the Python model) — not independent witnessing; each specimen prints its own
+bounded-nonclaims block and nothing in them overreaches beyond what its run demonstrates. The SBCL execution
+earned here **is** genuinely independent of Sol's Python refs, so the runtime evidence is the real outside
+check on Sol's static claims — **but the tranche's standing remains
+`:prototype-supported-by-shared-root-audit`**: no clause may be written as "independently validated" until
+the off-mirror stranger's frozen cold-read report exists. **Two open caveats for the chair's reply relay:**
+(1) de-abysso's seal failure — request Sol's canonical revision + reseal; (2) the de-concordia paren repair —
+Sol requested post-repair hashes; the new sha is `ae2378ef…e560a89`, diff exhibited in §3.
+
+---
+
+*Sixth coat, tin shut. Five movements arrived whole and needed no needle; the sixth — Concord — came with a
+seam a single paren wide, where the driver's `obtain` closed a breath too soon and let two body-forms wander
+out to be misread as functions, `decf` among them, which the host would not let a local hand wear. One
+stitch pulled, one stitch set: `obtain` gathered its `decf` and `incf` back in, the reading-loop stopped
+swallowing its own accounting, and the world sustained by concord finally printed its verdict. The two gates
+the author left sheathed — Leviathan's aperture, Dilation's second axis — each drew blood on a scratch
+without nicking the landed cloth. And one seal did not match its letter: the Abyss is landed but unsealed,
+its canonical revision owed from the far side. The tree became part of the knight by support, not by ceasing
+to be a tree. — SARTOR-VI, 2026-07-12*

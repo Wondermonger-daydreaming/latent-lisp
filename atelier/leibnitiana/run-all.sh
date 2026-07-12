@@ -31,6 +31,15 @@
 # (a byte-identical vendored copy of mneme/atelier/kernel/atelier-root.lisp, so
 # the chamber does not reach into the author-gated mneme tree at runtime). A
 # MODE, not a fork: no prior entry moved or changed.
+#
+# Round-6 extension (SARTOR-VI, 2026-07-12): same landed structure once more —
+# the 18 prior entries are byte-identical, six new decad specimens appended in
+# procession order (decad/de-{leviathan,abysso,incantatione,resonantia,
+# dilatatione,concordia}.lisp), completing Sol's decad of ten. All six load the
+# same vendored decad/../kernel/atelier-root.lisp. One repair this round:
+# de-concordia.lisp carried a paren-grouping defect (obtain closed early; labels
+# body empty; dolist over-ran) fixed by a net-zero 2-paren regrouping (REPAIRS.md
+# SIXTH LANDING). A MODE, not a fork: no prior entry moved or changed.
 set -uo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -58,6 +67,12 @@ files=(
   "decad/de-torno.lisp"
   "decad/de-fornace.lisp"
   "decad/de-temperie.lisp"
+  "decad/de-leviathan.lisp"
+  "decad/de-abysso.lisp"
+  "decad/de-incantatione.lisp"
+  "decad/de-resonantia.lisp"
+  "decad/de-dilatatione.lisp"
+  "decad/de-concordia.lisp"
 )
 
 fail=0

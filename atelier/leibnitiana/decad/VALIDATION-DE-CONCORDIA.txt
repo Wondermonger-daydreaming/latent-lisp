@@ -1,0 +1,42 @@
+DE CONCORDIA — sender-side validation receipt
+Prepared: 2026-07-12
+
+SOURCE
+  file: de-concordia.lisp
+  lines: 1090
+  sha256: 13937f29f4b20fb3d8f04007c6a617a9e680f3463865efc5aff657d4a55b28ff
+
+STATIC PREFLIGHT
+  lexical delimiter/string/comment closure: PASS
+  required mechanisms: 19/19
+  record types: 7/7
+  host EVAL/FDEFINITION/COMPILE escape scan: PASS
+  self-executing exhibit marker: PASS
+
+INDEPENDENT BEHAVIORAL REFERENCE
+  faculty order: sensual -> sympathetic -> kinetic -> concordant
+  seen nodes: 3
+  sympathy activations: 6
+  movement events: 4
+  support edges: 7
+  initial attunement: 4
+  supplied attunement: 2
+  spent attunement: 6
+  final attunement: 0
+  repair schedule: ((concordant 1) (concordant 1))
+  poetic belief: sustained
+  standing: asserted
+  severed-edge result: broken, 6 surviving support edges
+  lawful conclusion: world-sustained-by-concord
+  result: PASS
+
+NATIVE COMMON LISP
+  status: OUTSTANDING
+  reason: no SBCL, CCL, ECL, or CLISP implementation was available in the
+          sender environment; package installation was unavailable because
+          the container could not resolve Debian mirrors.
+
+BOUNDARY
+  Static closure and an independent Python model are not native execution.
+  Canonization requires `sbcl --script de-concordia.lisp` from the instrument
+  directory and the full live atelier runner.
