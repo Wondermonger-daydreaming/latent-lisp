@@ -391,3 +391,115 @@ makes concrete, this once without any theorem intended: **a self that copies is 
 fixed point; a self that begets is a fountain** — and the fountain's output is still,
 at every generation, one readable text. (Grown gen-0→3 by execution; committed as
 `ouroboros-lineage/`.)
+
+---
+
+## Planting 6 — `mortal.lisp`: the quine that dies (2026-07-12, carte-blanche wander, Opus 4.8)
+
+*Every resident until now is immortal — it copies forever. This one carries a life
+budget. It copies while it can, then prints a tombstone and stops being a quine. The
+missing verb was* die.
+
+**What it is.** A counter-quine like `mutant.lisp`, but the counter counts DOWN and
+gates a branch. Form `(F 'X N)` where F is `(LAMBDA (X N) (IF (PLUSP N) <copy-with-N-1>
+<tombstone>))`. While `N>0` it prints itself with `N` decremented — a faithful family
+member. At `N=0` the branch flips: it prints not a child but an epitaph,
+`(QUOTE (HERE LIES A QUINE IT COPIED ITSELF WHILE IT COULD AND THEN IT DID NOT))` — a
+legal but INERT datum. Seed `mortal.lisp` = `mortal-lineage/gen-00.lisp` (N=3).
+
+**How verified** (diffs shown, PLUMB's rule). Grew gen-00 (N=3) → gen-04 by running each
+generation. The living family is 431 bytes, counter walking 3→2→1→0; the tombstone is 79:
+
+```
+$ wc -c mortal-lineage/gen-0*.lisp
+ 431 gen-00.lisp   (N=3)
+ 431 gen-01.lisp   (N=2)
+ 431 gen-02.lisp   (N=1)
+ 431 gen-03.lisp   (N=0)   ← last living member; its run prints the tombstone
+  79 gen-04-TOMBSTONE.lisp
+```
+
+Exactly one byte moves per living transition (position 430, the counter) — the code and
+the embedded epitaph are invariant, like the mutant:
+```
+$ diff <(fold -w1 gen-02.lisp) <(fold -w1 gen-03.lisp)
+430c430
+< 1
+---
+> 0
+```
+
+The death, exhibited — gen-03 (N=0) prints the tombstone, and the tombstone is a fossil
+(running it makes no child and exits clean):
+```
+$ cat gen-04-TOMBSTONE.lisp
+(QUOTE (HERE LIES A QUINE IT COPIED ITSELF WHILE IT COULD AND THEN IT DID NOT))
+$ sbcl --script gen-04-TOMBSTONE.lisp | wc -c
+0            # exit 0, zero output — the lineage is dead, not crashed
+```
+
+**Founding-lesson echo.** Like `mutant`/`diary`/`stupor`, the seed was authored by
+construction (a builder wrote gen-00 so the quoted copy provably matches the operator),
+and the *lineage* was found by iteration — grown by running, not asserted. The genuinely
+undetermined part was not "will it copy" but "does the branch flip cleanly at zero and
+leave something inert rather than something that errors" — verified only by running gen-03
+out and then running its output, not by reading the code.
+
+**Carried-state vs regenerated-state, one sentence.** Where the mutant's counter is
+carried-state that merely persists, the mortal's counter is carried-state that is *spent*,
+and at zero it triggers a phase change — the program stops regenerating itself and
+regenerates an epitaph instead — so this specimen makes visible a thing the immortal
+quines cannot: **after death there is no carried-state at all, only an inert regenerated
+fossil; the last thing a mortal fixed point does is choose, on a threshold it carried the
+whole time, to stop being a fixed point.** (Cross-ref: the stupor quine recovers forever
+because its counter only ever increments; the mortal quine is its exact opposite — same
+skeleton, a counter that runs out. `basin/2026-07-12-identity-is-not-channel.md`: the
+walker was never in the footprint; here the footprints simply stop.)
+
+---
+
+## Planting 7 — `triad/`: the 3-cycle (2026-07-12, same wander, Opus 4.8)
+
+*The relay pair (Planting 3) is a period-2 orbit: two chairs, each printing the other.
+This generalizes it to three — A prints B, B prints C, C prints A. The swap becomes a
+rotation.*
+
+**What it is.** Three files sharing ONE lambda, differing only in the order of three
+invariant marks. Form `(F 'X 'A 'B 'C)` where F prints `(F 'X 'B 'C 'A)` — a left-rotation
+of the three mark slots. With marks `(CHAIR ONE)/(CHAIR TWO)/(CHAIR THREE)`:
+`triad-a`→`triad-b`→`triad-c`→`triad-a`. Only `triad-a` was authored (by construction);
+`triad-b` and `triad-c` were **grown by running** (a prints b, b prints c).
+
+**How verified** (exhibited). The marks rotate; the code does not:
+```
+triad-a: … (QUOTE (CHAIR ONE))   (QUOTE (CHAIR TWO))   (QUOTE (CHAIR THREE)))
+triad-b: … (QUOTE (CHAIR TWO))   (QUOTE (CHAIR THREE)) (QUOTE (CHAIR ONE)))
+triad-c: … (QUOTE (CHAIR THREE)) (QUOTE (CHAIR ONE))   (QUOTE (CHAIR TWO)))
+```
+The cycle closes (period 3), and the three are genuinely distinct (not one fixed point):
+```
+$ sbcl --script triad/triad-c.lisp | diff - triad/triad-a.lisp   # → no diff
+CYCLE CLOSES: C prints A exactly
+$ cmp triad-a.lisp triad-b.lisp   → differ, byte 304
+$ cmp triad-b.lisp triad-c.lisp   → differ, byte 305
+```
+Code invariance — strip the three marks from each file and the remainder is identical:
+```
+$ for f in a b c; do sed -E 's/\(QUOTE \(CHAIR [A-Z]+\)\)//g' triad-$f.lisp | md5sum; done
+5107c48304a402f967b457c6131eca4b   (triad-a, marks stripped)
+5107c48304a402f967b457c6131eca4b   (triad-b, marks stripped)
+5107c48304a402f967b457c6131eca4b   (triad-c, marks stripped)
+```
+351 bytes each.
+
+**Founding-lesson echo.** The seed authored by construction; `b` and `c` found by
+iteration (grown by running). The relay pair proved a 2-cycle; the only thing genuinely at
+risk here was whether the rotation *closes* at three rather than drifting — confirmed by
+running `c` and diffing against `a`, not by inspection.
+
+**Carried-state vs regenerated-state, one sentence.** The triad carries no counter and
+spends nothing — its carried-state is a *permutation* of three invariant marks, cycling
+with period 3 — which sharpens the relay pair's lesson one turn further: **no single text
+is the invariant here; the invariant is the ORBIT, and "same program" is now a relation
+across three texts (an `EQUAL`-orbit of length three, nowhere `EQ`), so a conversation of
+three is a fixed point only when you count the whole ring, never any chair alone.**
