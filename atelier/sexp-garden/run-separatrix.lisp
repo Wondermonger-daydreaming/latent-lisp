@@ -92,7 +92,12 @@
             (setf orgs (nreverse next))))))
     (values overall-best (nreverse stats))))
 
-(defun jstr (tree) (format nil "~S" tree))
+(defun jstr (tree)
+  ;; print the tree on ONE physical line so census-separatrix.jsonl is true JSONL:
+  ;; large evolved trees pretty-print across newlines under the defaults, which the
+  ;; small synthetic-world winners never triggered.  (Local fix; garden.lisp untouched.)
+  (let ((*print-pretty* nil) (*print-right-margin* nil))
+    (format nil "~S" tree)))
 
 (defun write-census (stats path)
   (with-open-file (s path :direction :output :if-exists :supersede
