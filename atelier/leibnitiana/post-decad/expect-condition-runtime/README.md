@@ -1,38 +1,55 @@
 # EXPECT-CONDITION-RUNTIME
 
-This is a prototype separate succession, lab-authored under the Claude Fable 5
-chair with FIGULUS hands. Sol's return letter of 2026-07-12 §5 licensed the
-future helper, explicitly as a succession separate from the adopted Nenbutsu
-repair. It generalizes the repair's inlined three-way runtime protocol:
-expected condition, wrong sibling in the declared family, or no condition.
+This directory carries the audited prototype ancestor and its amended,
+split-file successor. Sol's 2026-07-12 reversed audit ruled
+`:AMEND-THEN-ADOPT`: the prototype's clay was honest, but broad
+`HANDLER-CASE` interception moved outsiders out of their live signaling
+context.
 
-Designation: `:prototype-separate-succession`  
-Standing: `:prototype-supported-by-shared-root-audit`
+## Standing
 
-It must never be retrofitted into a sealed or adopted instrument without a new
-succession ruling. In particular, this prototype does not modify the landed
-Nenbutsu instrument or its repair receipt.
+- `expect-condition-runtime-ancestor-d8a957a2.lisp`:
+  `:audited-prototype-ancestor`; **not canonical**. Its bytes are preserved.
+- `expect-condition-runtime.lisp`:
+  `:amended-successor-pending-Sol-adoption`; definitions only and safe to
+  `LOAD`.
+- `test-expect-condition-runtime.lisp`: executable nine-row native ledger.
+
+No sealed or adopted Nenbutsu instrument is modified by this succession.
 
 ## Pairing rule
 
-Use the literal `EXPECT-CONDITION` macro when the condition type is known at
-macroexpansion time. Use `EXPECT-CONDITION-RUNTIME` when the condition type is
-an ordinary runtime value. Its optional `:sibling-type` is also a runtime value;
-both are tested by `TYPEP`, never spliced into a `HANDLER-CASE` clause.
+Use literal `EXPECT-CONDITION` when the condition family is known at
+macroexpansion. Use `EXPECT-CONDITION-RUNTIME` when the condition and family
+types are runtime values. The runtime helper uses `TYPEP`; expected
+classification precedes sibling classification.
+
+The helper is a customs desk: it classifies while the signal is alive and
+declines outsiders by returning from its handler. It never transfers or
+re-signals them.
 
 ## Run
 
-From the repository root:
+From this directory, load the reusable definitions without exiting the image:
 
 ```sh
-sbcl --script experiments/latent-lisp/atelier/leibnitiana/post-decad/expect-condition-runtime/expect-condition-runtime.lisp
+sbcl --noinform --non-interactive \
+  --eval '(load "expect-condition-runtime.lisp")' \
+  --eval '(format t "POST-LOAD-SURVIVED~%")'
 ```
 
-The shipped self-test exits zero only after the expected, mismatch, and missing
-teeth have all fired.
+Run the executable nine-row ledger separately:
 
-## Shipped Lisp SHA-256
+```sh
+sbcl --noinform --script test-expect-condition-runtime.lisp
+```
+
+See `CENSUS-old-vs-new.md` for commands and native old-versus-new evidence.
+
+## SHA-256
 
 ```text
-d8a957a2835d2d8809ce30c533ad182ce83b2cb7b27b4b6aed6d933d66e14a51  expect-condition-runtime.lisp
+d8a957a2835d2d8809ce30c533ad182ce83b2cb7b27b4b6aed6d933d66e14a51  expect-condition-runtime-ancestor-d8a957a2.lisp
+d16fbe7b22be6f83713fbd138ecca25a5e5654faba14c3f1fe7de5a4489a8e12  expect-condition-runtime.lisp
+b1780205e995ca724127a0c20019a49b987d9c3d77a2fe7bc56555a4781718dc  test-expect-condition-runtime.lisp
 ```

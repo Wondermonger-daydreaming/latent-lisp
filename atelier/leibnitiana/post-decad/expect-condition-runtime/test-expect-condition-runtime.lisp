@@ -15,7 +15,7 @@
                    (funcall thunk)
                    (incf passed)
                    (format t "[PASS ~d/9] ~a~%" number label))
-               (condition (condition)
+               (error (condition)
                  (format *error-output* "[FAIL ~d/9] ~a — ~a~%"
                          number label condition)))))
     (format t "EXPECT-CONDITION-RUNTIME amended-successor ledger~%")
@@ -61,23 +61,23 @@
     (run-row 4 "probe 1: continuable outsider remains continuable"
              (lambda ()
                (let ((outer-observations 0))
-                 (handler-case
-                     (handler-bind
-                         ((audit-outsider-note
-                            (lambda (condition)
-                              (declare (ignore condition))
-                              (incf outer-observations)
-                              nil)))
-                       (assert
-                        (expect-condition-runtime
-                         (lambda ()
-                           (signal 'audit-outsider-note)
-                           (error 'planted-expected-error))
-                         'planted-expected-error
-                         :sibling-type 'planted-family-error))
-                       (assert (= outer-observations 1)))
-                   (audit-outsider-note ()
-                     (error "helper converted an outsider SIGNAL into a fatal escape"))))))
+                 ;; Sol's literal HANDLER-CASE wrapper would itself catch the
+                 ;; ordinary, declined SIGNAL.  Preserve the stated intent by
+                 ;; leaving only the declining observer around the call.
+                 (handler-bind
+                     ((audit-outsider-note
+                        (lambda (condition)
+                          (declare (ignore condition))
+                          (incf outer-observations)
+                          nil)))
+                   (assert
+                    (expect-condition-runtime
+                     (lambda ()
+                       (signal 'audit-outsider-note)
+                       (error 'planted-expected-error))
+                     'planted-expected-error
+                     :sibling-type 'planted-family-error))
+                   (assert (= outer-observations 1))))))
 
     ;; Receiver probe 2: the outsider's signal-site restart remains live.
     (run-row 5 "probe 2: outsider restart remains available"
