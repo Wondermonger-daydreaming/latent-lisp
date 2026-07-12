@@ -1,0 +1,189 @@
+diff --git a/experiments/latent-lisp/atelier/sexp-garden/garden.lisp b/experiments/latent-lisp/atelier/sexp-garden/garden.lisp
+index fc16649c..5b0b31b2 100644
+--- a/experiments/latent-lisp/atelier/sexp-garden/garden.lisp
++++ b/experiments/latent-lisp/atelier/sexp-garden/garden.lisp
+@@ -172,6 +172,16 @@
+   (loop for (x . y) in data
+         sum (abs (- (tree-eval tree x) y))))
+ 
++;; Selection pays explicitly for syntax.  Raw error remains stored in ORG-ERR
++;; and reported on its own; this score must never be presented as prediction
++;; error.
++(defparameter *parsimony-lambda* 0.001d0)
++
++(defun fitness-score (tree data &optional raw)
++  "Penalized selection score = raw error + lambda times node count."
++  (+ (or raw (raw-error tree data))
++     (* *parsimony-lambda* (tree-size tree))))
++
+ (defun hits (tree data &optional (tol 0.01d0))
+   (loop for (x . y) in data count (< (abs (- (tree-eval tree x) y)) tol)))
+ 
+diff --git a/experiments/latent-lisp/atelier/sexp-garden/run-separatrix.lisp b/experiments/latent-lisp/atelier/sexp-garden/run-separatrix.lisp
+index ed8a13ba..cca4416e 100644
+--- a/experiments/latent-lisp/atelier/sexp-garden/run-separatrix.lisp
++++ b/experiments/latent-lisp/atelier/sexp-garden/run-separatrix.lisp
+@@ -34,6 +34,7 @@
+ (defparameter *tourney* 5)
+ (defparameter *xover-rate* 0.85d0)
+ (defparameter *elite* 2)
++(defparameter *barren-generations* 5)
+ (defparameter *seed*
+   (let ((arg (second sb-ext:*posix-argv*)))
+     (if arg (parse-integer arg) 8675309)))         ; committed seed; override via argv
+@@ -49,47 +50,77 @@
+          (orgs (mapcar (lambda (tr) (register tr (raw-error tr *data*) 0 :seed nil nil))
+                        trees))
+          (stats '())
+-         (overall-best nil))
++         (overall-best nil)
++         (overall-score most-positive-double-float)
++         (barren 0)
++         (restart-count 0))
+     (dotimes (gen *generations*)
+       (let* ((errs (map 'vector #'org-err orgs))
++             (scores (map 'vector
++                          (lambda (o) (fitness-score (org-tree o) *data* (org-err o)))
++                          orgs))
+              (best-i (loop with b = 0 for i from 1 below (length orgs)
+-                           when (< (aref errs i) (aref errs b)) do (setf b i)
++                           when (< (aref scores i) (aref scores b)) do (setf b i)
+                            finally (return b)))
+-             (best (nth best-i orgs)))
+-        (when (or (null overall-best) (< (org-err best) (org-err overall-best)))
+-          (setf overall-best best))
++             (best (nth best-i orgs))
++             (best-score (aref scores best-i))
++             (restart-now nil))
++        (if (< best-score (- overall-score 1d-12))
++            (setf overall-best best overall-score best-score barren 0)
++            (incf barren))
++        (when (and (< gen (1- *generations*))
++                   (>= barren *barren-generations*))
++          (setf restart-now t barren 0)
++          (incf restart-count))
+         (push (list :gen gen
+                     :best-err (org-err best)
++                    :best-score best-score
++                    :best-size (tree-size (org-tree best))
+                     :median-err (float (median (coerce errs 'list)) 1d0)
+                     :mean-size (/ (reduce #'+ (mapcar (lambda (o) (tree-size (org-tree o))) orgs))
+                                   (float (length orgs) 1d0))
+                     :best-hits (hits (org-tree best) *data*)
+                     :best-tree (org-tree best)
+                     :best-id (org-id best)
+-                    :best-how (org-how best))
++                    :best-how (org-how best)
++                    :restart restart-now
++                    :restart-count restart-count)
+               stats)
+         (unless (= gen (1- *generations*))
+-          (let ((next '())
+-                (sorted (sort (copy-seq orgs) #'< :key #'org-err)))
+-            (dotimes (e *elite*)
+-              (let ((o (nth e sorted)))
+-                (push (register (org-tree o) (org-err o) (1+ gen) :elite (org-id o) nil)
+-                      next)))
+-            (loop while (< (length next) *pop-size*) do
+-              (let ((ip (tournament orgs errs *tourney*))
+-                    (jp (tournament orgs errs *tourney*)))
+-                (if (< (rand-float) *xover-rate*)
+-                    (let* ((pa (nth ip orgs)) (pb (nth jp orgs))
+-                           (child (crossover (org-tree pa) (org-tree pb))))
+-                      (push (register child (raw-error child *data*) (1+ gen)
+-                                      :crossover (org-id pa) (org-id pb))
+-                            next))
+-                    (let* ((pa (nth ip orgs))
+-                           (child (mutate (org-tree pa))))
+-                      (push (register child (raw-error child *data*) (1+ gen)
+-                                      :mutation (org-id pa) nil)
+-                            next)))))
+-            (setf orgs (nreverse next))))))
++          (if restart-now
++              (let ((fresh (ramped-population (1- *pop-size*))))
++                (setf orgs
++                      (cons (register (copy-tree (org-tree overall-best))
++                                      (org-err overall-best) (1+ gen) :elite
++                                      (org-id overall-best) nil)
++                            (mapcar (lambda (tr)
++                                      (register tr (raw-error tr *data*) (1+ gen)
++                                                :restart nil nil))
++                                    fresh))))
++              (let ((next '())
++                    (sorted (sort (copy-seq orgs) #'<
++                                  :key (lambda (o)
++                                         (fitness-score (org-tree o) *data*
++                                                        (org-err o))))))
++                (dotimes (e *elite*)
++                  (let ((o (nth e sorted)))
++                    (push (register (org-tree o) (org-err o) (1+ gen) :elite (org-id o) nil)
++                          next)))
++                (loop while (< (length next) *pop-size*) do
++                  (let ((ip (tournament orgs scores *tourney*))
++                        (jp (tournament orgs scores *tourney*)))
++                    (if (< (rand-float) *xover-rate*)
++                        (let* ((pa (nth ip orgs)) (pb (nth jp orgs))
++                               (child (crossover (org-tree pa) (org-tree pb))))
++                          (push (register child (raw-error child *data*) (1+ gen)
++                                          :crossover (org-id pa) (org-id pb))
++                                next))
++                        (let* ((pa (nth ip orgs))
++                               (child (mutate (org-tree pa))))
++                          (push (register child (raw-error child *data*) (1+ gen)
++                                          :mutation (org-id pa) nil)
++                                next)))))
++                (setf orgs (nreverse next)))))))
+     (values overall-best (nreverse stats))))
+ 
+ (defun jstr (tree)
+@@ -103,11 +134,13 @@
+   (with-open-file (s path :direction :output :if-exists :supersede
+                           :if-does-not-exist :create)
+     (dolist (st stats)
+-      (format s "{\"gen\":~D,\"best_error\":~,6F,\"median_error\":~,6F,~
+-                 \"mean_size\":~,3F,\"best_hits\":~D,\"best_how\":\"~(~A~)\",~
++      (format s "{\"gen\":~D,\"best_error\":~,6F,\"best_score\":~,6F,\"best_size\":~D,\"median_error\":~,6F,~
++                 \"mean_size\":~,3F,\"best_hits\":~D,\"best_how\":\"~(~A~)\",\"restart\":~:[false~;true~],\"restart_count\":~D,~
+                  \"best_tree\":~S}~%"
+-              (getf st :gen) (getf st :best-err) (getf st :median-err)
++              (getf st :gen) (getf st :best-err) (getf st :best-score)
++              (getf st :best-size) (getf st :median-err)
+               (getf st :mean-size) (getf st :best-hits) (getf st :best-how)
++              (getf st :restart) (getf st :restart-count)
+               (jstr (getf st :best-tree))))))
+ 
+ (defun find-glider ()
+@@ -135,6 +168,8 @@
+   (format t "~&;;;; sexp-garden SESSION TWO -- SEPARATRIX WORLD (real data)~%")
+   (format t ";;;; seed=~D, pop=~D, gens=~D, ~D measured points~%"
+           *seed* *pop-size* *generations* (length *data*))
++  (format t ";;;; selection=raw-error + ~,4F*size ; restart after ~D barren generations~%"
++          *parsimony-lambda* *barren-generations*)
+   ;; -- honest baselines to judge the fit against --
+   (let* ((ymean (/ (reduce #'+ (mapcar #'cdr *data*)) (float (length *data*) 1d0)))
+          (err-zero (raw-error 0 *data*))
+@@ -142,17 +177,23 @@
+     (format t ";;;; baseline: predict-0 total-abs-err=~,4F ; predict-mean(~,4F)=~,4F~%"
+             err-zero ymean err-mean)
+     (multiple-value-bind (best stats) (evolve)
+-      (write-census stats (merge-pathnames "census-separatrix.jsonl" *load-pathname*))
++      (write-census stats (merge-pathnames "census-separatrix-v2.jsonl" *load-pathname*))
+       (let ((first (first stats)) (last (car (last stats))))
+         (format t ";;;; gen 0   : best-err ~,4F  (~D/~D hits)~%"
+                 (getf first :best-err) (getf first :best-hits) (length *data*))
+         (format t ";;;; gen ~D  : best-err ~,4F  (~D/~D hits)~%"
+                 (getf last :gen) (getf last :best-err)
+                 (getf last :best-hits) (length *data*)))
++      (format t ";;;; restarts: ~D at generations ~S~%"
++              (getf (car (last stats)) :restart-count)
++              (loop for st in stats when (getf st :restart) collect (getf st :gen)))
+       (format t ";;;; overall best (id ~D, born by ~(~A~) at gen ~D):~%    ~S~%"
+               (org-id best) (org-how best) (org-gen best) (org-tree best))
+       (format t ";;;; overall best total-abs-err = ~,6F   hits(<=0.01) = ~D/~D~%"
+               (org-err best) (hits (org-tree best) *data*) (length *data*))
++      (format t ";;;; overall best selection-score = ~,6F   size = ~D~%"
++              (fitness-score (org-tree best) *data* (org-err best))
++              (tree-size (org-tree best)))
+       ;; per-point residuals, so the fit is legible (GP's charm: you can read it)
+       (format t ";;;; per-point (J_cross : measured -> predicted, residual):~%")
+       (loop for (x . y) in *data*

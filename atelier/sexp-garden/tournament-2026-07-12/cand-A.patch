@@ -1,0 +1,106 @@
+diff --git a/experiments/latent-lisp/atelier/sexp-garden/run-separatrix.lisp b/experiments/latent-lisp/atelier/sexp-garden/run-separatrix.lisp
+index ed8a13ba..1c3868c9 100644
+--- a/experiments/latent-lisp/atelier/sexp-garden/run-separatrix.lisp
++++ b/experiments/latent-lisp/atelier/sexp-garden/run-separatrix.lisp
+@@ -34,6 +34,8 @@
+ (defparameter *tourney* 5)
+ (defparameter *xover-rate* 0.85d0)
+ (defparameter *elite* 2)
++(defparameter *parsimony-lambda* 0.001d0)
++(defparameter *barren-limit* 5)
+ (defparameter *seed*
+   (let ((arg (second sb-ext:*posix-argv*)))
+     (if arg (parse-integer arg) 8675309)))         ; committed seed; override via argv
+@@ -49,15 +51,23 @@
+          (orgs (mapcar (lambda (tr) (register tr (raw-error tr *data*) 0 :seed nil nil))
+                        trees))
+          (stats '())
+-         (overall-best nil))
++         (overall-best nil)
++         (barren 0))
+     (dotimes (gen *generations*)
+       (let* ((errs (map 'vector #'org-err orgs))
++             (fitness (map 'vector (lambda (o) (+ (org-err o)
++                                                   (* *parsimony-lambda*
++                                                      (tree-size (org-tree o)))))
++                           orgs))
+              (best-i (loop with b = 0 for i from 1 below (length orgs)
+                            when (< (aref errs i) (aref errs b)) do (setf b i)
+                            finally (return b)))
+              (best (nth best-i orgs)))
+-        (when (or (null overall-best) (< (org-err best) (org-err overall-best)))
+-          (setf overall-best best))
++        (if (or (null overall-best) (< (org-err best) (org-err overall-best)))
++            (setf overall-best best barren 0)
++            (incf barren))
++        (let ((restart (and (>= barren *barren-limit*)
++                            (< gen (1- *generations*)))))
+         (push (list :gen gen
+                     :best-err (org-err best)
+                     :median-err (float (median (coerce errs 'list)) 1d0)
+@@ -66,18 +76,26 @@
+                     :best-hits (hits (org-tree best) *data*)
+                     :best-tree (org-tree best)
+                     :best-id (org-id best)
+-                    :best-how (org-how best))
++                    :best-how (org-how best)
++                    :restart restart)
+               stats)
+         (unless (= gen (1- *generations*))
+           (let ((next '())
+-                (sorted (sort (copy-seq orgs) #'< :key #'org-err)))
++                (sorted (sort (copy-seq orgs) #'<
++                              :key (lambda (o) (+ (org-err o)
++                                                  (* *parsimony-lambda*
++                                                     (tree-size (org-tree o))))))))
+             (dotimes (e *elite*)
+               (let ((o (nth e sorted)))
+                 (push (register (org-tree o) (org-err o) (1+ gen) :elite (org-id o) nil)
+                       next)))
+-            (loop while (< (length next) *pop-size*) do
+-              (let ((ip (tournament orgs errs *tourney*))
+-                    (jp (tournament orgs errs *tourney*)))
++            (if restart
++                (dolist (tree (ramped-population (- *pop-size* *elite*)))
++                  (push (register tree (raw-error tree *data*) (1+ gen)
++                                  :seed nil nil) next))
++                (loop while (< (length next) *pop-size*) do
++              (let ((ip (tournament orgs fitness *tourney*))
++                    (jp (tournament orgs fitness *tourney*)))
+                 (if (< (rand-float) *xover-rate*)
+                     (let* ((pa (nth ip orgs)) (pb (nth jp orgs))
+                            (child (crossover (org-tree pa) (org-tree pb))))
+@@ -88,8 +106,9 @@
+                            (child (mutate (org-tree pa))))
+                       (push (register child (raw-error child *data*) (1+ gen)
+                                       :mutation (org-id pa) nil)
+-                            next)))))
+-            (setf orgs (nreverse next))))))
++                            next))))))
++            (when restart (setf barren 0))
++            (setf orgs (nreverse next)))))))
+     (values overall-best (nreverse stats))))
+ 
+ (defun jstr (tree)
+@@ -105,10 +124,10 @@
+     (dolist (st stats)
+       (format s "{\"gen\":~D,\"best_error\":~,6F,\"median_error\":~,6F,~
+                  \"mean_size\":~,3F,\"best_hits\":~D,\"best_how\":\"~(~A~)\",~
+-                 \"best_tree\":~S}~%"
++                 \"restart\":~:[false~;true~],\"best_tree\":~S}~%"
+               (getf st :gen) (getf st :best-err) (getf st :median-err)
+               (getf st :mean-size) (getf st :best-hits) (getf st :best-how)
+-              (jstr (getf st :best-tree))))))
++              (getf st :restart) (jstr (getf st :best-tree))))))
+ 
+ (defun find-glider ()
+   (let ((best nil) (best-gap -1d0))
+@@ -142,7 +161,7 @@
+     (format t ";;;; baseline: predict-0 total-abs-err=~,4F ; predict-mean(~,4F)=~,4F~%"
+             err-zero ymean err-mean)
+     (multiple-value-bind (best stats) (evolve)
+-      (write-census stats (merge-pathnames "census-separatrix.jsonl" *load-pathname*))
++      (write-census stats (merge-pathnames "census-separatrix-v2.jsonl" *load-pathname*))
+       (let ((first (first stats)) (last (car (last stats))))
+         (format t ";;;; gen 0   : best-err ~,4F  (~D/~D hits)~%"
+                 (getf first :best-err) (getf first :best-hits) (length *data*))
