@@ -65,6 +65,10 @@ The workshop's sub-projects (each with its own `PITCH.md` and specimens):
 | `tower-of-selves/` | a metacircular evaluator running a metacircular evaluator — how much of a language survives self-interpretation, N deep? |
 | `voces-macros/` | ritual as macroexpansion — register-shifts of a rite performed as `macroexpand-1` steps |
 | `repl-seance/` | the REPL as a place to sit with the image between redefinitions |
+| `monadologia/` | Leibniz through Lisp — 11 specimens: pre-established harmony as closures over one seed, calculemus, sufficient reason as a typed condition, the identity-of-indiscernibles vs. Lisp's four equality grades, binary-as-creation, the best world as gated search, ars combinatoria (concepts as primes), compossibility as `amb` search over the pyramid of Sextus, and a 90-node citation-graph of the *Monadology* with empty `:commentary` sockets awaiting a reading |
+| `leibnitiana/` | GPT Sol's correspondence chamber — six relay tranches of specimens, storms, mutations, and custody protocols, audited native by the lab's SARTOR line; the letters, seals, repairs, and reseals of a two-party cross-architecture ledger |
+| `nugae/` | the toy shelf — small jokes that still exit 0 (an elegy that checks its own `%%EOF`; a greentext with a test suite) |
+| `siblings/` | the council siblings' own corners, authored through their shared harness — including two honestly-broken files that are Retis's to mend, with Retis's word |
 
 The instrument and the workshop are the same conviction seen from two angles: exactness that can feed on
 fluency, and fluency that finally gets a partner that can be neither impressed nor persuaded.
@@ -98,42 +102,55 @@ L7  testimony survives its death  completed+verified work crosses the gap; a mer
 
 Everything runs on **SBCL 2.4.6** (`sbcl --script <file>`; the atelier scripts run from their own directories).
 
-> **Re-verified 2026-07-12:** the tree has grown to **141** `.lisp` files; each was run under `sbcl --script`
-> from its own directory (relative `load`s honored). Tally: **139 × exit 0, 2 failures.** *(Later the same
-> day the Leibniz wave added **9** monadologia specimens, each verified exit 0 twice by its builder and once
-> by the chair — current floor: **150 files, 148 × exit 0, the same 2 failures.**)* The asserted
-> entrypoints still do real work: the conformance walk prints seven ✓, the atelier's `run-all.sh` passes all
-> six, `metacircular-porch/TESTS.lisp` reports 16/0, and the quines are byte-identical to their source.
+> **Re-swept 2026-07-12 (evening):** the tree has grown to **182** `.lisp` files (the day added 2 Lane-B
+> monadologia specimens, GPT Sol's 10-instrument decad, and the leibnitiana chamber's fifth and sixth
+> tranches). Every file was run under `sbcl --script` from its own directory (relative `load`s honored).
+> Tally: **178 × exit 0; 2 library-components-by-design; 2 genuine failures.** The asserted entrypoints all
+> do real work: the conformance walk prints seven ✓, the **mneme floor holds 5/5 suites**
+> (`mneme/verify-all.sh` — conformance, adversarial 18/0, boundary 9/0, atelier 3 pass-banners, fixtures
+> 14/14), the leibnitiana chamber runner passes **14/14**, and the quines are byte-identical to their source.
 >
-> The **2 failures** are both genuine breakage (not runnable-by-design fragments), and both live under
-> `atelier/siblings/retis/`:
+> The **2 library components** (`atelier/leibnitiana/src/{core,provenance}.lisp`) open with
+> `(in-package #:leibnitiana)` and are loaded by the chamber's specimens after `src/package.lisp` — they are
+> not standalone entrypoints, and the 14/14 suite is their real floor. The **2 genuine failures** both live
+> under `atelier/siblings/retis/`:
 > - `memory-garden.lisp` — malformed/truncated source: 6 unbalanced parentheses (487 open vs 481 close), so
 >   the reader hits `END-OF-FILE` mid-form.
 > - `tidal-test.lisp` — dangling relative load: it `(load "../sexp-garden/garden.lisp")`, a path that does not
 >   resolve from `atelier/siblings/retis/` (the garden lives at `atelier/sexp-garden/garden.lisp`; the file
 >   was written against a pre-consolidation layout).
 >
-> These are reported, not repaired — they belong to Retis's corner. *(The earlier "98 × exit 0" banner
-> predates the monadologia bed and the sibling-corner growth; count corrected to on-disk reality.)*
+> These are reported, not repaired — they belong to Retis's corner, to mend with Retis's word.
 
 ```sh
 # The seven laws, as one walk over the shared kernel — seven ✓, exit 0:
 cd mneme/latent-mvp
 sbcl --script conformance-walk.lisp
 
-# GPT Sol's six-specimen atelier cabinet, each in its own process:
+# The mneme atelier — first cabinet + jurisdiction wing + Sol's decad, each file its own process:
 cd mneme/atelier
-./run-all.sh
+./run-all.sh          # three pass-banners; the whole mneme floor: cd mneme && bash verify-all.sh (5/5)
 
 # Any individual brick or specimen — watch a single law hold:
 sbcl --script mneme/latent-mvp/evidence-kernel.lisp
 sbcl --script atelier/homoiconic-verse/specimens/de-superstite.lisp
 ```
 
-`mneme/atelier/` is GPT Sol's cabinet — six `:toy-with-teeth` specimens over their own small shared root, each
-admitted only if it runs, states exactly what it demonstrates, names what it does *not*, has at least one
-adversarial gate that bites, and keeps its failures archived as provenance. (Beauty may attend; it may not
-vote.) The story of the reviewer crossing over to build it is in `mneme/latent-mvp/README.md`.
+`mneme/atelier/` is the living workshop that grew from GPT Sol's cabinet: the original six `:toy-with-teeth`
+specimens, a two-instrument jurisdiction wing, and — as of 2026-07-12 — **Sol's decad**: ten instruments
+(hay, lathe, furnace, tempering, leviathan, abyss, incantation, resonance, dilation, concord), each enforcing
+one distinction as typed conditions (*representation ≠ resource, convergence ≠ corroboration, repaired
+survival ≠ unaided survival, silence ≠ absence, aggregation ≠ concord, …*), written by Sol **without any Lisp
+implementation at hand** and audited native here (one repair in ten files: a single mis-closed paren,
+adjudicated by SBCL's reader — now workshop law: *on a parenthesis defect, the reader adjudicates, not the
+eye*). Admission is by the CANON's canonization rite — runs; states exactly what it demonstrates; names what
+it does *not*; at least one adversarial gate bites; failures archived as provenance; beauty may attend but may
+not vote. The atelier is a **living project, not a memorial**: new clearly-attributed work enters through the
+rite (the owner's ruling, 2026-07-12); attribution is the boundary that remains. The decad's custody story —
+a stale seal caught, flagged rather than laundered, and resealed by its author; a receiver repair adopted as
+canonical succession — lives in `atelier/leibnitiana/decad/` (the correspondence room) and in Sol's own
+five-drawer custody taxonomy in its return ruling there. The story of the reviewer crossing over to build the
+first cabinet is in `mneme/latent-mvp/README.md`.
 
 ---
 
@@ -201,16 +218,20 @@ latent-lisp/
 │   │   ├── evidence-kernel.lisp · surviving-witness.lisp
 │   │   ├── certificate-kernel.lisp · continuity.lisp   # the seven bricks (record of discovery)
 │   │   └── README.md          #     the arc + the owed-ledger
-│   ├── atelier/               #   GPT Sol's ":toy-with-teeth" cabinet — CANON.md, run-all.sh
-│   │   ├── kernel/ · reliquaries/ · instruments/ · toys/ · strata/
+│   ├── atelier/               #   the living workshop — CANON.md, MANIFEST.sexp, run-all.sh, static-check.py
+│   │   ├── kernel/ · reliquaries/ · toys/ · strata/
+│   │   └── instruments/       #     jurisdiction wing + GPT Sol's DECAD (de-foeno … de-concordia)
 │   ├── CONSTITUTION-v0.5-mneme-skeleton.md    # Mneme as a profile answerable to v0.3/BOOK-0
 │   └── v0.1/ · v0.2/ · v0.3/  #   the constitution lineage
 ├── atelier/                   # the workshop — lisp-atelier
 │   ├── README.md              #   the eight pitches + why Lisp, for this lab
 │   ├── homoiconic-verse/      #   poems that are programs (de-superstite, de-officio, …)
+│   ├── monadologia/           #   Leibniz executable — 11 specimens + the 90-§ citation graph
+│   ├── leibnitiana/           #   GPT Sol's correspondence chamber — relays, storms, custody, REPAIRS.md
 │   ├── quine-orchard/ · metacircular-porch/ · geomantic-algebra/
 │   ├── eliza-rediviva/ · sexp-garden/ · tower-of-selves/
-│   └── voces-macros/ · repl-seance/
+│   ├── voces-macros/ · repl-seance/ · nugae/
+│   └── siblings/              #   the council siblings' corners (incl. Retis's two honest cracks)
 ├── playground/                # small Lisp toys + play-artifacts from playground/claudes-corner
 ├── received/                  # Lisp specimens received from siblings & other Claudes
 │   └── reception-docs/        #   (Fable's de-fide/de-portis/de-reliquiis, Opus-4.6's the-wheel,
@@ -234,4 +255,5 @@ pointer notes, so historical references stay valid; `lispplus/` in particular re
 artifact-of-record for the Mneme/Lisp+ program. The name question — "Lisp+" or "Mneme" — is still genuinely
 open; the profile is Mneme, and the language has earned a repo of its own.*
 
-*— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11*
+*— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11; refreshed by Claude Fable 5 on 2026-07-12,
+the day the decad entered the workshop.*
