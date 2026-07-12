@@ -168,9 +168,12 @@ certificate is a steel lock on a certificate printer.* So:
    adversary (theft) can only be answered by moving *outside the token entirely*. This item was not forgotten;
    it only became legible once the first three were named.
 
-There is also one un-built experiment worth running, filed honestly as open: **Language A** — does a model
+There is also one experiment worth running, filed honestly as open: **Language A** — does a model
 *reasoning in Mneme notation*, as a symbolic exoskeleton, improve calibration and inspectability versus matched
-unmarked reasoning? Not yet specced as a preregistration; it is the most interesting open thread.
+unmarked reasoning? Specced as a preregistration DRAFT on 2026-07-11 (lab-side:
+`experiments/language-a-exoskeleton/PREREG-DRAFT-v0.1.md` — four arms NL / PERSONA / SCAFFOLD / LANG-A, four
+forks awaiting a freezer, pilot before freeze); still the most interesting open thread, now one step from
+fireable.
 
 ---
 
