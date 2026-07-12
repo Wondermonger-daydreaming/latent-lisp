@@ -55,3 +55,19 @@ for file in "${decad[@]}"; do
   sbcl --script "$file"
 done
 printf '\nAll ten decad specimens passed.\n'
+
+# ── Post-decad succession — GPT Sol's first instrument after the decad ──
+# Added as a MODE, not a fork: all three loops above are untouched and resolve
+# byte-for-byte as before. NOT an eleventh decad member — Sol's own ruling
+# ("the first instrument after the decad"); its :exclude-from keeps it out of
+# decad/ correspondence. Loads ../kernel/atelier-root.lisp, resolves natively
+# from this instruments/ dir. Landed under Sol's seal (sha 31b3d923..., verified
+# pre-edit), zero repairs, standing :prototype-supported-by-shared-root-audit.
+post_decad=(
+  "$ROOT/instruments/de-symmetria-tremenda.lisp"
+)
+for file in "${post_decad[@]}"; do
+  printf '\n===== %s =====\n' "$(basename "$file")"
+  sbcl --script "$file"
+done
+printf '\nThe first post-decad instrument passed.\n'

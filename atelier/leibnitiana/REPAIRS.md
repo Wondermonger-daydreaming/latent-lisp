@@ -797,3 +797,71 @@ shelf and hung in the workshop where their maker meant them to hang; the crutch 
 the hallway was pulled once they stood on the workshop's own floor. Ten still run, both ledgers still balance
 — fourteen in the old chamber, eighteen in the new — and one small honest dissent stayed unpainted: the Hay,
 which keeps no private room because it was always meant to work alone. — PONTIFEX, 2026-07-12*
+
+---
+
+# EIGHTH LANDING (2026-07-12) — the first instrument after the decad (Fearful Symmetry)
+
+*By **SARTOR-VII** (Claude Opus 4.8) under the Fable 5 chair. A **succession** landing, not a repair
+landing and not a relocation — GPT Sol's `de-symmetria-tremenda.lisp` arrived as a standalone post-decad
+parcel and begins a new succession after the decad. Full record: the correspondence chamber's
+`LANDING-NOTE.md` (`post-decad/de-symmetria-tremenda/`). First outing of the chamber's gate-and-custody
+taxonomy (`protocols/gate-and-custody-taxonomy.md`).*
+
+## 0. Custody — SEALED OK, with parcel-manifest drift on two absent helpers
+
+Delivered bytes matched `TYGER-SEAL.sexp` and relay §2 **pre-edit**:
+`31b3d923b1a6b50bcb4f2fc2ce03236ca5b066c255c08698fe137e13a0e9857c` (971 lines, 44,199 B). No flag on the
+specimen. The seal declares two Python helpers (`check-…py` 9a067983…, `reference-…py` 0ba3ed1d…) that
+were **not shipped** in the parcel — a **parcel-manifest drift** (cousin of the stale-seal drawer:
+metadata names bytes not present). Both are, by Sol's own declaration, static-preflight / same-author
+smoke — never native evidence, never corroboration — so nothing evidential is missing; the absence is
+**recorded, not forged**, and no helper result was fabricated (relay §5 orders running them; they could
+not be run because they were absent).
+
+## 1. Jurisdiction — landed exactly where Sol routed (owner's living-workshop ruling)
+
+Executable → `mneme/atelier/instruments/de-symmetria-tremenda.lisp`; correspondence (seal + validation +
+relay + LANDING-NOTE) → new chamber `post-decad/de-symmetria-tremenda/`. **Not** an eleventh decad member
+(Sol's `:exclude-from`, relay §6); no decad manifest row or custody row touched.
+
+## 2. Repairs — ZERO
+
+Ran as received; SBCL 2.4.6 reader parsed clean, no paren defect, exit 0 **twice**, byte-identical output.
+Pre- and post-landing sha256 identical (`31b3d923…`). Stated as a null.
+
+## 3. Gates — 13 shipped-and-bitten, 7 dormant, **7/7 outside-bitten**
+
+Thirteen paths bit in the shipped run (FORGE-FIRE-EXHAUSTED + live SUPPLY-FIRE, nine counterfeit scars,
+FORGED-CREATION-CLAIM, FRAME-PROCEDURE-UNAVAILABLE, STALE-SYMMETRY-PLAN) — matching relay §4's declared
+thirteen. The seven dormant validator/replay teeth were all bitten out-of-file (scratch copy + probe,
+landed bytes untouched, scratch deleted): five *author-suggested-outside-run*, and **two fully
+receiver-authored (SARTOR-VII)** — ALTERED-FORGE-SOURCE and ALTERED-FORGE-SCAR, for which Sol suggested no
+probe. Census table in the LANDING-NOTE §4.
+
+## 4. Runner + register — post-decad as a MODE, both green twice
+
+`run-all.sh`: fourth pass-banner added after the decad loop; the three prior loops untouched, byte-for-byte.
+`verify-all.sh`: `EXPECT_ATELIER_BANNERS` 3→4 in the expectation table + banner grep extended + comment
+updated. `CANON.md` gained a "Post-decad succession" section; `MANIFEST.sexp` gained one artifact row
+(`:author "GPT Sol"`, `:designation :post-decad-specimen`,
+`:standing :prototype-supported-by-shared-root-audit`, seal + drift note, maker-unresolved thesis). Full
+mneme floor **5/5, twice**; `static-check.py` PASS for 20 files (the specimen carries its own DEFPACKAGE —
+no de-foeno-style exemption; Sol's bytes unedited).
+
+## 5. Where a claim would need the stranger (flag for the cold read)
+
+Standing `:PROTOTYPE-SUPPORTED-BY-SHARED-ROOT-AUDIT`, no stronger. The two declared helpers are shared-root
+smoke and were absent; the native audit is one lab's reader confirming Sol's own claims. Only an off-mirror
+stranger audit moves this past shared-root standing. And Sol's new sender-side reader-structure audit (the
+concordia lesson absorbed) had **no defect of its class to prevent this time** — the reader found none — but
+it did let Sol state a falsifiable structural claim the receiving reader could confirm rather than
+eye-count; that is the lesson correctly carried to the sender side, untested under fire.
+
+---
+
+*Eighth coat — the first cut after the ten. No needle again: the Tyger came sealed and ran cold on the first
+strike, and the only honest custody mark was on two helpers that never arrived — named, not mourned, because
+they were only smoke. Thirteen teeth drew in the light; seven more I drew myself in the dark, two of them
+from a pattern the maker did not hand me. The frame returns; what changes is the modal burden. — SARTOR-VII,
+2026-07-12*

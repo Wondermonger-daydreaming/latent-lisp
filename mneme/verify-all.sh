@@ -26,7 +26,7 @@ trap 'rm -rf "$WORK"' EXIT
 EXPECT_CONFORMANCE_CHECKS=7      # ✓ marks: L1..L7
 EXPECT_ADVERSARIAL_PASSED=18     # "=== N passed, 0 failed ==="
 EXPECT_BOUNDARY_PASSED=9         # "=== N passed, 0 failed ==="
-EXPECT_ATELIER_BANNERS=3         # "...specimens passed." + "...jurisdiction instruments passed." + "All ten decad specimens passed." (Sol's decad entered the atelier 2026-07-12, owner's ruling)
+EXPECT_ATELIER_BANNERS=4         # "...specimens passed." + "...jurisdiction instruments passed." + "All ten decad specimens passed." + "The first post-decad instrument passed." (Sol's de-symmetria-tremenda landed as the first post-decad succession, 2026-07-12)
 EXPECT_FIXTURES_PASS=14          # 6 lawful + 8 malformed PASS lines
 
 FAILURES=()
@@ -88,9 +88,9 @@ fi
 LOG="$WORK/atelier.log"
 bash "$ROOT/atelier/run-all.sh" >"$LOG" 2>&1
 rc=$?
-b=$(grep -Ec "specimens passed|jurisdiction instruments passed" "$LOG")
+b=$(grep -Ec "specimens passed|jurisdiction instruments passed|post-decad instrument passed" "$LOG")
 if [ "$rc" -eq 0 ] && [ "$b" -eq "$EXPECT_ATELIER_BANNERS" ]; then
-  report "PASS" "atelier" "expected $EXPECT_ATELIER_BANNERS pass-banners, got $b (6 specimens + jurisdiction wing)"
+  report "PASS" "atelier" "expected $EXPECT_ATELIER_BANNERS pass-banners, got $b (6 specimens + jurisdiction wing + decad + post-decad)"
 else
   fail "atelier" "expected $EXPECT_ATELIER_BANNERS pass-banners / exit 0, got $b / exit $rc" "$LOG"
 fi

@@ -34,6 +34,12 @@ Ten executable specimens authored by **GPT Sol** and relayed to the lab on 2026-
 
 *Note: `de-foeno.lisp` is self-contained (defines its symbols in `CL-USER`, loads no kernel), so it does not carry a private `DEFPACKAGE`; `static-check.py`'s package-isolation lint flags it. Its bytes are Sol's and were left unedited. The nine others load `../kernel/atelier-root.lisp`, which resolves natively from this directory.*
 
+## Post-decad succession — GPT Sol's first instrument after the decad (relay 2026-07-12)
+
+Authored by **GPT Sol**, relayed as a standalone post-decad parcel and landed/audited by **SARTOR-VII** (Claude Opus 4.8) under the Fable 5 chair. Explicitly **not** an eleventh decad member (Sol's own `:exclude-from`): it begins a new succession after the decad. Ran exit 0 twice under SBCL 2.4.6, byte-identical output, seal `31b3d923…` verified pre-edit, **zero repairs**. Standing: `:prototype-supported-by-shared-root-audit`.
+
+- `instruments/de-symmetria-tremenda.lisp` — *Concerning Fearful Symmetry.* The repeated frame of Blake's *The Tyger* preserves structure while `:COULD` becomes `:DARE`; beauty does not domesticate terror, and a question about a maker does not certify one. Thirteen advertised paths bit in the shipped run (FORGE-FIRE-EXHAUSTED with live SUPPLY-FIRE repair, nine counterfeit-promotion scars, FORGED-CREATION-CLAIM, FRAME-PROCEDURE-UNAVAILABLE, STALE-SYMMETRY-PLAN); its seven validator/replay teeth are declared-dormant and were all outside-bitten (five author-suggested, two SARTOR-VII-authored: ALTERED-FORGE-SOURCE, ALTERED-FORGE-SCAR). Carries its own private `DEFPACKAGE` (`lispplus-atelier.de-symmetria-tremenda`); passes the package-isolation lint. Correspondence: `atelier/leibnitiana/post-decad/de-symmetria-tremenda/`.
+
 ## Canonization rite
 
 An artifact enters this cabinet only if:

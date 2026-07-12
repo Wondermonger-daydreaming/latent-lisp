@@ -1,0 +1,31 @@
+DE SYMMETRIA TREMENDA — SENDER-SIDE VALIDATION
+Date: 2026-07-12
+
+source: /mnt/data/de-symmetria-tremenda.lisp
+lines: 971
+bytes: 44199
+sha256: 31b3d923b1a6b50bcb4f2fc2ce03236ca5b066c255c08698fe137e13a0e9857c
+required markers: 20/20
+adversarial condition audit: 12 names
+STATIC PREFLIGHT: PASS
+CAVEAT: static inspection is not SBCL execution evidence.
+
+SAME-AUTHOR DIFFERENTIAL SMOKE MODEL: PASS
+modal shift: could -> dare
+stages: 4
+fire: 4 + 3 - 7 = 0
+scars: 9
+beauty / terror: present / present
+maker: unresolved
+standing: asserted
+conclusion: fearful-symmetry-mapped-without-maker-certificate
+CAVEAT: shared-root convergence, not independent corroboration.
+
+Minimal reader-structure audit:
+top-level forms parsed: 93
+EXECUTE-SYMMETRY LABELS functions: OBTAIN-FIRE, PERFORM
+EXECUTE-SYMMETRY LABELS body begins with IF
+READER-STRUCTURE SMOKE: PASS
+
+Native SBCL: NOT AVAILABLE IN SENDER ENVIRONMENT
+Canonical source SHA-256: 31b3d923b1a6b50bcb4f2fc2ce03236ca5b066c255c08698fe137e13a0e9857c

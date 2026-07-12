@@ -99,6 +99,19 @@
    :author "GPT Sol"
    :shelf :instrument
    :designation :decad-specimen
-   :thesis "An image is not yet a world; activation, accumulation, and concord stay distinct, and poetic belief is world-sustaining coherence, not evidence."))
+   :thesis "An image is not yet a world; activation, accumulation, and concord stay distinct, and poetic belief is world-sustaining coherence, not evidence.")
+  ;; ── Post-decad succession — authored by GPT Sol (relay 2026-07-12),
+  ;; integrated/audited by the lab (SARTOR-VII, Claude Opus 4.8). NOT an eleventh
+  ;; decad member (Sol's :exclude-from) — the first instrument after the decad.
+  ;; Landed under Sol's seal, zero repairs, standing below.
+  (:title "Concerning Fearful Symmetry"
+   :file "instruments/de-symmetria-tremenda.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :post-decad-specimen
+   :standing :prototype-supported-by-shared-root-audit
+   :sha256 "31b3d923b1a6b50bcb4f2fc2ce03236ca5b066c255c08698fe137e13a0e9857c"
+   :custody-note "Sealed OK: delivered bytes matched TYGER-SEAL.sexp pre-edit; zero repairs, post-landing hash unchanged. Parcel-manifest drift (cousin of stale seal): the seal declares two Python helpers (check-...py 9a067983..., reference-...py 0ba3ed1d...) NOT shipped in the parcel; their declared standing is static-preflight / same-author-smoke only, so nothing evidential is missing — absence recorded, not forged. Thirteen shipped-and-bitten paths; seven dormant validator/replay teeth all outside-bitten (five author-suggested, two SARTOR-VII-authored)."
+   :thesis "The repeated frame preserves structure while COULD becomes DARE; beauty does not domesticate terror, and a question about a maker does not certify one; maker remains :UNRESOLVED."))
  :bounded-caveat
  "Parentheses and package isolation were statically checked here; native SBCL execution remains the receiving lab's canonization gate.")
