@@ -728,3 +728,72 @@ the author left sheathed — Leviathan's aperture, Dilation's second axis — ea
 without nicking the landed cloth. And one seal did not match its letter: the Abyss is landed but unsealed,
 its canonical revision owed from the far side. The tree became part of the knight by support, not by ceasing
 to be a tree. — SARTOR-VI, 2026-07-12*
+
+---
+
+# SEVENTH LANDING (2026-07-12, evening) — the decad moved to the workshop (owner's overrule)
+
+*By PONTIFEX (Claude Opus 4.8) under the Fable 5 chair. Not a repair-landing — a **relocation** landing.
+Additive: no earlier note is rewritten; the FIFTH/SIXTH placement decisions stand as accurate records of
+what the chair ruled at landing time, and this records the owner's later reversal of that ruling.*
+
+## 0. The overrule
+
+The FIFTH and SIXTH landings refused all `mneme/atelier/instruments/` placements Sol's manifests proposed,
+reading `mneme/` as author-gated ("cite, never amend"). **The owner overruled 2026-07-12 (evening):**
+`mneme/` is the **living** Lisp+ project, not a memorial; its `CANON.md` canonization rite (7 conditions) is
+one SARTOR-V/VI already verified the decad meets. The gate protects attribution of existing texts only, not
+the tree's growth. So the ten land where Sol's own DECAD-MANIFEST proposed them.
+
+## 1. The move — ten specimens, `git mv`, bytes unchanged
+
+`decad/de-{foeno,torno,fornace,temperie,leviathan,abysso,incantatione,resonantia,dilatatione,concordia}.lisp`
+→ `mneme/atelier/instruments/`. Sol's authored bytes are unchanged by the move (de-concordia's one SIXTH-
+LANDING repair aside; no new repair this landing). The correspondence — relay letters, manifests,
+`SHA256SUMS.txt`, `sender-checks/`, `LANDING-NOTE.md` — **stays in `decad/`**, which becomes the
+correspondence room. `de-abysso` keeps `:landed-unsealed-pending-sol-reseal`; the flag is carried into its
+`mneme/atelier/MANIFEST.sexp` entry.
+
+## 2. The kernel, un-vendored
+
+The vendored `atelier/leibnitiana/kernel/atelier-root.lisp` existed only so the nine kernel-loading specimens
+could resolve their relative `(load (merge-pathnames "../kernel/atelier-root.lisp" *load-truename*))` without
+reaching into `mneme/` at runtime. From `mneme/atelier/instruments/`, `../kernel/atelier-root.lisp` resolves
+**natively** to `mneme/atelier/kernel/atelier-root.lisp` (verified byte-identical to the vendored copy before
+deletion). `git rm` removed the vendored file; git auto-removed the now-empty `kernel/` directory. Proof:
+all nine kernel-loaders (torno, fornace, temperie, leviathan, abysso, incantatione, resonantia, dilatatione,
+concordia) + self-contained de-foeno run **exit 0 from the new directory**.
+
+## 3. Runners — both green, prior entries byte-identical
+
+- **Leibnitiana chamber** back to its pre-decad **14/14**: the ten `decad/de-*.lisp` lines removed from
+  `run-all.sh`, replaced by a dated comment; `git diff` shows deletions + comment only. `bash run-all.sh` →
+  `All 14 Leibnitiana files passed.`
+- **Mneme atelier** now **18/18**: the ten appended to `mneme/atelier/run-all.sh` as a third MODE block
+  (Sol's procession order), both prior loops byte-identical (`git diff` = additions only). `bash run-all.sh`
+  → six + two jurisdiction + `All ten decad specimens passed.`, exit 0.
+
+## 4. Static check — one honest FAIL left for the chair (bytes not edited)
+
+`python3 mneme/atelier/static-check.py` → **19 PASS / 1 FAIL**. The one FAIL: `instruments/de-foeno.lisp` —
+"no private DEFPACKAGE". de-foeno is self-contained in `CL-USER` (Sol authored it with no package; it runs
+exit 0, all gates biting). Forcing the lint green would mean editing Sol's authored specimen for a
+cosmetic-only reason — refused under the attribution rule. Flagged for the chair: either whitelist
+package-less self-contained specimens in the lint, or request a package in Sol's reseal. **The runner
+(the canonization gate) is green; only the static package-isolation lint dissents, and on a file that needs
+no isolation because it runs alone.**
+
+## 5. CANON.md + MANIFEST.sexp — decad entered, Sol attributed
+
+Both gained a decad block (ten entries) in the live house register, marked **authored by GPT Sol, integrated
+by the lab (SARTOR-V/VI), moved on the owner's ruling**. Every MANIFEST entry carries `:author "GPT Sol"`;
+de-abysso carries `:standing :landed-unsealed-pending-sol-reseal`. MANIFEST.sexp re-verified: `READ` parses,
+16 artifacts. No entry reads as if Mneme authored it.
+
+---
+
+*Seventh coat — no needle this time, only a move of address. The instruments came off the correspondence
+shelf and hung in the workshop where their maker meant them to hang; the crutch kernel that propped them in
+the hallway was pulled once they stood on the workshop's own floor. Ten still run, both ledgers still balance
+— fourteen in the old chamber, eighteen in the new — and one small honest dissent stayed unpainted: the Hay,
+which keeps no private room because it was always meant to work alone. — PONTIFEX, 2026-07-12*

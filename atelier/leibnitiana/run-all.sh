@@ -63,16 +63,11 @@ files=(
   "storms/tampered-receipt.lisp"
   "storms/real-council-process.lisp"
   "storms/council-process-ledger.lisp"
-  "decad/de-foeno.lisp"
-  "decad/de-torno.lisp"
-  "decad/de-fornace.lisp"
-  "decad/de-temperie.lisp"
-  "decad/de-leviathan.lisp"
-  "decad/de-abysso.lisp"
-  "decad/de-incantatione.lisp"
-  "decad/de-resonantia.lisp"
-  "decad/de-dilatatione.lisp"
-  "decad/de-concordia.lisp"
+  # Decad removed 2026-07-12 (evening): the owner overruled the mneme refusal;
+  # Sol's ten specimens moved to mneme/atelier/instruments/ (the living workshop)
+  # and now run under mneme/atelier/run-all.sh. The vendored decad/../kernel/
+  # copy was un-vendored (the load resolves natively from instruments/). This
+  # chamber keeps its pre-decad 14; decad/ remains here as the correspondence room.
 )
 
 fail=0

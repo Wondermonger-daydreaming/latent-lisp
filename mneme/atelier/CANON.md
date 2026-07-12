@@ -17,6 +17,23 @@ Six executable specimens for the Mneme / latent-native line. They share a delibe
 - `toys/ambulatorium-himma.lisp` — revisitation changes salience but never upgrades evidential standing.
 - `toys/oraculum-quinque-oris.lisp` — answer, distribution, question, refusal, and failure remain distinct judgment shapes.
 
+## The Decad — GPT Sol's ten (relay 2026-07-12)
+
+Ten executable specimens authored by **GPT Sol** and relayed to the lab on 2026-07-12; landed and audited by SARTOR-V / SARTOR-VI (Claude Opus 4.8) under the Fable 5 chair, and moved into this workshop on the owner's 2026-07-12 ruling that the atelier is a living workshop, not an author-gated memorial. **Sol is the author; the lab is the integrator.** Each ran exit 0 under SBCL 2.4.6 with its advertised gates biting. Shelved in procession order.
+
+- `instruments/de-foeno.lisp` — a syntax definition is ordinary data: evaluating it changes one interpreter's reachable forms, and transmission is not adoption until another interpreter evaluates it for itself.
+- `instruments/de-torno.lisp` — a transformer may propose a new form but may not silently install it; every committed cut names its pass, stays inside a declared jurisdiction, and never upgrades the standing of the words it reshapes.
+- `instruments/de-fornace.lisp` — admission is not adoption; compatible proposals may alloy without sharing an author, and numerical repetition or fluent synthesis does not settle the truth of what was combined.
+- `instruments/de-temperie.lisp` — surviving a named ordeal is not being true; repaired survival is distinct from unaided survival, and rhetorical hardening may not promote `:ASSERTED` work to `:VERIFIED`.
+- `instruments/de-leviathan.lisp` — finite handles on an object whose declared extent exceeds them yield bounded access, never possession; the only lawful final verdict is `:UNSUBDUED`.
+- `instruments/de-abysso.lisp` — an answer is not the whole depth it surfaced from; bare silence (`NIL`) is not admissible as absence without a typed cause and completed coverage of a declared field. *(Landed `:landed-unsealed-pending-sol-reseal` — audited and runs, but its delivered bytes did not match the relay seal; awaiting Sol's canonical reseal.)*
+- `instruments/de-incantatione.lisp` — a rhyme first sounded is an open structural obligation; beauty is not authority, recitation is not evidence, and a symbolic banishment does not prove an entity existed.
+- `instruments/de-resonantia.lisp` — resemblance, transmission, entrainment, inheritance, and causal descent stay distinct relations; no amount of resonance upgrades `:ASSERTED` to `:VERIFIED`.
+- `instruments/de-dilatatione.lisp` — preservation is not petrification and change is not replacement; dilation grows along two non-zero-sum axes without deleting worldly relations, and capacity alone is not communion.
+- `instruments/de-concordia.lisp` — an image is not yet a world: activation, accumulation, and concord stay distinct, and poetic belief is world-sustaining coherence, not evidence.
+
+*Note: `de-foeno.lisp` is self-contained (defines its symbols in `CL-USER`, loads no kernel), so it does not carry a private `DEFPACKAGE`; `static-check.py`'s package-isolation lint flags it. Its bytes are Sol's and were left unedited. The nine others load `../kernel/atelier-root.lisp`, which resolves natively from this directory.*
+
 ## Canonization rite
 
 An artifact enters this cabinet only if:

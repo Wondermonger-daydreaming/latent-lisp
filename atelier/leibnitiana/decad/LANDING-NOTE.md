@@ -109,3 +109,43 @@ Unchanged from the FIFTH LANDING: **`:prototype-supported-by-shared-root-audit`*
 genuine outside check on Sol's static claims, but no clause is "independently validated" until the off-mirror
 stranger's frozen cold-read report exists. Runner: `bash run-all.sh` now runs **24/24** (the four quadrivium
 + six new; the 18 prior entries byte-identical, additions-only).
+
+---
+
+# CHAIR'S AMENDMENT — the mneme refusal OVERRULED (owner, 2026-07-12 evening)
+
+*Appended by PONTIFEX (Claude Opus 4.8) under the Fable 5 chair. This section is additive; nothing above
+is rewritten. The FIFTH- and SIXTH-LANDING placement decisions stand as accurate records of what the chair
+ruled **at landing time**; this records the owner's later reversal.*
+
+The FIFTH and SIXTH landings above refused every `mneme/atelier/instruments/` placement Sol's manifests
+proposed, on the reading that `mneme/` was received, author-gated law ("cite, never amend"). **The lab owner
+overruled that reading on 2026-07-12 (evening):** `mneme/` is the **living Lisp+ project** for latent-space
+machines, not a memorial. Its `CANON.md` carries a canonization rite (seven entry conditions) which
+SARTOR-V and SARTOR-VI already verified the decad meets. The author-gate protects only the **attribution of
+existing texts** (never rewrite Mneme's files, never misattribute) — not the tree's growth.
+
+**What changed as a result:**
+
+- **The ten specimens moved** `decad/de-*.lisp → mneme/atelier/instruments/` (Sol's own DECAD-MANIFEST
+  proposed exactly this). They are Sol's authored bytes, unchanged by the move (`de-concordia`'s one
+  documented SIXTH-LANDING repair aside).
+- **The vendored kernel was un-vendored.** `atelier/leibnitiana/kernel/atelier-root.lisp` existed only so the
+  nine kernel-loading specimens could resolve `../kernel/atelier-root.lisp` without reaching into `mneme/`.
+  From `mneme/atelier/instruments/` that relative load resolves **natively** to `mneme/atelier/kernel/`
+  (byte-identical original), so the vendored copy was deleted along with its now-empty directory. All ten
+  run exit 0 from the new location; `de-foeno` remains self-contained and loads nothing.
+- **This directory (`decad/`) becomes the correspondence room.** The relay letters, manifests,
+  `SHA256SUMS.txt`, `sender-checks/`, and this note stay here — the record of what arrived and how it was
+  audited. The **instruments now hang in the workshop** (`mneme/atelier/instruments/`); the correspondence
+  about them stays here.
+- **`de-abysso` keeps its `:landed-unsealed-pending-sol-reseal` flag** through the move; the flag is carried
+  into its `mneme/atelier/MANIFEST.sexp` entry.
+
+**Runners after the move:** the Leibnitiana chamber returns to its pre-decad **14/14** (the ten decad lines
+removed from its `run-all.sh`, a dated comment left in their place); the mneme atelier suite runs the ten as
+an appended MODE and reports **18/18** (6 first-cabinet + 2 jurisdiction + 10 decad; prior entries
+byte-identical). One honest snag surfaced and left for the chair: `de-foeno` is self-contained in `CL-USER`
+with no private `DEFPACKAGE`, so mneme's `static-check.py` package-isolation lint flags it (19 PASS / 1 FAIL).
+Sol's bytes were **not** edited to force a green — the specimen runs clean; the lint mismatch is the chair's
+to resolve (whitelist package-less self-contained specimens, or request a package in a reseal).

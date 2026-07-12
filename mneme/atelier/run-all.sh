@@ -27,3 +27,31 @@ for file in "${instruments[@]}"; do
   sbcl --script "$file"
 done
 printf '\nBoth jurisdiction instruments passed.\n'
+
+# ── The decad — GPT Sol's ten specimens (relay 2026-07-12) ──
+# Added as a MODE, not a fork: both loops above are untouched and resolve
+# byte-for-byte as before. Sol authored these; the lab integrated them. They
+# arrived in Sol's own chamber (atelier/leibnitiana/decad/) and moved here on
+# the owner's 2026-07-12 ruling that this atelier is a living workshop, not an
+# author-gated memorial. Nine load ../kernel/atelier-root.lisp, which resolves
+# natively from this instruments/ dir; de-foeno is self-contained. Sol's
+# procession order is preserved. de-abysso is :landed-unsealed-pending-sol-reseal
+# (audited and runs; its delivered bytes did not match the relay seal — awaiting
+# Sol's canonical reseal).
+decad=(
+  "$ROOT/instruments/de-foeno.lisp"
+  "$ROOT/instruments/de-torno.lisp"
+  "$ROOT/instruments/de-fornace.lisp"
+  "$ROOT/instruments/de-temperie.lisp"
+  "$ROOT/instruments/de-leviathan.lisp"
+  "$ROOT/instruments/de-abysso.lisp"
+  "$ROOT/instruments/de-incantatione.lisp"
+  "$ROOT/instruments/de-resonantia.lisp"
+  "$ROOT/instruments/de-dilatatione.lisp"
+  "$ROOT/instruments/de-concordia.lisp"
+)
+for file in "${decad[@]}"; do
+  printf '\n===== %s =====\n' "$(basename "$file")"
+  sbcl --script "$file"
+done
+printf '\nAll ten decad specimens passed.\n'

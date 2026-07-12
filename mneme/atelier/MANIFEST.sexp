@@ -32,6 +32,71 @@
    :file "toys/oraculum-quinque-oris.lisp"
    :shelf :toy
    :designation :judgment-fixture
-   :thesis "Answer, distribution, question, refusal, and failure are non-coercible shapes."))
+   :thesis "Answer, distribution, question, refusal, and failure are non-coercible shapes.")
+  ;; ── The decad — authored by GPT Sol (relay 2026-07-12), integrated by the
+  ;; lab (SARTOR-V/VI, Claude Opus 4.8); moved into this workshop on the owner's
+  ;; 2026-07-12 ruling that the atelier is a living workshop, not an author-gated
+  ;; memorial. Sol is the author; the lab is the integrator. Procession order.
+  (:title "Concerning Hay"
+   :file "instruments/de-foeno.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :thesis "A syntax definition is ordinary data; transmission is not adoption until another interpreter evaluates it for itself.")
+  (:title "Concerning the Lathe"
+   :file "instruments/de-torno.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :thesis "A transformer may propose a new form but not silently install it; a committed cut never upgrades the standing of the words it reshapes.")
+  (:title "Concerning the Furnace"
+   :file "instruments/de-fornace.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :thesis "Admission is not adoption; numerical repetition or fluent synthesis does not settle the truth of what was combined.")
+  (:title "Concerning Tempering"
+   :file "instruments/de-temperie.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :thesis "Surviving a named ordeal is not being true; repaired survival is distinct from unaided, and hardening may not promote :ASSERTED to :VERIFIED.")
+  (:title "Concerning Leviathan"
+   :file "instruments/de-leviathan.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :thesis "Finite handles on an object that exceeds them yield bounded access, never possession; the only lawful final verdict is :UNSUBDUED.")
+  (:title "Concerning the Deep"
+   :file "instruments/de-abysso.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :standing :landed-unsealed-pending-sol-reseal
+   :thesis "An answer is not the whole depth it surfaced from; bare silence (NIL) is not admissible as absence without a typed cause and completed coverage.")
+  (:title "Concerning Incantation"
+   :file "instruments/de-incantatione.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :thesis "A rhyme first sounded is an open obligation; beauty is not authority, recitation is not evidence, and symbolic banishment is not proof.")
+  (:title "Concerning Resonance"
+   :file "instruments/de-resonantia.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :thesis "Resemblance, transmission, entrainment, inheritance, and causal descent stay distinct; no amount of resonance upgrades :ASSERTED to :VERIFIED.")
+  (:title "Concerning Dilation"
+   :file "instruments/de-dilatatione.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :thesis "Preservation is not petrification and change is not replacement; capacity alone is not communion.")
+  (:title "Concerning Concord"
+   :file "instruments/de-concordia.lisp"
+   :author "GPT Sol"
+   :shelf :instrument
+   :designation :decad-specimen
+   :thesis "An image is not yet a world; activation, accumulation, and concord stay distinct, and poetic belief is world-sustaining coherence, not evidence."))
  :bounded-caveat
  "Parentheses and package isolation were statically checked here; native SBCL execution remains the receiving lab's canonization gate.")
