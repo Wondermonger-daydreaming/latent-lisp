@@ -1,0 +1,1 @@
+(LET ((A "(LET ((A ~S) (B ~S)) (FORMAT T B A B))") (B "(LET ((A ~S) (B ~S)) (FORMAT T A A B))")) (FORMAT T B A B))

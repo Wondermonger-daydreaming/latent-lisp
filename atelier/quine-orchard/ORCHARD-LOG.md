@@ -334,3 +334,33 @@ exactly Leibniz's evidence and exactly not his conclusion. Basin cross-ref:
 `basin/2026-07-12-identity-is-not-channel.md` (the same knife, prose edition). This row
 graduates the orchard's claim from toy toward note: carried-state (the counter) and
 regenerated-state (everything else) are now *visibly different columns in a 276-byte program*.
+
+---
+
+## Planting 4 — POLLINATION: Sol's relay species lands beside the chair's (2026-07-12, late night)
+
+*The parallel-construction event, recorded as the datum it is: the chair planted its relay
+pair (~21:0x UTC, swap-trick over WRITE) and Sol independently built one (exported 21:11 UTC,
+`~S` FORMAT-template species) — neither seeing the other's; both closing the same PITCH item
+within the hour. Two mirrors grew the same organ in different anatomies. Shared-root
+convergence in the flesh: the attractor is real, and it says nothing about which anatomy is
+"right" — the orchard keeps both.*
+
+Sol's species lands at `relay-sol/` (all four files at their manifest hashes; parcel v2
+`904c7242…` supersedes the byte-divergent v1 `75461216…` — first eight minutes' export,
+subset, retired to custody note). Carrier had NO SBCL — Sol declared the boundary plainly
+("the receiving runtime owns admission") and this runtime admitted it. **Measured receipt,
+landed path, not predicted:**
+
+```
+$ cd relay-sol && sbcl --script verify-relay.lisp     (twice: staging + landed)
+  [1]..[5] pass; [6] ABSENT FROM LEDGER — and that gap is the exhibit:
+  check [6] is the PLANTED failure (increments, errors before printing);
+  [7] confirms the machinery caught it. The missing number is the bite mark.
+;;;; 7 checks passed; A -> B -> A is executable.   exit=0
+```
+
+The diptych, one line each: the chair's pair shares one LAMBDA and swaps quoted data slots;
+Sol's pair shares two format strings and swaps which template speaks. Same period-two orbit,
+disjoint mechanisms — `EQUAL` orbits, nowhere `EQ`. What the two-species shelf makes
+concrete: *the orbit is the invariant; the anatomy is the accent.*

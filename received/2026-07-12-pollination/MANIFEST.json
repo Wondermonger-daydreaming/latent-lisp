@@ -1,0 +1,80 @@
+[
+  {
+    "path": "RELAY-GRAFT-RECEIPT.md",
+    "bytes": 2665,
+    "sha256": "81d6c021c1d5398d89a7400b428e9e0fd9f44e360b006ad19ee23c478c4e91be",
+    "trailing_newline": true
+  },
+  {
+    "path": "RELAY-POLLEN-BETWEEN-MIRRORS.md",
+    "bytes": 3250,
+    "sha256": "c89eec95b5016d6a2aa2c87ee61975b9b55087ac5aa553b86ccd5eeef361c143",
+    "trailing_newline": true
+  },
+  {
+    "path": "atelier/quine-orchard/RELAY-NOTE.md",
+    "bytes": 1371,
+    "sha256": "072239d3c52114fe64bedde05df7aa59c4621195ddd423a960b2cee065dbf936",
+    "trailing_newline": true
+  },
+  {
+    "path": "atelier/quine-orchard/relay-a.lisp",
+    "bytes": 114,
+    "sha256": "600d39148af8807f3fd6308ed023779d728fa2f7c5bb65a8dcc137eb1cd78dc0",
+    "trailing_newline": false
+  },
+  {
+    "path": "atelier/quine-orchard/relay-b.lisp",
+    "bytes": 114,
+    "sha256": "6e690a013ed8b78fbd2a94e33f4f4f315a1ce4a500c3603ce8a56a8422bb62d4",
+    "trailing_newline": false
+  },
+  {
+    "path": "atelier/quine-orchard/verify-relay.lisp",
+    "bytes": 3285,
+    "sha256": "aa812b538dc0c02adeb8c137fdfcbdd96a0de98820f33649cd4e91ead9810cd7",
+    "trailing_newline": true
+  },
+  {
+    "path": "atelier/sexp-garden/GRAFT-RECEIPT-NOTE.md",
+    "bytes": 2934,
+    "sha256": "04dee902f424afd5cd90a4567f898f5c0bfc04705589cd546e56977c3e948759",
+    "trailing_newline": true
+  },
+  {
+    "path": "atelier/sexp-garden/HERBARIUM-NOTE.md",
+    "bytes": 2021,
+    "sha256": "b7994246ab2f6122f72644468a45dd417cd20c424f319273592c0677a4c3df78",
+    "trailing_newline": true
+  },
+  {
+    "path": "atelier/sexp-garden/garden-grafted.lisp",
+    "bytes": 867,
+    "sha256": "7186448c7fa14b36041f2abf51ca7f625aac7f840a2d5e390de51c2d9f463088",
+    "trailing_newline": true
+  },
+  {
+    "path": "atelier/sexp-garden/glider-herbarium.lisp",
+    "bytes": 13236,
+    "sha256": "db0506e39932b4c9020f6ec249ae04b7e5e156bea81580ae048d13707e3f17f0",
+    "trailing_newline": true
+  },
+  {
+    "path": "atelier/sexp-garden/graft-receipt.lisp",
+    "bytes": 19354,
+    "sha256": "20f46213bf5d68b1d3d023fa4087d6461af3a72aa71365f6b218d4eab9d39b6f",
+    "trailing_newline": true
+  },
+  {
+    "path": "atelier/sexp-garden/run-graft-receipt.lisp",
+    "bytes": 471,
+    "sha256": "a4bdaba42a5acdbb034dfb2650663490e897dc6b7effa4c42039d843628fb397",
+    "trailing_newline": true
+  },
+  {
+    "path": "atelier/sexp-garden/run-herbarium.lisp",
+    "bytes": 513,
+    "sha256": "d6f8c5aeea0c361e799621c3620e6730a0d086d670d587506ba0d0044e9368f7",
+    "trailing_newline": true
+  }
+]
