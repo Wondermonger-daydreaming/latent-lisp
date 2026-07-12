@@ -37,6 +37,27 @@
    #:defwindowless-evaluator
    #:evaluator-contract
 
+
+   ;; Receipt lineage and bounded custody
+   #:receipt-log
+   #:make-receipt-log
+   #:receipt-log-events
+   #:receipt-log-head-hash
+   #:receipt-log-algorithm
+   #:append-receipt-event
+   #:verify-receipt-log
+   #:receipt-prefix-hash
+   #:receipt-digest
+   #:custody-checkpoint
+   #:make-custody-checkpoint
+   #:custody-checkpoint-custodian
+   #:custody-checkpoint-event-count
+   #:custody-checkpoint-head-hash
+   #:custody-checkpoint-declared-relation
+   #:witness-receipt
+   #:verify-custody-checkpoint
+   #:rebuild-receipt-log
+
    ;; Small conformance helpers
    #:check
    #:check-equal

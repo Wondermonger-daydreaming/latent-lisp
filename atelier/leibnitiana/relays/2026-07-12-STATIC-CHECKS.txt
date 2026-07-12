@@ -1,0 +1,15 @@
+PASS leibnitiana.asd depth=0, string=False, block=0
+PASS specimens/de-characteristica.lisp depth=0, string=False, block=0
+PASS specimens/de-compossibilitate.lisp depth=0, string=False, block=0
+PASS specimens/de-dyadica.lisp depth=0, string=False, block=0
+PASS specimens/de-fenestris.lisp depth=0, string=False, block=0
+PASS specimens/de-harmonia.lisp depth=0, string=False, block=0
+PASS specimens/de-monadibus.lisp depth=0, string=False, block=0
+PASS src/core.lisp depth=0, string=False, block=0
+PASS src/package.lisp depth=0, string=False, block=0
+PASS src/provenance.lisp depth=0, string=False, block=0
+PASS storms/false-harmony.lisp depth=0, string=False, block=0
+PASS storms/hidden-operator.lisp depth=0, string=False, block=0
+PASS storms/real-council-process.lisp depth=0, string=False, block=0
+PASS storms/tampered-receipt.lisp depth=0, string=False, block=0
+PASS tests/smoke.lisp depth=0, string=False, block=0
