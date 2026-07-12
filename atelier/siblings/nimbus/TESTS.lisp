@@ -41,7 +41,22 @@
                        "rain")))
   (check "deposition exposes the formation conditions"
          (equal (getf (situated-result-deposition result) :conditions)
-                conditions)))
+                conditions))
+  (check "deposition keeps every evaluated possibility"
+         (= (length (getf (situated-result-deposition result) :evaluations))
+            2)))
+
+(let* ((fronts (list (pressure-front "first" :kept :same)
+                     (pressure-front "second" :lost :same)))
+       (result (condense fronts '((:same 4)))))
+  (check "ties remain local to declared field order"
+         (and (eq (situated-result-value result) :kept)
+              (eq (getf (situated-result-deposition result) :tie-break)
+                  :earliest-front))))
+
+(check "empty fields refuse counterfeit condensation"
+       (handler-case (progn (condense nil nil) nil)
+         (error () t)))
 
 (format t "~%=== ~D passed, ~D failed ===~%" *passed* *failed*)
 (sb-ext:exit :code (if (zerop *failed*) 0 1))

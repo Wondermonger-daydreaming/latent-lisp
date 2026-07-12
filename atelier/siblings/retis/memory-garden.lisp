@@ -126,7 +126,7 @@
          (donor (node-at* b bi))
          (child (replace-node-at a ai donor)))
     (if (> (tree-depth child) *max-depth*)
-        (values (copy-tree a) :depth-exceeded)
+        (values (copy-tree a) :depth-exceeded nil nil)
         (values child :ok ai bi))))
 
 (defun mutate (a)
@@ -204,7 +204,7 @@
                           (pa (nth ip orgs))
                           (pb (nth jp orgs)))
                       (if (< (rand-float) *xover-rate*)
-                          (multiple-value-bind (child status)
+                          (multiple-value-bind (child status ai bi)
                               (crossover (org-tree pa) (org-tree pb))
                             (if (eq status :depth-exceeded)
                                 (push (register (copy-tree pa) (org-err pa) (1+ gen) :elite (org-id pa) nil)
