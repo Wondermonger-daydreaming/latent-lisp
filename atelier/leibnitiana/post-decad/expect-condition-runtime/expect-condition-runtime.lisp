@@ -1,104 +1,88 @@
-;;;; EXPECT-CONDITION-RUNTIME — prototype separate succession
+;;;; EXPECT-CONDITION-RUNTIME — amended separate succession
 ;;;;
-;;;; Provenance: prototype, lab-authored (Claude Fable 5 chair / FIGULUS hands),
-;;;; licensed by Sol's return letter §5 on 2026-07-12.
-;;;; :designation :prototype-separate-succession
-;;;; :standing :prototype-supported-by-shared-root-audit
+;;;; Ancestor SHA-256:
+;;;; d8a957a2835d2d8809ce30c533ad182ce83b2cb7b27b4b6aed6d933d66e14a51
+;;;; Sol's ruling: :AMEND-THEN-ADOPT (2026-07-12).
+;;;; Standing: :amended-successor-pending-Sol-adoption.
 ;;;;
-;;;; PAIRED WITH the literal EXPECT-CONDITION macro: use that macro when the
-;;;; condition type is literal and known at macroexpansion time; use this
-;;;; function when the condition type is a runtime value.  This prototype is
-;;;; explicitly NOT retrofitted into any landed instrument.
+;;;; Customs-desk doctrine: classify conditions while their original signaling
+;;;; context is alive.  Conditions outside SIBLING-TYPE are declined by the
+;;;; handler and never transferred or re-signaled.
+;;;;
+;;;; Pairing rule: use literal EXPECT-CONDITION when the family is known at
+;;;; macroexpansion; use EXPECT-CONDITION-RUNTIME when condition and family
+;;;; types are runtime values.
+;;;;
+;;;; Probe-6 precedence: CONDITION-TYPE is tested before SIBLING-TYPE, so a
+;;;; condition satisfying both is expected, never a mismatch.
 
 (define-condition expect-condition-runtime-error (error) ())
 
 (define-condition expect-condition-runtime-mismatch
     (expect-condition-runtime-error)
   ((expected-type :initarg :expected-type :reader mismatch-expected-type)
+   (sibling-type :initarg :sibling-type :reader mismatch-sibling-type)
    (actual-condition :initarg :actual-condition :reader mismatch-actual-condition))
   (:report (lambda (condition stream)
-             (format stream "expected condition of type ~s, got sibling ~s"
+             (format stream
+                     "expected condition of type ~s within sibling family ~s, got ~s"
                      (mismatch-expected-type condition)
+                     (mismatch-sibling-type condition)
                      (type-of (mismatch-actual-condition condition))))))
 
 (define-condition expect-condition-runtime-missing
     (expect-condition-runtime-error)
-  ((expected-type :initarg :expected-type :reader missing-expected-type))
+  ((expected-type :initarg :expected-type :reader missing-expected-type)
+   (sibling-type :initarg :sibling-type :reader missing-sibling-type))
   (:report (lambda (condition stream)
-             (format stream "expected condition of type ~s, but none fired"
-                     (missing-expected-type condition)))))
+             (format stream
+                     "expected condition of type ~s within sibling family ~s, but none fired"
+                     (missing-expected-type condition)
+                     (missing-sibling-type condition)))))
 
-(defun expect-condition-runtime (thunk condition-type &key (sibling-type 'condition))
-  "Call THUNK and require a condition matching runtime value CONDITION-TYPE.
+(defun expect-condition-runtime
+    (thunk condition-type &key (sibling-type 'condition))
+  "Call THUNK and require a condition matching CONDITION-TYPE.
 
-Return T when the expected condition fires.  If a condition matching the
-runtime SIBLING-TYPE fires but does not match CONDITION-TYPE, signal
-EXPECT-CONDITION-RUNTIME-MISMATCH.  If THUNK returns normally, signal
-EXPECT-CONDITION-RUNTIME-MISSING.  A condition outside SIBLING-TYPE is
-re-signaled unchanged.  CONDITION-TYPE and SIBLING-TYPE are TYPEP type
-specifiers evaluated as ordinary runtime values; neither is inserted into a
-HANDLER-CASE clause."
-  (let ((caught-condition nil))
-    (handler-case
-        (funcall thunk)
-      (condition (condition)
-        (cond ((typep condition condition-type)
-               (return-from expect-condition-runtime t))
-              ((typep condition sibling-type)
-               (setf caught-condition condition))
-              (t
-               (error condition)))))
-    (if caught-condition
-        (error 'expect-condition-runtime-mismatch
-               :expected-type condition-type
-               :actual-condition caught-condition)
-        (error 'expect-condition-runtime-missing
-               :expected-type condition-type))))
+The first condition matching CONDITION-TYPE succeeds. The first condition
+matching SIBLING-TYPE but not CONDITION-TYPE becomes a mismatch. Conditions
+outside SIBLING-TYPE are declined without transfer, preserving their original
+signaling context. Normal return becomes a missing-condition diagnostic."
 
-;;; Self-test exhibit: each declared trichotomy tooth must bite in this run.
+  (multiple-value-bind (outcome actual-condition)
+      (block capture
+        (handler-bind
+            ((condition
+               (lambda (condition)
+                 (cond
+                   ((typep condition condition-type)
+                    (return-from capture
+                      (values :expected condition)))
 
-(define-condition planted-family-error (error) ())
-(define-condition planted-expected-error (planted-family-error) ())
-(define-condition planted-sibling-error (planted-family-error) ())
+                   ((typep condition sibling-type)
+                    (return-from capture
+                      (values :sibling condition)))
 
-(defun self-test ()
-  (let ((passed 0))
-    (format t "EXPECT-CONDITION-RUNTIME self-test ledger~%")
-    (flet ((pass (tooth)
-             (incf passed)
-             (format t "[BITE ~d/3] ~a~%" passed tooth)))
-      (let ((runtime-type 'planted-expected-error))
-        (when (expect-condition-runtime
-               (lambda () (error 'planted-expected-error))
-               runtime-type
-               :sibling-type 'planted-family-error)
-          (pass "expected condition -> success value T")))
-      (handler-case
-          (expect-condition-runtime
-           (lambda () (error 'planted-sibling-error))
-           'planted-expected-error
-           :sibling-type 'planted-family-error)
-        (expect-condition-runtime-mismatch (condition)
-          (unless (typep (mismatch-actual-condition condition)
-                         'planted-sibling-error)
-            (error "mismatch tooth carried the wrong planted condition"))
-          (pass "family sibling -> distinct mismatch error")))
-      (handler-case
-          (expect-condition-runtime
-           (lambda () :returned-without-firing)
-           'planted-expected-error
-           :sibling-type 'planted-family-error)
-        (expect-condition-runtime-missing ()
-          (pass "normal return -> distinct missing-condition error"))))
-    (unless (= passed 3)
-      (error "self-test ledger incomplete: ~d/3 teeth bit" passed))
-    (format t "RESULT: PASS — 3/3 teeth bit~%")
-    t))
+                   ;; The outside remains outside:
+                   ;; return from the handler, decline this condition,
+                   ;; and let the original signaling protocol continue.
+                   (t
+                    nil)))))
+          (funcall thunk)
+          (values :missing nil)))
 
-(handler-case
-    (progn
-      (self-test)
-      (sb-ext:exit :code 0))
-  (condition (condition)
-    (format *error-output* "RESULT: FAIL — ~a~%" condition)
-    (sb-ext:exit :code 1)))
+    ;; Diagnostics remain outside the observing handler.
+    (ecase outcome
+      (:expected
+       t)
+
+      (:sibling
+       (error 'expect-condition-runtime-mismatch
+              :expected-type condition-type
+              :sibling-type sibling-type
+              :actual-condition actual-condition))
+
+      (:missing
+       (error 'expect-condition-runtime-missing
+              :expected-type condition-type
+              :sibling-type sibling-type)))))
