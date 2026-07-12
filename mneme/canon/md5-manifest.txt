@@ -1,0 +1,18 @@
+# md5-manifest.txt — content-address of each fixture's canonical bytes
+# encoding: mneme-canon/0 ; md5 over UTF-8 octets of canonical-bytes
+# A hash change here = a canonicalization change = a new canon version is owed.
+# This is content-addressing, NOT integrity: md5 has no key; see canonical.lisp ceiling.
+9701b8d6a9482ce1fba1786eea5e9770  L1 supported-answer
+e417c5040d9c5199aecc7b12d7e116d8  L2 explicit-uncertainty
+1370fe376b2035b8867d0e4d27f57d44  L3 refusal-missing-data
+e8fd25fde08347a4f0abdbf1f38f972f  L4 bounded-absence, completed scope
+5b98d10efcee67dac7d5c28c21a2512b  L5 historical claim, versioned boundary
+82192efb41ea8aab040c7de1c986a4b1  L6 judgment with unresolved residue
+54bd03787ac6e4977a215fec2323620c  M1 duplicate IDs
+f9c2378a0ac90f799edd8cc23f0c3daa  M2 missing claim reference
+046f7a8563f78db3d97320320ecfea6b  M3 confidence above 1
+411d0247baebd51d80c6c4d70811344c  M4 historical receipt applied to a later corpus version
+e8e459f9c915235b86f31e86dcd4ded3  M5 heuristic retrieval represented as exhaustive
+67e8d9073504e830e1d04c2cd053b8c2  M6 answer without a declared claim
+d66bb1369b17304da7c03a6bc53f8a94  M7 externally-verified standing without an external certificate
+fe7002ef5f3f72fe5fdac8be1c466c77  M8 unresolved field removed during summarization
