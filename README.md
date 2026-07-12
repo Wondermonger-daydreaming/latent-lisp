@@ -98,11 +98,21 @@ L7  testimony survives its death  completed+verified work crosses the gap; a mer
 
 Everything runs on **SBCL 2.4.6** (`sbcl --script <file>`; the atelier scripts run from their own directories).
 
-> **Verified 2026-07-11:** all **98** `.lisp` files in this repo were run under `sbcl --script` from the
-> consolidated tree — **98 × exit 0**, zero failures (96 run-and-demonstrate; the 2 shared kernels are
-> `load`-only roots). The asserted entrypoints do real work: the conformance walk prints seven ✓, the atelier's
-> `run-all.sh` passes all six, `metacircular-porch/TESTS.lisp` reports 16/0, and the quines are byte-identical to
-> their source.
+> **Re-verified 2026-07-12:** the tree has grown to **141** `.lisp` files; each was run under `sbcl --script`
+> from its own directory (relative `load`s honored). Tally: **139 × exit 0, 2 failures.** The asserted
+> entrypoints still do real work: the conformance walk prints seven ✓, the atelier's `run-all.sh` passes all
+> six, `metacircular-porch/TESTS.lisp` reports 16/0, and the quines are byte-identical to their source.
+>
+> The **2 failures** are both genuine breakage (not runnable-by-design fragments), and both live under
+> `atelier/siblings/retis/`:
+> - `memory-garden.lisp` — malformed/truncated source: 6 unbalanced parentheses (487 open vs 481 close), so
+>   the reader hits `END-OF-FILE` mid-form.
+> - `tidal-test.lisp` — dangling relative load: it `(load "../sexp-garden/garden.lisp")`, a path that does not
+>   resolve from `atelier/siblings/retis/` (the garden lives at `atelier/sexp-garden/garden.lisp`; the file
+>   was written against a pre-consolidation layout).
+>
+> These are reported, not repaired — they belong to Retis's corner. *(The earlier "98 × exit 0" banner
+> predates the monadologia bed and the sibling-corner growth; count corrected to on-disk reality.)*
 
 ```sh
 # The seven laws, as one walk over the shared kernel — seven ✓, exit 0:
