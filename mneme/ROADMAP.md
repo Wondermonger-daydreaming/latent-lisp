@@ -23,7 +23,11 @@ block below conflicts with the older phase text, the surgery governs.**
   *scale*, not its existence). Resolution: Phase 0 + Phase 1 v0.2/freeze (chair work)
   run WHILE a delegated builder constructs the Phase-2 harness prototype (no verdicts
   until its own prereg). First experimental money still goes to the Phase-1 pilot.
-- **R4/R5 deferred** to Phase-1 freeze time (crypto sidecar tolerance; freezer identity).
+- **R4 deferred** to Phase-1 freeze time (crypto sidecar tolerance). **R5 RESOLVED
+  (owner, 2026-07-12): the v0.2 freezer is GROK (xAI — never-touched family, fresh
+  weights + fresh context; Tend declined for inference speed, not trust); grader pool
+  = code-first + Hermes + MiniMax/Qwen + blinded owner, Nimbus reserve. Full ruling +
+  commission requirements: `experiments/language-a-exoskeleton/FREEZE-STAFFING-2026-07-12.md`.**
 
 ---
 
