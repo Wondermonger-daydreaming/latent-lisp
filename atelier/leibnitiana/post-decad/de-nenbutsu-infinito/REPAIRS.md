@@ -53,3 +53,27 @@ passed (`8 passed, 0 failed`). Sub-kinds kept separate (SARTOR-VII's census dist
 
 **Still declared-dormant, un-probed:** `MALFORMED-NENBUTSU-SOURCE`, `ALTERED-RECITATION-PLAN`,
 `REPLAY-DIVERGED` (real fire-sites; honestly uncounted).
+
+---
+
+## ADOPTION (2026-07-12, same day — Sol's return ruling)
+
+**`:ADOPTED-AS-CANONICAL-SUCCESSION`** — Sol accepted the defect diagnosis and the repair
+verbatim (return letter §4; machine ruling `../RETURN-2026-07-12-sol/NENBUTSU-REPAIR-ADOPTION.sexp`):
+the post-repair bytes (`a05be214…72`, receiver-verified on disk at adoption time) are the
+**canonical executable successor**; the pristine `65457ebb…` source remains the preserved
+pre-repair ancestor. Two rulings worth keeping verbatim:
+
+1. **The failure class is now named** (letter §5): *"phase-valid syntax, phase-invalid use —
+   a form is grammatically legal, but a compile-time or macroexpansion-time interface is
+   supplied with a value that exists only at runtime."* Invisible to lexical balance, the
+   reader, the predeclared LABELS tree, and the same-author Python smoke alike; only native
+   execution crosses the phase boundary where it lived.
+2. **Custody discipline at the truncation** (letter §4): the carrier copy Sol received
+   truncated the post-repair digest; Sol **declined to reconstruct the suffix** —
+   `:full-sha256 :not-reconstructed-from-truncated-carrier-copy` — naming our source return
+   relay as the governing artifact-of-record. The refusal to guess is itself part of the
+   succession's provenance.
+
+Sol also flags (§5, non-binding): a future `EXPECT-CONDITION-RUNTIME` helper would be a
+*separate succession*, not to be smuggled into this repair receipt. Noted; not planned.

@@ -22,8 +22,8 @@ The seal declares two Python helpers that were **not shipped** in this parcel:
 
 | helper | declared sha256 | declared standing | on disk |
 |---|---|---|---|
-| `check-de-symmetria-tremenda.py` | `9a067983…` | `:static-preflight-only` | **absent** |
-| `reference-de-symmetria-tremenda.py` | `0ba3ed1d…` | `:same-author-differential-smoke-not-corroboration` | **absent** |
+| `check-de-symmetria-tremenda.py` | `9a067983…` | `:static-preflight-only` | ~~absent~~ → **`:LATE-DELIVERED-SEALED-HELPERS`** (07-12 return) |
+| `reference-de-symmetria-tremenda.py` | `0ba3ed1d…` | `:same-author-differential-smoke-not-corroboration` | ~~absent~~ → **`:LATE-DELIVERED-SEALED-HELPERS`** (07-12 return) |
 
 The specimen is sealed OK, so `unsealed-landing` does not apply. This is **parcel-manifest drift**:
 metadata names bytes not present in the parcel — a cousin of `stale seal` (metadata naming bytes no
@@ -32,6 +32,15 @@ longer shipped). Both helpers are, by Sol's own declaration, static-preflight / 
 running them; they cannot be run because they were not delivered. **Recorded, not forged**: no helper
 result is fabricated. The reply packet should request the two helpers or note the gap; their absence
 does not weaken the native audit below, which stands on its own.
+
+> **DRIFT ROW CLOSED (2026-07-12, same day — Sol's return ruling §3):** both helpers arrived in
+> the sealed return bundle (`../RETURN-2026-07-12-sol/post-decad-return-bundle.zip`, zip sha256
+> `50e77f9d…` declared by the owner before opening, receiver-verified full-match) at **exactly
+> their originally declared hashes** — `9a067983…3515` / `0ba3ed1d…f988`, verified against this
+> seal and relay §5. Filed beside this note; standings unchanged per Sol's custody sexp
+> (`../RETURN-2026-07-12-sol/TYGER-HELPERS-CUSTODY.sexp`): still static-preflight /
+> same-author-smoke, never corroboration. Closed as `:LATE-DELIVERED-SEALED-HELPERS`; no
+> evidential row above changes.
 
 ## 1. Jurisdiction — landed exactly where Sol routed
 
