@@ -15,8 +15,8 @@
 ;;;;
 ;;;; The four Sol amendments enforced below:
 ;;;;   A1  exported defstruct readers are setf-able  -> private %accessors + plain defun readers.
-;;;;   A2  a read-only reader can return a mutable cons tree -> canonicalize on ingress,
-;;;;       keep private, return defensive copies. (Shallow immutability ≠ epistemic immutability.)
+;;;;   A2  a read-only reader can return mutable host data -> convert on ingress to a
+;;;;       private canonical datum, return fresh host values on egress.
 ;;;;   A3  "is an attestation" must not mean "was authentically minted" -> raise-claim validates
 ;;;;       MINT-REGISTRY membership + target + scope + validity + issuer, never attestation-p.
 ;;;;   A4  the verifier must not funcall a caller-named function -> a private procedure registry;
@@ -48,7 +48,9 @@
 (define-condition scope-mismatch          (mneme-error) ())
 (define-condition unsafe-procedure        (mneme-error) ())
 (define-condition schema-mismatch         (mneme-error) ())
-(define-condition handoff-state-violation (mneme-error) ())
+(define-condition handoff-state-violation (mneme-error)
+  ((source-state :initarg :source-state :reader handoff-source-state :initform :unknown)
+   (destination-state :initarg :destination-state :reader handoff-destination-state :initform :unknown)))
 (defmacro ensure (test kind fmt &rest args)
   `(unless ,test (error ',kind :detail (format nil ,fmt ,@args))))
 
@@ -115,21 +117,71 @@
        (member kind (%cap-event-kinds cap))
        (member proc-id (%cap-procedure-ids cap))))
 
-;;; ── canonical proposition (A2: copy on ingress, keep private, small grammar) ──
-;;; grammar:  (:equals (:call PROC-ID INPUT) EXPECTED)   PROC-ID a symbol; INPUT/EXPECTED inert data
+;;; ── private canonical datum (A2: no host datum leaves shared with clients) ──
+;;;
+;;; A canonical datum is a private tagged algebra.  Client conses and strings are
+;;; converted on ingress; fresh ordinary CL data is reconstructed on egress.  This
+;;; is immutability within the documented exported-client threat model, not a claim
+;;; that same-image MNEME:: code cannot mutate implementation-private structures.
+(defstruct (canonical-cons
+             (:constructor %make-canonical-cons (head tail))
+             (:conc-name %canonical-cons-)
+             (:copier nil)
+             (:predicate %canonical-cons-p))
+  head tail)
+(defstruct (canonical-string
+             (:constructor %make-canonical-string (value))
+             (:conc-name %canonical-string-)
+             (:copier nil)
+             (:predicate %canonical-string-p))
+  value)
+
 (defun %safe-data-p (x &optional (depth 0))
   (and (<= depth 32)
        (typecase x
          ((or number symbol string character) t)   ; NO structures, arrays, hash-tables
          (cons (and (%safe-data-p (car x) (1+ depth)) (%safe-data-p (cdr x) (1+ depth))))
          (t nil))))
+
+(defun %freeze-datum (x)
+  (typecase x
+    (string (%make-canonical-string (copy-seq x)))
+    (cons (%make-canonical-cons (%freeze-datum (car x)) (%freeze-datum (cdr x))))
+    ((or number symbol character) x)
+    (t (error 'schema-mismatch :detail (format nil "cannot canonicalize unsafe datum ~s" x)))))
+
+(defun %thaw-datum (x)
+  (cond
+    ((%canonical-string-p x) (copy-seq (%canonical-string-value x)))
+    ((%canonical-cons-p x)
+     (cons (%thaw-datum (%canonical-cons-head x))
+           (%thaw-datum (%canonical-cons-tail x))))
+    (t x)))
+
+(defun %datum-equal (left right)
+  (cond
+    ((and (%canonical-string-p left) (%canonical-string-p right))
+     (string= (%canonical-string-value left) (%canonical-string-value right)))
+    ((and (%canonical-cons-p left) (%canonical-cons-p right))
+     (and (%datum-equal (%canonical-cons-head left) (%canonical-cons-head right))
+          (%datum-equal (%canonical-cons-tail left) (%canonical-cons-tail right))))
+    ((or (%canonical-string-p left) (%canonical-string-p right)
+         (%canonical-cons-p left) (%canonical-cons-p right))
+     nil)
+    (t (equal left right))))
+
+(defun %canonicalize-datum (datum &optional (what "datum"))
+  (ensure (%safe-data-p datum) schema-mismatch "~a contains unsafe payload" what)
+  (%freeze-datum datum))
+
+;;; grammar:  (:equals (:call PROC-ID INPUT) EXPECTED)   PROC-ID a symbol; INPUT/EXPECTED inert data
 (defun %canonicalize-proposition (p)
   (ensure (%safe-data-p p) schema-mismatch "proposition contains unsafe payload")
   (ensure (and (consp p) (eq (first p) :equals) (consp (second p))
                (eq (first (second p)) :call) (symbolp (second (second p))))
           schema-mismatch "unsupported proposition shape: ~s" p)
-  (copy-tree p))                                    ; our private, immutable copy
-(defun %fingerprint (canonical) (digest (prin1-to-string canonical)))
+  (%freeze-datum p))
+(defun %fingerprint (canonical) (digest (prin1-to-string (%thaw-datum canonical))))
 
 ;;; ── claim: ONE immutable aggregate; predecessor vs authenticated warrant SETS ──
 (defstruct (claim (:constructor %make-claim) (:conc-name %claim-) (:copier nil) (:predicate %claim-real-p))
@@ -138,12 +190,20 @@
   "Client construction. Always yields an UNauthenticated claim — there is no exported
    path to a graded/authenticated claim except verify-proposition + raise-claim."
   (let ((c (%canonicalize-proposition proposition)))
-    (%make-claim :canonical c :fingerprint (%fingerprint c) :as-of as-of)))
+    (%make-claim :canonical c :fingerprint (%fingerprint c)
+                 :as-of (%canonicalize-datum as-of "as-of"))))
+
+(defun %ensure-claim-integrity (claim)
+  (ensure (and (%claim-real-p claim)
+               (equal (%claim-fingerprint claim) (%fingerprint (%claim-canonical claim))))
+          scope-mismatch "claim datum no longer matches its stored fingerprint")
+  claim)
+
 ;; A1+A2: exported readers are PLAIN FUNCTIONS (no setf expander) returning DEFENSIVE COPIES.
-(defun claim-proposition (c) (copy-tree (%claim-canonical c)))
+(defun claim-proposition (c) (%thaw-datum (%claim-canonical (%ensure-claim-integrity c))))
 (defun claim-authenticated-warrants (c) (copy-list (%claim-authenticated-warrants c)))
-(defun claim-predecessor-warrants (c) (copy-list (%claim-predecessor-warrants c)))
-(defun claim-provenance (c) (copy-tree (%claim-provenance c)))
+(defun claim-predecessor-warrants (c) (%thaw-datum (%claim-predecessor-warrants c)))
+(defun claim-provenance (c) (%thaw-datum (%claim-provenance c)))
 (defun claim-authenticated-p (c) (and (%claim-authenticated-warrants c) t))
 
 ;;; ── attestation: private ctor; minted ONLY inside verify-proposition ─────────
@@ -154,14 +214,15 @@
 (defun attestation-verdict      (a) (%att-verdict a))
 (defun attestation-procedure-id (a) (%att-procedure-id a))
 (defun attestation-event-kind   (a) (%att-event-kind a))
-(defun attestation-scope        (a) (%att-scope a))
+(defun attestation-scope        (a) (%thaw-datum (%att-scope a)))
 
 (defun verify-proposition (proposition capability &key (event-kind :execution) (scope :default))
   "Requires a live capability authorized for (event-kind, proc-id). Resolves the procedure
    ONLY through the private registry, RE-RUNS it, reads EXPECTED from the proposition, and
    mints an attestation recorded in the private mint registry. Callers cannot mint one."
-  (let* ((canon (%canonicalize-proposition proposition)))
-    (destructuring-bind (rel (ck proc-id input) expected) canon
+  (let* ((canon (%canonicalize-proposition proposition))
+         (canonical-scope (%canonicalize-datum scope "scope")))
+    (destructuring-bind (rel (ck proc-id input) expected) (%thaw-datum canon)
       (declare (ignore rel ck))
       (let ((pr (gethash proc-id *procedure-registry*)))
         (ensure pr unsafe-procedure "procedure ~s not registered — refusing arbitrary dispatch" proc-id)
@@ -173,13 +234,14 @@
           (push mint-id (gethash (%cap-token capability) *mint-by-token*))  ; for cascade revocation
           (%make-att :mint-id mint-id :cap-token (%cap-token capability) :principal (%cap-principal capability)
                      :event-kind event-kind :procedure-id proc-id :procedure-version (%pr-version pr)
-                     :target-fingerprint (%fingerprint canon) :scope scope
+                     :target-fingerprint (%fingerprint canon) :scope canonical-scope
                      :verdict (if (equal actual expected) :supports :refutes)
                      :validity :valid :issued-at (tick)))))))
 
 (defun raise-claim (claim attestation &key (scope :default))
   "A3: nominal typing must not impersonate authentication. Validate PROVENANCE, not shape."
   (ensure (and (%claim-real-p claim) (typep attestation 'attestation)) invalid-attestation "wrong argument types")
+  (%ensure-claim-integrity claim)
   (ensure (gethash (%att-mint-id attestation) *attestation-mint*)      ; did THIS runtime mint it?
           invalid-attestation "attestation was not minted by this runtime")
   (ensure (not (gethash (%att-mint-id attestation) *attestation-revoked*))  ; retrospective revocation
@@ -188,7 +250,10 @@
           scope-mismatch "attestation faces a different located claim")
   (ensure (eq (%att-verdict attestation) :supports) invalid-attestation "attestation does not support")
   (ensure (eq (%att-validity attestation) :valid) invalid-attestation "attestation is not valid now")
-  (ensure (eq (%att-scope attestation) scope) scope-mismatch "attestation scope ~s ≠ ~s" (%att-scope attestation) scope)
+  (let ((canonical-scope (%canonicalize-datum scope "scope")))
+    (ensure (%datum-equal (%att-scope attestation) canonical-scope)
+            scope-mismatch "attestation scope ~s ≠ ~s"
+            (%thaw-datum (%att-scope attestation)) scope))
   (%make-claim :canonical (%claim-canonical claim) :fingerprint (%claim-fingerprint claim)
                :predecessor-warrants (%claim-predecessor-warrants claim)
                :authenticated-warrants (cons attestation (%claim-authenticated-warrants claim))
@@ -200,15 +265,31 @@
   content-digest status path)
 (defun receipt-status (r) (%rcpt-status r))
 (defun receipt-path   (r) (%rcpt-path r))
+(defun %handoff-failure (source destination)
+  (error 'handoff-state-violation
+         :source-state source
+         :destination-state destination
+         :detail (format nil "illegal receipt transition ~s → ~s" source destination)))
+(defun %guard-receipt-transition (receipt source destination)
+  (unless (receipt-p receipt)
+    (%handoff-failure :not-a-receipt destination))
+  (unless (eq (%rcpt-status receipt) source)
+    (%handoff-failure (%rcpt-status receipt) destination))
+  receipt)
 (defun %warrant->data (a)
   (list :principal (%att-principal a) :event-kind (%att-event-kind a) :procedure-id (%att-procedure-id a)
-        :procedure-version (%att-procedure-version a) :verdict (%att-verdict a) :scope (%att-scope a)))
+        :procedure-version (%att-procedure-version a) :verdict (%att-verdict a)
+        :scope (%thaw-datum (%att-scope a))))
 (defun freeze (claim)
-  (let ((text (with-standard-io-syntax
-                (prin1-to-string
-                 (list :tag :mneme :schema 2 :proposition (%claim-canonical claim)
-                       :as-of (%claim-as-of claim)
-                       :predecessor-warrants (mapcar #'%warrant->data (%claim-authenticated-warrants claim)))))))
+  (%ensure-claim-integrity claim)
+  (let* ((predecessors (%thaw-datum (%claim-predecessor-warrants claim)))
+         (current (mapcar #'%warrant->data (%claim-authenticated-warrants claim)))
+         (text (with-standard-io-syntax
+                 (prin1-to-string
+                  (list :tag :mneme :schema 2
+                        :proposition (%thaw-datum (%claim-canonical claim))
+                        :as-of (%thaw-datum (%claim-as-of claim))
+                        :predecessor-warrants (append predecessors current))))))
     (values text (digest text))))
 
 ;;; A/#3: hostile-data decoder. *read-eval* nil + #S/#. disabled + one-form + inert-only.
@@ -236,42 +317,72 @@
   (multiple-value-bind (text dig) (freeze claim)
     (list :text text :receipt (%make-receipt :content-digest dig :status :prepared))))
 (defun commit (prepared store)
-  (let* ((r (getf prepared :receipt))
-         (path (namestring (merge-pathnames (format nil "mneme-~a.sexp" (%rcpt-content-digest r))
-                                            (pathname store)))))
-    (ensure-directories-exist path)
-    (with-open-file (s (concatenate 'string path ".tmp") :direction :output :if-exists :supersede)
-      (write-string (getf prepared :text) s) (finish-output s))
-    (rename-file (concatenate 'string path ".tmp") path)
-    (setf (%rcpt-status r) :committed (%rcpt-path r) path) r))
+  (let ((r (getf prepared :receipt)))
+    (%guard-receipt-transition r :prepared :committed)
+    (let ((path (namestring
+                 (merge-pathnames (format nil "mneme-~a.sexp" (%rcpt-content-digest r))
+                                  (pathname store)))))
+      (ensure-directories-exist path)
+      (with-open-file (s (concatenate 'string path ".tmp") :direction :output :if-exists :supersede)
+        (write-string (getf prepared :text) s) (finish-output s))
+      (rename-file (concatenate 'string path ".tmp") path)
+      (setf (%rcpt-status r) :committed (%rcpt-path r) path)
+      r)))
 (defun receive (receipt)
-  (ensure (eq (%rcpt-status receipt) :committed) handoff-state-violation "cannot receive: not committed")
+  (%guard-receipt-transition receipt :committed :received)
   (let ((text (with-open-file (s (%rcpt-path receipt))
                 (let ((b (make-string (file-length s)))) (read-sequence b s) b))))
     (ensure (string= (digest text) (%rcpt-content-digest receipt)) schema-mismatch "digest mismatch (forged)")
     (setf (%rcpt-status receipt) :received) (values receipt text)))
 
-(defun revive (text-or-receipt)
+(defun %claim-from-text (text provenance-kind)
+  (let* ((d (%safe-decode text))
+         (raw-predecessors (getf d :predecessor-warrants))
+         (raw-as-of (getf d :as-of))
+         (canon (%canonicalize-proposition (getf d :proposition))))
+    (ensure (listp raw-predecessors) schema-mismatch "predecessor-warrants must be a list")
+    (%make-claim
+     :canonical canon
+     :fingerprint (%fingerprint canon)
+     :predecessor-warrants (%canonicalize-datum raw-predecessors "predecessor-warrants")
+     :authenticated-warrants '()
+     :provenance (%canonicalize-datum
+                  (list provenance-kind t
+                        :predecessor-digest (digest text)
+                        :as-of raw-as-of)
+                  "provenance")
+     :as-of (%canonicalize-datum raw-as-of "as-of"))))
+
+(defun decode-artifact (text)
+  "Decode hostile raw artifact text into inert claim data.  This grants no live
+   authority and deliberately makes no receipt-custody or revival claim."
+  (%claim-from-text text :decoded-untrusted))
+
+(defun revive (receipt)
   "A4/L5-L7: reconstruct as DATA, mark discontinuity, grant NO present authority.
    Authenticated set begins EMPTY; inherited warrants become predecessor testimony only.
-   :revived is the fourth transition; a receipt cannot be revived twice."
-  (let* ((receipt (when (receipt-p text-or-receipt) text-or-receipt))
-         (text (if receipt (nth-value 1 (receive receipt)) text-or-receipt)))
-    (when receipt
-      (ensure (member (%rcpt-status receipt) '(:received)) handoff-state-violation
-              "revive expects a :received receipt, got ~s" (%rcpt-status receipt))
-      (setf (%rcpt-status receipt) :revived))
-    (let* ((d (%safe-decode text))
-           (canon (%canonicalize-proposition (getf d :proposition))))
-      (%make-claim :canonical canon :fingerprint (%fingerprint canon)
-                   :predecessor-warrants (getf d :predecessor-warrants)   ; inert history, opens no door
-                   :authenticated-warrants '()                            ; empty, always
-                   :provenance (list :revived t :predecessor-digest (digest text) :as-of (getf d :as-of))
-                   :as-of (getf d :as-of)))))
+   :revived is the fourth guarded transition; raw text uses DECODE-ARTIFACT."
+  (unless (receipt-p receipt)
+    (%handoff-failure :raw-data :revived))
+  (unless (member (%rcpt-status receipt) '(:committed :received))
+    (%handoff-failure (%rcpt-status receipt) :revived))
+  (let ((text
+          (if (eq (%rcpt-status receipt) :committed)
+              (nth-value 1 (receive receipt))
+              (with-open-file (s (%rcpt-path receipt))
+                (let ((b (make-string (file-length s))))
+                  (read-sequence b s)
+                  (ensure (string= (digest b) (%rcpt-content-digest receipt))
+                          schema-mismatch "digest mismatch (forged)")
+                  b)))))
+    (%guard-receipt-transition receipt :received :revived)
+    (let ((claim (%claim-from-text text :revived)))
+      (setf (%rcpt-status receipt) :revived)
+      claim)))
 (defun replay-and-attest (claim capability &key (event-kind :execution) (scope :default))
   "The explicit successor act: re-run verification with the successor's own capability and
    raise afresh. The only way a revived claim regains authenticated standing."
-  (raise-claim claim (verify-proposition (%claim-canonical claim) capability
+  (raise-claim claim (verify-proposition (%thaw-datum (%claim-canonical claim)) capability
                                           :event-kind event-kind :scope scope)
                :scope scope))
 
@@ -282,22 +393,24 @@
   (:import-from #:mneme
    #:mneme-error #:authority-violation #:invalid-attestation #:scope-mismatch
    #:unsafe-procedure #:schema-mismatch #:handoff-state-violation
+   #:handoff-source-state #:handoff-destination-state
    #:assert-claim #:claim-proposition #:claim-authenticated-warrants
    #:claim-predecessor-warrants #:claim-provenance #:claim-authenticated-p
    #:verify-proposition #:raise-claim
    #:attestation-principal #:attestation-verdict #:attestation-procedure-id
    #:attestation-event-kind #:attestation-scope
-   #:freeze #:prepare #:commit #:receive #:revive #:replay-and-attest
+   #:freeze #:prepare #:commit #:receive #:decode-artifact #:revive #:replay-and-attest
    #:receipt-status #:receipt-path)
   (:export
    #:mneme-error #:authority-violation #:invalid-attestation #:scope-mismatch
    #:unsafe-procedure #:schema-mismatch #:handoff-state-violation
+   #:handoff-source-state #:handoff-destination-state
    #:assert-claim #:claim-proposition #:claim-authenticated-warrants
    #:claim-predecessor-warrants #:claim-provenance #:claim-authenticated-p
    #:verify-proposition #:raise-claim
    #:attestation-principal #:attestation-verdict #:attestation-procedure-id
    #:attestation-event-kind #:attestation-scope
-   #:freeze #:prepare #:commit #:receive #:revive #:replay-and-attest
+   #:freeze #:prepare #:commit #:receive #:decode-artifact #:revive #:replay-and-attest
    #:receipt-status #:receipt-path))
 
 ;; MNEME.OPERATOR — TRUSTED bootstrap. Registers procedures and mints/revokes authority.

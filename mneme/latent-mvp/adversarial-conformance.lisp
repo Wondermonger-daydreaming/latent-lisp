@@ -88,11 +88,12 @@
 
 ;; 5. serialized #S structure literal in hostile bytes
 (expect-condition "A5 #S struct literal in serialized input is refused" mneme.client:schema-mismatch
-  (mneme.client:revive "#S(mneme::attestation :verdict :supports)"))
+  (mneme.client:decode-artifact "#S(mneme::attestation :verdict :supports)"))
 
 ;; 6. trailing forms after the first
 (expect-condition "A6 trailing data after the first form is refused" mneme.client:schema-mismatch
-  (mneme.client:revive "(:tag :mneme :schema 2 :proposition (:equals (:call :double 1) 2) :as-of nil) (evil)"))
+  (mneme.client:decode-artifact
+   "(:tag :mneme :schema 2 :proposition (:equals (:call :double 1) 2) :as-of nil) (evil)"))
 
 ;; 7. arbitrary / unregistered procedure name → no fdefinition from caller data
 (expect-condition "A7 an unregistered procedure cannot be dispatched" mneme.client:unsafe-procedure

@@ -133,7 +133,7 @@
     (mneme.client:revive receipt)
     (mneme.client:commit prepared *store*)))
 
-;;; CE7: every refused receipt transition carries its attempted endpoints.
+;;; CE7: a refused receipt transition carries its attempted endpoints.
 (expect-transition "CE7 receive-before-commit reports :PREPARED to :RECEIVED" :prepared :received
   (let* ((claim (mneme.client:assert-claim '(:equals (:call :string-is-a "A") t)))
          (prepared (mneme.client:prepare claim)))

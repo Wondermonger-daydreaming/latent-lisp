@@ -3,7 +3,7 @@
 #
 # Two separate SBCL images with NO shared runtime state: process A freezes verified state
 # to disk and EXITS (its capabilities, mints, and registries die with it); process B boots
-# fresh and must reconstruct from bytes alone, refuse to honor the serialized 'verified'
+# fresh and must decode untrusted bytes alone, refuse to honor the serialized 'verified'
 # grade until it re-authenticates, and refuse every planted forgery. exit 0 == the law
 # holds across the gap. (Style mirrors the atelier's run-all.sh.)
 set -euo pipefail
@@ -19,7 +19,7 @@ sbcl --script "$ROOT/boundary-freeze.lisp" "$STORE"
 
 printf '\n(process A has exited; its image and every live capability are gone)\n'
 
-printf '\n===== PROCESS B — revive (image 2, fresh) =====\n'
+printf '\n===== PROCESS B — decode untrusted artifact (image 2, fresh) =====\n'
 sbcl --script "$ROOT/boundary-revive.lisp" "$STORE"
 
 printf '\nBoundary conformance holds across a real process image gap (both scripts exit 0).\n'
