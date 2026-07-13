@@ -17,15 +17,20 @@ python3 canonical-datum/generator/generate_corpus.py \
   --output-dir canonical-datum/generated/release-v0 \
   --seed 3439329281 \
   --positive-count 10000 \
-  --negative-count 20000 \
+  --negative-count 20308 \
   --mutation-sample-count 128 \
   --truncation-max-document-octets 16
 ```
 
-The generator refuses release counts below 10,000 positive and 20,000
-classified adversarial vectors.  That 20,000 total can include rows whose stage
-or code is explicitly provisional under A1/A2; normative and provisional counts
-are reported separately.  `--allow-small` exists only for deterministic tests.
+Release qualification requires at least 10,000 positives, at least 20,000 total
+classified adversarial rows, and independently at least 20,000 rows carrying the
+demonstrated `byte-deletion-primary-minimal` proof.  The generator retains 308
+authored/host coverage rows in addition, so the preferred and default release
+count is 20,308.  A 20,000-total invocation is refused: it would contain only
+19,692 demonstrated-primary rows.  Rows whose stage or code is provisional
+under A1/A2 remain useful coverage, but cannot make up the demonstrated-primary
+minimum; normative and provisional counts are reported separately.
+`--allow-small` exists only for deterministic tests.
 A dirty source override is accepted only as `--allow-small
 --allow-dirty-source`, and both facts are recorded.  Release mode requires a
 worktree clean of tracked and untracked changes.

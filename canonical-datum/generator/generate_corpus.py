@@ -29,11 +29,14 @@ import tempfile
 from typing import Any, Iterable, Mapping, Sequence
 
 
-GENERATOR_VERSION = "cd0-corpus-generator/2"
+GENERATOR_VERSION = "cd0-corpus-generator/3"
 EXPECTED_SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
 DEFAULT_SEED = 0xCD000001
 RELEASE_POSITIVE_MINIMUM = 10_000
-RELEASE_NEGATIVE_MINIMUM = 20_000
+RELEASE_ADVERSARIAL_TOTAL_MINIMUM = 20_000
+RELEASE_PRIMARY_MINIMIZED_MINIMUM = 20_000
+SEEDED_COVERAGE_NEGATIVE_COUNT = 308
+PREFERRED_RELEASE_NEGATIVE_COUNT = RELEASE_PRIMARY_MINIMIZED_MINIMUM + SEEDED_COVERAGE_NEGATIVE_COUNT
 DEFAULT_MUTATION_SAMPLE_COUNT = 128
 DEFAULT_TRUNCATION_MAX_DOCUMENT_OCTETS = 16
 MAGIC_VERSION = bytes.fromhex("4c50434400")
@@ -1641,6 +1644,18 @@ def frequency(values: Iterable[str]) -> dict[str, int]:
     return dict(sorted(result.items()))
 
 
+def release_qualifies(
+    positive_count: int,
+    adversarial_total: int,
+    demonstrated_primary_minimal: int,
+) -> bool:
+    return (
+        positive_count >= RELEASE_POSITIVE_MINIMUM
+        and adversarial_total >= RELEASE_ADVERSARIAL_TOTAL_MINIMUM
+        and demonstrated_primary_minimal >= RELEASE_PRIMARY_MINIMIZED_MINIMUM
+    )
+
+
 def generate(args: argparse.Namespace) -> Path:
     root = args.repo_root.resolve()
     spec_path, spec_digest = verify_spec(root)
@@ -1649,8 +1664,17 @@ def generate(args: argparse.Namespace) -> Path:
     if not args.allow_small:
         if args.positive_count < RELEASE_POSITIVE_MINIMUM:
             raise GeneratorError(f"release positive count must be at least {RELEASE_POSITIVE_MINIMUM}")
-        if args.negative_count < RELEASE_NEGATIVE_MINIMUM:
-            raise GeneratorError(f"release negative count must be at least {RELEASE_NEGATIVE_MINIMUM}")
+        if args.negative_count < RELEASE_ADVERSARIAL_TOTAL_MINIMUM:
+            raise GeneratorError(
+                f"release adversarial total must be at least {RELEASE_ADVERSARIAL_TOTAL_MINIMUM}"
+            )
+        if args.negative_count < PREFERRED_RELEASE_NEGATIVE_COUNT:
+            raise GeneratorError(
+                f"release --negative-count must be at least {PREFERRED_RELEASE_NEGATIVE_COUNT}: "
+                f"{SEEDED_COVERAGE_NEGATIVE_COUNT} authored/host coverage rows are retained in "
+                f"addition to {RELEASE_PRIMARY_MINIMIZED_MINIMUM} demonstrated "
+                "byte-deletion-primary-minimal rows"
+            )
     if args.positive_count < len(core_positive_asts()):
         raise GeneratorError(f"positive count must be at least {len(core_positive_asts())} to cover the core matrix")
     if args.negative_count < 512:
@@ -1685,6 +1709,12 @@ def generate(args: argparse.Namespace) -> Path:
     positives, positive_metadata = build_positives(args.positive_count, rng, cd0, default_budget, coverage)
     negative_builder = NegativeBuilder(cd0, budgets, coverage)
     seed_precise_negatives(negative_builder, positives)
+    seeded_coverage_count = len(negative_builder.rows)
+    if seeded_coverage_count != SEEDED_COVERAGE_NEGATIVE_COUNT:
+        raise GeneratorError(
+            "seeded coverage-row count drifted; review the preferred release count and evidence: "
+            f"expected {SEEDED_COVERAGE_NEGATIVE_COUNT}, observed {seeded_coverage_count}"
+        )
     fill_precise_negatives(negative_builder, args.negative_count)
     mutations, truncation_summary = build_mutations(
         root,
@@ -1715,6 +1745,18 @@ def generate(args: argparse.Namespace) -> Path:
     minimization_counts = frequency(
         row["minimization_kind"] for row in negative_builder.derivations
     )
+    demonstrated_primary_minimal = minimization_counts.get(
+        "byte-deletion-primary-minimal", 0
+    )
+    qualifies = release_qualifies(
+        len(positives), len(negative_builder.rows), demonstrated_primary_minimal
+    )
+    if not args.allow_small and not qualifies:
+        raise GeneratorError(
+            "release corpus does not meet the demonstrated primary-minimal threshold: "
+            f"observed {demonstrated_primary_minimal}, required "
+            f"{RELEASE_PRIMARY_MINIMIZED_MINIMUM}"
+        )
     retry_count = sum(1 for row in negative_builder.rows if "retry_budget" in row)
     command_argv = logical_command(args, root)
     invocation_argv = [sys.executable, sys.argv[0], *sys.argv[1:]]
@@ -1777,6 +1819,8 @@ def generate(args: argparse.Namespace) -> Path:
                 "classified_adversarial_total": len(negative_builder.rows),
                 "classified_negative": len(negative_builder.rows),
                 "classified_negative_by_status": status_counts,
+                "authored_and_host_coverage_negative": seeded_coverage_count,
+                "demonstrated_primary_minimal_negative": demonstrated_primary_minimal,
                 "negative_derivations": len(negative_builder.derivations),
                 "negative_retry_verified": retry_count,
                 "negative_by_minimization_kind": minimization_counts,
@@ -1786,13 +1830,19 @@ def generate(args: argparse.Namespace) -> Path:
             },
             "release_thresholds": {
                 "positive_minimum": RELEASE_POSITIVE_MINIMUM,
-                "adversarial_total_minimum": RELEASE_NEGATIVE_MINIMUM,
-                "qualifies": len(positives) >= RELEASE_POSITIVE_MINIMUM and len(negative_builder.rows) >= RELEASE_NEGATIVE_MINIMUM,
-                "count_scope": "total classified adversarial rows; provisional rows are reported separately and do not imply fully normative triples",
+                "adversarial_total_minimum": RELEASE_ADVERSARIAL_TOTAL_MINIMUM,
+                "demonstrated_primary_minimal_minimum": RELEASE_PRIMARY_MINIMIZED_MINIMUM,
+                "preferred_negative_count": PREFERRED_RELEASE_NEGATIVE_COUNT,
+                "observed_adversarial_total": len(negative_builder.rows),
+                "observed_demonstrated_primary_minimal": demonstrated_primary_minimal,
+                "qualifies": qualifies,
+                "count_scope": "qualification requires at least 20000 demonstrated byte-deletion-primary-minimal rows; authored/host coverage rows are additional, while provisional rows remain separately reported",
                 "allow_small_test_mode": bool(args.allow_small),
             },
             "negative_minimization": {
                 "kind_counts": minimization_counts,
+                "demonstrated_primary_minimal_count": demonstrated_primary_minimal,
+                "demonstrated_primary_minimal_threshold": RELEASE_PRIMARY_MINIMIZED_MINIMUM,
                 "primary_defect_scope": "proofs remove only the declared primary defect; no global semantic uniqueness is claimed",
                 "compact_padding_family": "canonical two-octet Bytes documents, nine input octets under max_input_octets=8",
             },
@@ -1846,7 +1896,7 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--output-dir", type=Path, required=True)
     result.add_argument("--seed", type=parse_integer, default=DEFAULT_SEED)
     result.add_argument("--positive-count", type=int, default=RELEASE_POSITIVE_MINIMUM)
-    result.add_argument("--negative-count", type=int, default=RELEASE_NEGATIVE_MINIMUM)
+    result.add_argument("--negative-count", type=int, default=PREFERRED_RELEASE_NEGATIVE_COUNT)
     result.add_argument("--mutation-sample-count", type=int, default=DEFAULT_MUTATION_SAMPLE_COUNT)
     result.add_argument(
         "--truncation-max-document-octets",
