@@ -1,7 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://latent-lisp.example/cd0-fixtures.schema.json",
-  "title": "Lisp+ Canonical Datum /0 shared fixtures",
+  "$id": "https://latent-lisp.example/cd0-fixtures-0.1.schema.json",
+  "title": "Lisp+ Canonical Datum /0 plus Errata 0.1 shared fixtures",
+  "x-fixture-schema-revision": "0.1",
   "oneOf": [
     {"$ref": "#/$defs/positive"},
     {"$ref": "#/$defs/negative"}
@@ -33,6 +34,16 @@
           "minItems": 1,
           "items": {"$ref": "#/$defs/nonemptyUtf8Hex"}
         }
+      },
+      "additionalProperties": false
+    },
+    "construction": {
+      "type": "object",
+      "required": ["op", "p", "q"],
+      "properties": {
+        "op": {"const": "rational"},
+        "p": {"$ref": "#/$defs/decimalInteger"},
+        "q": {"$ref": "#/$defs/decimalInteger"}
       },
       "additionalProperties": false
     },
@@ -178,7 +189,9 @@
             "code": {"enum": [
               "UnsupportedHostType", "CyclicHostInput", "ImproperHostList",
               "AmbiguousIdentifier", "InvalidHostUnicode",
-              "NegativeDenominatorHostRational"
+              "NegativeDenominatorHostRational", "ZeroDenominator",
+              "EmptyIdentifierSegment", "MissingIdentifierPath",
+              "DuplicateRecordField"
             ]}
           }
         },
@@ -244,6 +257,7 @@
       "properties": {
         "id": {"type": "string", "pattern": "^cd0-pos-[a-z0-9-]+$"},
         "datum_version": {"const": 0},
+        "construction": {"$ref": "#/$defs/construction"},
         "abstract": {"$ref": "#/$defs/datum"},
         "canonical_hex": {"$ref": "#/$defs/hexOctets"},
         "diagnostic": {"type": "string"},
@@ -276,9 +290,7 @@
             "host-unsupported", "privileged"
           ]
         },
-        "status": {
-          "enum": ["normative", "provisional-blocked-stage", "provisional-blocked-code"]
-        },
+        "status": {"const": "normative"},
         "resource_state_unchanged": {"const": true},
         "partial_output_forbidden": {"const": true},
         "notes": {"type": "array", "items": {"type": "string"}}
