@@ -1,0 +1,68 @@
+{
+  "adapter_sha256": {
+    "common-lisp": "5caa574534c3dc0d1975138abb228e6735807ca20dcc7da1c4c7c95887cc092c",
+    "python": "3b1d8017ed3a6cad375b6604e9fdcf2c01b9bdc5bccf3b336f95140abaf71db9",
+    "runner": "f614f844f73476be0817cba3760bdf07ab420fd2d75927fcff02a7dc8d312205"
+  },
+  "ambient_test_state": {
+    "python_hash_seed": "137",
+    "python_int_max_str_digits": "640"
+  },
+  "counts": {
+    "common-lisp_host_not_applicable": 3,
+    "common-lisp_negative_executed": 68,
+    "equality_judgments": 253,
+    "integration_regressions": 7,
+    "negative_rows": 71,
+    "positive_rows": 22,
+    "python_negative_executed": 71
+  },
+  "fixture_sha256": {
+    "budgets": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
+    "negative": "6000f52e1559ea579d866eca25fd25e443f07ac35cc65d3ff7166499e64de4a5",
+    "positive": "f7e3a26760350f021041bd0d492da95ce3be20c27d5410e49d29370128c35dce"
+  },
+  "host_not_applicable": [
+    {
+      "id": "cd0-neg-host-ambiguous-identifier",
+      "implementation": "common-lisp",
+      "reason": "Common Lisp seed does not expose this optional host importer"
+    },
+    {
+      "id": "cd0-neg-host-bool-as-integer",
+      "implementation": "common-lisp",
+      "reason": "Common Lisp seed does not expose this optional host importer"
+    },
+    {
+      "id": "cd0-neg-host-privileged-value",
+      "implementation": "common-lisp",
+      "reason": "Common Lisp seed does not expose this optional host importer"
+    }
+  ],
+  "integration_regression_sha256": "c4c52419b81d2fab87c20c7c4949222df236aacc5451feedd1673e8f90e9ea79",
+  "issues": [],
+  "processes": {
+    "common-lisp": {
+      "command": "sbcl --noinform --disable-debugger --script /home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp <requests.jsonl>",
+      "elapsed_seconds": 0.383117,
+      "response_count": 353,
+      "returncode": 0,
+      "stderr": ""
+    },
+    "python": {
+      "command": "/home/gauss/OpenGauss/venv/bin/python3 /home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py <requests.jsonl>",
+      "elapsed_seconds": 0.083211,
+      "response_count": 353,
+      "returncode": 0,
+      "stderr": ""
+    }
+  },
+  "protocol": "lisp-plus-cd0-differential/v1",
+  "provisional_observations": [],
+  "requests": 353,
+  "specification": {
+    "path": "mneme/spec/CANONICAL-DATUM-SPEC.md",
+    "sha256": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+  },
+  "status": "PASS"
+}
