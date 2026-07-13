@@ -5,9 +5,7 @@ Datum /0 plus Errata 0.1. Its semantic inputs are the pinned repository copy of
 `mneme/spec/CANONICAL-DATUM-SPEC.md` and the companion errata; it does not
 import or adapt the v1 kernel.
 
-Independently seeded implementations under shared normative infrastructure,
-with procedural—not OS-enforced—isolation, attested by the implementers and
-corroborated at content tier.
+“Independently seeded implementations under shared normative infrastructure, with procedural—not OS-enforced—isolation, attested by the implementers and corroborated at content tier.”
 
 The Python independence anchor is seed commit
 `58ecca4083275ebfe16605765e575bfb9f6eb755`, not this corrected branch tip.

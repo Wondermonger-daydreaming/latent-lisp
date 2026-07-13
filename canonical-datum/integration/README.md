@@ -16,6 +16,12 @@ Add `--json` for a machine-readable summary.  Add
 JSONL and stderr, and the summary.  The runner verifies the normative
 specification digest before launching a codec.
 
+“Independently seeded implementations under shared normative infrastructure, with procedural—not OS-enforced—isolation, attested by the implementers and corroborated at content tier.”
+
+The independence anchors are Common Lisp seed `e6f3b579742f5fcff0d82477d07f8c0c9ee34df3`
+and Python seed `58ecca4083275ebfe16605765e575bfb9f6eb755`, not
+their audited or corrected branch tips.
+
 ## Protocol
 
 `lisp-plus-cd0-differential/v1` is a JSON Lines request/response protocol.  One
