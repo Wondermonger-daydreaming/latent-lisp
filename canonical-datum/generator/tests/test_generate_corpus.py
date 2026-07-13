@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -9,6 +10,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 from jsonschema import Draft202012Validator
 
@@ -18,6 +20,13 @@ SCRIPT = ROOT / "canonical-datum" / "generator" / "generate_corpus.py"
 SCHEMA = json.loads((ROOT / "canonical-datum" / "schema" / "cd0-fixtures.schema.json").read_text(encoding="utf-8"))
 EXPECTED_SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
 ASSIGNED_TAGS = {"00", "01", "02", "10", "11", "20", "21", "22", "30", "31"}
+RESOURCE_LIMITS = {
+    "max_input_octets", "max_output_octets", "max_varint_octets",
+    "max_integer_bits", "max_depth", "max_nodes", "max_sequence_items",
+    "max_record_fields", "max_identifier_segments", "max_segment_octets",
+    "max_single_string_octets", "max_single_bytes_octets",
+    "max_aggregate_payload_octets", "max_total_record_key_octets",
+}
 REQUIRED_MUTATIONS = {
     "delete-octet",
     "delete-suffix",
@@ -41,6 +50,12 @@ REQUIRED_HOST_SCENARIOS = {
     "cd0-host-property-live-privileged",
     "cd0-host-property-inert-records",
 }
+
+MODULE_SPEC = importlib.util.spec_from_file_location("cd0_generate_corpus_test_module", SCRIPT)
+if MODULE_SPEC is None or MODULE_SPEC.loader is None:
+    raise RuntimeError("could not load corpus generator module")
+GENERATOR = importlib.util.module_from_spec(MODULE_SPEC)
+MODULE_SPEC.loader.exec_module(GENERATOR)
 
 
 def sha256(path: Path) -> str:
@@ -74,6 +89,7 @@ class GeneratedCorpusTests(unittest.TestCase):
             "--truncation-max-document-octets",
             "10",
             "--allow-small",
+            "--allow-dirty-source",
         ]
         first_environment = dict(os.environ, PYTHONHASHSEED="1")
         first = subprocess.run(cls.command, cwd=ROOT, env=first_environment, capture_output=True, text=True)
@@ -109,6 +125,7 @@ class GeneratedCorpusTests(unittest.TestCase):
             if path.is_file()
         }
         self.assertEqual(second_bytes, self.first_bytes)
+        self.assertEqual(list(self.output.parent.glob(f".{self.output.name}.staging-*")), [])
 
     def test_spec_and_source_revision_are_recorded(self) -> None:
         self.assertEqual(self.manifest["normative_specification"]["sha256"], EXPECTED_SPEC_SHA256)
@@ -118,6 +135,12 @@ class GeneratedCorpusTests(unittest.TestCase):
         self.assertEqual(self.manifest["source_revision"], observed)
         self.assertIn("--positive-count 384", self.manifest["logical_command"])
         self.assertIn("--allow-small", self.manifest["logical_command"])
+        self.assertEqual(self.manifest["invocation_argv"], self.command)
+        self.assertEqual(self.manifest["invocation_cwd"], str(ROOT))
+        self.assertEqual(self.manifest["source_input_sha256"]["before_generation"], self.manifest["source_input_sha256"]["after_generation"])
+        for relative, digest in self.manifest["source_input_sha256"]["before_generation"].items():
+            self.assertEqual(sha256(ROOT / relative), digest, relative)
+        self.assertTrue(self.manifest["source_worktree"]["dirty_override_requested"])
 
     def test_small_corpus_counts_and_nonrelease_marker(self) -> None:
         self.assertEqual(len(self.positives), 384)
@@ -125,8 +148,10 @@ class GeneratedCorpusTests(unittest.TestCase):
         self.assertEqual(len(self.derivations), 640)
         self.assertEqual(self.manifest["counts"]["positive"], 384)
         self.assertEqual(self.manifest["counts"]["classified_negative"], 640)
+        self.assertEqual(self.manifest["counts"]["classified_adversarial_total"], 640)
         self.assertFalse(self.manifest["release_thresholds"]["qualifies"])
         self.assertTrue(self.manifest["release_thresholds"]["allow_small_test_mode"])
+        self.assertIn("provisional", self.manifest["release_thresholds"]["count_scope"])
 
     def test_shared_positive_and_negative_fixture_schema(self) -> None:
         validator = Draft202012Validator(SCHEMA)
@@ -160,8 +185,32 @@ class GeneratedCorpusTests(unittest.TestCase):
         for row in self.mutations:
             self.assertNotIn("expected_failure", row)
             self.assertEqual(row["classification_status"], "unclassified-may-have-multiple-defects")
+            self.assertNotEqual(row["source_hex"], row["input_hex"], row["id"])
         operations = {row["operation"] for row in self.mutations}
         self.assertTrue(REQUIRED_MUTATIONS <= operations, REQUIRED_MUTATIONS - operations)
+
+    def test_every_sampled_delete_position_and_suffix_provenance_is_preserved(self) -> None:
+        positive_by_id = {row["id"]: row for row in self.positives}
+        sampled_ids = {
+            row["source_positive_id"]
+            for row in self.mutations
+            if row["source_scope"] == "generated-sample" and row["operation"] == "delete-octet"
+        }
+        self.assertEqual(len(sampled_ids), 16)
+        for source_id in sampled_ids:
+            size = len(bytes.fromhex(positive_by_id[source_id]["canonical_hex"]))
+            deletion_positions = sorted(
+                row["parameter"]
+                for row in self.mutations
+                if row["source_positive_id"] == source_id and row["operation"] == "delete-octet"
+            )
+            suffix_points = sorted(
+                row["parameter"]
+                for row in self.mutations
+                if row["source_positive_id"] == source_id and row["operation"] == "delete-suffix"
+            )
+            self.assertEqual(deletion_positions, list(range(size)), source_id)
+            self.assertEqual(suffix_points, list(range(size)), source_id)
 
     def test_every_hand_truncation_point_is_present(self) -> None:
         hand = jsonl(ROOT / "canonical-datum" / "vectors" / "cd0-positive.jsonl")
@@ -200,6 +249,46 @@ class GeneratedCorpusTests(unittest.TestCase):
         inert = next(row for row in self.host_scenarios["scenarios"] if row["id"] == "cd0-host-property-inert-records")
         self.assertEqual(set(inert["shapes"]), {"capability", "warrant", "claim", "certificate", "receipt"})
         self.assertEqual(len(inert["positive_vector_refs"]), 5)
+        self.assertIn("separately retained Phase-4 evidence", self.host_scenarios["factual_status"])
+        self.assertTrue(all(row["execution_status"] == "not-executed-by-generator" for row in self.host_scenarios["scenarios"]))
+        self.assertIn("integration adapters", self.host_scenarios["integration_adapter_note"])
+
+    def test_all_resource_limits_have_explicit_boundary_metadata(self) -> None:
+        scenarios = self.host_scenarios["resource_boundary_scenarios"]
+        self.assertEqual(len(scenarios), 14)
+        self.assertEqual({row["limit"] for row in scenarios}, RESOURCE_LIMITS)
+        self.assertTrue(all(row["execution_status"] == "not-executed-by-generator" for row in scenarios))
+        for row in scenarios:
+            self.assertIn("operation", row)
+            self.assertIn("budget_base", row)
+            self.assertIn("accept_value", row)
+            self.assertIn("refuse_value", row)
+            self.assertIn("expected_refusal", row)
+            self.assertIn("success_assertion", row)
+            self.assertTrue("input_hex" in row or "fixture_ast" in row)
+        integer = next(row for row in scenarios if row["limit"] == "max_integer_bits")
+        self.assertEqual(integer["expected_refusal"]["status"], "implementation-local-pending-adjudication")
+        self.assertIn("not normative", integer["divergence_boundary"])
+
+    def test_identifier_distinction_pairs_are_explicit_and_disjoint(self) -> None:
+        expected = {
+            "precomposed-decomposed",
+            "latin-cyrillic-confusable",
+            "namespace-path",
+            "case",
+            "segmentation",
+        }
+        observed: dict[str, list[dict]] = {}
+        for row in self.positives:
+            for note in row["notes"]:
+                if note.startswith("identifier-distinction="):
+                    observed.setdefault(note.split("=", 1)[1], []).append(row)
+        self.assertEqual(set(observed), expected)
+        for distinction, rows in observed.items():
+            self.assertEqual(len(rows), 2, distinction)
+            self.assertEqual({next(note for note in row["notes"] if note.startswith("pair-side=")) for row in rows}, {"pair-side=left", "pair-side=right"})
+            self.assertEqual(len({row["canonical_hex"] for row in rows}), 2, distinction)
+            self.assertEqual(len({row["equality_class"] for row in rows}), 2, distinction)
 
     def test_coverage_table_has_evidence_for_every_obligation(self) -> None:
         self.assertEqual(len(self.manifest["coverage"]), 33)
@@ -223,6 +312,78 @@ class GeneratedCorpusTests(unittest.TestCase):
         self.assertIn("consistency aid only", boundary["authority"])
         self.assertIn("no permanent triple", boundary["mutation_candidates"])
         self.assertIn("A1-A9", self.manifest["divergence_boundary"])
+        self.assertIn("not global semantic uniqueness", self.manifest["negative_distinctness_scope"])
+        self.assertIn("primary defect", self.manifest["negative_minimization"]["primary_defect_scope"])
+
+    def test_compact_padding_is_byte_deletion_primary_minimal(self) -> None:
+        negative_by_id = {row["id"]: row for row in self.negatives}
+        cd0 = GENERATOR.import_codec(ROOT)
+        budgets = GENERATOR.load_budgets(ROOT, cd0)
+        compact = [
+            row for row in self.derivations
+            if row["minimization_kind"] == "byte-deletion-primary-minimal"
+        ]
+        self.assertGreater(len(compact), 0)
+        self.assertEqual(
+            len(compact),
+            self.manifest["counts"]["negative_by_minimization_kind"]["byte-deletion-primary-minimal"],
+        )
+        for derivation in compact:
+            row = negative_by_id[derivation["id"]]
+            source = bytes.fromhex(row["input_hex"])
+            proof = derivation["minimization_proof"]
+            self.assertEqual(len(source), 9)
+            self.assertEqual(row["budget"]["max_input_octets"], 8)
+            self.assertEqual(row["retry_budget"], "cd0-conformance-default")
+            self.assertEqual(row["expected_failure"], {
+                "category": "ResourceRefusal",
+                "code": "ExcessiveInputLength",
+                "stage": "input-budget",
+            })
+            self.assertTrue(proof["all_one_octet_deletions_remove_primary_defect"])
+            self.assertEqual(proof["claim_scope"], "primary ExcessiveInputLength defect only")
+            budget = GENERATOR.resolve_budget(row["budget"], budgets, cd0, f"minimal:{row['id']}")
+            for position in range(9):
+                shortened = source[:position] + source[position + 1:]
+                self.assertLessEqual(len(shortened), 8)
+                try:
+                    cd0.decode_exact(shortened, budget)
+                except cd0.CD0Failure as failure:
+                    self.assertNotEqual(failure.code, "ExcessiveInputLength", (row["id"], position))
+
+    def test_every_declared_retry_succeeds_and_reencodes_identically(self) -> None:
+        cd0 = GENERATOR.import_codec(ROOT)
+        budgets = GENERATOR.load_budgets(ROOT, cd0)
+        observed = 0
+        for row in self.negatives:
+            if "retry_budget" not in row:
+                continue
+            observed += 1
+            retry = GENERATOR.resolve_budget(row["retry_budget"], budgets, cd0, f"test:{row['id']}")
+            source = bytes.fromhex(row["input_hex"])
+            decoded = cd0.decode_exact(source, retry)
+            self.assertEqual(cd0.encode_exact(decoded, retry), source, row["id"])
+        self.assertEqual(observed, self.manifest["counts"]["negative_retry_verified"])
+
+    def test_normative_and_provisional_negative_counts_are_separate(self) -> None:
+        expected: dict[str, int] = {}
+        for row in self.negatives:
+            status = row.get("status", "normative")
+            expected[status] = expected.get(status, 0) + 1
+        self.assertEqual(self.manifest["counts"]["classified_negative_by_status"], dict(sorted(expected.items())))
+        self.assertGreater(expected["normative"], 0)
+        self.assertGreater(expected["provisional-blocked-stage"], 0)
+        self.assertGreater(expected["provisional-blocked-code"], 0)
+        identifier_resource_rows = [
+            row for row in self.negatives
+            if any(token in row["id"] for token in (
+                "resource-identifier-segments",
+                "resource-segment-length",
+                "resource-identifier-declaration-only",
+            ))
+        ]
+        self.assertEqual(len(identifier_resource_rows), 3)
+        self.assertTrue(all(row["status"] == "provisional-blocked-stage" for row in identifier_resource_rows))
 
     def test_release_floors_cannot_be_bypassed_accidentally(self) -> None:
         refused = Path(self.temporary.name) / "refused"
@@ -242,6 +403,100 @@ class GeneratedCorpusTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 2)
         self.assertIn("at least 10000", completed.stderr)
         self.assertFalse(refused.exists())
+
+    def test_dirty_source_override_is_small_mode_only(self) -> None:
+        refused = Path(self.temporary.name) / "dirty-override-refused"
+        command = [
+            sys.executable,
+            str(SCRIPT),
+            "--repo-root",
+            str(ROOT),
+            "--output-dir",
+            str(refused),
+            "--positive-count",
+            "384",
+            "--negative-count",
+            "640",
+            "--allow-dirty-source",
+        ]
+        completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("only together with --allow-small", completed.stderr)
+        self.assertFalse(refused.exists())
+
+    def test_dirty_worktree_refuses_without_explicit_small_mode_override(self) -> None:
+        false_root = Path(self.temporary.name) / "dirty-root"
+        false_spec = false_root / "mneme" / "spec" / "CANONICAL-DATUM-SPEC.md"
+        false_spec.parent.mkdir(parents=True)
+        shutil.copy2(ROOT / "mneme" / "spec" / "CANONICAL-DATUM-SPEC.md", false_spec)
+        subprocess.run(["git", "init", "-q"], cwd=false_root, check=True)
+        subprocess.run(["git", "add", str(false_spec.relative_to(false_root))], cwd=false_root, check=True)
+        subprocess.run(
+            ["git", "-c", "user.name=CD0 Test", "-c", "user.email=cd0@example.invalid", "commit", "-qm", "pin spec"],
+            cwd=false_root,
+            check=True,
+        )
+        (false_root / "untracked-source").write_text("dirty\n", encoding="utf-8")
+        refused = Path(self.temporary.name) / "dirty-worktree-refused"
+        command = [
+            sys.executable,
+            str(SCRIPT),
+            "--repo-root",
+            str(false_root),
+            "--output-dir",
+            str(refused),
+            "--positive-count",
+            "96",
+            "--negative-count",
+            "512",
+            "--mutation-sample-count",
+            "16",
+            "--allow-small",
+        ]
+        completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("worktree is not clean", completed.stderr)
+        self.assertIn("untracked-source", completed.stderr)
+        self.assertFalse(refused.exists())
+
+    def test_staging_is_removed_and_final_output_absent_on_write_failure(self) -> None:
+        output = Path(self.temporary.name) / "atomic-output"
+        args = GENERATOR.parser().parse_args([
+            "--repo-root", str(ROOT),
+            "--output-dir", str(output),
+            "--positive-count", "96",
+            "--negative-count", "512",
+            "--mutation-sample-count", "16",
+            "--truncation-max-document-octets", "10",
+            "--allow-small",
+            "--allow-dirty-source",
+        ])
+        with mock.patch.object(GENERATOR, "write_jsonl", side_effect=OSError("injected write refusal")):
+            with self.assertRaisesRegex(OSError, "injected write refusal"):
+                GENERATOR.generate(args)
+        self.assertFalse(output.exists())
+        self.assertEqual(list(output.parent.glob(f".{output.name}.staging-*")), [])
+
+    def test_source_hash_drift_refuses_before_publication(self) -> None:
+        output = Path(self.temporary.name) / "source-drift-output"
+        args = GENERATOR.parser().parse_args([
+            "--repo-root", str(ROOT),
+            "--output-dir", str(output),
+            "--positive-count", "96",
+            "--negative-count", "512",
+            "--mutation-sample-count", "16",
+            "--truncation-max-document-octets", "10",
+            "--allow-small",
+            "--allow-dirty-source",
+        ])
+        actual = GENERATOR.source_input_hashes(ROOT)
+        changed = dict(actual)
+        changed["canonical-datum/generator/generate_corpus.py"] = "0" * 64
+        with mock.patch.object(GENERATOR, "source_input_hashes", side_effect=[actual, changed]):
+            with self.assertRaisesRegex(GENERATOR.GeneratorError, "source inputs drifted"):
+                GENERATOR.generate(args)
+        self.assertFalse(output.exists())
+        self.assertEqual(list(output.parent.glob(f".{output.name}.staging-*")), [])
 
     def test_spec_digest_mismatch_refuses_before_output(self) -> None:
         false_root = Path(self.temporary.name) / "false-root"
