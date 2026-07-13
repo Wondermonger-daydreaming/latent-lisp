@@ -44,7 +44,11 @@
   "Total division that COUNTS when the zero-guard actually saves it."
   (if (< (abs b) 1d-9) (progn (incf *guard-fires*) 1d0) (/ a b)))
 
-(defparameter *lambda* 1.0d0)
+;; λ defaults to 1.0 (the pre-registered value); optional argv[2] overrides it for the
+;; threshold sweep (a MODE, not a fork — a bare `run-clean.lisp <seed>` is byte-unchanged).
+(defparameter *lambda*
+  (let ((arg (third sb-ext:*posix-argv*)))
+    (if arg (let ((*read-default-float-format* 'double-float)) (read-from-string arg)) 1.0d0)))
 
 (defun guard-fires-of (tree data)
   "Evaluate TREE across DATA, return how many times the zero-guard fired."

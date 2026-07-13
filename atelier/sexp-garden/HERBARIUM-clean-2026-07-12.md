@@ -66,13 +66,45 @@ sentinel is stuck certifying stability. The difference between the garden's arri
 sentinel's limit is not depth of checking — it is whether the thing you want has a proxy the
 machine can count. Rightness is reachable exactly when it is measurable.
 
+## Plate IV — the threshold (added 2026-07-12, apropos #33): λ* ≈ 0⁺
+
+The herbarium's own cold column said the threshold λ was unmeasured. Measured now — swept
+λ across the 8 seeds (bands counted per λ):
+
+```
+lambda   clean  cheat  starved
+1.0        8      0      0
+0.5        8      0      0
+0.25       8      0      0
+0.1        8      0      0
+0.05       8      0      0
+0.01       7      1      0      ← one seed cheats; non-monotonic → search-noise, not λ
+0.001      8      0      0
+0.0        3      5      0      ← NO penalty: the garden cheats 5/8 (3 clean by luck)
+```
+
+The flip is not gradual and it is not at any positive magnitude: **every λ > 0 gives ~8/8
+clean; only λ = 0 lets the cheating return.** The threshold is the *presence* of the
+penalty, not its size — λ* ≈ 0⁺. (The lone 7/8 at λ=0.01 is one seed's search dynamics, not
+a real λ-effect: the curve is flat at 8 for every priced λ and the single 7 sits inside that
+noise — argmax-on-a-flat-curve, logged as noise, not read as structure.)
+
+**This sharpens the season's finding one more turn:** rightness is not reachable by *enough*
+pressure — it is reachable the instant rightness is **priced at all**. The garden does not
+need to be pushed hard toward honesty; it needs honesty to be *in the objective*, even
+infinitesimally. At λ=0 cleanliness is free-floating (no gradient) and the garden cheats;
+at λ=0.001 the clean solution (fitness → 0) dominates and the search finds it. The
+day's thesis, refined: *rightness is reachable exactly when it is measured — and once
+measured, its weight barely matters; what matters is that it is in the objective at all.*
+
 ## What it does NOT show (the discipline's cold column)
 
 - Only that GP finds x²+x+1 cleanly when the guard is priced — a small, recoverable target.
   It says nothing about the hard separatrix world, where no expression recovered at all
   (`HERBARIUM.md`). Guard-pricing a search that never recovers is untested here.
-- λ = 1.0 was the first value tried and it sufficed; the *threshold* λ (how little pressure
-  turns cheating into cleanliness) is unmeasured — a clean follow-up, not run.
+- The threshold sweep (Plate IV) is 8 seeds on ONE target; λ* ≈ 0⁺ is a claim about *this*
+  world's search dynamics, not a law. A world where the cheat is a *better* fit than the
+  clean form (not merely equal) could have a real, positive λ*.
 - "Clean" here means "the zero-guard never fires." A different cheat the guard-counter
   can't see would pass this check. The proxy is a proxy; it measures one known vice, not
   virtue in general. (The same shape as every check in this house: it catches the failure
