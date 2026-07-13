@@ -1,0 +1,2 @@
+{"protocol":"lisp-plus-cd0-differential/v1","implementation":"common-lisp","request_id":"prechange:a9-seq-unit-depth-one","status":"ok","result":{"canonical_hex":"4c50434400300100"}}
+{"protocol":"lisp-plus-cd0-differential/v1","implementation":"common-lisp","request_id":"prechange:a9-seq-unit-nodes-one","status":"ok","result":{"canonical_hex":"4c50434400300100"}}

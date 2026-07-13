@@ -95,7 +95,7 @@ oracle; the pinned specification and later Common Lisp/Python differential run
 remain authoritative for conformance evidence.
 
 A1–A9 are closed by the pinned ruling and Errata 0.1. The manifest records all
-37 promoted cases (A1=6, A2=5, A3=6, A4=3, A5=3, A6=2, A7=1, A8=6, A9=5).
+39 promoted cases (A1=6, A2=5, A3=6, A4=3, A5=3, A6=2, A7=1, A8=6, A9=7).
 Construction descriptors remain distinct from normalized abstract datums.
 Broad mutation candidates remain unclassified because the errata does not
 authorize assigning a primary defect to multi-defect mutations.

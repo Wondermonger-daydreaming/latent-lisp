@@ -14,6 +14,50 @@ This transcript distinguishes commands executed, rows classified, rows
 executed, N/A dispositions, failures, and skips. It does not describe the
 Phase-0 result as “71 tests passed.”
 
+## Focused A9 two-vector addendum
+
+Fable protocol `49b3cf88` returned only the absence of two exact permanent A9
+instantiations. The focused rerun at integration source commit
+`64988991215939d84517801d049348a3393d04a6`, tree
+`1a4c094900a5bc627830986797d77a8073d59a25`, supersedes derived operation and
+request counts below without invalidating the historical first-closure runs.
+
+```text
+vector SHA-256:            731a74ed61352200d378771f43b747d64bfcc0dea793b116d25b0b888ee11bc3
+promoted operations:       39 (A9=7)
+hand differential:         PASS, 467 requests per codec, issues []
+release differential:      PASS, 100,863 requests per codec, issues 0
+Phase-0:                   71 classified = 66 octet + 5 host
+Python Phase-0:            71 executed, 0 N/A, 0 failures, 0 skips
+Common Lisp Phase-0:       68 executed, 3 N/A, 0 failures, 0 skips
+Common Lisp complete:      PASS, 2,633 assertions
+Python complete:           PASS, 167 tests
+generator self-tests:      PASS, 28 tests
+release-runner self-tests: PASS, 9 tests
+qualification self-tests:  PASS, 9 tests
+property qualification:   PASS, 1,045 requests per codec
+existing v1:               PASS, 6/6 suites
+```
+
+Both added IDs executed generically in both codecs and returned
+`4c50434400300100`. The retained focused hand summary has SHA-256
+`8dd3156abfbf14ca15c90e64d539ca022d3f930a42f0adabaf943458c4641078`;
+the release summary is
+`c229e377ef160b7038b1a901630cb440a08666d39f8737d20c4b2b77ce1e3c2e`;
+the qualification summary is
+`0e8abf173dffea60f072c6b20fca48a8cb178fabfa79308e8c02bedfb4a72a86`.
+
+Two full corpus regenerations at one logical path were byte-identical under
+`PYTHONHASHSEED=1` and `777`. The corpus digest stayed
+`62a18766d59e9144d6beb1371d3b2886ffc35df511f7ec32a85f0be8af4b2b58`;
+the new manifest SHA-256 is
+`101cd0d59e6ad2dad5d9aff4d3179936ac393ad32a9be1736453a0b8cc4b8d92`.
+The protected 10,000-row projection remained byte-identical at
+`21399286466dd5c85c95a591c750d00799a997677c6c8357b6287e683ad8aa58`.
+
+The earlier 37/465/100,861 passages below are retained as factual transcripts
+of the first closure run; they are not the current focused-delta arithmetic.
+
 ## Environment and normative gate
 
 Pre-change state and runtime details were captured before modification in

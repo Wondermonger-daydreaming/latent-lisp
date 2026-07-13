@@ -35,7 +35,7 @@ python3 canonical-datum/qualification/run_qualification.py \
 ```
 
 `--json` prints the bounded summary.  All modes run the specification digest
-gate, the Phase-0 verifier, the 465-request hand/errata differential, harness
+gate, the Phase-0 verifier, the 467-request hand/errata differential, harness
 self-tests, separate-process property probes, and language-specific runtime
 probes.  Small mode uses 48 values; default uses 512.
 
@@ -43,7 +43,7 @@ probes.  Small mode uses 48 values; default uses 512.
 
 | ID | Obligation | Harness evidence | Boundary |
 |---|---|---|---|
-| Q1 | Pin the normative revision and rerun deterministic goldens | exact three-document SHA-256 gate, Phase-0 verifier, 25 positive / 71 classified negative / 325 equality / seven regression / 37 errata operation differential | finite reviewed hand corpus only |
+| Q1 | Pin the normative revision and rerun deterministic goldens | exact three-document SHA-256 gate, Phase-0 verifier, 25 positive / 71 classified negative / 325 equality / seven regression / 39 errata operation differential | finite reviewed hand corpus only |
 | Q2 | Round trip, equality/encoding equivalence, and canonical-byte identity | 48 or 512 deterministic generated values through both adapters; an equal-source variant per value | ephemeral bounded sample, not the release corpus |
 | Q3 | Refuse noncanonical and forbidden encodings with classified failures | eight single-defect mutation cases per codec | precise triples only where normative |
 | Q4 | Resist mutable source, accessor, and decoder-input aliases | seven Python and eleven Common Lisp runtime mutation probes, plus full seed suites in default mode | ordinary supported API mutation, not reflection/unsafe memory writes |
@@ -53,15 +53,15 @@ probes.  Small mode uses 48 values; default uses 512.
 | Q8 | Distinguish host cycles from sharing and preserve identifier namespaces | direct host probes in both runtimes plus cross-codec namespace inequality | finite shapes and explicit importers |
 | Q9 | Compare in isolated processes and classify disagreements | both adapters receive identical JSONL; every hostile case has a primary classification and warranted-field set | host exception text is never compared |
 | Q10 | Preserve immutable observations under concurrency | Common Lisp threads perform 1,024 read/encode pairs in default mode; Python full seed suite performs its existing concurrent read/encode test | thread schedules are sampled, not exhaustively explored |
-| Q11 | Verify authorized A1–A9 closure without changing N/A accounting | 37 promoted operation vectors with exact per-adjudication counts; three Common Lisp-specific host rows remain explicit N/A | N/A is never counted as a pass |
+| Q11 | Verify authorized A1–A9 closure without changing N/A accounting | 39 promoted operation vectors with exact per-adjudication counts; three Common Lisp-specific host rows remain explicit N/A | N/A is never counted as a pass |
 
 ## Classified failure and errata accounting
 
 The ephemeral property matrix contains eight mutation-derived and six resource
 failures, all compared on category, code, and stage. Depth and node failures use
 the adjudicated `type-tag` stage. The golden differential separately executes
-37 permanent promoted vectors: A1=6, A2=5, A3=6, A4=3, A5=3, A6=2, A7=1,
-A8=6, and A9=5. Those are classified totals, not additions to the 71-row
+39 permanent promoted vectors: A1=6, A2=5, A3=6, A4=3, A5=3, A6=2, A7=1,
+A8=6, and A9=7. Those are classified totals, not additions to the 71-row
 Phase-0 accounting.
 
 Rational construction uses a construction descriptor distinct from the

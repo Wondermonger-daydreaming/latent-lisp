@@ -2,6 +2,30 @@
 
 Date: 2026-07-13
 
+## Focused A9 two-vector superseding run
+
+Fable protocol `49b3cf88` added exactly two A9 `runtime-encode` operations.
+The current retained evidence is
+`canonical-datum/evidence/a9-two-vector-2026-07-13/hand/`.
+
+| Artifact | Rows or bytes | SHA-256 |
+|---|---:|---|
+| `requests.jsonl` | 467 rows | `8f1ea3b37e4a501eb2c82c5bfc53ad3032fd32b2fc137335fd46d926e669bb36` |
+| `common-lisp-responses.jsonl` | 467 rows | `a37ba62f18490e3ca3be55db333efda19f8db898cea36e96b01ca410b8e16424` |
+| `python-responses.jsonl` | 467 rows | `65fa0d7d0a595481b8dc42a690ed08c03d6a1f62b9426db2e07bba880eda812d` |
+| each stderr | 0 bytes | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `summary.json` | 2,814 bytes | `8dd3156abfbf14ca15c90e64d539ca022d3f930a42f0adabaf943458c4641078` |
+
+Current arithmetic per codec is
+`25 + 71 + 325 + 7 + 39 = 467`. Promoted decomposition is
+`6/5/6/3/3/2/1/6/7`; failures `0`, skips `0`. Both new A9 rows returned
+`4c50434400300100` in both response streams. The historical comparator passed
+with zero canonical-octet, normalized-datum, equality-result, or disposition
+changes.
+
+The 37/465 material below is retained as the factual first-closure receipt and
+is superseded only for the promoted-operation-derived arithmetic.
+
 This receipt covers the finite hand corpus, the 37 promoted A1–A9 operation
 vectors, and the historical hand-corpus compatibility comparison. The generated
 release-scale comparison has its own receipt. Neither codec is used as the

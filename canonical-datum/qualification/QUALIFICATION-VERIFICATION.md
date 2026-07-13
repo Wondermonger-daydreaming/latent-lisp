@@ -2,7 +2,7 @@
 
 > Historical pre-Errata-0.1 receipt. The provisional A1–A9 statements below
 > describe the bounded run before adjudication and are not the current
-> conformance claim. The successor qualification requires 37 promoted cases
+> conformance claim. The successor qualification requires 39 promoted cases
 > with complete expectations while retaining three Common Lisp N/A rows.
 
 This is a bounded engineering receipt for the qualification run on 2026-07-13.

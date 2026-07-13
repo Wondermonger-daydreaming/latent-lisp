@@ -56,7 +56,7 @@ The Errata 0.1 convergence matrix consists of:
 - 25 shared positive rows, including three rational construction descriptors;
 - 71 classified negative rows as complete triples;
 - all 325 unordered-with-reflexivity equality judgments over the 25 positives;
-- 37 permanent operation-sensitive A1--A9 vectors;
+- 39 permanent operation-sensitive A1--A9 vectors;
 - seven historical integration regressions.
 
 Phase-0 accounting remains separate: 71 classified rows are 66 octet rows plus

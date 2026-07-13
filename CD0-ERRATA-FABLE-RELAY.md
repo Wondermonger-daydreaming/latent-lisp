@@ -1,5 +1,10 @@
 # CD/0 Errata 0.1 targeted Fable relay
 
+> Focused return note: Fable protocol `49b3cf88` returned only §3-A9's two
+> missing shared-vector instantiations. The paste-ready resubmission is now
+> `CD0-A9-FABLE-FOCUSED-RELAY.md`. The original relay below remains preserved as
+> review history; its 37/465/100,861 arithmetic describes the first submission.
+
 Date: 2026-07-13
 
 This is a copy/paste-ready handoff for another reviewer or model instance. It is

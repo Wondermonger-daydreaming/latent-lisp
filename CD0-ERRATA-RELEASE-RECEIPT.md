@@ -2,6 +2,33 @@
 
 Date: 2026-07-13
 
+## Focused A9 two-vector superseding run
+
+The release runner includes every promoted errata operation. After the focused
+Fable return, it mechanically computed 39 promoted operations and 100,863
+requests per codec. The retained summary is
+`canonical-datum/evidence/a9-two-vector-2026-07-13/release/summary.json`,
+93,742 bytes, SHA-256
+`c229e377ef160b7038b1a901630cb440a08666d39f8737d20c4b2b77ce1e3c2e`.
+
+```text
+10,000 positive + 20,308 negative + 20,000 equality + 20,012 retries
++ 30,504 unclassified mutations + 39 promoted errata = 100,863
+```
+
+Result: `PASS`; 50 batches; issues `0`; mutation disagreements `0`.
+Common Lisp response total was 100,863 rows / 31,407,248 bytes; Python was
+100,863 rows / 30,902,995 bytes. A9 executed seven operations; every A1–A9
+operation passed its complete expectation.
+
+The valid-datum gate compared 10,000 rows and found canonical-octet,
+abstract-datum, decoded-AST, and equality-class changes all `0`. Baseline and
+current projection SHA-256 remained
+`21399286466dd5c85c95a591c750d00799a997677c6c8357b6287e683ad8aa58`.
+
+The 37/100,861 material below is retained as the factual first-closure receipt
+and is superseded only for the promoted-operation-derived arithmetic.
+
 This receipt records the corrected deterministic corpus and complete generated
 differential. It is release evidence for the successor branch only. It does not
 claim a merge to `main` or make either implementation a normative oracle.

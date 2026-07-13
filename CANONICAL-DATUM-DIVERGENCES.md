@@ -6,6 +6,11 @@ Phase 0 executability review.  It does not amend
 `d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc`).
 No implementation comparison had occurred when A1--A9 were recorded.
 
+> Current status: A1–A9 remain normatively closed by the ruling and Errata 0.1.
+> Fable protocol `49b3cf88` returned no semantic divergence; it returned only
+> the absence of two exact permanent A9 shared-vector instantiations. Those rows
+> are now present and execute in both codecs. No new ambiguity was observed.
+
 ## A1 — Failure stages are not mapped completely
 
 - **Sections:** 20.1, 20.3, 20.4, 20.5; also 17.7.

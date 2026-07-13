@@ -132,7 +132,7 @@ Python A8 import:       ResourceRefusal/RecordKeyWorkBudgetExceeded/host-import;
 
 “Changed” distinguishes observable codec/adapter behavior from additions to
 tests or comments.  Every row changed shared vectors because each ruling is now
-represented in the permanent 37-operation manifest.  The final two columns are
+represented in the permanent 39-operation manifest.  The final two columns are
 the protected hard-stop columns.
 
 | Erratum | Affected implementation/evidence files | Old failing or blocked witness | New result | Common Lisp changed? | Python changed? | Vectors changed? | Canonical bytes changed? | v1 changed? |
@@ -145,10 +145,10 @@ the protected hard-stop columns.
 | A6 | both suites/adapters and promoted vectors | record-key tag precedence was blocked | `f0..ff` retains `PrivilegedRestorationAttempt/ForbiddenPrivilegedTag/type-tag`; other non-Identifier tags use `RecordKeyNotIdentifier/record-key` | no observable codec change | no observable codec change | yes, 2 promoted operations | no | no |
 | A7 | fixture schema, `datum-from-fixture-construction`, `from_fixture_construction`, both suites, positive vectors | unreduced rational source could not be represented without pretending it was a normalized abstract datum; late injection showed Python could leak raw `MemoryError` while validating descriptor keys | closed `{"op":"rational","p":"…","q":"…"}` construction descriptor is distinct from normalized abstract fixture AST; its complete Python entry point translates allocation/stack exhaustion | yes, new fixture-construction adapter | yes, new fixture adapter plus late allocation-boundary translation | yes, 1 promoted failure, 3 positive construction rows, and a permanent allocation-injection property case | no | no |
 | A8 | both codec cores, both suites/adapters, generator/qualification and promoted vectors | key-work operand and sort-comparison multiplicity were blocked; late injection showed complete key bytes were allocated before an already-deterministic zero-budget refusal | each complete canonical Identifier `ValueBytes` is counted exactly once per field occurrence, globally per operation; exact length is preflighted without a byte buffer and refusal precedes materialization | yes, runtime preflight now precedes complete key-byte materialization | yes, runtime and fixture-import preflights now precede complete key-byte materialization | yes, 6 promoted operations plus permanent allocation-injection and non-ASCII/UVAR boundary properties | no | no |
-| A9 | `common-lisp/cd0.lisp`, both suites/adapters, qualification and promoted vectors | Common Lisp runtime encoding reapplied depth/nodes/varint/integer/segment/count/aggregate limits; Python did not | runtime encoding of an already-valid datum enforces output size, record-key work, and actual host allocation only; decode/import limits remain operation-specific | yes, structural encoder refusals removed | no codec behavior change; existing jurisdiction retained | yes, 5 promoted operations | no | no |
+| A9 | `common-lisp/cd0.lisp`, both suites/adapters, qualification and promoted vectors | Common Lisp runtime encoding reapplied depth/nodes/varint/integer/segment/count/aggregate limits; Python did not | runtime encoding of an already-valid datum enforces output size, record-key work, and actual host allocation only; decode/import limits remain operation-specific | yes, structural encoder refusals removed | no codec behavior change; existing jurisdiction retained | yes, 7 promoted operations, including Fable protocol `49b3cf88`'s two exact shared instantiations | no | no |
 
 Promoted-operation arithmetic is A1=6, A2=5, A3=6, A4=3, A5=3, A6=2,
-A7=1, A8=6, and A9=5, for 37 classified operations.  These operations are a
+A7=1, A8=6, and A9=7, for 39 classified operations.  These operations are a
 separate class and do not alter the 71-row Phase-0 total.
 
 ## Shared fixture and accounting changes
@@ -158,7 +158,7 @@ separate class and do not alter the 71-row Phase-0 total.
 | `canonical-datum/vectors/cd0-positive.jsonl` | 25 rows; three rational construction rows added; SHA-256 `34fe63302e686efc0bcf1b1d841dbc5392c7f5abae393390eca40680179492b4` |
 | `canonical-datum/vectors/cd0-negative.jsonl` | exactly 71 classified rows; A1/A2 expectations promoted; SHA-256 `d491d83e8b27d3224567f1948e90b92db2ea02689c464fe6144c69bb2cb851a6` |
 | `canonical-datum/schema/cd0-fixtures.schema.json` | construction descriptor separated from normalized datum; SHA-256 `6609a6d97140f1fda5a538ccb908bb820bcdad380b7dd8efb05fa8a9e7a0407c` |
-| `canonical-datum/vectors/cd0-errata-0.1.json` | 37 A1–A9 operations; SHA-256 `55725e14e763075a8866be9da8be9f8647b5b06803e1fea6f661068d87651ddc` |
+| `canonical-datum/vectors/cd0-errata-0.1.json` | 39 A1–A9 operations; SHA-256 `731a74ed61352200d378771f43b747d64bfcc0dea793b116d25b0b888ee11bc3` |
 
 Phase-0 accounting is deliberately not reported as “71 tests passed”:
 
@@ -230,3 +230,24 @@ and no `CD0-ERRATA-DIVERGENCES.md` entry was required.
 This is a conformance-repair ledger.  It does not treat canonical identity as
 truth or authority and makes no claim about located-claim identity, warrants,
 capabilities, receipts, modules, effects, cryptography, custody, or lineage.
+
+## Focused Fable return closure — protocol 49b3cf88
+
+Fable report commit `40462613` (in the lab repository, not latent-lisp) returned
+exactly §3-A9 shared-vector instantiation. The byte-exact report is retained at
+`canonical-datum/evidence/targeted-fable-a9-two-vector/FABLE-CD0-TARGETED-VERIFICATION-REPORT.md`,
+SHA-256 `67d6c2923f8ff93946dfce141696592826b25927249e0089dcbbf6e5a0f5263b`.
+All other targeted findings remain passed and were not reopened.
+
+The old failing witness was evidence absence: neither exact conjunction existed
+as a permanent shared executable row. Direct pre-change generic-adapter probes
+showed both codecs already returned `OK 4c50434400300100` for `seq[Unit]` under
+`max_depth=1` and separately `max_nodes=1`. The repair added those two rows and
+only synchronized generic count/hash guards and derived evidence. No codec core
+or adapter source changed in this focused repair. Hand arithmetic is now 467
+requests per codec; release arithmetic is mechanically 100,863 per codec.
+
+Protected results remain: canonical-octet changes `0`, abstract-datum changes
+`0`, equality-class changes `0`, accepted-document changes `0`, and v1 changes
+`0`. The focused delta receipt records commands, hashes, and the exact changed
+surface. This ledger does not claim merge eligibility.

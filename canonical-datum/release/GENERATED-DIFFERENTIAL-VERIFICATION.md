@@ -3,7 +3,7 @@
 > Historical pre-Errata-0.1 receipt. The counts and partial-status language
 > below describe the audited release-v0 run and are not the current conformance
 > claim. The successor v4 receipt records complete triples and the separately
-> executed 37-case A1–A9 closure set.
+> executed 39-case A1–A9 closure set.
 
 Date: 2026-07-13
 Factual status: executable tooling verification; **not** final release-corpus

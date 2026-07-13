@@ -45,7 +45,7 @@ equality directions and `equal-datum` iff identical canonical bytes without
 constructing a quadratic request matrix.
 
 Every classified negative is checked on the complete normative category, code,
-and stage triple. The runner separately executes all 37 promoted A1–A9
+and stage triple. The runner separately executes all 39 promoted A1–A9
 operation vectors and reports each adjudication count without folding them into
 the generated corpus scale.
 
@@ -90,7 +90,7 @@ mechanically demonstrated byte-deletion-primary-minimal rows, plus 308
 authored/host coverage rows.  Large retry sets do not require a corpus-sized
 request array.
 The fixed release contains 10,000 positives, 20,308 classified negatives,
-30,504 unclassified mutation candidates, and 20,012 retry requests. The 37
+30,504 unclassified mutation candidates, and 20,012 retry requests. The 39
 promoted errata operations are reported as a separate classified class.
 
 For a release-qualified run, the runner hard-compares all 10,000 generated
