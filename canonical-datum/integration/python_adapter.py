@@ -30,6 +30,22 @@ def _budget(request: dict[str, Any]) -> cd0.ResourceBudget:
     )
 
 
+def _admission_budget(request: dict[str, Any]) -> cd0.ResourceBudget:
+    return cd0.ResourceBudget.from_mapping(
+        request["admission_budget"], identifier=request["admission_budget_id"]
+    )
+
+
+def _from_request(
+    request: dict[str, Any], budget: cd0.ResourceBudget, *, prefix: str = ""
+) -> cd0.Datum:
+    construction_key = f"{prefix}construction"
+    ast_key = f"{prefix}ast"
+    if construction_key in request:
+        return cd0.from_fixture_construction(request[construction_key], budget)
+    return cd0.from_fixture_ast(request[ast_key], budget)
+
+
 def _ok(request_id: str, result: dict[str, Any]) -> dict[str, Any]:
     return {
         "protocol": PROTOCOL,
@@ -66,7 +82,7 @@ def handle(request: dict[str, Any]) -> dict[str, Any]:
 
     try:
         if operation == "construct-roundtrip":
-            constructed = cd0.from_fixture_ast(request["ast"], budget)
+            constructed = _from_request(request, budget)
             encoded = cd0.encode_exact(constructed, budget)
             decoded = cd0.decode_exact(encoded, budget)
             return _ok(
@@ -83,6 +99,9 @@ def handle(request: dict[str, Any]) -> dict[str, Any]:
         if operation == "decode":
             value = cd0.decode_exact(bytes.fromhex(request["input_hex"]), budget)
             return _ok(request_id, _datum_result(value, budget))
+        if operation == "decode-only":
+            value = cd0.decode_exact(bytes.fromhex(request["input_hex"]), budget)
+            return _ok(request_id, {"fixture_ast": cd0.to_fixture_ast(value)})
         if operation == "decode-probe":
             value = cd0.decode_exact(bytes.fromhex(request["input_hex"]), budget)
             return _ok(
@@ -95,8 +114,8 @@ def handle(request: dict[str, Any]) -> dict[str, Any]:
             )
             return _ok(request_id, _datum_result(value, budget))
         if operation == "equal":
-            left = cd0.from_fixture_ast(request["left_ast"], budget)
-            right = cd0.from_fixture_ast(request["right_ast"], budget)
+            left = _from_request(request, budget, prefix="left_")
+            right = _from_request(request, budget, prefix="right_")
             return _ok(
                 request_id,
                 {
@@ -108,6 +127,15 @@ def handle(request: dict[str, Any]) -> dict[str, Any]:
         if operation == "fixture-import":
             value = cd0.from_fixture_ast(request["ast"], budget)
             return _ok(request_id, _datum_result(value, budget))
+        if operation == "fixture-import-only":
+            value = cd0.from_fixture_ast(request["ast"], budget)
+            return _ok(request_id, {"fixture_ast": cd0.to_fixture_ast(value)})
+        if operation == "construction-only":
+            value = cd0.from_fixture_construction(request["construction"], budget)
+            return _ok(request_id, {"fixture_ast": cd0.to_fixture_ast(value)})
+        if operation == "runtime-encode":
+            value = cd0.from_fixture_ast(request["ast"], _admission_budget(request))
+            return _ok(request_id, {"canonical_hex": cd0.encode_exact(value, budget).hex()})
         if operation == "nested-encode":
             depth = request["depth"]
             if type(depth) is not int or depth < 1:

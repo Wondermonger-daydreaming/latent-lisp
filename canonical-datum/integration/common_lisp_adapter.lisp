@@ -116,10 +116,24 @@
       (t (error "unsupported fixture AST tag ~S" tag)))
     (write-char #\} stream)))
 
-(defun request-budget (request)
+(defun request-budget-fields (request budget-key budget-id-key)
   (apply #'make-resource-budget
-         :id (jget request "budget_id")
-         (lisp-plus-cd0-tests::budget-overrides (jget request "budget"))))
+         :id (jget request budget-id-key)
+         (lisp-plus-cd0-tests::budget-overrides (jget request budget-key))))
+
+(defun request-budget (request)
+  (request-budget-fields request "budget" "budget_id"))
+
+(defun request-admission-budget (request)
+  (request-budget-fields request "admission_budget" "admission_budget_id"))
+
+(defun datum-from-request (request budget &optional (prefix ""))
+  (let* ((construction-key (concatenate 'string prefix "construction"))
+         (ast-key (concatenate 'string prefix "ast"))
+         (construction (jget request construction-key nil)))
+    (if construction
+        (datum-from-fixture-construction construction :budget budget)
+        (datum-from-fixture-ast (jget request ast-key) :budget budget))))
 
 (defun write-response-prefix (request-id status stream)
   (write-char #\{ stream)
@@ -170,6 +184,27 @@
   (write-char #\, *standard-output*)
   (json-key "fixture_ast" *standard-output*)
   (write-fixture-ast (datum-to-fixture-ast datum) *standard-output*)
+  (write-string "}}" *standard-output*)
+  (terpri))
+
+(defun emit-fixture-result (request-id datum)
+  (write-response-prefix request-id "ok" *standard-output*)
+  (write-char #\, *standard-output*)
+  (json-key "result" *standard-output*)
+  (write-char #\{ *standard-output*)
+  (json-key "fixture_ast" *standard-output*)
+  (write-fixture-ast (datum-to-fixture-ast datum) *standard-output*)
+  (write-string "}}" *standard-output*)
+  (terpri))
+
+(defun emit-canonical-result (request-id datum budget)
+  (write-response-prefix request-id "ok" *standard-output*)
+  (write-char #\, *standard-output*)
+  (json-key "result" *standard-output*)
+  (write-char #\{ *standard-output*)
+  (json-key "canonical_hex" *standard-output*)
+  (json-string (octets-to-hex (encode-exact datum :budget budget))
+               *standard-output*)
   (write-string "}}" *standard-output*)
   (terpri))
 
@@ -247,7 +282,7 @@
           ((string= operation "construct-roundtrip")
            (emit-roundtrip
             request-id
-            (datum-from-fixture-ast (jget request "ast") :budget budget)
+            (datum-from-request request budget)
             budget))
           ((string= operation "decode")
            (emit-datum-result
@@ -255,6 +290,11 @@
             (decode-exact (hex-to-octets (jget request "input_hex"))
                           :budget budget)
             budget))
+          ((string= operation "decode-only")
+           (emit-fixture-result
+            request-id
+            (decode-exact (hex-to-octets (jget request "input_hex"))
+                          :budget budget)))
           ((string= operation "decode-probe")
            (let* ((datum
                     (decode-exact (hex-to-octets (jget request "input_hex"))
@@ -273,13 +313,28 @@
           ((string= operation "equal")
            (emit-equality
             request-id
-            (datum-from-fixture-ast (jget request "left_ast") :budget budget)
-            (datum-from-fixture-ast (jget request "right_ast") :budget budget)
+            (datum-from-request request budget "left_")
+            (datum-from-request request budget "right_")
             budget))
           ((string= operation "fixture-import")
            (emit-datum-result
             request-id
             (datum-from-fixture-ast (jget request "ast") :budget budget)
+            budget))
+          ((string= operation "fixture-import-only")
+           (emit-fixture-result
+            request-id
+            (datum-from-fixture-ast (jget request "ast") :budget budget)))
+          ((string= operation "construction-only")
+           (emit-fixture-result
+            request-id
+            (datum-from-fixture-construction (jget request "construction")
+                                             :budget budget)))
+          ((string= operation "runtime-encode")
+           (emit-canonical-result
+            request-id
+            (datum-from-fixture-ast (jget request "ast")
+                                    :budget (request-admission-budget request))
             budget))
           ((string= operation "nested-encode")
            (let ((datum (make-unit-datum)))

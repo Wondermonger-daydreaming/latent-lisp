@@ -147,6 +147,7 @@ def build_requests(
     negatives: list[dict[str, Any]],
     budgets: dict[str, dict[str, int]],
     regressions: list[dict[str, Any]],
+    errata_cases: list[dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
     requests: list[dict[str, Any]] = []
     metadata: dict[str, dict[str, Any]] = {}
@@ -157,6 +158,8 @@ def build_requests(
         request_id = f"positive:{row_id}"
         request = request_base(request_id, "construct-roundtrip", budget, budget_id)
         request["ast"] = row["abstract"]
+        if "construction" in row:
+            request["construction"] = row["construction"]
         requests.append(request)
         metadata[request_id] = {"kind": "positive", "row": row}
 
@@ -190,6 +193,10 @@ def build_requests(
         )
         request["left_ast"] = left["abstract"]
         request["right_ast"] = right["abstract"]
+        if "construction" in left:
+            request["left_construction"] = left["construction"]
+        if "construction" in right:
+            request["right_construction"] = right["construction"]
         requests.append(request)
         metadata[request_id] = {
             "kind": "equality",
@@ -244,6 +251,23 @@ def build_requests(
             request["input_hex"] = "4c50434400" + "3001" * (depth - 1) + "00"
         requests.append(request)
         metadata[request_id] = {"kind": "regression", "case": case}
+
+    for case in errata_cases:
+        case_id = case["id"]
+        base_name = case["budget"]
+        if base_name not in budgets:
+            raise DifferentialFailure(f"{case_id}: unknown errata base budget")
+        budget = {**budgets[base_name], **case.get("overrides", {})}
+        request_id = f"errata:{case_id}"
+        request = request_base(request_id, case["op"], budget, f"errata:{case_id}")
+        for field in ("input_hex", "ast", "construction"):
+            if field in case:
+                request[field] = case[field]
+        if case["op"] == "runtime-encode":
+            request["admission_budget"] = budgets["cd0-conformance-default"]
+            request["admission_budget_id"] = "cd0-conformance-default"
+        requests.append(request)
+        metadata[request_id] = {"kind": "errata", "case": case}
 
     return requests, metadata
 
@@ -311,10 +335,6 @@ def run_adapter(
 
 def warranted_fields(row: dict[str, Any]) -> tuple[str, ...]:
     status = row.get("status", "normative")
-    if status == "provisional-blocked-stage":
-        return ("category", "code")
-    if status == "provisional-blocked-code":
-        return ("category", "stage")
     if status == "normative":
         return ("category", "code", "stage")
     raise DifferentialFailure(f"{row['id']}: unknown fixture status {status!r}")
@@ -327,7 +347,6 @@ def compare(
 ) -> tuple[list[str], dict[str, Any]]:
     issues: list[str] = []
     counters: dict[str, int] = defaultdict(int)
-    provisional_observations: list[dict[str, Any]] = []
     host_not_applicable: list[dict[str, str]] = []
     expected_host_not_applicable = {
         ("common-lisp", "cd0-neg-host-ambiguous-identifier"),
@@ -408,10 +427,6 @@ def compare(
                         f"{request_id}: cross-codec warranted failure disagreement "
                         f"CL={failures[0]} Python={failures[1]} fields={fields}"
                     )
-                if row.get("status") and failures[0] != failures[1]:
-                    provisional_observations.append(
-                        {"id": row["id"], "common_lisp": failures[0], "python": failures[1]}
-                    )
             continue
 
         if kind == "equality":
@@ -462,6 +477,34 @@ def compare(
                 )
             continue
 
+        if kind == "errata":
+            counters["errata_vectors"] += 1
+            case = meta["case"]
+            expectation = case["expected"]
+            for label, response in (("common-lisp", cl), ("python", py)):
+                if response.get("status") != expectation["status"]:
+                    issues.append(
+                        f"{request_id}: {label} errata status {response.get('status')} "
+                        f"!= {expectation['status']}: {response}"
+                    )
+                    continue
+                if expectation["status"] == "failure":
+                    if response.get("failure") != expectation["failure"]:
+                        issues.append(
+                            f"{request_id}: {label} errata failure mismatch "
+                            f"actual={response.get('failure')} expected={expectation['failure']}"
+                        )
+                elif response.get("result") != expectation["result"]:
+                    issues.append(
+                        f"{request_id}: {label} errata result mismatch "
+                        f"actual={response.get('result')} expected={expectation['result']}"
+                    )
+            if cl.get("status") == py.get("status") == "ok" and cl.get("result") != py.get("result"):
+                issues.append(f"{request_id}: successful errata results disagree")
+            if cl.get("status") == py.get("status") == "failure" and cl.get("failure") != py.get("failure"):
+                issues.append(f"{request_id}: errata failure triples disagree")
+            continue
+
         issues.append(f"{request_id}: unknown metadata kind {kind!r}")
 
     missing_not_applicable = sorted(
@@ -476,7 +519,7 @@ def compare(
     return issues, {
         "counts": dict(sorted(counters.items())),
         "host_not_applicable": host_not_applicable,
-        "provisional_observations": provisional_observations,
+        "provisional_observations": [],
     }
 
 
@@ -518,9 +561,10 @@ def main(argv: list[str] | None = None) -> int:
     negative_path = VECTORS_DIR / "cd0-negative.jsonl"
     budget_path = VECTORS_DIR / "cd0-budgets.json"
     regression_path = INTEGRATION_DIR / "cases" / "cd0-integration-regressions.json"
+    errata_path = VECTORS_DIR / "cd0-errata-0.1.json"
     positives = read_jsonl(positive_path)
     negatives = read_jsonl(negative_path)
-    if len(positives) != 22 or len(negatives) != 71:
+    if len(positives) != 25 or len(negatives) != 71:
         raise DifferentialFailure(
             f"reviewed seed manifest changed: positives={len(positives)}, negatives={len(negatives)}"
         )
@@ -531,7 +575,15 @@ def main(argv: list[str] | None = None) -> int:
     regressions = regression_document.get("cases")
     if type(regressions) is not list or len(regressions) != 7:
         raise DifferentialFailure("integration regression manifest must contain seven cases")
-    requests, metadata = build_requests(positives, negatives, budgets, regressions)
+    errata_document = json.loads(errata_path.read_text(encoding="utf-8"))
+    if errata_document.get("schema") != "cd0-errata-vectors/0.1":
+        raise DifferentialFailure("Errata 0.1 vector manifest schema mismatch")
+    errata_cases = errata_document.get("cases")
+    if type(errata_cases) is not list or len(errata_cases) != 37:
+        raise DifferentialFailure("Errata 0.1 vector manifest must contain 37 cases")
+    requests, metadata = build_requests(
+        positives, negatives, budgets, regressions, errata_cases
+    )
     request_text = serialize_requests(requests)
 
     with tempfile.TemporaryDirectory(prefix="cd0-differential-") as temporary:
@@ -579,6 +631,7 @@ def main(argv: list[str] | None = None) -> int:
         "fixture_sha256": {
             "positive": sha256(positive_path),
             "negative": sha256(negative_path),
+            "errata_0_1": sha256(errata_path),
             "budgets": sha256(budget_path),
         },
         "adapter_sha256": {
@@ -615,8 +668,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"CD/0 differential convergence: {summary['status']}")
         print(f"spec sha256: {actual_spec_digest}")
         print(f"requests: {summary['requests']} in each of 2 isolated codec processes")
-        print(f"shared positives: {counts.get('positive_rows', 0)}/22")
-        print(f"shared negatives dispositioned: {counts.get('negative_rows', 0)}/71")
+        print(f"shared positives executed: {counts.get('positive_rows', 0)}/25")
+        print(f"shared negative classified total: {counts.get('negative_rows', 0)}/71")
         print(
             "  Common Lisp executed: "
             f"{counts.get('common-lisp_negative_executed', 0)}; host N/A: "
@@ -627,14 +680,15 @@ def main(argv: list[str] | None = None) -> int:
             f"{counts.get('python_negative_executed', 0)}; host N/A: "
             f"{counts.get('python_host_not_applicable', 0)}"
         )
-        print(f"complete equality matrix: {counts.get('equality_judgments', 0)}/253")
+        print("  classified failures: 0; skips: 0")
+        print(f"complete equality matrix: {counts.get('equality_judgments', 0)}/325")
         print(
             "minimized integration regressions: "
             f"{counts.get('integration_regressions', 0)}/7"
         )
         print(
-            "provisional unwarranted-field differences observed: "
-            f"{len(summary['provisional_observations'])}"
+            "promoted Errata 0.1 operation vectors: "
+            f"{counts.get('errata_vectors', 0)}/37"
         )
         for label, process in summary["processes"].items():
             print(

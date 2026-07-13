@@ -330,6 +330,71 @@
         }
       },
       "additionalProperties": false
+    },
+    "errataExpected": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["ok", "failure"]},
+        "failure": {"$ref": "#/$defs/failure"},
+        "result": {"type": "object"}
+      },
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {"status": {"const": "ok"}},
+          "required": ["result"],
+          "not": {"required": ["failure"]}
+        },
+        {
+          "properties": {"status": {"const": "failure"}},
+          "required": ["failure"],
+          "not": {"required": ["result"]}
+        }
+      ]
+    },
+    "errataCase": {
+      "type": "object",
+      "required": ["id", "adjudication", "op", "budget", "expected", "notes"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^cd0-errata-a[1-9]-[a-z0-9-]+$"},
+        "adjudication": {"enum": ["A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9"]},
+        "op": {"enum": ["decode-only", "fixture-import-only", "construction-only", "runtime-encode"]},
+        "input_hex": {"$ref": "#/$defs/hexOctets"},
+        "ast": {"type": "object"},
+        "construction": {"$ref": "#/$defs/construction"},
+        "budget": {"type": "string", "minLength": 1},
+        "overrides": {
+          "type": "object",
+          "propertyNames": {"enum": [
+            "max_input_octets", "max_output_octets", "max_varint_octets",
+            "max_integer_bits", "max_depth", "max_nodes",
+            "max_sequence_items", "max_record_fields",
+            "max_identifier_segments", "max_segment_octets",
+            "max_single_string_octets", "max_single_bytes_octets",
+            "max_aggregate_payload_octets", "max_total_record_key_octets"
+          ]},
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "expected": {"$ref": "#/$defs/errataExpected"},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "errataManifest": {
+      "type": "object",
+      "required": ["schema", "ruling_sha256", "errata_sha256", "cases"],
+      "properties": {
+        "schema": {"const": "cd0-errata-vectors/0.1"},
+        "ruling_sha256": {"const": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc"},
+        "errata_sha256": {"const": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271"},
+        "cases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/errataCase"}
+        }
+      },
+      "additionalProperties": false
     }
   }
 }
