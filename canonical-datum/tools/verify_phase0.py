@@ -33,7 +33,7 @@ DISTINCT = ROOT / "canonical-datum/vectors/cd0-distinct-pairs.json"
 ERRATA_VECTORS = ROOT / "canonical-datum/vectors/cd0-errata-0.1.json"
 EXPECTED_SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
 EXPECTED_NEGATIVE_MANIFEST_SHA256 = "d491d83e8b27d3224567f1948e90b92db2ea02689c464fe6144c69bb2cb851a6"
-EXPECTED_ERRATA_VECTORS_SHA256 = "55725e14e763075a8866be9da8be9f8647b5b06803e1fea6f661068d87651ddc"
+EXPECTED_ERRATA_VECTORS_SHA256 = "731a74ed61352200d378771f43b747d64bfcc0dea793b116d25b0b888ee11bc3"
 MAGIC_VERSION = bytes.fromhex("4c50434400")
 HEX_RE = re.compile(r"^(?:[0-9a-f]{2})*$")
 DECIMAL_RE = re.compile(r"^(?:0|-?[1-9][0-9]*)$")
@@ -377,10 +377,27 @@ def check_errata_vectors(
     manifest: dict[str, Any], budget_names: set[str], limits: set[str]
 ) -> None:
     cases = manifest["cases"]
-    require(len(cases) == 37, f"Errata 0.1 case count is {len(cases)}, expected 37")
+    require(len(cases) == 39, f"Errata 0.1 case count is {len(cases)}, expected 39")
     require(len({case["id"] for case in cases}) == len(cases), "errata case IDs are not unique")
     require({case["adjudication"] for case in cases} == {f"A{index}" for index in range(1, 10)},
             "errata vector coverage does not span A1-A9")
+    cases_by_id = {case["id"]: case for case in cases}
+    expected_a9_runtime_rows = {
+        "cd0-errata-a9-runtime-seq-unit-depth-one": {"max_depth": 1},
+        "cd0-errata-a9-runtime-seq-unit-nodes-one": {"max_nodes": 1},
+    }
+    for case_id, overrides in expected_a9_runtime_rows.items():
+        case = cases_by_id.get(case_id)
+        require(case is not None, f"missing focused A9 runtime vector {case_id}")
+        require(case["adjudication"] == "A9" and case["op"] == "runtime-encode",
+                f"focused A9 runtime vector {case_id}: operation shape")
+        require(case["ast"] == {"t": "seq", "items": [{"t": "unit"}]},
+                f"focused A9 runtime vector {case_id}: AST shape")
+        require(case.get("overrides") == overrides,
+                f"focused A9 runtime vector {case_id}: budget override shape")
+        require(case["expected"] == {
+            "status": "ok", "result": {"canonical_hex": "4c50434400300100"}
+        }, f"focused A9 runtime vector {case_id}: expected result")
     for index, case in enumerate(cases, 1):
         require(case["budget"] in budget_names, f"errata case {index}: unknown budget")
         require(set(case.get("overrides", {})) <= limits, f"errata case {index}: bad override")
@@ -494,7 +511,7 @@ def main() -> int:
     print(f"additional positives: {len(positives) - 17}; equality classes and distinct pairs valid")
     print("negative vectors: 71 classified = 66 octet + 5 host; all complete normative triples")
     print("execution accounting contract: Python 71 executed; Common Lisp 68 executed + 3 N/A; 0 failures; 0 skips")
-    print("promoted Errata 0.1 operation vectors: 37 complete A1-A9 cases")
+    print("promoted Errata 0.1 operation vectors: 39 complete A1-A9 cases")
     print("mutation self-tests: wrong failure code, reversed decoded record order, and split equality class rejected")
     print("type tags: 256/256 classified; all 10 assigned tags exercised; reserved/forbidden boundaries present")
     for path in (POSITIVE, NEGATIVE, ERRATA_VECTORS, DISTINCT, BUDGETS, SCHEMA):
