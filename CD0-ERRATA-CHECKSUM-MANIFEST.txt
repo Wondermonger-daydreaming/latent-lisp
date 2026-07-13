@@ -1,4 +1,7 @@
 # CD/0 Errata 0.1 checksum manifest
+# Historical first-closure manifest. Superseded for the focused Fable A9 return
+# by CD0-A9-TWO-VECTOR-SHA256SUMS.txt; entries below intentionally retain the
+# exact identities of the first submission and are not current-file assertions.
 # Generated 2026-07-13 from the final receipt/checksum envelope.
 # This file omits itself. The packet SHA256SUMS hashes its 19 other members.
 1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc  CD0-POST-IMPLEMENTATION-RULING.md

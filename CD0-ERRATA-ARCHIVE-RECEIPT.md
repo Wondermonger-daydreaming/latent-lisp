@@ -1,5 +1,9 @@
 # CD/0 Errata 0.1 immutable archive receipt
 
+> Focused supersession: the Fable-returned two-vector delta has a new immutable
+> archive and receipt at `CD0-A9-TWO-VECTOR-ARCHIVE-RECEIPT.md`. The original
+> archive identity below remains preserved as historical first-closure evidence.
+
 Date: 2026-07-13
 Vantage: local WSL2 repository worktree
 Status: two independent archive constructions from the same immutable Git
