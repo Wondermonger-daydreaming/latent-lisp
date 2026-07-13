@@ -132,17 +132,18 @@ Per-codec request arithmetic:
 
 Negative execution dispositions:
 
-| Implementation | Executed failures | N/A | Classified rows |
-|---|---:|---:|---:|
-| Python | 20,308 | 0 | 20,308 |
-| Common Lisp | 20,305 | 3 | 20,308 |
+| Implementation | Executed classified rows | N/A | Conformance failures | Skips | Classified total |
+|---|---:|---:|---:|---:|---:|
+| Python | 20,308 | 0 | 0 | 0 | 20,308 |
+| Common Lisp | 20,305 | 3 | 0 | 0 | 20,308 |
 
 The three Common Lisp rows are partial-language-applicability dispositions for
 optional importers absent from that seed. They are N/A, not passes. All 20,308
 rows carry complete normative triples; 20,305 are fully executed by both
 implementations.
 
-The promoted class executed all 37 operations with zero failures:
+The promoted class executed all 37 operations with zero failures and zero
+skips:
 
 ```text
 A1=6 A2=5 A3=6 A4=3 A5=3 A6=2 A7=1 A8=6 A9=5
