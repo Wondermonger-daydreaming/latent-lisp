@@ -23,18 +23,33 @@ python3 canonical-datum/generator/generate_corpus.py \
 ```
 
 The generator refuses release counts below 10,000 positive and 20,000
-classified negative vectors.  `--allow-small` exists only for deterministic
-tests and is recorded as non-release mode in the manifest.  Existing output
-directories are never overwritten.
+classified adversarial vectors.  That 20,000 total can include rows whose stage
+or code is explicitly provisional under A1/A2; normative and provisional counts
+are reported separately.  `--allow-small` exists only for deterministic tests.
+A dirty source override is accepted only as `--allow-small
+--allow-dirty-source`, and both facts are recorded.  Release mode requires a
+worktree clean of tracked and untracked changes.
+
+The generator snapshots the source revision and SHA-256 of every relevant input
+before in-memory generation, verifies them again afterward and immediately
+before publication, then writes into a sibling staging directory.  Only a
+complete artifact set and manifest are atomically renamed to the requested
+path.  Staging is removed on failure, and an existing final path is never
+overwritten.
 
 ## Emitted artifacts
 
 - `cd0-generated-positive.jsonl` and `cd0-generated-negative.jsonl` are shared
   Section 27/28 fixture-schema rows.  Positive canonical documents are unique.
-  Classified negative input/budget pairs are unique.
+  Classified negative input/budget cases are distinct within the artifact; this
+  is not a claim of global semantic uniqueness.
 - `cd0-generated-negative-derivations.jsonl` records the source operation and
-  whether a row is a one-edit mutation.  Precise triples are hand-derived from
-  the pinned grammar and checked against the post-seed Python codec.
+  a scoped minimization kind/proof.  Coverage templates retain their authored
+  primary defects.  Bulk padding uses canonical two-octet Bytes documents: nine
+  input octets under a complete inline budget with `max_input_octets=8`.  Every
+  one-byte deletion removes that primary input-length defect, and the sufficient
+  retry budget must decode/re-encode the original bytes exactly.  This is
+  byte-deletion-primary-minimal, not a global minimization claim.
 - `cd0-mutation-candidates.jsonl` contains broad Section 28.4 mutations.  It
   intentionally has no `expected_failure`: a candidate may contain multiple
   defects and cannot acquire a permanent triple until both implementations
@@ -42,7 +57,9 @@ directories are never overwritten.
 - `cd0-host-property-scenarios.json` makes non-octet obligations explicit:
   cycles, improper lists, shared acyclic structure, mutable aliases, symbols,
   Python bool/integer disjointness, namespaces, and inert privileged-looking
-  records.
+  records, plus executable descriptions for all fourteen resource boundaries.
+  These scenarios are marked `not-executed-by-generator`; execution is owned by
+  separately retained Phase-4 evidence, and this metadata is not that transcript.
 - `cd0-corpus-manifest.json` records generator/runtime versions, seed, exact
   invocation and resolved logical command, source revision, configured
   truncation size, counts, Section 28 coverage, every data-artifact SHA-256, and
@@ -65,8 +82,12 @@ oracle; the pinned specification and later Common Lisp/Python differential run
 remain authoritative for conformance evidence.
 
 Open divergences A1--A9 are preserved.  In particular, broad mutations remain
-unclassified, the Python bool/import code stays provisional under A2, and the
-generator does not invent a rational-construction AST to bypass A7.
+unclassified, identifier-resource stages remain provisional under A1, the
+Python bool/import code stays provisional under A2, the integer resource
+boundary metadata is explicitly implementation-local and unexecuted under A3,
+and the generator does not invent a rational-construction AST to bypass A7.
+Generated host rows require explicit support in the later integration adapters;
+their presence here does not establish cross-codec execution.
 
 ## Tests
 
@@ -78,5 +99,7 @@ The suite generates the same small corpus twice at one path under
 `PYTHONHASHSEED=1` and `PYTHONHASHSEED=777` and compares every output byte.  It
 also validates shared fixture schemas, tag coverage, mutation separation,
 complete hand/configured truncation sets, host scenario metadata, source/spec
-pins, release floors, and artifact/corpus hashes.  A small green run is evidence
-for generator behavior only; it is not the required release corpus.
+pins and drift refusal, retry success, deletion-position provenance, no-op
+removal, identifier distinctions, all resource metadata, atomic failure cleanup,
+release floors, and artifact/corpus hashes.  A small green run is evidence for
+generator behavior only; it is not the required release corpus.
