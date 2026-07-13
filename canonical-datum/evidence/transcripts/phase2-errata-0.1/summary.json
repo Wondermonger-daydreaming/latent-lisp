@@ -1,0 +1,79 @@
+{
+  "adapter_sha256": {
+    "common-lisp": "35a89dd77734bb5a2f6e3142a2cbdd5c3552ab040493b83795a308a6a066f351",
+    "python": "8478bc1687d2df233e95455c8bfa9f4d6a4e74443e3aec62c30b2dd4ddc5a872",
+    "runner": "16fdb15899148a48b7560ad11bd5aba894a14ff7d5cb97efcaaac8393cec4c78"
+  },
+  "ambient_test_state": {
+    "python_hash_seed": "137",
+    "python_int_max_str_digits": "640"
+  },
+  "counts": {
+    "common-lisp_host_not_applicable": 3,
+    "common-lisp_negative_executed": 68,
+    "equality_judgments": 325,
+    "errata_a1": 6,
+    "errata_a2": 5,
+    "errata_a3": 6,
+    "errata_a4": 3,
+    "errata_a5": 3,
+    "errata_a6": 2,
+    "errata_a7": 1,
+    "errata_a8": 6,
+    "errata_a9": 5,
+    "errata_vectors": 37,
+    "integration_regressions": 7,
+    "negative_rows": 71,
+    "positive_rows": 25,
+    "python_negative_executed": 71
+  },
+  "fixture_sha256": {
+    "budgets": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
+    "errata_0_1": "55725e14e763075a8866be9da8be9f8647b5b06803e1fea6f661068d87651ddc",
+    "negative": "d491d83e8b27d3224567f1948e90b92db2ea02689c464fe6144c69bb2cb851a6",
+    "positive": "34fe63302e686efc0bcf1b1d841dbc5392c7f5abae393390eca40680179492b4"
+  },
+  "host_not_applicable": [
+    {
+      "id": "cd0-neg-host-ambiguous-identifier",
+      "implementation": "common-lisp",
+      "reason": "Common Lisp seed does not expose this optional host importer"
+    },
+    {
+      "id": "cd0-neg-host-bool-as-integer",
+      "implementation": "common-lisp",
+      "reason": "Common Lisp seed does not expose this optional host importer"
+    },
+    {
+      "id": "cd0-neg-host-privileged-value",
+      "implementation": "common-lisp",
+      "reason": "Common Lisp seed does not expose this optional host importer"
+    }
+  ],
+  "integration_regression_sha256": "293fcd6cc0df40ce95446bfdcac5be008a2bf96364fd3ba1da38c6508ed95cbc",
+  "issues": [],
+  "processes": {
+    "common-lisp": {
+      "command": "sbcl --noinform --disable-debugger --script /home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp <requests.jsonl>",
+      "elapsed_seconds": 0.446488,
+      "response_count": 465,
+      "returncode": 0,
+      "stderr": ""
+    },
+    "python": {
+      "command": "/home/gauss/OpenGauss/venv/bin/python3 /home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py <requests.jsonl>",
+      "elapsed_seconds": 0.078291,
+      "response_count": 465,
+      "returncode": 0,
+      "stderr": ""
+    }
+  },
+  "protocol": "lisp-plus-cd0-differential/v1",
+  "provisional_observations": [],
+  "requests": 465,
+  "specification": {
+    "path": "mneme/spec/CANONICAL-DATUM-SPEC.md",
+    "sha256": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+  },
+  "status": "PASS"
+}
