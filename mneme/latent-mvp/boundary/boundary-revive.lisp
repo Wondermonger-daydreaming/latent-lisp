@@ -8,7 +8,7 @@
 ;;;; genuinely dead.
 ;;;;
 ;;;; Exit 0 iff, across the process gap:
-;;;;   (a) the lawful reconstruction is ACCEPTED as a revived claim (L5);
+;;;;   (a) raw artifact bytes are ACCEPTED only through the explicitly untrusted decoder;
 ;;;;   (b) its serialized 'verified' grade is NOT honored — claim-authenticated-p NIL —
 ;;;;       until re-authenticated in THIS image (L6);
 ;;;;   (c) completed+verified work crosses as predecessor testimony while a mere promise
@@ -53,30 +53,31 @@
     (let ((*read-eval* nil)) (read-from-string (slurp (merge-pathnames "manifest.sexp" (pathname *store*)))))))
 (defun m (k) (getf *manifest* k))
 
-(format t "~&=== PROCESS B (reviver, pid ~a) — FRESH image, predecessor is dead ===~%~%" (sb-unix:unix-getpid))
+(format t "~&=== PROCESS B (decoder, pid ~a) — FRESH image, predecessor is dead ===~%~%" (sb-unix:unix-getpid))
 (format t "LAWFUL RECONSTRUCTION across the process boundary:~%")
 
-;;; ── (a)+(b)+(c-positive): revive the COMPLETED work from A's bytes ─────────────
-(defparameter *revived-completed* nil)
-(expect-ok "B1 completed work revives as a lawful reconstruction (L5)"
-  (let ((c (mneme.client:revive (slurp (m :completed)))))
-    (setf *revived-completed* c)
+;;; ── (a)+(b)+(c-positive): decode the COMPLETED work from A's raw bytes ────────
+(defparameter *decoded-completed* nil)
+(expect-ok "B1 completed work decodes as an explicitly untrusted reconstruction"
+  (let ((c (mneme.client:decode-artifact (slurp (m :completed)))))
+    (setf *decoded-completed* c)
     (unless (equal (mneme.client:claim-proposition c) (m :true-prop))
-      (error "revived proposition does not match the frozen one"))
-    (unless (getf (mneme.client:claim-provenance c) :revived)
-      (error "revived claim not marked :revived"))))
+      (error "decoded proposition does not match the frozen one"))
+    (unless (and (getf (mneme.client:claim-provenance c) :decoded-untrusted)
+                 (not (getf (mneme.client:claim-provenance c) :revived)))
+      (error "raw artifact was confused with receipt-backed revival"))))
 
 (expect-ok "B2 the serialized 'verified' grade is NOT honored — authenticated-p NIL (L6)"
-  (when (mneme.client:claim-authenticated-p *revived-completed*)
+  (when (mneme.client:claim-authenticated-p *decoded-completed*)
     (error "a serialized grade was honored without re-authentication")))
 
 (expect-ok "B3 completed+verified work crosses as PREDECESSOR TESTIMONY (L7 positive)"
-  (unless (mneme.client:claim-predecessor-warrants *revived-completed*)
+  (unless (mneme.client:claim-predecessor-warrants *decoded-completed*)
     (error "the dead author's completed testimony did not survive the gap")))
 
 ;;; ── (c-negative): the MERE PROMISE crosses carrying nothing ────────────────────
-(expect-ok "B4 a mere promise revives but carries NO testimony — it died (L7 negative)"
-  (let ((p (mneme.client:revive (slurp (m :promise)))))
+(expect-ok "B4 a mere promise decodes but carries NO testimony — it died (L7 negative)"
+  (let ((p (mneme.client:decode-artifact (slurp (m :promise)))))
     (when (mneme.client:claim-authenticated-p p) (error "a promise arrived authenticated"))
     (when (mneme.client:claim-predecessor-warrants p) (error "a never-verified promise carried testimony"))))
 
@@ -85,7 +86,7 @@
 (mneme.operator:register-procedure :double (lambda (x) (* 2 x)) :version 1)  ; B's own registry
 (expect-ok "B5 replay-and-attest re-earns authentication with B's OWN capability"
   (let* ((cap (mneme.operator:grant-authority :execution-verifier '(:execution) '(:double)))
-         (re  (mneme.client:replay-and-attest *revived-completed* cap :event-kind :execution)))
+         (re  (mneme.client:replay-and-attest *decoded-completed* cap :event-kind :execution)))
     (unless (mneme.client:claim-authenticated-p re)
       (error "successor could not re-earn authentication by re-checking"))))
 
@@ -94,20 +95,20 @@
 
 ;; F1 — a serialized LIVE ATTESTATION (forged grade) is refused at decode, typed.
 (expect-condition "B6 forged live-attestation (#S grade injection) refused" mneme.client:schema-mismatch
-  (mneme.client:revive (slurp (m :forged-live))))
+  (mneme.client:decode-artifact (slurp (m :forged-live))))
 
 ;; F2 — a #. read-eval (forged grade via code execution) is refused at decode, typed.
 (expect-condition "B7 forged read-eval (#. code injection) refused" mneme.client:schema-mismatch
-  (mneme.client:revive (slurp (m :forged-read-eval))))
+  (mneme.client:decode-artifact (slurp (m :forged-read-eval))))
 
 ;; F3 — a structure-preserving CONTENT forgery: the decoder CANNOT catch it (honest
 ;; ceiling), so it must be caught downstream by RE-AUTHENTICATION (the lie refutes).
 (expect-ok "B8 content forgery passes the decoder but arrives UNauthenticated (honest ceiling)"
-  (let ((c (mneme.client:revive (slurp (m :forged-content)))))
+  (let ((c (mneme.client:decode-artifact (slurp (m :forged-content)))))
     (when (mneme.client:claim-authenticated-p c) (error "content forgery arrived authenticated"))))
 
 (expect-condition "B9 content forgery is caught by RE-AUTHENTICATION (the lie refutes)" mneme.client:invalid-attestation
-  (let ((c   (mneme.client:revive (slurp (m :forged-content))))
+  (let ((c   (mneme.client:decode-artifact (slurp (m :forged-content))))
         (cap (mneme.operator:grant-authority :execution-verifier '(:execution) '(:double))))
     (mneme.client:replay-and-attest c cap :event-kind :execution)))  ; double 21 ≠ 99 → :refutes → refused
 
