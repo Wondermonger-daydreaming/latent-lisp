@@ -9,6 +9,9 @@ import or adapt the v1 kernel.
 
 The Python independence anchor is seed commit
 `58ecca4083275ebfe16605765e575bfb9f6eb755`, not this corrected branch tip.
+The audited tip contains the seed plus bounded corrections authored after
+cross-reading was authorized and then backported; it remains provenance, not an
+independent-seed anchor.
 
 ## Surface
 
