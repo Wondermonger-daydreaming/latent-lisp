@@ -86,9 +86,7 @@ components.
 
 ## Oracle and divergence boundary
 
-Independently seeded implementations under shared normative infrastructure,
-with procedural—not OS-enforced—isolation, attested by the implementers and
-corroborated at content tier.
+“Independently seeded implementations under shared normative infrastructure, with procedural—not OS-enforced—isolation, attested by the implementers and corroborated at content tier.”
 
 Generation begins only after the seed implementations have agreed.
 The Python codec is reused as a fixture adapter and consistency check because it

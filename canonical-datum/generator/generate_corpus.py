@@ -1027,7 +1027,9 @@ def seed_precise_negatives(builder: NegativeBuilder, positives: Sequence[dict[st
             budget=budget,
             retry_budget="cd0-conformance-default",
             status=status,
-            notes=("Errata 0.1 fixes the identifier resource stage",),
+            notes=("Errata 0.1 fixes the identifier resource stage",)
+            if slug == "identifier-segments"
+            else (),
             coverage_names=("declared-lengths-and-counts-above-budgets",),
         )
 
@@ -1049,7 +1051,9 @@ def seed_precise_negatives(builder: NegativeBuilder, positives: Sequence[dict[st
             "declared-limit-breach-without-matching-payload",
             budget=budget,
             status=status,
-            notes=("Errata 0.1 fixes the identifier resource stage",),
+            notes=("Errata 0.1 fixes the identifier resource stage",)
+            if slug == "identifier-declaration-only"
+            else (),
             coverage_names=("declared-lengths-and-counts-above-budgets",),
         )
 

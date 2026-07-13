@@ -1,5 +1,10 @@
 # Lisp+ Canonical Datum /0 implementation ledger
 
+> **Historical pre-errata record.** This ledger preserves the audited
+> implementation state in which A1–A9 remained open. It is superseded for
+> current closure status by `CD0-ERRATA-IMPLEMENTATION-LEDGER.md` and
+> `CD0-ERRATA-VERIFICATION-TRANSCRIPT.md`.
+
 Status date: 2026-07-13
 
 This ledger distinguishes normative CD/0 requirements, implementation-local

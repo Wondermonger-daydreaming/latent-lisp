@@ -9,6 +9,9 @@ runtime. SBCL 2.4.6 is the seed qualification host.
 
 The Common Lisp independence anchor is seed commit
 `e6f3b579742f5fcff0d82477d07f8c0c9ee34df3`, not this corrected branch tip.
+The audited tip contains the seed plus bounded corrections authored after
+cross-reading was authorized and then backported; it remains provenance, not an
+independent-seed anchor.
 
 ## Interface
 

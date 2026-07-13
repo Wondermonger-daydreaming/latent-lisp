@@ -230,7 +230,8 @@ A1--A9.  Phase-0 remains exactly 71 classified rows: 66 octet rows and 5 host
 rows.  Python executes 71.  Common Lisp executes 68 and records exactly three
 language-specific N/A dispositions.  N/A rows are neither passes nor failures;
 the intended final disposition is recorded separately as executed rows, N/A,
-failures, skips, and classified total.
+failures, skips, and classified total.  The observed result is 0 failures and
+0 skips.
 
 No closure entry authorizes a canonical-octet, abstract-equality, accepted
 document, datum-family, grammar, format-version, v1, or unrelated Mneme change.

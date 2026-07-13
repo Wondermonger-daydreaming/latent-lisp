@@ -1,5 +1,9 @@
 # Lisp+ Canonical Datum /0 implementation receipt — 2026-07-13
 
+> **Historical pre-errata receipt.** This receipt preserves the audited state
+> in which A1–A9 remained open. See `CD0-ERRATA-IMPLEMENTATION-LEDGER.md` and
+> `CD0-ERRATA-VERIFICATION-TRANSCRIPT.md` for current closure evidence.
+
 Receipt status: **final implementation evidence**. The independent codecs,
 release corpus, full differential, final qualification, mutation checks, and v1
 gate described below are executed facts retained in the repository. Archive and

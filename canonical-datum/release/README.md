@@ -5,9 +5,7 @@ Canonical Datum /0 with Errata 0.1. It sends the same requests to the Common
 Lisp and Python process adapters. It is not a codec, does not infer datum
 semantics, and does not treat either implementation as an oracle.
 
-Independently seeded implementations under shared normative infrastructure,
-with procedural—not OS-enforced—isolation, attested by the implementers and
-corroborated at content tier.
+“Independently seeded implementations under shared normative infrastructure, with procedural—not OS-enforced—isolation, attested by the implementers and corroborated at content tier.”
 
 ## Release invocation
 

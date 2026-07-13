@@ -21,6 +21,9 @@ specification digest before launching a codec.
 The independence anchors are Common Lisp seed `e6f3b579742f5fcff0d82477d07f8c0c9ee34df3`
 and Python seed `58ecca4083275ebfe16605765e575bfb9f6eb755`, not
 their audited or corrected branch tips.
+Those audited tips contain bounded corrections authored after cross-reading was
+authorized and then backported. They remain provenance, not independent-seed
+anchors.
 
 ## Protocol
 
@@ -60,7 +63,8 @@ Phase-0 accounting remains separate: 71 classified rows are 66 octet rows plus
 5 host rows. Python executes 71. Common Lisp executes 68 (66 octet plus 2
 applicable host rows) and records 3 language-specific N/A dispositions. N/A
 rows are neither passes nor failures. Reports state executed rows, N/A
-dispositions, failures, skips, and classified totals independently.
+dispositions, failures, skips, and classified totals independently. The
+observed result is 0 failures and 0 skips.
 
 The Common Lisp adapter reuses the seed test harness's data-only JSON parser;
 it does not use the Common Lisp reader on fixture content.  The Python adapter
