@@ -983,6 +983,18 @@ class ErrataClosureTests(unittest.TestCase):
             ("UnsupportedHostInput", "ZeroDenominator", "host-import"),
         )
 
+    def test_A7_construction_descriptor_translates_key_validation_allocation(self) -> None:
+        descriptor = {"op": "rational", "p": "1", "q": "2"}
+        with mock.patch.object(
+            builtins,
+            "set",
+            side_effect=MemoryError("injected descriptor key-set allocation"),
+        ):
+            self.assert_failure(
+                lambda: cd0.from_fixture_construction(descriptor, DEFAULT),
+                ("ResourceRefusal", "AllocationRefused", "allocation"),
+            )
+
     def test_A8_record_key_work_counts_each_occurrence_once(self) -> None:
         datum = cd0.record(
             (
@@ -997,6 +1009,44 @@ class ErrataClosureTests(unittest.TestCase):
             lambda: cd0.encode_exact(datum, small),
             ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
         )
+
+    def test_A8_encoder_key_work_precedes_key_materialization(self) -> None:
+        datum = cd0.record(((cd0.identifier((), ("a",)), cd0.unit()),))
+        zero = replace(DEFAULT, max_total_record_key_octets=0, identifier="A8-encode-zero")
+        with mock.patch.object(
+            cd0,
+            "_identifier_value_bytes",
+            side_effect=MemoryError("injected key materialization"),
+        ):
+            self.assert_failure(
+                lambda: cd0.encode_exact(datum, zero),
+                ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
+            )
+
+    def test_A8_fixture_key_work_precedes_key_materialization(self) -> None:
+        fixture = {
+            "t": "record",
+            "fields": [
+                {
+                    "key": {
+                        "t": "id",
+                        "namespace_utf8_hex": [],
+                        "path_utf8_hex": ["61"],
+                    },
+                    "value": {"t": "unit"},
+                }
+            ],
+        }
+        zero = replace(DEFAULT, max_total_record_key_octets=0, identifier="A8-import-zero")
+        with mock.patch.object(
+            cd0,
+            "_identifier_value_bytes",
+            side_effect=MemoryError("injected key materialization"),
+        ):
+            self.assert_failure(
+                lambda: cd0.from_fixture_ast(fixture, zero),
+                ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "host-import"),
+            )
 
     def test_A9_runtime_encoding_ignores_structural_admission_budgets(self) -> None:
         datum = cd0.record(
