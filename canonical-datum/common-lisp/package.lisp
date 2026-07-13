@@ -99,6 +99,7 @@
    #:decode-exact
    #:datum-to-fixture-ast
    #:datum-from-fixture-ast
+   #:datum-from-fixture-construction
 
    ;; Diagnostic-only rendering, never an identity representation.
    #:render-diagnostic))

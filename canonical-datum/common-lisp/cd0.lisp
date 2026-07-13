@@ -559,7 +559,7 @@
   object)
 
 (defun %integer-bit-count (integer)
-  ;; A3 implementation-local choice: mathematical absolute-value bit length.
+  ;; Errata 0.1: mathematical absolute-value bit length; zero consumes zero.
   (integer-length (abs integer)))
 
 (defun %check-integer-budget (integer budget stage &optional offset)
@@ -603,8 +603,11 @@
     (%host-failure "UnsupportedHostType"
                    "rational constructor requires two integers"))
   (when (zerop denominator)
-    ;; A2 local choice: reuse the semantic code at host-import stage.
-    (%fail "InvalidCanonicalGrammar" "ZeroDenominator" "host-import"))
+    (%host-failure "ZeroDenominator"))
+  ;; Errata 0.1 checks the supplied mathematical components before GCD work.
+  ;; The post-normalization checks below retain the private runtime invariant.
+  (%check-integer-budget numerator budget "host-import")
+  (%check-integer-budget denominator budget "host-import")
   (when (minusp denominator)
     (setf numerator (- numerator)
           denominator (- denominator)))
@@ -684,9 +687,7 @@
                  (%host-string-utf8-metrics segment)
                (declare (ignore scalar-count))
                (when (zerop octet-count)
-                 ;; A2 local choice: decoder code at host-import stage.
-                 (%fail "InvalidCanonicalGrammar" "EmptyIdentifierSegment"
-                        "host-import"))
+                 (%host-failure "EmptyIdentifierSegment"))
                (when (> octet-count (budget-max-segment-octets budget))
                  (%resource-failure "ExcessiveDeclaredLength" "host-import" budget
                                     :detail octet-count))
@@ -711,8 +712,8 @@
          :segment-limit (- (budget-max-identifier-segments budget)
                            (length namespace-segments)))
       (when (zerop (length path-segments))
-        (%fail "InvalidCanonicalGrammar" "MissingIdentifierPath" "host-import"))
-      ;; A4 local choice: the limit is aggregate across both sides.
+        (%host-failure "MissingIdentifierPath"))
+      ;; Errata 0.1: the limit is aggregate across both sides.
       (when (> (+ (length namespace-segments) (length path-segments))
                (budget-max-identifier-segments budget))
         (%resource-failure "ExcessiveIdentifierSegments" "host-import" budget))
@@ -887,7 +888,7 @@
            :budget budget :stage stage)))
     (let ((normalized (make-array (length entries)))
           (key-work 0))
-      ;; A8 local choice: complete Identifier ValueBytes counted once per key.
+      ;; Errata 0.1: complete Identifier ValueBytes counted once per key.
       (loop for index below (length entries)
             for entry = (aref entries index)
             do (unless (record-entry-p entry)
@@ -925,7 +926,7 @@
             for current = (aref normalized index)
             when (zerop (%octets-compare (%entry-key-bytes previous)
                                          (%entry-key-bytes current)))
-              do (%fail "InvalidCanonicalGrammar" "DuplicateRecordField" stage))
+              do (%host-failure "DuplicateRecordField"))
       normalized)))
 
 (defun make-record-datum (entries &key (budget (default-resource-budget)))
@@ -1080,14 +1081,12 @@
              (:constructor %new-encoder-state (budget output)))
   budget
   output
-  (nodes 0 :type integer)
-  (aggregate-payload 0 :type integer)
   (record-key-work 0 :type integer))
 
 (defun %emit-octet (state octet)
   (when (>= (length (%encoder-state-output state))
             (budget-max-output-octets (%encoder-state-budget state)))
-    ;; A1 local choice: atomic output refusal uses the allocation stage.
+    ;; Errata 0.1: atomic output refusal uses the allocation stage.
     (%resource-failure "ExcessiveOutputLength" "allocation"
                        (%encoder-state-budget state)
                        :detail (1+ (length (%encoder-state-output state)))))
@@ -1108,131 +1107,72 @@
   (loop for octet across octets do
     (vector-push-extend octet (%encoder-state-output state))))
 
-(defun %emit-uvar (state integer stage)
-  (let ((length (%uvar-length integer)))
-    (when (> length
-             (budget-max-varint-octets (%encoder-state-budget state)))
-      (%resource-failure "VarintBudgetExceeded" stage
-                         (%encoder-state-budget state) :detail length))
-    (%emit-octets state (%uvar-vector integer))))
+(defun %emit-uvar (state integer)
+  ;; Runtime encoding receives an already-valid datum.  Errata 0.1 assigns
+  ;; varint work only to decode, so this shared budget field is ignored here.
+  (%emit-octets state (%uvar-vector integer)))
 
 (defun %zigzag (integer)
   (if (minusp integer) (1- (* -2 integer)) (* 2 integer)))
 
-(defun %encoder-enter-value (state depth)
-  ;; A5 local choice: depth precedes node count on simultaneous breach.
-  (when (> depth (budget-max-depth (%encoder-state-budget state)))
-    (%resource-failure "ExcessiveNesting" "type-tag"
-                       (%encoder-state-budget state) :detail depth))
-  (when (>= (%encoder-state-nodes state)
-            (budget-max-nodes (%encoder-state-budget state)))
-    (%resource-failure "NodeBudgetExceeded" "type-tag"
-                       (%encoder-state-budget state)
-                       :detail (1+ (%encoder-state-nodes state))))
-  (incf (%encoder-state-nodes state)))
-
-(defun %encoder-add-payload (state length single-limit stage)
-  (let ((budget (%encoder-state-budget state)))
-    ;; A5 local choice: the context-specific limit precedes aggregate payload.
-    (when (> length single-limit)
-      (%resource-failure "ExcessiveDeclaredLength" stage budget :detail length))
-    (when (> (+ (%encoder-state-aggregate-payload state) length)
-             (budget-max-aggregate-payload-octets budget))
-      (%resource-failure "AggregatePayloadBudgetExceeded" stage budget
-                         :detail (+ (%encoder-state-aggregate-payload state)
-                                    length)))
-    (incf (%encoder-state-aggregate-payload state) length)))
-
 (defun %encode-segments (state segments)
-  (%emit-uvar state (length segments) "count")
+  (%emit-uvar state (length segments))
   (loop for segment across segments
-        do (%encoder-add-payload
-            state (length segment)
-            (budget-max-segment-octets (%encoder-state-budget state))
-            "length")
-           (%emit-uvar state (length segment) "length")
+        do (%emit-uvar state (length segment))
            (%emit-octets state segment)))
 
 (defun %encode-identifier-after-tag (state identifier)
   (let* ((namespace (%identifier-namespace identifier))
-         (path (%identifier-path identifier))
-         (segment-count (+ (length namespace) (length path)))
-         (budget (%encoder-state-budget state)))
+         (path (%identifier-path identifier)))
     (when (zerop (length path))
       (%fail "InternalInvariantFailure" "EncoderInvariantFailure" "internal"))
-    (when (> segment-count (budget-max-identifier-segments budget))
-      (%resource-failure "ExcessiveIdentifierSegments" "count" budget
-                         :detail segment-count))
     (%encode-segments state namespace)
     (%encode-segments state path)))
 
-(defun %check-runtime-integer (state integer stage)
-  (%check-integer-budget integer (%encoder-state-budget state) stage))
-
-(defun %check-container-count (state count limit)
-  (when (> count limit)
-    (%resource-failure "ExcessiveContainerCount" "count"
-                       (%encoder-state-budget state) :detail count)))
-
-(defun %encode-value (state datum depth)
+(defun %encode-value (state datum)
   (%ensure-datum datum)
-  (%encoder-enter-value state depth)
   (cond
     ((unit-datum-p datum)
      (%emit-octet state #x00))
     ((boolean-datum-p datum)
      (%emit-octet state (if (%boolean-value datum) #x02 #x01)))
     ((integer-datum-p datum)
-     (%check-runtime-integer state (%integer-value datum) "integer-payload")
      (%emit-octet state #x10)
-     (%emit-uvar state (%zigzag (%integer-value datum)) "integer-payload"))
+     (%emit-uvar state (%zigzag (%integer-value datum))))
     ((rational-datum-p datum)
      (let ((numerator (%rational-numerator datum))
            (denominator (%rational-denominator datum)))
        (unless (and (not (zerop numerator)) (> denominator 1)
                     (= 1 (gcd (abs numerator) denominator)))
          (%fail "InternalInvariantFailure" "EncoderInvariantFailure" "internal"))
-       (%check-runtime-integer state numerator "rational-payload")
-       (%check-runtime-integer state denominator "rational-payload")
        (%emit-octet state #x11)
-       (%emit-uvar state (%zigzag numerator) "rational-payload")
-       (%emit-uvar state denominator "rational-payload")))
+       (%emit-uvar state (%zigzag numerator))
+       (%emit-uvar state denominator)))
     ((string-datum-p datum)
      (let ((payload (%string-utf8 datum)))
-       (%encoder-add-payload
-        state (length payload)
-        (budget-max-single-string-octets (%encoder-state-budget state)) "length")
        (%emit-octet state #x20)
-       (%emit-uvar state (length payload) "length")
+       (%emit-uvar state (length payload))
        (%emit-octets state payload)))
     ((bytes-datum-p datum)
      (let ((payload (%bytes-octets datum)))
-       (%encoder-add-payload
-        state (length payload)
-        (budget-max-single-bytes-octets (%encoder-state-budget state)) "length")
        (%emit-octet state #x21)
-       (%emit-uvar state (length payload) "length")
+       (%emit-uvar state (length payload))
        (%emit-octets state payload)))
     ((identifier-datum-p datum)
      (%emit-octet state #x22)
      (%encode-identifier-after-tag state datum))
     ((sequence-datum-p datum)
      (let ((elements (%sequence-elements datum)))
-       (%check-container-count state (length elements)
-                               (budget-max-sequence-items
-                                (%encoder-state-budget state)))
        (%emit-octet state #x30)
-       (%emit-uvar state (length elements) "count")
+       (%emit-uvar state (length elements))
        (loop for element across elements
-             do (%encode-value state element (1+ depth)))))
+             do (%encode-value state element))))
     ((record-datum-p datum)
      (let* ((entries (%record-entries datum))
             (budget (%encoder-state-budget state))
             (previous nil))
-       (%check-container-count state (length entries)
-                               (budget-max-record-fields budget))
        (%emit-octet state #x31)
-       (%emit-uvar state (length entries) "count")
+       (%emit-uvar state (length entries))
        (loop for entry across entries
              for fresh-key-bytes = (%identifier-value-bytes (%entry-key entry))
              do (unless (and (%entry-key-bytes entry)
@@ -1251,8 +1191,8 @@
                          (budget-max-total-record-key-octets budget))
                   (%resource-failure "RecordKeyWorkBudgetExceeded"
                                      "encode-ordering" budget))
-                (%encode-value state (%entry-key entry) (1+ depth))
-                (%encode-value state (%entry-value entry) (1+ depth)))))
+                (%encode-value state (%entry-key entry))
+                (%encode-value state (%entry-value entry)))))
     (t (%fail "InternalInvariantFailure" "EncoderInvariantFailure" "internal"))))
 
 (defun encode-exact (datum &key (budget (default-resource-budget)))
@@ -1263,11 +1203,11 @@
     (let* ((output (make-array 64 :element-type '(unsigned-byte 8)
                                :adjustable t :fill-pointer 0))
            (state (%new-encoder-state budget output)))
-      ;; A9 local choice: every non-input Section 21 budget is enforced while
-      ;; encoding an already-valid runtime datum.
+      ;; Errata 0.1 assigns runtime encode only output size, operation-wide
+      ;; record-key work, and actual host allocation limits.
       (%emit-octets state #(76 80 67 68))
-      (%emit-uvar state 0 "version-varint")
-      (%encode-value state datum 1)
+      (%emit-uvar state 0)
+      (%encode-value state datum)
       (%make-octet-string (%freeze-adjustable-octets output) :trusted t))))
 
 (defun canonical-octets (datum &key (budget (default-resource-budget)))
@@ -1303,7 +1243,7 @@
 
 (defun %decoder-enter-value (state depth)
   (let ((budget (%decoder-state-budget state)))
-    ;; A5 local choice: depth precedes node count on a simultaneous breach.
+    ;; Errata 0.1: depth precedes node count on a simultaneous breach.
     (when (> depth (budget-max-depth budget))
       (%resource-failure "ExcessiveNesting" "type-tag" budget
                          :offset (%decoder-state-position state) :detail depth))
@@ -1349,7 +1289,7 @@
 
 (defun %decoder-add-payload (state length single-limit stage offset)
   (let ((budget (%decoder-state-budget state)))
-    ;; A5 local choice: single-payload limit precedes aggregate payload.
+    ;; Errata 0.1: single-payload limit precedes aggregate payload.
     (when (> length single-limit)
       (%resource-failure "ExcessiveDeclaredLength" stage budget
                          :offset offset :detail length))
@@ -1364,7 +1304,7 @@
 (defun %decoder-take-payload (state length stage)
   (let ((start (%decoder-state-position state)))
     (when (> length (- (%decoder-length state) start))
-      ;; A1 local choice: declared-payload truncation remains at length stage.
+      ;; Errata 0.1: declared-payload truncation remains at length stage.
       (%fail "InvalidCanonicalGrammar" "TruncatedInput" stage :offset start))
     (incf (%decoder-state-position state) length)
     (values (%copy-octet-vector (%decoder-state-storage state)
@@ -1425,7 +1365,13 @@
                              (%decoder-state-position state))
   (let ((segments (make-array count)))
     (loop for index below count
-          do (setf (aref segments index) (%parse-segment state)))
+          do (when (%decoder-at-end-p state)
+               ;; The count promised another segment, but its length UVAR has
+               ;; not begun.  Once an octet exists, %PARSE-SEGMENT assigns the
+               ;; length/UTF-8 stages normally.
+               (%fail "InvalidCanonicalGrammar" "TruncatedInput" "count"
+                      :offset (%decoder-state-position state)))
+             (setf (aref segments index) (%parse-segment state)))
     segments))
 
 (defun %parse-identifier-after-tag (state)
@@ -1442,7 +1388,7 @@
       (when (zerop path-count)
         (%fail "InvalidCanonicalGrammar" "MissingIdentifierPath" "identifier"
                :offset path-count-offset))
-      ;; A4 local choice: aggregate namespace + path segment budget.
+      ;; Errata 0.1: aggregate namespace + path segment budget.
       (when (> (+ namespace-count path-count)
                (budget-max-identifier-segments budget))
         (%resource-failure "ExcessiveIdentifierSegments" "count" budget
@@ -1460,10 +1406,10 @@
 (defun %parse-record-key (state depth)
   (%decoder-enter-value state depth)
   (when (%decoder-at-end-p state)
-    (%fail "InvalidCanonicalGrammar" "TruncatedInput" "record-key"
+    (%fail "InvalidCanonicalGrammar" "TruncatedInput" "count"
            :offset (%decoder-state-position state)))
   (let ((tag (%decoder-peek state)))
-    ;; A6 local choice: forbidden privileged range retains its dedicated
+    ;; Errata 0.1: forbidden privileged range retains its dedicated
     ;; security failure; every other non-22 byte is RecordKeyNotIdentifier.
     (when (<= #xf0 tag #xff)
       (%fail "PrivilegedRestorationAttempt" "ForbiddenPrivilegedTag" "type-tag"
@@ -1487,7 +1433,7 @@
     (let ((elements (make-array count)))
       (loop for index below count
             do (setf (aref elements index)
-                     (%parse-value state (1+ depth))))
+                     (%parse-value state (1+ depth) "count")))
       (make-instance '%sequence-datum :elements elements))))
 
 (defun %parse-record-after-tag (state depth)
@@ -1518,15 +1464,21 @@
                              "record-order" :offset key-start)))))
                ;; Ordering is checked before the associated value is parsed.
                (setf previous-key-bytes key-bytes)
-               (let ((value (%parse-value state (1+ depth))))
+               (let ((value (%parse-value state (1+ depth) "count")))
                  (setf (aref entries index)
                        (make-instance '%record-entry
                                       :key key :value value
                                       :key-bytes key-bytes))))
       (make-instance '%record-datum :entries entries))))
 
-(defun %parse-value (state depth)
+(defun %parse-value (state depth &optional (absent-stage "type-tag"))
   (%decoder-enter-value state depth)
+  (when (%decoder-at-end-p state)
+    ;; A surrounding count promises a complete nested item.  The count stage
+    ;; applies only before that item's first octet; a present tag transfers
+    ;; control to the nested value's own stage matrix.
+    (%fail "InvalidCanonicalGrammar" "TruncatedInput" absent-stage
+           :offset (%decoder-state-position state)))
   (let* ((tag-offset (%decoder-state-position state))
          (tag (%decoder-read-octet state "type-tag")))
     (cond
@@ -1853,8 +1805,7 @@
              for hex = (aref items index)
              for octet-count = (%host-hex-octet-length hex)
              do (when (zerop octet-count)
-                  (%fail "InvalidCanonicalGrammar" "EmptyIdentifierSegment"
-                         "host-import"))
+                  (%host-failure "EmptyIdentifierSegment"))
                 (%import-add-payload
                  state octet-count
                  (budget-max-segment-octets (%import-state-budget state)))
@@ -1953,7 +1904,7 @@
                     (length namespace))))
               (total (+ (length namespace) (length path))))
          (when (zerop (length path))
-           (%fail "InvalidCanonicalGrammar" "MissingIdentifierPath" "host-import"))
+           (%host-failure "MissingIdentifierPath"))
          (when (> total (budget-max-identifier-segments budget))
            (%resource-failure "ExcessiveIdentifierSegments" "host-import" budget))
          (make-instance '%identifier-datum :namespace namespace :path path)))
@@ -1998,6 +1949,28 @@
     (%host-failure "UnsupportedHostType" "fixture budget is not a ResourceBudget"))
   (%with-allocation-refusal (budget)
     (%import-ast ast (%new-import-state budget) 1)))
+
+(defun datum-from-fixture-construction
+    (descriptor &key (budget (default-resource-budget)))
+  "Invoke the public constructor named by Errata 0.1 fixture metadata.
+
+The descriptor is not a datum AST and never enters the byte decoder."
+  (unless (resource-budget-p budget)
+    (%host-failure "UnsupportedHostType" "fixture budget is not a ResourceBudget"))
+  (%with-allocation-refusal (budget)
+    (let* ((pairs (%object-pairs descriptor))
+           (operation (%object-value pairs "op" +fixture-missing+)))
+      (%require-object-keys pairs '("op" "p" "q"))
+      (unless (and (stringp operation) (string= operation "rational"))
+        (%host-failure "UnsupportedHostType"
+                       "unknown fixture construction operation"))
+      (let ((numerator
+              (%parse-decimal-host (%object-value pairs "p")
+                                   budget "host-import"))
+            (denominator
+              (%parse-decimal-host (%object-value pairs "q")
+                                   budget "host-import")))
+        (make-rational-datum numerator denominator :budget budget)))))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Preferred diagnostic rendering (non-identity)
