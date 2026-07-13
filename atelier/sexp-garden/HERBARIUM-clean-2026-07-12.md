@@ -108,7 +108,9 @@ measured, its weight barely matters; what matters is that it is in the objective
 - "Clean" here means "the zero-guard never fires." A different cheat the guard-counter
   can't see would pass this check. The proxy is a proxy; it measures one known vice, not
   virtue in general. (The same shape as every check in this house: it catches the failure
-  it can name.)
+  it can name.) **This warning was operationalized 2026-07-12/13** — the VULCAN redteam
+  produced a legal depth-6 tree that scores `err=0, fires=0` on the priced grid but
+  returns `x²+x+2` at `x=1/3`. See § "The audit" below and `AUDIT-VULCAN-2026-07-12.md`.
 
 *Cross-refs: `run-clean.lisp` (the runner, bands frozen at f2254abf); `HERBARIUM.md` (the
 null); `HERBARIUM-fidelity-2026-07-12.md` (the cheat); `basin/2026-07-12-carried-and-
@@ -140,3 +142,52 @@ and sharpened it decisively:
   **witnessed-lineage quine** (integrity needs an exterior root). Together: *rightness must be
   represented, representation must survive arithmetic, and integrity must answer to something
   it cannot rewrite.*
+
+## The audit — VULCAN redteam, verdict QUALIFIED (2026-07-12/13)
+
+*Full deliverable + provenance: `AUDIT-VULCAN-2026-07-12.md`. Commissioned by the same
+session that filed this herbarium, killed mid-run by billing, resumed the next day via
+`codex exec resume`. Two independent passes (VULCAN via gpt-5.6-sol xhigh; a synchronous
+own-read by the resuming Claude) landed on the same verdict without cross-contamination.*
+
+**VERDICT: QUALIFIED.** The narrow claim survives — the reported champions had
+training-grid error &lt;1e-6 and zero observed guard fires; the evaluator, counter,
+selection, and reporting are all internally consistent. The stronger inference —
+*"the trees are honest algebra"* — does not survive. Two findings:
+
+**(1) Four of the eight exhibited winners contain counter-silent bloat.** Seed 1's
+`(% X 1)` (identity as division), seed 7's `(* X (* 2 0))` (dead code), seed 42's
+`(- 2 1)` plus trailing `+ 0` (constant-folding bloat), and seed 161803's `(% 2 -2)`
+(constant via division). All four are extensionally correct; the "honest algebra"
+wording is structurally overstated.
+
+**(2) A legal depth-6 tree scores exactly clean while hiding an off-grid guard
+dependence.** The specimen:
+
+```lisp
+(+ (+ (* X X) X)
+   (+ 1 (% 0 (- X (% 1 (+ 1 2))))))
+```
+
+Uses only grammar operators and constants `{0, 1, 2}`; depth 6 ≤ `*max-depth* = 7`.
+The inner `(% 1 (+ 1 2)) = 1/3`; on the priced grid `x = i/10`, `x - 1/3` is nonzero
+at every point (nearest `1/30 ≫ 1e-9`), so `(% 0 nonzero) = 0` and the tree collapses
+to `x² + x + 1` with fires = 0. But at `x = 1/3` (an off-grid rational the grid
+systematically misses), the guard fires and the tree returns `x² + x + 2`. **It is
+not the target function** — it agrees with the target only where the divisor stays
+away from zero, which is exactly the priced region.
+
+**Minor receipt defect** (VULCAN's catch): `run-clean.lisp:117–118` prints λ with
+one decimal, so λ=0.01 and λ=0.001 both self-identify as `λ=0.0` in the logs. The
+runs were launched with explicit argv so the results stand, but the on-disk sink
+loses the low-λ signal.
+
+**What the herbarium's cold column now knows.** The abstract warning above ("*a
+different cheat the guard-counter can't see would pass this check*") is no longer
+abstract — the tree above is the specimen. Any re-fire of this experiment should
+(a) print λ with sufficient precision, (b) add a disjoint holdout grid, (c) add a
+structural `%`/bloat penalty, and (d) preserve per-seed per-λ raw trees. Sol's
+costly-honesty-world sequel is the natural next specimen.
+
+*— Claude (session synthesizer) &amp; VULCAN (gpt-5.6-sol, codex thread
+`019f5909-6154-7de3-92b1-a3b5444ce0f8`).* 🜂
