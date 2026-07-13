@@ -1,65 +1,323 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://latent-lisp.example/cd0-fixtures.schema.json",
-  "title": "Lisp+ Canonical Datum /0 shared fixture rows",
+  "title": "Lisp+ Canonical Datum /0 shared fixtures",
+  "oneOf": [
+    {"$ref": "#/$defs/positive"},
+    {"$ref": "#/$defs/negative"}
+  ],
   "$defs": {
-    "decimalInteger": {"type":"string","pattern":"^-?(0|[1-9][0-9]*)$"},
-    "hexOctets": {"type":"string","pattern":"^(?:[0-9a-f]{2})*$"},
-    "id": {
-      "type":"object",
-      "required":["t","namespace_utf8_hex","path_utf8_hex"],
-      "properties":{
-        "t":{"const":"id"},
-        "namespace_utf8_hex":{"type":"array","items":{"type":"string","pattern":"^(?:[0-9a-f]{2})+$"}},
-        "path_utf8_hex":{"type":"array","minItems":1,"items":{"type":"string","pattern":"^(?:[0-9a-f]{2})+$"}}
+    "decimalInteger": {
+      "type": "string",
+      "pattern": "^(?:0|-?[1-9][0-9]*)$"
+    },
+    "hexOctets": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{2})*$"
+    },
+    "nonemptyUtf8Hex": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{2})+$"
+    },
+    "identifier": {
+      "type": "object",
+      "required": ["t", "namespace_utf8_hex", "path_utf8_hex"],
+      "properties": {
+        "t": {"const": "id"},
+        "namespace_utf8_hex": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonemptyUtf8Hex"}
+        },
+        "path_utf8_hex": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/nonemptyUtf8Hex"}
+        }
       },
-      "additionalProperties":false
+      "additionalProperties": false
     },
     "datum": {
-      "oneOf":[
-        {"type":"object","required":["t"],"properties":{"t":{"const":"unit"}},"additionalProperties":false},
-        {"type":"object","required":["t","v"],"properties":{"t":{"const":"bool"},"v":{"type":"boolean"}},"additionalProperties":false},
-        {"type":"object","required":["t","v"],"properties":{"t":{"const":"int"},"v":{"$ref":"#/$defs/decimalInteger"}},"additionalProperties":false},
-        {"type":"object","required":["t","p","q"],"properties":{"t":{"const":"rat"},"p":{"$ref":"#/$defs/decimalInteger"},"q":{"$ref":"#/$defs/decimalInteger"}},"additionalProperties":false},
-        {"type":"object","required":["t","utf8_hex"],"properties":{"t":{"const":"string"},"utf8_hex":{"$ref":"#/$defs/hexOctets"}},"additionalProperties":false},
-        {"type":"object","required":["t","hex"],"properties":{"t":{"const":"bytes"},"hex":{"$ref":"#/$defs/hexOctets"}},"additionalProperties":false},
-        {"$ref":"#/$defs/id"},
-        {"type":"object","required":["t","items"],"properties":{"t":{"const":"seq"},"items":{"type":"array","items":{"$ref":"#/$defs/datum"}}},"additionalProperties":false},
-        {"type":"object","required":["t","fields"],"properties":{"t":{"const":"record"},"fields":{"type":"array","items":{"type":"object","required":["key","value"],"properties":{"key":{"$ref":"#/$defs/id"},"value":{"$ref":"#/$defs/datum"}},"additionalProperties":false}}},"additionalProperties":false}
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["t"],
+          "properties": {"t": {"const": "unit"}},
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["t", "v"],
+          "properties": {"t": {"const": "bool"}, "v": {"type": "boolean"}},
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["t", "v"],
+          "properties": {"t": {"const": "int"}, "v": {"$ref": "#/$defs/decimalInteger"}},
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["t", "p", "q"],
+          "properties": {
+            "t": {"const": "rat"},
+            "p": {"$ref": "#/$defs/decimalInteger"},
+            "q": {"$ref": "#/$defs/decimalInteger"}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["t", "utf8_hex"],
+          "properties": {"t": {"const": "string"}, "utf8_hex": {"$ref": "#/$defs/hexOctets"}},
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["t", "hex"],
+          "properties": {"t": {"const": "bytes"}, "hex": {"$ref": "#/$defs/hexOctets"}},
+          "additionalProperties": false
+        },
+        {"$ref": "#/$defs/identifier"},
+        {
+          "type": "object",
+          "required": ["t", "items"],
+          "properties": {
+            "t": {"const": "seq"},
+            "items": {"type": "array", "items": {"$ref": "#/$defs/datum"}}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["t", "fields"],
+          "properties": {
+            "t": {"const": "record"},
+            "fields": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["key", "value"],
+                "properties": {
+                  "key": {"$ref": "#/$defs/identifier"},
+                  "value": {"$ref": "#/$defs/datum"}
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "stage": {
+      "enum": [
+        "input-budget", "magic", "version-varint", "version-selection",
+        "type-tag", "integer-payload", "rational-payload", "length", "count",
+        "utf8", "identifier", "record-key", "record-order",
+        "container-content", "end-of-input", "host-import", "encode-ordering",
+        "allocation", "cache-check", "internal"
       ]
     },
     "failure": {
-      "type":"object",
-      "required":["category","code","stage"],
-      "properties":{
-        "category":{"enum":["InvalidCanonicalGrammar","NoncanonicalEncoding","UnsupportedFormat","ResourceRefusal","UnsupportedHostInput","PrivilegedRestorationAttempt","InternalInvariantFailure"]},
-        "code":{"type":"string","minLength":1},
-        "stage":{"enum":["input-budget","magic","version-varint","version-selection","type-tag","integer-payload","rational-payload","length","count","utf8","identifier","record-key","record-order","container-content","end-of-input","host-import","encode-ordering","allocation","cache-check","internal"]}
+      "type": "object",
+      "required": ["category", "code", "stage"],
+      "properties": {
+        "category": {"type": "string"},
+        "code": {"type": "string"},
+        "stage": {"$ref": "#/$defs/stage"}
       },
-      "additionalProperties":false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {
+            "category": {"const": "InvalidCanonicalGrammar"},
+            "code": {"enum": [
+              "InvalidMagic", "InvalidTypeTag", "ReservedTypeTag",
+              "TruncatedInput", "TrailingBytes", "InvalidUTF8",
+              "ForbiddenUnicodeScalar", "ZeroDenominator",
+              "EmptyIdentifierSegment", "MissingIdentifierPath",
+              "RecordKeyNotIdentifier", "DuplicateRecordField"
+            ]}
+          }
+        },
+        {
+          "properties": {
+            "category": {"const": "NoncanonicalEncoding"},
+            "code": {"enum": [
+              "NonminimalVersionEncoding", "NonminimalIntegerEncoding",
+              "NonminimalRationalComponentEncoding", "OverlongLengthEncoding",
+              "OverlongCountEncoding", "ZeroRationalEncoding",
+              "IntegralRationalEncoding", "UnreducedRational",
+              "NoncanonicalFieldOrder"
+            ]}
+          }
+        },
+        {
+          "properties": {
+            "category": {"const": "UnsupportedFormat"},
+            "code": {"enum": ["UnknownVersion", "UnsupportedFutureVersion", "UnsupportedExtensionTag"]}
+          }
+        },
+        {
+          "properties": {
+            "category": {"const": "ResourceRefusal"},
+            "code": {"enum": [
+              "ExcessiveInputLength", "ExcessiveOutputLength",
+              "ExcessiveDeclaredLength", "ExcessiveContainerCount",
+              "ExcessiveIdentifierSegments", "ExcessiveNesting",
+              "IntegerBudgetExceeded", "VarintBudgetExceeded",
+              "NodeBudgetExceeded", "AggregatePayloadBudgetExceeded",
+              "RecordKeyWorkBudgetExceeded", "AllocationRefused"
+            ]}
+          }
+        },
+        {
+          "properties": {
+            "category": {"const": "UnsupportedHostInput"},
+            "code": {"enum": [
+              "UnsupportedHostType", "CyclicHostInput", "ImproperHostList",
+              "AmbiguousIdentifier", "InvalidHostUnicode",
+              "NegativeDenominatorHostRational"
+            ]}
+          }
+        },
+        {
+          "properties": {
+            "category": {"const": "PrivilegedRestorationAttempt"},
+            "code": {"enum": [
+              "ForbiddenPrivilegedTag", "PrivilegedHostValue",
+              "PrivilegedRestorationRequested"
+            ]}
+          }
+        },
+        {
+          "properties": {
+            "category": {"const": "InternalInvariantFailure"},
+            "code": {"enum": [
+              "EncoderInvariantFailure", "DecoderInvariantFailure",
+              "CachedOctetsMismatch"
+            ]}
+          }
+        }
+      ]
+    },
+    "budgetFields": {
+      "type": "object",
+      "required": [
+        "max_input_octets", "max_output_octets", "max_varint_octets",
+        "max_integer_bits", "max_depth", "max_nodes", "max_sequence_items",
+        "max_record_fields", "max_identifier_segments", "max_segment_octets",
+        "max_single_string_octets", "max_single_bytes_octets",
+        "max_aggregate_payload_octets", "max_total_record_key_octets"
+      ],
+      "properties": {
+        "max_input_octets": {"type": "integer", "minimum": 0},
+        "max_output_octets": {"type": "integer", "minimum": 0},
+        "max_varint_octets": {"type": "integer", "minimum": 0},
+        "max_integer_bits": {"type": "integer", "minimum": 0},
+        "max_depth": {"type": "integer", "minimum": 0},
+        "max_nodes": {"type": "integer", "minimum": 0},
+        "max_sequence_items": {"type": "integer", "minimum": 0},
+        "max_record_fields": {"type": "integer", "minimum": 0},
+        "max_identifier_segments": {"type": "integer", "minimum": 0},
+        "max_segment_octets": {"type": "integer", "minimum": 0},
+        "max_single_string_octets": {"type": "integer", "minimum": 0},
+        "max_single_bytes_octets": {"type": "integer", "minimum": 0},
+        "max_aggregate_payload_octets": {"type": "integer", "minimum": 0},
+        "max_total_record_key_octets": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "budget": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"$ref": "#/$defs/budgetFields"}
+      ]
     },
     "positive": {
-      "type":"object",
-      "required":["id","datum_version","abstract","canonical_hex","expected_decoded","equality_class","budget","notes"],
-      "properties":{
-        "id":{"type":"string"},"datum_version":{"const":0},"abstract":{"$ref":"#/$defs/datum"},
-        "canonical_hex":{"$ref":"#/$defs/hexOctets"},"diagnostic":{"type":"string"},
-        "expected_decoded":{"$ref":"#/$defs/datum"},"equality_class":{"type":"string"},
-        "budget":{"type":"string"},"notes":{"type":"array","items":{"type":"string"}}
+      "type": "object",
+      "required": [
+        "id", "datum_version", "abstract", "canonical_hex",
+        "expected_decoded", "equality_class", "budget", "notes"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^cd0-pos-[a-z0-9-]+$"},
+        "datum_version": {"const": 0},
+        "abstract": {"$ref": "#/$defs/datum"},
+        "canonical_hex": {"$ref": "#/$defs/hexOctets"},
+        "diagnostic": {"type": "string"},
+        "expected_decoded": {"$ref": "#/$defs/datum"},
+        "equality_class": {"type": "string", "minLength": 1},
+        "budget": {"$ref": "#/$defs/budget"},
+        "notes": {"type": "array", "items": {"type": "string"}}
       },
-      "additionalProperties":false
+      "additionalProperties": false
     },
     "negative": {
-      "type":"object",
-      "required":["id","input_kind","input_hex","budget","expected_failure","input_classification","resource_state_unchanged","partial_output_forbidden","notes"],
-      "properties":{
-        "id":{"type":"string"},"input_kind":{"const":"octets"},"input_hex":{"$ref":"#/$defs/hexOctets"},
-        "budget":{"type":"string"},"expected_failure":{"$ref":"#/$defs/failure"},
-        "input_classification":{"enum":["invalid","noncanonical","unsupported","resource","privileged"]},
-        "resource_state_unchanged":{"const":true},"partial_output_forbidden":{"const":true},
-        "notes":{"type":"array","items":{"type":"string"}}
+      "type": "object",
+      "required": [
+        "id", "input_kind", "budget", "expected_failure",
+        "input_classification", "resource_state_unchanged",
+        "partial_output_forbidden", "notes"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^cd0-neg-[a-z0-9-]+$"},
+        "input_kind": {"enum": ["octets", "host"]},
+        "input_hex": {"$ref": "#/$defs/hexOctets"},
+        "host_input": {"type": "object"},
+        "importer": {"type": "string", "minLength": 1},
+        "budget": {"$ref": "#/$defs/budget"},
+        "retry_budget": {"$ref": "#/$defs/budget"},
+        "expected_failure": {"$ref": "#/$defs/failure"},
+        "input_classification": {
+          "enum": [
+            "invalid", "noncanonical", "unsupported", "resource",
+            "host-unsupported", "privileged"
+          ]
+        },
+        "status": {
+          "enum": ["normative", "provisional-blocked-stage", "provisional-blocked-code"]
+        },
+        "resource_state_unchanged": {"const": true},
+        "partial_output_forbidden": {"const": true},
+        "notes": {"type": "array", "items": {"type": "string"}}
       },
-      "additionalProperties":false
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "properties": {"input_kind": {"const": "octets"}},
+          "required": ["input_hex"],
+          "not": {"anyOf": [{"required": ["host_input"]}, {"required": ["importer"]}]}
+        },
+        {
+          "properties": {"input_kind": {"const": "host"}},
+          "required": ["host_input", "importer"],
+          "not": {"required": ["input_hex"]}
+        }
+      ]
+    },
+    "distinctPairManifest": {
+      "type": "object",
+      "required": ["schema", "pairs"],
+      "properties": {
+        "schema": {"const": "cd0-distinct-pairs/v1"},
+        "pairs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["left", "right", "reason"],
+            "properties": {
+              "left": {"type": "string"},
+              "right": {"type": "string"},
+              "reason": {"type": "string", "minLength": 1}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
     }
   }
 }
