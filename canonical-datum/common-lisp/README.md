@@ -60,6 +60,27 @@ Integration must classify any disagreement against the normative specification
 and divergence ledger; another implementation must not copy these choices merely
 to converge.
 
+## Integration conformance corrections (2026-07-13)
+
+The integration hardening checkpoint keeps the public API and A1--A9 choices
+unchanged while adding four specification-derived corrections:
+
+- rational decode applies `max_integer_bits` to a complete minimal numerator
+  UVAR before reading its denominator, as required by Section 20.5(6);
+- fixture decimal components reject canonical-schema negative zero and enforce
+  `max_integer_bits` incrementally at the explicit `host-import` stage;
+- `equal-datum` uses an explicit worklist, preserving the nine disjoint
+  structural cases without consuming host control-stack depth per datum level;
+- host sequence, identifier, fixture-object, and record import paths preflight
+  applicable count, aggregate-segment, schema-field, and record-key-work bounds
+  before avoidable proportional copies or unreachable value traversal.
+
+Permanent regression witnesses cover denominator truncation/overlong/varint
+adjacencies, all fixture integer/rational decimal positions, 20,000-level equal
+and unequal values, and the importer preflight order.  The exact commands,
+results, and residual boundaries are recorded in
+`canonical-datum/evidence/COMMON-LISP-INTEGRATION-FIX-VERIFICATION.md`.
+
 ## Representation and security boundary
 
 Runtime nodes are private classes with no public mutators.  Strings are retained
