@@ -48,7 +48,10 @@ the exact delta.
 10. `CD0-ERRATA-DOCUMENTATION-CORRECTIONS.md`
 11. `CD0-ERRATA-ARCHIVE-RECEIPT.md`
 12. `CD0-ERRATA-FABLE-RELAY.md`
-13. the later targeted-independent-review and remote-read-back receipts
+13. `CD0-ERRATA-INDEPENDENT-REVIEW-RECEIPT.md`
+14. `CD0-ERRATA-REMOTE-READBACK-RECEIPT.md`
+15. `CD0-ERRATA-CHANGED-FILES.txt`
+16. `SHA256SUMS`
 
 The relay is deliberately copy/paste-ready for another model or reviewer.
 
