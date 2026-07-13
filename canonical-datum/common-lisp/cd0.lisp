@@ -667,10 +667,14 @@
                            0 budget "host-import")
     (make-instance '%bytes-datum :octets (%snapshot-host-octets prepared))))
 
-(defun %segments-from-host (source budget &optional (aggregate-so-far 0))
+(defun %segments-from-host (source budget
+                            &key
+                              (aggregate-so-far 0)
+                              (segment-limit
+                                (budget-max-identifier-segments budget)))
   (let* ((items
            (%proper-sequence-vector
-            source :limit (budget-max-identifier-segments budget)
+            source :limit segment-limit
             :budget budget :resource-code "ExcessiveIdentifierSegments"))
          (result (make-array (length items)))
          (aggregate aggregate-so-far))
@@ -701,7 +705,11 @@
   (multiple-value-bind (namespace-segments namespace-payload)
       (%segments-from-host namespace budget)
     (multiple-value-bind (path-segments path-payload)
-        (%segments-from-host path budget namespace-payload)
+        (%segments-from-host
+         path budget
+         :aggregate-so-far namespace-payload
+         :segment-limit (- (budget-max-identifier-segments budget)
+                           (length namespace-segments)))
       (when (zerop (length path-segments))
         (%fail "InvalidCanonicalGrammar" "MissingIdentifierPath" "host-import"))
       ;; A4 local choice: the limit is aggregate across both sides.
@@ -889,15 +897,22 @@
                  (%host-failure "UnsupportedHostType"
                                 "record entry key is not an identifier"))
                (%ensure-datum (%entry-value entry))
-               (let ((key-bytes (%identifier-value-bytes (%entry-key entry))))
-                 (incf key-work (length key-bytes))
+               (let ((key-length
+                       (%identifier-value-length (%entry-key entry))))
+                 ;; The length is derivable from already immutable segment
+                 ;; snapshots.  Enforce the work budget before allocating the
+                 ;; proportional complete Identifier ValueBytes buffer.
+                 (incf key-work key-length)
                  (when (> key-work (budget-max-total-record-key-octets budget))
-                   (%resource-failure "RecordKeyWorkBudgetExceeded" stage budget))
-                 (setf (aref normalized index)
-                       (make-instance '%record-entry
-                                      :key (%entry-key entry)
-                                      :value (%entry-value entry)
-                                      :key-bytes key-bytes))))
+                   (%resource-failure "RecordKeyWorkBudgetExceeded" stage budget
+                                      :detail key-work))
+                 (let ((key-bytes
+                         (%identifier-value-bytes (%entry-key entry))))
+                   (setf (aref normalized index)
+                         (make-instance '%record-entry
+                                        :key (%entry-key entry)
+                                        :value (%entry-value entry)
+                                        :key-bytes key-bytes)))))
       ;; Stability is semantically irrelevant because duplicates are rejected
       ;; immediately afterward, but STABLE-SORT is portable and explicit here.
       (setf normalized
@@ -974,49 +989,89 @@
 (defun equal-datum (left right)
   (unless (and (datum-p left) (datum-p right))
     (%host-failure "UnsupportedHostType" "equal-datum requires two datums"))
-  (cond
-    ((unit-datum-p left) (unit-datum-p right))
-    ((boolean-datum-p left)
-     (and (boolean-datum-p right)
-          (eq (%boolean-value left) (%boolean-value right))))
-    ((integer-datum-p left)
-     (and (integer-datum-p right)
-          (= (%integer-value left) (%integer-value right))))
-    ((rational-datum-p left)
-     (and (rational-datum-p right)
-          (= (%rational-numerator left) (%rational-numerator right))
-          (= (%rational-denominator left) (%rational-denominator right))))
-    ((string-datum-p left)
-     (and (string-datum-p right)
-          (%octets-equal (%string-utf8 left) (%string-utf8 right))))
-    ((bytes-datum-p left)
-     (and (bytes-datum-p right)
-          (%octets-equal (%bytes-octets left) (%bytes-octets right))))
-    ((identifier-datum-p left)
-     (and (identifier-datum-p right)
-          (%segments-equal (%identifier-namespace left)
-                           (%identifier-namespace right))
-          (%segments-equal (%identifier-path left)
-                           (%identifier-path right))))
-    ((sequence-datum-p left)
-     (and (sequence-datum-p right)
-          (= (length (%sequence-elements left))
-             (length (%sequence-elements right)))
-          (loop for index below (length (%sequence-elements left))
-                always (equal-datum (aref (%sequence-elements left) index)
-                                    (aref (%sequence-elements right) index)))))
-    ((record-datum-p left)
-     (and (record-datum-p right)
-          (= (length (%record-entries left))
-             (length (%record-entries right)))
-          (loop for index below (length (%record-entries left))
-                for left-entry = (aref (%record-entries left) index)
-                for right-entry = (aref (%record-entries right) index)
-                always (and (%octets-equal (%entry-key-bytes left-entry)
-                                           (%entry-key-bytes right-entry))
-                            (equal-datum (%entry-value left-entry)
-                                         (%entry-value right-entry))))))
-    (t nil)))
+  ;; Equality is mathematically recursive, but a host call stack is not part of
+  ;; that algebra.  Keep pending datum pairs on an explicit worklist so deeply
+  ;; nested, independently constructed values remain ordinary finite inputs.
+  (let ((worklist (list (cons left right))))
+    (loop while worklist
+          for pair = (pop worklist)
+          for current-left = (car pair)
+          for current-right = (cdr pair)
+          do
+             (cond
+               ;; Runtime datums are immutable, so shared identity is a sound
+               ;; fast path without making sharing observable.
+               ((eq current-left current-right))
+               ((unit-datum-p current-left)
+                (unless (unit-datum-p current-right)
+                  (return-from equal-datum nil)))
+               ((boolean-datum-p current-left)
+                (unless (and (boolean-datum-p current-right)
+                             (eq (%boolean-value current-left)
+                                 (%boolean-value current-right)))
+                  (return-from equal-datum nil)))
+               ((integer-datum-p current-left)
+                (unless (and (integer-datum-p current-right)
+                             (= (%integer-value current-left)
+                                (%integer-value current-right)))
+                  (return-from equal-datum nil)))
+               ((rational-datum-p current-left)
+                (unless (and (rational-datum-p current-right)
+                             (= (%rational-numerator current-left)
+                                (%rational-numerator current-right))
+                             (= (%rational-denominator current-left)
+                                (%rational-denominator current-right)))
+                  (return-from equal-datum nil)))
+               ((string-datum-p current-left)
+                (unless (and (string-datum-p current-right)
+                             (%octets-equal (%string-utf8 current-left)
+                                            (%string-utf8 current-right)))
+                  (return-from equal-datum nil)))
+               ((bytes-datum-p current-left)
+                (unless (and (bytes-datum-p current-right)
+                             (%octets-equal (%bytes-octets current-left)
+                                            (%bytes-octets current-right)))
+                  (return-from equal-datum nil)))
+               ((identifier-datum-p current-left)
+                (unless
+                    (and (identifier-datum-p current-right)
+                         (%segments-equal (%identifier-namespace current-left)
+                                          (%identifier-namespace current-right))
+                         (%segments-equal (%identifier-path current-left)
+                                          (%identifier-path current-right)))
+                  (return-from equal-datum nil)))
+               ((sequence-datum-p current-left)
+                (unless (sequence-datum-p current-right)
+                  (return-from equal-datum nil))
+                (let ((left-elements (%sequence-elements current-left))
+                      (right-elements (%sequence-elements current-right)))
+                  (unless (= (length left-elements) (length right-elements))
+                    (return-from equal-datum nil))
+                  (loop for index below (length left-elements)
+                        do (push (cons (aref left-elements index)
+                                       (aref right-elements index))
+                                 worklist))))
+               ((record-datum-p current-left)
+                (unless (record-datum-p current-right)
+                  (return-from equal-datum nil))
+                (let ((left-entries (%record-entries current-left))
+                      (right-entries (%record-entries current-right)))
+                  (unless (= (length left-entries) (length right-entries))
+                    (return-from equal-datum nil))
+                  (loop for index below (length left-entries)
+                        for left-entry = (aref left-entries index)
+                        for right-entry = (aref right-entries index)
+                        do (push (cons (%entry-key left-entry)
+                                       (%entry-key right-entry))
+                                 worklist)
+                           (push (cons (%entry-value left-entry)
+                                       (%entry-value right-entry))
+                                 worklist))))
+               (t
+                ;; A non-datum cannot occur below a successfully constructed
+                ;; public datum; treat a violated private invariant as unequal.
+                (return-from equal-datum nil))))
+    t))
 
 ;;; ---------------------------------------------------------------------------
 ;;; Canonical encoder
@@ -1496,29 +1551,33 @@
               (unsigned-numerator
                 (%read-uvar state "rational-payload"
                             "NonminimalRationalComponentEncoding"))
-              (numerator (%unzigzag unsigned-numerator))
-              (denominator-offset (%decoder-state-position state))
-              (denominator
-                (%read-uvar state "rational-payload"
-                            "NonminimalRationalComponentEncoding")))
+              (numerator (%unzigzag unsigned-numerator)))
+         ;; Section 20.5(6) applies the magnitude budget after each complete,
+         ;; minimal UVAR.  In particular, a numerator refusal is determinable
+         ;; before reading even the first denominator octet.
          (%decoder-check-integer state numerator "rational-payload" payload-offset)
-         (%decoder-check-integer state denominator "rational-payload"
-                                 denominator-offset)
-         (cond
-           ((zerop denominator)
-            (%fail "InvalidCanonicalGrammar" "ZeroDenominator" "rational-payload"
-                   :offset denominator-offset))
-           ((zerop numerator)
-            (%fail "NoncanonicalEncoding" "ZeroRationalEncoding"
-                   "rational-payload" :offset payload-offset))
-           ((= denominator 1)
-            (%fail "NoncanonicalEncoding" "IntegralRationalEncoding"
-                   "rational-payload" :offset denominator-offset))
-           ((/= 1 (gcd (abs numerator) denominator))
-            (%fail "NoncanonicalEncoding" "UnreducedRational"
-                   "rational-payload" :offset payload-offset))
-           (t (make-instance '%rational-datum
-                             :numerator numerator :denominator denominator)))))
+         (let* ((denominator-offset (%decoder-state-position state))
+                (denominator
+                  (%read-uvar state "rational-payload"
+                              "NonminimalRationalComponentEncoding")))
+           (%decoder-check-integer state denominator "rational-payload"
+                                   denominator-offset)
+           (cond
+             ((zerop denominator)
+              (%fail "InvalidCanonicalGrammar" "ZeroDenominator"
+                     "rational-payload" :offset denominator-offset))
+             ((zerop numerator)
+              (%fail "NoncanonicalEncoding" "ZeroRationalEncoding"
+                     "rational-payload" :offset payload-offset))
+             ((= denominator 1)
+              (%fail "NoncanonicalEncoding" "IntegralRationalEncoding"
+                     "rational-payload" :offset denominator-offset))
+             ((/= 1 (gcd (abs numerator) denominator))
+              (%fail "NoncanonicalEncoding" "UnreducedRational"
+                     "rational-payload" :offset payload-offset))
+             (t (make-instance '%rational-datum
+                               :numerator numerator
+                               :denominator denominator))))))
       ((= tag #x20) (%parse-string-after-tag state))
       ((= tag #x21) (%parse-bytes-after-tag state))
       ((= tag #x22) (%parse-identifier-after-tag state))
@@ -1660,7 +1719,8 @@
   budget
   (active (make-hash-table :test #'eq))
   (nodes 0 :type integer)
-  (aggregate-payload 0 :type integer))
+  (aggregate-payload 0 :type integer)
+  (record-key-work 0 :type integer))
 
 (defun %call-import-active (object state thunk)
   (if (or (consp object) (vectorp object))
@@ -1673,7 +1733,9 @@
       (funcall thunk)))
 
 (defun %object-pairs (object)
-  (let ((pairs (%proper-sequence-vector object))
+  ;; Fixture datum/object forms have at most three schema fields.  Apply that
+  ;; fixed bound before copying a hostile vector or growing a list snapshot.
+  (let ((pairs (%proper-sequence-vector object :limit 3))
         (seen (make-hash-table :test #'equal)))
     (loop for pair across pairs
           do (unless (and (consp pair) (stringp (car pair)))
@@ -1700,9 +1762,15 @@
           do (%host-failure "UnsupportedHostType"
                             (list "fixture object missing field" key))))
 
-(defun %parse-decimal-host (text)
+(defun %parse-decimal-host (text budget stage)
   (unless (and (stringp text) (plusp (length text)))
     (%host-failure "UnsupportedHostType" "fixture integer must be decimal text"))
+  (unless (resource-budget-p budget)
+    (%host-failure "UnsupportedHostType"
+                   "fixture decimal parser requires a ResourceBudget"))
+  (unless (stringp stage)
+    (%host-failure "UnsupportedHostType"
+                   "fixture decimal parser requires an explicit stage"))
   (let ((negative nil)
         (index 0))
     (when (char= (char text 0) #\-)
@@ -1712,6 +1780,11 @@
     (when (and (> (- (length text) index) 1)
                (char= (char text index) #\0))
       (%host-failure "UnsupportedHostType" "leading zero in fixture integer"))
+    (when (and negative
+               (= (- (length text) index) 1)
+               (char= (char text index) #\0))
+      (%host-failure "UnsupportedHostType"
+                     "negative zero in fixture integer"))
     (let ((value 0))
       (loop for position from index below (length text)
             for character = (char text position)
@@ -1719,7 +1792,11 @@
               do (%host-failure "UnsupportedHostType"
                                 "non-decimal fixture integer")
             do (setf value (+ (* value 10)
-                              (- (char-code character) (char-code #\0)))))
+                              (- (char-code character) (char-code #\0))))
+               ;; The temporary magnitude exceeds the configured limit by at
+               ;; most one decimal digit; it never grows with the remaining
+               ;; hostile input after refusal becomes determinable.
+               (%check-integer-budget value budget stage))
       (if negative (- value) value))))
 
 (defun %host-hex-vector (text)
@@ -1763,7 +1840,11 @@
                sequence :limit limit :budget (%import-state-budget state)
                :resource-code resource-code)))))
 
-(defun %import-id-segments (source state)
+(defun %import-id-segments
+    (source state &optional
+                    (segment-limit
+                      (budget-max-identifier-segments
+                       (%import-state-budget state))))
   (%call-import-sequence
    source state
    (lambda (items)
@@ -1781,10 +1862,19 @@
                   (%validate-utf8 bytes 0 (length bytes) :mode :host)
                   (setf (aref segments index) bytes)))
        segments))
-   :limit (budget-max-identifier-segments (%import-state-budget state))
+   :limit segment-limit
    :resource-code "ExcessiveIdentifierSegments"))
 
 (declaim (ftype function %import-ast))
+
+(defun %import-add-record-key-work (key state)
+  (let* ((budget (%import-state-budget state))
+         (next (+ (%import-state-record-key-work state)
+                  (%identifier-value-length key))))
+    (when (> next (budget-max-total-record-key-octets budget))
+      (%resource-failure "RecordKeyWorkBudgetExceeded" "host-import" budget
+                         :detail next))
+    (setf (%import-state-record-key-work state) next)))
 
 (defun %import-field (field state depth)
   (%call-import-active
@@ -1792,11 +1882,14 @@
    (lambda ()
      (let ((pairs (%object-pairs field)))
        (%require-object-keys pairs '("key" "value"))
-       (let ((key (%import-ast (%object-value pairs "key") state depth))
-             (value (%import-ast (%object-value pairs "value") state depth)))
+       (let ((key (%import-ast (%object-value pairs "key") state depth)))
          (unless (identifier-datum-p key)
            (%host-failure "UnsupportedHostType" "fixture record key is not id"))
-         (make-record-entry key value))))))
+         ;; Reject an invalid/over-budget key before importing an associated
+         ;; value that cannot belong to any successful record.
+         (%import-add-record-key-work key state)
+         (let ((value (%import-ast (%object-value pairs "value") state depth)))
+           (make-record-entry key value)))))))
 
 (defun %import-ast-body (ast state depth)
   (let* ((pairs (%object-pairs ast))
@@ -1817,21 +1910,22 @@
                                  "fixture bool payload is not boolean")))))
       ((string= tag "int")
        (%require-object-keys pairs '("t" "v"))
-       (let ((integer (%parse-decimal-host (%object-value pairs "v"))))
-         (%check-integer-budget integer budget "host-import")
+       (let ((integer (%parse-decimal-host (%object-value pairs "v")
+                                           budget "host-import")))
          (make-instance '%integer-datum :value integer)))
       ((string= tag "rat")
        (%require-object-keys pairs '("t" "p" "q"))
-       (let ((numerator (%parse-decimal-host (%object-value pairs "p")))
-             (denominator (%parse-decimal-host (%object-value pairs "q"))))
-         (%check-integer-budget numerator budget "host-import")
-         (%check-integer-budget denominator budget "host-import")
-         (unless (and (not (zerop numerator)) (> denominator 1)
-                      (= 1 (gcd (abs numerator) denominator)))
-           (%host-failure "UnsupportedHostType"
-                          "fixture rat must already be a canonical abstract rational"))
-         (make-instance '%rational-datum
-                        :numerator numerator :denominator denominator)))
+       (let ((numerator (%parse-decimal-host (%object-value pairs "p")
+                                             budget "host-import")))
+         (let ((denominator (%parse-decimal-host (%object-value pairs "q")
+                                                 budget "host-import")))
+           (unless (and (not (zerop numerator)) (> denominator 1)
+                        (= 1 (gcd (abs numerator) denominator)))
+             (%host-failure
+              "UnsupportedHostType"
+              "fixture rat must already be a canonical abstract rational"))
+           (make-instance '%rational-datum
+                          :numerator numerator :denominator denominator))))
       ((string= tag "string")
        (%require-object-keys pairs '("t" "utf8_hex"))
        (let* ((hex (%object-value pairs "utf8_hex"))
@@ -1852,7 +1946,11 @@
        (%require-object-keys pairs '("t" "namespace_utf8_hex" "path_utf8_hex"))
        (let* ((namespace
                 (%import-id-segments (%object-value pairs "namespace_utf8_hex") state))
-              (path (%import-id-segments (%object-value pairs "path_utf8_hex") state))
+              (path
+                (%import-id-segments
+                 (%object-value pairs "path_utf8_hex") state
+                 (- (budget-max-identifier-segments budget)
+                    (length namespace))))
               (total (+ (length namespace) (length path))))
          (when (zerop (length path))
            (%fail "InvalidCanonicalGrammar" "MissingIdentifierPath" "host-import"))
