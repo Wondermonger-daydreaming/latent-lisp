@@ -1,0 +1,75 @@
+# Lisp+ Canonical Datum /0 — Common Lisp seed
+
+This directory is the clean-room, dependency-free Common Lisp implementation of
+the nine-family CD/0 algebra in `mneme/spec/CANONICAL-DATUM-SPEC.md`.  It neither
+loads nor modifies the v1 runtime.  SBCL 2.4.6 is the seed qualification host.
+
+## Interface
+
+Load `package.lisp` followed by `cd0.lisp`.  The package
+`LISP-PLUS-CD0` exports:
+
+- explicit constructors and predicates for unit, boolean, integer, rational,
+  string, bytes, identifier, sequence, and record datums;
+- defensive accessors and read-only `octet-string` results;
+- `equal-datum`, `encode-exact`, `canonical-octets`, and `decode-exact`;
+- immutable `resource-budget` values covering all Section 21 counters;
+- the typed `cd0-failure` condition with stable category, code, and stage;
+- `datum-from-fixture-ast` and `datum-to-fixture-ast` using string-keyed alists;
+- `render-diagnostic`, whose output is explicitly not an identity witness.
+
+`encode-exact` returns an `octet-string` wrapper rather than a publicly mutable
+Common Lisp vector.  `octets-ref` reads it and `octets-copy` makes an explicitly
+mutable host copy.  `decode-exact` accepts either that wrapper or a host vector,
+which it snapshots before parsing.  String, byte, identifier, sequence, and
+record construction likewise snapshots every mutable source component.
+
+Fixture AST objects are alists such as `(("t" . "int") ("v" . "1"))`.
+Within the explicitly typed boolean node, host `T` and `NIL` denote true and
+false.  There is no generic NIL importer and no host-symbol-to-identifier
+mapping.
+
+Run the independent seed suite from the worktree root:
+
+```text
+sbcl --noinform --disable-debugger --script canonical-datum/common-lisp/run-tests.lisp
+```
+
+The harness contains a data-only JSON parser and reads the shared JSONL vectors
+directly.  It performs no Common Lisp reader evaluation on fixture content.
+
+## Phase-0 ambiguities: implementation-local choices
+
+The following choices make the seed executable but are **non-normative**.  They
+do not amend the specification, close A1--A9, or tell the independent Python
+codec what to do.
+
+| Ledger entry | Common Lisp seed choice |
+|---|---|
+| A1 | Missing bytes from an in-budget declared payload use stage `length`; a missing record key uses `record-key`; encoder output refusal uses `allocation`. Shared ambiguous rows mark their stage provisional, and the seed compares only the warranted category and code. |
+| A2 | Explicit constructor invariant failures reuse the nearest semantic code at `host-import`; ordinary type mismatches use `UnsupportedHostInput/UnsupportedHostType/host-import`. These are local API triples only. |
+| A3 | `max_integer_bits` counts `integer-length(abs(mathematical-component))`; zero consumes zero bits. |
+| A4 | `max_identifier_segments` is aggregate across namespace and path. |
+| A5 | Simultaneous checks use depth before nodes, then the context-specific length/count limit before aggregate payload. |
+| A6 | A record key starting in `f0..ff` retains `ForbiddenPrivilegedTag`; every other non-`22` key start is `RecordKeyNotIdentifier`. |
+| A7 | Fixture `rat` nodes must already describe a normalized abstract rational. Constructor normalization is exercised through `make-rational-datum`, outside the fixture AST. |
+| A8 | Record-key work counts the complete identifier `ValueBytes` once per field, independent of sorting comparisons. |
+| A9 | Runtime encoding enforces every non-input budget field, including depth, nodes, counts, payload, integer, varint, output, and record-key work. |
+
+Integration must classify any disagreement against the normative specification
+and divergence ledger; another implementation must not copy these choices merely
+to converge.
+
+## Representation and security boundary
+
+Runtime nodes are private classes with no public mutators.  Strings are retained
+as validated private UTF-8 snapshots, bytes as private octet snapshots, and
+containers as private vectors of immutable nodes.  Accessors either return
+immutable datum references/scalars or defensive host copies.
+
+Decoding recognizes only the fixed CD/0 grammar.  It performs no generic object
+deserialization, symbol interning, package resolution, module loading, registry
+lookup, evaluator transition, or I/O.  Capability-, warrant-, claim-,
+certificate-, authority-, and receipt-shaped records remain ordinary records.
+Canonicalization establishes stable inert structure and bytes, not truth,
+authority, custody, authenticity, or verified lineage.
