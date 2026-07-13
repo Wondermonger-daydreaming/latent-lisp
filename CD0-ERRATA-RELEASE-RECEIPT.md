@@ -10,15 +10,15 @@ claim a merge to `main` or make either implementation a normative oracle.
 
 | Field | Value |
 |---|---|
-| clean generator source commit | `59fdd5b65a2ab44f98ec91c0b1464650cf18cfb3` |
-| source tree | `bb185ab2e0adeacec6c390745df8d0b6422340db` |
+| clean generator source commit | `bdb2214878ebb302329a40e895269ff950b8ae97` |
+| source tree | `46253ae9bfcfd37b2e481fbe8cfd0e8ad9553d09` |
 | generator | `cd0-corpus-generator/4` |
 | runtime | CPython 3.11.14 |
 | deterministic seed | `3439329281` |
 | clean before generation | `true` |
 | dirty override | not requested; not used |
 | manifest schema | `cd0-generated-corpus-manifest/v4` |
-| manifest SHA-256 | `ee9a6ef6864e36e38c7a15ba010b8e5658dd212c09d103f1fc8af626b0a93d8b` |
+| manifest SHA-256 | `9b0865c559cdcdfaa850a8fa5e8e7ac47916059ac0516427322f3cf9d0c81fbc` |
 | aggregate corpus SHA-256 | `62a18766d59e9144d6beb1371d3b2886ffc35df511f7ec32a85f0be8af4b2b58` |
 | release-qualified | `true` |
 
@@ -32,7 +32,7 @@ Exact generator command:
 
 ```text
 python3 canonical-datum/generator/generate_corpus.py \
-  --output-dir /tmp/cd0-final-regeneration/repeat \
+  --output-dir /tmp/cd0-final-regeneration-bdb2214/repeat \
   --seed 3439329281 \
   --positive-count 10000 \
   --negative-count 20308 \
@@ -50,11 +50,11 @@ Errata 0.1:          5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb
 
 ## Corpus members
 
-The retained directory has six files and 52,625,121 bytes:
+The retained directory has six files and 52,625,151 bytes:
 
 | Member | Rows/descriptors | Bytes | SHA-256 |
 |---|---:|---:|---|
-| `cd0-corpus-manifest.json` | one manifest | 30,551 | `ee9a6ef6864e36e38c7a15ba010b8e5658dd212c09d103f1fc8af626b0a93d8b` |
+| `cd0-corpus-manifest.json` | one manifest | 30,581 | `9b0865c559cdcdfaa850a8fa5e8e7ac47916059ac0516427322f3cf9d0c81fbc` |
 | `cd0-generated-negative-derivations.jsonl` | 20,308 | 11,179,974 | `2ffd77257e18dfbc70abef0cc5fae1603d50b1a8b005226af95200708c29ca02` |
 | `cd0-generated-negative.jsonl` | 20,308 | 17,210,317 | `465e300ec0695b9d066b5a47662b1c87ff7327d3b6cb487d086034bb986194d4` |
 | `cd0-generated-positive.jsonl` | 10,000 | 7,919,166 | `4d4d5ef09606d04d21297b4cd08c209a57cb090601bb790fbe3019a07c33c77d` |
@@ -84,10 +84,10 @@ triples, or candidate classification standing.
 
 ```text
 python3 canonical-datum/release/run_generated_differential.py \
-  --corpus-dir canonical-datum/generated/release-errata-0.1 \
+  --corpus-dir /tmp/cd0-final-regeneration-bdb2214/repeat \
   --batch-size 2048 \
   --timeout-seconds 120 \
-  --artifacts-dir canonical-datum/evidence/generated-differential-errata-0.1 \
+  --artifacts-dir /tmp/cd0-release-final-bdb2214 \
   --json
 ```
 
@@ -96,10 +96,17 @@ Exit: `0`. Status: `PASS`. Issues: `0`. Mutation disagreements: `0`.
 Evidence directory:
 `canonical-datum/evidence/generated-differential-errata-0.1`
 
+The final post-review run was executed from the clean detached source worktree
+at `bdb2214…` into the temporary artifact directory shown above.  Its 251
+request/response/stderr artifacts were byte-identical to the already-retained
+files; the retained `summary.json` was replaced with the final provenance and
+timing summary.  Thus no response byte changed while the manifest/source and
+observational summary identities advanced.
+
 | Evidence fact | Value |
 |---|---:|
 | files | 252 |
-| bytes | 134,883,099 |
+| bytes | 134,880,443 |
 | batches | 50 |
 | full 2,048-request batches | 49 |
 | final-batch requests | 509 |
@@ -109,7 +116,7 @@ Evidence directory:
 | Python response rows/bytes | 100,861 / 30,902,607 |
 | Common Lisp stderr bytes | 0 |
 | Python stderr bytes | 0 |
-| summary SHA-256 | `4f1b17eb13808ca73f5f4c8e3755e879db12e644d6a93bebdbc7b7a3111b52de` |
+| summary SHA-256 | `44e1b9edb7dac1f89124d52559c3fc7368b26e3340e487379f389b85bfb0b422` |
 
 Per-codec request arithmetic:
 

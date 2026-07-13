@@ -4,8 +4,8 @@ Date: 2026-07-13
 Vantage: local WSL2 worktree
 `/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata`
 Run source checkpoint: commit
-`59fdd5b65a2ab44f98ec91c0b1464650cf18cfb3`, tree
-`bb185ab2e0adeacec6c390745df8d0b6422340db`
+`bdb2214878ebb302329a40e895269ff950b8ae97`, tree
+`46253ae9bfcfd37b2e481fbe8cfd0e8ad9553d09`
 Status: all required local verification categories passed. Archive reproduction,
 targeted review, and remote read-back have separate receipts because those facts
 occur after this source checkpoint.
@@ -69,6 +69,21 @@ now report `InvalidCanonicalGrammar/TruncatedInput/count`. These witness changes
 are failure classification or operation-jurisdiction changes, not canonical
 byte changes.
 
+A targeted review of the first local closure envelope found two additional
+in-scope allocation-boundary regressions.  Before their tests-only red commits,
+Python A7 could leak raw `MemoryError` while computing the construction
+descriptor's key set.  Both runtime encoders, and Python fixture import, could
+materialize complete record-key bytes before an already-deterministic zero
+key-work budget refusal; injected allocation exhaustion therefore produced
+`AllocationRefused/allocation` and the materializer call count was one.
+
+After the late repair, Python A7 returns
+`ResourceRefusal/AllocationRefused/allocation`.  A8 returns
+`ResourceRefusal/RecordKeyWorkBudgetExceeded/encode-ordering` for both runtime
+encoders and `.../host-import` for Python fixture import, with zero calls to the
+complete-key materializer before refusal.  Independent non-ASCII, 127/128 UVAR,
+segment-count, and nested-operation probes matched exact materialized lengths.
+
 ## Phase-0 vectors and accounting
 
 Command:
@@ -117,7 +132,7 @@ sbcl --noinform --disable-debugger --script canonical-datum/common-lisp/run-test
 Exit `0`; stderr empty. Stdout is retained at
 `canonical-datum/qualification/evidence/errata-final-run/05-common-lisp-seed-suite.stdout.txt`
 and has SHA-256
-`d668ad41b407923ff6e817db01e19747a4d8f1d5a08249d09bf710c0b4ce3e2c`.
+`fe4272bb6617642e184c50e68a6f42398969273952ab970f2573847a467415f5`.
 Result:
 
 ```text
@@ -131,12 +146,12 @@ shared negative classified total: 71/71
 resource-vector successful retries: 12
 declared distinct pairs: 5
 mutation probes: 15
-resource refusal/retry probes: 19
+resource refusal/retry probes: 20
 ambient-state variants: 2
 deterministic generated round trips: 500
 grammar/Unicode boundary cases: 20
 integration regression witnesses: 20
-total assertions: 2629
+total assertions: 2633
 ```
 
 Python command:
@@ -146,13 +161,13 @@ env PYTHONPATH=canonical-datum/python \
   python3 -m unittest discover -s canonical-datum/python/tests -v
 ```
 
-Exit `0`; stdout empty. The complete 164-test verbose stderr is retained at
+Exit `0`; stdout empty. The complete 167-test verbose stderr is retained at
 `canonical-datum/qualification/evidence/errata-final-run/04-python-seed-suite.stderr.txt`,
 SHA-256
-`bb9c11f338bb8a65260ab2cea6f4efb9c0c3a48a68ce4d943c81fc2bdb2cde43`:
+`53164a35f7c8585dff9e8af09f4040a84580529fef29bb52b1fd7109dfbe7b06`:
 
 ```text
-Ran 164 tests
+Ran 167 tests
 OK
 ```
 
@@ -179,7 +194,7 @@ python3 canonical-datum/integration/run_differential.py \
 ```
 
 Retained summary SHA-256:
-`887389f56b2b4692471f0cca0b7e7c0e79c3eae9f760a547c13cbfdde9bd2ad5`.
+`3c62572cb962c5fb4ab8395937901355ea54f0664032ad2a7ccdaa6f937396c4`.
 Exit `0`, status `PASS`, issues `[]`. Both process stderr files are zero bytes
 with SHA-256 `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
 
@@ -241,18 +256,18 @@ Exit `0`, result: `Ran 9 tests ... OK`.
 
 Qualification self-tests are retained as child command 01 in the qualification
 evidence. They exited `0`, ran nine tests, and reported `OK`; stderr SHA-256 is
-`daedc47114aa7364dabe7852ad15c858d35c4c38f1e45d3cd1858aefda85aa5e`.
+`381ce5ce3f333b6a6dcfc0429754c26dd3f5d1f8d12a6ef08ae72be1380b6b89`.
 
 ## Deterministic corpus regeneration
 
 The generator was run twice from a detached clean worktree at exact commit
-`59fdd5b65a2ab44f98ec91c0b1464650cf18cfb3`, once with
+`bdb2214878ebb302329a40e895269ff950b8ae97`, once with
 `PYTHONHASHSEED=1` and once with `PYTHONHASHSEED=777`, using the same output path
 in successive runs:
 
 ```text
 python3 canonical-datum/generator/generate_corpus.py \
-  --output-dir /tmp/cd0-final-regeneration/repeat \
+  --output-dir /tmp/cd0-final-regeneration-bdb2214/repeat \
   --seed 3439329281 \
   --positive-count 10000 \
   --negative-count 20308 \
@@ -264,7 +279,7 @@ python3 canonical-datum/generator/generate_corpus.py \
 manifest. The identical hash map was:
 
 ```text
-ee9a6ef6864e36e38c7a15ba010b8e5658dd212c09d103f1fc8af626b0a93d8b  cd0-corpus-manifest.json
+9b0865c559cdcdfaa850a8fa5e8e7ac47916059ac0516427322f3cf9d0c81fbc  cd0-corpus-manifest.json
 2ffd77257e18dfbc70abef0cc5fae1603d50b1a8b005226af95200708c29ca02  cd0-generated-negative-derivations.jsonl
 465e300ec0695b9d066b5a47662b1c87ff7327d3b6cb487d086034bb986194d4  cd0-generated-negative.jsonl
 4d4d5ef09606d04d21297b4cd08c209a57cb090601bb790fbe3019a07c33c77d  cd0-generated-positive.jsonl
@@ -274,6 +289,9 @@ cf9bbce16a0aae99a4fbd363db313bd422c6796c694746a548fbdded161a2ab5  cd0-host-prope
 
 The aggregate corpus digest is
 `62a18766d59e9144d6beb1371d3b2886ffc35df511f7ec32a85f0be8af4b2b58`.
+All five generated data members stayed byte-identical to the prior closure run;
+only the manifest changed to pin the repaired Python source, corrected
+divergence ledger, clean source commit, and actual regeneration path.
 The change from the earlier trial digest was solely the removal of a false
 human-readable identifier-stage note from thirteen unrelated resource rows;
 canonical inputs, expected triples, row counts, and all other data-artifact
@@ -292,16 +310,16 @@ The complete receipt is `CD0-ERRATA-RELEASE-RECEIPT.md`. Command:
 
 ```text
 python3 canonical-datum/release/run_generated_differential.py \
-  --corpus-dir canonical-datum/generated/release-errata-0.1 \
+  --corpus-dir /tmp/cd0-final-regeneration-bdb2214/repeat \
   --batch-size 2048 \
   --timeout-seconds 120 \
-  --artifacts-dir canonical-datum/evidence/generated-differential-errata-0.1 \
+  --artifacts-dir /tmp/cd0-release-final-bdb2214 \
   --json
 ```
 
 Exit `0`, status `PASS`, 50 bounded batches, zero issues, zero mutation
 disagreements, and 100,861 requests per implementation. Summary SHA-256:
-`4f1b17eb13808ca73f5f4c8e3755e879db12e644d6a93bebdbc7b7a3111b52de`.
+`44e1b9edb7dac1f89124d52559c3fc7368b26e3340e487379f389b85bfb0b422`.
 
 The audited-valid hard gate compared 10,000 rows and observed zero canonical
 octet, normalized abstract datum, decoded AST, or equality-class changes. Both
@@ -315,12 +333,12 @@ Command:
 ```text
 python3 canonical-datum/qualification/run_qualification.py \
   --mode default \
-  --artifacts-dir canonical-datum/qualification/evidence/errata-final-run \
+  --artifacts-dir /tmp/cd0-qualification-final-bdb2214 \
   --json
 ```
 
 Exit `0`, status `PASS`. Summary SHA-256:
-`601557e46fb660a62903ce0313322b5b264b8b74504b147cf9a53ff09bdb2bdc`.
+`ffaeb38ed61777980b2313d4d8bf1a1c8c27ea8a658a8ba53ac95bca0aec429b`.
 
 The property matrix executed 1,045 requests per codec: 512 deterministic random
 round trips, 513 equality properties, 14 complete normative failure triples
@@ -369,6 +387,22 @@ ALL FLOORS HOLD — 6/6 suites green.
 
 `git diff --exit-code baeecd5e0347435b9e1362000344f46ea441c6ec..HEAD -- mneme`
 exited `0`: no file under `mneme/` changed from the audited integration tip.
+
+## Post-fix targeted code review
+
+A fresh read-only Codex reviewer—not Fable—reviewed integration commit
+`e3612bd684b4a0e7685d0bececf5a8e3aae8202d` and the matching standalone codec
+tips.  It independently reproduced all A7/A8 allocation injections, exact
+UTF-8/UVAR length boundaries, nested operation-wide accounting, both complete
+codec suites, the 465-request differential, and the 6/6 v1 floor.  Its verdict
+was PASS within that targeted scope.  It also confirmed that integration core
+and test files were byte-identical to Common Lisp `ee3baa9a…` and Python
+`9f46a323…`.
+
+That focused review is discovery-closure evidence, not a claim that Codex is
+Fable and not a substitute for the later packet-level targeted independent
+review of A1–A9, the four LOW documentation repairs, archive identity, and
+publication read-back.
 
 ## Result and bounded claim
 

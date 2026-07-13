@@ -20,11 +20,13 @@ Evidence directory:
 | `python-responses.jsonl` | 465 rows | `a4eee701b263e21c891ab265a52198b30669b1aade69de34c463dfd9f56a86d4` |
 | `common-lisp-stderr.txt` | 0 bytes | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
 | `python-stderr.txt` | 0 bytes | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
-| `summary.json` | 2,814 bytes | `887389f56b2b4692471f0cca0b7e7c0e79c3eae9f760a547c13cbfdde9bd2ad5` |
+| `summary.json` | 2,813 bytes | `3c62572cb962c5fb4ab8395937901355ea54f0664032ad2a7ccdaa6f937396c4` |
 
-The six retained files total 608,001 bytes. They entered history at commit
-`3d0aba8ef31fde03e24b59ca2993260bcd88cda3`, tree
-`a14492aec571ca62c214740bb67bbf2087108445`.
+The six retained files total 608,000 bytes.  The post-review rerun used the
+repaired integration source after commit `bdb2214878ebb302329a40e895269ff950b8ae97`.
+Requests and both response streams remained byte-identical to the earlier local
+closure run; only the summary's observed timings changed.  The immutable
+archive receipt pins the final evidence-complete commit containing this result.
 
 ## Command and result
 

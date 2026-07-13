@@ -55,14 +55,14 @@
   "processes": {
     "common-lisp": {
       "command": "sbcl --noinform --disable-debugger --script /home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp <requests.jsonl>",
-      "elapsed_seconds": 0.398169,
+      "elapsed_seconds": 0.479013,
       "response_count": 465,
       "returncode": 0,
       "stderr": ""
     },
     "python": {
       "command": "/home/gauss/OpenGauss/venv/bin/python3 /home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py <requests.jsonl>",
-      "elapsed_seconds": 0.081127,
+      "elapsed_seconds": 0.082114,
       "response_count": 465,
       "returncode": 0,
       "stderr": ""

@@ -20,6 +20,9 @@ test_A4_identifier_segment_budget_is_aggregate (test_cd0.ErrataClosureTests.test
 test_A5_resource_precedence_uses_complete_triples (test_cd0.ErrataClosureTests.test_A5_resource_precedence_uses_complete_triples) ... ok
 test_A6_forbidden_record_key_tag_retains_precedence (test_cd0.ErrataClosureTests.test_A6_forbidden_record_key_tag_retains_precedence) ... ok
 test_A7_construction_descriptor_is_not_an_abstract_datum (test_cd0.ErrataClosureTests.test_A7_construction_descriptor_is_not_an_abstract_datum) ... ok
+test_A7_construction_descriptor_translates_key_validation_allocation (test_cd0.ErrataClosureTests.test_A7_construction_descriptor_translates_key_validation_allocation) ... ok
+test_A8_encoder_key_work_precedes_key_materialization (test_cd0.ErrataClosureTests.test_A8_encoder_key_work_precedes_key_materialization) ... ok
+test_A8_fixture_key_work_precedes_key_materialization (test_cd0.ErrataClosureTests.test_A8_fixture_key_work_precedes_key_materialization) ... ok
 test_A8_record_key_work_counts_each_occurrence_once (test_cd0.ErrataClosureTests.test_A8_record_key_work_counts_each_occurrence_once) ... ok
 test_A9_runtime_encoding_ignores_structural_admission_budgets (test_cd0.ErrataClosureTests.test_A9_runtime_encoding_ignores_structural_admission_budgets) ... ok
 test_A1_truncated_payload_stage (test_cd0.GrammarBoundaryTests.test_A1_truncated_payload_stage) ... ok
@@ -164,6 +167,6 @@ test_equality_classes_are_coherent (test_cd0.VectorManifestTests.test_equality_c
 test_fixture_counts_are_exact (test_cd0.VectorManifestTests.test_fixture_counts_are_exact) ... ok
 
 ----------------------------------------------------------------------
-Ran 164 tests in 0.188s
+Ran 167 tests in 0.190s
 
 OK

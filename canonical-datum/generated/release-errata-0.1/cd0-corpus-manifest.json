@@ -702,7 +702,7 @@
     "/home/gauss/OpenGauss/venv/bin/python3",
     "canonical-datum/generator/generate_corpus.py",
     "--output-dir",
-    "/tmp/cd0-final-regeneration/repeat",
+    "/tmp/cd0-final-regeneration-bdb2214/repeat",
     "--seed",
     "3439329281",
     "--positive-count",
@@ -714,14 +714,14 @@
     "--truncation-max-document-octets",
     "16"
   ],
-  "invocation_command": "/home/gauss/OpenGauss/venv/bin/python3 canonical-datum/generator/generate_corpus.py --output-dir /tmp/cd0-final-regeneration/repeat --seed 3439329281 --positive-count 10000 --negative-count 20308 --mutation-sample-count 128 --truncation-max-document-octets 16",
-  "invocation_cwd": "/tmp/cd0-generation-source-59fdd",
-  "logical_command": "python3 canonical-datum/generator/generate_corpus.py --output-dir /tmp/cd0-final-regeneration/repeat --seed 3439329281 --positive-count 10000 --negative-count 20308 --mutation-sample-count 128 --truncation-max-document-octets 16",
+  "invocation_command": "/home/gauss/OpenGauss/venv/bin/python3 canonical-datum/generator/generate_corpus.py --output-dir /tmp/cd0-final-regeneration-bdb2214/repeat --seed 3439329281 --positive-count 10000 --negative-count 20308 --mutation-sample-count 128 --truncation-max-document-octets 16",
+  "invocation_cwd": "/tmp/cd0-errata-source-bdb2214",
+  "logical_command": "python3 canonical-datum/generator/generate_corpus.py --output-dir /tmp/cd0-final-regeneration-bdb2214/repeat --seed 3439329281 --positive-count 10000 --negative-count 20308 --mutation-sample-count 128 --truncation-max-document-octets 16",
   "logical_command_argv": [
     "python3",
     "canonical-datum/generator/generate_corpus.py",
     "--output-dir",
-    "/tmp/cd0-final-regeneration/repeat",
+    "/tmp/cd0-final-regeneration-bdb2214/repeat",
     "--seed",
     "3439329281",
     "--positive-count",
@@ -793,11 +793,11 @@
   "schema": "cd0-generated-corpus-manifest/v4",
   "source_input_sha256": {
     "after_generation": {
-      "CANONICAL-DATUM-DIVERGENCES.md": "290df745b1f7fe97207c153b70673f7cc29bbe373f52e598a88a1e6c2f77a0b0",
+      "CANONICAL-DATUM-DIVERGENCES.md": "af9a5abccba147bb9c3e6845fb37b23e88ce956d7103b80a1c8ae0f2b9695651",
       "CANONICAL-DATUM-SPEC-ERRATA-0.1.md": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
       "CD0-POST-IMPLEMENTATION-RULING.md": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
       "canonical-datum/generator/generate_corpus.py": "60668b2e1fae1962d255a55d244f9b86cccbb7873e00802451f1b10e6e3338ea",
-      "canonical-datum/python/cd0/__init__.py": "8f8fe19d4a03a9d85bf01a836a2418254a6286f0b5b45a954af8f36f70adfd41",
+      "canonical-datum/python/cd0/__init__.py": "4d251590e4957187552ee0a2c6dc4131348fec54be2bb424839ef8e61f880dbe",
       "canonical-datum/schema/cd0-fixtures.schema.json": "6609a6d97140f1fda5a538ccb908bb820bcdad380b7dd8efb05fa8a9e7a0407c",
       "canonical-datum/vectors/cd0-budgets.json": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
       "canonical-datum/vectors/cd0-distinct-pairs.json": "ee966c62c49e2f64f6378901e1bc33db352a5b2a7d69f0dd606947eb02e73d27",
@@ -807,11 +807,11 @@
       "mneme/spec/CANONICAL-DATUM-SPEC.md": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
     },
     "before_generation": {
-      "CANONICAL-DATUM-DIVERGENCES.md": "290df745b1f7fe97207c153b70673f7cc29bbe373f52e598a88a1e6c2f77a0b0",
+      "CANONICAL-DATUM-DIVERGENCES.md": "af9a5abccba147bb9c3e6845fb37b23e88ce956d7103b80a1c8ae0f2b9695651",
       "CANONICAL-DATUM-SPEC-ERRATA-0.1.md": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
       "CD0-POST-IMPLEMENTATION-RULING.md": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
       "canonical-datum/generator/generate_corpus.py": "60668b2e1fae1962d255a55d244f9b86cccbb7873e00802451f1b10e6e3338ea",
-      "canonical-datum/python/cd0/__init__.py": "8f8fe19d4a03a9d85bf01a836a2418254a6286f0b5b45a954af8f36f70adfd41",
+      "canonical-datum/python/cd0/__init__.py": "4d251590e4957187552ee0a2c6dc4131348fec54be2bb424839ef8e61f880dbe",
       "canonical-datum/schema/cd0-fixtures.schema.json": "6609a6d97140f1fda5a538ccb908bb820bcdad380b7dd8efb05fa8a9e7a0407c",
       "canonical-datum/vectors/cd0-budgets.json": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
       "canonical-datum/vectors/cd0-distinct-pairs.json": "ee966c62c49e2f64f6378901e1bc33db352a5b2a7d69f0dd606947eb02e73d27",
@@ -821,7 +821,7 @@
       "mneme/spec/CANONICAL-DATUM-SPEC.md": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
     }
   },
-  "source_revision": "59fdd5b65a2ab44f98ec91c0b1464650cf18cfb3",
+  "source_revision": "bdb2214878ebb302329a40e895269ff950b8ae97",
   "source_worktree": {
     "clean_before": true,
     "dirty_override_requested": false,
