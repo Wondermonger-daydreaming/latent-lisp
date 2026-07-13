@@ -144,3 +144,28 @@ All unambiguous Section 15 vectors and compact negative cases continue to be
 executable.  A1--A9 remain open and must not be resolved by copying behavior from
 either seed implementation.  Proposed adjudications above are review material,
 not CD/0 law.
+
+## Phase 0 correction note — provisional fixture stages
+
+An independent fixture audit confirmed the current compact inputs' categories
+and primary codes but also showed that A1 reaches permanent hand rows.  The
+following rows now carry `status: provisional-blocked-stage`; their recorded
+stage is a testable proposal, not a normative adjudication:
+
+- `cd0-neg-tag-20-string-truncated`
+- `cd0-neg-tag-21-bytes-truncated`
+- `cd0-neg-tag-22-id-truncated`
+- `cd0-neg-tag-30-seq-truncated`
+- `cd0-neg-tag-31-record-truncated`
+- `cd0-neg-id-missing-path`
+- `cd0-neg-id-empty-segment`
+- `cd0-neg-record-key-not-id`
+- `cd0-neg-resource-identifier-segments`
+- `cd0-neg-resource-depth`
+- `cd0-neg-resource-nodes`
+
+`cd0-neg-host-bool-as-integer` similarly carries
+`status: provisional-blocked-code` under A2: type disjointness and refusal are
+normative, while the exact constructor/importer code is not uniquely assigned.
+Differential conformance must compare only the warranted portions of these rows
+until the specification is adjudicated.
