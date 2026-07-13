@@ -1,0 +1,20 @@
+The S-Expression Garden: test assize
+  [PASS] lawful graft, immutable donor, replay
+  [PASS] malformed paths still receive receipts
+  [PASS] identity jurisdiction
+  [PASS] contract shape jurisdiction
+  [PASS] new unbound symbols
+  [PASS] arity jurisdiction
+  [PASS] free-symbol capture
+  [PASS] operator-domain mismatch
+  [PASS] unknown operator domain
+  [PASS] behavioral exception quarantine
+  [PASS] behavioral budget quarantine
+  [PASS] acyclic provenance
+  [PASS] receipts can themselves be grafted
+  [PASS] receipt readable round trip
+  [PASS] replay detects rulebook drift
+  [PASS] persistent tree surgery (200 trials)
+  [PASS] lawful randomized graft/replay (200 trials)
+  [PASS] random refusals are atomic (200 trials)
+Verdict: 18 passed, 0 failed.
