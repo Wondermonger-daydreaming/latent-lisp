@@ -29,8 +29,8 @@ this" cannot be raised to a graded claim without a *certificate* — a bare asse
 > — the lawful route was precise but forgeable through the raw exported constructors. *v1*
 > (`mneme/latent-mvp/kernel-hardened.lisp`, 2026-07-11) closes that seam: authenticated state cannot be minted
 > through the client surface. The public API is **mechanically split** into `mneme.client` (adversarial) and
-> `mneme.operator` (trusted bootstrap), and an external-client suite proves **13 forgeries refused + 3
-> lawful-route checks — each gate firing its own typed condition** (`adversarial-conformance.lisp` → 16 passed,
+> `mneme.operator` (trusted bootstrap), and an external-client suite proves **15 forgeries refused + 3
+> lawful-route checks — each gate firing its own typed condition** (`adversarial-conformance.lisp` → 18 passed,
 > 0 failed). The ceiling is stated exactly: `mneme.client` resists adversarial use of the exported API and treats
 > serialized input as hostile; it does **not** defend against same-image code reaching `mneme::` internals
 > (process isolation, not a language feature), and cryptography is a later milestone. This is a **bounded receipt,
@@ -106,8 +106,8 @@ Everything runs on **SBCL 2.4.6** (`sbcl --script <file>`; the atelier scripts r
 > monadologia specimens, GPT Sol's 10-instrument decad, and the leibnitiana chamber's fifth and sixth
 > tranches). Every file was run under `sbcl --script` from its own directory (relative `load`s honored).
 > Tally: **178 × exit 0; 2 library-components-by-design; 2 genuine failures.** The asserted entrypoints all
-> do real work: the conformance walk prints seven ✓, the **mneme floor holds 5/5 suites**
-> (`mneme/verify-all.sh` — conformance, adversarial 18/0, boundary 9/0, atelier 3 pass-banners, fixtures
+> do real work: the conformance walk prints seven ✓, the **mneme floor holds 6/6 suites**
+> (`mneme/verify-all.sh` — conformance, adversarial 18/0, counterexamples 10/0, boundary 9/0, atelier 4 pass-banners, fixtures
 > 14/14), the leibnitiana chamber runner passes **14/14**, and the quines are byte-identical to their source.
 >
 > The **2 library components** (`atelier/leibnitiana/src/{core,provenance}.lisp`) open with
@@ -129,7 +129,7 @@ sbcl --script conformance-walk.lisp
 
 # The mneme atelier — first cabinet + jurisdiction wing + Sol's decad, each file its own process:
 cd mneme/atelier
-./run-all.sh          # three pass-banners; the whole mneme floor: cd mneme && bash verify-all.sh (5/5)
+./run-all.sh          # four pass-banners; the whole mneme floor: cd mneme && bash verify-all.sh (6/6)
 
 # Any individual brick or specimen — watch a single law hold:
 sbcl --script mneme/latent-mvp/evidence-kernel.lisp
@@ -162,14 +162,16 @@ in the lab). Sol's ruling: *semantic authority must come before cryptography —
 certificate is a steel lock on a certificate printer.* So:
 
 0. **Semantic unforgeability through the supported API** — **✅ BUILT (v1, 2026-07-11):**
-   `mneme/latent-mvp/kernel-hardened.lisp` + `adversarial-conformance.lisp` (16/0). Client/operator packages
-   split mechanically; no exported constructors for authenticated objects; defensive-copy readers; opaque
+   `mneme/latent-mvp/kernel-hardened.lisp` + `adversarial-conformance.lisp` (18/0) +
+   `counterexample-closure.lisp` (10/0). Client/operator packages split mechanically; no exported constructors
+   for authenticated objects; private canonical datum values with fresh-data readers; opaque
    verifier capabilities (scope lists copied on grant); private procedure registry (no `fdefinition` from caller
    data); `raise-claim` validates mint provenance not shape; hostile-data decoder; inert revival (inherited
    warrants are historical testimony only; `:revived` is the 4th receipt transition); typed conditions. The
    **revival contradiction is fixed** — a revived claim's authenticated set begins empty; standing is re-earned
-   only via `replay-and-attest`. *Still open under this item:* an **attestation-revocation registry** (v1
-   revocation is prospective only), and migrating the v0 bricks onto the hardened kernel.
+   only via `replay-and-attest`. *Still open under this item:* claim-level standing after later warrant
+   revocation, and migrating the v0 bricks onto the hardened kernel. See `V1-COUNTEREXAMPLE-CLOSURE.md` for
+   the focused closure receipt and its explicit remaining threats.
 1. **Real crypto** — canonical byte serialization + SHA-256 + HMAC/signatures, replacing the pedagogical
    digests (`md5`/`sxhash`/FNV-class — fine for specimens, forgeable by a real attacker). *After #0, not before.*
 2. **Durable identity** — UUIDs / store-issued monotone IDs instead of `gensym`; digests stable across process
