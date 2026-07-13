@@ -688,6 +688,64 @@ class DecimalGuardTests(unittest.TestCase):
 
 
 class HostImportPreallocationTests(unittest.TestCase):
+    def test_record_key_work_precedes_identifier_materialization(self) -> None:
+        zero = replace(
+            DEFAULT,
+            max_total_record_key_octets=0,
+            identifier="record-key-preflight-0",
+        )
+        datum = cd0.record(((cd0.identifier((), ("a",)), cd0.unit()),))
+        ast = {
+            "t": "record",
+            "fields": [
+                {
+                    "key": {
+                        "t": "id",
+                        "namespace_utf8_hex": [],
+                        "path_utf8_hex": ["61"],
+                    },
+                    "value": {"t": "unit"},
+                }
+            ],
+        }
+        cases = (
+            (
+                "runtime encode",
+                lambda: cd0.encode_exact(datum, zero),
+                ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
+            ),
+            (
+                "fixture import",
+                lambda: cd0.from_fixture_ast(ast, zero),
+                ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "host-import"),
+            ),
+        )
+        for label, operation, expected in cases:
+            with self.subTest(label=label), mock.patch.object(
+                cd0,
+                "_identifier_value_bytes",
+                side_effect=MemoryError("synthetic key materialization refusal"),
+            ):
+                with self.assertRaises(cd0.CD0Failure) as raised:
+                    operation()
+                self.assertEqual(raised.exception.triple, expected)
+
+    def test_construction_descriptor_allocation_refusal_is_translated(self) -> None:
+        with mock.patch.object(
+            builtins,
+            "set",
+            side_effect=MemoryError("synthetic construction-schema refusal"),
+        ):
+            with self.assertRaises(cd0.CD0Failure) as raised:
+                cd0.from_fixture_construction(
+                    {"op": "rational", "p": "1", "q": "2"},
+                    DEFAULT,
+                )
+        self.assertEqual(
+            raised.exception.triple,
+            ("ResourceRefusal", "AllocationRefused", "allocation"),
+        )
+
     def test_fixture_hex_budget_precedes_bytes_conversion(self) -> None:
         tiny = replace(DEFAULT, max_single_bytes_octets=1, identifier="fixture-bytes-1")
         with mock.patch.object(
