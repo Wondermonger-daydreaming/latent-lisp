@@ -1,4 +1,4 @@
-# CD/0 first differential convergence
+# CD/0 Errata 0.1 differential convergence
 
 This directory contains the dependency-light Phase-2 comparison harness.  It
 does not define datum semantics.  Both adapters translate the same requests to
@@ -31,7 +31,10 @@ per request.  The runner currently uses these operations:
   nested JSON;
 - `host-import`: invoke only the explicitly named closed fixture importer;
 - `equal`: construct two fixture datums and report equality plus both encodings;
-- `fixture-import` and `nested-encode`: focused integration-regression probes.
+- `fixture-import` and `nested-encode`: focused integration-regression probes;
+- `decode-only`, `fixture-import-only`, `construction-only`, and
+  `runtime-encode`: operation-isolated Errata 0.1 probes that do not mask one
+  operation with a follow-on operation governed by different budget fields.
 
 Every request carries a fully resolved immutable fourteen-field budget and a
 diagnostic budget ID.  Successful responses use `status: "ok"`.  Codec failures
@@ -39,15 +42,19 @@ use `status: "failure"` and the normative `category`, `code`, and `stage`.
 Where an optional host importer is not part of a seed's declared API, the
 adapter emits `status: "not-applicable"`; it never converts absence into a pass.
 
-The first convergence matrix consists of:
+The Errata 0.1 convergence matrix consists of:
 
-- 22 shared positive rows;
-- 71 shared negative rows (66 octet and five host descriptors);
-- all 253 unordered-with-reflexivity equality judgments over the 22 positives.
+- 25 shared positive rows, including three rational construction descriptors;
+- 71 classified negative rows as complete triples;
+- all 325 unordered-with-reflexivity equality judgments over the 25 positives;
+- 37 permanent operation-sensitive A1--A9 vectors;
+- seven historical integration regressions.
 
-For `provisional-blocked-stage` and `provisional-blocked-code` rows, comparison
-is restricted to the fields warranted by the append-only divergence ledger.
-An observed match in an unwarranted field does not adjudicate that field.
+Phase-0 accounting remains separate: 71 classified rows are 66 octet rows plus
+5 host rows. Python executes 71. Common Lisp executes 68 (66 octet plus 2
+applicable host rows) and records 3 language-specific N/A dispositions. N/A
+rows are neither passes nor failures. Reports state executed rows, N/A
+dispositions, failures, skips, and classified totals independently.
 
 The Common Lisp adapter reuses the seed test harness's data-only JSON parser;
 it does not use the Common Lisp reader on fixture content.  The Python adapter

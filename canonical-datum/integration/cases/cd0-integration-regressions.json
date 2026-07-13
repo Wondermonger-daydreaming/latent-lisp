@@ -49,7 +49,7 @@
             "code": "UnsupportedHostType",
             "stage": "host-import"
           },
-          "warranted_fields": ["category", "stage"]
+          "warranted_fields": ["category", "code", "stage"]
         },
         "python": {
           "status": "failure",
@@ -58,14 +58,14 @@
             "code": "UnsupportedHostType",
             "stage": "host-import"
           },
-          "warranted_fields": ["category", "stage"]
+          "warranted_fields": ["category", "code", "stage"]
         }
       },
       "classification": "fixture-adapter-defect-both",
       "sections": ["27.2", "schema/$defs/decimalInteger", "A2"],
       "notes": [
         "The fixture schema excludes -0; the abstract Integer zero and its canonical wire encoding are unchanged.",
-        "A2 leaves the exact constructor/import code provisional, so the regression does not warrant that code."
+        "Errata 0.1 A2 assigns UnsupportedHostType at this host fixture boundary."
       ]
     },
     {
@@ -240,7 +240,7 @@
       "classification": "python-defect-with-a9-boundary",
       "sections": ["17.1", "20.1", "21.2", "21.7", "A9"],
       "notes": [
-        "A9 still leaves the runtime encoder's structural budget surface open.",
+        "Errata 0.1 A9 assigns runtime encoding only output, record-key-work, and actual allocation limits.",
         "Independent of A9, raw RecursionError is not a typed encode-exact outcome; this qualified host maps it to AllocationRefused."
       ]
     }
