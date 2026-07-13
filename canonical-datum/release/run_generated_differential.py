@@ -218,6 +218,7 @@ def verify_derivation_alignment(negative_path: Path, derivation_path: Path) -> i
     """Check one-for-one provenance and count mechanically demonstrated rows."""
 
     demonstrated = 0
+    demonstrated_cases: set[str] = set()
     missing = object()
     for negative_item, derivation_item in zip_longest(
         jsonl_rows(negative_path), jsonl_rows(derivation_path), fillvalue=missing
@@ -261,6 +262,14 @@ def verify_derivation_alignment(negative_path: Path, derivation_path: Path) -> i
                 raise ReleaseDifferentialError(
                     f"{negative.get('id')}: demonstrated byte-deletion proof is inconsistent"
                 )
+            case_key = canonical_json(
+                {"input_hex": negative["input_hex"], "budget": budget}
+            )
+            if case_key in demonstrated_cases:
+                raise ReleaseDifferentialError(
+                    f"{negative.get('id')}: duplicate demonstrated input/budget case"
+                )
+            demonstrated_cases.add(case_key)
             demonstrated += 1
         elif kind not in {"authored-primary-template", "host-graph-scenario"}:
             raise ReleaseDifferentialError(
@@ -1013,11 +1022,15 @@ def compare_retry(
         if not require_ok(response, request_id, label, report):
             both_ok = False
             continue
-        if response["result"].get("reencoded_hex") != expected_hex:
-            report.issue(f"{request_id}: {label} retry did not exactly re-encode input")
+        result = response["result"]
+        if result.get("canonical_hex") != expected_hex:
+            report.issue(f"{request_id}: {label} retry did not preserve canonical input")
+            both_ok = False
+        if type(result.get("fixture_ast")) is not dict:
+            report.issue(f"{request_id}: {label} retry omitted normalized fixture AST")
             both_ok = False
     if both_ok and cl["result"] != py["result"]:
-        report.issue(f"{request_id}: retry results disagree")
+        report.issue(f"{request_id}: retry normalized results disagree")
 
 
 def mutation_observation(response: dict[str, Any]) -> dict[str, Any]:
@@ -1054,10 +1067,26 @@ def compare_mutation(
     report.counts["unclassified_mutation_candidates"] += 1
     cl_obs = mutation_observation(cl)
     py_obs = mutation_observation(py)
-    if cl_obs == py_obs and cl_obs["status"] in {"ok", "failure"}:
-        outcome = "both_success_identical" if cl_obs["status"] == "ok" else "both_failure_same_triple"
-        report.mutation_outcomes[outcome] += 1
+    classification = (
+        "unclassified; minimization required before assigning a primary defect"
+    )
+    issue = f"{request_id}: unclassified mutation disagreement; minimization required"
+    if cl_obs == py_obs and cl_obs["status"] == "failure":
+        report.mutation_outcomes["both_failure_same_triple"] += 1
         return
+    if cl_obs == py_obs and cl_obs["status"] == "ok":
+        if cl_obs["canonical_hex"] == row["input_hex"]:
+            report.mutation_outcomes["both_success_identical"] += 1
+            return
+        report.mutation_outcomes["both_success_changed_input"] += 1
+        classification = (
+            "both codecs accepted exact-decode input but normalized to different bytes; "
+            "conformance review and minimization required"
+        )
+        issue = (
+            f"{request_id}: both codecs accepted a mutation but changed its canonical bytes; "
+            "conformance review and minimization required"
+        )
     report.mutation_outcomes["minimization_required_disagreements"] += 1
     record = {
         "id": row["id"],
@@ -1067,10 +1096,10 @@ def compare_mutation(
         "input_sha256": sha256_bytes(bytes.fromhex(row["input_hex"])),
         "common_lisp": cl_obs,
         "python": py_obs,
-        "classification": "unclassified; minimization required before assigning a primary defect",
+        "classification": classification,
     }
     report.differences.add(record)
-    report.issue(f"{request_id}: unclassified mutation disagreement; minimization required")
+    report.issue(issue)
 
 
 Comparator = Callable[[dict[str, Any], dict[str, Any], dict[str, Any], Report], None]
@@ -1386,7 +1415,7 @@ def negative_requests(
                 row["retry_budget"], budgets, f"{row_id}:retry"
             )
             retry = request_base(
-                f"retry:{row_id}", "decode-probe", retry_budget, retry_id
+                f"retry:{row_id}", "decode", retry_budget, retry_id
             )
             retry["input_hex"] = row["input_hex"]
             coordinator.add(
@@ -1439,7 +1468,11 @@ def host_scenario_dispositions(path: Path, positive_ids: set[str]) -> dict[str, 
     }:
         raise ReleaseDifferentialError("host/resource scenario document field set changed")
     scenarios = document.get("scenarios")
-    if type(scenarios) is not list or {row.get("id") for row in scenarios} != EXPECTED_HOST_SCENARIOS:
+    if (
+        type(scenarios) is not list
+        or len(scenarios) != len(EXPECTED_HOST_SCENARIOS)
+        or {row.get("id") for row in scenarios} != EXPECTED_HOST_SCENARIOS
+    ):
         raise ReleaseDifferentialError("host property scenario id set mismatch")
     dispositions: list[dict[str, Any]] = []
     for scenario in scenarios:

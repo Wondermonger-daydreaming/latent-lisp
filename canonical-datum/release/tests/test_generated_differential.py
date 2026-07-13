@@ -139,14 +139,81 @@ class GeneratedCorpusFixture(unittest.TestCase):
         )
         self.assertTrue((artifacts / "summary.json").is_file())
 
+        retry_requests = 0
         for batch in summary["batch_artifact_ledger"]:
             stem = f"batch-{batch['batch']:05d}"
             request_path = artifacts / f"{stem}-requests.jsonl"
             self.assertEqual(batch["request_sha256"], _sha256(request_path))
+            for line in request_path.read_text(encoding="ascii").splitlines():
+                request = json.loads(line)
+                if request["request_id"].startswith("retry:"):
+                    retry_requests += 1
+                    self.assertEqual("decode", request["op"])
             for label, record in batch["responses"].items():
                 response_path = artifacts / f"{stem}-{label}-responses.jsonl"
                 self.assertEqual(record["response_sha256"], _sha256(response_path))
                 self.assertEqual(batch["request_count"], record["response_count"])
+        self.assertEqual(manifest_counts["negative_retry_verified"], retry_requests)
+
+    def test_symmetric_mutation_normalization_is_not_counted_as_success(self) -> None:
+        report = runner.Report(runner.DifferenceLedger(None))
+        response = {
+            "status": "ok",
+            "result": {
+                "canonical_hex": "4c5043440001",
+                "fixture_ast": {"t": "bool", "v": False},
+            },
+        }
+        runner.compare_mutation(
+            {
+                "request_id": "mutation:regression-symmetric-normalization",
+                "row": {
+                    "id": "cd0-mut-regression-symmetric-normalization",
+                    "source_positive_id": "cd0-pos-generated-00000000",
+                    "operation": "regression",
+                    "input_hex": "4c5043440000",
+                },
+            },
+            response,
+            response,
+            report,
+        )
+        self.assertEqual(1, report.issue_count)
+        self.assertEqual(1, report.differences.count)
+        self.assertEqual(1, report.mutation_outcomes["both_success_changed_input"])
+        self.assertEqual(
+            1, report.mutation_outcomes["minimization_required_disagreements"]
+        )
+        self.assertEqual(0, report.mutation_outcomes["both_success_identical"])
+
+    def test_retry_requires_cross_codec_normalized_ast_agreement(self) -> None:
+        report = runner.Report(runner.DifferenceLedger(None))
+        common_lisp = {
+            "status": "ok",
+            "result": {
+                "canonical_hex": "4c5043440000",
+                "fixture_ast": {"t": "unit"},
+            },
+        }
+        python = {
+            "status": "ok",
+            "result": {
+                "canonical_hex": "4c5043440000",
+                "fixture_ast": {"t": "bool", "v": False},
+            },
+        }
+        runner.compare_retry(
+            {
+                "request_id": "retry:regression-ast-disagreement",
+                "input_hex": "4c5043440000",
+            },
+            common_lisp,
+            python,
+            report,
+        )
+        self.assertEqual(1, report.issue_count)
+        self.assertIn("normalized results disagree", report.issues[0])
+        self.assertEqual(1, report.counts["retry_budget_checks"])
 
     def test_warranted_provisional_fields_do_not_promote_ambiguities(self) -> None:
         self.assertEqual(

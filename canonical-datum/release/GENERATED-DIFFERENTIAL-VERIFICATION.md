@@ -39,12 +39,13 @@ python3 canonical-datum/release/run_generated_differential.py \
   --allow-small-corpus \
   --batch-size 256 \
   --timeout-seconds 120 \
-  --artifacts-dir /tmp/cd0-release-runner-evidence-v3-20260713/artifacts-final
+  --artifacts-dir /tmp/cd0-release-runner-evidence-v3-20260713/artifacts-audit-fix
 ```
 
 Observed result:
 
-- Unit/integration tests: 6 passed in 2.813 seconds.
+- Unit/integration tests: 8 passed in 2.850 seconds, including synthetic
+  regressions for symmetric noncanonical normalization and retry AST mismatch.
 - Generator: `cd0-corpus-generator/3`; test-mode dirty-source override was
   explicitly recorded because the release-runner files were not yet committed.
 - Manifest SHA-256:
@@ -52,7 +53,7 @@ Observed result:
 - Corpus SHA-256:
   `f36f69ea5b387d47b7bd42441fa83230af2e7a9a49977384990e5417c1d04d3d`.
 - Retained summary SHA-256:
-  `ee59917e644cf867a4dd9b03fd08a29918a1c1a97052162d2ab83d5f4827c2b6`.
+  `b22f686e29254386889a74e56f2564251236df2ab557a03d1648751358cf4199`.
 - Rows: 64 positives; 512 classified adversarial negatives; 523 unclassified
   mutation candidates; 9 host scenarios; 14 resource-boundary scenarios.
 - Negative status: 506 normative; 5 provisional-blocked-stage; 1
@@ -61,7 +62,8 @@ Observed result:
   byte-deletion-primary-minimal; 5 host-graph-scenario.  The runner independently
   rechecked all 204 byte-deletion proof shapes and matched the manifest count.
 - Per implementation: 1,443 requests in 6 bounded batches; 128 equality
-  judgments; 216 exact retry/re-encodes.
+  judgments; 216 exact retry decodes with canonical-byte preservation and
+  normalized-AST agreement.
 - Host applicability: 509 Common Lisp negative executions, 512 Python
   executions, and exactly 3 Common Lisp N/A rows which were not counted as
   passes.
@@ -69,7 +71,7 @@ Observed result:
   minimize-required disagreements.
 - Warranted comparison issues: 0.
 - Runner SHA-256 at this run:
-  `4d3031d9240833304dee08a68e89fabc6fdafd19b3efd4fa3e5410432084b9fb`.
+  `5c8c6b3e7cf8e6fe01fc5b0923ea84e9b4fbf1cf6113d1f07475cf02ea56f9a8`.
 - Python adapter SHA-256:
   `3b1d8017ed3a6cad375b6604e9fdcf2c01b9bdc5bccf3b336f95140abaf71db9`.
 - Common Lisp adapter SHA-256:
