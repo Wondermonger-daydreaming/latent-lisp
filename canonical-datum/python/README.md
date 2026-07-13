@@ -1,8 +1,16 @@
-# CD/0 Python seed
+# CD/0 Python implementation
 
-This directory contains the dependency-free CPython seed codec for Lisp+
-Canonical Datum /0.  Its semantic input is the pinned repository copy of
-`mneme/spec/CANONICAL-DATUM-SPEC.md`; it does not import or adapt the v1 kernel.
+This directory contains the dependency-free CPython codec for Lisp+ Canonical
+Datum /0 plus Errata 0.1. Its semantic inputs are the pinned repository copy of
+`mneme/spec/CANONICAL-DATUM-SPEC.md` and the companion errata; it does not
+import or adapt the v1 kernel.
+
+Independently seeded implementations under shared normative infrastructure,
+with procedural—not OS-enforced—isolation, attested by the implementers and
+corroborated at content tier.
+
+The Python independence anchor is seed commit
+`58ecca4083275ebfe16605765e575bfb9f6eb755`, not this corrected branch tip.
 
 ## Surface
 
@@ -12,7 +20,9 @@ The `cd0` package exports:
   ByteString, Identifier, Sequence, and Record;
 - `equal_datum`, `encode_exact`, and `decode_exact`;
 - frozen `ResourceBudget` values and typed `CD0Failure` exceptions;
-- `from_fixture_ast` and `to_fixture_ast` for the shared typed fixture form;
+- `from_fixture_ast` and `to_fixture_ast` for the shared typed fixture form,
+  plus `from_fixture_construction` for the distinct rational-construction
+  descriptor;
 - `import_host_descriptor` for the closed Section-28.2 conformance descriptors
   (this is not a generic object deserializer);
 - `diagnostic_render`, which is explicitly non-identity-bearing.
@@ -37,7 +47,7 @@ The integration hardening pass keeps Python host limits outside datum identity:
 - fixture hex and list/tuple declarations are checked against their applicable
   budgets before proportional conversion or snapshotting.
 
-Run the seed suite from the repository root:
+Run the complete Python suite from the repository root:
 
 ```text
 PYTHONPATH=canonical-datum/python python3 -m unittest discover -s canonical-datum/python/tests -v
@@ -49,23 +59,22 @@ The focused host-boundary regressions can be run with:
 PYTHONPATH=canonical-datum/python:canonical-datum/python/tests python3 -m unittest -v test_cd0.HostStackSafetyTests test_cd0.DecimalGuardTests test_cd0.HostImportPreallocationTests
 ```
 
-## A1--A9 implementation-local choices
+## Errata 0.1 A1--A9 conformance
 
-The root divergence ledger remains authoritative about what the specification
-does not settle.  The choices below make this seed executable but are
-non-normative and are not claimed as shared failure triples.
+The post-implementation ruling and Errata 0.1 settle the following behavior.
+Every failure below is compared as the complete category/code/stage triple.
 
-| Divergence | Python seed choice |
+| Adjudication | Implemented behavior |
 |---|---|
-| A1 | A missing declared string/bytes/segment payload uses stage `length`; malformed complete payload uses `utf8`; a missing nested value tag uses `type-tag`; a missing record key uses `record-key`; encoder output refusal uses `allocation`. |
-| A2 | Constructor invariant failures use category `UnsupportedHostInput`, the nearest existing code, and stage `host-import`. |
-| A3 | `max_integer_bits` counts `bit_length(abs(z))`; zero uses zero bits. |
-| A4 | `max_identifier_segments` is aggregate across namespace and path. |
-| A5 | Depth refusal precedes node refusal.  A context-specific single-payload limit precedes aggregate payload refusal. |
-| A6 | A record-key tag in `f0..ff` reports `ForbiddenPrivilegedTag`; every other non-`22` key tag reports `RecordKeyNotIdentifier`. |
-| A7 | Fixture `rat` denotes only an already-normalized abstract Rational.  Unreduced constructor inputs are tested directly through `rational`, not smuggled into the fixture AST. |
-| A8 | Key work counts each field's complete canonical identifier `ValueBytes` once and accumulates across the operation. |
-| A9 | Encoding an already-valid runtime datum enforces `max_output_octets` and `max_total_record_key_octets`; decode and fixture-host import enforce their applicable structural and payload limits. |
+| A1 | A declared count promising an absent item, field key/value, or identifier segment reports `InvalidCanonicalGrammar/TruncatedInput/count`. Root absence remains `type-tag`; an output-size refusal uses `allocation`. |
+| A2 | Constructor/importer invariant failures use `UnsupportedHostInput`, the applicable specific code, and `host-import`. |
+| A3 | `max_integer_bits` counts `bit_length(abs(component))`; zero consumes zero bits. The construction adapter checks supplied rational components before reduction. |
+| A4 | `max_identifier_segments` aggregates namespace and path segments. |
+| A5 | Resource precedence is depth, nodes, local magnitude/count/length, then aggregate payload. |
+| A6 | A record-key tag in `f0..ff` reports `ForbiddenPrivilegedTag`; other non-`22` tags report `RecordKeyNotIdentifier`. |
+| A7 | Rational construction uses a separate `{op,p,q}` descriptor; fixture `rat` remains an already-normalized abstract datum. |
+| A8 | Key work counts each field occurrence's complete canonical Identifier `ValueBytes` exactly once. |
+| A9 | Encoding an already-valid runtime datum enforces output size, record-key work, and actual host-allocation limits only. Decode and import retain their operation-specific admission budgets. |
 
 ## Bounded host guarantees
 
@@ -76,13 +85,11 @@ boundary against code already executing in the same interpreter.  The encoder
 revalidates private invariants and returns `EncoderInvariantFailure` if a
 tampered value is detected where practical.
 
-The suite establishes finite conformance against the shared hand corpus and its
-listed probes: 22 positives, 71 negatives, and 59 implementation-local tests at
-the integration-hardening checkpoint (152 tests total).  It
-compares all three failure fields for the 59 normative negative rows, only
-category/code for the 11 `provisional-blocked-stage` rows, and only
-category/stage for the one `provisional-blocked-code` row.  This preserves the
-A1/A2 boundary instead of laundering proposed fields into normative agreement.
-It is not the Phase-3 generated 10,000/20,000 release corpus and contains no
-claim that finite Python-local tests settle cross-language conformance.  A1--A9,
-including the Python seed's A9 encoder-budget choice, remain unadjudicated.
+The suite establishes finite conformance against 25 positive rows and the exact
+Phase-0 accounting of 71 classified negative rows: 66 octet rows plus 5 host
+rows. Python executes all 71 negative rows with complete triples; on the
+recorded CPython 3.11.14 run there were 0 N/A dispositions, 0 failures, and 0
+skips. The Common Lisp accounting is separate: 68 executed rows plus 3 explicit
+language-specific N/A dispositions. N/A rows are neither successes nor
+failures. The finite hand corpus does not by itself establish universal
+cross-language conformance or replace the generated release qualification.
