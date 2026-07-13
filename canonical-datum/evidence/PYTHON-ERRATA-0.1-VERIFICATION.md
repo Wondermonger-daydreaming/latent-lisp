@@ -108,9 +108,14 @@ PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=canonical-datum/python:canonical-datum/pyth
   test_cd0.ImmutabilityTests
   exit 0; Ran 21 tests; OK
 
-git diff --check
+git diff --check 29d0946ad78347015b9f0c65a2f528f039fdca78..HEAD
   exit 0; no output
 ```
+
+The two immutable normative Markdown inputs contain intentional two-space line
+breaks. Narrow `.gitattributes` entries disable only the end-of-line whitespace
+diagnostic for those two files, allowing the whole-branch check above without
+changing either pinned byte sequence.
 
 Phase-0 accounting is a classification/execution statement, not the phrase
 “71 tests passed”: Python executed 71 classified rows, with 0 N/A dispositions,
