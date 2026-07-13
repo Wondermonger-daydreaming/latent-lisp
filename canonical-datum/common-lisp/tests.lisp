@@ -219,6 +219,7 @@
 (defvar *ambient-count* 0)
 (defvar *property-count* 0)
 (defvar *grammar-boundary-count* 0)
+(defvar *integration-regression-count* 0)
 
 (defun check (condition control &rest arguments)
   (incf *checks*)
@@ -489,6 +490,175 @@
                              (make-string-datum
                               (coerce (list #\e (code-char #x301)) 'string))))
            "Unicode normalization leaked into equality")))
+
+(defun test-integration-regressions ()
+  ;; Section 20.5(6): a complete numerator UVAR is budget-checked before the
+  ;; decoder attempts any part of the following denominator UVAR.
+  (let ((zero-bits
+          (copy-resource-budget (default-resource-budget)
+                                :id "rational-numerator-zero-bits"
+                                :max-integer-bits 0)))
+    (dolist (case '(;; Denominator absent.
+                    "4c504344001102"
+                    ;; Denominator begins but is unterminated.
+                    "4c50434400110280"
+                    ;; Denominator is terminated but overlong.
+                    "4c5043440011028000"))
+      (incf *integration-regression-count*)
+      (expect-failure
+       (lambda () (decode-exact (hex-to-octets case) :budget zero-bits))
+       "ResourceRefusal" "IntegerBudgetExceeded" "rational-payload"
+       "rational numerator budget precedes denominator defect")))
+  (let ((numerator-first
+          (make-resource-budget :id "rational-numerator-before-denominator-varint"
+                                :max-integer-bits 0 :max-varint-octets 1)))
+    (incf *integration-regression-count*)
+    (expect-failure
+     (lambda ()
+       (decode-exact (hex-to-octets "4c50434400110280")
+                     :budget numerator-first))
+     "ResourceRefusal" "IntegerBudgetExceeded" "rational-payload"
+     "rational numerator budget precedes denominator varint budget"))
+  ;; Moving the numerator check forward must leave adjacent denominator
+  ;; failures intact when the numerator itself is within budget.
+  (let ((one-bit
+          (copy-resource-budget (default-resource-budget)
+                                :id "rational-numerator-one-bit"
+                                :max-integer-bits 1))
+        (one-bit-one-uvar
+          (make-resource-budget :id "rational-denominator-one-uvar"
+                                :max-integer-bits 1 :max-varint-octets 1)))
+    (dolist (case '(("4c504344001102"
+                     "InvalidCanonicalGrammar" "TruncatedInput")
+                    ("4c5043440011028000"
+                     "NoncanonicalEncoding"
+                     "NonminimalRationalComponentEncoding")))
+      (incf *integration-regression-count*)
+      (expect-failure
+       (lambda () (decode-exact (hex-to-octets (first case)) :budget one-bit))
+       (second case) (third case) "rational-payload"
+       "adjacent denominator failure remains classified"))
+    (incf *integration-regression-count*)
+    (expect-failure
+     (lambda ()
+       (decode-exact (hex-to-octets "4c50434400110280")
+                     :budget one-bit-one-uvar))
+     "ResourceRefusal" "VarintBudgetExceeded" "rational-payload"
+     "adjacent denominator varint budget remains classified"))
+
+  ;; Section 27.2 decimal components are canonical decimal integer strings:
+  ;; negative zero is forbidden, and the resource bound is enforced while
+  ;; scanning rather than after constructing an input-sized bignum.
+  (dolist (ast '((("t" . "int") ("v" . "-0"))
+                 (("t" . "rat") ("p" . "-0") ("q" . "2"))
+                 (("t" . "rat") ("p" . "1") ("q" . "-0"))))
+    (incf *integration-regression-count*)
+    (expect-failure
+     (lambda () (datum-from-fixture-ast ast))
+     "UnsupportedHostInput" "UnsupportedHostType" "host-import"
+     "fixture decimal negative zero"))
+  (let* ((huge (make-string 5000 :initial-element #\9))
+         (eight-bits
+           (copy-resource-budget (default-resource-budget)
+                                 :id "fixture-integer-eight-bits"
+                                 :max-integer-bits 8)))
+    (dolist (ast (list (list (cons "t" "int") (cons "v" huge))
+                       (list (cons "t" "rat") (cons "p" huge)
+                             (cons "q" "2"))
+                       (list (cons "t" "rat") (cons "p" "1")
+                             (cons "q" huge))))
+      (incf *integration-regression-count*)
+      (expect-failure
+       (lambda () (datum-from-fixture-ast ast :budget eight-bits))
+       "ResourceRefusal" "IntegerBudgetExceeded" "host-import"
+       "fixture decimal incremental integer budget")))
+
+  ;; These independently constructed chains exceed SBCL's comfortable
+  ;; recursive call depth while keeping the live equality worklist bounded.
+  (labels ((deep-chain (leaf depth)
+             (loop repeat depth
+                   do (setf leaf (make-sequence-datum (vector leaf)))
+                   finally (return leaf))))
+    (let ((left (deep-chain (make-unit-datum) 20000))
+          (equal-right (deep-chain (make-unit-datum) 20000))
+          (unequal-right (deep-chain (make-boolean-datum nil) 20000)))
+      (incf *integration-regression-count* 2)
+      (check (equal-datum left equal-right)
+             "iterative equality rejected independently built deep equals")
+      (check (not (equal-datum left unequal-right))
+             "iterative equality accepted independently built deep unequals")))
+
+  ;; Host importer budget/schema checks must win before avoidable proportional
+  ;; copies or traversal of semantically unreachable hostile components.
+  (let* ((one-segment
+           (copy-resource-budget (default-resource-budget)
+                                 :id "aggregate-id-one-segment"
+                                 :max-identifier-segments 1))
+         (fixture-id
+           (list (cons "t" "id")
+                 (cons "namespace_utf8_hex" (vector "6e"))
+                 ;; If inspected before the aggregate count refusal, this host
+                 ;; symbol is itself an invalid segment representation.
+                 (cons "path_utf8_hex" (vector 'host-symbol)))))
+    (incf *integration-regression-count* 2)
+    (expect-failure
+     (lambda ()
+       (make-identifier-datum (vector "n") (vector 'host-symbol)
+                              :budget one-segment))
+     "ResourceRefusal" "ExcessiveIdentifierSegments" "host-import"
+     "constructor aggregate identifier count before path copy")
+    (expect-failure
+     (lambda () (datum-from-fixture-ast fixture-id :budget one-segment))
+     "ResourceRefusal" "ExcessiveIdentifierSegments" "host-import"
+     "fixture aggregate identifier count before path copy"))
+  (let* ((huge (make-string 5000 :initial-element #\9))
+         (invalid-key (list (cons "t" "unit")))
+         (hostile-value (list (cons "t" "int") (cons "v" huge)))
+         (field (list (cons "key" invalid-key)
+                      (cons "value" hostile-value)))
+         (record (list (cons "t" "record")
+                       (cons "fields" (vector field))))
+         (eight-bits
+           (copy-resource-budget (default-resource-budget)
+                                 :id "record-key-before-value"
+                                 :max-integer-bits 8)))
+    (incf *integration-regression-count*)
+    (expect-failure
+     (lambda () (datum-from-fixture-ast record :budget eight-bits))
+     "UnsupportedHostInput" "UnsupportedHostType" "host-import"
+     "fixture record key type before hostile value"))
+  (let* ((oversized-object
+           (vector (cons "t" "unit") (cons "x" 1)
+                   (cons "y" 2) (cons "z" 3))))
+    (incf *integration-regression-count*)
+    (expect-failure
+     (lambda () (datum-from-fixture-ast oversized-object))
+     "UnsupportedHostInput" "UnsupportedHostType" "host-import"
+     "fixture object schema count preflight"))
+  (let* ((key (make-identifier-datum nil (list (make-string 1024
+                                                            :initial-element #\k))))
+         (entry (make-record-entry key (make-unit-datum)))
+         (no-key-work
+           (copy-resource-budget (default-resource-budget)
+                                 :id "record-key-no-work"
+                                 :max-total-record-key-octets 0))
+         (materializer 'lisp-plus-cd0::%identifier-value-bytes)
+         (original (symbol-function materializer))
+         (calls 0))
+    (unwind-protect
+         (progn
+           (setf (symbol-function materializer)
+                 (lambda (identifier)
+                   (incf calls)
+                   (funcall original identifier)))
+           (incf *integration-regression-count*)
+           (expect-failure
+            (lambda () (make-record-datum (vector entry) :budget no-key-work))
+            "ResourceRefusal" "RecordKeyWorkBudgetExceeded" "host-import"
+            "record key work preflight before value-byte materialization")
+           (check (zerop calls)
+                  "record key bytes materialized before key-work refusal"))
+      (setf (symbol-function materializer) original))))
 
 (defun true-datum () (make-boolean-datum t))
 
@@ -891,6 +1061,7 @@
         *retry-count* 0 *distinct-pair-count* 0
         *mutation-count* 0 *resource-count* 0 *ambient-count* 0
         *property-count* 0 *grammar-boundary-count* 0
+        *integration-regression-count* 0
         *activation-count* 0)
   (let* ((budgets (load-budgets budget-path))
          (positives (read-jsonl positive-path))
@@ -901,6 +1072,7 @@
       (test-distinct-pairs (read-json-document distinct-path) by-id))
     (test-negative-vectors negatives budgets))
   (test-constructors-and-equality)
+  (test-integration-regressions)
   (test-mutation-resistance)
   (test-resource-boundaries)
   (test-inert-and-host-import)
@@ -924,5 +1096,7 @@
   (format t "ambient-state variants: ~D~%" *ambient-count*)
   (format t "deterministic generated round trips: ~D~%" *property-count*)
   (format t "grammar/Unicode boundary cases: ~D~%" *grammar-boundary-count*)
+  (format t "integration regression witnesses: ~D~%"
+          *integration-regression-count*)
   (format t "total assertions: ~D~%" *checks*)
   t)
