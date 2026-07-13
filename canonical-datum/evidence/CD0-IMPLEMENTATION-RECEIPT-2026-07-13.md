@@ -1,20 +1,19 @@
 # Lisp+ Canonical Datum /0 implementation receipt — 2026-07-13
 
-Receipt status: **pre-release draft**. The independent codecs, hand-corpus
-differential, and bounded Phase-4 qualification described below are executed
-facts. The release corpus, final reruns, archive, and push are not facts until
-their `{{CD0_*}}` placeholders are replaced from retained evidence.
+Receipt status: **final implementation evidence**. The independent codecs,
+release corpus, full differential, final qualification, mutation checks, and v1
+gate described below are executed facts retained in the repository. Archive and
+remote-tip facts that cannot be self-referentially embedded are reported in the
+external handoff and in sibling archive metadata.
 
 This receipt is concise evidence for an implementation and conformance task. It
 does not redesign CD/0, amend the normative specification, or migrate v1.
 
-For this documentation draft, SHA-256 values shown for the specification, hand
-artifacts, and retained Phase-2/Phase-4 summaries were directly recomputed.
-Commit/tree objects, JSONL line counts, negative status/input-kind counts,
-machine-summary fields, and retained `152`-test/`2510`-assertion transcript lines
-were directly inspected. Worked-vector semantics, mutation/inertness outcomes,
-and concurrency observations are transcribed from the committed execution
-receipts; the documentation-only drafting step did not rerun them.
+SHA-256 values shown for the specification, hand artifacts, corpus, manifests,
+and retained summaries were directly recomputed during qualification or final
+packaging. Commit/tree objects, JSONL counts, machine-summary fields, and retained
+`152`-test/`2510`-assertion transcript lines were directly inspected. Detailed
+runtime outcomes are bounded by the committed execution receipts and transcripts.
 
 ## Pinned authority and starting state
 
@@ -43,9 +42,9 @@ the provenance does not silently replace one with the other.
 | Python hardened branch | `29d0946ad78347015b9f0c65a2f528f039fdca78` | seed plus bounded host-resource corrections |
 | first integrated convergence | `fac17dd701c59f6da8eb2536dd022853b2e258fe` | imported seeds, repairs, process adapters, differential evidence |
 | bounded Phase-4 qualification | `7a0994f1ea176db1bffa61564dd23957a8c6216a` | retained hostile/property/runtime qualification |
-| generator correction | `{{CD0_GENERATOR_CORRECTION_COMMIT}}` | pending final source gate |
-| release runner source | `{{CD0_RELEASE_RUNNER_SOURCE_COMMIT}}` | pending final source gate |
-| verified release checkpoint | `{{CD0_VERIFIED_CHECKPOINT_COMMIT}}` | tree `{{CD0_VERIFIED_CHECKPOINT_TREE}}` |
+| generator correction | `c826c61587953eb5252cdeb5c361d6c0fed573d6` | enforces 20,000 demonstrated byte-deletion-primary-minimal negatives |
+| release runner source | `aed2f393781456dfd495ac5d5822bdcd58bea711` | audits exact retry bytes/AST and prevents symmetric false passes |
+| verified release checkpoint | `0fa772e946c50e27f64e9a435e0e69343a6cd5ea` | tree `f2a2252a830d574d0b06f357754e683146fdb981` |
 
 The Common Lisp and Python seed source-access logs enumerate what each
 implementation agent inspected. Neither agent read the other codec before its
@@ -57,7 +56,7 @@ integration phase.
 | ID | Requirement | Evidence | Current status | Residual uncertainty |
 |---|---|---|---|---|
 | R1 | Construct and preserve all nine disjoint datum families | explicit constructors/private immutable family nodes in both codecs; bool/int, `NIL`, symbol, namespace, and distinct-pair tests | satisfied for supported APIs | finite host-shape coverage |
-| R2 | Same abstract equality and canonical octets | 17 worked vectors; 22-positive corpus; complete 253-pair equality relation; 512 randomized round trips; 513 equality/encoding properties | satisfied through bounded qualification | release-scale corpus pending |
+| R2 | Same abstract equality and canonical octets | 17 worked vectors; 10,000 release positives; 20,000 release equality requests; 512 randomized round trips; 513 bounded equality/encoding properties | satisfied at recorded release scale | finite generated coverage |
 | R3 | Exact full-input codec and canonical refusal | 71 hand negatives, strict UTF-8, ordering/duplicate, trailing, reserved/forbidden, varint, zigzag, rational, and resource tests | satisfied for warranted fields | A1/A2 fields remain provisional |
 | R4 | Immutable views and mutation resistance | 15 CL seed probes, 11 Phase-4 CL probes, 11 Python mutation/inertness seed tests, seven Phase-4 Python probes | satisfied within ordinary public APIs | unsafe reflection/native memory outside claim |
 | R5 | Explicit immutable resource budgets | fourteen-field budgets, threshold/refusal/retry and preallocation tests | satisfied within tested boundaries | A3–A5/A8/A9 unadjudicated |
@@ -66,10 +65,10 @@ integration phase.
 | R8 | Inert privileged-looking records | selected evaluator/reader/interning/file/pickle/socket guards observed zero calls; decoded family remains Record | strong finite evidence | cannot prove absence of all FFI/syscalls |
 | R9 | Ambient-host invariance | CL printer/package/readtable and concurrency probes; Python hash seeds/digit guard/dictionary order and concurrency | satisfied on recorded hosts | other hosts/versions not run |
 | R10 | Independent then differential convergence | separate worktrees, seed commits before cross-reading, 353-request process differential | satisfied for hand corpus | procedural rather than OS-enforced isolation |
-| R11 | Preserve existing v1 | CD/0 changed-path audit; final `mneme/verify-all.sh` transcript placeholder | source untouched; final result `{{CD0_FINAL_V1_RESULT}}` | retained post-release rerun pending |
-| R12 | Generate and consume release corpus | corpus/manifest/differential placeholders below | pending | completion gate |
+| R11 | Preserve existing v1 | changed-path audit and retained post-release `mneme/verify-all.sh` transcript | source untouched; 6/6 checks passed | finite behavioral regression suite |
+| R12 | Generate and consume release corpus | 10,000 positives, 20,308 classified adversarials, 30,504 unlabelled mutations, 100,824 requests per codec | satisfied | deterministic corpus remains finite |
 
-## Executed results before release generation
+## Executed results
 
 Phase 0 mechanically reproduced all 17 Section 15 worked vectors. The corrected
 shared fixture set contains 22 positives and 71 negatives (66 octet inputs and
@@ -110,7 +109,12 @@ assertions, exercised four Python hash-seed processes and one CL runtime process
 with 1,024 concurrent observations, and retained summary SHA-256
 `88ed013ef71690b174627730c0c85ea51d5a28b61181bdeef08bfdd2d09a0a57`.
 
-That qualification explicitly did not consume or claim the release corpus.
+That bounded qualification explicitly did not consume or claim the release
+corpus. The later full release differential did: each codec handled 100,824
+requests in 50 batches, including 10,000 positive encodes/decodes, 20,000
+equality judgments, 20,308 classified adversarials, 20,012 sufficient-budget
+retries, and 30,504 mutation candidates. It reported zero warranted issues and
+retained empty stderr for all 100 codec batch processes.
 
 ## Provisional and N/A boundary
 
@@ -132,38 +136,36 @@ boundary.
 
 ## Release and final gate record
 
-Replace every field below directly from committed artifacts and transcripts:
-
 ```text
-generator correction commit: {{CD0_GENERATOR_CORRECTION_COMMIT}}
-release runner source commit: {{CD0_RELEASE_RUNNER_SOURCE_COMMIT}}
-manifest source revision: {{CD0_RELEASE_SOURCE_REVISION}}
-generator seed: {{CD0_RELEASE_SEED}}
-exact generator command: {{CD0_RELEASE_COMMAND}}
-release positives: {{CD0_RELEASE_POSITIVE_COUNT}}
-release classified negatives/adversarials: {{CD0_RELEASE_NEGATIVE_COUNT}}
-release unlabelled mutation candidates: {{CD0_RELEASE_MUTATION_COUNT}}
-corpus digest: {{CD0_RELEASE_CORPUS_SHA256}}
-manifest sha256: {{CD0_RELEASE_MANIFEST_SHA256}}
-corpus commit: {{CD0_RELEASE_CORPUS_COMMIT}}
-corpus tree: {{CD0_RELEASE_CORPUS_TREE}}
-determinism rerun: {{CD0_RELEASE_DETERMINISM_RESULT}}
-release differential commit: {{CD0_RELEASE_DIFFERENTIAL_COMMIT}}
-requests handled by Common Lisp: {{CD0_RELEASE_REQUESTS_CL}}
-requests handled by Python: {{CD0_RELEASE_REQUESTS_PY}}
-warranted disagreements: {{CD0_RELEASE_WARRANTED_DISAGREEMENTS}}
-provisional and N/A observations: {{CD0_RELEASE_PROVISIONAL_OBSERVATIONS}}
-release differential result: {{CD0_RELEASE_DIFFERENTIAL_RESULT}}
-release differential summary sha256: {{CD0_RELEASE_DIFFERENTIAL_SUMMARY_SHA256}}
-final qualification result: {{CD0_FINAL_QUALIFICATION_RESULT}}
-final qualification summary sha256: {{CD0_FINAL_QUALIFICATION_SUMMARY_SHA256}}
-final v1 result: {{CD0_FINAL_V1_RESULT}}
-final v1 transcript sha256: {{CD0_FINAL_V1_TRANSCRIPT_SHA256}}
-final changed-path audit: {{CD0_FINAL_CHANGED_PATH_AUDIT}}
-verified checkpoint commit: {{CD0_VERIFIED_CHECKPOINT_COMMIT}}
-verified checkpoint tree: {{CD0_VERIFIED_CHECKPOINT_TREE}}
-archive path: {{CD0_ARCHIVE_PATH}}
-archive sha256: {{CD0_ARCHIVE_SHA256}}
+generator correction commit: c826c61587953eb5252cdeb5c361d6c0fed573d6
+release runner source commit: aed2f393781456dfd495ac5d5822bdcd58bea711
+manifest source revision: aed2f393781456dfd495ac5d5822bdcd58bea711
+generator seed: 3439329281
+exact generator command: python3 canonical-datum/generator/generate_corpus.py --output-dir canonical-datum/generated/release-v0 --seed 3439329281 --positive-count 10000 --negative-count 20308 --mutation-sample-count 128 --truncation-max-document-octets 16
+release positives: 10,000
+release classified negatives/adversarials: 20,308 (20,000 byte-deletion-primary-minimal plus 308 coverage cases)
+release unlabelled mutation candidates: 30,504
+corpus digest: 83e35b3ac9641e06a6573fbec404149ca78130ca0a0ff9d550ff693dbdd819be
+manifest sha256: 2b3fee981a2db8f46a03909d8a7c1a505248875b5a8aa9686e0afcef0f8410c3
+corpus commit: 42a71429cfdafe63a989e3f44e706f828efab20e
+corpus tree: 947444fde812754ac8e04bb5a0fbe29f690df3d0
+determinism rerun: PASS; PYTHONHASHSEED=1 and 777 produced six byte-identical files
+release differential commit: 3aed0d991781ca7b58d53a4e08cd7747ed7e5726
+requests handled by Common Lisp: 100,824
+requests handled by Python: 100,824
+warranted disagreements: 0; mutation minimizations required: 0
+provisional and N/A observations: 5 provisional-stage plus 1 provisional-code release rows; 3 Common Lisp language-specific host rows N/A, not pass
+release differential result: PASS
+release differential summary sha256: 66b6122d4145e97c59b931d2e90be041e7094329b1a72df7586ac7bbf3799232
+final qualification result: PASS; same 100,824 requests per codec
+final qualification summary sha256: 5580c47e6bce23001e93b8259e6d9c6e432c6a25dcbcb25ee298821dd93fa585
+final v1 result: PASS; 6/6 mneme/verify-all.sh checks
+final v1 transcript sha256: da89c3155729b77f6ba8de6a219b5ebae5bd7c3bd25ee1406234331cf2f83c1c
+final changed-path audit: PASS; only canonical-datum/**, CANONICAL-DATUM-DIVERGENCES.md, and CD0-IMPLEMENTATION-LEDGER.md changed from the fetched base through the verified checkpoint
+verified checkpoint commit: 0fa772e946c50e27f64e9a435e0e69343a6cd5ea
+verified checkpoint tree: f2a2252a830d574d0b06f357754e683146fdb981
+archive path: canonical-datum/evidence/artifacts/cd0-release-2026-07-13.tar.gz
+archive sha256: recorded after packaging in the sibling .sha256 file and external handoff
 ```
 
 Completion requires the two codecs to agree on all warranted release-corpus
@@ -188,13 +190,13 @@ identity was selected or changed.
 ## Commit, archive, and remote handoff
 
 ```text
-cd0-common-lisp final commit: {{CD0_COMMON_LISP_FINAL_COMMIT}}
-cd0-python final commit: {{CD0_PYTHON_FINAL_COMMIT}}
-integration verified checkpoint: {{CD0_VERIFIED_CHECKPOINT_COMMIT}}
-origin Common Lisp ref: {{CD0_COMMON_LISP_REMOTE_REF}}
-origin Python ref: {{CD0_PYTHON_REMOTE_REF}}
-origin integration ref: {{CD0_INTEGRATION_REMOTE_REF}}
-push result: {{CD0_PUSH_RESULT}}
+cd0-common-lisp final commit: 45eb60ce5b80485a0b287feab53ed3b58643b1b0
+cd0-python final commit: 29d0946ad78347015b9f0c65a2f528f039fdca78
+integration verified checkpoint: 0fa772e946c50e27f64e9a435e0e69343a6cd5ea
+origin Common Lisp ref: refs/heads/cd0-common-lisp
+origin Python ref: refs/heads/cd0-python
+origin integration ref: refs/heads/cd0-integration
+push result: reported in the external handoff after the final branch-tip push
 ```
 
 Remote URL: `https://github.com/Wondermonger-daydreaming/latent-lisp.git`.

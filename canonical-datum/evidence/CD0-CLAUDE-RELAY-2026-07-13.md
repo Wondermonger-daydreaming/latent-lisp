@@ -1,14 +1,12 @@
 # Paste-ready Claude relay — Lisp+ Canonical Datum /0
 
-Relay status: **pre-release draft**. Do not paste as a completion handoff until
-all `{{CD0_*}}` fields are replaced from retained evidence.
+Relay status: **paste-ready implementation and conformance handoff**.
 
-Draft provenance: hashes for the specification, hand artifacts, and retained
-Phase-2/Phase-4 summaries were recomputed in the documentation worktree. Git
-objects, JSONL/status/input-kind counts, summary fields, and retained
-152-test/2,510-assertion lines were directly inspected. Other runtime outcomes
-are explicitly relayed from committed execution receipts and were not rerun by
-the documentation-only drafting step.
+Provenance: hashes for the specification, hand artifacts, release corpus,
+manifests, and retained summaries were recomputed during qualification or final
+packaging. Git objects, JSONL/status/input-kind counts, summary fields, and
+retained 152-test/2,510-assertion lines were directly inspected. Runtime claims
+remain bounded by the committed execution receipts and transcripts.
 
 ---
 
@@ -20,13 +18,15 @@ Repository:
 
 Remote branches after the authorized push:
 
-- Common Lisp: `{{CD0_COMMON_LISP_REMOTE_REF}}` at
-  `{{CD0_COMMON_LISP_FINAL_COMMIT}}`
-- Python: `{{CD0_PYTHON_REMOTE_REF}}` at `{{CD0_PYTHON_FINAL_COMMIT}}`
-- integration: `{{CD0_INTEGRATION_REMOTE_REF}}`; verified source/evidence
-  checkpoint `{{CD0_VERIFIED_CHECKPOINT_COMMIT}}`, tree
-  `{{CD0_VERIFIED_CHECKPOINT_TREE}}`
-- push observation: `{{CD0_PUSH_RESULT}}`
+- Common Lisp: `refs/heads/cd0-common-lisp` at
+  `45eb60ce5b80485a0b287feab53ed3b58643b1b0`
+- Python: `refs/heads/cd0-python` at
+  `29d0946ad78347015b9f0c65a2f528f039fdca78`
+- integration: `refs/heads/cd0-integration`; verified source/evidence checkpoint
+  `0fa772e946c50e27f64e9a435e0e69343a6cd5ea`, tree
+  `f2a2252a830d574d0b06f357754e683146fdb981`
+- push observation: supplied alongside this relay because the final remote tip
+  necessarily postdates the tracked relay file
 
 The branch tip containing the final documentation/archive envelope is reported
 outside this tracked relay to avoid a self-referential commit hash.
@@ -77,11 +77,11 @@ Common Lisp hardened branch: 45eb60ce5b80485a0b287feab53ed3b58643b1b0
 Python hardened branch: 29d0946ad78347015b9f0c65a2f528f039fdca78
 first differential convergence: fac17dd701c59f6da8eb2536dd022853b2e258fe
 bounded Phase-4 qualification: 7a0994f1ea176db1bffa61564dd23957a8c6216a
-generator correction: {{CD0_GENERATOR_CORRECTION_COMMIT}}
-release runner source: {{CD0_RELEASE_RUNNER_SOURCE_COMMIT}}
-release corpus commit/tree: {{CD0_RELEASE_CORPUS_COMMIT}} / {{CD0_RELEASE_CORPUS_TREE}}
-release differential commit: {{CD0_RELEASE_DIFFERENTIAL_COMMIT}}
-verified checkpoint commit/tree: {{CD0_VERIFIED_CHECKPOINT_COMMIT}} / {{CD0_VERIFIED_CHECKPOINT_TREE}}
+generator correction: c826c61587953eb5252cdeb5c361d6c0fed573d6
+release runner source: aed2f393781456dfd495ac5d5822bdcd58bea711
+release corpus commit/tree: 42a71429cfdafe63a989e3f44e706f828efab20e / 947444fde812754ac8e04bb5a0fbe29f690df3d0
+release differential commit: 3aed0d991781ca7b58d53a4e08cd7747ed7e5726
+verified checkpoint commit/tree: 0fa772e946c50e27f64e9a435e0e69343a6cd5ea / f2a2252a830d574d0b06f357754e683146fdb981
 ```
 
 The implemented conceptual surface in both languages is: construction of all
@@ -126,32 +126,33 @@ guards, and 1,024 Common Lisp concurrent observations. Summary SHA-256:
 88ed013ef71690b174627730c0c85ea51d5a28b61181bdeef08bfdd2d09a0a57
 ```
 
-Do not overread those counts. The Phase-4 run explicitly did not consume the
-release corpus. Its completion evidence is separately recorded as:
+Do not overread those counts. That bounded Phase-4 run explicitly did not consume
+the release corpus. The later release run did, with this retained evidence:
 
 ```text
-manifest source revision: {{CD0_RELEASE_SOURCE_REVISION}}
-generator seed: {{CD0_RELEASE_SEED}}
-exact command: {{CD0_RELEASE_COMMAND}}
-positive count: {{CD0_RELEASE_POSITIVE_COUNT}}
-classified negative/adversarial count: {{CD0_RELEASE_NEGATIVE_COUNT}}
-unlabelled mutation-candidate count: {{CD0_RELEASE_MUTATION_COUNT}}
-corpus digest: {{CD0_RELEASE_CORPUS_SHA256}}
-manifest sha256: {{CD0_RELEASE_MANIFEST_SHA256}}
-determinism rerun: {{CD0_RELEASE_DETERMINISM_RESULT}}
-requests handled by Common Lisp: {{CD0_RELEASE_REQUESTS_CL}}
-requests handled by Python: {{CD0_RELEASE_REQUESTS_PY}}
-warranted disagreements: {{CD0_RELEASE_WARRANTED_DISAGREEMENTS}}
-provisional/N/A observations: {{CD0_RELEASE_PROVISIONAL_OBSERVATIONS}}
-release result: {{CD0_RELEASE_DIFFERENTIAL_RESULT}}
-release summary sha256: {{CD0_RELEASE_DIFFERENTIAL_SUMMARY_SHA256}}
-final qualification: {{CD0_FINAL_QUALIFICATION_RESULT}}
-final qualification summary sha256: {{CD0_FINAL_QUALIFICATION_SUMMARY_SHA256}}
-final v1 gate: {{CD0_FINAL_V1_RESULT}}
-final v1 transcript sha256: {{CD0_FINAL_V1_TRANSCRIPT_SHA256}}
-final changed-path audit: {{CD0_FINAL_CHANGED_PATH_AUDIT}}
-archive: {{CD0_ARCHIVE_PATH}}
-archive sha256: {{CD0_ARCHIVE_SHA256}}
+manifest source revision: aed2f393781456dfd495ac5d5822bdcd58bea711
+generator seed: 3439329281
+exact command: python3 canonical-datum/generator/generate_corpus.py --output-dir canonical-datum/generated/release-v0 --seed 3439329281 --positive-count 10000 --negative-count 20308 --mutation-sample-count 128 --truncation-max-document-octets 16
+positive count: 10,000
+classified negative/adversarial count: 20,308 (20,000 demonstrated byte-deletion-primary-minimal plus 308 coverage cases)
+unlabelled mutation-candidate count: 30,504
+sufficient-budget retries: 20,012
+corpus digest: 83e35b3ac9641e06a6573fbec404149ca78130ca0a0ff9d550ff693dbdd819be
+manifest sha256: 2b3fee981a2db8f46a03909d8a7c1a505248875b5a8aa9686e0afcef0f8410c3
+determinism rerun: PASS; PYTHONHASHSEED=1 and 777 produced all six files byte-identically
+requests handled by Common Lisp: 100,824 in 50 batches
+requests handled by Python: 100,824 in 50 batches
+warranted disagreements: 0; mutation minimizations required: 0
+provisional/N/A observations: 5 provisional-stage plus 1 provisional-code release rows; 3 Common Lisp language-specific host rows N/A, not pass
+release result: PASS; all 100 stderr files empty
+release summary sha256: 66b6122d4145e97c59b931d2e90be041e7094329b1a72df7586ac7bbf3799232
+final qualification: PASS; same 100,824 requests per codec
+final qualification summary sha256: 5580c47e6bce23001e93b8259e6d9c6e432c6a25dcbcb25ee298821dd93fa585
+final v1 gate: PASS; 6/6 mneme/verify-all.sh checks
+final v1 transcript sha256: da89c3155729b77f6ba8de6a219b5ebae5bd7c3bd25ee1406234331cf2f83c1c
+final changed-path audit: PASS; only canonical-datum/**, CANONICAL-DATUM-DIVERGENCES.md, and CD0-IMPLEMENTATION-LEDGER.md changed through the verified checkpoint
+archive: canonical-datum/evidence/artifacts/cd0-release-2026-07-13.tar.gz
+archive sha256: see the sibling .sha256 file and the external handoff
 ```
 
 Treat `CANONICAL-DATUM-DIVERGENCES.md` as an append-only open-questions ledger.
@@ -228,8 +229,8 @@ canonical-datum/evidence/PYTHON-SEED-SOURCE-ACCESS.md
 canonical-datum/evidence/INTEGRATION-SOURCE-ACCESS.md
 canonical-datum/evidence/INTEGRATION-CONVERGENCE-VERIFICATION.md
 canonical-datum/qualification/QUALIFICATION-VERIFICATION.md
-{{CD0_RELEASE_RECEIPT_PATH}}
-{{CD0_FINAL_VERIFICATION_TRANSCRIPT_PATH}}
+canonical-datum/evidence/RELEASE-CORPUS-VERIFICATION-2026-07-13.md
+canonical-datum/evidence/FINAL-VERIFICATION-TRANSCRIPT-2026-07-13.md
 ```
 
 Known portability/non-claim boundary: no CCL, ECL, CLISP, ABCL, Roswell, PyPy,
