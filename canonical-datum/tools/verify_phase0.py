@@ -258,10 +258,14 @@ def check_positive(
         require(decoded_bytes == expected, f"positive row {index}: expected_decoded encodes differently")
 
     classes: dict[str, set[str]] = {}
+    classes_by_hex: dict[str, set[str]] = {}
     for row in rows:
         classes.setdefault(row["equality_class"], set()).add(row["canonical_hex"])
+        classes_by_hex.setdefault(row["canonical_hex"], set()).add(row["equality_class"])
     require(all(len(hexes) == 1 for hexes in classes.values()),
             "one equality class contains different canonical documents")
+    require(all(len(class_names) == 1 for class_names in classes_by_hex.values()),
+            "one canonical document is split across equality classes")
 
     by_id = {row["id"]: row for row in rows}
     require(distinct.get("schema") == "cd0-distinct-pairs/v1", "distinct-pair manifest schema")
@@ -402,11 +406,18 @@ def main() -> int:
         lambda: check_positive(bad_positives, spec_text, budget_names, required_limits, distinct),
         "positive verifier accepted reversed expected_decoded record order",
     )
+    split_classes = deepcopy(positives)
+    split_target = next(row for row in split_classes if row["id"] == "cd0-pos-boundary-zigzag-128")
+    split_target["equality_class"] = "int:64-wrong-second-class"
+    expect_assertion(
+        lambda: check_positive(split_classes, spec_text, budget_names, required_limits, distinct),
+        "positive verifier accepted equal bytes split across equality classes",
+    )
     print(f"spec sha256: {digest}")
     print("worked vectors: 17/17 exact and grammar-derived encodings agree")
     print(f"additional positives: {len(positives) - 17}; equality classes and distinct pairs valid")
     print(f"negative vectors: {len(negatives)} schema-valid and equal to reviewed finite manifest pin")
-    print("mutation self-tests: wrong failure code and reversed decoded record order rejected")
+    print("mutation self-tests: wrong failure code, reversed decoded record order, and split equality class rejected")
     print("type tags: 256/256 classified; all 10 assigned tags exercised; reserved/forbidden boundaries present")
     for path in (POSITIVE, NEGATIVE, DISTINCT, BUDGETS, SCHEMA):
         print(f"sha256 {hashlib.sha256(path.read_bytes()).hexdigest()}  {path.relative_to(ROOT)}")
