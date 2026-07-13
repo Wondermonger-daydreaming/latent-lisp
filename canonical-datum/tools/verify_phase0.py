@@ -30,8 +30,10 @@ NEGATIVE = ROOT / "canonical-datum/vectors/cd0-negative.jsonl"
 BUDGETS = ROOT / "canonical-datum/vectors/cd0-budgets.json"
 SCHEMA = ROOT / "canonical-datum/schema/cd0-fixtures.schema.json"
 DISTINCT = ROOT / "canonical-datum/vectors/cd0-distinct-pairs.json"
+ERRATA_VECTORS = ROOT / "canonical-datum/vectors/cd0-errata-0.1.json"
 EXPECTED_SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
 EXPECTED_NEGATIVE_MANIFEST_SHA256 = "d491d83e8b27d3224567f1948e90b92db2ea02689c464fe6144c69bb2cb851a6"
+EXPECTED_ERRATA_VECTORS_SHA256 = "55725e14e763075a8866be9da8be9f8647b5b06803e1fea6f661068d87651ddc"
 MAGIC_VERSION = bytes.fromhex("4c50434400")
 HEX_RE = re.compile(r"^(?:[0-9a-f]{2})*$")
 DECIMAL_RE = re.compile(r"^(?:0|-?[1-9][0-9]*)$")
@@ -371,6 +373,36 @@ def check_negative(rows: list[dict[str, Any]], budget_names: set[str], limits: s
         require(f"cd0-neg-forbidden-{tag:02x}" in ids, f"missing forbidden boundary {tag:02x}")
 
 
+def check_errata_vectors(
+    manifest: dict[str, Any], budget_names: set[str], limits: set[str]
+) -> None:
+    cases = manifest["cases"]
+    require(len(cases) == 37, f"Errata 0.1 case count is {len(cases)}, expected 37")
+    require(len({case["id"] for case in cases}) == len(cases), "errata case IDs are not unique")
+    require({case["adjudication"] for case in cases} == {f"A{index}" for index in range(1, 10)},
+            "errata vector coverage does not span A1-A9")
+    for index, case in enumerate(cases, 1):
+        require(case["budget"] in budget_names, f"errata case {index}: unknown budget")
+        require(set(case.get("overrides", {})) <= limits, f"errata case {index}: bad override")
+        operation = case["op"]
+        require((operation == "decode-only") == ("input_hex" in case),
+                f"errata case {index}: decode input shape")
+        require((operation == "construction-only") == ("construction" in case),
+                f"errata case {index}: construction input shape")
+        require((operation in {"fixture-import-only", "runtime-encode"}) == ("ast" in case),
+                f"errata case {index}: AST input shape")
+        expected = case["expected"]
+        if expected["status"] == "failure":
+            failure = expected["failure"]
+            require(failure["code"] in FAILURE_CODES_BY_CATEGORY[failure["category"]],
+                    f"errata case {index}: failure code/category")
+            require(failure["stage"] in STAGES, f"errata case {index}: failure stage")
+
+    actual_digest = hashlib.sha256(ERRATA_VECTORS.read_bytes()).hexdigest()
+    require(actual_digest == EXPECTED_ERRATA_VECTORS_SHA256,
+            f"errata vector manifest differs from pin: {actual_digest}")
+
+
 def expect_assertion(action: Any, message: str) -> None:
     try:
         action()
@@ -395,6 +427,11 @@ def main() -> int:
         "$defs": schema["$defs"],
         "$ref": "#/$defs/distinctPairManifest",
     })
+    errata_validator = Draft202012Validator({
+        "$schema": schema["$schema"],
+        "$defs": schema["$defs"],
+        "$ref": "#/$defs/errataManifest",
+    })
     budget_doc = json.loads(BUDGETS.read_text(encoding="utf-8"))
     budget_names = set(budget_doc.get("budgets", {}))
     required_limits = set(budget_doc.get("limits", []))
@@ -412,6 +449,7 @@ def main() -> int:
     positives = read_jsonl(POSITIVE)
     negatives = read_jsonl(NEGATIVE)
     distinct = json.loads(DISTINCT.read_text(encoding="utf-8"))
+    errata_vectors = json.loads(ERRATA_VECTORS.read_text(encoding="utf-8"))
     for index, row in enumerate(positives, 1):
         errors = sorted(row_validator.iter_errors(row), key=lambda error: list(error.path))
         require(not errors, f"positive row {index}: JSON Schema: {errors[0].message if errors else ''}")
@@ -421,9 +459,13 @@ def main() -> int:
     distinct_errors = list(distinct_validator.iter_errors(distinct))
     require(not distinct_errors,
             f"distinct-pair manifest JSON Schema: {distinct_errors[0].message if distinct_errors else ''}")
+    errata_errors = list(errata_validator.iter_errors(errata_vectors))
+    require(not errata_errors,
+            f"errata manifest JSON Schema: {errata_errors[0].message if errata_errors else ''}")
 
     check_positive(positives, spec_text, budget_names, required_limits, distinct)
     check_negative(negatives, budget_names, required_limits)
+    check_errata_vectors(errata_vectors, budget_names, required_limits)
 
     # Mutation self-tests guard the two underchecks found by independent audit.
     bad_negatives = deepcopy(negatives)
@@ -452,9 +494,10 @@ def main() -> int:
     print(f"additional positives: {len(positives) - 17}; equality classes and distinct pairs valid")
     print("negative vectors: 71 classified = 66 octet + 5 host; all complete normative triples")
     print("execution accounting contract: Python 71 executed; Common Lisp 68 executed + 3 N/A; 0 failures; 0 skips")
+    print("promoted Errata 0.1 operation vectors: 37 complete A1-A9 cases")
     print("mutation self-tests: wrong failure code, reversed decoded record order, and split equality class rejected")
     print("type tags: 256/256 classified; all 10 assigned tags exercised; reserved/forbidden boundaries present")
-    for path in (POSITIVE, NEGATIVE, DISTINCT, BUDGETS, SCHEMA):
+    for path in (POSITIVE, NEGATIVE, ERRATA_VECTORS, DISTINCT, BUDGETS, SCHEMA):
         print(f"sha256 {hashlib.sha256(path.read_bytes()).hexdigest()}  {path.relative_to(ROOT)}")
     return 0
 
