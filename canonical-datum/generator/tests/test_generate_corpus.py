@@ -149,9 +149,16 @@ class GeneratedCorpusTests(unittest.TestCase):
         self.assertEqual(self.manifest["counts"]["positive"], 384)
         self.assertEqual(self.manifest["counts"]["classified_negative"], 640)
         self.assertEqual(self.manifest["counts"]["classified_adversarial_total"], 640)
+        self.assertEqual(self.manifest["counts"]["authored_and_host_coverage_negative"], 308)
+        self.assertEqual(self.manifest["counts"]["demonstrated_primary_minimal_negative"], 332)
         self.assertFalse(self.manifest["release_thresholds"]["qualifies"])
         self.assertTrue(self.manifest["release_thresholds"]["allow_small_test_mode"])
+        self.assertEqual(self.manifest["release_thresholds"]["adversarial_total_minimum"], 20_000)
+        self.assertEqual(self.manifest["release_thresholds"]["demonstrated_primary_minimal_minimum"], 20_000)
+        self.assertEqual(self.manifest["release_thresholds"]["preferred_negative_count"], 20_308)
+        self.assertEqual(self.manifest["release_thresholds"]["observed_demonstrated_primary_minimal"], 332)
         self.assertIn("provisional", self.manifest["release_thresholds"]["count_scope"])
+        self.assertEqual(self.manifest["generator_version"], "cd0-corpus-generator/3")
 
     def test_shared_positive_and_negative_fixture_schema(self) -> None:
         validator = Draft202012Validator(SCHEMA)
@@ -328,6 +335,12 @@ class GeneratedCorpusTests(unittest.TestCase):
             len(compact),
             self.manifest["counts"]["negative_by_minimization_kind"]["byte-deletion-primary-minimal"],
         )
+        self.assertEqual(
+            len(compact), self.manifest["negative_minimization"]["demonstrated_primary_minimal_count"]
+        )
+        self.assertEqual(
+            self.manifest["negative_minimization"]["demonstrated_primary_minimal_threshold"], 20_000
+        )
         for derivation in compact:
             row = negative_by_id[derivation["id"]]
             source = bytes.fromhex(row["input_hex"])
@@ -403,6 +416,34 @@ class GeneratedCorpusTests(unittest.TestCase):
         self.assertEqual(completed.returncode, 2)
         self.assertIn("at least 10000", completed.stderr)
         self.assertFalse(refused.exists())
+
+    def test_twenty_thousand_total_refuses_without_demonstrated_primary_minimum(self) -> None:
+        refused = Path(self.temporary.name) / "primary-minimum-refused"
+        command = [
+            sys.executable,
+            str(SCRIPT),
+            "--repo-root",
+            str(ROOT),
+            "--output-dir",
+            str(refused),
+            "--positive-count",
+            "10000",
+            "--negative-count",
+            "20000",
+        ]
+        completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("at least 20308", completed.stderr)
+        self.assertIn("20000 demonstrated byte-deletion-primary-minimal", completed.stderr)
+        self.assertFalse(refused.exists())
+
+    def test_release_qualification_has_independent_total_and_primary_minimums(self) -> None:
+        self.assertFalse(GENERATOR.release_qualifies(9_999, 20_308, 20_000))
+        self.assertFalse(GENERATOR.release_qualifies(10_000, 19_999, 20_000))
+        self.assertFalse(GENERATOR.release_qualifies(10_000, 20_308, 19_999))
+        self.assertTrue(GENERATOR.release_qualifies(10_000, 20_308, 20_000))
+        defaults = GENERATOR.parser().parse_args(["--output-dir", "/tmp/cd0-default-count-probe"])
+        self.assertEqual(defaults.negative_count, 20_308)
 
     def test_dirty_source_override_is_small_mode_only(self) -> None:
         refused = Path(self.temporary.name) / "dirty-override-refused"
