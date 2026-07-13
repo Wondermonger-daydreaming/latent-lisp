@@ -1,0 +1,18 @@
+Lisp+ Canonical Datum /0 release archive source
+
+source commit: 169785744afd26d7580f08c6bce0ee2e569d77a6
+source tree: fd94182a0973601bed1c30d7ed47ef26b555a443
+archive prefix: cd0-release-2026-07-13/
+archive members: 407
+archive bytes: 6861174
+archive sha256: af65596713533b29d90b28a75881de9473adec7a5dc91af9bd49830d52001949
+reproducibility check: PASS; two independent git archive invocations were byte-identical
+
+git archive scope:
+  CANONICAL-DATUM-DIVERGENCES.md
+  CD0-IMPLEMENTATION-LEDGER.md
+  canonical-datum
+
+The archive contains the committed implementation/evidence snapshot, not Git
+history. Its own binary and sibling metadata are necessarily outside that
+snapshot to avoid recursive archive inclusion.
