@@ -50,7 +50,7 @@ ERRATA_CASE_COUNTS = {
     "A6": 2,
     "A7": 1,
     "A8": 6,
-    "A9": 5,
+    "A9": 7,
 }
 QUALIFICATION_BASE_REVISION = "fac17dd701c59f6da8eb2536dd022853b2e258fe"
 RANDOM_SEED = 0xCD0004
@@ -767,7 +767,7 @@ def main(argv: list[str] | None = None) -> int:
         raise QualificationFailure("reviewed golden differential did not pass")
     golden_counts = golden_summary.get("counts", {})
     if golden_counts.get("errata_vectors") != sum(ERRATA_CASE_COUNTS.values()):
-        raise QualificationFailure("golden differential did not execute all 37 errata vectors")
+        raise QualificationFailure("golden differential did not execute all 39 errata vectors")
     observed_errata_counts = {
         adjudication: golden_counts.get(f"errata_{adjudication.lower()}", 0)
         for adjudication in ERRATA_CASE_COUNTS
@@ -884,7 +884,7 @@ def main(argv: list[str] | None = None) -> int:
             "Common Lisp language-specific host descriptors: "
             f"{common_lisp_host_na} not applicable (not passes)"
         )
-        print("A1-A9: 37 promoted vectors executed with complete adjudicated expectations")
+        print("A1-A9: 39 promoted vectors executed with complete adjudicated expectations")
         print("Phase-3 10k/20k corpus: neither consumed nor claimed")
     return 0
 

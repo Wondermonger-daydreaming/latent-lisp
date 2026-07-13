@@ -57,7 +57,7 @@ ERRATA_CASE_COUNTS = {
     "A6": 2,
     "A7": 1,
     "A8": 6,
-    "A9": 5,
+    "A9": 7,
 }
 DEFAULT_SEED = 0xCD000001
 RELEASE_POSITIVE_MINIMUM = 10_000

@@ -117,7 +117,7 @@ ERRATA_CASE_COUNTS = {
     "A6": 2,
     "A7": 1,
     "A8": 6,
-    "A9": 5,
+    "A9": 7,
 }
 OPTIONAL_CL_IMPORTERS = {
     "symbol-to-identifier/v0",
@@ -1946,7 +1946,7 @@ def run(
         "batch_artifact_ledger": coordinator.batch_ledger,
         "issues": report.issue_summary(),
         "residual_boundaries": [
-            "A1-A9 are closed by the pinned ruling and Errata 0.1; all 37 promoted cases are compared on their complete adjudicated expectations.",
+            "A1-A9 are closed by the pinned ruling and Errata 0.1; all 39 promoted cases are compared on their complete adjudicated expectations.",
             "Unclassified mutations receive no expected triple; any disagreement requires minimization.",
             "Seven host-property scenarios remain owned by Phase-4 qualification or instrumentation.",
             "All fourteen generated resource-boundary descriptors remain metadata here; the promoted operation vectors and Phase-4 qualification execute adjudicated boundaries.",

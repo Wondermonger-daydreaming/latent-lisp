@@ -145,7 +145,7 @@ class GeneratedCorpusTests(unittest.TestCase):
             infrastructure["promoted_errata_vectors"]["cases_by_adjudication"],
             GENERATOR.ERRATA_CASE_COUNTS,
         )
-        self.assertEqual(infrastructure["promoted_errata_vectors"]["classified_cases"], 37)
+        self.assertEqual(infrastructure["promoted_errata_vectors"]["classified_cases"], 39)
         observed = subprocess.run(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True
         ).stdout.strip()

@@ -120,7 +120,7 @@ class GeneratedCorpusFixture(unittest.TestCase):
             manifest_counts["unclassified_mutation_candidates"],
             counts["unclassified_mutation_candidates"],
         )
-        self.assertEqual(37, counts["promoted_errata_vectors"])
+        self.assertEqual(39, counts["promoted_errata_vectors"])
         self.assertEqual(
             runner.ERRATA_CASE_COUNTS,
             summary["promoted_errata_execution"]["by_adjudication"],

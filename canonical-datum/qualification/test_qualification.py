@@ -91,7 +91,7 @@ class ManifestTests(unittest.TestCase):
             self.assertEqual(self.metadata[request_id]["expected"]["stage"], "type-tag")
 
     def test_normative_inputs_and_errata_counts_are_pinned(self) -> None:
-        self.assertEqual(sum(qualification.ERRATA_CASE_COUNTS.values()), 37)
+        self.assertEqual(sum(qualification.ERRATA_CASE_COUNTS.values()), 39)
         self.assertEqual(set(qualification.ERRATA_CASE_COUNTS), {f"A{i}" for i in range(1, 10)})
         for record in qualification.EXPECTED_NORMATIVE_SHA256.values():
             self.assertEqual(len(record["sha256"]), 64)

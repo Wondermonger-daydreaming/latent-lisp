@@ -97,7 +97,7 @@ def compare_one(
         "negative": 71,
         "equality": 325,
         "regression": 7,
-        "errata": 37,
+        "errata": 39,
     }
     if errata_counts != expected_errata:
         issues.append(f"{implementation}: errata request counts {errata_counts} != {expected_errata}")

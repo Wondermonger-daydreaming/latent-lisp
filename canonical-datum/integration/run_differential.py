@@ -580,8 +580,8 @@ def main(argv: list[str] | None = None) -> int:
     if errata_document.get("schema") != "cd0-errata-vectors/0.1":
         raise DifferentialFailure("Errata 0.1 vector manifest schema mismatch")
     errata_cases = errata_document.get("cases")
-    if type(errata_cases) is not list or len(errata_cases) != 37:
-        raise DifferentialFailure("Errata 0.1 vector manifest must contain 37 cases")
+    if type(errata_cases) is not list or len(errata_cases) != 39:
+        raise DifferentialFailure("Errata 0.1 vector manifest must contain 39 cases")
     requests, metadata = build_requests(
         positives, negatives, budgets, regressions, errata_cases
     )
@@ -689,7 +689,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(
             "promoted Errata 0.1 operation vectors: "
-            f"{counts.get('errata_vectors', 0)}/37"
+            f"{counts.get('errata_vectors', 0)}/39"
         )
         for label, process in summary["processes"].items():
             print(
