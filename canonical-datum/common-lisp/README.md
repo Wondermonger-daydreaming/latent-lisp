@@ -5,9 +5,7 @@ nine-family CD/0 algebra in `mneme/spec/CANONICAL-DATUM-SPEC.md`, as qualified b
 `CANONICAL-DATUM-SPEC-ERRATA-0.1.md`. It neither loads nor modifies the v1
 runtime. SBCL 2.4.6 is the seed qualification host.
 
-“Independently seeded implementations under shared normative infrastructure,
-with procedural—not OS-enforced—isolation, attested by the implementers and
-corroborated at content tier.”
+“Independently seeded implementations under shared normative infrastructure, with procedural—not OS-enforced—isolation, attested by the implementers and corroborated at content tier.”
 
 The Common Lisp independence anchor is seed commit
 `e6f3b579742f5fcff0d82477d07f8c0c9ee34df3`, not this corrected branch tip.
