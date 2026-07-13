@@ -1,11 +1,11 @@
 # CD/0 Errata 0.1 verification transcript
 
-Date: 2026-07-13  
+Date: 2026-07-13
 Vantage: local WSL2 worktree
-`/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata`  
+`/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata`
 Run source checkpoint: commit
 `59fdd5b65a2ab44f98ec91c0b1464650cf18cfb3`, tree
-`bb185ab2e0adeacec6c390745df8d0b6422340db`  
+`bb185ab2e0adeacec6c390745df8d0b6422340db`
 Status: all required local verification categories passed. Archive reproduction,
 targeted review, and remote read-back have separate receipts because those facts
 occur after this source checkpoint.
