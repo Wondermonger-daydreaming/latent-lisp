@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Phase-0 fixture audit for CD/0.
+"""Finite Phase-0 fixture audit for CD/0.
 
 This is deliberately not a codec: it has no document decoder, runtime datum
-types, resource enforcement, or failure classifier.  It independently encodes
-the fixture AST under Section 15, extracts the worked hexadecimal rows from the
-pinned specification, and checks fixture metadata/coverage.
+types, or resource enforcement.  It independently encodes fixture ASTs under
+Section 15, extracts the worked hexadecimal rows from the pinned specification,
+validates the shared JSON Schema, and pins the independently reviewed compact
+negative manifest.  The manifest pin detects fixture drift; it is not an
+independent decoder oracle and the evidence receipt states that boundary.
 """
 
 from __future__ import annotations
@@ -14,8 +16,11 @@ import json
 import math
 import re
 import sys
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
+
+from jsonschema import Draft202012Validator
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -24,10 +29,58 @@ POSITIVE = ROOT / "canonical-datum/vectors/cd0-positive.jsonl"
 NEGATIVE = ROOT / "canonical-datum/vectors/cd0-negative.jsonl"
 BUDGETS = ROOT / "canonical-datum/vectors/cd0-budgets.json"
 SCHEMA = ROOT / "canonical-datum/schema/cd0-fixtures.schema.json"
+DISTINCT = ROOT / "canonical-datum/vectors/cd0-distinct-pairs.json"
 EXPECTED_SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+EXPECTED_NEGATIVE_MANIFEST_SHA256 = "6000f52e1559ea579d866eca25fd25e443f07ac35cc65d3ff7166499e64de4a5"
 MAGIC_VERSION = bytes.fromhex("4c50434400")
 HEX_RE = re.compile(r"^(?:[0-9a-f]{2})*$")
-DECIMAL_RE = re.compile(r"^-?(?:0|[1-9][0-9]*)$")
+DECIMAL_RE = re.compile(r"^(?:0|-?[1-9][0-9]*)$")
+
+FAILURE_CODES_BY_CATEGORY = {
+    "InvalidCanonicalGrammar": {
+        "InvalidMagic", "InvalidTypeTag", "ReservedTypeTag", "TruncatedInput",
+        "TrailingBytes", "InvalidUTF8", "ForbiddenUnicodeScalar",
+        "ZeroDenominator", "EmptyIdentifierSegment", "MissingIdentifierPath",
+        "RecordKeyNotIdentifier", "DuplicateRecordField",
+    },
+    "NoncanonicalEncoding": {
+        "NonminimalVersionEncoding", "NonminimalIntegerEncoding",
+        "NonminimalRationalComponentEncoding", "OverlongLengthEncoding",
+        "OverlongCountEncoding", "ZeroRationalEncoding",
+        "IntegralRationalEncoding", "UnreducedRational",
+        "NoncanonicalFieldOrder",
+    },
+    "UnsupportedFormat": {
+        "UnknownVersion", "UnsupportedFutureVersion", "UnsupportedExtensionTag",
+    },
+    "ResourceRefusal": {
+        "ExcessiveInputLength", "ExcessiveOutputLength", "ExcessiveDeclaredLength",
+        "ExcessiveContainerCount", "ExcessiveIdentifierSegments",
+        "ExcessiveNesting", "IntegerBudgetExceeded", "VarintBudgetExceeded",
+        "NodeBudgetExceeded", "AggregatePayloadBudgetExceeded",
+        "RecordKeyWorkBudgetExceeded", "AllocationRefused",
+    },
+    "UnsupportedHostInput": {
+        "UnsupportedHostType", "CyclicHostInput", "ImproperHostList",
+        "AmbiguousIdentifier", "InvalidHostUnicode",
+        "NegativeDenominatorHostRational",
+    },
+    "PrivilegedRestorationAttempt": {
+        "ForbiddenPrivilegedTag", "PrivilegedHostValue",
+        "PrivilegedRestorationRequested",
+    },
+    "InternalInvariantFailure": {
+        "EncoderInvariantFailure", "DecoderInvariantFailure", "CachedOctetsMismatch",
+    },
+}
+
+STAGES = {
+    "input-budget", "magic", "version-varint", "version-selection", "type-tag",
+    "integer-payload", "rational-payload", "length", "count", "utf8",
+    "identifier", "record-key", "record-order", "container-content",
+    "end-of-input", "host-import", "encode-ordering", "allocation",
+    "cache-check", "internal",
+}
 
 
 def require(condition: bool, message: str) -> None:
@@ -159,36 +212,102 @@ def worked_hex_from_spec(text: str) -> list[str]:
     return result
 
 
-def check_positive(rows: list[dict[str, Any]], spec_text: str, budget_names: set[str]) -> None:
-    require(len(rows) == 17, f"positive fixture count is {len(rows)}, expected exactly 17")
-    require(len({row.get('id') for row in rows}) == 17, "positive IDs are not unique")
+def require_canonical_decoded_record_order(ast: dict[str, Any], where: str) -> None:
+    """Expected-decoded records are fixture views and must already be canonical."""
+    tag = ast.get("t")
+    if tag == "record":
+        fields = ast["fields"]
+        keys = [encode_identifier(field["key"], f"{where}.fields[{index}].key")
+                for index, field in enumerate(fields)]
+        require(keys == sorted(keys), f"{where}: record fields are not in canonical key order")
+        require(len(keys) == len(set(keys)), f"{where}: duplicate record key")
+        for index, field in enumerate(fields):
+            require_canonical_decoded_record_order(field["value"], f"{where}.fields[{index}].value")
+    elif tag == "seq":
+        for index, item in enumerate(ast["items"]):
+            require_canonical_decoded_record_order(item, f"{where}.items[{index}]")
+
+
+def validate_budget_reference(value: Any, budget_names: set[str], limits: set[str], where: str) -> None:
+    if isinstance(value, str):
+        require(value in budget_names, f"{where}: unknown named budget {value!r}")
+        return
+    require(isinstance(value, dict) and set(value) == limits, f"{where}: incomplete explicit budget")
+    for key, item in value.items():
+        require(type(item) is int and item >= 0, f"{where}.{key}: expected nonnegative integer")
+
+
+def check_positive(
+    rows: list[dict[str, Any]], spec_text: str, budget_names: set[str],
+    limits: set[str], distinct: dict[str, Any],
+) -> None:
+    require(len(rows) >= 17, f"positive fixture count is {len(rows)}, expected at least 17")
+    require(len({row.get('id') for row in rows}) == len(rows), "positive IDs are not unique")
     worked = worked_hex_from_spec(spec_text)
     require(len(worked) == 17, f"extracted {len(worked)} worked spec rows, expected 17")
-    fixture_hex = [row.get("canonical_hex") for row in rows]
+    fixture_hex = [row.get("canonical_hex") for row in rows[:17]]
     require(fixture_hex == worked, "positive fixture order/hex differs from Section 15.15")
     for index, row in enumerate(rows, 1):
         require(row.get("datum_version") == 0, f"positive row {index}: datum_version")
-        require(row.get("budget") in budget_names, f"positive row {index}: unknown budget")
+        validate_budget_reference(row.get("budget"), budget_names, limits, f"positive row {index}.budget")
         require(isinstance(row.get("notes"), list), f"positive row {index}: notes")
         expected = MAGIC_VERSION + encode_value(row["abstract"], f"positive[{index}].abstract")
         require(expected.hex() == row["canonical_hex"], f"positive row {index}: grammar-derived encoding mismatch")
+        require_canonical_decoded_record_order(row["expected_decoded"], f"positive[{index}].expected_decoded")
         decoded_bytes = MAGIC_VERSION + encode_value(row["expected_decoded"], f"positive[{index}].expected_decoded")
         require(decoded_bytes == expected, f"positive row {index}: expected_decoded encodes differently")
 
+    classes: dict[str, set[str]] = {}
+    for row in rows:
+        classes.setdefault(row["equality_class"], set()).add(row["canonical_hex"])
+    require(all(len(hexes) == 1 for hexes in classes.values()),
+            "one equality class contains different canonical documents")
 
-def check_negative(rows: list[dict[str, Any]], budget_names: set[str]) -> None:
+    by_id = {row["id"]: row for row in rows}
+    require(distinct.get("schema") == "cd0-distinct-pairs/v1", "distinct-pair manifest schema")
+    for index, pair in enumerate(distinct.get("pairs", []), 1):
+        left = by_id.get(pair.get("left"))
+        right = by_id.get(pair.get("right"))
+        require(left is not None and right is not None, f"distinct pair {index}: unknown vector ID")
+        require(left["equality_class"] != right["equality_class"], f"distinct pair {index}: same equality class")
+        require(left["canonical_hex"] != right["canonical_hex"], f"distinct pair {index}: same canonical bytes")
+
+
+def canonical_jsonl_digest(rows: list[dict[str, Any]]) -> str:
+    payload = "".join(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n" for row in rows)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def check_negative(rows: list[dict[str, Any]], budget_names: set[str], limits: set[str]) -> None:
     require(len({row.get('id') for row in rows}) == len(rows), "negative IDs are not unique")
-    categories = {"InvalidCanonicalGrammar", "NoncanonicalEncoding", "UnsupportedFormat", "ResourceRefusal", "PrivilegedRestorationAttempt"}
-    stages = {"input-budget", "magic", "version-varint", "version-selection", "type-tag", "integer-payload", "rational-payload", "length", "count", "utf8", "identifier", "record-key", "record-order", "end-of-input"}
     for index, row in enumerate(rows, 1):
-        require(row.get("input_kind") == "octets", f"negative row {index}: Phase 0 corpus is octet-only")
-        require(isinstance(row.get("input_hex"), str) and HEX_RE.fullmatch(row["input_hex"]), f"negative row {index}: input_hex")
-        require(row.get("budget") in budget_names, f"negative row {index}: unknown budget")
+        kind = row.get("input_kind")
+        require(kind in {"octets", "host"}, f"negative row {index}: input_kind")
+        if kind == "octets":
+            require(isinstance(row.get("input_hex"), str) and HEX_RE.fullmatch(row["input_hex"]),
+                    f"negative row {index}: input_hex")
+            require("host_input" not in row and "importer" not in row,
+                    f"negative row {index}: octet/host fields mixed")
+        else:
+            require(isinstance(row.get("host_input"), dict) and isinstance(row.get("importer"), str),
+                    f"negative row {index}: host descriptor")
+            require("input_hex" not in row, f"negative row {index}: host row has input_hex")
+        validate_budget_reference(row.get("budget"), budget_names, limits, f"negative row {index}.budget")
+        if "retry_budget" in row:
+            validate_budget_reference(row["retry_budget"], budget_names, limits,
+                                      f"negative row {index}.retry_budget")
         failure = row.get("expected_failure")
         require(isinstance(failure, dict) and set(failure) == {"category", "code", "stage"}, f"negative row {index}: failure shape")
-        require(failure["category"] in categories and failure["stage"] in stages, f"negative row {index}: failure vocabulary")
+        require(failure["category"] in FAILURE_CODES_BY_CATEGORY, f"negative row {index}: failure category")
+        require(failure["code"] in FAILURE_CODES_BY_CATEGORY[failure["category"]],
+                f"negative row {index}: code/category mismatch")
+        require(failure["stage"] in STAGES, f"negative row {index}: failure stage")
         require(row.get("resource_state_unchanged") is True, f"negative row {index}: state assertion")
         require(row.get("partial_output_forbidden") is True, f"negative row {index}: partial-output assertion")
+
+    actual_digest = canonical_jsonl_digest(rows)
+    require(actual_digest == EXPECTED_NEGATIVE_MANIFEST_SHA256,
+            f"negative manifest differs from independently reviewed pin: {actual_digest}")
 
     ids = {row["id"] for row in rows}
     required_fragments = [
@@ -215,6 +334,14 @@ def check_negative(rows: list[dict[str, Any]], budget_names: set[str]) -> None:
         require(f"cd0-neg-forbidden-{tag:02x}" in ids, f"missing forbidden boundary {tag:02x}")
 
 
+def expect_assertion(action: Any, message: str) -> None:
+    try:
+        action()
+    except AssertionError:
+        return
+    raise AssertionError(message)
+
+
 def main() -> int:
     spec_bytes = SPEC.read_bytes()
     digest = hashlib.sha256(spec_bytes).hexdigest()
@@ -223,24 +350,65 @@ def main() -> int:
     schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
     require(schema.get("$schema") == "https://json-schema.org/draft/2020-12/schema", "fixture schema draft")
     require({"datum", "failure", "positive", "negative"} <= set(schema.get("$defs", {})), "fixture schema definitions")
+    Draft202012Validator.check_schema(schema)
+    row_validator = Draft202012Validator(schema)
+    distinct_validator = Draft202012Validator({
+        "$schema": schema["$schema"],
+        "$defs": schema["$defs"],
+        "$ref": "#/$defs/distinctPairManifest",
+    })
     budget_doc = json.loads(BUDGETS.read_text(encoding="utf-8"))
     budget_names = set(budget_doc.get("budgets", {}))
     required_limits = set(budget_doc.get("limits", []))
     default = budget_doc["budgets"].get("cd0-conformance-default")
     require(isinstance(default, dict) and set(default) == required_limits, "default budget is not complete")
+    require(all(type(value) is int and value >= 0 for value in default.values()),
+            "default budget values must be nonnegative integers")
     for name, budget in budget_doc["budgets"].items():
         require(isinstance(budget, dict), f"budget {name}: not an object")
         if name != "cd0-conformance-default":
             require(budget.get("base") == "cd0-conformance-default", f"budget {name}: bad base")
+            require(set(budget) - {"base"} <= required_limits, f"budget {name}: unknown override")
+            require(all(type(value) is int and value >= 0 for key, value in budget.items() if key != "base"),
+                    f"budget {name}: invalid override")
     positives = read_jsonl(POSITIVE)
     negatives = read_jsonl(NEGATIVE)
-    check_positive(positives, spec_text, budget_names)
-    check_negative(negatives, budget_names)
+    distinct = json.loads(DISTINCT.read_text(encoding="utf-8"))
+    for index, row in enumerate(positives, 1):
+        errors = sorted(row_validator.iter_errors(row), key=lambda error: list(error.path))
+        require(not errors, f"positive row {index}: JSON Schema: {errors[0].message if errors else ''}")
+    for index, row in enumerate(negatives, 1):
+        errors = sorted(row_validator.iter_errors(row), key=lambda error: list(error.path))
+        require(not errors, f"negative row {index}: JSON Schema: {errors[0].message if errors else ''}")
+    distinct_errors = list(distinct_validator.iter_errors(distinct))
+    require(not distinct_errors,
+            f"distinct-pair manifest JSON Schema: {distinct_errors[0].message if distinct_errors else ''}")
+
+    check_positive(positives, spec_text, budget_names, required_limits, distinct)
+    check_negative(negatives, budget_names, required_limits)
+
+    # Mutation self-tests guard the two underchecks found by independent audit.
+    bad_negatives = deepcopy(negatives)
+    target = next(row for row in bad_negatives if row["id"] == "cd0-neg-rat-zero-denominator")
+    target["expected_failure"]["code"] = "TruncatedInput"  # same valid category, wrong primary code
+    expect_assertion(
+        lambda: check_negative(bad_negatives, budget_names, required_limits),
+        "negative verifier accepted a deliberately wrong primary code",
+    )
+    bad_positives = deepcopy(positives)
+    target_positive = next(row for row in bad_positives if row["id"] == "cd0-pos-worked-15-record-a-b")
+    target_positive["expected_decoded"]["fields"].reverse()
+    expect_assertion(
+        lambda: check_positive(bad_positives, spec_text, budget_names, required_limits, distinct),
+        "positive verifier accepted reversed expected_decoded record order",
+    )
     print(f"spec sha256: {digest}")
-    print(f"worked vectors: {len(positives)}/17 exact and grammar-derived encodings agree")
-    print(f"negative vectors: {len(negatives)} structurally valid; required compact coverage present")
+    print("worked vectors: 17/17 exact and grammar-derived encodings agree")
+    print(f"additional positives: {len(positives) - 17}; equality classes and distinct pairs valid")
+    print(f"negative vectors: {len(negatives)} schema-valid and equal to reviewed finite manifest pin")
+    print("mutation self-tests: wrong failure code and reversed decoded record order rejected")
     print("type tags: 256/256 classified; all 10 assigned tags exercised; reserved/forbidden boundaries present")
-    for path in (POSITIVE, NEGATIVE, BUDGETS, SCHEMA):
+    for path in (POSITIVE, NEGATIVE, DISTINCT, BUDGETS, SCHEMA):
         print(f"sha256 {hashlib.sha256(path.read_bytes()).hexdigest()}  {path.relative_to(ROOT)}")
     return 0
 
