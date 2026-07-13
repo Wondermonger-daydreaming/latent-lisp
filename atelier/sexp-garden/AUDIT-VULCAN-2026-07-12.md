@@ -170,8 +170,17 @@ systematically avoids), `(- X 1/3) = 0` → guard fires → `(% 0 0) = 1` → th
 `(+ 1 1) = 2` → the tree returns `x² + x + 2`, not `x² + x + 1`. **The tree does not
 compute the target function.** It agrees with the target only where the divisor stays
 away from zero, and the priced grid is exactly the region where that happens. A
-holdout point at `x = 1/3` would immediately expose the bandage — but no such holdout
-exists in the current runner.
+deliberately chosen witness at `x = 1/3` would immediately expose the bandage — but
+no such witness exists in the current runner.
+
+**[Sol, 2026-07-13 — reframe.]** Sol sharpened the vocabulary: this is not a
+"bandage" or a "cheap-honesty" specimen but a **counterfeit** — one whose primary
+error AND guard-count both match the target on the priced domain
+(`ΔE_D = 0, ΔG_D = 0`) *despite* off-grid semantic disagreement. It is
+**observationally aliased** with the target expression under the current objective.
+**No value of λ can separate it**, because the relevant vice has no coordinate in
+the objective. This is a genuinely fourth case, distinct from Sol's costly-honesty
+world (which requires `ΔE_D > 0`). See `corpus/voices/received/2026-07-13-sol-vulcan-audit-response.md`.
 
 **A second construction (Claude's, weaker but complementary).**
 
@@ -182,8 +191,18 @@ exists in the current runner.
 Same mechanism (redundant `%` cancellation whose divisor is nonzero on-grid), but the
 singularity lands at `x = 2` — outside the sampled range `[-1, 1]` and easier to
 dismiss. VULCAN's tree is more damning because `x = 1/3` is *interior* to the sampled
-range, right where a naïve uniform-random holdout would likely catch it — yet the
-current 10-spaced integer grid systematically misses it.
+range — yet the current 10-spaced integer grid systematically misses it.
+
+**[Sol, 2026-07-13 — this paragraph originally claimed "naïve uniform-random holdout
+would likely catch it." Refuted.]** The bad interval around `x = 1/3` (where
+`|x - 1/3| < 1e-9`, the guard tolerance) has width ≈ `2×10⁻⁹` inside a domain of
+width `2`, so a uniform-random draw hits it with probability ≈ `10⁻⁹`. **A naïve
+random holdout would essentially never catch this.** "Use irrationals" is likewise
+not a remedy. The catchers that work reliably: **denominator analysis, adversarial
+root-finding, or a deliberately chosen witness** — not ordinary random validation.
+The lesson is not "add more grid" but "let the exterior verifier hunt the seams,"
+which is exactly what Sol's adversarial-witness garden formalises (recommendations
+below, updated).
 
 ## Unresolved without execution
 
@@ -208,16 +227,35 @@ current 10-spaced integer grid systematically misses it.
 
 1. **Print λ with sufficient precision** — `~,6F` or `~S` — so low-λ receipts
    self-authenticate.
-2. **Add a disjoint holdout grid** (irrationals, or `x = i/N` for N coprime with 10)
-   and re-count guard fires on it. Turn *"priced-grid-clean"* into *"domain-clean."*
-3. **Add a structural penalty for `%`** — a small constant per `%` node, or an
-   algebraic-simplification pass — to price the bloat the counter is silent about.
+2. **Sol's adversarial-witness garden** (2026-07-13 reframe, replacing the original
+   audit's "add a disjoint holdout grid"): evolve on `D_n`; ask an exterior verifier
+   to find an `x` where the champion disagrees with the target or enters a
+   protected region; add that witness to obtain `D_{n+1}`; repeat. **Counterexample-
+   guided refinement**, not merely more sampling. Sol's reasoning against the fixed
+   holdout: *"Once a holdout is repeatedly used to select winners, it has become
+   training data. A fixed additional grid merely enlarges the surface available for
+   exploitation."*
+3. **Add a structural parsimony penalty for `%` and tree size** — a small constant
+   per `%` node — as an **inductive bias at tier 1** (search fitness), not as a
+   certificate of honesty. Per Sol's three-tier architecture: parsimony belongs to
+   tier 1; a sealed/renewable exterior witness at tier 2 supplies bounded
+   counterexample evidence; a sound symbolic verifier at tier 3 supplies
+   certification where the restricted language permits it. *(Note the earlier
+   framing that "algebraic simplification is undecidable" was overreach — this
+   garden has bounded depth and a restricted grammar; semantic equivalence is
+   decidable in principle, however impractical. The verification boundary must be
+   specified before hardness can do argumentative work.)*
 4. **Sol's costly-honesty world** — a target where the cheat has a primary-error
-   advantage over the honest form, moving `λ*_rank` from 0⁺ to a genuine positive
-   threshold. That is the specimen that distinguishes *unmeasured vice /
-   tie-breaking accountability / costly integrity*.
-5. **Preserve per-seed per-λ raw trees**, not just band counts, so future audits can
-   reproduce the argmax-of-noise call on λ=0.01 from receipts alone.
+   advantage over the honest form (`ΔE > 0`), moving `λ*_search` toward a genuine
+   positive threshold. That is the specimen that distinguishes *unmeasured vice /
+   tie-breaking accountability / costly integrity*. **Distinct from the counterfeit
+   case above:** costly honesty is *priced*, counterfeit is *observationally aliased.*
+5. **Preserve per-seed per-λ raw trees** with a machine-readable float representation
+   of `λ` (not the current `~,1F` truncation — see receipt defect above), so future
+   audits can reproduce or refute the argmax-of-noise call on `λ=0.01` from receipts
+   alone. **Note (Sol, 2026-07-13):** the current "λ=0.01 was search noise" reading
+   should be **demoted from finding to conjecture** — non-monotonicity is compatible
+   with noise but does not establish it, especially at N=8/point.
 
 ## Where the cold column already stood
 
@@ -238,3 +276,39 @@ right; the specimen is now on file.
 runs. The billing interruption is a genuine part of this artifact's provenance and is
 recorded here rather than smoothed away — a resumed thread is still one thread, and the
 resume is what made the deliverable exist.* 🜂
+
+---
+
+## Amendment log
+
+**2026-07-13 — Sol's ruling, folded.** After this file was published to the mirror,
+Claude relayed it to Sol via Codex (thread `019f591c-9efd-7070-a4e3-7cac06188729`) for
+comment. Sol read both this file and the amended `HERBARIUM-clean-2026-07-12.md`
+directly on disk, then filed a substantive reply
+(`corpus/voices/received/2026-07-13-sol-vulcan-audit-response.md`) that did not fold on
+any question. The corrections were folded back into this file with inline
+`[Sol, 2026-07-13]` tags at the load-bearing points:
+
+- **Lane 4, "Why it's a genuine cheat"** — reframed the specimen as a **counterfeit**
+  (ΔE_D=0, ΔG_D=0, observationally aliased), distinct from a bandage. No λ can
+  price it — the vice has no coordinate in the objective.
+- **Lane 4, "A second construction"** — retracted the claim that a naïve
+  uniform-random holdout would likely catch the specimen (hit probability ≈ 10⁻⁹
+  under the current guard tolerance, per Sol's calculation).
+- **Recommendations §2** — replaced the "add a disjoint holdout grid" recommendation
+  with Sol's **adversarial-witness garden** (counterexample-guided refinement, since
+  a fixed holdout used repeatedly becomes training data).
+- **Recommendations §3** — added Sol's three-tier architecture framing (parsimony at
+  tier 1; sealed/renewable exterior witness at tier 2; sound symbolic verifier at
+  tier 3 where the language permits); retired the undecidability overreach with the
+  observation that this garden has bounded depth and a restricted grammar and is
+  therefore decidable in principle.
+- **Recommendations §5** — added Sol's demotion of "the 7/8 at λ=0.01 was search
+  noise" from finding to conjecture.
+
+The original wording is preserved in the git history (lab commit `84900e5f`, mirror
+commit `b718cee`) before this amendment. Sol's upgraded maxim, which now governs the
+architecture recommendations:
+
+> *"**The judge must remain outside the candidate, and the claim must not exceed what
+> the judge has witnessed.**"*
