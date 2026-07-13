@@ -321,6 +321,26 @@
       "notes": ["already-valid datum is admitted under the default budget before tested runtime encoding"]
     },
     {
+      "id": "cd0-errata-a9-runtime-seq-unit-depth-one",
+      "adjudication": "A9",
+      "op": "runtime-encode",
+      "ast": {"t": "seq", "items": [{"t": "unit"}]},
+      "budget": "cd0-conformance-default",
+      "overrides": {"max_depth": 1},
+      "expected": {"status": "ok", "result": {"canonical_hex": "4c50434400300100"}},
+      "notes": ["Fable protocol 49b3cf88 exact A9 shared-vector instantiation"]
+    },
+    {
+      "id": "cd0-errata-a9-runtime-seq-unit-nodes-one",
+      "adjudication": "A9",
+      "op": "runtime-encode",
+      "ast": {"t": "seq", "items": [{"t": "unit"}]},
+      "budget": "cd0-conformance-default",
+      "overrides": {"max_nodes": 1},
+      "expected": {"status": "ok", "result": {"canonical_hex": "4c50434400300100"}},
+      "notes": ["Fable protocol 49b3cf88 exact A9 shared-vector instantiation"]
+    },
+    {
       "id": "cd0-errata-a9-decode-ignores-output-and-keywork",
       "adjudication": "A9",
       "op": "decode-only",
