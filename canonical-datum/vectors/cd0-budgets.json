@@ -1,0 +1,47 @@
+{
+  "schema": "cd0-budget-fixtures/v1",
+  "limits": [
+    "max_input_octets",
+    "max_output_octets",
+    "max_varint_octets",
+    "max_integer_bits",
+    "max_depth",
+    "max_nodes",
+    "max_sequence_items",
+    "max_record_fields",
+    "max_identifier_segments",
+    "max_segment_octets",
+    "max_single_string_octets",
+    "max_single_bytes_octets",
+    "max_aggregate_payload_octets",
+    "max_total_record_key_octets"
+  ],
+  "budgets": {
+    "cd0-conformance-default": {
+      "max_input_octets": 1048576,
+      "max_output_octets": 1048576,
+      "max_varint_octets": 64,
+      "max_integer_bits": 4096,
+      "max_depth": 128,
+      "max_nodes": 100000,
+      "max_sequence_items": 10000,
+      "max_record_fields": 10000,
+      "max_identifier_segments": 1024,
+      "max_segment_octets": 65536,
+      "max_single_string_octets": 1048576,
+      "max_single_bytes_octets": 1048576,
+      "max_aggregate_payload_octets": 1048576,
+      "max_total_record_key_octets": 1048576
+    },
+    "cd0-max-input-5": {"base":"cd0-conformance-default","max_input_octets":5},
+    "cd0-max-varint-1": {"base":"cd0-conformance-default","max_varint_octets":1},
+    "cd0-max-string-1": {"base":"cd0-conformance-default","max_single_string_octets":1},
+    "cd0-max-sequence-1": {"base":"cd0-conformance-default","max_sequence_items":1},
+    "cd0-max-record-1": {"base":"cd0-conformance-default","max_record_fields":1},
+    "cd0-max-id-segments-1": {"base":"cd0-conformance-default","max_identifier_segments":1}
+  },
+  "notes": [
+    "Named budgets are fixture metadata, not universal CD/0 limits.",
+    "A budget containing base inherits the named complete budget and replaces the listed limits."
+  ]
+}
