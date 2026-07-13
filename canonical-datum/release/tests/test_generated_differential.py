@@ -70,6 +70,12 @@ class GeneratedCorpusFixture(unittest.TestCase):
         self.assertEqual(64, verified["counts"]["positive"])
         self.assertEqual(512, verified["counts"]["negative"])
         self.assertEqual(14, verified["counts"]["resource_boundary_scenarios"])
+        self.assertEqual(
+            runner.ERRATA_CASE_COUNTS,
+            verified["manifest"]["fixture_infrastructure"]["promoted_errata_vectors"][
+                "cases_by_adjudication"
+            ],
+        )
 
     def test_manifest_verification_detects_artifact_tamper(self) -> None:
         tampered = self.root / "tampered-corpus"
@@ -114,6 +120,11 @@ class GeneratedCorpusFixture(unittest.TestCase):
             manifest_counts["unclassified_mutation_candidates"],
             counts["unclassified_mutation_candidates"],
         )
+        self.assertEqual(37, counts["promoted_errata_vectors"])
+        self.assertEqual(
+            runner.ERRATA_CASE_COUNTS,
+            summary["promoted_errata_execution"]["by_adjudication"],
+        )
         self.assertEqual(manifest_counts["positive"] * 2, counts["equality_judgments"])
         self.assertEqual(3, counts["common_lisp_host_not_applicable"])
         self.assertEqual(
@@ -138,6 +149,10 @@ class GeneratedCorpusFixture(unittest.TestCase):
             )
         )
         self.assertTrue((artifacts / "summary.json").is_file())
+        self.assertEqual(
+            "not-applicable-generator-test-mode",
+            summary["corpus"]["valid_datum_compatibility"]["disposition"],
+        )
 
         retry_requests = 0
         for batch in summary["batch_artifact_ledger"]:
@@ -215,23 +230,47 @@ class GeneratedCorpusFixture(unittest.TestCase):
         self.assertIn("normalized results disagree", report.issues[0])
         self.assertEqual(1, report.counts["retry_budget_checks"])
 
-    def test_warranted_provisional_fields_do_not_promote_ambiguities(self) -> None:
-        self.assertEqual(
-            ("category", "code"),
-            runner.warranted_fields({"status": "provisional-blocked-stage"}),
+    def test_audited_valid_datum_compatibility_is_a_hard_gate(self) -> None:
+        baseline = (
+            runner.AUDITED_CORPUS_DIR
+            / runner.ARTIFACT_NAMES["positive"]
         )
-        self.assertEqual(
-            ("category", "stage"),
-            runner.warranted_fields({"status": "provisional-blocked-code"}),
+        result = runner.compare_audited_positive_semantics(
+            baseline, release_qualified=True
         )
+        self.assertEqual("compared-byte-and-abstract-identical", result["disposition"])
+        self.assertEqual(10_000, result["compared_rows"])
+        self.assertEqual(0, result["canonical_octet_changes"])
+        self.assertEqual(0, result["abstract_datum_changes"])
+
+        changed = self.root / "changed-valid-datums.jsonl"
+        rows = baseline.read_text(encoding="ascii").splitlines()
+        first = json.loads(rows[0])
+        first["abstract"] = {"t": "bool", "v": False}
+        rows[0] = json.dumps(first, sort_keys=True, separators=(",", ":"))
+        changed.write_text("\n".join(rows) + "\n", encoding="ascii")
+        with self.assertRaisesRegex(
+            runner.ReleaseDifferentialError, "unauthorized generated valid-datum"
+        ):
+            runner.compare_audited_positive_semantics(
+                changed, release_qualified=True
+            )
+
+    def test_v4_classified_rows_always_warrant_the_complete_triple(self) -> None:
         self.assertEqual(
             ("category", "code", "stage"), runner.warranted_fields({})
         )
+        with self.assertRaisesRegex(runner.ReleaseDifferentialError, "complete normative"):
+            runner.warranted_fields({"status": "legacy-partial"})
 
-    def test_v3_provenance_and_supplemental_counts_are_exact(self) -> None:
+    def test_v4_provenance_and_supplemental_counts_are_exact(self) -> None:
         verified = runner.verify_manifest(self.corpus, allow_small=True)
         manifest = verified["manifest"]
-        self.assertEqual("cd0-corpus-generator/3", manifest["generator_version"])
+        self.assertEqual("cd0-corpus-generator/4", manifest["generator_version"])
+        self.assertEqual("cd0-generated-corpus-manifest/v4", manifest["schema"])
+        self.assertEqual(
+            runner.EXPECTED_NORMATIVE_SHA256, manifest["normative_specifications"]
+        )
         source = manifest["source_input_sha256"]
         self.assertEqual(source["before_generation"], source["after_generation"])
         self.assertEqual(set(runner.SOURCE_INPUT_PATHS), set(source["before_generation"]))

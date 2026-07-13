@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stream the generated CD/0 corpus through both independent codecs.
+"""Stream the generated CD/0.1 corpus through both independently seeded codecs.
 
 This program coordinates two process adapters.  It does not implement datum
 semantics and neither implementation is used as an oracle for the other.
@@ -27,12 +27,27 @@ from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
 
 PROTOCOL = "lisp-plus-cd0-differential/v1"
-RUNNER_SCHEMA = "cd0-generated-differential-summary/v1"
-MANIFEST_SCHEMA = "cd0-generated-corpus-manifest/v1"
-GENERATOR_VERSION = "cd0-corpus-generator/3"
-SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+RUNNER_SCHEMA = "cd0-generated-differential-summary/v2"
+MANIFEST_SCHEMA = "cd0-generated-corpus-manifest/v4"
+GENERATOR_VERSION = "cd0-corpus-generator/4"
+EXPECTED_NORMATIVE_SHA256 = {
+    "base-specification": {
+        "path": "mneme/spec/CANONICAL-DATUM-SPEC.md",
+        "sha256": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc",
+    },
+    "post-implementation-ruling": {
+        "path": "CD0-POST-IMPLEMENTATION-RULING.md",
+        "sha256": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
+    },
+    "errata-0.1": {
+        "path": "CANONICAL-DATUM-SPEC-ERRATA-0.1.md",
+        "sha256": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
+    },
+}
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SPEC_PATH = REPO_ROOT / "mneme" / "spec" / "CANONICAL-DATUM-SPEC.md"
+SPEC_PATH = REPO_ROOT / EXPECTED_NORMATIVE_SHA256["base-specification"]["path"]
+ERRATA_VECTOR_PATH = REPO_ROOT / "canonical-datum" / "vectors" / "cd0-errata-0.1.json"
+AUDITED_CORPUS_DIR = REPO_ROOT / "canonical-datum" / "generated" / "release-v0"
 INTEGRATION_DIR = REPO_ROOT / "canonical-datum" / "integration"
 BUDGET_PATH = REPO_ROOT / "canonical-datum" / "vectors" / "cd0-budgets.json"
 
@@ -51,9 +66,12 @@ COUNT_KEYS = {
 }
 SOURCE_INPUT_PATHS = (
     "mneme/spec/CANONICAL-DATUM-SPEC.md",
+    "CD0-POST-IMPLEMENTATION-RULING.md",
+    "CANONICAL-DATUM-SPEC-ERRATA-0.1.md",
     "CANONICAL-DATUM-DIVERGENCES.md",
     "canonical-datum/schema/cd0-fixtures.schema.json",
     "canonical-datum/vectors/cd0-budgets.json",
+    "canonical-datum/vectors/cd0-errata-0.1.json",
     "canonical-datum/vectors/cd0-positive.jsonl",
     "canonical-datum/vectors/cd0-negative.jsonl",
     "canonical-datum/vectors/cd0-distinct-pairs.json",
@@ -90,9 +108,16 @@ BUDGET_FIELDS = (
     "max_aggregate_payload_octets",
     "max_total_record_key_octets",
 )
-PROVISIONAL_STATUSES = {
-    "provisional-blocked-stage": ("category", "code"),
-    "provisional-blocked-code": ("category", "stage"),
+ERRATA_CASE_COUNTS = {
+    "A1": 6,
+    "A2": 5,
+    "A3": 6,
+    "A4": 3,
+    "A5": 3,
+    "A6": 2,
+    "A7": 1,
+    "A8": 6,
+    "A9": 5,
 }
 OPTIONAL_CL_IMPORTERS = {
     "symbol-to-identifier/v0",
@@ -152,6 +177,71 @@ def jsonl_rows(path: Path) -> Iterator[tuple[int, dict[str, Any]]]:
 
 def count_jsonl(path: Path) -> int:
     return sum(1 for _ in jsonl_rows(path))
+
+
+def compare_audited_positive_semantics(
+    current_path: Path, *, release_qualified: bool
+) -> dict[str, Any]:
+    """Hard-stop release evidence if generated valid datums or bytes changed."""
+
+    baseline_path = AUDITED_CORPUS_DIR / ARTIFACT_NAMES["positive"]
+    if not release_qualified:
+        return {
+            "disposition": "not-applicable-generator-test-mode",
+            "baseline_path": str(baseline_path.relative_to(REPO_ROOT)),
+            "compared_rows": 0,
+            "canonical_octet_changes": 0,
+            "abstract_datum_changes": 0,
+            "decoded_ast_changes": 0,
+            "equality_class_changes": 0,
+        }
+    if not baseline_path.is_file():
+        raise ReleaseDifferentialError("audited positive corpus baseline is unavailable")
+    baseline_rows = list(jsonl_rows(baseline_path))
+    current_rows = list(jsonl_rows(current_path))
+    if len(baseline_rows) != 10_000 or len(current_rows) != len(baseline_rows):
+        raise ReleaseDifferentialError("release positive compatibility row count changed")
+    changes = {
+        "canonical_octet_changes": 0,
+        "abstract_datum_changes": 0,
+        "decoded_ast_changes": 0,
+        "equality_class_changes": 0,
+    }
+    baseline_projection = hashlib.sha256()
+    current_projection = hashlib.sha256()
+    for baseline_item, current_item in zip(baseline_rows, current_rows):
+        _, baseline = baseline_item
+        _, current = current_item
+        if baseline.get("id") != current.get("id"):
+            raise ReleaseDifferentialError("release positive case identity/order changed")
+        fields = {
+            "canonical_hex": "canonical_octet_changes",
+            "abstract": "abstract_datum_changes",
+            "expected_decoded": "decoded_ast_changes",
+            "equality_class": "equality_class_changes",
+        }
+        for field, counter in fields.items():
+            changes[counter] += int(baseline.get(field) != current.get(field))
+        baseline_projection.update(
+            (canonical_json({field: baseline[field] for field in fields}) + "\n").encode("ascii")
+        )
+        current_projection.update(
+            (canonical_json({field: current[field] for field in fields}) + "\n").encode("ascii")
+        )
+    if any(changes.values()):
+        raise ReleaseDifferentialError(
+            f"unauthorized generated valid-datum compatibility change: {changes}"
+        )
+    return {
+        "disposition": "compared-byte-and-abstract-identical",
+        "baseline_path": str(baseline_path.relative_to(REPO_ROOT)),
+        "baseline_source_revision": "aed2f393781456dfd495ac5d5822bdcd58bea711",
+        "audited_integration_anchor": "baeecd5e0347435b9e1362000344f46ea441c6ec",
+        "compared_rows": len(current_rows),
+        **changes,
+        "baseline_projection_sha256": baseline_projection.hexdigest(),
+        "current_projection_sha256": current_projection.hexdigest(),
+    }
 
 
 def corpus_digest(artifacts: Mapping[str, Mapping[str, Any]]) -> str:
@@ -281,11 +371,16 @@ def verify_derivation_alignment(negative_path: Path, derivation_path: Path) -> i
 def verify_manifest(corpus_dir: Path, *, allow_small: bool) -> dict[str, Any]:
     """Verify corpus bytes and provenance before returning immutable metadata."""
 
-    actual_spec = sha256_file(SPEC_PATH)
-    if actual_spec != SPEC_SHA256:
-        raise ReleaseDifferentialError(
-            f"specification digest mismatch: {actual_spec} != {SPEC_SHA256}"
-        )
+    observed_normative: dict[str, dict[str, str]] = {}
+    for role, expected in EXPECTED_NORMATIVE_SHA256.items():
+        path = REPO_ROOT / expected["path"]
+        observed = sha256_file(path)
+        if observed != expected["sha256"]:
+            raise ReleaseDifferentialError(
+                f"normative input digest mismatch for {role}: "
+                f"{observed} != {expected['sha256']}"
+            )
+        observed_normative[role] = dict(expected)
     manifest_path = corpus_dir / "cd0-corpus-manifest.json"
     try:
         manifest = json.loads(manifest_path.read_text(encoding="ascii"))
@@ -296,12 +391,32 @@ def verify_manifest(corpus_dir: Path, *, allow_small: bool) -> dict[str, Any]:
     if manifest.get("generator_version") != GENERATOR_VERSION:
         raise ReleaseDifferentialError("generated corpus generator version mismatch")
 
-    specification = manifest.get("normative_specification")
-    if specification != {
-        "path": "mneme/spec/CANONICAL-DATUM-SPEC.md",
-        "sha256": SPEC_SHA256,
+    if manifest.get("normative_specifications") != observed_normative:
+        raise ReleaseDifferentialError("manifest normative input pins mismatch")
+    infrastructure = manifest.get("fixture_infrastructure")
+    if type(infrastructure) is not dict or set(infrastructure) != {
+        "schema",
+        "promoted_errata_vectors",
     }:
-        raise ReleaseDifferentialError("manifest normative specification pin mismatch")
+        raise ReleaseDifferentialError("fixture infrastructure provenance is missing")
+    schema_record = infrastructure["schema"]
+    if (
+        type(schema_record) is not dict
+        or schema_record.get("path") != "canonical-datum/schema/cd0-fixtures.schema.json"
+        or schema_record.get("revision") != "0.1"
+        or schema_record.get("sha256") != sha256_file(REPO_ROOT / schema_record["path"])
+    ):
+        raise ReleaseDifferentialError("fixture schema provenance mismatch")
+    errata_record = infrastructure["promoted_errata_vectors"]
+    if (
+        type(errata_record) is not dict
+        or errata_record.get("path") != str(ERRATA_VECTOR_PATH.relative_to(REPO_ROOT))
+        or errata_record.get("sha256") != sha256_file(ERRATA_VECTOR_PATH)
+        or errata_record.get("schema") != "cd0-errata-vectors/0.1"
+        or errata_record.get("classified_cases") != sum(ERRATA_CASE_COUNTS.values())
+        or errata_record.get("cases_by_adjudication") != ERRATA_CASE_COUNTS
+    ):
+        raise ReleaseDifferentialError("promoted errata vector provenance mismatch")
     source_revision = manifest.get("source_revision")
     if type(source_revision) is not str:
         raise ReleaseDifferentialError("manifest source_revision is missing")
@@ -359,7 +474,7 @@ def verify_manifest(corpus_dir: Path, *, allow_small: bool) -> dict[str, Any]:
     if type(counts) is not dict or type(artifacts) is not dict:
         raise ReleaseDifferentialError("manifest counts/artifacts are missing")
     if set(counts) != MANIFEST_COUNT_KEYS:
-        raise ReleaseDifferentialError("manifest v3 count key set is not exact")
+        raise ReleaseDifferentialError("manifest v4 count key set is not exact")
     expected_artifact_names = set(ARTIFACT_NAMES.values())
     if set(artifacts) != expected_artifact_names:
         raise ReleaseDifferentialError("manifest artifact set is not exact")
@@ -528,8 +643,8 @@ def verify_manifest(corpus_dir: Path, *, allow_small: bool) -> dict[str, Any]:
         )
     if thresholds.get("count_scope") != (
         "qualification requires at least 20000 demonstrated byte-deletion-primary-minimal "
-        "rows; authored/host coverage rows are additional, while provisional rows remain "
-        "separately reported"
+        "rows; 308 authored/host coverage rows are additional and every classified row "
+        "carries a complete normative failure triple"
     ):
         raise ReleaseDifferentialError("classified-adversarial count scope changed")
     if thresholds.get("qualifies") is not qualifies:
@@ -611,8 +726,8 @@ def verify_manifest(corpus_dir: Path, *, allow_small: bool) -> dict[str, Any]:
         or type(runtime.get("random_engine")) is not str
     ):
         raise ReleaseDifferentialError("generator runtime metadata is invalid")
-    if "A1-A9" not in str(manifest.get("divergence_boundary", "")):
-        raise ReleaseDifferentialError("manifest does not preserve the A1-A9 boundary")
+    if "A1-A9 are closed" not in str(manifest.get("errata_closure", "")):
+        raise ReleaseDifferentialError("manifest does not record A1-A9 closure")
     root_tag_counts = manifest.get("positive_root_tag_counts")
     if (
         type(root_tag_counts) is not dict
@@ -627,7 +742,7 @@ def verify_manifest(corpus_dir: Path, *, allow_small: bool) -> dict[str, Any]:
         "manifest_sha256": sha256_file(manifest_path),
         "corpus_dir": corpus_dir,
         "counts": observed_counts,
-        "specification_sha256": actual_spec,
+        "normative_specifications": observed_normative,
         "corpus_sha256": observed_corpus_digest,
         "qualifies_for_release": qualifies and not small_mode,
         "demonstrated_primary_minimal": demonstrated_primary_minimal,
@@ -758,11 +873,11 @@ def validate_negative(row: dict[str, Any], line_number: int) -> None:
         raise ReleaseDifferentialError(f"{row_id}: expected failure triple invalid")
     if not all(type(failure[field]) is str and failure[field] for field in failure):
         raise ReleaseDifferentialError(f"{row_id}: expected failure member invalid")
-    if row.get("status", "normative") not in {"normative", *PROVISIONAL_STATUSES}:
-        raise ReleaseDifferentialError(f"{row_id}: failure status invalid")
+    if "status" in row:
+        raise ReleaseDifferentialError(f"{row_id}: v4 classified rows must not carry a provisional status")
     if row.get("resource_state_unchanged") is not True or row.get("partial_output_forbidden") is not True:
         raise ReleaseDifferentialError(f"{row_id}: refusal invariants are not asserted")
-    allowed = required | {"input_hex", "host_input", "importer", "status", "retry_budget"}
+    allowed = required | {"input_hex", "host_input", "importer", "retry_budget"}
     if not set(row).issubset(allowed):
         raise ReleaseDifferentialError(f"{row_id}: fields differ from shared fixture schema")
 
@@ -798,9 +913,9 @@ def validate_mutation(row: dict[str, Any], line_number: int) -> None:
 
 
 def warranted_fields(row: Mapping[str, Any]) -> tuple[str, ...]:
-    return PROVISIONAL_STATUSES.get(
-        str(row.get("status", "normative")), ("category", "code", "stage")
-    )
+    if "status" in row:
+        raise ReleaseDifferentialError("v4 classified rows must use the complete normative triple")
+    return ("category", "code", "stage")
 
 
 class DifferenceLedger:
@@ -839,7 +954,6 @@ class Report:
         self.issue_count = 0
         self._issue_digest = hashlib.sha256()
         self.issue_sample_limit = 100
-        self.provisional_observations: list[dict[str, Any]] = []
         self.host_row_dispositions: list[dict[str, Any]] = []
         self.mutation_outcomes: defaultdict[str, int] = defaultdict(int)
         self.differences = difference_ledger
@@ -935,7 +1049,7 @@ def compare_negative(
 ) -> None:
     row = meta["row"]
     request_id = meta["request_id"]
-    status = row.get("status", "normative")
+    status = "normative"
     fields = warranted_fields(row)
     report.counts["classified_negative_rows"] += 1
     report.counts[f"negative_{status}_rows"] += 1
@@ -988,10 +1102,6 @@ def compare_negative(
             report.issue(
                 f"{request_id}: cross-codec warranted failure disagreement "
                 f"CL={left[1]} Python={right[1]} fields={fields}"
-            )
-        elif status != "normative" and left[1] != right[1]:
-            report.provisional_observations.append(
-                {"id": row["id"], "common_lisp": left[1], "python": right[1]}
             )
 
     if is_host:
@@ -1445,6 +1555,111 @@ def mutation_requests(
     return len(ids)
 
 
+def load_promoted_errata_cases() -> list[dict[str, Any]]:
+    try:
+        document = json.loads(ERRATA_VECTOR_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ReleaseDifferentialError(f"cannot load promoted errata vectors: {exc}") from exc
+    if document.get("schema") != "cd0-errata-vectors/0.1":
+        raise ReleaseDifferentialError("promoted errata vector schema mismatch")
+    if document.get("ruling_sha256") != EXPECTED_NORMATIVE_SHA256["post-implementation-ruling"]["sha256"]:
+        raise ReleaseDifferentialError("promoted vectors do not pin the ruling")
+    if document.get("errata_sha256") != EXPECTED_NORMATIVE_SHA256["errata-0.1"]["sha256"]:
+        raise ReleaseDifferentialError("promoted vectors do not pin Errata 0.1")
+    cases = document.get("cases")
+    if type(cases) is not list or any(type(case) is not dict for case in cases):
+        raise ReleaseDifferentialError("promoted errata cases are malformed")
+    counts: defaultdict[str, int] = defaultdict(int)
+    ids: set[str] = set()
+    for case in cases:
+        case_id = case.get("id")
+        adjudication = case.get("adjudication")
+        if type(case_id) is not str or case_id in ids:
+            raise ReleaseDifferentialError("promoted errata ids are invalid or duplicated")
+        if adjudication not in ERRATA_CASE_COUNTS:
+            raise ReleaseDifferentialError(f"{case_id}: unknown errata adjudication")
+        ids.add(case_id)
+        counts[adjudication] += 1
+    if dict(sorted(counts.items())) != ERRATA_CASE_COUNTS:
+        raise ReleaseDifferentialError("promoted A1-A9 case counts changed")
+    return cases
+
+
+def compare_promoted_errata(
+    meta: dict[str, Any], cl: dict[str, Any], py: dict[str, Any], report: Report
+) -> None:
+    case = meta["case"]
+    request_id = meta["request_id"]
+    expected = case["expected"]
+    report.counts["promoted_errata_vectors"] += 1
+    report.counts[f"promoted_errata_{case['adjudication'].lower()}"] += 1
+    successful_responses: list[tuple[str, dict[str, Any]]] = []
+    for label, response in (("common-lisp", cl), ("python", py)):
+        if response.get("status") != expected.get("status"):
+            report.issue(
+                f"{request_id}: {label} errata disposition differs: "
+                f"actual={response.get('status')} expected={expected.get('status')}"
+            )
+            continue
+        if expected["status"] == "failure":
+            if response.get("failure") != expected.get("failure"):
+                report.issue(
+                    f"{request_id}: {label} errata failure differs: "
+                    f"actual={response.get('failure')} expected={expected.get('failure')}"
+                )
+                continue
+        elif expected["status"] == "ok":
+            result = response.get("result")
+            expected_result = expected.get("result", {})
+            if type(result) is not dict or any(
+                result.get(field) != value for field, value in expected_result.items()
+            ):
+                report.issue(
+                    f"{request_id}: {label} errata result differs: "
+                    f"actual={result} expected_fields={expected_result}"
+                )
+                continue
+        else:
+            report.issue(f"{request_id}: malformed expected errata disposition")
+            continue
+        successful_responses.append((label, response))
+    if len(successful_responses) == 2:
+        left = successful_responses[0][1]
+        right = successful_responses[1][1]
+        outcome_field = "failure" if expected["status"] == "failure" else "result"
+        if left.get(outcome_field) != right.get(outcome_field):
+            report.issue(f"{request_id}: codecs disagree on promoted errata result")
+
+
+def promoted_errata_requests(
+    budgets: Mapping[str, Mapping[str, int]],
+    coordinator: BatchCoordinator,
+) -> int:
+    cases = load_promoted_errata_cases()
+    for case in cases:
+        case_id = case["id"]
+        budget, budget_id = resolve_budget(case["budget"], budgets, case_id)
+        overrides = case.get("overrides", {})
+        if (
+            type(overrides) is not dict
+            or not set(overrides).issubset(BUDGET_FIELDS)
+            or any(type(value) is not int or value < 0 for value in overrides.values())
+        ):
+            raise ReleaseDifferentialError(f"{case_id}: invalid errata budget overrides")
+        budget.update(overrides)
+        request = request_base(
+            f"errata:{case_id}", case["op"], budget, f"errata:{budget_id}"
+        )
+        for field in ("input_hex", "ast", "construction"):
+            if field in case:
+                request[field] = case[field]
+        if case["op"] == "runtime-encode":
+            request["admission_budget"] = dict(budgets["cd0-conformance-default"])
+            request["admission_budget_id"] = "cd0-conformance-default"
+        coordinator.add(request, {"case": case}, compare_promoted_errata)
+    return len(cases)
+
+
 def host_scenario_dispositions(path: Path, positive_ids: set[str]) -> dict[str, Any]:
     document = json.loads(path.read_text(encoding="ascii"))
     if document.get("schema") != "cd0-host-property-scenarios/v1":
@@ -1542,11 +1757,8 @@ def host_scenario_dispositions(path: Path, positive_ids: set[str]) -> dict[str, 
         elif type(row.get("fixture_ast")) is not dict:
             raise ReleaseDifferentialError(f"{row_id}: resource probe input is missing")
         status = failure["status"]
-        if row["limit"] == "max_integer_bits":
-            if status != "implementation-local-pending-adjudication" or "A3" not in str(
-                row.get("divergence_boundary", "")
-            ):
-                raise ReleaseDifferentialError("A3 integer resource boundary was promoted")
+        if status != "normative":
+            raise ReleaseDifferentialError(f"{row_id}: resource refusal is not normative")
         resource_dispositions.append(
             {
                 "id": row_id,
@@ -1588,6 +1800,10 @@ def run(
         raise ReleaseDifferentialError("timeout must be positive")
     corpus_dir = corpus_dir.resolve()
     provenance = verify_manifest(corpus_dir, allow_small=allow_small)
+    valid_datum_compatibility = compare_audited_positive_semantics(
+        corpus_dir / ARTIFACT_NAMES["positive"],
+        release_qualified=provenance["qualifies_for_release"],
+    )
     if artifacts_dir is not None and artifacts_dir.resolve().is_relative_to(corpus_dir):
         raise ReleaseDifferentialError(
             "artifacts directory must not be the corpus directory or one of its descendants"
@@ -1615,6 +1831,7 @@ def run(
     mutation_count = mutation_requests(
         corpus_dir / ARTIFACT_NAMES["mutations"], budgets, coordinator
     )
+    errata_count = promoted_errata_requests(budgets, coordinator)
     coordinator.flush()
 
     if positives["count"] != provenance["counts"]["positive"]:
@@ -1625,6 +1842,8 @@ def run(
         raise ReleaseDifferentialError("retry request count changed after provenance verification")
     if mutation_count != provenance["counts"]["mutations"]:
         raise ReleaseDifferentialError("mutation request count changed after provenance verification")
+    if errata_count != sum(ERRATA_CASE_COUNTS.values()):
+        raise ReleaseDifferentialError("promoted errata request count changed")
     expected_equality = positives["count"] * 2 if positives["count"] > 1 else positives["count"]
     if equality_count != expected_equality:
         raise ReleaseDifferentialError("deterministic equality pair count is inconsistent")
@@ -1643,17 +1862,24 @@ def run(
     )
     difference_summary = report.differences.finish()
     counts = dict(sorted(report.counts.items()))
-    if {
-        "normative": counts.get("negative_normative_rows", 0),
-        "provisional-blocked-stage": counts.get(
-            "negative_provisional-blocked-stage_rows", 0
-        ),
-        "provisional-blocked-code": counts.get(
-            "negative_provisional-blocked-code_rows", 0
-        ),
-    } != provenance["manifest"]["counts"]["classified_negative_by_status"]:
+    if {"normative": counts.get("negative_normative_rows", 0)} != provenance[
+        "manifest"
+    ]["counts"]["classified_negative_by_status"]:
         raise ReleaseDifferentialError("executed negative status counts differ from manifest")
-    expected_requests = positives["count"] + equality_count + negatives["count"] + negatives["retry_count"] + mutation_count
+    observed_errata_counts = {
+        adjudication: counts.get(f"promoted_errata_{adjudication.lower()}", 0)
+        for adjudication in ERRATA_CASE_COUNTS
+    }
+    if observed_errata_counts != ERRATA_CASE_COUNTS:
+        raise ReleaseDifferentialError("executed promoted A1-A9 counts changed")
+    expected_requests = (
+        positives["count"]
+        + equality_count
+        + negatives["count"]
+        + negatives["retry_count"]
+        + mutation_count
+        + errata_count
+    )
     if counts.get("adapter_requests_per_implementation") != expected_requests:
         raise ReleaseDifferentialError("adapter request ledger count mismatch")
 
@@ -1664,10 +1890,7 @@ def run(
             "PASS means every warranted, applicable comparison agreed. "
             "Common Lisp N/A rows and unexecuted host-property metadata are not counted as passes."
         ),
-        "specification": {
-            "path": str(SPEC_PATH.relative_to(REPO_ROOT)),
-            "sha256": provenance["specification_sha256"],
-        },
+        "normative_specifications": provenance["normative_specifications"],
         "corpus": {
             "directory": str(corpus_dir),
             "manifest_sha256": provenance["manifest_sha256"],
@@ -1687,6 +1910,7 @@ def run(
                 name: record["sha256"]
                 for name, record in sorted(provenance["manifest"]["artifacts"].items())
             },
+            "valid_datum_compatibility": valid_datum_compatibility,
         },
         "runner": {
             "path": str(Path(__file__).resolve().relative_to(REPO_ROOT)),
@@ -1706,28 +1930,26 @@ def run(
         "counts": counts,
         "failure_status_counts": {
             "normative": counts.get("negative_normative_rows", 0),
-            "provisional_blocked_stage": counts.get(
-                "negative_provisional-blocked-stage_rows", 0
-            ),
-            "provisional_blocked_code": counts.get(
-                "negative_provisional-blocked-code_rows", 0
-            ),
+        },
+        "promoted_errata_execution": {
+            "classified_total": counts.get("promoted_errata_vectors", 0),
+            "by_adjudication": observed_errata_counts,
+            "failures": 0 if report.issue_count == 0 else None,
         },
         "host_negative_dispositions": report.host_row_dispositions,
         "host_property_dispositions": scenario_dispositions["host_properties"],
         "resource_boundary_dispositions": scenario_dispositions[
             "resource_boundaries"
         ],
-        "provisional_unwarranted_field_observations": report.provisional_observations,
         "unclassified_mutation_outcomes": dict(sorted(report.mutation_outcomes.items())),
         "mutation_disagreements": difference_summary,
         "batch_artifact_ledger": coordinator.batch_ledger,
         "issues": report.issue_summary(),
         "residual_boundaries": [
-            "A1-A9 remain open and provisional fixture fields are not promoted by agreement.",
+            "A1-A9 are closed by the pinned ruling and Errata 0.1; all 37 promoted cases are compared on their complete adjudicated expectations.",
             "Unclassified mutations receive no expected triple; any disagreement requires minimization.",
             "Seven host-property scenarios remain owned by Phase-4 qualification or instrumentation.",
-            "All fourteen resource-boundary scenario descriptors remain pending Phase-4 execution.",
+            "All fourteen generated resource-boundary descriptors remain metadata here; the promoted operation vectors and Phase-4 qualification execute adjudicated boundaries.",
             "Three Common Lisp optional/language-specific importer rows remain N/A, not pass.",
         ],
     }
@@ -1763,7 +1985,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     else:
         counts = summary["counts"]
         print(f"CD/0 generated differential: {summary['status']}")
-        print(f"spec sha256: {summary['specification']['sha256']}")
+        print(
+            "normative sha256: "
+            + ", ".join(
+                f"{role}={record['sha256']}"
+                for role, record in summary["normative_specifications"].items()
+            )
+        )
         print(f"manifest sha256: {summary['corpus']['manifest_sha256']}")
         print(f"corpus sha256: {summary['corpus']['corpus_sha256']}")
         print(f"release-qualified corpus: {summary['corpus']['qualifies_for_release']}")
@@ -1776,9 +2004,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         status_counts = summary["failure_status_counts"]
         print(
             "negative status: "
-            f"normative={status_counts['normative']} "
-            f"provisional-stage={status_counts['provisional_blocked_stage']} "
-            f"provisional-code={status_counts['provisional_blocked_code']}"
+            f"normative={status_counts['normative']}"
+        )
+        errata = summary["promoted_errata_execution"]
+        print(
+            f"promoted errata: classified={errata['classified_total']} "
+            + " ".join(
+                f"{name}={count}" for name, count in errata["by_adjudication"].items()
+            )
         )
         print(
             "equality: "

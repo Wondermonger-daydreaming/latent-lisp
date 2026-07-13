@@ -1,5 +1,8 @@
 # CD/0 qualification source-access record
 
+> Historical pre-Errata-0.1 source-access record. Later ruling, errata, and
+> promoted-vector access is recorded by the successor implementation ledger.
+
 This record covers the Phase-4 qualification work based at
 `fac17dd701c59f6da8eb2536dd022853b2e258fe`.  Both independent seed commits and
 their first complete local conformance runs existed before this work began, so

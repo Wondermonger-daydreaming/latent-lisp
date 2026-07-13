@@ -18,7 +18,11 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "canonical-datum" / "generator" / "generate_corpus.py"
 SCHEMA = json.loads((ROOT / "canonical-datum" / "schema" / "cd0-fixtures.schema.json").read_text(encoding="utf-8"))
-EXPECTED_SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+EXPECTED_NORMATIVE_SHA256 = {
+    "base-specification": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc",
+    "post-implementation-ruling": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
+    "errata-0.1": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
+}
 ASSIGNED_TAGS = {"00", "01", "02", "10", "11", "20", "21", "22", "30", "31"}
 RESOURCE_LIMITS = {
     "max_input_octets", "max_output_octets", "max_varint_octets",
@@ -128,7 +132,20 @@ class GeneratedCorpusTests(unittest.TestCase):
         self.assertEqual(list(self.output.parent.glob(f".{self.output.name}.staging-*")), [])
 
     def test_spec_and_source_revision_are_recorded(self) -> None:
-        self.assertEqual(self.manifest["normative_specification"]["sha256"], EXPECTED_SPEC_SHA256)
+        self.assertEqual(
+            {
+                role: record["sha256"]
+                for role, record in self.manifest["normative_specifications"].items()
+            },
+            EXPECTED_NORMATIVE_SHA256,
+        )
+        infrastructure = self.manifest["fixture_infrastructure"]
+        self.assertEqual(infrastructure["schema"]["revision"], "0.1")
+        self.assertEqual(
+            infrastructure["promoted_errata_vectors"]["cases_by_adjudication"],
+            GENERATOR.ERRATA_CASE_COUNTS,
+        )
+        self.assertEqual(infrastructure["promoted_errata_vectors"]["classified_cases"], 37)
         observed = subprocess.run(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, check=True, capture_output=True, text=True
         ).stdout.strip()
@@ -157,8 +174,9 @@ class GeneratedCorpusTests(unittest.TestCase):
         self.assertEqual(self.manifest["release_thresholds"]["demonstrated_primary_minimal_minimum"], 20_000)
         self.assertEqual(self.manifest["release_thresholds"]["preferred_negative_count"], 20_308)
         self.assertEqual(self.manifest["release_thresholds"]["observed_demonstrated_primary_minimal"], 332)
-        self.assertIn("provisional", self.manifest["release_thresholds"]["count_scope"])
-        self.assertEqual(self.manifest["generator_version"], "cd0-corpus-generator/3")
+        self.assertIn("complete normative failure triple", self.manifest["release_thresholds"]["count_scope"])
+        self.assertEqual(self.manifest["generator_version"], "cd0-corpus-generator/4")
+        self.assertEqual(self.manifest["schema"], "cd0-generated-corpus-manifest/v4")
 
     def test_shared_positive_and_negative_fixture_schema(self) -> None:
         validator = Draft202012Validator(SCHEMA)
@@ -237,18 +255,23 @@ class GeneratedCorpusTests(unittest.TestCase):
     def test_generated_truncation_size_is_explicit(self) -> None:
         configuration = self.manifest["truncation_configuration"]
         self.assertEqual(configuration["maximum_generated_document_octets"], 10)
-        expected = {
+        all_expected = [
             (row["id"], point)
             for row in self.positives
             if len(bytes.fromhex(row["canonical_hex"])) <= 10
             for point in range(len(bytes.fromhex(row["canonical_hex"])))
-        }
+        ]
+        displaced = self.manifest["truncation_configuration"][
+            "generated_truncation_candidates_displaced_by_promoted_hand_vectors"
+        ]
+        expected = set(all_expected[:-displaced] if displaced else all_expected)
         observed = {
             (row["source_positive_id"], row["parameter"])
             for row in self.mutations
             if row["source_scope"] == "generated-configured-size" and row["operation"] == "truncate-at"
         }
         self.assertEqual(observed, expected)
+        self.assertEqual(displaced, 22)
 
     def test_host_property_metadata_is_explicit(self) -> None:
         ids = {row["id"] for row in self.host_scenarios["scenarios"]}
@@ -274,8 +297,11 @@ class GeneratedCorpusTests(unittest.TestCase):
             self.assertIn("success_assertion", row)
             self.assertTrue("input_hex" in row or "fixture_ast" in row)
         integer = next(row for row in scenarios if row["limit"] == "max_integer_bits")
-        self.assertEqual(integer["expected_refusal"]["status"], "implementation-local-pending-adjudication")
-        self.assertIn("not normative", integer["divergence_boundary"])
+        self.assertEqual(integer["expected_refusal"]["status"], "normative")
+        depth = next(row for row in scenarios if row["limit"] == "max_depth")
+        nodes = next(row for row in scenarios if row["limit"] == "max_nodes")
+        self.assertEqual(depth["expected_refusal"]["stage"], "type-tag")
+        self.assertEqual(nodes["expected_refusal"]["stage"], "type-tag")
 
     def test_identifier_distinction_pairs_are_explicit_and_disjoint(self) -> None:
         expected = {
@@ -318,7 +344,7 @@ class GeneratedCorpusTests(unittest.TestCase):
         boundary = self.manifest["representation_and_oracle_boundary"]
         self.assertIn("consistency aid only", boundary["authority"])
         self.assertIn("no permanent triple", boundary["mutation_candidates"])
-        self.assertIn("A1-A9", self.manifest["divergence_boundary"])
+        self.assertIn("A1-A9 are closed", self.manifest["errata_closure"])
         self.assertIn("not global semantic uniqueness", self.manifest["negative_distinctness_scope"])
         self.assertIn("primary defect", self.manifest["negative_minimization"]["primary_defect_scope"])
 
@@ -378,15 +404,14 @@ class GeneratedCorpusTests(unittest.TestCase):
             self.assertEqual(cd0.encode_exact(decoded, retry), source, row["id"])
         self.assertEqual(observed, self.manifest["counts"]["negative_retry_verified"])
 
-    def test_normative_and_provisional_negative_counts_are_separate(self) -> None:
+    def test_every_classified_negative_has_a_complete_normative_triple(self) -> None:
         expected: dict[str, int] = {}
         for row in self.negatives:
             status = row.get("status", "normative")
             expected[status] = expected.get(status, 0) + 1
         self.assertEqual(self.manifest["counts"]["classified_negative_by_status"], dict(sorted(expected.items())))
-        self.assertGreater(expected["normative"], 0)
-        self.assertGreater(expected["provisional-blocked-stage"], 0)
-        self.assertGreater(expected["provisional-blocked-code"], 0)
+        self.assertEqual(expected, {"normative": len(self.negatives)})
+        self.assertTrue(all("status" not in row for row in self.negatives))
         identifier_resource_rows = [
             row for row in self.negatives
             if any(token in row["id"] for token in (
@@ -396,7 +421,9 @@ class GeneratedCorpusTests(unittest.TestCase):
             ))
         ]
         self.assertEqual(len(identifier_resource_rows), 3)
-        self.assertTrue(all(row["status"] == "provisional-blocked-stage" for row in identifier_resource_rows))
+        self.assertTrue(
+            all(set(row["expected_failure"]) == {"category", "code", "stage"} for row in identifier_resource_rows)
+        )
 
     def test_release_floors_cannot_be_bypassed_accidentally(self) -> None:
         refused = Path(self.temporary.name) / "refused"
@@ -470,8 +497,19 @@ class GeneratedCorpusTests(unittest.TestCase):
         false_spec = false_root / "mneme" / "spec" / "CANONICAL-DATUM-SPEC.md"
         false_spec.parent.mkdir(parents=True)
         shutil.copy2(ROOT / "mneme" / "spec" / "CANONICAL-DATUM-SPEC.md", false_spec)
+        for name in (
+            "CD0-POST-IMPLEMENTATION-RULING.md",
+            "CANONICAL-DATUM-SPEC-ERRATA-0.1.md",
+        ):
+            shutil.copy2(ROOT / name, false_root / name)
+        false_errata_vectors = false_root / "canonical-datum" / "vectors" / "cd0-errata-0.1.json"
+        false_errata_vectors.parent.mkdir(parents=True)
+        shutil.copy2(
+            ROOT / "canonical-datum" / "vectors" / "cd0-errata-0.1.json",
+            false_errata_vectors,
+        )
         subprocess.run(["git", "init", "-q"], cwd=false_root, check=True)
-        subprocess.run(["git", "add", str(false_spec.relative_to(false_root))], cwd=false_root, check=True)
+        subprocess.run(["git", "add", "."], cwd=false_root, check=True)
         subprocess.run(
             ["git", "-c", "user.name=CD0 Test", "-c", "user.email=cd0@example.invalid", "commit", "-qm", "pin spec"],
             cwd=false_root,
@@ -561,7 +599,7 @@ class GeneratedCorpusTests(unittest.TestCase):
         completed = subprocess.run(command, cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(completed.returncode, 2)
         self.assertIn("digest mismatch", completed.stderr)
-        self.assertIn(EXPECTED_SPEC_SHA256, completed.stderr)
+        self.assertIn(EXPECTED_NORMATIVE_SHA256["base-specification"], completed.stderr)
         self.assertFalse(refused.exists())
 
 

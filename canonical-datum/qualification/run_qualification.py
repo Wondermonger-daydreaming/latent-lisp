@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bounded Phase-4 qualification for the two CD/0 seed codecs.
+"""Bounded post-errata qualification for the two CD/0 seed codecs.
 
 This coordinator is not a codec and is not a source of datum semantics.  It
 drives the public codec APIs through the existing process adapters, reruns the
@@ -25,9 +25,33 @@ import tempfile
 from typing import Any, Iterable
 
 
-SCHEMA = "lisp-plus-cd0-qualification/v1"
+SCHEMA = "lisp-plus-cd0-qualification/v2"
 PROTOCOL = "lisp-plus-cd0-differential/v1"
-SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+EXPECTED_NORMATIVE_SHA256 = {
+    "base-specification": {
+        "path": "mneme/spec/CANONICAL-DATUM-SPEC.md",
+        "sha256": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc",
+    },
+    "post-implementation-ruling": {
+        "path": "CD0-POST-IMPLEMENTATION-RULING.md",
+        "sha256": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
+    },
+    "errata-0.1": {
+        "path": "CANONICAL-DATUM-SPEC-ERRATA-0.1.md",
+        "sha256": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
+    },
+}
+ERRATA_CASE_COUNTS = {
+    "A1": 6,
+    "A2": 5,
+    "A3": 6,
+    "A4": 3,
+    "A5": 3,
+    "A6": 2,
+    "A7": 1,
+    "A8": 6,
+    "A9": 5,
+}
 QUALIFICATION_BASE_REVISION = "fac17dd701c59f6da8eb2536dd022853b2e258fe"
 RANDOM_SEED = 0xCD0004
 
@@ -36,7 +60,7 @@ QUALIFICATION_DIR = REPO_ROOT / "canonical-datum" / "qualification"
 INTEGRATION_DIR = REPO_ROOT / "canonical-datum" / "integration"
 PYTHON_DIR = REPO_ROOT / "canonical-datum" / "python"
 COMMON_LISP_DIR = REPO_ROOT / "canonical-datum" / "common-lisp"
-SPEC_PATH = REPO_ROOT / "mneme" / "spec" / "CANONICAL-DATUM-SPEC.md"
+SPEC_PATH = REPO_ROOT / EXPECTED_NORMATIVE_SHA256["base-specification"]["path"]
 BUDGET_PATH = REPO_ROOT / "canonical-datum" / "vectors" / "cd0-budgets.json"
 
 MODE_CONFIG = {
@@ -329,7 +353,6 @@ def build_property_requests(
             "expected": dict(zip(("category", "code", "stage"), triple)),
             "warranted_fields": warranted,
             "classification": classification,
-            "provisional": False,
         }
 
     resource_cases = [
@@ -338,50 +361,39 @@ def build_property_requests(
             "4c5043440000",
             budget_with(base_budget, max_input_octets=5),
             ("ResourceRefusal", "ExcessiveInputLength", "input-budget"),
-            ("category", "code", "stage"),
-            False,
         ),
         (
             "resource-varint-threshold",
             "4c50434400108001",
             budget_with(base_budget, max_varint_octets=1),
             ("ResourceRefusal", "VarintBudgetExceeded", "integer-payload"),
-            ("category", "code", "stage"),
-            False,
         ),
         (
             "resource-string-threshold",
             "4c5043440020024142",
             budget_with(base_budget, max_single_string_octets=1),
             ("ResourceRefusal", "ExcessiveDeclaredLength", "length"),
-            ("category", "code", "stage"),
-            False,
         ),
         (
             "resource-depth-threshold",
             "4c50434400300100",
             budget_with(base_budget, max_depth=1),
-            ("ResourceRefusal", "ExcessiveNesting", "container-content"),
-            ("category", "code"),
-            True,
+            ("ResourceRefusal", "ExcessiveNesting", "type-tag"),
         ),
         (
             "resource-node-threshold",
             "4c50434400300100",
             budget_with(base_budget, max_nodes=1),
-            ("ResourceRefusal", "NodeBudgetExceeded", "container-content"),
-            ("category", "code"),
-            True,
+            ("ResourceRefusal", "NodeBudgetExceeded", "type-tag"),
         ),
     ]
-    for case_id, input_hex, tight_budget, triple, warranted, provisional in resource_cases:
+    for case_id, input_hex, tight_budget, triple in resource_cases:
         requests.append(request(case_id, "decode", tight_budget, input_hex=input_hex))
         metadata[case_id] = {
             "kind": "failure",
             "expected": dict(zip(("category", "code", "stage"), triple)),
-            "warranted_fields": warranted,
+            "warranted_fields": ("category", "code", "stage"),
             "classification": "resource-boundary",
-            "provisional": provisional,
         }
         retry_id = f"{case_id}:retry"
         requests.append(request(retry_id, "decode", base_budget, input_hex=input_hex))
@@ -410,11 +422,10 @@ def build_property_requests(
         "expected": {
             "category": "ResourceRefusal",
             "code": "ExcessiveNesting",
-            "stage": "container-content",
+            "stage": "type-tag",
         },
-        "warranted_fields": ("category", "code"),
+        "warranted_fields": ("category", "code", "stage"),
         "classification": "resource-boundary",
-        "provisional": True,
     }
     deep_retry_id = f"{deep_failure_id}:retry"
     requests.append(
@@ -550,7 +561,6 @@ def run_property_matrix(
     counters: Counter[str] = Counter()
     family_counts: Counter[str] = Counter()
     classifications: Counter[str] = Counter()
-    provisional_observations: list[dict[str, Any]] = []
     for request_id, meta in metadata.items():
         cl = responses["common-lisp"][request_id]
         py = responses["python"][request_id]
@@ -599,18 +609,7 @@ def run_property_matrix(
                     )
             if any(cl["failure"].get(field) != py["failure"].get(field) for field in fields):
                 raise QualificationFailure(f"{request_id}: warranted cross-codec failure disagreement")
-            if meta["provisional"]:
-                counters["provisional_failure_rows"] += 1
-                provisional_observations.append(
-                    {
-                        "request_id": request_id,
-                        "warranted_fields": list(fields),
-                        "common_lisp": cl["failure"],
-                        "python": py["failure"],
-                    }
-                )
-            else:
-                counters["normative_failure_rows"] += 1
+            counters["normative_failure_rows"] += 1
             continue
         if kind in ("retry", "retry-probe"):
             counters["resource_retries"] += 1
@@ -636,7 +635,6 @@ def run_property_matrix(
         "counts": dict(sorted(counters.items())),
         "root_family_counts": dict(sorted(family_counts.items())),
         "failure_classifications": dict(sorted(classifications.items())),
-        "provisional_observations": provisional_observations,
         "warranted_cross_codec_disagreements": 0,
     }
     return summary, runs
@@ -735,11 +733,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
 
-    spec_digest = sha256_path(SPEC_PATH)
-    if spec_digest != SPEC_SHA256:
-        raise QualificationFailure(
-            f"specification digest mismatch: {spec_digest} != {SPEC_SHA256}"
-        )
+    normative_inputs: dict[str, dict[str, str]] = {}
+    for role, expected in EXPECTED_NORMATIVE_SHA256.items():
+        observed = sha256_path(REPO_ROOT / expected["path"])
+        if observed != expected["sha256"]:
+            raise QualificationFailure(
+                f"normative input digest mismatch for {role}: "
+                f"{observed} != {expected['sha256']}"
+            )
+        normative_inputs[role] = dict(expected)
     base_budget = default_budget()
     all_runs: list[dict[str, Any]] = []
 
@@ -763,6 +765,17 @@ def main(argv: list[str] | None = None) -> int:
     golden_summary = json.loads(golden["stdout"])
     if golden_summary.get("status") != "PASS":
         raise QualificationFailure("reviewed golden differential did not pass")
+    golden_counts = golden_summary.get("counts", {})
+    if golden_counts.get("errata_vectors") != sum(ERRATA_CASE_COUNTS.values()):
+        raise QualificationFailure("golden differential did not execute all 37 errata vectors")
+    observed_errata_counts = {
+        adjudication: golden_counts.get(f"errata_{adjudication.lower()}", 0)
+        for adjudication in ERRATA_CASE_COUNTS
+    }
+    if observed_errata_counts != ERRATA_CASE_COUNTS:
+        raise QualificationFailure(
+            f"golden A1-A9 execution counts changed: {observed_errata_counts}"
+        )
     common_lisp_host_na = golden_summary["counts"].get("common-lisp_host_not_applicable", 0)
     if common_lisp_host_na != 3:
         raise QualificationFailure(
@@ -811,22 +824,25 @@ def main(argv: list[str] | None = None) -> int:
         "qualification_base_revision": QUALIFICATION_BASE_REVISION,
         "run_revision": git_rev_parse("HEAD"),
         "run_tree": git_rev_parse("HEAD^{tree}"),
-        "specification": {
-            "path": str(SPEC_PATH.relative_to(REPO_ROOT)),
-            "sha256": spec_digest,
-        },
+        "normative_specifications": normative_inputs,
         "scope": {
             "phase3_release_corpus_consumed": False,
             "phase3_release_corpus_claimed": False,
-            "a1_through_a9_adjudicated": False,
-            "provisional_fields_compared_as_normative": False,
+            "a1_through_a9_adjudicated": True,
+            "promoted_errata_vectors_executed": True,
+            "classified_failure_triples_complete": True,
         },
         "golden": {
             "status": golden_summary["status"],
             "requests_per_codec": golden_summary["requests"],
-            "counts": golden_summary["counts"],
+            "counts": golden_counts,
             "issues": golden_summary["issues"],
-            "provisional_observations": golden_summary["provisional_observations"],
+            "promoted_errata_execution": {
+                "classified_total": golden_counts["errata_vectors"],
+                "by_adjudication": observed_errata_counts,
+                "failures": 0,
+                "skips": 0,
+            },
             "host_descriptor_dispositions": {
                 "common_lisp_not_applicable": common_lisp_host_na,
                 "common_lisp_not_applicable_is_pass": False,
@@ -842,8 +858,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.json:
         print(json.dumps(summary, indent=2, sort_keys=True))
     else:
-        print(f"CD/0 Phase-4 qualification ({args.mode}): PASS")
-        print(f"spec sha256: {spec_digest}")
+        print(f"CD/0 post-errata qualification ({args.mode}): PASS")
+        print(
+            "normative sha256: "
+            + ", ".join(
+                f"{role}={record['sha256']}" for role, record in normative_inputs.items()
+            )
+        )
         print(f"golden requests per codec: {golden_summary['requests']}")
         print(
             "ephemeral randomized round trips: "
@@ -863,10 +884,7 @@ def main(argv: list[str] | None = None) -> int:
             "Common Lisp language-specific host descriptors: "
             f"{common_lisp_host_na} not applicable (not passes)"
         )
-        print(
-            "A1-A9: preserved; provisional failure stages were observed but "
-            "not promoted to normative fields"
-        )
+        print("A1-A9: 37 promoted vectors executed with complete adjudicated expectations")
         print("Phase-3 10k/20k corpus: neither consumed nor claimed")
     return 0
 

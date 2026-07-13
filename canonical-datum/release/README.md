@@ -1,9 +1,13 @@
 # CD/0 generated-corpus differential runner
 
-`run_generated_differential.py` is the Phase-3 release-corpus coordinator for
-Lisp+ Canonical Datum /0.  It sends the same requests to the independent Common
-Lisp and Python process adapters.  It is not a codec, does not infer datum
+`run_generated_differential.py` is the release-corpus coordinator for Lisp+
+Canonical Datum /0 with Errata 0.1. It sends the same requests to the Common
+Lisp and Python process adapters. It is not a codec, does not infer datum
 semantics, and does not treat either implementation as an oracle.
+
+Independently seeded implementations under shared normative infrastructure,
+with procedural—not OS-enforced—isolation, attested by the implementers and
+corroborated at content tier.
 
 ## Release invocation
 
@@ -11,7 +15,7 @@ Generate the corpus from a committed generator revision first.  Then run:
 
 ```sh
 python3 canonical-datum/release/run_generated_differential.py \
-  --corpus-dir canonical-datum/generated/release-v0 \
+  --corpus-dir canonical-datum/generated/release-errata-0.1 \
   --batch-size 2048 \
   --timeout-seconds 120 \
   --artifacts-dir canonical-datum/evidence/generated-differential-release-v0
@@ -19,10 +23,11 @@ python3 canonical-datum/release/run_generated_differential.py \
 
 The runner refuses before launching either codec unless all of these agree:
 
-- the repository specification has the required pinned SHA-256;
-- the manifest schema, generator version, specification pin, source commit,
+- the base specification, ruling, and errata have their required SHA-256 values;
+- the manifest v4 schema, generator v4, normative pins, source commit,
   source ancestry, and checked-out generator bytes;
-- identical before/after SHA-256 maps for all nine relevant source inputs, with
+- identical before/after SHA-256 maps for every relevant source input, including
+  the fixture schema and promoted errata vectors, with
   every recorded digest matching the checked-out path;
 - a clean source worktree with no dirty override for release-mode generation;
 - logical command, seed, runtime, release-mode, count, and threshold metadata;
@@ -41,11 +46,10 @@ decoded equality.  A deterministic self-plus-ring-neighbor matrix checks both
 equality directions and `equal-datum` iff identical canonical bytes without
 constructing a quadratic request matrix.
 
-Every classified negative is checked only on normatively warranted fields:
-
-- normative rows: category, code, and stage;
-- `provisional-blocked-stage`: category and code;
-- `provisional-blocked-code`: category and stage.
+Every classified negative is checked on the complete normative category, code,
+and stage triple. The runner separately executes all 37 promoted A1–A9
+operation vectors and reports each adjudication count without folding them into
+the generated corpus scale.
 
 Every `retry_budget` produces an additional full decode request.  Success must
 reproduce the original canonical document exactly, render a normalized fixture
@@ -71,10 +75,11 @@ Common Lisp N/A, not pass:
 
 The nine generated host-property scenarios are also dispositioned explicitly.
 Only the two equivalent classified host negatives count as exercised here.
-Inertness instrumentation, mutation probes, shared-graph properties, namespace
-matrices, and the A7 constructor case remain owned by Phase-4 qualification.
-The companion fourteen-resource-limit metadata matrix is validated but remains
-explicitly unexecuted here; its A1/A3/A8/A9 boundaries are not promoted.
+Inertness instrumentation, mutation probes, shared-graph properties, and the
+full namespace matrix remain owned by bounded qualification. The companion
+fourteen-resource-limit metadata matrix remains metadata, while the permanent
+errata vectors execute the adjudicated A1/A3/A4/A5/A8/A9 boundaries supported
+by the adapter protocol.
 
 ## Scale and evidence
 
@@ -86,16 +91,22 @@ shape: at least 20,000 classified adversarial rows and independently 20,000
 mechanically demonstrated byte-deletion-primary-minimal rows, plus 308
 authored/host coverage rows.  Large retry sets do not require a corpus-sized
 request array.
-Normative and provisional negative status totals remain separate in the
-manifest and differential summary.
+The fixed release contains 10,000 positives, 20,308 classified negatives,
+30,504 unclassified mutation candidates, and 20,012 retry requests. The 37
+promoted errata operations are reported as a separate classified class.
+
+For a release-qualified run, the runner hard-compares all 10,000 generated
+canonical octets, abstract datums, decoded ASTs, and equality classes against
+the audited release-v0 corpus. Any change is a hard stop.
 
 The summary always contains exact counts and SHA-256 values for every request
 and response batch.  With `--artifacts-dir`, exact request JSONL, response
 JSONL, adapter stderr, the mutation-disagreement ledger, and `summary.json` are
 retained.  A nonempty artifact directory is refused.
 
-Exit status 0 means all warranted applicable comparisons agreed.  It does not
-promote A1--A9, turn N/A into pass, or claim unexecuted host properties passed.
+Exit status 0 means all applicable comparisons and every promoted errata
+expectation agreed. It does not turn N/A into pass or claim unexecuted host
+properties passed.
 Exit status 1 means comparison issues; exit status 2 means a provenance,
 protocol, process, or runner precondition failed.
 

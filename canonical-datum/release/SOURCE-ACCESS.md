@@ -1,5 +1,8 @@
 # CD/0 release differential source-access record
 
+> Historical pre-Errata-0.1 source-access record. The successor v4 manifest
+> adds the ruling, errata, fixture schema, and promoted-vector provenance.
+
 Date: 2026-07-13
 Branch/worktree: `cd0-release-runner-stage` at
 `/home/gauss/Codex-Lab/latent-lisp-cd0-release-runner`

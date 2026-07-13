@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Deterministically generate the Lisp+ Canonical Datum /0 release corpus.
+"""Deterministically generate the Lisp+ Canonical Datum /0.1 release corpus.
 
-The normative specification is pinned before output is created.  Classified
-rows use the shared fixture schema.  Broad mutations that can carry more than
-one defect are emitted separately without an expected failure triple; only a
-later cross-implementation minimization pass may promote them.
+The base specification, post-implementation ruling, and Errata 0.1 are pinned
+before output is created.  Classified rows use the shared fixture schema.
+Broad mutations that can carry more than one defect are emitted separately
+without an expected failure triple; only a later cross-implementation
+minimization pass may promote them.
 
 The post-seed Python codec supplies canonical fixture adapters and a consistency
 check.  It is deliberately not described or used as a normative oracle.
@@ -29,8 +30,35 @@ import tempfile
 from typing import Any, Iterable, Mapping, Sequence
 
 
-GENERATOR_VERSION = "cd0-corpus-generator/3"
-EXPECTED_SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+GENERATOR_VERSION = "cd0-corpus-generator/4"
+MANIFEST_SCHEMA = "cd0-generated-corpus-manifest/v4"
+EXPECTED_NORMATIVE_SHA256 = {
+    "base-specification": {
+        "path": "mneme/spec/CANONICAL-DATUM-SPEC.md",
+        "sha256": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc",
+    },
+    "post-implementation-ruling": {
+        "path": "CD0-POST-IMPLEMENTATION-RULING.md",
+        "sha256": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
+    },
+    "errata-0.1": {
+        "path": "CANONICAL-DATUM-SPEC-ERRATA-0.1.md",
+        "sha256": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
+    },
+}
+ERRATA_VECTOR_PATH = "canonical-datum/vectors/cd0-errata-0.1.json"
+ERRATA_VECTOR_SCHEMA = "cd0-errata-vectors/0.1"
+ERRATA_CASE_COUNTS = {
+    "A1": 6,
+    "A2": 5,
+    "A3": 6,
+    "A4": 3,
+    "A5": 3,
+    "A6": 2,
+    "A7": 1,
+    "A8": 6,
+    "A9": 5,
+}
 DEFAULT_SEED = 0xCD000001
 RELEASE_POSITIVE_MINIMUM = 10_000
 RELEASE_ADVERSARIAL_TOTAL_MINIMUM = 20_000
@@ -44,9 +72,12 @@ ASSIGNED_TAGS = (0x00, 0x01, 0x02, 0x10, 0x11, 0x20, 0x21, 0x22, 0x30, 0x31)
 
 SOURCE_INPUT_PATHS = (
     "mneme/spec/CANONICAL-DATUM-SPEC.md",
+    "CD0-POST-IMPLEMENTATION-RULING.md",
+    "CANONICAL-DATUM-SPEC-ERRATA-0.1.md",
     "CANONICAL-DATUM-DIVERGENCES.md",
     "canonical-datum/schema/cd0-fixtures.schema.json",
     "canonical-datum/vectors/cd0-budgets.json",
+    ERRATA_VECTOR_PATH,
     "canonical-datum/vectors/cd0-positive.jsonl",
     "canonical-datum/vectors/cd0-negative.jsonl",
     "canonical-datum/vectors/cd0-distinct-pairs.json",
@@ -174,17 +205,52 @@ def require_unchanged_source(
     return hashes_after
 
 
-def verify_spec(root: Path) -> tuple[Path, str]:
-    spec = root / "mneme" / "spec" / "CANONICAL-DATUM-SPEC.md"
-    if not spec.is_file():
-        raise GeneratorError(f"normative specification not found: {spec}")
-    observed = sha256_file(spec)
-    if observed != EXPECTED_SPEC_SHA256:
+def verify_normative_inputs(root: Path) -> dict[str, dict[str, str]]:
+    observed_inputs: dict[str, dict[str, str]] = {}
+    for role, expected in EXPECTED_NORMATIVE_SHA256.items():
+        path = root / expected["path"]
+        if not path.is_file():
+            raise GeneratorError(f"normative input not found: {path}")
+        observed = sha256_file(path)
+        if observed != expected["sha256"]:
+            raise GeneratorError(
+                f"normative input digest mismatch for {role}: "
+                f"expected {expected['sha256']}, observed {observed} at {path}"
+            )
+        observed_inputs[role] = dict(expected)
+    return observed_inputs
+
+
+def load_promoted_errata_metadata(root: Path) -> dict[str, Any]:
+    path = root / ERRATA_VECTOR_PATH
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise GeneratorError(f"cannot load promoted errata vectors: {exc}") from exc
+    if document.get("schema") != ERRATA_VECTOR_SCHEMA:
+        raise GeneratorError("promoted errata vector schema mismatch")
+    if document.get("ruling_sha256") != EXPECTED_NORMATIVE_SHA256["post-implementation-ruling"]["sha256"]:
+        raise GeneratorError("promoted vectors do not pin the authorized ruling")
+    if document.get("errata_sha256") != EXPECTED_NORMATIVE_SHA256["errata-0.1"]["sha256"]:
+        raise GeneratorError("promoted vectors do not pin Errata 0.1")
+    cases = document.get("cases")
+    if type(cases) is not list or any(type(case) is not dict for case in cases):
+        raise GeneratorError("promoted errata cases are malformed")
+    observed_counts = frequency(str(case.get("adjudication")) for case in cases)
+    if observed_counts != ERRATA_CASE_COUNTS:
         raise GeneratorError(
-            "normative specification digest mismatch: "
-            f"expected {EXPECTED_SPEC_SHA256}, observed {observed} at {spec}"
+            f"promoted A1-A9 counts changed: {observed_counts} != {ERRATA_CASE_COUNTS}"
         )
-    return spec, observed
+    if len({case.get("id") for case in cases}) != len(cases):
+        raise GeneratorError("promoted errata vector ids are not unique")
+    return {
+        "path": ERRATA_VECTOR_PATH,
+        "sha256": sha256_file(path),
+        "schema": ERRATA_VECTOR_SCHEMA,
+        "classified_cases": len(cases),
+        "cases_by_adjudication": observed_counts,
+        "execution_owner": "shared hand differential and bounded qualification",
+    }
 
 
 def import_codec(root: Path) -> Any:
@@ -711,14 +777,7 @@ class NegativeBuilder:
         else:
             raise GeneratorError(f"authored negative unexpectedly succeeded: {row['id']}")
         expected = row["expected_failure"]
-        status = row.get("status", "normative")
-        if status == "provisional-blocked-stage":
-            comparable = (actual["category"], actual["code"]) == (expected["category"], expected["code"])
-        elif status == "provisional-blocked-code":
-            comparable = (actual["category"], actual["stage"]) == (expected["category"], expected["stage"])
-        else:
-            comparable = actual == expected
-        if not comparable:
+        if actual != expected:
             raise GeneratorError(f"seed consistency check disagreed for {row['id']}: expected {expected}, got {actual}")
         if "retry_budget" in row:
             if row["input_kind"] != "octets":
@@ -953,9 +1012,9 @@ def seed_precise_negatives(builder: NegativeBuilder, positives: Sequence[dict[st
         ("bytes-length", MAGIC_VERSION + b"\x21\x02ab", "cd0-max-bytes-1", "ExcessiveDeclaredLength", "length", None),
         ("sequence-count", MAGIC_VERSION + b"\x30\x02\x00\x00", "cd0-max-sequence-1", "ExcessiveContainerCount", "count", None),
         ("record-count", MAGIC_VERSION + b"\x31\x02" + key_a + b"\x00" + key_b + b"\x00", "cd0-max-record-1", "ExcessiveContainerCount", "count", None),
-        ("identifier-segments", MAGIC_VERSION + identifier_value_bytes(("a", "b"), ("p",)), "cd0-max-id-segments-1", "ExcessiveIdentifierSegments", "count", "provisional-blocked-stage"),
+        ("identifier-segments", MAGIC_VERSION + identifier_value_bytes(("a", "b"), ("p",)), "cd0-max-id-segments-1", "ExcessiveIdentifierSegments", "count", None),
         ("integer-bits", MAGIC_VERSION + b"\x10" + uvar(2 * 65536), "cd0-max-integer-8", "IntegerBudgetExceeded", "integer-payload", None),
-        ("segment-length", MAGIC_VERSION + identifier_value_bytes((), ("ab",)), "cd0-max-segment-1", "ExcessiveDeclaredLength", "length", "provisional-blocked-stage"),
+        ("segment-length", MAGIC_VERSION + identifier_value_bytes((), ("ab",)), "cd0-max-segment-1", "ExcessiveDeclaredLength", "length", None),
         ("aggregate", MAGIC_VERSION + b"\x30\x02\x20\x01a\x20\x01b", "cd0-max-aggregate-1", "AggregatePayloadBudgetExceeded", "length", None),
     )
     for slug, document, budget, code, stage, status in resource_cases:
@@ -968,7 +1027,7 @@ def seed_precise_negatives(builder: NegativeBuilder, positives: Sequence[dict[st
             budget=budget,
             retry_budget="cd0-conformance-default",
             status=status,
-            notes=("A1 keeps the identifier resource stage provisional",) if status else (),
+            notes=("Errata 0.1 fixes the identifier resource stage",),
             coverage_names=("declared-lengths-and-counts-above-budgets",),
         )
 
@@ -980,7 +1039,7 @@ def seed_precise_negatives(builder: NegativeBuilder, positives: Sequence[dict[st
         ("bytes-declaration-only", MAGIC_VERSION + b"\x21\x02", "cd0-max-bytes-1", "ExcessiveDeclaredLength", "length", None),
         ("sequence-declaration-only", MAGIC_VERSION + b"\x30\x02", "cd0-max-sequence-1", "ExcessiveContainerCount", "count", None),
         ("record-declaration-only", MAGIC_VERSION + b"\x31\x02", "cd0-max-record-1", "ExcessiveContainerCount", "count", None),
-        ("identifier-declaration-only", MAGIC_VERSION + b"\x22\x02", "cd0-max-id-segments-1", "ExcessiveIdentifierSegments", "count", "provisional-blocked-stage"),
+        ("identifier-declaration-only", MAGIC_VERSION + b"\x22\x02", "cd0-max-id-segments-1", "ExcessiveIdentifierSegments", "count", None),
     ):
         builder.add_octets(
             f"resource-{slug}",
@@ -990,7 +1049,7 @@ def seed_precise_negatives(builder: NegativeBuilder, positives: Sequence[dict[st
             "declared-limit-breach-without-matching-payload",
             budget=budget,
             status=status,
-            notes=("A1 keeps the identifier resource stage provisional",) if status else (),
+            notes=("Errata 0.1 fixes the identifier resource stage",),
             coverage_names=("declared-lengths-and-counts-above-budgets",),
         )
 
@@ -998,25 +1057,23 @@ def seed_precise_negatives(builder: NegativeBuilder, positives: Sequence[dict[st
     builder.add_octets(
         "resource-depth-boundary",
         nested_unit,
-        (resource, "ExcessiveNesting", "container-content"),
+        (resource, "ExcessiveNesting", "type-tag"),
         "resource",
         "lower-depth-budget-by-one",
         budget="cd0-max-depth-1",
         retry_budget="cd0-conformance-default",
-        status="provisional-blocked-stage",
-        notes=("A1 fixes category/code but not this stage",),
+        notes=("A1/Errata 0.1 fixes value-entry refusal at type-tag",),
         coverage_names=("container-depth-node-count-boundaries",),
     )
     builder.add_octets(
         "resource-node-boundary",
         nested_unit,
-        (resource, "NodeBudgetExceeded", "container-content"),
+        (resource, "NodeBudgetExceeded", "type-tag"),
         "resource",
         "lower-node-budget-by-one",
         budget="cd0-max-nodes-1",
         retry_budget="cd0-conformance-default",
-        status="provisional-blocked-stage",
-        notes=("A1 fixes category/code but not this stage",),
+        notes=("A1/Errata 0.1 fixes value-entry refusal at type-tag",),
         coverage_names=("container-depth-node-count-boundaries",),
     )
 
@@ -1058,8 +1115,7 @@ def seed_precise_negatives(builder: NegativeBuilder, positives: Sequence[dict[st
         "strict-integer-import/v0",
         (host_unsupported, "UnsupportedHostType", "host-import"),
         "host-unsupported",
-        status="provisional-blocked-code",
-        notes=("A2 keeps the exact refusal code provisional",),
+        notes=("A2/Errata 0.1 fixes the exact host-import refusal triple",),
         coverage_names=("host-symbols-and-python-bool-int",),
     )
     builder.add_host(
@@ -1312,15 +1368,40 @@ def build_mutations(
             )
             hand_truncations += 1
 
-    for row in positives:
+    generated_truncation_sources = [
+        row
+        for row in positives
+        if len(bytes.fromhex(row["canonical_hex"])) <= truncation_max_octets
+    ]
+    generated_truncation_points = [
+        (row, point)
+        for row in generated_truncation_sources
+        for point in range(len(bytes.fromhex(row["canonical_hex"])))
+    ]
+    promoted_hand_points = sum(
+        len(bytes.fromhex(row["canonical_hex"]))
+        for row in hand_rows
+        if "construction" in row
+    )
+    # The release mutation population is fixed at its audited scale.  A7 adds
+    # 22 permanent hand-vector truncation points; displace the same number of
+    # redundant generated-size truncations from the deterministic tail instead
+    # of dropping any promoted hand witness or changing sample operations.
+    displaced_generated_points = min(
+        promoted_hand_points, max(0, len(generated_truncation_points) - 1)
+    )
+    emitted_generated_points = (
+        generated_truncation_points[:-displaced_generated_points]
+        if displaced_generated_points
+        else generated_truncation_points
+    )
+    for row, point in emitted_generated_points:
         document = bytes.fromhex(row["canonical_hex"])
-        if len(document) <= truncation_max_octets:
-            for point in range(len(document)):
-                mutations.add(
-                    row["id"], "generated-configured-size", "truncate-at", document.hex(), document[:point],
-                    "configured-generated-truncation-points", parameter=point,
-                )
-                generated_truncations += 1
+        mutations.add(
+            row["id"], "generated-configured-size", "truncate-at", document.hex(), document[:point],
+            "configured-generated-truncation-points", parameter=point,
+        )
+        generated_truncations += 1
 
     samples = select_mutation_samples(positives, sample_count)
     for row in samples:
@@ -1358,11 +1439,12 @@ def build_mutations(
         add_rational_mutations(mutations, row)
 
     return mutations.rows, {
-        "hand_positive_documents": len(hand_rows),
+        "hand_positive_fixture_rows": len(hand_rows),
+        "construction_descriptor_rows": sum(1 for row in hand_rows if "construction" in row),
         "hand_truncation_candidates": hand_truncations,
-        "generated_documents_at_or_below_configured_size": sum(
-            1 for row in positives if len(bytes.fromhex(row["canonical_hex"])) <= truncation_max_octets
-        ),
+        "generated_documents_at_or_below_configured_size": len(generated_truncation_sources),
+        "generated_truncation_candidates_before_fixed-scale_displacement": len(generated_truncation_points),
+        "generated_truncation_candidates_displaced_by_promoted_hand_vectors": displaced_generated_points,
         "generated_truncation_candidates": generated_truncations,
         "sampled_positive_documents": len(samples),
     }
@@ -1394,10 +1476,8 @@ def build_resource_boundary_scenarios() -> list[dict[str, Any]]:
         refuse: int,
         code: str,
         stage: str,
-        status: str = "normative",
-        divergence: str | None = None,
     ) -> dict[str, Any]:
-        row: dict[str, Any] = {
+        return {
             "id": identifier,
             "operation": "decode-exact",
             "input_hex": document.hex(),
@@ -1409,14 +1489,11 @@ def build_resource_boundary_scenarios() -> list[dict[str, Any]]:
                 "category": "ResourceRefusal",
                 "code": code,
                 "stage": stage,
-                "status": status,
+                "status": "normative",
             },
             "success_assertion": "decode succeeds and re-encodes byte-identically at accept_value",
             "execution_status": "not-executed-by-generator",
         }
-        if divergence is not None:
-            row["divergence_boundary"] = divergence
-        return row
 
     rows = [
         decode_case("cd0-resource-boundary-input", "max_input_octets", documents["unit"], 6, 5, "ExcessiveInputLength", "input-budget"),
@@ -1432,11 +1509,11 @@ def build_resource_boundary_scenarios() -> list[dict[str, Any]]:
                 "category": "ResourceRefusal",
                 "code": "ExcessiveOutputLength",
                 "stage": "allocation",
-                "status": "provisional-blocked-stage",
+                "status": "normative",
             },
             "success_assertion": "canonical Unit document is six octets at accept_value",
             "execution_status": "not-executed-by-generator",
-            "divergence_boundary": "A1 fixes no unique encoder stage; A9 fixes no complete encoder budget surface",
+            "operation_budget_rule": "runtime encoding applies output size and record-key work, not structural admission limits",
         },
         decode_case("cd0-resource-boundary-varint", "max_varint_octets", documents["integer-64"], 2, 1, "VarintBudgetExceeded", "integer-payload"),
         decode_case(
@@ -1447,15 +1524,13 @@ def build_resource_boundary_scenarios() -> list[dict[str, Any]]:
             8,
             "IntegerBudgetExceeded",
             "integer-payload",
-            "implementation-local-pending-adjudication",
-            "A3: accept/refuse values use the Python seed's magnitude-bit interpretation; they are unexecuted metadata and not normative",
         ),
-        decode_case("cd0-resource-boundary-depth", "max_depth", documents["nested-unit"], 2, 1, "ExcessiveNesting", "container-content", "provisional-blocked-stage", "A1 stage remains provisional"),
-        decode_case("cd0-resource-boundary-nodes", "max_nodes", documents["nested-unit"], 2, 1, "NodeBudgetExceeded", "container-content", "provisional-blocked-stage", "A1 stage remains provisional"),
+        decode_case("cd0-resource-boundary-depth", "max_depth", documents["nested-unit"], 2, 1, "ExcessiveNesting", "type-tag"),
+        decode_case("cd0-resource-boundary-nodes", "max_nodes", documents["nested-unit"], 2, 1, "NodeBudgetExceeded", "type-tag"),
         decode_case("cd0-resource-boundary-sequence-count", "max_sequence_items", documents["sequence-two"], 2, 1, "ExcessiveContainerCount", "count"),
         decode_case("cd0-resource-boundary-record-count", "max_record_fields", documents["record-two"], 2, 1, "ExcessiveContainerCount", "count"),
-        decode_case("cd0-resource-boundary-identifier-count", "max_identifier_segments", documents["identifier-three-segments"], 3, 1, "ExcessiveIdentifierSegments", "count", "provisional-blocked-stage", "A1 stage and A4 aggregate accounting remain open"),
-        decode_case("cd0-resource-boundary-segment", "max_segment_octets", documents["identifier-segment-two"], 2, 1, "ExcessiveDeclaredLength", "length", "provisional-blocked-stage", "A1 identifier resource stage remains open"),
+        decode_case("cd0-resource-boundary-identifier-count", "max_identifier_segments", documents["identifier-three-segments"], 3, 2, "ExcessiveIdentifierSegments", "count"),
+        decode_case("cd0-resource-boundary-segment", "max_segment_octets", documents["identifier-segment-two"], 2, 1, "ExcessiveDeclaredLength", "length"),
         decode_case("cd0-resource-boundary-string", "max_single_string_octets", documents["string-two"], 2, 1, "ExcessiveDeclaredLength", "length"),
         decode_case("cd0-resource-boundary-bytes", "max_single_bytes_octets", documents["bytes-two"], 2, 1, "ExcessiveDeclaredLength", "length"),
         decode_case("cd0-resource-boundary-aggregate", "max_aggregate_payload_octets", documents["aggregate-two"], 2, 1, "AggregatePayloadBudgetExceeded", "length"),
@@ -1475,11 +1550,11 @@ def build_resource_boundary_scenarios() -> list[dict[str, Any]]:
                 "category": "ResourceRefusal",
                 "code": "RecordKeyWorkBudgetExceeded",
                 "stage": "encode-ordering",
-                "status": "provisional-blocked-accounting",
+                "status": "normative",
             },
-            "success_assertion": "import/encode succeeds when the selected complete-key accounting fits",
+            "success_assertion": "encode succeeds when each complete canonical Identifier ValueBytes occurrence fits exactly once",
             "execution_status": "not-executed-by-generator",
-            "divergence_boundary": "A8 leaves exact record-key work accounting open",
+            "accounting_rule": "complete canonical Identifier ValueBytes, once per field occurrence, operation-wide",
         },
     ]
     limits = {row["limit"] for row in rows}
@@ -1534,7 +1609,11 @@ def build_host_scenarios(positives: Sequence[dict[str, Any]], coverage: Coverage
             "kind": "disjoint-host-types-property",
             "requirement": "symbols need explicit mapping and Python bool never imports as integer",
             "cases": ["interned-symbol-without-mapping", "uninterned-symbol", "package-renamed-symbol", "python-true-as-integer", "python-false-as-zero"],
-            "divergence_boundary": "A2 leaves the bool/importer exact code provisional",
+            "expected_bool_integer_failure": {
+                "category": "UnsupportedHostInput",
+                "code": "UnsupportedHostType",
+                "stage": "host-import",
+            },
         },
         {
             "id": "cd0-host-property-namespaces",
@@ -1559,7 +1638,12 @@ def build_host_scenarios(positives: Sequence[dict[str, Any]], coverage: Coverage
             "id": "cd0-host-property-rational-construction",
             "kind": "constructor-normalization-property",
             "requirement": "2/4 constructs the same abstract value as 1/2 while exact bytes for unreduced 2/4 refuse",
-            "divergence_boundary": "A7: this is metadata, not an invented fixture AST constructor form",
+            "fixture_form": "construction descriptor distinct from the normalized abstract datum",
+            "promoted_positive_vector_refs": [
+                "cd0-pos-rational-construction-two-fourths",
+                "cd0-pos-rational-construction-two-halves",
+                "cd0-pos-rational-construction-zero-sevenths",
+            ],
         },
     ]
     for scenario in scenarios:
@@ -1658,7 +1742,8 @@ def release_qualifies(
 
 def generate(args: argparse.Namespace) -> Path:
     root = args.repo_root.resolve()
-    spec_path, spec_digest = verify_spec(root)
+    normative_inputs = verify_normative_inputs(root)
+    promoted_errata = load_promoted_errata_metadata(root)
     if args.allow_dirty_source and not args.allow_small:
         raise GeneratorError("--allow-dirty-source is permitted only together with --allow-small")
     if not args.allow_small:
@@ -1785,7 +1870,7 @@ def generate(args: argparse.Namespace) -> Path:
             ),
         }
         manifest = {
-            "schema": "cd0-generated-corpus-manifest/v1",
+            "schema": MANIFEST_SCHEMA,
             "generator_version": GENERATOR_VERSION,
             "deterministic_seed": args.seed,
             "logical_command_argv": command_argv,
@@ -1810,9 +1895,16 @@ def generate(args: argparse.Namespace) -> Path:
                 "version": platform.python_version(),
                 "random_engine": "random.Random (MT19937) with explicit integer seed",
             },
-            "normative_specification": {
-                "path": str(spec_path.relative_to(root)),
-                "sha256": spec_digest,
+            "normative_specifications": normative_inputs,
+            "fixture_infrastructure": {
+                "schema": {
+                    "path": "canonical-datum/schema/cd0-fixtures.schema.json",
+                    "sha256": source_hashes_before[
+                        "canonical-datum/schema/cd0-fixtures.schema.json"
+                    ],
+                    "revision": "0.1",
+                },
+                "promoted_errata_vectors": promoted_errata,
             },
             "counts": {
                 "positive": len(positives),
@@ -1836,7 +1928,7 @@ def generate(args: argparse.Namespace) -> Path:
                 "observed_adversarial_total": len(negative_builder.rows),
                 "observed_demonstrated_primary_minimal": demonstrated_primary_minimal,
                 "qualifies": qualifies,
-                "count_scope": "qualification requires at least 20000 demonstrated byte-deletion-primary-minimal rows; authored/host coverage rows are additional, while provisional rows remain separately reported",
+                "count_scope": "qualification requires at least 20000 demonstrated byte-deletion-primary-minimal rows; 308 authored/host coverage rows are additional and every classified row carries a complete normative failure triple",
                 "allow_small_test_mode": bool(args.allow_small),
             },
             "negative_minimization": {
@@ -1861,7 +1953,7 @@ def generate(args: argparse.Namespace) -> Path:
                 "mutation_candidates": "unclassified; no permanent triple until minimized and compared",
                 "generated_host_rows": "require later integration-adapter support before cross-implementation execution",
             },
-            "divergence_boundary": "A1-A9 remain open; provisional stage/code/accounting rows are counted separately and mutations carry no inferred normative triple",
+            "errata_closure": "A1-A9 are closed by the pinned ruling and Errata 0.1; promoted cases are permanent shared vectors, while unclassified mutations still carry no inferred normative triple",
             "positive_root_tag_counts": {
                 f"{tag:02x}": sum(1 for item in positive_metadata if item["root_tag"] == tag)
                 for tag in ASSIGNED_TAGS

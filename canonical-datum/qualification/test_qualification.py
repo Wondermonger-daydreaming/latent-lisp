@@ -70,28 +70,31 @@ class ManifestTests(unittest.TestCase):
             self.assertEqual(set(request["budget"]), expected_fields)
             self.assertTrue(all(type(value) is int and value >= 0 for value in request["budget"].values()))
 
-    def test_provisional_failures_do_not_warrant_stage(self) -> None:
-        provisional = [
-            metadata
-            for metadata in self.metadata.values()
-            if metadata.get("kind") == "failure" and metadata.get("provisional")
-        ]
-        self.assertEqual(len(provisional), 3)
-        self.assertTrue(all(tuple(item["warranted_fields"]) == ("category", "code") for item in provisional))
-
-    def test_normative_failures_warrant_all_three_fields(self) -> None:
+    def test_all_classified_failures_warrant_all_three_fields(self) -> None:
         normative = [
             metadata
             for metadata in self.metadata.values()
-            if metadata.get("kind") == "failure" and not metadata.get("provisional")
+            if metadata.get("kind") == "failure"
         ]
-        self.assertEqual(len(normative), 11)
+        self.assertEqual(len(normative), 14)
         self.assertTrue(
             all(
                 tuple(item["warranted_fields"]) == ("category", "code", "stage")
                 for item in normative
             )
         )
+        for request_id in (
+            "resource-depth-threshold",
+            "resource-node-threshold",
+            "resource-deep-semantic-threshold",
+        ):
+            self.assertEqual(self.metadata[request_id]["expected"]["stage"], "type-tag")
+
+    def test_normative_inputs_and_errata_counts_are_pinned(self) -> None:
+        self.assertEqual(sum(qualification.ERRATA_CASE_COUNTS.values()), 37)
+        self.assertEqual(set(qualification.ERRATA_CASE_COUNTS), {f"A{i}" for i in range(1, 10)})
+        for record in qualification.EXPECTED_NORMATIVE_SHA256.values():
+            self.assertEqual(len(record["sha256"]), 64)
 
     def test_hostile_rows_are_classified_and_single_purpose(self) -> None:
         failures = [item for item in self.metadata.values() if item.get("kind") == "failure"]
