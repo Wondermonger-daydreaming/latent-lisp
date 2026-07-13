@@ -486,6 +486,246 @@ class AmbientAndProcessTests(unittest.TestCase):
         self.assertEqual(observed, [expected] * 128)
 
 
+class HostStackSafetyTests(unittest.TestCase):
+    DEPTH = 1500
+
+    def deep_budget(self) -> cd0.ResourceBudget:
+        return replace(
+            DEFAULT,
+            max_depth=self.DEPTH + 1,
+            max_nodes=self.DEPTH + 1,
+            identifier="python-host-stack-witness",
+        )
+
+    def assert_allocation_refusal(self, callable_) -> None:
+        old_limit = sys.getrecursionlimit()
+        try:
+            sys.setrecursionlimit(300)
+            with self.assertRaises(cd0.CD0Failure) as raised:
+                callable_()
+        finally:
+            sys.setrecursionlimit(old_limit)
+        self.assertEqual(
+            raised.exception.triple,
+            ("ResourceRefusal", "AllocationRefused", "allocation"),
+        )
+
+    def nested_datum(self, leaf: cd0.Datum | None = None) -> cd0.Datum:
+        value = cd0.unit() if leaf is None else leaf
+        for _ in range(self.DEPTH):
+            value = cd0.sequence((value,))
+        return value
+
+    def test_deep_decode_translates_host_stack_exhaustion(self) -> None:
+        document = b"LPCD\x00" + b"\x30\x01" * self.DEPTH + b"\x00"
+        self.assert_allocation_refusal(lambda: cd0.decode_exact(document, self.deep_budget()))
+
+    def test_deep_encode_translates_host_stack_exhaustion(self) -> None:
+        value = self.nested_datum()
+        self.assert_allocation_refusal(lambda: cd0.encode_exact(value, self.deep_budget()))
+
+    def test_deep_fixture_import_translates_host_stack_exhaustion(self) -> None:
+        ast: dict = {"t": "unit"}
+        for _ in range(self.DEPTH):
+            ast = {"t": "seq", "items": [ast]}
+        self.assert_allocation_refusal(lambda: cd0.from_fixture_ast(ast, self.deep_budget()))
+
+    def test_deep_descriptor_import_translates_host_stack_exhaustion(self) -> None:
+        node: dict = {"host_type": "unit"}
+        for _ in range(self.DEPTH):
+            node = {"host_type": "sequence", "items": [node]}
+        descriptor = {"root": node, "objects": {}}
+        self.assert_allocation_refusal(
+            lambda: cd0.import_host_descriptor(
+                descriptor,
+                "generic-sequence-import/v0",
+                self.deep_budget(),
+            )
+        )
+
+    def test_iterative_equality_survives_deep_values(self) -> None:
+        left = self.nested_datum(cd0.integer(1))
+        equal = self.nested_datum(cd0.integer(1))
+        distinct = self.nested_datum(cd0.integer(2))
+        old_limit = sys.getrecursionlimit()
+        try:
+            sys.setrecursionlimit(100)
+            self.assertTrue(cd0.equal_datum(left, equal))
+            self.assertFalse(cd0.equal_datum(left, distinct))
+        finally:
+            sys.setrecursionlimit(old_limit)
+
+    def test_iterative_fixture_export_survives_deep_values(self) -> None:
+        ast = cd0.to_fixture_ast(self.nested_datum())
+        for _ in range(self.DEPTH):
+            self.assertEqual(ast["t"], "seq")
+            ast = ast["items"][0]
+        self.assertEqual(ast, {"t": "unit"})
+
+    def test_deep_diagnostic_translates_host_stack_exhaustion(self) -> None:
+        value = self.nested_datum()
+        self.assert_allocation_refusal(lambda: cd0.diagnostic_render(value))
+
+
+class DecimalGuardTests(unittest.TestCase):
+    @unittest.skipUnless(hasattr(sys, "set_int_max_str_digits"), "Python has no decimal digit guard")
+    def test_local_digit_limit_does_not_change_fixture_identity(self) -> None:
+        source = "1" + "0" * 999
+        old_limit = sys.get_int_max_str_digits()
+        try:
+            sys.set_int_max_str_digits(640)
+            datum = cd0.from_fixture_ast({"t": "int", "v": source}, DEFAULT)
+            self.assertEqual(cd0.to_fixture_ast(datum), {"t": "int", "v": source})
+            self.assertEqual(cd0.diagnostic_render(datum), source)
+            rational = cd0.from_fixture_ast({"t": "rat", "p": "1", "q": source}, DEFAULT)
+            self.assertEqual(
+                cd0.to_fixture_ast(rational),
+                {"t": "rat", "p": "1", "q": source},
+            )
+            self.assertEqual(cd0.diagnostic_render(rational), f"rat(1,{source})")
+            descriptor = {
+                "root": {"host_type": "integer", "value": source},
+                "objects": {},
+            }
+            imported = cd0.import_host_descriptor(
+                descriptor,
+                "generic-sequence-import/v0",
+                DEFAULT,
+            )
+            self.assertTrue(cd0.equal_datum(imported, datum))
+        finally:
+            sys.set_int_max_str_digits(old_limit)
+
+    @unittest.skipUnless(hasattr(sys, "set_int_max_str_digits"), "Python has no decimal digit guard")
+    def test_cross_process_digit_limit_does_not_change_fixture_identity(self) -> None:
+        limits_json = json.dumps(dict(DEFAULT.limits), sort_keys=True)
+        program = textwrap.dedent(
+            f"""
+            import json
+            import sys
+            import cd0
+            sys.set_int_max_str_digits(640)
+            budget = cd0.ResourceBudget.from_mapping(json.loads({limits_json!r}), identifier='digit-child')
+            source = '1' + '0' * 999
+            datum = cd0.from_fixture_ast({{'t': 'int', 'v': source}}, budget)
+            print(cd0.to_fixture_ast(datum)['v'] == source)
+            print(cd0.diagnostic_render(datum) == source)
+            """
+        )
+        completed = subprocess.run(
+            [sys.executable, "-c", program],
+            check=True,
+            capture_output=True,
+            text=True,
+            env=dict(os.environ),
+        )
+        self.assertEqual(completed.stdout.splitlines(), ["True", "True"])
+
+    def test_oversized_decimal_refuses_before_unbounded_integer_construction(self) -> None:
+        tiny = replace(DEFAULT, max_integer_bits=8, identifier="fixture-integer-8")
+        operations = (
+            lambda: cd0.from_fixture_ast({"t": "int", "v": "9" * 5000}, tiny),
+            lambda: cd0.from_fixture_ast(
+                {"t": "rat", "p": "1", "q": "9" * 5000},
+                tiny,
+            ),
+            lambda: cd0.import_host_descriptor(
+                {
+                    "root": {"host_type": "integer", "value": "9" * 5000},
+                    "objects": {},
+                },
+                "generic-sequence-import/v0",
+                tiny,
+            ),
+        )
+        for operation in operations:
+            with self.subTest(operation=operation), self.assertRaises(cd0.CD0Failure) as raised:
+                operation()
+            self.assertEqual(
+                raised.exception.triple,
+                ("ResourceRefusal", "IntegerBudgetExceeded", "host-import"),
+            )
+
+    def test_fixture_decimal_rejects_negative_zero(self) -> None:
+        for ast in (
+            {"t": "int", "v": "-0"},
+            {"t": "rat", "p": "-0", "q": "2"},
+            {"t": "rat", "p": "1", "q": "-0"},
+        ):
+            with self.subTest(ast=ast), self.assertRaises(cd0.CD0Failure) as raised:
+                cd0.from_fixture_ast(ast, DEFAULT)
+            self.assertEqual(
+                raised.exception.triple,
+                ("UnsupportedHostInput", "UnsupportedHostType", "host-import"),
+            )
+        descriptor = {"root": {"host_type": "integer", "value": "-0"}, "objects": {}}
+        with self.assertRaises(cd0.CD0Failure) as raised:
+            cd0.import_host_descriptor(descriptor, "generic-sequence-import/v0", DEFAULT)
+        self.assertEqual(
+            raised.exception.triple,
+            ("UnsupportedHostInput", "UnsupportedHostType", "host-import"),
+        )
+
+
+class HostImportPreallocationTests(unittest.TestCase):
+    def test_fixture_hex_budget_precedes_bytes_conversion(self) -> None:
+        tiny = replace(DEFAULT, max_single_bytes_octets=1, identifier="fixture-bytes-1")
+        with mock.patch.object(
+            cd0,
+            "_fixture_hex_to_bytes",
+            side_effect=AssertionError("hex conversion reached"),
+        ):
+            with self.assertRaises(cd0.CD0Failure) as raised:
+                cd0.from_fixture_ast({"t": "bytes", "hex": "0001"}, tiny)
+        self.assertEqual(
+            raised.exception.triple,
+            ("ResourceRefusal", "ExcessiveDeclaredLength", "host-import"),
+        )
+
+    def test_descriptor_hex_budget_precedes_bytes_conversion(self) -> None:
+        tiny = replace(DEFAULT, max_single_bytes_octets=1, identifier="descriptor-bytes-1")
+        descriptor = {"root": {"host_type": "bytes", "hex": "0001"}, "objects": {}}
+        with mock.patch.object(
+            cd0,
+            "_fixture_hex_to_bytes",
+            side_effect=AssertionError("hex conversion reached"),
+        ):
+            with self.assertRaises(cd0.CD0Failure) as raised:
+                cd0.import_host_descriptor(descriptor, "generic-sequence-import/v0", tiny)
+        self.assertEqual(
+            raised.exception.triple,
+            ("ResourceRefusal", "ExcessiveDeclaredLength", "host-import"),
+        )
+
+    def test_fixture_container_limits_precede_runtime_construction(self) -> None:
+        cases = (
+            (
+                {"t": "seq", "items": [{"t": "unit"}]},
+                replace(DEFAULT, max_sequence_items=0, identifier="fixture-sequence-0"),
+            ),
+            (
+                {
+                    "t": "record",
+                    "fields": [
+                        {
+                            "key": {"t": "id", "namespace_utf8_hex": [], "path_utf8_hex": ["61"]},
+                            "value": {"t": "unit"},
+                        }
+                    ],
+                },
+                replace(DEFAULT, max_record_fields=0, identifier="fixture-record-0"),
+            ),
+            (
+                {"t": "id", "namespace_utf8_hex": [], "path_utf8_hex": ["61"]},
+                replace(DEFAULT, max_identifier_segments=0, identifier="fixture-segments-0"),
+            ),
+        )
+        for ast, budget in cases:
+            with self.subTest(tag=ast["t"]), self.assertRaises(cd0.CD0Failure) as raised:
+                cd0.from_fixture_ast(ast, budget)
+            self.assertEqual(raised.exception.category, "ResourceRefusal")
+
+
 class GrammarBoundaryTests(unittest.TestCase):
     def test_integer_and_uvar_boundaries_round_trip(self) -> None:
         values = (
