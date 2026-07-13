@@ -157,7 +157,7 @@ warranted disagreements: 0; mutation minimizations required: 0
 provisional and N/A observations: 5 provisional-stage plus 1 provisional-code release rows; 3 Common Lisp language-specific host rows N/A, not pass
 release differential result: PASS
 release differential summary sha256: 66b6122d4145e97c59b931d2e90be041e7094329b1a72df7586ac7bbf3799232
-final qualification result: PASS; same 100,824 requests per codec
+final qualification result: PASS; 353 golden plus 1,045 property requests per codec
 final qualification summary sha256: 5580c47e6bce23001e93b8259e6d9c6e432c6a25dcbcb25ee298821dd93fa585
 final v1 result: PASS; 6/6 mneme/verify-all.sh checks
 final v1 transcript sha256: da89c3155729b77f6ba8de6a219b5ebae5bd7c3bd25ee1406234331cf2f83c1c
