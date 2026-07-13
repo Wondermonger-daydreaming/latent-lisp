@@ -47,14 +47,17 @@ Every classified negative is checked only on normatively warranted fields:
 - `provisional-blocked-stage`: category and code;
 - `provisional-blocked-code`: category and stage.
 
-Every `retry_budget` produces an additional decode/re-encode request.  Success
-must reproduce the original canonical document exactly in both codecs.
+Every `retry_budget` produces an additional full decode request.  Success must
+reproduce the original canonical document exactly, render a normalized fixture
+AST in both codecs, and agree cross-codec on that AST.
 
 Mutation candidates remain unclassified.  Both-success is accepted only when
-the canonical retry result is identical.  Both-failure is accepted only when
-the complete failure triples agree.  Mixed outcomes or different triples are
-recorded by original case id and input digest as `minimization required`; the
-runner never assigns an expected primary defect.
+both normalized ASTs and canonical results agree **and** the canonical bytes
+are exactly the candidate input.  Symmetric acceptance that normalizes to
+different bytes is a conformance/minimization issue, not a pass.  Both-failure
+is accepted only when the complete failure triples agree.  Mixed outcomes or
+different triples are recorded by original case id and input digest as
+`minimization required`; the runner never assigns an expected primary defect.
 
 ## Host applicability boundary
 
