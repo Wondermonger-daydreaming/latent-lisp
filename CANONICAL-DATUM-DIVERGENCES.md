@@ -225,6 +225,23 @@ boundary on its own stated rationale.
 | A8 | complete Identifier `ValueBytes` once per field occurrence | A8 exact/nested/duplicate cases | none |
 | A9 | per-operation resource jurisdiction; runtime encode enforces only output/key work/allocation | A9 isolated-operation cases | none |
 
+A targeted post-repair implementation review then found a bounded A8 preflight
+defect, not a new normative ambiguity.  Both runtime encoders, and Python's
+fixture importer, computed complete key bytes before checking a key-work budget
+that already deterministically refused the key.  Under injected allocation
+exhaustion this could mask `RecordKeyWorkBudgetExceeded` with
+`AllocationRefused`.  Python's new A7 construction entry point also performed
+descriptor key-set allocation just outside its allocation-translation boundary.
+
+Tests-only red commits preserve both findings.  The corrected paths now count
+the exact complete Identifier `ValueBytes` length without constructing that byte
+buffer, apply operation-wide key-work accounting, refuse at `encode-ordering`
+or `host-import`, and only then materialize the key.  Python encloses the whole
+A7 descriptor operation in its allocation/stack translation.  Non-ASCII and
+multi-octet UVAR boundary properties confirm that the preflight length equals
+the actual canonical key length.  These repairs change no canonical byte,
+equality result, accepted document, format version, or v1 behavior.
+
 The permanent additive manifest contains 37 complete operation cases spanning
 A1--A9.  Phase-0 remains exactly 71 classified rows: 66 octet rows and 5 host
 rows.  Python executes 71.  Common Lisp executes 68 and records exactly three

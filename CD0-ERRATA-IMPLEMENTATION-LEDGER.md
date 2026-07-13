@@ -33,10 +33,10 @@ The audited branch tips are seed-plus-bounded-correction states created after
 differential cross-reading was authorized.  They are provenance anchors, but
 they are not the independence anchors.  No audited tip was rewritten.
 
-The release-evidence checkpoint before this documentation envelope is commit
-`122ffa27b30d28b80c66a8b03c872f896ffd985a`, tree
-`943b6592161507de69460a8282037c0399a2fe0e`.  The archive receipt identifies the
-later documentation-complete source commit used to build the immutable archive.
+The post-review semantic checkpoint is integration commit
+`e3612bd684b4a0e7685d0bececf5a8e3aae8202d`, tree
+`c52137eb2817c60ecb5b68acaaa5f8fdf08daeef`.  The archive receipt identifies
+the later evidence-complete source commit used to build the immutable archive.
 
 No erratum authorizes a change to canonical bytes, abstract equality, accepted
 documents, datum families, the wire grammar, the CD/0 format version, v1, or
@@ -52,6 +52,15 @@ Red expectations were committed before semantic repair:
 | integration | `7a8c1be532da2a0dd3b13d281bdc84edfe26a1ca` | Common Lisp `9d7f8ad2ee3a124046d05538cd9ee23bbe561318`; Python `6a369f77511fbadb1e2c2c06953b6b27e66734d0` |
 | Common Lisp successor | `7d7f7594260d16699f8175988c29df4dd811b990` | `82c8b8ae10a423df2e44fc15f4b2b0c8963e09a8` |
 | Python successor | `c04d856499f1d7fed4cc67c56067d77e3122f566` | `679ef811c1cbb5b573f5517f43bd4a5e0a52a129` |
+
+A fresh targeted review then found two narrower allocation-boundary gaps.  They
+also received tests-only red commits before repair:
+
+| Branch | Late red-regression commit | Late semantic repair commit |
+|---|---|---|
+| integration | `9334ea5e11c6ed71d030150b1f9392c64ed0a494` | `e3612bd684b4a0e7685d0bececf5a8e3aae8202d` |
+| Common Lisp successor | `97d18f6f96329efa02ce7717532e8547191c2b3f` | `ee3baa9ab504f65d39015f212050748fd300160a` |
+| Python successor | `f9c53de48ea1fee94165f39e353fcfb1a142c059` | `9f46a32351095dc1a52724a31574e0b9e62ed221` |
 
 The audited Common Lisp A2/A9 witness was red before repair:
 
@@ -100,6 +109,25 @@ The A9 success hex is the pre-existing canonical sequence `[Unit]`; the repair
 changes only whether an already-valid datum is refused under an inapplicable
 structural budget.
 
+The late review's red A7/A8 allocation witnesses were:
+
+```text
+Python A7 construction descriptor key validation: raw MemoryError escaped
+Common Lisp A8 runtime encode, key-work limit 0: AllocationRefused/allocation; materializer calls 1
+Python A8 runtime encode, key-work limit 0:      AllocationRefused/allocation; materializer calls 1
+Python A8 fixture import, key-work limit 0:      AllocationRefused/allocation; materializer calls 1
+```
+
+After repair, A7 translates the host allocation failure and A8 refuses before
+constructing complete key bytes:
+
+```text
+Python A7: ResourceRefusal/AllocationRefused/allocation
+Common Lisp A8 runtime: ResourceRefusal/RecordKeyWorkBudgetExceeded/encode-ordering; materializer calls 0
+Python A8 runtime:      ResourceRefusal/RecordKeyWorkBudgetExceeded/encode-ordering; materializer calls 0
+Python A8 import:       ResourceRefusal/RecordKeyWorkBudgetExceeded/host-import; materializer calls 0
+```
+
 ## A1–A9 closure matrix
 
 “Changed” distinguishes observable codec/adapter behavior from additions to
@@ -115,8 +143,8 @@ the protected hard-stop columns.
 | A4 | both suites/adapters, generator, promoted vectors | aggregate namespace-plus-path interpretation was non-normative | combined namespace and path segment count is enforced on decode/import; limit 1 refuses `Id(["n"],["p"])`, limit 2 accepts | no observable codec change; existing aggregate behavior retained | no observable codec change; existing aggregate behavior retained | yes, 3 promoted operations | no | no |
 | A5 | both suites, corrected Phase-0 stages, generator/qualification | simultaneous resource breach order was unspecified | deterministic order is depth, nodes, local magnitude/count/length, aggregate payload | no observable codec change; existing order retained | no observable codec change; existing order retained | yes, 3 promoted operations | no | no |
 | A6 | both suites/adapters and promoted vectors | record-key tag precedence was blocked | `f0..ff` retains `PrivilegedRestorationAttempt/ForbiddenPrivilegedTag/type-tag`; other non-Identifier tags use `RecordKeyNotIdentifier/record-key` | no observable codec change | no observable codec change | yes, 2 promoted operations | no | no |
-| A7 | fixture schema, `datum-from-fixture-construction`, `from_fixture_construction`, both suites, positive vectors | unreduced rational source could not be represented without pretending it was a normalized abstract datum | closed `{"op":"rational","p":"…","q":"…"}` construction descriptor is distinct from normalized abstract fixture AST | yes, new fixture-construction adapter | yes, new fixture-construction adapter | yes, 1 promoted failure plus 3 positive construction rows | no | no |
-| A8 | both suites/adapters, generator/qualification and promoted vectors | key-work operand and sort-comparison multiplicity were blocked | each complete canonical Identifier `ValueBytes` is counted exactly once per field occurrence, globally per operation | no observable codec change; retained algorithm-independent accounting | no observable codec change; retained algorithm-independent accounting | yes, 6 promoted operations | no | no |
+| A7 | fixture schema, `datum-from-fixture-construction`, `from_fixture_construction`, both suites, positive vectors | unreduced rational source could not be represented without pretending it was a normalized abstract datum; late injection showed Python could leak raw `MemoryError` while validating descriptor keys | closed `{"op":"rational","p":"…","q":"…"}` construction descriptor is distinct from normalized abstract fixture AST; its complete Python entry point translates allocation/stack exhaustion | yes, new fixture-construction adapter | yes, new fixture adapter plus late allocation-boundary translation | yes, 1 promoted failure, 3 positive construction rows, and a permanent allocation-injection property case | no | no |
+| A8 | both codec cores, both suites/adapters, generator/qualification and promoted vectors | key-work operand and sort-comparison multiplicity were blocked; late injection showed complete key bytes were allocated before an already-deterministic zero-budget refusal | each complete canonical Identifier `ValueBytes` is counted exactly once per field occurrence, globally per operation; exact length is preflighted without a byte buffer and refusal precedes materialization | yes, runtime preflight now precedes complete key-byte materialization | yes, runtime and fixture-import preflights now precede complete key-byte materialization | yes, 6 promoted operations plus permanent allocation-injection and non-ASCII/UVAR boundary properties | no | no |
 | A9 | `common-lisp/cd0.lisp`, both suites/adapters, qualification and promoted vectors | Common Lisp runtime encoding reapplied depth/nodes/varint/integer/segment/count/aggregate limits; Python did not | runtime encoding of an already-valid datum enforces output size, record-key work, and actual host allocation only; decode/import limits remain operation-specific | yes, structural encoder refusals removed | no codec behavior change; existing jurisdiction retained | yes, 5 promoted operations | no | no |
 
 Promoted-operation arithmetic is A1=6, A2=5, A3=6, A4=3, A5=3, A6=2,
