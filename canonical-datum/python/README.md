@@ -24,10 +24,29 @@ constructors accept explicit key/value sequences, reject duplicates, and sort by
 complete canonical identifier value bytes.  Exact decoding is a dedicated byte
 parser and returns only those nine inert types.
 
+The integration hardening pass keeps Python host limits outside datum identity:
+
+- `equal_datum` and `to_fixture_ast` use explicit worklists, so deeply nested
+  valid runtime values do not depend on Python call-stack depth;
+- recursive encode/decode and fixture/descriptor import translate host stack or
+  allocation exhaustion to `ResourceRefusal/AllocationRefused/allocation`
+  instead of leaking `RecursionError`;
+- fixture decimal parsing and formatting are manual and bounded, reject the
+  schema-forbidden spelling `-0`, and do not depend on
+  `sys.set_int_max_str_digits`;
+- fixture hex and list/tuple declarations are checked against their applicable
+  budgets before proportional conversion or snapshotting.
+
 Run the seed suite from the repository root:
 
 ```text
 PYTHONPATH=canonical-datum/python python3 -m unittest discover -s canonical-datum/python/tests -v
+```
+
+The focused host-boundary regressions can be run with:
+
+```text
+PYTHONPATH=canonical-datum/python:canonical-datum/python/tests python3 -m unittest -v test_cd0.HostStackSafetyTests test_cd0.DecimalGuardTests test_cd0.HostImportPreallocationTests
 ```
 
 ## A1--A9 implementation-local choices
@@ -58,10 +77,12 @@ revalidates private invariants and returns `EncoderInvariantFailure` if a
 tampered value is detected where practical.
 
 The suite establishes finite conformance against the shared hand corpus and its
-listed probes: 22 positives and 71 negatives at the seed checkpoint.  It
+listed probes: 22 positives, 71 negatives, and 59 implementation-local tests at
+the integration-hardening checkpoint (152 tests total).  It
 compares all three failure fields for the 59 normative negative rows, only
 category/code for the 11 `provisional-blocked-stage` rows, and only
 category/stage for the one `provisional-blocked-code` row.  This preserves the
 A1/A2 boundary instead of laundering proposed fields into normative agreement.
 It is not the Phase-3 generated 10,000/20,000 release corpus and contains no
-cross-language differential result.
+claim that finite Python-local tests settle cross-language conformance.  A1--A9,
+including the Python seed's A9 encoder-budget choice, remain unadjudicated.
