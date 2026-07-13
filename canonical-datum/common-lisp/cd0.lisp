@@ -1174,25 +1174,30 @@
        (%emit-octet state #x31)
        (%emit-uvar state (length entries))
        (loop for entry across entries
-             for fresh-key-bytes = (%identifier-value-bytes (%entry-key entry))
-             do (unless (and (%entry-key-bytes entry)
-                             (%octets-equal fresh-key-bytes
-                                            (%entry-key-bytes entry)))
-                  (%fail "InternalInvariantFailure" "EncoderInvariantFailure"
-                         "cache-check"))
-                (when previous
-                  (unless (= -1 (%octets-compare previous fresh-key-bytes))
-                    (%fail "InternalInvariantFailure" "EncoderInvariantFailure"
-                           "encode-ordering")))
-                (setf previous fresh-key-bytes)
+             for key = (%entry-key entry)
+             for key-length = (%identifier-value-length key)
+             do
                 (incf (%encoder-state-record-key-work state)
-                      (length fresh-key-bytes))
+                      key-length)
                 (when (> (%encoder-state-record-key-work state)
                          (budget-max-total-record-key-octets budget))
                   (%resource-failure "RecordKeyWorkBudgetExceeded"
                                      "encode-ordering" budget))
-                (%encode-value state (%entry-key entry))
-                (%encode-value state (%entry-value entry)))))
+                ;; Refuse deterministic key work before allocating the complete
+                ;; Identifier ValueBytes representation that the budget forbids.
+                (let ((fresh-key-bytes (%identifier-value-bytes key)))
+                  (unless (and (%entry-key-bytes entry)
+                               (%octets-equal fresh-key-bytes
+                                              (%entry-key-bytes entry)))
+                    (%fail "InternalInvariantFailure" "EncoderInvariantFailure"
+                           "cache-check"))
+                  (when previous
+                    (unless (= -1 (%octets-compare previous fresh-key-bytes))
+                      (%fail "InternalInvariantFailure" "EncoderInvariantFailure"
+                             "encode-ordering")))
+                  (setf previous fresh-key-bytes)
+                  (%encode-value state key)
+                  (%encode-value state (%entry-value entry))))))
     (t (%fail "InternalInvariantFailure" "EncoderInvariantFailure" "internal"))))
 
 (defun encode-exact (datum &key (budget (default-resource-budget)))

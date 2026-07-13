@@ -688,64 +688,6 @@ class DecimalGuardTests(unittest.TestCase):
 
 
 class HostImportPreallocationTests(unittest.TestCase):
-    def test_record_key_work_precedes_identifier_materialization(self) -> None:
-        zero = replace(
-            DEFAULT,
-            max_total_record_key_octets=0,
-            identifier="record-key-preflight-0",
-        )
-        datum = cd0.record(((cd0.identifier((), ("a",)), cd0.unit()),))
-        ast = {
-            "t": "record",
-            "fields": [
-                {
-                    "key": {
-                        "t": "id",
-                        "namespace_utf8_hex": [],
-                        "path_utf8_hex": ["61"],
-                    },
-                    "value": {"t": "unit"},
-                }
-            ],
-        }
-        cases = (
-            (
-                "runtime encode",
-                lambda: cd0.encode_exact(datum, zero),
-                ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
-            ),
-            (
-                "fixture import",
-                lambda: cd0.from_fixture_ast(ast, zero),
-                ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "host-import"),
-            ),
-        )
-        for label, operation, expected in cases:
-            with self.subTest(label=label), mock.patch.object(
-                cd0,
-                "_identifier_value_bytes",
-                side_effect=MemoryError("synthetic key materialization refusal"),
-            ):
-                with self.assertRaises(cd0.CD0Failure) as raised:
-                    operation()
-                self.assertEqual(raised.exception.triple, expected)
-
-    def test_construction_descriptor_allocation_refusal_is_translated(self) -> None:
-        with mock.patch.object(
-            builtins,
-            "set",
-            side_effect=MemoryError("synthetic construction-schema refusal"),
-        ):
-            with self.assertRaises(cd0.CD0Failure) as raised:
-                cd0.from_fixture_construction(
-                    {"op": "rational", "p": "1", "q": "2"},
-                    DEFAULT,
-                )
-        self.assertEqual(
-            raised.exception.triple,
-            ("ResourceRefusal", "AllocationRefused", "allocation"),
-        )
-
     def test_fixture_hex_budget_precedes_bytes_conversion(self) -> None:
         tiny = replace(DEFAULT, max_single_bytes_octets=1, identifier="fixture-bytes-1")
         with mock.patch.object(
@@ -1041,6 +983,18 @@ class ErrataClosureTests(unittest.TestCase):
             ("UnsupportedHostInput", "ZeroDenominator", "host-import"),
         )
 
+    def test_A7_construction_descriptor_translates_key_validation_allocation(self) -> None:
+        descriptor = {"op": "rational", "p": "1", "q": "2"}
+        with mock.patch.object(
+            builtins,
+            "set",
+            side_effect=MemoryError("injected descriptor key-set allocation"),
+        ):
+            self.assert_failure(
+                lambda: cd0.from_fixture_construction(descriptor, DEFAULT),
+                ("ResourceRefusal", "AllocationRefused", "allocation"),
+            )
+
     def test_A8_record_key_work_counts_each_occurrence_once(self) -> None:
         datum = cd0.record(
             (
@@ -1055,6 +1009,66 @@ class ErrataClosureTests(unittest.TestCase):
             lambda: cd0.encode_exact(datum, small),
             ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
         )
+
+        wide_key = cd0.identifier(("\u00e9",), ("\U0001f600", "a" * 128))
+        wide_datum = cd0.record(((wide_key, cd0.unit()),))
+        value_octets = len(cd0.encode_exact(wide_key, DEFAULT)) - 5
+        wide_exact = replace(
+            DEFAULT,
+            max_total_record_key_octets=value_octets,
+            identifier="A8-wide-exact",
+        )
+        wide_small = replace(
+            DEFAULT,
+            max_total_record_key_octets=value_octets - 1,
+            identifier="A8-wide-small",
+        )
+        self.assertEqual(
+            cd0.encode_exact(wide_datum, wide_exact),
+            cd0.encode_exact(wide_datum, DEFAULT),
+        )
+        self.assert_failure(
+            lambda: cd0.encode_exact(wide_datum, wide_small),
+            ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
+        )
+
+    def test_A8_encoder_key_work_precedes_key_materialization(self) -> None:
+        datum = cd0.record(((cd0.identifier((), ("a",)), cd0.unit()),))
+        zero = replace(DEFAULT, max_total_record_key_octets=0, identifier="A8-encode-zero")
+        with mock.patch.object(
+            cd0,
+            "_identifier_value_bytes",
+            side_effect=MemoryError("injected key materialization"),
+        ):
+            self.assert_failure(
+                lambda: cd0.encode_exact(datum, zero),
+                ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
+            )
+
+    def test_A8_fixture_key_work_precedes_key_materialization(self) -> None:
+        fixture = {
+            "t": "record",
+            "fields": [
+                {
+                    "key": {
+                        "t": "id",
+                        "namespace_utf8_hex": [],
+                        "path_utf8_hex": ["61"],
+                    },
+                    "value": {"t": "unit"},
+                }
+            ],
+        }
+        zero = replace(DEFAULT, max_total_record_key_octets=0, identifier="A8-import-zero")
+        with mock.patch.object(
+            cd0,
+            "_identifier_value_bytes",
+            side_effect=MemoryError("injected key materialization"),
+        ):
+            self.assert_failure(
+                lambda: cd0.from_fixture_ast(fixture, zero),
+                ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "host-import"),
+            )
 
     def test_A9_runtime_encoding_ignores_structural_admission_budgets(self) -> None:
         datum = cd0.record(

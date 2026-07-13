@@ -700,31 +700,6 @@
            (check (zerop calls)
                   "record key bytes materialized before key-work refusal"))
       (setf (symbol-function materializer) original))))
-  (let* ((key (make-identifier-datum nil (list "a")))
-         (entry (make-record-entry key (make-unit-datum)))
-         (datum (make-record-datum (vector entry)))
-         (no-key-work
-           (copy-resource-budget (default-resource-budget)
-                                 :id "runtime-record-key-no-work"
-                                 :max-total-record-key-octets 0))
-         (materializer 'lisp-plus-cd0::%identifier-value-bytes)
-         (original (symbol-function materializer))
-         (calls 0))
-    (unwind-protect
-         (progn
-           (setf (symbol-function materializer)
-                 (lambda (identifier)
-                   (declare (ignore identifier))
-                   (incf calls)
-                   (error 'storage-condition)))
-           (incf *integration-regression-count*)
-           (expect-failure
-            (lambda () (encode-exact datum :budget no-key-work))
-            "ResourceRefusal" "RecordKeyWorkBudgetExceeded" "encode-ordering"
-            "runtime record key work before value-byte materialization")
-           (check (zerop calls)
-                  "runtime record key bytes materialized before key-work refusal"))
-      (setf (symbol-function materializer) original))))
 
 (defun true-datum () (make-boolean-datum t))
 
@@ -989,6 +964,28 @@
       (resource (lambda () (encode-exact datum :budget four))
                 "RecordKeyWorkBudgetExceeded" "encode-ordering"
                 "A8 complete five-octet key budget refusal"))
+    (let* ((key (id "a"))
+           (datum (make-record-datum
+                   (list (make-record-entry key (make-unit-datum)))))
+           (zero (copy-resource-budget (default-resource-budget)
+                                       :id "key-work-preflight-zero"
+                                       :max-total-record-key-octets 0))
+           (materializer 'lisp-plus-cd0::%identifier-value-bytes)
+           (original (symbol-function materializer))
+           (calls 0))
+      (unwind-protect
+           (progn
+             (setf (symbol-function materializer)
+                   (lambda (identifier)
+                     (declare (ignore identifier))
+                     (incf calls)
+                     (error 'storage-condition)))
+             (resource (lambda () (encode-exact datum :budget zero))
+                       "RecordKeyWorkBudgetExceeded" "encode-ordering"
+                       "A8 key-work refusal precedes key allocation")
+             (check (zerop calls)
+                    "A8 key materialized before key-work refusal"))
+        (setf (symbol-function materializer) original)))
     (let* ((inner (make-record-datum
                    (list (make-record-entry (id "b") (make-unit-datum)))))
            (outer (make-record-datum
