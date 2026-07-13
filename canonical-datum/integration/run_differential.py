@@ -480,6 +480,7 @@ def compare(
         if kind == "errata":
             counters["errata_vectors"] += 1
             case = meta["case"]
+            counters[f"errata_{case['adjudication'].lower()}"] += 1
             expectation = case["expected"]
             for label, response in (("common-lisp", cl), ("python", py)):
                 if response.get("status") != expectation["status"]:
