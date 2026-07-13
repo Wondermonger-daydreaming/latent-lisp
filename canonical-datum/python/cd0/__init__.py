@@ -1,4 +1,4 @@
-"""Clean-room Python implementation of Lisp+ Canonical Datum /0.
+"""CPython implementation of Lisp+ Canonical Datum /0.
 
 The public surface deliberately accepts only explicit CD/0 constructors or the
 typed shared-fixture AST.  It does not infer datum meaning from arbitrary Python
@@ -127,8 +127,7 @@ class Datum:
 
 
 def _constructor_failure(code: str, detail: str | None = None) -> CD0Failure:
-    # Constructor triples are unresolved by specification divergence A2.  This
-    # seed consistently treats them as explicit host-input failures.
+    # Errata 0.1 A2 classifies constructor invariant failures as host input.
     return CD0Failure(UNSUPPORTED_HOST, code, "host-import", detail=detail)
 
 
@@ -569,7 +568,7 @@ class _Encoder:
 
     def emit(self, value: bytes | bytearray) -> None:
         if len(self.output) + len(value) > self.budget.max_output_octets:
-            # A1 leaves the encoder stage open.  This seed uses allocation.
+            # Errata 0.1 A1 assigns output refusal to allocation.
             self.fail(RESOURCE_REFUSAL, "ExcessiveOutputLength", "allocation")
         self.output.extend(value)
 
@@ -828,7 +827,7 @@ class _Decoder:
             shift += 7
 
     def before_node(self, depth: int) -> None:
-        # A5 implementation-local tie break: depth precedes node count.
+        # Errata 0.1 A5: depth precedes node count.
         if depth > self.budget.max_depth:
             self.fail(RESOURCE_REFUSAL, "ExcessiveNesting", "type-tag")
         if self.nodes >= self.budget.max_nodes:
@@ -849,14 +848,14 @@ class _Decoder:
         self.aggregate_payload += length
 
     def check_integer_bits(self, value: int, stage: str) -> None:
-        # A3 implementation-local choice: mathematical magnitude bit length.
+        # Errata 0.1 A3: mathematical magnitude bit length; zero uses zero bits.
         if abs(value).bit_length() > self.budget.max_integer_bits:
             self.fail(RESOURCE_REFUSAL, "IntegerBudgetExceeded", stage)
 
-    def parse_value(self, depth: int) -> Datum:
+    def parse_value(self, depth: int, missing_stage: str = "type-tag") -> Datum:
         self.before_node(depth)
         if self.position >= len(self.data):
-            self.fail(INVALID_GRAMMAR, "TruncatedInput", "type-tag")
+            self.fail(INVALID_GRAMMAR, "TruncatedInput", missing_stage)
         tag = self.data[self.position]
         self.position += 1
         if tag == 0x00:
@@ -895,7 +894,7 @@ class _Decoder:
             count = self.read_uvar("count", "OverlongCountEncoding")
             if count > self.budget.max_sequence_items:
                 self.fail(RESOURCE_REFUSAL, "ExcessiveContainerCount", "count")
-            return Sequence(tuple(self.parse_value(depth + 1) for _ in range(count)))
+            return Sequence(tuple(self.parse_value(depth + 1, "count") for _ in range(count)))
         if tag == 0x31:
             return self.parse_record(depth)
         if tag >= 0xF0:
@@ -904,7 +903,7 @@ class _Decoder:
 
     def read_length(self, maximum: int) -> int:
         length = self.read_uvar("length", "OverlongLengthEncoding")
-        # A5 implementation-local tie break: local length before aggregate.
+        # Errata 0.1 A5: the local length limit precedes aggregate payload.
         if length > maximum:
             self.fail(RESOURCE_REFUSAL, "ExcessiveDeclaredLength", "length")
         self.add_payload(length)
@@ -922,6 +921,10 @@ class _Decoder:
         return ByteString(payload)
 
     def parse_segment(self) -> str:
+        # A declared namespace/path count promises a complete next segment.
+        # Only absence of its first length octet is therefore a count-stage EOF.
+        if self.position >= len(self.data):
+            self.fail(INVALID_GRAMMAR, "TruncatedInput", "count")
         length = self.read_uvar("length", "OverlongLengthEncoding")
         if length == 0:
             self.fail(INVALID_GRAMMAR, "EmptyIdentifierSegment", "identifier")
@@ -939,7 +942,7 @@ class _Decoder:
         path_count = self.read_uvar("count", "OverlongCountEncoding")
         if path_count == 0:
             self.fail(INVALID_GRAMMAR, "MissingIdentifierPath", "identifier")
-        # A4 implementation-local choice: the segment budget is aggregate.
+        # Errata 0.1 A4: namespace and path segments share one aggregate budget.
         if namespace_count + path_count > self.budget.max_identifier_segments:
             self.fail(RESOURCE_REFUSAL, "ExcessiveIdentifierSegments", "count")
         path = tuple(self.parse_segment() for _ in range(path_count))
@@ -948,12 +951,12 @@ class _Decoder:
     def parse_record_key(self, depth: int) -> tuple[Identifier, bytes]:
         self.before_node(depth)
         if self.position >= len(self.data):
-            self.fail(INVALID_GRAMMAR, "TruncatedInput", "record-key")
+            self.fail(INVALID_GRAMMAR, "TruncatedInput", "count")
         start = self.position
         tag = self.data[self.position]
         self.position += 1
-        # A6 implementation-local choice: forbidden tags retain security
-        # telemetry; every other non-identifier tag is RecordKeyNotIdentifier.
+        # Errata 0.1 A6: forbidden tags retain security telemetry; every other
+        # non-identifier tag is RecordKeyNotIdentifier.
         if tag >= 0xF0:
             self.fail(PRIVILEGED_ATTEMPT, "ForbiddenPrivilegedTag", "type-tag", offset=start)
         if tag != 0x22:
@@ -975,7 +978,7 @@ class _Decoder:
                 if key_bytes < previous:
                     self.fail(NONCANONICAL, "NoncanonicalFieldOrder", "record-order")
             previous = key_bytes
-            fields.append((key, self.parse_value(depth + 1)))
+            fields.append((key, self.parse_value(depth + 1, "count")))
         return Record(tuple(fields))
 
 
@@ -1210,6 +1213,46 @@ def from_fixture_ast(value: Any, budget: ResourceBudget) -> Datum:
         raise _allocation_refusal(exc, budget) from exc
 
 
+def from_fixture_construction(descriptor: Any, budget: ResourceBudget) -> Datum:
+    """Execute a closed fixture construction descriptor under import budgets.
+
+    Construction metadata is deliberately distinct from the normalized datum
+    AST.  For rational construction, Errata 0.1 A3 checks each supplied
+    component before sign normalization or reduction.
+    """
+
+    if type(budget) is not ResourceBudget:
+        raise _constructor_failure(
+            "UnsupportedHostType",
+            "from_fixture_construction requires ResourceBudget",
+        )
+    if type(descriptor) is not dict or set(descriptor) != {"op", "p", "q"}:
+        raise _constructor_failure(
+            "UnsupportedHostType",
+            "fixture construction requires exactly op, p, and q",
+        )
+    if descriptor.get("op") != "rational":
+        raise _constructor_failure("UnsupportedHostType", "unknown fixture construction")
+    try:
+        numerator = _bounded_decimal(descriptor["p"], budget.max_integer_bits)
+        denominator = _bounded_decimal(descriptor["q"], budget.max_integer_bits)
+    except ValueError as exc:
+        raise _constructor_failure("UnsupportedHostType", str(exc)) from exc
+    except OverflowError as exc:
+        raise CD0Failure(
+            RESOURCE_REFUSAL,
+            "IntegerBudgetExceeded",
+            "host-import",
+            budget_id=budget.identifier,
+        ) from exc
+    except (MemoryError, RecursionError) as exc:
+        raise _allocation_refusal(exc, budget) from exc
+    try:
+        return rational(numerator, denominator)
+    except (MemoryError, RecursionError) as exc:
+        raise _allocation_refusal(exc, budget) from exc
+
+
 class _HostDescriptorImporter:
     """Interpreter for the shared Section-28.2 hostile-host descriptors.
 
@@ -1326,8 +1369,7 @@ def _import_host_descriptor(host_input: Any, importer: str, budget: ResourceBudg
         return _HostDescriptorImporter(host_input, budget).import_root(host_input.get("root"))
     if importer == "strict-integer-import/v0":
         if host_input.get("host_type") == "python-bool" and host_input.get("requested_cd0_type") == "integer":
-            # The bool/int refusal is normative; A2 leaves the exact code
-            # provisional.  This seed's local constructor code is retained.
+            # Errata 0.1 A2 assigns UnsupportedHostType to this host mismatch.
             return integer(host_input.get("value"))
         raise _constructor_failure("UnsupportedHostType", "strict integer descriptor not mapped")
     if importer == "symbol-to-identifier/v0":
@@ -1542,6 +1584,7 @@ __all__ = [
     "encode_exact",
     "decode_exact",
     "from_fixture_ast",
+    "from_fixture_construction",
     "import_host_descriptor",
     "to_fixture_ast",
     "diagnostic_render",

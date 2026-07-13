@@ -56,6 +56,12 @@ def resolve_budget(value, *, identifier: str) -> cd0.ResourceBudget:
     return cd0.ResourceBudget.from_mapping(value, identifier=identifier)
 
 
+def construct_positive(row: dict, budget: cd0.ResourceBudget) -> cd0.Datum:
+    if "construction" in row:
+        return cd0.from_fixture_construction(row["construction"], budget)
+    return cd0.from_fixture_ast(row["abstract"], budget)
+
+
 class SharedVectorTests(unittest.TestCase):
     """Methods are installed below so every shared row is one unittest."""
 
@@ -63,11 +69,7 @@ class SharedVectorTests(unittest.TestCase):
 def make_positive_test(row: dict):
     def test(self: SharedVectorTests) -> None:
         budget = resolve_budget(row["budget"], identifier=f"{row['id']}:budget")
-        constructed = (
-            cd0.from_fixture_construction(row["construction"], budget)
-            if "construction" in row
-            else cd0.from_fixture_ast(row["abstract"], budget)
-        )
+        constructed = construct_positive(row, budget)
         self.assertEqual(cd0.to_fixture_ast(constructed), row["expected_decoded"])
         expected_bytes = bytes.fromhex(row["canonical_hex"])
         self.assertEqual(cd0.encode_exact(constructed, budget), expected_bytes)
@@ -159,7 +161,10 @@ class ConstructorAndEqualityTests(unittest.TestCase):
         self.assertEqual(cd0.rational(12, 4), cd0.Integer(3))
         with self.assertRaises(cd0.CD0Failure) as raised:
             cd0.rational(1, 0)
-        self.assertEqual(raised.exception.code, "ZeroDenominator")
+        self.assertEqual(
+            raised.exception.triple,
+            ("UnsupportedHostInput", "ZeroDenominator", "host-import"),
+        )
 
     def test_record_source_order_is_unobservable(self) -> None:
         key_a = cd0.identifier((), ("a",))
@@ -817,17 +822,20 @@ class GrammarBoundaryTests(unittest.TestCase):
         key_documents = [cd0.encode_exact(key, DEFAULT)[5:] for key, _ in datum.fields]
         self.assertEqual(key_documents, sorted(key_documents))
 
-    def test_A1_local_truncated_payload_stage(self) -> None:
+    def test_A1_truncated_payload_stage(self) -> None:
         with self.assertRaises(cd0.CD0Failure) as raised:
             cd0.decode_exact(bytes.fromhex("4c504344002002c3"), DEFAULT)
         self.assertEqual(raised.exception.triple, ("InvalidCanonicalGrammar", "TruncatedInput", "length"))
 
-    def test_A5_local_simultaneous_resource_tie_breaks(self) -> None:
+    def test_A5_simultaneous_resource_precedence(self) -> None:
         nested = bytes.fromhex("4c50434400300100")
         depth_and_nodes = replace(DEFAULT, max_depth=1, max_nodes=1, identifier="A5-depth-nodes")
         with self.assertRaises(cd0.CD0Failure) as raised:
             cd0.decode_exact(nested, depth_and_nodes)
-        self.assertEqual(raised.exception.code, "ExcessiveNesting")
+        self.assertEqual(
+            raised.exception.triple,
+            ("ResourceRefusal", "ExcessiveNesting", "type-tag"),
+        )
 
         text = bytes.fromhex("4c5043440020026162")
         single_and_aggregate = replace(
@@ -838,9 +846,12 @@ class GrammarBoundaryTests(unittest.TestCase):
         )
         with self.assertRaises(cd0.CD0Failure) as raised:
             cd0.decode_exact(text, single_and_aggregate)
-        self.assertEqual(raised.exception.code, "ExcessiveDeclaredLength")
+        self.assertEqual(
+            raised.exception.triple,
+            ("ResourceRefusal", "ExcessiveDeclaredLength", "length"),
+        )
 
-    def test_A6_local_record_key_tag_precedence(self) -> None:
+    def test_A6_record_key_tag_precedence(self) -> None:
         with self.assertRaises(cd0.CD0Failure) as forbidden:
             cd0.decode_exact(bytes.fromhex("4c504344003101f0"), DEFAULT)
         self.assertEqual(
@@ -852,6 +863,183 @@ class GrammarBoundaryTests(unittest.TestCase):
         self.assertEqual(
             reserved.exception.triple,
             ("InvalidCanonicalGrammar", "RecordKeyNotIdentifier", "record-key"),
+        )
+
+
+class ErrataClosureTests(unittest.TestCase):
+    def assert_failure(self, callable_, triple: tuple[str, str, str]) -> None:
+        with self.assertRaises(cd0.CD0Failure) as raised:
+            callable_()
+        self.assertEqual(raised.exception.triple, triple)
+
+    def test_A2_constructor_invariant_failures_are_host_input(self) -> None:
+        key = cd0.identifier((), ("a",))
+        cases = (
+            (lambda: cd0.rational(1, 0), "ZeroDenominator"),
+            (lambda: cd0.identifier((), ()), "MissingIdentifierPath"),
+            (lambda: cd0.identifier(("",), ("p",)), "EmptyIdentifierSegment"),
+            (
+                lambda: cd0.record(((key, cd0.unit()), (key, cd0.boolean(True)))),
+                "DuplicateRecordField",
+            ),
+        )
+        for operation, code in cases:
+            with self.subTest(code=code):
+                self.assert_failure(
+                    operation,
+                    ("UnsupportedHostInput", code, "host-import"),
+                )
+
+    def test_A3_magnitude_bits_are_exact_and_pre_reduction(self) -> None:
+        for value in (0, 1, -1, 2, -2, 63, -65, 255, -256):
+            with self.subTest(value=value):
+                bits = abs(value).bit_length()
+                datum = cd0.integer(value)
+                document = cd0.encode_exact(datum, DEFAULT)
+                exact = replace(DEFAULT, max_integer_bits=bits, identifier=f"A3-{value}-exact")
+                self.assertEqual(cd0.decode_exact(document, exact), datum)
+                if bits:
+                    too_small = replace(
+                        DEFAULT,
+                        max_integer_bits=bits - 1,
+                        identifier=f"A3-{value}-small",
+                    )
+                    self.assert_failure(
+                        lambda document=document, too_small=too_small: cd0.decode_exact(
+                            document,
+                            too_small,
+                        ),
+                        ("ResourceRefusal", "IntegerBudgetExceeded", "integer-payload"),
+                    )
+
+        pre_reduction = replace(DEFAULT, max_integer_bits=1, identifier="A3-pre-reduction")
+        self.assert_failure(
+            lambda: cd0.from_fixture_construction(
+                {"op": "rational", "p": "1024", "q": "1024"},
+                pre_reduction,
+            ),
+            ("ResourceRefusal", "IntegerBudgetExceeded", "host-import"),
+        )
+
+    def test_A4_identifier_segment_budget_is_aggregate(self) -> None:
+        datum = cd0.identifier(("n",), ("p",))
+        document = cd0.encode_exact(datum, DEFAULT)
+        exact = replace(DEFAULT, max_identifier_segments=2, identifier="A4-exact")
+        small = replace(DEFAULT, max_identifier_segments=1, identifier="A4-small")
+        self.assertEqual(cd0.decode_exact(document, exact), datum)
+        self.assert_failure(
+            lambda: cd0.decode_exact(document, small),
+            ("ResourceRefusal", "ExcessiveIdentifierSegments", "count"),
+        )
+
+    def test_A5_resource_precedence_uses_complete_triples(self) -> None:
+        nested = bytes.fromhex("4c50434400300100")
+        both_structural = replace(DEFAULT, max_depth=1, max_nodes=1, identifier="A5-structural")
+        self.assert_failure(
+            lambda: cd0.decode_exact(nested, both_structural),
+            ("ResourceRefusal", "ExcessiveNesting", "type-tag"),
+        )
+        text = bytes.fromhex("4c5043440020026162")
+        both_payload = replace(
+            DEFAULT,
+            max_single_string_octets=1,
+            max_aggregate_payload_octets=1,
+            identifier="A5-payload",
+        )
+        self.assert_failure(
+            lambda: cd0.decode_exact(text, both_payload),
+            ("ResourceRefusal", "ExcessiveDeclaredLength", "length"),
+        )
+
+    def test_A6_forbidden_record_key_tag_retains_precedence(self) -> None:
+        self.assert_failure(
+            lambda: cd0.decode_exact(bytes.fromhex("4c504344003101f0"), DEFAULT),
+            ("PrivilegedRestorationAttempt", "ForbiddenPrivilegedTag", "type-tag"),
+        )
+        self.assert_failure(
+            lambda: cd0.decode_exact(bytes.fromhex("4c50434400310103"), DEFAULT),
+            ("InvalidCanonicalGrammar", "RecordKeyNotIdentifier", "record-key"),
+        )
+
+    def test_A7_construction_descriptor_is_not_an_abstract_datum(self) -> None:
+        cases = (
+            ({"op": "rational", "p": "2", "q": "4"}, cd0.Rational(1, 2)),
+            ({"op": "rational", "p": "2", "q": "2"}, cd0.Integer(1)),
+            ({"op": "rational", "p": "0", "q": "7"}, cd0.Integer(0)),
+        )
+        for descriptor, expected in cases:
+            with self.subTest(descriptor=descriptor):
+                constructed = cd0.from_fixture_construction(descriptor, DEFAULT)
+                self.assertEqual(constructed, expected)
+                self.assertEqual(
+                    cd0.to_fixture_ast(constructed),
+                    cd0.to_fixture_ast(expected),
+                )
+        self.assert_failure(
+            lambda: cd0.from_fixture_construction(
+                {"op": "rational", "p": "1", "q": "0"},
+                DEFAULT,
+            ),
+            ("UnsupportedHostInput", "ZeroDenominator", "host-import"),
+        )
+
+    def test_A8_record_key_work_counts_each_occurrence_once(self) -> None:
+        datum = cd0.record(
+            (
+                (cd0.identifier((), ("b",)), cd0.unit()),
+                (cd0.identifier((), ("a",)), cd0.unit()),
+            )
+        )
+        exact = replace(DEFAULT, max_total_record_key_octets=10, identifier="A8-exact")
+        small = replace(DEFAULT, max_total_record_key_octets=9, identifier="A8-small")
+        self.assertEqual(cd0.encode_exact(datum, exact), cd0.encode_exact(datum, DEFAULT))
+        self.assert_failure(
+            lambda: cd0.encode_exact(datum, small),
+            ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
+        )
+
+    def test_A9_runtime_encoding_ignores_structural_admission_budgets(self) -> None:
+        datum = cd0.record(
+            (
+                (
+                    cd0.identifier(("n",), ("p",)),
+                    cd0.sequence((cd0.integer(99), cd0.string("x"), cd0.byte_string(b"y"))),
+                ),
+            )
+        )
+        runtime = replace(
+            DEFAULT,
+            max_input_octets=0,
+            max_varint_octets=0,
+            max_integer_bits=0,
+            max_depth=0,
+            max_nodes=0,
+            max_sequence_items=0,
+            max_record_fields=0,
+            max_identifier_segments=0,
+            max_segment_octets=0,
+            max_single_string_octets=0,
+            max_single_bytes_octets=0,
+            max_aggregate_payload_octets=0,
+            identifier="A9-runtime",
+        )
+        self.assertEqual(cd0.encode_exact(datum, runtime), cd0.encode_exact(datum, DEFAULT))
+
+        decode_budget = replace(DEFAULT, max_output_octets=0, identifier="A9-decode")
+        self.assertEqual(
+            cd0.decode_exact(cd0.encode_exact(cd0.integer(1), DEFAULT), decode_budget),
+            cd0.integer(1),
+        )
+        import_budget = replace(
+            DEFAULT,
+            max_input_octets=0,
+            max_output_octets=0,
+            max_varint_octets=0,
+            identifier="A9-import",
+        )
+        self.assertEqual(
+            cd0.from_fixture_ast({"t": "int", "v": "1"}, import_budget),
+            cd0.integer(1),
         )
 
 
@@ -873,8 +1061,8 @@ class VectorManifestTests(unittest.TestCase):
         groups: dict[str, list[cd0.Datum]] = {}
         for row in POSITIVES:
             groups.setdefault(row["equality_class"], []).append(
-                cd0.from_fixture_ast(
-                    row["abstract"],
+                construct_positive(
+                    row,
                     resolve_budget(row["budget"], identifier=f"{row['id']}:equality"),
                 )
             )
@@ -885,8 +1073,8 @@ class VectorManifestTests(unittest.TestCase):
 
     def test_declared_distinct_pairs_are_unequal_and_encode_differently(self) -> None:
         by_id = {
-            row["id"]: cd0.from_fixture_ast(
-                row["abstract"],
+            row["id"]: construct_positive(
+                row,
                 resolve_budget(row["budget"], identifier=f"{row['id']}:distinct"),
             )
             for row in POSITIVES
