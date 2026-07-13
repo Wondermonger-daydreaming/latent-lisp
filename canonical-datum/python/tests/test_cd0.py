@@ -1010,6 +1010,28 @@ class ErrataClosureTests(unittest.TestCase):
             ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
         )
 
+        wide_key = cd0.identifier(("\u00e9",), ("\U0001f600", "a" * 128))
+        wide_datum = cd0.record(((wide_key, cd0.unit()),))
+        value_octets = len(cd0.encode_exact(wide_key, DEFAULT)) - 5
+        wide_exact = replace(
+            DEFAULT,
+            max_total_record_key_octets=value_octets,
+            identifier="A8-wide-exact",
+        )
+        wide_small = replace(
+            DEFAULT,
+            max_total_record_key_octets=value_octets - 1,
+            identifier="A8-wide-small",
+        )
+        self.assertEqual(
+            cd0.encode_exact(wide_datum, wide_exact),
+            cd0.encode_exact(wide_datum, DEFAULT),
+        )
+        self.assert_failure(
+            lambda: cd0.encode_exact(wide_datum, wide_small),
+            ("ResourceRefusal", "RecordKeyWorkBudgetExceeded", "encode-ordering"),
+        )
+
     def test_A8_encoder_key_work_precedes_key_materialization(self) -> None:
         datum = cd0.record(((cd0.identifier((), ("a",)), cd0.unit()),))
         zero = replace(DEFAULT, max_total_record_key_octets=0, identifier="A8-encode-zero")

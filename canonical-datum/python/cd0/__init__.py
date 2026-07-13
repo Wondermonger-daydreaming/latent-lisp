@@ -531,6 +531,14 @@ def _uvar_bytes(value: int) -> bytes:
             return bytes(result)
 
 
+def _uvar_length(value: int) -> int:
+    """Return the exact UVAR octet length without materializing its bytes."""
+
+    if type(value) is not int or value < 0:
+        raise ValueError("UVAR requires a nonnegative exact int")
+    return max(1, (value.bit_length() + 6) // 7)
+
+
 def _zigzag(value: int) -> int:
     return 2 * value if value >= 0 else -2 * value - 1
 
@@ -552,6 +560,37 @@ def _identifier_value_bytes(value: Identifier) -> bytes:
         result.extend(_uvar_bytes(len(payload)))
         result.extend(payload)
     return bytes(result)
+
+
+def _utf8_scalar_length(value: str) -> int:
+    """Count canonical UTF-8 octets for an already-validated scalar string."""
+
+    length = 0
+    for character in value:
+        scalar = ord(character)
+        if scalar <= 0x7F:
+            length += 1
+        elif scalar <= 0x7FF:
+            length += 2
+        elif scalar <= 0xFFFF:
+            length += 3
+        else:
+            length += 4
+    return length
+
+
+def _identifier_value_length(value: Identifier) -> int:
+    """Count complete canonical Identifier ValueBytes without a byte buffer."""
+
+    total = 1 + _uvar_length(len(value.namespace))
+    for segment in value.namespace:
+        payload_length = _utf8_scalar_length(segment)
+        total += _uvar_length(payload_length) + payload_length
+    total += _uvar_length(len(value.path))
+    for segment in value.path:
+        payload_length = _utf8_scalar_length(segment)
+        total += _uvar_length(payload_length) + payload_length
+    return total
 
 
 class _Encoder:
@@ -659,10 +698,10 @@ class _Encoder:
                 for key, field_value in value.fields:
                     if type(key) is not Identifier or not _is_datum(field_value):
                         self.fail(INTERNAL_FAILURE, "EncoderInvariantFailure", "internal")
-                    key_bytes = _identifier_value_bytes(key)
-                    self.record_key_octets += len(key_bytes)
+                    self.record_key_octets += _identifier_value_length(key)
                     if self.record_key_octets > self.budget.max_total_record_key_octets:
                         self.fail(RESOURCE_REFUSAL, "RecordKeyWorkBudgetExceeded", "encode-ordering")
+                    key_bytes = _identifier_value_bytes(key)
                     if key_bytes in seen:
                         self.fail(INTERNAL_FAILURE, "EncoderInvariantFailure", "encode-ordering")
                     seen.add(key_bytes)
@@ -1183,10 +1222,10 @@ class _FixtureImporter:
                         try:
                             field_ast = self.exact_object(field, {"key", "value"})
                             key = self.parse_identifier(field_ast["key"], depth + 1)
-                            key_bytes = _identifier_value_bytes(key)
-                            self.record_key_octets += len(key_bytes)
+                            self.record_key_octets += _identifier_value_length(key)
                             if self.record_key_octets > self.budget.max_total_record_key_octets:
                                 self.fail("RecordKeyWorkBudgetExceeded", category=RESOURCE_REFUSAL)
+                            key_bytes = _identifier_value_bytes(key)
                             if key_bytes in seen:
                                 self.fail("DuplicateRecordField")
                             seen.add(key_bytes)
@@ -1226,28 +1265,26 @@ def from_fixture_construction(descriptor: Any, budget: ResourceBudget) -> Datum:
             "UnsupportedHostType",
             "from_fixture_construction requires ResourceBudget",
         )
-    if type(descriptor) is not dict or set(descriptor) != {"op", "p", "q"}:
-        raise _constructor_failure(
-            "UnsupportedHostType",
-            "fixture construction requires exactly op, p, and q",
-        )
-    if descriptor.get("op") != "rational":
-        raise _constructor_failure("UnsupportedHostType", "unknown fixture construction")
     try:
-        numerator = _bounded_decimal(descriptor["p"], budget.max_integer_bits)
-        denominator = _bounded_decimal(descriptor["q"], budget.max_integer_bits)
-    except ValueError as exc:
-        raise _constructor_failure("UnsupportedHostType", str(exc)) from exc
-    except OverflowError as exc:
-        raise CD0Failure(
-            RESOURCE_REFUSAL,
-            "IntegerBudgetExceeded",
-            "host-import",
-            budget_id=budget.identifier,
-        ) from exc
-    except (MemoryError, RecursionError) as exc:
-        raise _allocation_refusal(exc, budget) from exc
-    try:
+        if type(descriptor) is not dict or set(descriptor) != {"op", "p", "q"}:
+            raise _constructor_failure(
+                "UnsupportedHostType",
+                "fixture construction requires exactly op, p, and q",
+            )
+        if descriptor.get("op") != "rational":
+            raise _constructor_failure("UnsupportedHostType", "unknown fixture construction")
+        try:
+            numerator = _bounded_decimal(descriptor["p"], budget.max_integer_bits)
+            denominator = _bounded_decimal(descriptor["q"], budget.max_integer_bits)
+        except ValueError as exc:
+            raise _constructor_failure("UnsupportedHostType", str(exc)) from exc
+        except OverflowError as exc:
+            raise CD0Failure(
+                RESOURCE_REFUSAL,
+                "IntegerBudgetExceeded",
+                "host-import",
+                budget_id=budget.identifier,
+            ) from exc
         return rational(numerator, denominator)
     except (MemoryError, RecursionError) as exc:
         raise _allocation_refusal(exc, budget) from exc
