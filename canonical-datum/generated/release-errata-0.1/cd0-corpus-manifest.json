@@ -1,0 +1,843 @@
+{
+  "artifacts": {
+    "cd0-generated-negative-derivations.jsonl": {
+      "octets": 11179974,
+      "rows": 20308,
+      "sha256": "2ffd77257e18dfbc70abef0cc5fae1603d50b1a8b005226af95200708c29ca02"
+    },
+    "cd0-generated-negative.jsonl": {
+      "octets": 17210954,
+      "rows": 20308,
+      "sha256": "d5342b762bae653f3f043322a9ef531addf17352cdf0c0ab8e5b595f0c57cf82"
+    },
+    "cd0-generated-positive.jsonl": {
+      "octets": 7919166,
+      "rows": 10000,
+      "sha256": "4d4d5ef09606d04d21297b4cd08c209a57cb090601bb790fbe3019a07c33c77d"
+    },
+    "cd0-host-property-scenarios.json": {
+      "octets": 15027,
+      "rows": 23,
+      "sha256": "cf9bbce16a0aae99a4fbd363db313bd422c6796c694746a548fbdded161a2ab5"
+    },
+    "cd0-mutation-candidates.jsonl": {
+      "octets": 16270086,
+      "rows": 30504,
+      "sha256": "9da19ecf42d5a8aba1aa1b978d1654c46f38ad37aaa66d81cbb1d6efdb96dfbb"
+    }
+  },
+  "corpus_sha256": "8c9d1b29bab5e87b035778286c1174bdb7397e6a62d046a5eaa2f2abd4ded488",
+  "counts": {
+    "authored_and_host_coverage_negative": 308,
+    "classified_adversarial_total": 20308,
+    "classified_negative": 20308,
+    "classified_negative_by_status": {
+      "normative": 20308
+    },
+    "demonstrated_primary_minimal_negative": 20000,
+    "host_property_scenarios": 9,
+    "negative_by_minimization_kind": {
+      "authored-primary-template": 303,
+      "byte-deletion-primary-minimal": 20000,
+      "host-graph-scenario": 5
+    },
+    "negative_derivations": 20308,
+    "negative_retry_verified": 20012,
+    "positive": 10000,
+    "resource_boundary_scenarios": 14,
+    "unclassified_mutation_candidates": 30504
+  },
+  "coverage": {
+    "all-hand-vector-truncation-points": {
+      "count": 236,
+      "evidence_ids": [
+        "cd0-mut-000000000",
+        "cd0-mut-000000001",
+        "cd0-mut-000000002",
+        "cd0-mut-000000003",
+        "cd0-mut-000000004",
+        "cd0-mut-000000005",
+        "cd0-mut-000000006",
+        "cd0-mut-000000007",
+        "cd0-mut-000000008",
+        "cd0-mut-000000009",
+        "cd0-mut-000000010",
+        "cd0-mut-000000011",
+        "cd0-mut-000000012",
+        "cd0-mut-000000013",
+        "cd0-mut-000000014",
+        "cd0-mut-000000015"
+      ]
+    },
+    "appended-and-concatenated-documents": {
+      "count": 2,
+      "evidence_ids": [
+        "cd0-neg-generated-00000284-trailing-byte",
+        "cd0-neg-generated-00000285-concatenated"
+      ]
+    },
+    "assigned-type-tags": {
+      "count": 10000,
+      "evidence_ids": [
+        "cd0-pos-generated-00000000",
+        "cd0-pos-generated-00000001",
+        "cd0-pos-generated-00000002",
+        "cd0-pos-generated-00000003",
+        "cd0-pos-generated-00000004",
+        "cd0-pos-generated-00000005",
+        "cd0-pos-generated-00000006",
+        "cd0-pos-generated-00000007",
+        "cd0-pos-generated-00000008",
+        "cd0-pos-generated-00000009",
+        "cd0-pos-generated-00000010",
+        "cd0-pos-generated-00000011",
+        "cd0-pos-generated-00000012",
+        "cd0-pos-generated-00000013",
+        "cd0-pos-generated-00000014",
+        "cd0-pos-generated-00000015"
+      ]
+    },
+    "configured-generated-truncation-points": {
+      "count": 20617,
+      "evidence_ids": [
+        "cd0-mut-000000236",
+        "cd0-mut-000000237",
+        "cd0-mut-000000238",
+        "cd0-mut-000000239",
+        "cd0-mut-000000240",
+        "cd0-mut-000000241",
+        "cd0-mut-000000242",
+        "cd0-mut-000000243",
+        "cd0-mut-000000244",
+        "cd0-mut-000000245",
+        "cd0-mut-000000246",
+        "cd0-mut-000000247",
+        "cd0-mut-000000248",
+        "cd0-mut-000000249",
+        "cd0-mut-000000250",
+        "cd0-mut-000000251"
+      ]
+    },
+    "container-depth-node-count-boundaries": {
+      "count": 2213,
+      "evidence_ids": [
+        "cd0-pos-generated-00000053",
+        "cd0-pos-generated-00000054",
+        "cd0-pos-generated-00000055",
+        "cd0-pos-generated-00000068",
+        "cd0-pos-generated-00000070",
+        "cd0-pos-generated-00000077",
+        "cd0-pos-generated-00000079",
+        "cd0-pos-generated-00000086",
+        "cd0-pos-generated-00000088",
+        "cd0-pos-generated-00000095",
+        "cd0-pos-generated-00000097",
+        "cd0-pos-generated-00000104",
+        "cd0-pos-generated-00000106",
+        "cd0-pos-generated-00000113",
+        "cd0-pos-generated-00000115",
+        "cd0-pos-generated-00000122"
+      ]
+    },
+    "declared-lengths-and-counts-above-budgets": {
+      "count": 15,
+      "evidence_ids": [
+        "cd0-neg-generated-00000286-resource-input",
+        "cd0-neg-generated-00000287-resource-varint",
+        "cd0-neg-generated-00000288-resource-string-length",
+        "cd0-neg-generated-00000289-resource-bytes-length",
+        "cd0-neg-generated-00000290-resource-sequence-count",
+        "cd0-neg-generated-00000291-resource-record-count",
+        "cd0-neg-generated-00000292-resource-identifier-segments",
+        "cd0-neg-generated-00000293-resource-integer-bits",
+        "cd0-neg-generated-00000294-resource-segment-length",
+        "cd0-neg-generated-00000295-resource-aggregate",
+        "cd0-neg-generated-00000296-resource-string-declaration-only",
+        "cd0-neg-generated-00000297-resource-bytes-declaration-only",
+        "cd0-neg-generated-00000298-resource-sequence-declaration-only",
+        "cd0-neg-generated-00000299-resource-record-declaration-only",
+        "cd0-neg-generated-00000300-resource-identifier-declaration-only"
+      ]
+    },
+    "forbidden-type-tags-and-boundaries": {
+      "count": 16,
+      "evidence_ids": [
+        "cd0-neg-generated-00000233-tag-f0",
+        "cd0-neg-generated-00000234-tag-f1",
+        "cd0-neg-generated-00000235-tag-f2",
+        "cd0-neg-generated-00000236-tag-f3",
+        "cd0-neg-generated-00000237-tag-f4",
+        "cd0-neg-generated-00000238-tag-f5",
+        "cd0-neg-generated-00000239-tag-f6",
+        "cd0-neg-generated-00000240-tag-f7",
+        "cd0-neg-generated-00000241-tag-f8",
+        "cd0-neg-generated-00000242-tag-f9",
+        "cd0-neg-generated-00000243-tag-fa",
+        "cd0-neg-generated-00000244-tag-fb",
+        "cd0-neg-generated-00000245-tag-fc",
+        "cd0-neg-generated-00000246-tag-fd",
+        "cd0-neg-generated-00000247-tag-fe",
+        "cd0-neg-generated-00000248-tag-ff"
+      ]
+    },
+    "host-cycles-and-improper-lists": {
+      "count": 4,
+      "evidence_ids": [
+        "cd0-neg-generated-00000303-host-cycle",
+        "cd0-neg-generated-00000304-host-improper-list",
+        "cd0-host-property-cycle",
+        "cd0-host-property-improper-list"
+      ]
+    },
+    "host-shared-acyclic-and-mutable-aliases": {
+      "count": 2,
+      "evidence_ids": [
+        "cd0-host-property-shared-acyclic",
+        "cd0-host-property-mutable-aliases"
+      ]
+    },
+    "host-symbols-and-python-bool-int": {
+      "count": 3,
+      "evidence_ids": [
+        "cd0-neg-generated-00000305-host-symbol",
+        "cd0-neg-generated-00000306-host-python-bool-int",
+        "cd0-host-property-symbols-bool"
+      ]
+    },
+    "identifier-namespace-distinctions": {
+      "count": 1118,
+      "evidence_ids": [
+        "cd0-pos-generated-00000041",
+        "cd0-pos-generated-00000042",
+        "cd0-pos-generated-00000043",
+        "cd0-pos-generated-00000044",
+        "cd0-pos-generated-00000045",
+        "cd0-pos-generated-00000046",
+        "cd0-pos-generated-00000047",
+        "cd0-pos-generated-00000048",
+        "cd0-pos-generated-00000049",
+        "cd0-pos-generated-00000050",
+        "cd0-pos-generated-00000051",
+        "cd0-pos-generated-00000052",
+        "cd0-pos-generated-00000067",
+        "cd0-pos-generated-00000076",
+        "cd0-pos-generated-00000085",
+        "cd0-pos-generated-00000094"
+      ]
+    },
+    "mutation-append-octets": {
+      "count": 384,
+      "evidence_ids": [
+        "cd0-mut-000020865",
+        "cd0-mut-000020866",
+        "cd0-mut-000020867",
+        "cd0-mut-000020885",
+        "cd0-mut-000020886",
+        "cd0-mut-000020887",
+        "cd0-mut-000020905",
+        "cd0-mut-000020906",
+        "cd0-mut-000020907",
+        "cd0-mut-000020927",
+        "cd0-mut-000020928",
+        "cd0-mut-000020929",
+        "cd0-mut-000020951",
+        "cd0-mut-000020952",
+        "cd0-mut-000020953",
+        "cd0-mut-000020981"
+      ]
+    },
+    "mutation-change-declared-length-count": {
+      "count": 162,
+      "evidence_ids": [
+        "cd0-mut-000020989",
+        "cd0-mut-000020990",
+        "cd0-mut-000021017",
+        "cd0-mut-000021046",
+        "cd0-mut-000021069",
+        "cd0-mut-000021140",
+        "cd0-mut-000021141",
+        "cd0-mut-000021848",
+        "cd0-mut-000021873",
+        "cd0-mut-000021874",
+        "cd0-mut-000021902",
+        "cd0-mut-000021903",
+        "cd0-mut-000021933",
+        "cd0-mut-000021934",
+        "cd0-mut-000021967",
+        "cd0-mut-000021968"
+      ]
+    },
+    "mutation-corrupt-utf8": {
+      "count": 71,
+      "evidence_ids": [
+        "cd0-mut-000020991",
+        "cd0-mut-000020992",
+        "cd0-mut-000020993",
+        "cd0-mut-000020994",
+        "cd0-mut-000021875",
+        "cd0-mut-000021876",
+        "cd0-mut-000021877",
+        "cd0-mut-000021904",
+        "cd0-mut-000021905",
+        "cd0-mut-000021906",
+        "cd0-mut-000021935",
+        "cd0-mut-000021936",
+        "cd0-mut-000021937",
+        "cd0-mut-000021938",
+        "cd0-mut-000021969",
+        "cd0-mut-000021970"
+      ]
+    },
+    "mutation-delete-each-octet": {
+      "count": 4159,
+      "evidence_ids": [
+        "cd0-mut-000020853",
+        "cd0-mut-000020854",
+        "cd0-mut-000020855",
+        "cd0-mut-000020856",
+        "cd0-mut-000020857",
+        "cd0-mut-000020858",
+        "cd0-mut-000020873",
+        "cd0-mut-000020874",
+        "cd0-mut-000020875",
+        "cd0-mut-000020876",
+        "cd0-mut-000020877",
+        "cd0-mut-000020878",
+        "cd0-mut-000020893",
+        "cd0-mut-000020894",
+        "cd0-mut-000020895",
+        "cd0-mut-000020896"
+      ]
+    },
+    "mutation-delete-each-suffix": {
+      "count": 4159,
+      "evidence_ids": [
+        "cd0-mut-000020859",
+        "cd0-mut-000020860",
+        "cd0-mut-000020861",
+        "cd0-mut-000020862",
+        "cd0-mut-000020863",
+        "cd0-mut-000020864",
+        "cd0-mut-000020879",
+        "cd0-mut-000020880",
+        "cd0-mut-000020881",
+        "cd0-mut-000020882",
+        "cd0-mut-000020883",
+        "cd0-mut-000020884",
+        "cd0-mut-000020899",
+        "cd0-mut-000020900",
+        "cd0-mut-000020901",
+        "cd0-mut-000020902"
+      ]
+    },
+    "mutation-overlong-uvar": {
+      "count": 128,
+      "evidence_ids": [
+        "cd0-mut-000020872",
+        "cd0-mut-000020892",
+        "cd0-mut-000020912",
+        "cd0-mut-000020934",
+        "cd0-mut-000020958",
+        "cd0-mut-000020988",
+        "cd0-mut-000021016",
+        "cd0-mut-000021045",
+        "cd0-mut-000021068",
+        "cd0-mut-000021139",
+        "cd0-mut-000021165",
+        "cd0-mut-000021187",
+        "cd0-mut-000021209",
+        "cd0-mut-000021231",
+        "cd0-mut-000021255",
+        "cd0-mut-000021279"
+      ]
+    },
+    "mutation-replace-rational-components": {
+      "count": 48,
+      "evidence_ids": [
+        "cd0-mut-000020959",
+        "cd0-mut-000020960",
+        "cd0-mut-000020961",
+        "cd0-mut-000020962",
+        "cd0-mut-000021686",
+        "cd0-mut-000021687",
+        "cd0-mut-000021688",
+        "cd0-mut-000021689",
+        "cd0-mut-000021786",
+        "cd0-mut-000021787",
+        "cd0-mut-000021788",
+        "cd0-mut-000021789",
+        "cd0-mut-000021822",
+        "cd0-mut-000021823",
+        "cd0-mut-000021824",
+        "cd0-mut-000021825"
+      ]
+    },
+    "mutation-replace-tags": {
+      "count": 512,
+      "evidence_ids": [
+        "cd0-mut-000020868",
+        "cd0-mut-000020869",
+        "cd0-mut-000020870",
+        "cd0-mut-000020871",
+        "cd0-mut-000020888",
+        "cd0-mut-000020889",
+        "cd0-mut-000020890",
+        "cd0-mut-000020891",
+        "cd0-mut-000020908",
+        "cd0-mut-000020909",
+        "cd0-mut-000020910",
+        "cd0-mut-000020911",
+        "cd0-mut-000020930",
+        "cd0-mut-000020931",
+        "cd0-mut-000020932",
+        "cd0-mut-000020933"
+      ]
+    },
+    "mutation-swap-duplicate-record-fields": {
+      "count": 28,
+      "evidence_ids": [
+        "cd0-mut-000021142",
+        "cd0-mut-000021143",
+        "cd0-mut-000024390",
+        "cd0-mut-000024391",
+        "cd0-mut-000024538",
+        "cd0-mut-000024539",
+        "cd0-mut-000024680",
+        "cd0-mut-000024681",
+        "cd0-mut-000024818",
+        "cd0-mut-000024819",
+        "cd0-mut-000024968",
+        "cd0-mut-000024969",
+        "cd0-mut-000025110",
+        "cd0-mut-000025111",
+        "cd0-mut-000025585",
+        "cd0-mut-000025586"
+      ]
+    },
+    "overlong-version-integer-rational-count-length-segment": {
+      "count": 23,
+      "evidence_ids": [
+        "cd0-neg-generated-00000000-magic",
+        "cd0-neg-generated-00000001-version-overlong",
+        "cd0-neg-generated-00000249-integer-overlong-0",
+        "cd0-neg-generated-00000250-integer-overlong-1",
+        "cd0-neg-generated-00000251-integer-overlong-7",
+        "cd0-neg-generated-00000252-integer-overlong-8",
+        "cd0-neg-generated-00000253-integer-overlong-14",
+        "cd0-neg-generated-00000254-integer-overlong-15",
+        "cd0-neg-generated-00000255-integer-overlong-64",
+        "cd0-neg-generated-00000256-integer-overlong-256",
+        "cd0-neg-generated-00000257-rational-numerator-overlong",
+        "cd0-neg-generated-00000258-rational-denominator-overlong",
+        "cd0-neg-generated-00000264-string-length-0-overlong",
+        "cd0-neg-generated-00000265-string-length-1-overlong",
+        "cd0-neg-generated-00000266-string-length-127-overlong",
+        "cd0-neg-generated-00000267-string-length-128-overlong"
+      ]
+    },
+    "privileged-host-refusal": {
+      "count": 2,
+      "evidence_ids": [
+        "cd0-neg-generated-00000307-host-live-capability",
+        "cd0-host-property-live-privileged"
+      ]
+    },
+    "privileged-looking-inert-records": {
+      "count": 1110,
+      "evidence_ids": [
+        "cd0-pos-generated-00000058",
+        "cd0-pos-generated-00000059",
+        "cd0-pos-generated-00000060",
+        "cd0-pos-generated-00000061",
+        "cd0-pos-generated-00000062",
+        "cd0-pos-generated-00000071",
+        "cd0-pos-generated-00000080",
+        "cd0-pos-generated-00000089",
+        "cd0-pos-generated-00000098",
+        "cd0-pos-generated-00000107",
+        "cd0-pos-generated-00000116",
+        "cd0-pos-generated-00000125",
+        "cd0-pos-generated-00000134",
+        "cd0-pos-generated-00000143",
+        "cd0-pos-generated-00000152",
+        "cd0-pos-generated-00000161"
+      ]
+    },
+    "rational-normalization-and-refusal": {
+      "count": 1116,
+      "evidence_ids": [
+        "cd0-pos-generated-00000017",
+        "cd0-pos-generated-00000018",
+        "cd0-pos-generated-00000019",
+        "cd0-pos-generated-00000020",
+        "cd0-pos-generated-00000064",
+        "cd0-pos-generated-00000073",
+        "cd0-pos-generated-00000082",
+        "cd0-pos-generated-00000091",
+        "cd0-pos-generated-00000100",
+        "cd0-pos-generated-00000109",
+        "cd0-pos-generated-00000118",
+        "cd0-pos-generated-00000127",
+        "cd0-pos-generated-00000136",
+        "cd0-pos-generated-00000145",
+        "cd0-pos-generated-00000154",
+        "cd0-pos-generated-00000163"
+      ]
+    },
+    "record-permutations-duplicates-prefix-large": {
+      "count": 1108,
+      "evidence_ids": [
+        "cd0-pos-generated-00000056",
+        "cd0-pos-generated-00000057",
+        "cd0-pos-generated-00000069",
+        "cd0-pos-generated-00000078",
+        "cd0-pos-generated-00000087",
+        "cd0-pos-generated-00000096",
+        "cd0-pos-generated-00000105",
+        "cd0-pos-generated-00000114",
+        "cd0-pos-generated-00000123",
+        "cd0-pos-generated-00000132",
+        "cd0-pos-generated-00000141",
+        "cd0-pos-generated-00000150",
+        "cd0-pos-generated-00000159",
+        "cd0-pos-generated-00000168",
+        "cd0-pos-generated-00000177",
+        "cd0-pos-generated-00000186"
+      ]
+    },
+    "reserved-type-tags-and-boundaries": {
+      "count": 230,
+      "evidence_ids": [
+        "cd0-neg-generated-00000003-tag-03",
+        "cd0-neg-generated-00000004-tag-04",
+        "cd0-neg-generated-00000005-tag-05",
+        "cd0-neg-generated-00000006-tag-06",
+        "cd0-neg-generated-00000007-tag-07",
+        "cd0-neg-generated-00000008-tag-08",
+        "cd0-neg-generated-00000009-tag-09",
+        "cd0-neg-generated-00000010-tag-0a",
+        "cd0-neg-generated-00000011-tag-0b",
+        "cd0-neg-generated-00000012-tag-0c",
+        "cd0-neg-generated-00000013-tag-0d",
+        "cd0-neg-generated-00000014-tag-0e",
+        "cd0-neg-generated-00000015-tag-0f",
+        "cd0-neg-generated-00000016-tag-12",
+        "cd0-neg-generated-00000017-tag-13",
+        "cd0-neg-generated-00000018-tag-14"
+      ]
+    },
+    "string-and-bytes-boundaries": {
+      "count": 2238,
+      "evidence_ids": [
+        "cd0-pos-generated-00000021",
+        "cd0-pos-generated-00000022",
+        "cd0-pos-generated-00000023",
+        "cd0-pos-generated-00000024",
+        "cd0-pos-generated-00000025",
+        "cd0-pos-generated-00000026",
+        "cd0-pos-generated-00000027",
+        "cd0-pos-generated-00000028",
+        "cd0-pos-generated-00000029",
+        "cd0-pos-generated-00000030",
+        "cd0-pos-generated-00000031",
+        "cd0-pos-generated-00000032",
+        "cd0-pos-generated-00000033",
+        "cd0-pos-generated-00000034",
+        "cd0-pos-generated-00000035",
+        "cd0-pos-generated-00000036"
+      ]
+    },
+    "unicode-precomposed-decomposed-confusable": {
+      "count": 2235,
+      "evidence_ids": [
+        "cd0-pos-generated-00000021",
+        "cd0-pos-generated-00000022",
+        "cd0-pos-generated-00000023",
+        "cd0-pos-generated-00000024",
+        "cd0-pos-generated-00000025",
+        "cd0-pos-generated-00000026",
+        "cd0-pos-generated-00000027",
+        "cd0-pos-generated-00000028",
+        "cd0-pos-generated-00000029",
+        "cd0-pos-generated-00000030",
+        "cd0-pos-generated-00000031",
+        "cd0-pos-generated-00000032",
+        "cd0-pos-generated-00000033",
+        "cd0-pos-generated-00000041",
+        "cd0-pos-generated-00000042",
+        "cd0-pos-generated-00000043"
+      ]
+    },
+    "utf8-all-sequence-lengths": {
+      "count": 1118,
+      "evidence_ids": [
+        "cd0-pos-generated-00000021",
+        "cd0-pos-generated-00000022",
+        "cd0-pos-generated-00000023",
+        "cd0-pos-generated-00000024",
+        "cd0-pos-generated-00000025",
+        "cd0-pos-generated-00000026",
+        "cd0-pos-generated-00000027",
+        "cd0-pos-generated-00000028",
+        "cd0-pos-generated-00000029",
+        "cd0-pos-generated-00000030",
+        "cd0-pos-generated-00000031",
+        "cd0-pos-generated-00000032",
+        "cd0-pos-generated-00000033",
+        "cd0-pos-generated-00000065",
+        "cd0-pos-generated-00000074",
+        "cd0-pos-generated-00000083"
+      ]
+    },
+    "utf8-invalid-overlong-surrogate-truncation": {
+      "count": 7,
+      "evidence_ids": [
+        "cd0-neg-generated-00000275-utf8-continuation-lead",
+        "cd0-neg-generated-00000276-utf8-overlong-nul",
+        "cd0-neg-generated-00000277-utf8-truncated-two",
+        "cd0-neg-generated-00000278-utf8-truncated-three",
+        "cd0-neg-generated-00000279-utf8-truncated-four",
+        "cd0-neg-generated-00000280-utf8-surrogate",
+        "cd0-neg-generated-00000281-utf8-above-maximum"
+      ]
+    },
+    "utf8-nul-maximum-noncharacters": {
+      "count": 1118,
+      "evidence_ids": [
+        "cd0-pos-generated-00000021",
+        "cd0-pos-generated-00000022",
+        "cd0-pos-generated-00000023",
+        "cd0-pos-generated-00000024",
+        "cd0-pos-generated-00000025",
+        "cd0-pos-generated-00000026",
+        "cd0-pos-generated-00000027",
+        "cd0-pos-generated-00000028",
+        "cd0-pos-generated-00000029",
+        "cd0-pos-generated-00000030",
+        "cd0-pos-generated-00000031",
+        "cd0-pos-generated-00000032",
+        "cd0-pos-generated-00000033",
+        "cd0-pos-generated-00000065",
+        "cd0-pos-generated-00000074",
+        "cd0-pos-generated-00000083"
+      ]
+    },
+    "uvar-boundaries": {
+      "count": 1124,
+      "evidence_ids": [
+        "cd0-pos-generated-00000003",
+        "cd0-pos-generated-00000004",
+        "cd0-pos-generated-00000005",
+        "cd0-pos-generated-00000006",
+        "cd0-pos-generated-00000007",
+        "cd0-pos-generated-00000008",
+        "cd0-pos-generated-00000009",
+        "cd0-pos-generated-00000010",
+        "cd0-pos-generated-00000011",
+        "cd0-pos-generated-00000012",
+        "cd0-pos-generated-00000013",
+        "cd0-pos-generated-00000014",
+        "cd0-pos-generated-00000015",
+        "cd0-pos-generated-00000016",
+        "cd0-pos-generated-00000063",
+        "cd0-pos-generated-00000072"
+      ]
+    },
+    "zigzag-and-arbitrary-precision": {
+      "count": 1116,
+      "evidence_ids": [
+        "cd0-pos-generated-00000003",
+        "cd0-pos-generated-00000004",
+        "cd0-pos-generated-00000005",
+        "cd0-pos-generated-00000006",
+        "cd0-pos-generated-00000007",
+        "cd0-pos-generated-00000008",
+        "cd0-pos-generated-00000009",
+        "cd0-pos-generated-00000010",
+        "cd0-pos-generated-00000011",
+        "cd0-pos-generated-00000012",
+        "cd0-pos-generated-00000013",
+        "cd0-pos-generated-00000014",
+        "cd0-pos-generated-00000015",
+        "cd0-pos-generated-00000016",
+        "cd0-pos-generated-00000063",
+        "cd0-pos-generated-00000072"
+      ]
+    }
+  },
+  "deterministic_seed": 3439329281,
+  "errata_closure": "A1-A9 are closed by the pinned ruling and Errata 0.1; promoted cases are permanent shared vectors, while unclassified mutations still carry no inferred normative triple",
+  "fixture_infrastructure": {
+    "promoted_errata_vectors": {
+      "cases_by_adjudication": {
+        "A1": 6,
+        "A2": 5,
+        "A3": 6,
+        "A4": 3,
+        "A5": 3,
+        "A6": 2,
+        "A7": 1,
+        "A8": 6,
+        "A9": 5
+      },
+      "classified_cases": 37,
+      "execution_owner": "shared hand differential and bounded qualification",
+      "path": "canonical-datum/vectors/cd0-errata-0.1.json",
+      "schema": "cd0-errata-vectors/0.1",
+      "sha256": "55725e14e763075a8866be9da8be9f8647b5b06803e1fea6f661068d87651ddc"
+    },
+    "schema": {
+      "path": "canonical-datum/schema/cd0-fixtures.schema.json",
+      "revision": "0.1",
+      "sha256": "6609a6d97140f1fda5a538ccb908bb820bcdad380b7dd8efb05fa8a9e7a0407c"
+    }
+  },
+  "generator_runtime": {
+    "implementation": "CPython",
+    "random_engine": "random.Random (MT19937) with explicit integer seed",
+    "version": "3.11.14"
+  },
+  "generator_version": "cd0-corpus-generator/4",
+  "invocation_argv": [
+    "/home/gauss/OpenGauss/venv/bin/python3",
+    "canonical-datum/generator/generate_corpus.py",
+    "--output-dir",
+    "canonical-datum/generated/release-errata-0.1",
+    "--seed",
+    "3439329281",
+    "--positive-count",
+    "10000",
+    "--negative-count",
+    "20308",
+    "--mutation-sample-count",
+    "128",
+    "--truncation-max-document-octets",
+    "16"
+  ],
+  "invocation_command": "/home/gauss/OpenGauss/venv/bin/python3 canonical-datum/generator/generate_corpus.py --output-dir canonical-datum/generated/release-errata-0.1 --seed 3439329281 --positive-count 10000 --negative-count 20308 --mutation-sample-count 128 --truncation-max-document-octets 16",
+  "invocation_cwd": "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata",
+  "logical_command": "python3 canonical-datum/generator/generate_corpus.py --output-dir canonical-datum/generated/release-errata-0.1 --seed 3439329281 --positive-count 10000 --negative-count 20308 --mutation-sample-count 128 --truncation-max-document-octets 16",
+  "logical_command_argv": [
+    "python3",
+    "canonical-datum/generator/generate_corpus.py",
+    "--output-dir",
+    "canonical-datum/generated/release-errata-0.1",
+    "--seed",
+    "3439329281",
+    "--positive-count",
+    "10000",
+    "--negative-count",
+    "20308",
+    "--mutation-sample-count",
+    "128",
+    "--truncation-max-document-octets",
+    "16"
+  ],
+  "manifest_self_hash": "excluded to avoid circularity; hash this file in the external artifact ledger",
+  "negative_distinctness_scope": "distinct input-kind/input-or-host-descriptor/budget cases only; not global semantic uniqueness",
+  "negative_minimization": {
+    "compact_padding_family": "canonical two-octet Bytes documents, nine input octets under max_input_octets=8",
+    "demonstrated_primary_minimal_count": 20000,
+    "demonstrated_primary_minimal_threshold": 20000,
+    "kind_counts": {
+      "authored-primary-template": 303,
+      "byte-deletion-primary-minimal": 20000,
+      "host-graph-scenario": 5
+    },
+    "primary_defect_scope": "proofs remove only the declared primary defect; no global semantic uniqueness is claimed"
+  },
+  "normative_specifications": {
+    "base-specification": {
+      "path": "mneme/spec/CANONICAL-DATUM-SPEC.md",
+      "sha256": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+    },
+    "errata-0.1": {
+      "path": "CANONICAL-DATUM-SPEC-ERRATA-0.1.md",
+      "sha256": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271"
+    },
+    "post-implementation-ruling": {
+      "path": "CD0-POST-IMPLEMENTATION-RULING.md",
+      "sha256": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc"
+    }
+  },
+  "positive_root_tag_counts": {
+    "00": 1,
+    "01": 1,
+    "02": 1,
+    "10": 1116,
+    "11": 1108,
+    "20": 1118,
+    "21": 1112,
+    "22": 1117,
+    "30": 3315,
+    "31": 1111
+  },
+  "release_thresholds": {
+    "adversarial_total_minimum": 20000,
+    "allow_small_test_mode": false,
+    "count_scope": "qualification requires at least 20000 demonstrated byte-deletion-primary-minimal rows; 308 authored/host coverage rows are additional and every classified row carries a complete normative failure triple",
+    "demonstrated_primary_minimal_minimum": 20000,
+    "observed_adversarial_total": 20308,
+    "observed_demonstrated_primary_minimal": 20000,
+    "positive_minimum": 10000,
+    "preferred_negative_count": 20308,
+    "qualifies": true
+  },
+  "representation_and_oracle_boundary": {
+    "authority": "consistency aid only; canonical identity and failure triples remain governed by the pinned specification and differential conformance",
+    "encoder_classifier": "post-seed Python CD/0 implementation",
+    "fixture_ast": "shared Section 27 JSON AST",
+    "generated_host_rows": "require later integration-adapter support before cross-implementation execution",
+    "mutation_candidates": "unclassified; no permanent triple until minimized and compared"
+  },
+  "schema": "cd0-generated-corpus-manifest/v4",
+  "source_input_sha256": {
+    "after_generation": {
+      "CANONICAL-DATUM-DIVERGENCES.md": "e3ee2be008fac43d22d5bf3d5a653ee0aa46f11398e241d6111c763a4d7b00a7",
+      "CANONICAL-DATUM-SPEC-ERRATA-0.1.md": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
+      "CD0-POST-IMPLEMENTATION-RULING.md": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
+      "canonical-datum/generator/generate_corpus.py": "b0a6fd4e799b1c89dd1340882151bcc756738320faafe5d76178c170eca87c38",
+      "canonical-datum/python/cd0/__init__.py": "8f8fe19d4a03a9d85bf01a836a2418254a6286f0b5b45a954af8f36f70adfd41",
+      "canonical-datum/schema/cd0-fixtures.schema.json": "6609a6d97140f1fda5a538ccb908bb820bcdad380b7dd8efb05fa8a9e7a0407c",
+      "canonical-datum/vectors/cd0-budgets.json": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
+      "canonical-datum/vectors/cd0-distinct-pairs.json": "ee966c62c49e2f64f6378901e1bc33db352a5b2a7d69f0dd606947eb02e73d27",
+      "canonical-datum/vectors/cd0-errata-0.1.json": "55725e14e763075a8866be9da8be9f8647b5b06803e1fea6f661068d87651ddc",
+      "canonical-datum/vectors/cd0-negative.jsonl": "d491d83e8b27d3224567f1948e90b92db2ea02689c464fe6144c69bb2cb851a6",
+      "canonical-datum/vectors/cd0-positive.jsonl": "34fe63302e686efc0bcf1b1d841dbc5392c7f5abae393390eca40680179492b4",
+      "mneme/spec/CANONICAL-DATUM-SPEC.md": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+    },
+    "before_generation": {
+      "CANONICAL-DATUM-DIVERGENCES.md": "e3ee2be008fac43d22d5bf3d5a653ee0aa46f11398e241d6111c763a4d7b00a7",
+      "CANONICAL-DATUM-SPEC-ERRATA-0.1.md": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
+      "CD0-POST-IMPLEMENTATION-RULING.md": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
+      "canonical-datum/generator/generate_corpus.py": "b0a6fd4e799b1c89dd1340882151bcc756738320faafe5d76178c170eca87c38",
+      "canonical-datum/python/cd0/__init__.py": "8f8fe19d4a03a9d85bf01a836a2418254a6286f0b5b45a954af8f36f70adfd41",
+      "canonical-datum/schema/cd0-fixtures.schema.json": "6609a6d97140f1fda5a538ccb908bb820bcdad380b7dd8efb05fa8a9e7a0407c",
+      "canonical-datum/vectors/cd0-budgets.json": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
+      "canonical-datum/vectors/cd0-distinct-pairs.json": "ee966c62c49e2f64f6378901e1bc33db352a5b2a7d69f0dd606947eb02e73d27",
+      "canonical-datum/vectors/cd0-errata-0.1.json": "55725e14e763075a8866be9da8be9f8647b5b06803e1fea6f661068d87651ddc",
+      "canonical-datum/vectors/cd0-negative.jsonl": "d491d83e8b27d3224567f1948e90b92db2ea02689c464fe6144c69bb2cb851a6",
+      "canonical-datum/vectors/cd0-positive.jsonl": "34fe63302e686efc0bcf1b1d841dbc5392c7f5abae393390eca40680179492b4",
+      "mneme/spec/CANONICAL-DATUM-SPEC.md": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+    }
+  },
+  "source_revision": "1cdd7779e22e805f6b3dc7f9a53c2df37902a1aa",
+  "source_worktree": {
+    "clean_before": true,
+    "dirty_override_requested": false,
+    "dirty_override_used": false,
+    "release_requires_clean": true,
+    "status_before": []
+  },
+  "truncation_configuration": {
+    "construction_descriptor_rows": 3,
+    "generated_documents_at_or_below_configured_size": 1664,
+    "generated_truncation_candidates": 20617,
+    "generated_truncation_candidates_before_fixed-scale_displacement": 20639,
+    "generated_truncation_candidates_displaced_by_promoted_hand_vectors": 22,
+    "hand_positive_fixture_rows": 25,
+    "hand_truncation_candidates": 236,
+    "maximum_generated_document_octets": 16,
+    "sampled_positive_documents": 128
+  }
+}

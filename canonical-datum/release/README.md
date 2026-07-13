@@ -18,7 +18,7 @@ python3 canonical-datum/release/run_generated_differential.py \
   --corpus-dir canonical-datum/generated/release-errata-0.1 \
   --batch-size 2048 \
   --timeout-seconds 120 \
-  --artifacts-dir canonical-datum/evidence/generated-differential-release-v0
+  --artifacts-dir canonical-datum/evidence/generated-differential-errata-0.1
 ```
 
 The runner refuses before launching either codec unless all of these agree:

@@ -1,0 +1,326 @@
+{
+  "commands": [
+    {
+      "command": [
+        "/home/gauss/OpenGauss/venv/bin/python3",
+        "-m",
+        "unittest",
+        "-v",
+        "canonical-datum/qualification/test_qualification.py"
+      ],
+      "label": "qualification-self-tests",
+      "returncode": 0,
+      "stderr_bytes": 1654,
+      "stderr_sha256": "cd120bfd5857e2ea2f4ef2a24c1a69b8070d924ddf99681669c4d0616c2d9372",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "/home/gauss/OpenGauss/venv/bin/python3",
+        "canonical-datum/tools/verify_phase0.py"
+      ],
+      "label": "phase0-vector-verifier",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 1372,
+      "stdout_sha256": "16187695e21212154ffbc59114f9cbadb8e3d082dc532e9c8749d08ead92335a"
+    },
+    {
+      "command": [
+        "/home/gauss/OpenGauss/venv/bin/python3",
+        "canonical-datum/integration/run_differential.py",
+        "--json"
+      ],
+      "label": "phase2-golden-differential",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 2814,
+      "stdout_sha256": "eb16ab489a53d1e7bad3b21d03b6b07967fdd7407f2ab4a6f8fd51d327724ce3"
+    },
+    {
+      "command": [
+        "/home/gauss/OpenGauss/venv/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "canonical-datum/python/tests",
+        "-v"
+      ],
+      "label": "python-seed-suite",
+      "returncode": 0,
+      "stderr_bytes": 21670,
+      "stderr_sha256": "458a1e3cddee90a7db543e289aefbd33b90c3dbb5c4086827ac7dcfbace41653",
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "sbcl",
+        "--noinform",
+        "--disable-debugger",
+        "--script",
+        "canonical-datum/common-lisp/run-tests.lisp"
+      ],
+      "label": "common-lisp-seed-suite",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 560,
+      "stdout_sha256": "d668ad41b407923ff6e817db01e19747a4d8f1d5a08249d09bf710c0b4ce3e2c"
+    },
+    {
+      "command": [
+        "sbcl",
+        "--noinform",
+        "--disable-debugger",
+        "--script",
+        "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
+        "<temporary-requests.jsonl>"
+      ],
+      "label": "qualification-common-lisp-adapter",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 424198,
+      "stdout_sha256": "8b25749bd473ae9af38ccba4a55324751d4fa0037019f4b4a68086972628ac06"
+    },
+    {
+      "command": [
+        "/home/gauss/OpenGauss/venv/bin/python3",
+        "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
+        "<temporary-requests.jsonl>"
+      ],
+      "label": "qualification-python-adapter",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 418973,
+      "stdout_sha256": "29309fd8a13b19a4da91fd94d59c1fdccb9fe19cb1eb2de0fb1962fae182d8a5"
+    },
+    {
+      "command": [
+        "/home/gauss/OpenGauss/venv/bin/python3",
+        "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/qualification/python_runtime_probe.py"
+      ],
+      "label": "python-runtime-probe-hash-0",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 435,
+      "stdout_sha256": "9665e1a6e52aaca4b8b8ba59912bf984863342453c08b23d5f5a7b4e4577a8cf"
+    },
+    {
+      "command": [
+        "/home/gauss/OpenGauss/venv/bin/python3",
+        "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/qualification/python_runtime_probe.py"
+      ],
+      "label": "python-runtime-probe-hash-1",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 435,
+      "stdout_sha256": "9665e1a6e52aaca4b8b8ba59912bf984863342453c08b23d5f5a7b4e4577a8cf"
+    },
+    {
+      "command": [
+        "/home/gauss/OpenGauss/venv/bin/python3",
+        "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/qualification/python_runtime_probe.py"
+      ],
+      "label": "python-runtime-probe-hash-137",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 435,
+      "stdout_sha256": "9665e1a6e52aaca4b8b8ba59912bf984863342453c08b23d5f5a7b4e4577a8cf"
+    },
+    {
+      "command": [
+        "/home/gauss/OpenGauss/venv/bin/python3",
+        "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/qualification/python_runtime_probe.py"
+      ],
+      "label": "python-runtime-probe-hash-777",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 435,
+      "stdout_sha256": "9665e1a6e52aaca4b8b8ba59912bf984863342453c08b23d5f5a7b4e4577a8cf"
+    },
+    {
+      "command": [
+        "sbcl",
+        "--noinform",
+        "--disable-debugger",
+        "--script",
+        "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/qualification/common_lisp_runtime_probe.lisp"
+      ],
+      "label": "common-lisp-runtime-probe",
+      "returncode": 0,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_bytes": 490,
+      "stdout_sha256": "abc23fb08d321a002e54fa12cf147fdbb9bbe89bc008b90ef92def2d7dba654a"
+    }
+  ],
+  "golden": {
+    "counts": {
+      "common-lisp_host_not_applicable": 3,
+      "common-lisp_negative_executed": 68,
+      "equality_judgments": 325,
+      "errata_a1": 6,
+      "errata_a2": 5,
+      "errata_a3": 6,
+      "errata_a4": 3,
+      "errata_a5": 3,
+      "errata_a6": 2,
+      "errata_a7": 1,
+      "errata_a8": 6,
+      "errata_a9": 5,
+      "errata_vectors": 37,
+      "integration_regressions": 7,
+      "negative_rows": 71,
+      "positive_rows": 25,
+      "python_negative_executed": 71
+    },
+    "host_descriptor_dispositions": {
+      "common_lisp_not_applicable": 3,
+      "common_lisp_not_applicable_is_pass": false,
+      "details": [
+        {
+          "id": "cd0-neg-host-ambiguous-identifier",
+          "implementation": "common-lisp",
+          "reason": "Common Lisp seed does not expose this optional host importer"
+        },
+        {
+          "id": "cd0-neg-host-bool-as-integer",
+          "implementation": "common-lisp",
+          "reason": "Common Lisp seed does not expose this optional host importer"
+        },
+        {
+          "id": "cd0-neg-host-privileged-value",
+          "implementation": "common-lisp",
+          "reason": "Common Lisp seed does not expose this optional host importer"
+        }
+      ]
+    },
+    "issues": [],
+    "promoted_errata_execution": {
+      "by_adjudication": {
+        "A1": 6,
+        "A2": 5,
+        "A3": 6,
+        "A4": 3,
+        "A5": 3,
+        "A6": 2,
+        "A7": 1,
+        "A8": 6,
+        "A9": 5
+      },
+      "classified_total": 37,
+      "failures": 0,
+      "skips": 0
+    },
+    "requests_per_codec": 465,
+    "status": "PASS"
+  },
+  "mode": "default",
+  "normative_specifications": {
+    "base-specification": {
+      "path": "mneme/spec/CANONICAL-DATUM-SPEC.md",
+      "sha256": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+    },
+    "errata-0.1": {
+      "path": "CANONICAL-DATUM-SPEC-ERRATA-0.1.md",
+      "sha256": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271"
+    },
+    "post-implementation-ruling": {
+      "path": "CD0-POST-IMPLEMENTATION-RULING.md",
+      "sha256": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc"
+    }
+  },
+  "property_matrix": {
+    "counts": {
+      "classified_failures": 14,
+      "equality_properties": 513,
+      "normative_failure_rows": 14,
+      "random_roundtrips": 512,
+      "resource_retries": 6
+    },
+    "failure_classifications": {
+      "mutation-derived-single-defect": 8,
+      "resource-boundary": 6
+    },
+    "random_seed": 13434884,
+    "request_count_per_codec": 1045,
+    "request_sha256": "0cb53adde95444be781b9203717632224c80ed8e7c7ba4e65ff488b2d2b19936",
+    "root_family_counts": {
+      "bool": 58,
+      "bytes": 45,
+      "id": 36,
+      "int": 48,
+      "rat": 57,
+      "record": 93,
+      "seq": 71,
+      "string": 51,
+      "unit": 53
+    },
+    "status": "PASS",
+    "warranted_cross_codec_disagreements": 0
+  },
+  "qualification_base_revision": "fac17dd701c59f6da8eb2536dd022853b2e258fe",
+  "run_revision": "1cdd7779e22e805f6b3dc7f9a53c2df37902a1aa",
+  "run_tree": "2f79a072c3702a016256d25bd896c7e4452ce4c4",
+  "runtime_probes": {
+    "ambient_cross_process_identity": "4c504344003103220107616d6269656e740104626574611004220107616d6269656e740105616c7068611002220107616d6269656e74010567616d6d611006",
+    "common_lisp": {
+      "activation_calls": 0,
+      "activation_entry_points_guarded": 8,
+      "ambient_state_variants": 1,
+      "concurrent_read_encode_pairs": 1024,
+      "deep_equality_depth": 5000,
+      "host_cycle_refusals": 1,
+      "identity_hex": "4c504344003103220107616d6269656e740104626574611004220107616d6269656e740105616c7068611002220107616d6269656e74010567616d6d611006",
+      "implementation": "common-lisp",
+      "inert_records": 1,
+      "mutation_probes": 11,
+      "namespace_distinctions": 1,
+      "resource_refusal_retries": 1,
+      "shared_acyclic_acceptances": 1,
+      "status": "PASS"
+    },
+    "python": {
+      "activation_calls": 0,
+      "decimal_guard": 640,
+      "deep_equality_depth": 5000,
+      "dictionary_order_variants": 2,
+      "host_cycle_refusals": 1,
+      "identity_hex": "4c504344003103220107616d6269656e740104626574611004220107616d6269656e740105616c7068611002220107616d6269656e74010567616d6d611006",
+      "implementation": "python",
+      "inert_records": 1,
+      "mutation_probes": 7,
+      "namespace_distinctions": 1,
+      "resource_refusal_retries": 1,
+      "shared_acyclic_acceptances": 1,
+      "status": "PASS"
+    },
+    "python_hash_seeds": [
+      "0",
+      "1",
+      "137",
+      "777"
+    ],
+    "status": "PASS"
+  },
+  "schema": "lisp-plus-cd0-qualification/v2",
+  "scope": {
+    "a1_through_a9_adjudicated": true,
+    "classified_failure_triples_complete": true,
+    "phase3_release_corpus_claimed": false,
+    "phase3_release_corpus_consumed": false,
+    "promoted_errata_vectors_executed": true
+  },
+  "status": "PASS"
+}
