@@ -178,6 +178,21 @@ class GeneratedCorpusTests(unittest.TestCase):
         self.assertEqual(self.manifest["generator_version"], "cd0-corpus-generator/4")
         self.assertEqual(self.manifest["schema"], "cd0-generated-corpus-manifest/v4")
 
+    def test_identifier_stage_errata_note_is_scoped_to_identifier_rows(self) -> None:
+        note = "Errata 0.1 fixes the identifier resource stage"
+        tagged = {
+            row["id"]
+            for row in self.negatives
+            if note in row.get("notes", [])
+        }
+        self.assertEqual(
+            tagged,
+            {
+                "cd0-neg-generated-00000292-resource-identifier-segments",
+                "cd0-neg-generated-00000300-resource-identifier-declaration-only",
+            },
+        )
+
     def test_shared_positive_and_negative_fixture_schema(self) -> None:
         validator = Draft202012Validator(SCHEMA)
         for row in self.positives + self.negatives:
