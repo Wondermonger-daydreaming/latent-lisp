@@ -164,6 +164,6 @@ test_equality_classes_are_coherent (test_cd0.VectorManifestTests.test_equality_c
 test_fixture_counts_are_exact (test_cd0.VectorManifestTests.test_fixture_counts_are_exact) ... ok
 
 ----------------------------------------------------------------------
-Ran 164 tests in 0.200s
+Ran 164 tests in 0.188s
 
 OK

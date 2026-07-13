@@ -1,6 +1,6 @@
 # CD/0 Errata 0.1 implementation ledger
 
-Date: 2026-07-13  
+Date: 2026-07-13
 Status: local implementation and verification complete; publication and targeted
 independent review are recorded separately.  This ledger does not authorize or
 claim a merge to `main`.

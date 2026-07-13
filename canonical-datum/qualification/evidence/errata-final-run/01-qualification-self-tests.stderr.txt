@@ -9,6 +9,6 @@ test_normative_inputs_and_errata_counts_are_pinned (canonical-datum.qualificatio
 test_request_ids_are_unique_and_complete (canonical-datum.qualification.test_qualification.ManifestTests.test_request_ids_are_unique_and_complete) ... ok
 
 ----------------------------------------------------------------------
-Ran 9 tests in 0.016s
+Ran 9 tests in 0.008s
 
 OK

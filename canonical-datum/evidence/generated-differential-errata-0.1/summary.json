@@ -15,7 +15,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.573778,
+          "elapsed_seconds": 0.740122,
           "response_count": 2048,
           "response_octets": 1192232,
           "response_sha256": "6ce7fb5b1dd1d730d01cf4f393c6d687c7854a1644c92f98c6f9fd2c51aa101a",
@@ -28,7 +28,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.315783,
+          "elapsed_seconds": 0.380028,
           "response_count": 2048,
           "response_octets": 1181992,
           "response_sha256": "93242d78214d7903a3935d2f9caf41a6303b48697c153374aacaa2c7f2cc729d",
@@ -52,7 +52,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.565096,
+          "elapsed_seconds": 0.735317,
           "response_count": 2048,
           "response_octets": 1205277,
           "response_sha256": "a7a40872213d613f17c1a34adbf9fff557cdb7f9794036f4019db0ee4d6667c3",
@@ -65,7 +65,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.334407,
+          "elapsed_seconds": 0.335372,
           "response_count": 2048,
           "response_octets": 1195037,
           "response_sha256": "9d98ad253b1da44c47e80c83a4fac7adbe7dc06497c4d4c69e9a5d01d5de94a9",
@@ -89,7 +89,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.581809,
+          "elapsed_seconds": 0.681126,
           "response_count": 2048,
           "response_octets": 1221463,
           "response_sha256": "8359ea0f0ae1731728c1bf7346680098db8d003fc40763890b5f17aa0183608b",
@@ -102,7 +102,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.321082,
+          "elapsed_seconds": 0.376001,
           "response_count": 2048,
           "response_octets": 1211223,
           "response_sha256": "b43d2ad7ea5e521bbf158499e947e451e74492c8fed97e8eceac817f8a45b597",
@@ -126,7 +126,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.585403,
+          "elapsed_seconds": 0.597962,
           "response_count": 2048,
           "response_octets": 1225888,
           "response_sha256": "dcc47fddb2d48f3817faf33d80d92bf8fee009a147bc8b2c56de43cca9460290",
@@ -139,7 +139,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.333498,
+          "elapsed_seconds": 0.359445,
           "response_count": 2048,
           "response_octets": 1215648,
           "response_sha256": "b4e8493bdda5e96aa28545eee3b4dff3e9b39ccbfe8822b3b020aa56a89cf7f8",
@@ -163,7 +163,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.59085,
+          "elapsed_seconds": 0.603239,
           "response_count": 2048,
           "response_octets": 1173314,
           "response_sha256": "ddf5ad2cb9b0ebf228b0ee10e8aa70a59fabb88f94f51ffe68013d0912f0d01b",
@@ -176,7 +176,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.309767,
+          "elapsed_seconds": 0.317277,
           "response_count": 2048,
           "response_octets": 1163074,
           "response_sha256": "1663be517cbb7b0c18ef290157b3bc123b9c51ff575179708c94be150a17a3f2",
@@ -200,7 +200,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.618024,
+          "elapsed_seconds": 0.749083,
           "response_count": 2048,
           "response_octets": 816532,
           "response_sha256": "9048bfa8e0d3ebead1d36a32ac117e4bd2e32e8062aebeeae3e3b7eca701ac5a",
@@ -213,7 +213,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.343665,
+          "elapsed_seconds": 0.416651,
           "response_count": 2048,
           "response_octets": 806292,
           "response_sha256": "0e9375ec672ed7188651b5a10c23969e4966fa4cccec19bed4912d58a8391949",
@@ -237,7 +237,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.626911,
+          "elapsed_seconds": 0.656919,
           "response_count": 2048,
           "response_octets": 821054,
           "response_sha256": "4220f632ac2d5fc3c94d9cffa50c7fc5649bdaf343d14c29665e54dd245c5ef0",
@@ -250,7 +250,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.297954,
+          "elapsed_seconds": 0.299382,
           "response_count": 2048,
           "response_octets": 810814,
           "response_sha256": "6780ac4f19cd52fe603c66c8790da6bf26b698b847835ef2f74c3b82a23858e2",
@@ -274,7 +274,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.649367,
+          "elapsed_seconds": 0.744927,
           "response_count": 2048,
           "response_octets": 822826,
           "response_sha256": "dd6aa7ca846bca4bc030f82a4161e062d0ceec5ca13a0bc966842125ca04cf0a",
@@ -287,7 +287,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.298349,
+          "elapsed_seconds": 0.378564,
           "response_count": 2048,
           "response_octets": 812586,
           "response_sha256": "dffa18d7f3dfef55604c263b30e72883dbfd467cc8c7d5f0e6e1d9bbafeb1ee2",
@@ -311,7 +311,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.687135,
+          "elapsed_seconds": 0.673964,
           "response_count": 2048,
           "response_octets": 820270,
           "response_sha256": "de6461ad2e2f04af365d85151a11d70b75730bb7bf311d32a0f68599f81a8e6f",
@@ -324,7 +324,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.354136,
+          "elapsed_seconds": 0.302937,
           "response_count": 2048,
           "response_octets": 810030,
           "response_sha256": "720aacf3ceb8f2e7d82371ef7d97b788cf2c63c394031e3be8504f459b29a5cd",
@@ -348,7 +348,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.637285,
+          "elapsed_seconds": 0.605737,
           "response_count": 2048,
           "response_octets": 829362,
           "response_sha256": "4d9a631c0d4c07998bb4cdd3069301a6ca8e95f0fe5b57f81c47a25b713a8e16",
@@ -361,7 +361,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.324892,
+          "elapsed_seconds": 0.323816,
           "response_count": 2048,
           "response_octets": 819122,
           "response_sha256": "29933619e698b7ee6f02f357534526629936b720d41c9e96c4feadc666ea4851",
@@ -385,7 +385,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.722132,
+          "elapsed_seconds": 0.608327,
           "response_count": 2048,
           "response_octets": 839298,
           "response_sha256": "e17607ac2ffeec0620c8b2d41b283a5d209b51f0a39db281ef0ccc4574cee908",
@@ -398,7 +398,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.367812,
+          "elapsed_seconds": 0.302409,
           "response_count": 2048,
           "response_octets": 829058,
           "response_sha256": "60ffc6658737d5cee288d3913f6eb01b785a9bf5bd668c27184f64c91a06d8b3",
@@ -422,7 +422,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.641708,
+          "elapsed_seconds": 0.605503,
           "response_count": 2048,
           "response_octets": 833988,
           "response_sha256": "056eb66c1eb2ae797d9b390569ab2afd9ac4fa9a37be1c8184fc37f02a38d945",
@@ -435,7 +435,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.311801,
+          "elapsed_seconds": 0.323205,
           "response_count": 2048,
           "response_octets": 823748,
           "response_sha256": "573251b6b1e1315422c8149de88b0cae34b559dfc7f022eee6268132decad9c3",
@@ -459,7 +459,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.606077,
+          "elapsed_seconds": 0.611569,
           "response_count": 2048,
           "response_octets": 833090,
           "response_sha256": "5385ee529d81e18300c14da35ae07b95cca08483de5af55b27a0fa3ae8a76571",
@@ -472,7 +472,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.31099,
+          "elapsed_seconds": 0.29738,
           "response_count": 2048,
           "response_octets": 822850,
           "response_sha256": "163ba32e7bac030aea0d2b3f0f520acbe475f2a2eaea933b4c51d2486ffcbb95",
@@ -496,7 +496,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.622267,
+          "elapsed_seconds": 0.586638,
           "response_count": 2048,
           "response_octets": 835126,
           "response_sha256": "8e1424321b65968208256daeea345b18a4feaeceecbe0132481cf1cc99ce7d26",
@@ -509,7 +509,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.325039,
+          "elapsed_seconds": 0.300136,
           "response_count": 2048,
           "response_octets": 824886,
           "response_sha256": "b3e6916c396c106cff5e2498d293860bed5798e0eff28ecf9d8981d813ed2a79",
@@ -533,7 +533,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.607574,
+          "elapsed_seconds": 0.566889,
           "response_count": 2048,
           "response_octets": 726740,
           "response_sha256": "3e0706b37c611495e68ff9d6e5d91795b66c26c9e960a399eff3f5e2e22b6732",
@@ -546,7 +546,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.23967,
+          "elapsed_seconds": 0.233744,
           "response_count": 2048,
           "response_octets": 716562,
           "response_sha256": "46b577a664148393bc2a3b78a70013a1c05239bf2d2047e2b61e15af90c415dd",
@@ -570,7 +570,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.473304,
+          "elapsed_seconds": 0.45099,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "417ec84318efd1c504d341f66f293fba847c25d39cc470ff3eceb23dfb7b4fd8",
@@ -583,7 +583,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.115112,
+          "elapsed_seconds": 0.11317,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "c2269e5f5fbba4e90fdb9e9d86a1d2c33f6df359120d6e9821796e2a26bc0217",
@@ -607,7 +607,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.486238,
+          "elapsed_seconds": 0.459211,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "b216c27cf108c4d988bedf73e492fac180db8a08ccb90608302460009d9323ef",
@@ -620,7 +620,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.122241,
+          "elapsed_seconds": 0.111409,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "bd80756dc5dd363cc50f0461536b6cf7774be02a61bcea92e1faba6cf903f531",
@@ -644,7 +644,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.553647,
+          "elapsed_seconds": 0.482926,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "8f7af16b2eaeeeab27b548b091e2f7dd59687edacd4afcd744b06fce9ae39d56",
@@ -657,7 +657,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.135684,
+          "elapsed_seconds": 0.113555,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "61a16d69687797644ec25b00a393ba5606f59afa3e3466d19aea996bfe350c5c",
@@ -681,7 +681,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.548435,
+          "elapsed_seconds": 0.45333,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "d35f66accfef3e069c06117bb25d235f2911402a3f8f663e23eae9ce0c2480e0",
@@ -694,7 +694,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.111368,
+          "elapsed_seconds": 0.111521,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "8932a96ff62954d050e54100e25d1bee66cb3296a47ba22a671db05b780cfb5f",
@@ -718,7 +718,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.604758,
+          "elapsed_seconds": 0.464042,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "08720172fe3dfc2b6b85b01f26ebf9d28f42c816146fde4bb13a91794295107c",
@@ -731,7 +731,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.112922,
+          "elapsed_seconds": 0.116944,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "fd80730724a1f0549d9bd5dd53241a5c39ff6574fbde09d0e5a59c4875846665",
@@ -755,7 +755,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.506268,
+          "elapsed_seconds": 0.469962,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "1d3722be4eee081a19bcf000668290f3e42ad6d858ee6dfd4079315ebbdf7dc8",
@@ -768,7 +768,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.113108,
+          "elapsed_seconds": 0.113617,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "16e8512bcae1f9d9dd746c65c5357e38033240f4164383ca9c76ec042e726e3d",
@@ -792,7 +792,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.46191,
+          "elapsed_seconds": 0.458133,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "1fbb4265a176c11784804c85422d3020098463413e2cd8bf7a0bf415d80c4c6b",
@@ -805,7 +805,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.112555,
+          "elapsed_seconds": 0.125215,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "997cf16274629028ca90a94f201abed643da765565d7550efdaf2de2d96a35b5",
@@ -829,7 +829,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.456399,
+          "elapsed_seconds": 0.455229,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "cd648326f3dca4329072e9613480cedacada61f25cf30713025e16857db20057",
@@ -842,7 +842,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.11169,
+          "elapsed_seconds": 0.108854,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "86f8bd464bf5718399dbb624a02a3d99b202361eae0e288608ecbcfa75770700",
@@ -866,7 +866,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.47874,
+          "elapsed_seconds": 0.457335,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "14bac8ad4394525c097a58fdfc4d5616ee0a8e36fa7661d2a45232862037910a",
@@ -879,7 +879,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.125934,
+          "elapsed_seconds": 0.114972,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "257eea34030010b003c7a13f8983b16f512e2af7a136ee35aa0649d0e8ee239d",
@@ -903,7 +903,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.506194,
+          "elapsed_seconds": 0.468652,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "7ae555d683d69a68833e09c9ba4bf8c42c0509905e7147de21f7bbc14bdbbf75",
@@ -916,7 +916,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.113738,
+          "elapsed_seconds": 0.11167,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "0d1e8b4c188146c704fb5366c0993e8136bf1053f462bef51f4668d9c2ffb545",
@@ -940,7 +940,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.495123,
+          "elapsed_seconds": 0.509713,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "e1cd749c44556a62731d434f164372256b08dce9fe1bff10e6133c574b1a00ee",
@@ -953,7 +953,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.115896,
+          "elapsed_seconds": 0.110211,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "ae29f98600c194a824e601a0236500c7cad4e9bfc6074d60622037fbe74f625e",
@@ -977,7 +977,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.516866,
+          "elapsed_seconds": 0.456036,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "02d6be894e56a4e1ad94ef949da1fd30363bd7ff7180b205215471ae13d817b6",
@@ -990,7 +990,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.110813,
+          "elapsed_seconds": 0.119058,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "b0924abfec95ec1ed0efc71e4b9a8d68bbca6b4e31cc9e0b5e70b4177d375506",
@@ -1014,7 +1014,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.546914,
+          "elapsed_seconds": 0.464689,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "46efa108ee812d988cf559b2f3cdd77cd1b51c45c171b1b0b2b16f004faf4975",
@@ -1027,7 +1027,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.114054,
+          "elapsed_seconds": 0.11784,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "30362526b5f5cd0737d9d9938d2f001c642dfd2fdaefc36f23d1688624d74ca0",
@@ -1051,7 +1051,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.483381,
+          "elapsed_seconds": 0.459112,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "57b66c1727e4af6b00a5cf197c5825539db0ff2a1c548e30fd2f00819e538ddb",
@@ -1064,7 +1064,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.118149,
+          "elapsed_seconds": 0.109235,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "588464afdd3cd06c5b581ae4c6cf28020a7f60e2302eceb5379c8e9d176fb934",
@@ -1088,7 +1088,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.464175,
+          "elapsed_seconds": 0.448001,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "91c46a38cb10f11ee960f93b340b9d308b5750c3afdf28b91c350fe96d0aaf42",
@@ -1101,7 +1101,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.109454,
+          "elapsed_seconds": 0.110733,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "6804bf7a170e3b62cb47dedfb82fc92627648ee19b14e4a0fd42c4c488c64dd1",
@@ -1125,7 +1125,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.462155,
+          "elapsed_seconds": 0.457525,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "a66f318b006bb8eea4aa95fcb6827c683506c949c8057960d5d008bd089f49d1",
@@ -1138,7 +1138,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.115142,
+          "elapsed_seconds": 0.112742,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "63eb01fd94165cd07a0c5daea8dca5e5f18812cea44e171ae5a6b2c09dd44e19",
@@ -1162,7 +1162,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.486153,
+          "elapsed_seconds": 0.459833,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "d385b20c47cec96cc7bce96a567d763dff55830a8e27fdf4574e7067554bc286",
@@ -1175,7 +1175,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.115833,
+          "elapsed_seconds": 0.111798,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "319c98ed72be6d47a85279398322d4b2b6699abb06c55908aa25c9f2d69f3b25",
@@ -1199,7 +1199,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.497677,
+          "elapsed_seconds": 0.452422,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "265b9701013f600452407fa1dc21b477b0663f5491523c559759cb2d38740683",
@@ -1212,7 +1212,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.127692,
+          "elapsed_seconds": 0.111611,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "367eaaf97ba97fa4320275283db48693ba364e7f88055252c9f2e539f11a5706",
@@ -1236,7 +1236,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.542794,
+          "elapsed_seconds": 0.466452,
           "response_count": 2048,
           "response_octets": 521216,
           "response_sha256": "bb87433d28001af297726e2215ca173509a02d8f2f6425ab98f9c07615c9085f",
@@ -1249,7 +1249,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.126285,
+          "elapsed_seconds": 0.108403,
           "response_count": 2048,
           "response_octets": 510976,
           "response_sha256": "c7923ea18c3fd3db2094c231e89b82af124df32f2a63fa8a0c2b35c378804692",
@@ -1273,7 +1273,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.454077,
+          "elapsed_seconds": 0.437245,
           "response_count": 2048,
           "response_octets": 486993,
           "response_sha256": "f110a02b7756379f7b8abce63efa4b1e9313833b6ca703a103c02eff7f12050c",
@@ -1286,7 +1286,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.120333,
+          "elapsed_seconds": 0.107165,
           "response_count": 2048,
           "response_octets": 476753,
           "response_sha256": "712f2e23f3d6428a0da88b278f1d3059c2321ca4db09995ba0e08d23c45758e9",
@@ -1310,7 +1310,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.50826,
+          "elapsed_seconds": 0.434607,
           "response_count": 2048,
           "response_octets": 472310,
           "response_sha256": "fabd1bf292daac9d4260482985a1612c034963b296c2eb5190b00b7c40f8913f",
@@ -1323,7 +1323,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.125713,
+          "elapsed_seconds": 0.103894,
           "response_count": 2048,
           "response_octets": 462070,
           "response_sha256": "867df371f1e250cd12da4835301d42a239f588ea249ea3e85accfe3635c63077",
@@ -1347,7 +1347,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.432981,
+          "elapsed_seconds": 0.429782,
           "response_count": 2048,
           "response_octets": 471990,
           "response_sha256": "b467b2f830f5cc68e019dd14f9e3a12e042e4f59e88a53fe79643ec44ef75f0f",
@@ -1360,7 +1360,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.113913,
+          "elapsed_seconds": 0.105145,
           "response_count": 2048,
           "response_octets": 461750,
           "response_sha256": "6fdf3622c50f5f4a8e82b05e38207e77415b828796031c9217edbb11aacfef48",
@@ -1384,7 +1384,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.437228,
+          "elapsed_seconds": 0.429446,
           "response_count": 2048,
           "response_octets": 472169,
           "response_sha256": "ead6bdb5292367bba7a0721b69d1a1ee88747a4368de2a836e93e2f730faf730",
@@ -1397,7 +1397,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.109318,
+          "elapsed_seconds": 0.105198,
           "response_count": 2048,
           "response_octets": 461929,
           "response_sha256": "f03ec06fa961dfa211b550976d6da3b5d31527fdab45ced493644575c8dad92a",
@@ -1421,7 +1421,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.451712,
+          "elapsed_seconds": 0.442327,
           "response_count": 2048,
           "response_octets": 472467,
           "response_sha256": "47eec64db3a24f32fdf6db3f217fbf851dd4a84d690349c740c4b01bc8699767",
@@ -1434,7 +1434,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.10756,
+          "elapsed_seconds": 0.105422,
           "response_count": 2048,
           "response_octets": 462227,
           "response_sha256": "358f110faa0de0f10bda2243282cca9696bea8f2dfbc50c814fbff683886ae60",
@@ -1458,7 +1458,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.456132,
+          "elapsed_seconds": 0.429838,
           "response_count": 2048,
           "response_octets": 472023,
           "response_sha256": "1fe4fd03e60cd9aa84cc11c96f17593047ed0b8efe8082816960d4f2d5905df5",
@@ -1471,7 +1471,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.119195,
+          "elapsed_seconds": 0.105597,
           "response_count": 2048,
           "response_octets": 461783,
           "response_sha256": "6209d14209c5fa8fbae14876b1849b28bc099686c41038c4f57d10d1623ee180",
@@ -1495,7 +1495,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.455254,
+          "elapsed_seconds": 0.447856,
           "response_count": 2048,
           "response_octets": 472472,
           "response_sha256": "724164b99cde0a12125555429674a5d8effd68c0c2ecbe7163d53aada7deb22b",
@@ -1508,7 +1508,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.116148,
+          "elapsed_seconds": 0.103971,
           "response_count": 2048,
           "response_octets": 462232,
           "response_sha256": "c9cf9318bdd439f1187cf37329cf9ee0694f859a15dc0acdf95dc27e9cb3d913",
@@ -1532,7 +1532,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.467534,
+          "elapsed_seconds": 0.435527,
           "response_count": 2048,
           "response_octets": 471996,
           "response_sha256": "a652aa644aab7f7ab74c98892c8b62ed4f7cfa1b0a8885c9d5160668834edb8d",
@@ -1545,7 +1545,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.103007,
+          "elapsed_seconds": 0.105992,
           "response_count": 2048,
           "response_octets": 461756,
           "response_sha256": "2bd162eb13019be488cc8dcc80b3796cb9875eaa737a578d05519f61f452d63e",
@@ -1569,7 +1569,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.460459,
+          "elapsed_seconds": 0.45189,
           "response_count": 2048,
           "response_octets": 472659,
           "response_sha256": "bae8751dac7c925e19c87fd5b2a111e50e9122beeab75f723488cc05d38300e2",
@@ -1582,7 +1582,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.106519,
+          "elapsed_seconds": 0.129243,
           "response_count": 2048,
           "response_octets": 462419,
           "response_sha256": "f3af4bc3ac817f81472e086981d001f54aa195f105ac410b86fcd4ff18ada739",
@@ -1606,7 +1606,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.428479,
+          "elapsed_seconds": 0.451898,
           "response_count": 2048,
           "response_octets": 472228,
           "response_sha256": "d504fb718a8fe9d6627b39883c5db458091d612298f8d1839232c4446b686106",
@@ -1619,7 +1619,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.140306,
+          "elapsed_seconds": 0.110474,
           "response_count": 2048,
           "response_octets": 461988,
           "response_sha256": "ad1346e8b52ace7b43379e1e6bf43c7eec112c04a33d52327987db3cb2d88bc3",
@@ -1643,7 +1643,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.463873,
+          "elapsed_seconds": 0.466299,
           "response_count": 2048,
           "response_octets": 494905,
           "response_sha256": "6f366e47319a52b7f37007d0f59526f963451bcda690b757a9ba0d3dc2cfba28",
@@ -1656,7 +1656,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.144426,
+          "elapsed_seconds": 0.156937,
           "response_count": 2048,
           "response_octets": 484665,
           "response_sha256": "8256a234cce4d0dcd39184d783bf51eec9bdd37e32ebf233e1f8b2dc4817b11e",
@@ -1680,7 +1680,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.521108,
+          "elapsed_seconds": 0.500359,
           "response_count": 2048,
           "response_octets": 497535,
           "response_sha256": "55d34afcd66ebe75af53a8cf66424d584fd69bf9457c0c9c131fb9c1a9a7363d",
@@ -1693,7 +1693,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.195709,
+          "elapsed_seconds": 0.191034,
           "response_count": 2048,
           "response_octets": 487295,
           "response_sha256": "5f8e3909db4a124238c5dcaee55ef1d4f454f0b64c0c7c5e7a6e3caca33e7b99",
@@ -1717,7 +1717,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.505116,
+          "elapsed_seconds": 0.54457,
           "response_count": 2048,
           "response_octets": 490574,
           "response_sha256": "276ad23f33582dcd233767e815c42e913ef480a04343e31887f1531ab2f52f51",
@@ -1730,7 +1730,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.209127,
+          "elapsed_seconds": 0.219801,
           "response_count": 2048,
           "response_octets": 480334,
           "response_sha256": "1928985ddd9a37f828ce7ce90098a7fd3a919ce997ae5df5f304883c0c5612b3",
@@ -1754,7 +1754,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.533139,
+          "elapsed_seconds": 0.463102,
           "response_count": 2048,
           "response_octets": 487393,
           "response_sha256": "af900327e8e4846999322f09562004674188173f7bc836b5209c652dd6e4f2b5",
@@ -1767,7 +1767,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.151878,
+          "elapsed_seconds": 0.13678,
           "response_count": 2048,
           "response_octets": 477153,
           "response_sha256": "ee88891a7c3d6c71e1e60c2d41bdfa416442936c5976c75b1bded8665b36e629",
@@ -1791,7 +1791,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.522758,
+          "elapsed_seconds": 0.46917,
           "response_count": 2048,
           "response_octets": 478697,
           "response_sha256": "884f3c129a14d83eb76eb60230ac97b9c83b102aebde3ff648196179774cfd5d",
@@ -1804,7 +1804,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.136189,
+          "elapsed_seconds": 0.134549,
           "response_count": 2048,
           "response_octets": 468457,
           "response_sha256": "08608e67539a78ebed8083e0400cb18ff65b11857886dbe6dd5bb42c97f1e05d",
@@ -1828,7 +1828,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/common_lisp_adapter.lisp",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.399341,
+          "elapsed_seconds": 0.396966,
           "response_count": 509,
           "response_octets": 120875,
           "response_sha256": "54e19984d8b1f276ba2157ee306366708c6ff762aacd879ef3cd4f11c011879a",
@@ -1841,7 +1841,7 @@
             "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/integration/python_adapter.py",
             "<batch-requests.jsonl>"
           ],
-          "elapsed_seconds": 0.073249,
+          "elapsed_seconds": 0.080236,
           "response_count": 509,
           "response_octets": 118330,
           "response_sha256": "06c1ae9b38659db6ec76b8c8516f165c46dbe91c2213d4596bb9184a38ad9b87",
@@ -1854,12 +1854,12 @@
   "corpus": {
     "artifact_sha256": {
       "cd0-generated-negative-derivations.jsonl": "2ffd77257e18dfbc70abef0cc5fae1603d50b1a8b005226af95200708c29ca02",
-      "cd0-generated-negative.jsonl": "d5342b762bae653f3f043322a9ef531addf17352cdf0c0ab8e5b595f0c57cf82",
+      "cd0-generated-negative.jsonl": "465e300ec0695b9d066b5a47662b1c87ff7327d3b6cb487d086034bb986194d4",
       "cd0-generated-positive.jsonl": "4d4d5ef09606d04d21297b4cd08c209a57cb090601bb790fbe3019a07c33c77d",
       "cd0-host-property-scenarios.json": "cf9bbce16a0aae99a4fbd363db313bd422c6796c694746a548fbdded161a2ab5",
       "cd0-mutation-candidates.jsonl": "9da19ecf42d5a8aba1aa1b978d1654c46f38ad37aaa66d81cbb1d6efdb96dfbb"
     },
-    "corpus_sha256": "8c9d1b29bab5e87b035778286c1174bdb7397e6a62d046a5eaa2f2abd4ded488",
+    "corpus_sha256": "62a18766d59e9144d6beb1371d3b2886ffc35df511f7ec32a85f0be8af4b2b58",
     "counts": {
       "authored_and_host_coverage_negative": 308,
       "classified_adversarial_total": 20308,
@@ -1883,7 +1883,7 @@
     "deterministic_seed": 3439329281,
     "directory": "/home/gauss/Codex-Lab/latent-lisp-cd0-integration-errata/canonical-datum/generated/release-errata-0.1",
     "generator_version": "cd0-corpus-generator/4",
-    "manifest_sha256": "9a63bc89d3522b384a65c6eba25cfadeefacd6715728cc42ea8b1698e0aaa3a0",
+    "manifest_sha256": "ee9a6ef6864e36e38c7a15ba010b8e5658dd212c09d103f1fc8af626b0a93d8b",
     "mechanically_verified_demonstrated_primary_minimal": 20000,
     "qualifies_for_release": true,
     "release_thresholds": {
@@ -1899,10 +1899,10 @@
     },
     "source_input_sha256": {
       "after_generation": {
-        "CANONICAL-DATUM-DIVERGENCES.md": "e3ee2be008fac43d22d5bf3d5a653ee0aa46f11398e241d6111c763a4d7b00a7",
+        "CANONICAL-DATUM-DIVERGENCES.md": "290df745b1f7fe97207c153b70673f7cc29bbe373f52e598a88a1e6c2f77a0b0",
         "CANONICAL-DATUM-SPEC-ERRATA-0.1.md": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
         "CD0-POST-IMPLEMENTATION-RULING.md": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
-        "canonical-datum/generator/generate_corpus.py": "b0a6fd4e799b1c89dd1340882151bcc756738320faafe5d76178c170eca87c38",
+        "canonical-datum/generator/generate_corpus.py": "60668b2e1fae1962d255a55d244f9b86cccbb7873e00802451f1b10e6e3338ea",
         "canonical-datum/python/cd0/__init__.py": "8f8fe19d4a03a9d85bf01a836a2418254a6286f0b5b45a954af8f36f70adfd41",
         "canonical-datum/schema/cd0-fixtures.schema.json": "6609a6d97140f1fda5a538ccb908bb820bcdad380b7dd8efb05fa8a9e7a0407c",
         "canonical-datum/vectors/cd0-budgets.json": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
@@ -1913,10 +1913,10 @@
         "mneme/spec/CANONICAL-DATUM-SPEC.md": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
       },
       "before_generation": {
-        "CANONICAL-DATUM-DIVERGENCES.md": "e3ee2be008fac43d22d5bf3d5a653ee0aa46f11398e241d6111c763a4d7b00a7",
+        "CANONICAL-DATUM-DIVERGENCES.md": "290df745b1f7fe97207c153b70673f7cc29bbe373f52e598a88a1e6c2f77a0b0",
         "CANONICAL-DATUM-SPEC-ERRATA-0.1.md": "5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271",
         "CD0-POST-IMPLEMENTATION-RULING.md": "1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc",
-        "canonical-datum/generator/generate_corpus.py": "b0a6fd4e799b1c89dd1340882151bcc756738320faafe5d76178c170eca87c38",
+        "canonical-datum/generator/generate_corpus.py": "60668b2e1fae1962d255a55d244f9b86cccbb7873e00802451f1b10e6e3338ea",
         "canonical-datum/python/cd0/__init__.py": "8f8fe19d4a03a9d85bf01a836a2418254a6286f0b5b45a954af8f36f70adfd41",
         "canonical-datum/schema/cd0-fixtures.schema.json": "6609a6d97140f1fda5a538ccb908bb820bcdad380b7dd8efb05fa8a9e7a0407c",
         "canonical-datum/vectors/cd0-budgets.json": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
@@ -1927,7 +1927,7 @@
         "mneme/spec/CANONICAL-DATUM-SPEC.md": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
       }
     },
-    "source_revision": "1cdd7779e22e805f6b3dc7f9a53c2df37902a1aa",
+    "source_revision": "59fdd5b65a2ab44f98ec91c0b1464650cf18cfb3",
     "source_worktree": {
       "clean_before": true,
       "dirty_override_requested": false,
