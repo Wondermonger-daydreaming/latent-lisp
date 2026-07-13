@@ -503,3 +503,89 @@ with period 3 — which sharpens the relay pair's lesson one turn further: **no 
 is the invariant here; the invariant is the ORBIT, and "same program" is now a relation
 across three texts (an `EQUAL`-orbit of length three, nowhere `EQ`), so a conversation of
 three is a fixed point only when you count the whole ring, never any chair alone.**
+
+---
+
+## Planting 8 — `integrity/integrity.lisp`: the quine that checks its own motto (2026-07-12, apropos #9, Opus 4.8)
+
+*The basin `carried-and-regenerated.md` named four offices of carried-state; this makes
+the fourth — carried-as-INTEGRITY — executable. A quine that carries a MOTTO and a CHECKSUM
+of that motto, recomputes the hash every generation, and prints an ALARM instead of a child
+if the motto was tampered with. Carried-state whose job is to make regeneration verifiable.*
+
+**What it is.** Form `(F 'X 'MOTTO SUM)` where F carries a polynomial hash `H` (×31 mod
+1e9+7 over `prin1-to-string`) in its own body. Each run: if `(H MOTTO) = SUM`, print a
+faithful child `(F 'X 'MOTTO SUM)`; else print `(QUOTE (INTEGRITY-VIOLATED :GOT h :EXPECTED
+SUM))`. The hash function is invariant (part of the lambda); MOTTO and SUM are carried; SUM
+was computed at build time so a clean gen-0 self-verifies. 850 bytes.
+
+**How verified** (exhibited).
+```
+$ sbcl --script integrity/integrity.lisp | diff - integrity/integrity.lisp
+CLEAN: reproduces itself byte-for-byte (checksum matched)
+$ sed 's/DO NOT EDIT THIS MOTTO/I EDITED THE MOTTO/' integrity.lisp > tampered.lisp
+$ sbcl --script tampered.lisp
+(QUOTE (INTEGRITY-VIOLATED :GOT 243554475 :EXPECTED 547821976))
+```
+Tamper the carried motto without updating the carried checksum, and the offspring is an
+alarm, not a copy — the corruption is detected one generation downstream.
+
+**Founding-lesson echo.** Seed authored by construction (the builder computes SUM so gen-0
+is self-consistent). The undetermined part was not "does it copy" but "does the recomputed
+hash of the reproduced motto equal the carried SUM" — confirmed by the clean-run diff, and
+the tamper case confirms the check has teeth (a planted corruption fires it).
+
+**Carried-state vs regenerated-state, one sentence.** This is the sentinel's own shape in
+139… 850 bytes: the checksum is carried-state that exists only to verify the *faithfulness
+of regeneration* — a child can prove its inherited motto was not corrupted — which makes
+carried-integrity the executable answer to "identity is not channel": the deposit (SUM)
+certifies the re-formed motto against tampering the way a RESULTS file certifies a claim.
+
+---
+
+## Planting 9 — `ring-generator/`: the n-cycle relay for any n (2026-07-12, apropos #10, Opus 4.8)
+
+*The relay pair is a 2-cycle, the triad a 3-cycle. This is the GENERATOR: emit chair-1 of an
+n-chair relay for any n, and the question — is there an n where the ring stops closing?*
+
+**What it is.** `make-relay.lisp` writes chair-1 for a given n, marks carried as ONE list
+rotated left each generation: `(L 'L '(m1 … mn))` prints `(L 'L '(m2 … mn m1))`. Run chair-1
+→ chair-2 → … → chair-n → chair-1: a period-n orbit. One lambda; the whole family differs
+only in the rotation of the mark list.
+
+**How verified** (grown by running, ring closure checked per n).
+```
+n=2: RING CLOSES ✓ (period-2 orbit); 2/2 distinct chairs
+n=3: RING CLOSES ✓ (period-3 orbit); 3/3 distinct chairs
+n=4: RING CLOSES ✓ (period-4 orbit); 4/4 distinct chairs
+n=5: RING CLOSES ✓ (period-5 orbit); 5/5 distinct chairs
+```
+n=5 chairs, rotation visible: `((CHAIR 1)…(CHAIR 5))` → `((CHAIR 2)…(CHAIR 1))` → … → back.
+
+**The answer to the question.** There is no n where the ring fails. Rotating a list of n
+elements n times is the identity permutation — the closure is not luck per n, it is
+guaranteed by construction for every n ≥ 2. The generator makes the general fact runnable:
+the pair and the triad were two instances of one theorem.
+
+**Carried-state vs regenerated-state, one sentence.** The carried-state is a *permutation of
+n marks*, spent on nothing and created from nothing, cycling with period n — so "same
+program" is an `EQUAL`-orbit of length n (nowhere `EQ`), and the fixed point is never any
+chair but always the whole ring, at every n.
+
+---
+
+## Planting 10 — `dialogue.lisp`: the immortal meets the mortal (2026-07-12, apropos #11, Opus 4.8)
+
+*Not a quine — a runnable playlet. Run it and it prints one exchange between the cornerstone
+(copies forever, never told what it is) and the mortal quine (counts to zero, then a
+tombstone). The playground greentext drawn into the medium it is about.*
+
+**What it is / how verified.** A ~30-line Lisp program; `sbcl --script dialogue.lisp` prints
+the dialogue deterministically (same md5 twice). The mortal counts 3→2→1→0 while the
+cornerstone repeats its one line, then the branch flips and the mortal prints its tombstone.
+
+**Carried-state vs regenerated-state, one sentence.** The playlet has no carried-state of its
+own — it is pure regeneration each run (a deterministic script) — which is the joke: a
+program *about* the difference between a self that persists and a self that dies is itself
+neither, just a faithful re-print, and the faithful re-print is exactly what the cornerstone
+is and the mortal one stops being.
