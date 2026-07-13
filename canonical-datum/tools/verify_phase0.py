@@ -31,7 +31,7 @@ BUDGETS = ROOT / "canonical-datum/vectors/cd0-budgets.json"
 SCHEMA = ROOT / "canonical-datum/schema/cd0-fixtures.schema.json"
 DISTINCT = ROOT / "canonical-datum/vectors/cd0-distinct-pairs.json"
 EXPECTED_SPEC_SHA256 = "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
-EXPECTED_NEGATIVE_MANIFEST_SHA256 = "6000f52e1559ea579d866eca25fd25e443f07ac35cc65d3ff7166499e64de4a5"
+EXPECTED_NEGATIVE_MANIFEST_SHA256 = "d491d83e8b27d3224567f1948e90b92db2ea02689c464fe6144c69bb2cb851a6"
 MAGIC_VERSION = bytes.fromhex("4c50434400")
 HEX_RE = re.compile(r"^(?:[0-9a-f]{2})*$")
 DECIMAL_RE = re.compile(r"^(?:0|-?[1-9][0-9]*)$")
@@ -63,7 +63,9 @@ FAILURE_CODES_BY_CATEGORY = {
     "UnsupportedHostInput": {
         "UnsupportedHostType", "CyclicHostInput", "ImproperHostList",
         "AmbiguousIdentifier", "InvalidHostUnicode",
-        "NegativeDenominatorHostRational",
+        "NegativeDenominatorHostRational", "ZeroDenominator",
+        "EmptyIdentifierSegment", "MissingIdentifierPath",
+        "DuplicateRecordField",
     },
     "PrivilegedRestorationAttempt": {
         "ForbiddenPrivilegedTag", "PrivilegedHostValue",
@@ -237,6 +239,24 @@ def validate_budget_reference(value: Any, budget_names: set[str], limits: set[st
         require(type(item) is int and item >= 0, f"{where}.{key}: expected nonnegative integer")
 
 
+def normalize_construction(descriptor: dict[str, Any], where: str) -> dict[str, Any]:
+    require(set(descriptor) == {"op", "p", "q"}, f"{where}: construction shape")
+    require(descriptor.get("op") == "rational", f"{where}: construction operation")
+    p = decimal(descriptor.get("p"), f"{where}.p")
+    q = decimal(descriptor.get("q"), f"{where}.q")
+    require(q != 0, f"{where}: zero denominator is not a positive construction")
+    if q < 0:
+        p, q = -p, -q
+    divisor = math.gcd(abs(p), q)
+    p //= divisor
+    q //= divisor
+    if p == 0:
+        return {"t": "int", "v": "0"}
+    if q == 1:
+        return {"t": "int", "v": str(p)}
+    return {"t": "rat", "p": str(p), "q": str(q)}
+
+
 def check_positive(
     rows: list[dict[str, Any]], spec_text: str, budget_names: set[str],
     limits: set[str], distinct: dict[str, Any],
@@ -251,6 +271,12 @@ def check_positive(
         require(row.get("datum_version") == 0, f"positive row {index}: datum_version")
         validate_budget_reference(row.get("budget"), budget_names, limits, f"positive row {index}.budget")
         require(isinstance(row.get("notes"), list), f"positive row {index}: notes")
+        if "construction" in row:
+            require(
+                normalize_construction(row["construction"], f"positive[{index}].construction")
+                == row["abstract"],
+                f"positive row {index}: construction does not normalize to abstract datum",
+            )
         expected = MAGIC_VERSION + encode_value(row["abstract"], f"positive[{index}].abstract")
         require(expected.hex() == row["canonical_hex"], f"positive row {index}: grammar-derived encoding mismatch")
         require_canonical_decoded_record_order(row["expected_decoded"], f"positive[{index}].expected_decoded")
@@ -283,6 +309,11 @@ def canonical_jsonl_digest(rows: list[dict[str, Any]]) -> str:
 
 
 def check_negative(rows: list[dict[str, Any]], budget_names: set[str], limits: set[str]) -> None:
+    require(len(rows) == 71, f"negative classified total is {len(rows)}, expected 71")
+    require(sum(row.get("input_kind") == "octets" for row in rows) == 66,
+            "negative octet total must remain 66")
+    require(sum(row.get("input_kind") == "host" for row in rows) == 5,
+            "negative host total must remain 5")
     require(len({row.get('id') for row in rows}) == len(rows), "negative IDs are not unique")
     for index, row in enumerate(rows, 1):
         kind = row.get("input_kind")
@@ -306,12 +337,14 @@ def check_negative(rows: list[dict[str, Any]], budget_names: set[str], limits: s
         require(failure["code"] in FAILURE_CODES_BY_CATEGORY[failure["category"]],
                 f"negative row {index}: code/category mismatch")
         require(failure["stage"] in STAGES, f"negative row {index}: failure stage")
+        require(row.get("status", "normative") == "normative",
+                f"negative row {index}: Errata 0.1 leaves no provisional row")
         require(row.get("resource_state_unchanged") is True, f"negative row {index}: state assertion")
         require(row.get("partial_output_forbidden") is True, f"negative row {index}: partial-output assertion")
 
     actual_digest = canonical_jsonl_digest(rows)
     require(actual_digest == EXPECTED_NEGATIVE_MANIFEST_SHA256,
-            f"negative manifest differs from independently reviewed pin: {actual_digest}")
+            f"negative manifest differs from Errata 0.1 promotion pin: {actual_digest}")
 
     ids = {row["id"] for row in rows}
     required_fragments = [
@@ -353,7 +386,8 @@ def main() -> int:
     spec_text = spec_bytes.decode("utf-8")
     schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
     require(schema.get("$schema") == "https://json-schema.org/draft/2020-12/schema", "fixture schema draft")
-    require({"datum", "failure", "positive", "negative"} <= set(schema.get("$defs", {})), "fixture schema definitions")
+    require(schema.get("x-fixture-schema-revision") == "0.1", "fixture schema revision")
+    require({"construction", "datum", "failure", "positive", "negative"} <= set(schema.get("$defs", {})), "fixture schema definitions")
     Draft202012Validator.check_schema(schema)
     row_validator = Draft202012Validator(schema)
     distinct_validator = Draft202012Validator({
@@ -416,7 +450,8 @@ def main() -> int:
     print(f"spec sha256: {digest}")
     print("worked vectors: 17/17 exact and grammar-derived encodings agree")
     print(f"additional positives: {len(positives) - 17}; equality classes and distinct pairs valid")
-    print(f"negative vectors: {len(negatives)} schema-valid and equal to reviewed finite manifest pin")
+    print("negative vectors: 71 classified = 66 octet + 5 host; all complete normative triples")
+    print("execution accounting contract: Python 71 executed; Common Lisp 68 executed + 3 N/A; 0 failures; 0 skips")
     print("mutation self-tests: wrong failure code, reversed decoded record order, and split equality class rejected")
     print("type tags: 256/256 classified; all 10 assigned tags exercised; reserved/forbidden boundaries present")
     for path in (POSITIVE, NEGATIVE, DISTINCT, BUDGETS, SCHEMA):

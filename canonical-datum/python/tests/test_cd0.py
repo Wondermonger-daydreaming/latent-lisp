@@ -63,7 +63,12 @@ class SharedVectorTests(unittest.TestCase):
 def make_positive_test(row: dict):
     def test(self: SharedVectorTests) -> None:
         budget = resolve_budget(row["budget"], identifier=f"{row['id']}:budget")
-        constructed = cd0.from_fixture_ast(row["abstract"], budget)
+        constructed = (
+            cd0.from_fixture_construction(row["construction"], budget)
+            if "construction" in row
+            else cd0.from_fixture_ast(row["abstract"], budget)
+        )
+        self.assertEqual(cd0.to_fixture_ast(constructed), row["expected_decoded"])
         expected_bytes = bytes.fromhex(row["canonical_hex"])
         self.assertEqual(cd0.encode_exact(constructed, budget), expected_bytes)
         decoded = cd0.decode_exact(expected_bytes, budget)
@@ -96,13 +101,8 @@ def make_negative_test(row: dict):
 
         expected = row["expected_failure"]
         actual = raised.exception.as_dict()
-        status = row.get("status", "normative")
-        if status == "provisional-blocked-stage":
-            self.assertEqual((actual["category"], actual["code"]), (expected["category"], expected["code"]))
-        elif status == "provisional-blocked-code":
-            self.assertEqual((actual["category"], actual["stage"]), (expected["category"], expected["stage"]))
-        else:
-            self.assertEqual(actual, expected)
+        self.assertEqual(row.get("status", "normative"), "normative")
+        self.assertEqual(actual, expected)
 
         if "retry_budget" in row:
             retry = resolve_budget(row["retry_budget"], identifier=f"{row['id']}:retry")
@@ -294,6 +294,21 @@ class ResourceTests(unittest.TestCase):
         )
         self.assertEqual(cd0.to_fixture_ast(cd0.decode_exact(document, DEFAULT))["t"], "seq")
 
+    def test_count_promised_items_use_count_stage_before_first_octet(self) -> None:
+        cases = {
+            "sequence item": "4c504344003001",
+            "record key": "4c504344003101",
+            "record value": "4c5043440031012200010161",
+            "identifier namespace segment": "4c504344002201",
+            "identifier path segment": "4c50434400220001",
+        }
+        for label, input_hex in cases.items():
+            with self.subTest(label=label):
+                self.assert_failure(
+                    lambda input_hex=input_hex: cd0.decode_exact(bytes.fromhex(input_hex), DEFAULT),
+                    ("InvalidCanonicalGrammar", "TruncatedInput", "count"),
+                )
+
     def test_integer_magnitude_boundary_uses_mathematical_absolute_value(self) -> None:
         document = cd0.encode_exact(cd0.integer(-65), DEFAULT)
         seven_bits = replace(DEFAULT, max_integer_bits=7, identifier="integer-7")
@@ -359,8 +374,8 @@ class ResourceTests(unittest.TestCase):
         self.assertEqual(cd0.decode_exact(document, DEFAULT), cd0.byte_string(b"ab"))
 
     def test_runtime_encoder_uses_only_output_and_key_work_limits(self) -> None:
-        # Specification divergence A9: this is an implementation-local seed
-        # choice, not a claimed shared normative result.
+        # Errata 0.1 A9: already-valid runtime data are not re-admitted under
+        # decode/import structural limits.
         restrictive = replace(
             DEFAULT,
             max_depth=0,
@@ -851,7 +866,7 @@ class DiagnosticTests(unittest.TestCase):
 
 class VectorManifestTests(unittest.TestCase):
     def test_fixture_counts_are_exact(self) -> None:
-        self.assertEqual(len(POSITIVES), 22)
+        self.assertEqual(len(POSITIVES), 25)
         self.assertEqual(len(NEGATIVES), 71)
 
     def test_equality_classes_are_coherent(self) -> None:
