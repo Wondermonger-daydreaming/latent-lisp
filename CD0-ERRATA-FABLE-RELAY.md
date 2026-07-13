@@ -29,6 +29,11 @@ mneme/spec/CANONICAL-DATUM-SPEC.md
 d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc
 ```
 
+The pre-change repository/remote/runtime capture is retained at
+`canonical-datum/evidence/baselines/CD0-ERRATA-PRECHANGE-BASELINE-2026-07-13.md`,
+SHA-256
+`5ace3291811f2131a50e1ff6afe281e7bc4a251dd3dd50771bcd8a54894318bb`.
+
 Independently seeded implementations under shared normative infrastructure,
 with procedural—not OS-enforced—isolation, attested by the implementers and
 corroborated at content tier.

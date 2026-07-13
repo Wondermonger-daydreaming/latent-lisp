@@ -16,10 +16,13 @@ Phase-0 result as “71 tests passed.”
 
 ## Environment and normative gate
 
-Pre-change state and runtime details were captured before modification in the
-external local baseline
-`/tmp/CD0-ERRATA-PRECHANGE-BASELINE-2026-07-13.md`, SHA-256
-`5ace3291811f7a34a63709cfdb0b027a148dd2ec436696c258ff555dfcd218bb`.
+Pre-change state and runtime details were captured before modification in
+`/tmp/CD0-ERRATA-PRECHANGE-BASELINE-2026-07-13.md`. An exact byte copy is
+retained at
+`canonical-datum/evidence/baselines/CD0-ERRATA-PRECHANGE-BASELINE-2026-07-13.md`.
+Both have SHA-256
+`5ace3291811f2131a50e1ff6afe281e7bc4a251dd3dd50771bcd8a54894318bb`;
+`cmp -s` exited `0` when the copy was retained.
 The execution environment was:
 
 ```text
