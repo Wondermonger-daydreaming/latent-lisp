@@ -477,6 +477,32 @@
      (lambda () (make-identifier-datum nil nil))
      "UnsupportedHostInput" "MissingIdentifierPath" "host-import"
      "A2 missing identifier path constructor")
+    (expect-failure
+     (lambda ()
+       (datum-from-fixture-ast
+        '(("t" . "id") ("namespace_utf8_hex" . (""))
+          ("path_utf8_hex" . ("70")))))
+     "UnsupportedHostInput" "EmptyIdentifierSegment" "host-import"
+     "A2 empty identifier segment fixture importer")
+    (expect-failure
+     (lambda ()
+       (datum-from-fixture-ast
+        '(("t" . "id") ("namespace_utf8_hex") ("path_utf8_hex"))))
+     "UnsupportedHostInput" "MissingIdentifierPath" "host-import"
+     "A2 missing identifier path fixture importer")
+    (let ((constructed
+            (datum-from-fixture-construction
+             '(("op" . "rational") ("p" . "2") ("q" . "4")))))
+      (check (and (rational-datum-p constructed)
+                  (= (rational-datum-numerator constructed) 1)
+                  (= (rational-datum-denominator constructed) 2))
+             "A7 construction descriptor did not normalize 2/4"))
+    (expect-failure
+     (lambda ()
+       (datum-from-fixture-construction
+        '(("op" . "rational") ("p" . "1") ("q" . "0"))))
+     "UnsupportedHostInput" "ZeroDenominator" "host-import"
+     "A7 zero-denominator construction descriptor")
     (check (not (equal-datum false (make-integer-datum 0)))
            "boolean collapsed into integer")
     (check (not (equal-datum unit (make-sequence-datum nil)))
@@ -800,6 +826,15 @@
       (check (equal-datum nested (decode-exact encoded)) "depth retry failed"))
     (let* ((sequence (make-sequence-datum (list (make-unit-datum))))
            (encoded (encode-exact sequence))
+           (both-one (copy-resource-budget
+                      (default-resource-budget)
+                      :id "depth-and-nodes-one"
+                      :max-depth 1 :max-nodes 1)))
+      (resource (lambda () (decode-exact encoded :budget both-one))
+                "ExcessiveNesting" "type-tag"
+                "A5 depth precedes simultaneous node refusal"))
+    (let* ((sequence (make-sequence-datum (list (make-unit-datum))))
+           (encoded (encode-exact sequence))
            (one-node (copy-resource-budget (default-resource-budget)
                                            :id "one-node" :max-nodes 1)))
       (resource (lambda () (decode-exact encoded :budget one-node))
@@ -815,6 +850,15 @@
                 "AggregatePayloadBudgetExceeded" "length"
                 "aggregate payload boundary")
       (check (equal-datum datum (decode-exact encoded)) "aggregate retry failed"))
+    (let* ((encoded (encode-exact (make-string-datum "ab")))
+           (both-one (copy-resource-budget
+                      (default-resource-budget)
+                      :id "string-and-aggregate-one"
+                      :max-single-string-octets 1
+                      :max-aggregate-payload-octets 1)))
+      (resource (lambda () (decode-exact encoded :budget both-one))
+                "ExcessiveDeclaredLength" "length"
+                "A5 local length precedes aggregate payload"))
     (let* ((one (make-integer-datum -65))
            (encoded (encode-exact one))
            (seven (copy-resource-budget (default-resource-budget)
@@ -826,6 +870,38 @@
              "A3 mathematical bit-length choice not applied")
       (resource (lambda () (decode-exact encoded :budget six))
                 "IntegerBudgetExceeded" "integer-payload" "integer boundary"))
+    (let* ((zero-bits (copy-resource-budget (default-resource-budget)
+                                             :id "integer-zero-bits"
+                                             :max-integer-bits 0))
+           (zero (make-integer-datum 0 :budget zero-bits)))
+      (check (integer-datum-p zero) "A3 zero did not consume zero bits")
+      (check (equal-datum zero
+                          (decode-exact (encode-exact zero)
+                                        :budget zero-bits))
+             "A3 zero-bit decode boundary"))
+    (let* ((numerator-boundary (make-rational-datum -65 3))
+           (denominator-boundary (make-rational-datum 1 65))
+           (seven (copy-resource-budget (default-resource-budget)
+                                        :id "rational-bits-seven"
+                                        :max-integer-bits 7))
+           (six (copy-resource-budget seven :id "rational-bits-six"
+                                      :max-integer-bits 6)))
+      (check (rational-datum-p
+              (decode-exact (encode-exact numerator-boundary) :budget seven))
+             "A3 rational numerator seven-bit acceptance")
+      (resource
+       (lambda ()
+         (decode-exact (encode-exact numerator-boundary) :budget six))
+       "IntegerBudgetExceeded" "rational-payload"
+       "A3 rational numerator six-bit refusal")
+      (check (rational-datum-p
+              (decode-exact (encode-exact denominator-boundary) :budget seven))
+             "A3 rational denominator seven-bit acceptance")
+      (resource
+       (lambda ()
+         (decode-exact (encode-exact denominator-boundary) :budget six))
+       "IntegerBudgetExceeded" "rational-payload"
+       "A3 rational denominator six-bit refusal"))
     (let* ((one-bit (copy-resource-budget (default-resource-budget)
                                           :id "pre-reduction-one-bit"
                                           :max-integer-bits 1)))
@@ -856,6 +932,17 @@
       (resource (lambda () (decode-exact encoded :budget small))
                 "ExcessiveIdentifierSegments" "count" "identifier aggregate")
       (check (identifier-datum-p (decode-exact encoded)) "identifier retry"))
+    (let* ((one (copy-resource-budget (default-resource-budget)
+                                      :id "host-id-segments-one"
+                                      :max-identifier-segments 1))
+           (two (copy-resource-budget one :id "host-id-segments-two"
+                                      :max-identifier-segments 2)))
+      (resource (lambda () (make-identifier-datum '("n") '("p") :budget one))
+                "ExcessiveIdentifierSegments" "host-import"
+                "A4 host aggregate identifier segments")
+      (check (identifier-datum-p
+              (make-identifier-datum '("n") '("p") :budget two))
+             "A4 host aggregate boundary acceptance"))
     (let* ((datum (make-record-datum
                    (list (make-record-entry (id "a") (make-unit-datum)))))
            (small (copy-resource-budget (default-resource-budget)
@@ -864,9 +951,49 @@
       (resource (lambda () (encode-exact datum :budget small))
                 "RecordKeyWorkBudgetExceeded" "encode-ordering"
                 "record key work"))
-    (let* ((datum (make-sequence-datum
-                   (list (make-integer-datum 99)
-                         (make-string-datum "payload"))))
+    (let* ((key (id "a"))
+           (datum (make-record-datum
+                   (list (make-record-entry key (make-unit-datum)))))
+           (five (copy-resource-budget (default-resource-budget)
+                                       :id "key-work-five"
+                                       :max-total-record-key-octets 5))
+           (four (copy-resource-budget five :id "key-work-four"
+                                       :max-total-record-key-octets 4)))
+      (check (octet-string-p (encode-exact datum :budget five))
+             "A8 complete five-octet key budget acceptance")
+      (resource (lambda () (encode-exact datum :budget four))
+                "RecordKeyWorkBudgetExceeded" "encode-ordering"
+                "A8 complete five-octet key budget refusal"))
+    (let* ((inner (make-record-datum
+                   (list (make-record-entry (id "b") (make-unit-datum)))))
+           (outer (make-record-datum
+                   (list (make-record-entry (id "a") inner))))
+           (ten (copy-resource-budget (default-resource-budget)
+                                      :id "nested-key-work-ten"
+                                      :max-total-record-key-octets 10))
+           (nine (copy-resource-budget ten :id "nested-key-work-nine"
+                                       :max-total-record-key-octets 9))
+           (ast (datum-to-fixture-ast outer)))
+      (check (octet-string-p (encode-exact outer :budget ten))
+             "A8 nested operation-wide encode acceptance")
+      (resource (lambda () (encode-exact outer :budget nine))
+                "RecordKeyWorkBudgetExceeded" "encode-ordering"
+                "A8 nested operation-wide encode accumulation")
+      (check (record-datum-p (datum-from-fixture-ast ast :budget ten))
+             "A8 nested operation-wide import acceptance")
+      (resource (lambda () (datum-from-fixture-ast ast :budget nine))
+                "RecordKeyWorkBudgetExceeded" "host-import"
+                "A8 nested operation-wide import accumulation"))
+    (let* ((datum
+             (make-sequence-datum
+              (list (make-integer-datum 99)
+                    (make-rational-datum 1 2)
+                    (make-string-datum "payload")
+                    (make-bytes-datum #(0 255))
+                    (make-identifier-datum '("n") '("p"))
+                    (make-record-datum
+                     (list (make-record-entry (id "a")
+                                              (make-unit-datum)))))))
            (structurally-zero
              (make-resource-budget
               :id "A9-runtime-structural-fields-zero"
@@ -880,6 +1007,28 @@
       (check-string= (octets-to-hex (encode-exact datum :budget structurally-zero))
                      (octets-to-hex (encode-exact datum))
                      "A9 runtime encode ignores every structural field"))
+    (let* ((datum (make-sequence-datum
+                   (list (make-integer-datum 7)
+                         (make-string-datum "x"))))
+           (encoded (encode-exact datum))
+           (decode-ignores-output
+             (copy-resource-budget (default-resource-budget)
+                                   :id "decode-output-zero"
+                                   :max-output-octets 0))
+           (import-ignores-wire
+             (copy-resource-budget (default-resource-budget)
+                                   :id "import-wire-fields-zero"
+                                   :max-input-octets 0
+                                   :max-output-octets 0
+                                   :max-varint-octets 0)))
+      (check (equal-datum datum
+                          (decode-exact encoded :budget decode-ignores-output))
+             "A9 decode must ignore max_output_octets")
+      (check (equal-datum
+              datum
+              (datum-from-fixture-ast (datum-to-fixture-ast datum)
+                                      :budget import-ignores-wire))
+             "A9 host import must ignore input/output/varint fields"))
     (let* ((value (ash 1 500))
            (datum (make-integer-datum value))
            (large (copy-resource-budget (default-resource-budget)
