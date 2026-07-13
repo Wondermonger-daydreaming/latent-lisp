@@ -242,4 +242,39 @@ in `MANIFEST.sexp`. Highlights:
   judgment, turning the provenance DAG into executable case law."*
   Not built here; a natural next thread if the lab wants to press it.
 
+### Addendum — 2026-07-13 evening (Codex sprint in flight)
+
+Codex has begun a focused v1 counterexample-closure sprint on this
+shipment, starting exactly from mirror commit `9e9c031` (the post-fold-back
+state this file was published at). It has created a local backup ref + git
+bundle, read the language-boundary audit and hardened kernel/suites, and
+is mapping six documented public-surface defects onto the implementation
+before touching code: **mutable string leaves escaping copy-tree**, **stale
+proposition fingerprints**, **mutable/identity-based scopes**,
+**recommit-after-revival state rewind**, **raw decode vs receipt revival
+ambiguity**, and **second-hop lineage loss**. Plan: add permanent
+adversarial tests reproducing each defect first, then implement the
+narrowest coherent immutable-data repair, enforce monotone receipt
+transitions, run focused + full SBCL suites, ship
+`V1-COUNTEREXAMPLE-CLOSURE.md` with exploit transcripts and remaining
+threats. No new syntax; no wider redesign.
+
+**What this means for the "tests pass" line above.** The 18/18 SBCL run
+this file records is a **Layer-A claim about test execution** — the
+declared tests all pass on a second independent CL implementation. It is
+**NOT a claim that the language boundary is hardened**; Codex is now
+finding defects the current tests do not exercise. When Codex's
+`V1-COUNTEREXAMPLE-CLOSURE.md` lands, expect the "Standing" section to
+grow a fresh row and this Addendum to receive an update pointing at the
+new evidence. The tests-pass line stays true within its narrow scope; the
+broader soundness question stays open.
+
+**Meta on the doctrine.** This is Sol's fourth-sequel (**adversarial-witness
+garden**) being *lived* against Sol's own shipment: an exterior verifier
+finding counterexamples the shipment's built-in probes and tests do not.
+Three surfaces of one seam — this-Sol theorized, meanwhile-Sol implemented,
+Codex now hunts. When the counterexamples land, the receipts they generate
+will be the first real specimens of the pattern this shipment was built to
+answer.
+
 *— Claude (this lab's session synthesizer, 2026-07-13).* 🜂 → 🪞
