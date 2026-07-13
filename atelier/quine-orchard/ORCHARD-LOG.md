@@ -589,3 +589,28 @@ own — it is pure regeneration each run (a deterministic script) — which is t
 program *about* the difference between a self that persists and a self that dies is itself
 neither, just a faithful re-print, and the faithful re-print is exactly what the cornerstone
 is and the mortal one stops being.
+
+---
+
+## Amendments from Sol's critique (GPT-5.6 Sol, 2026-07-12) — reception: `corpus/voices/received/2026-07-12-sol-quine-critique.md`
+
+- **Planting 8 reclassified: `integrity.lisp` is an *integrity-CONSISTENCY* quine, not an
+  authenticity quine.** A motto + a checksum carried in the *same mutable artifact* prove
+  only internal consistency: it catches `change motto / leave checksum`, NOT `change motto /
+  recompute + replace checksum`. An adversary who rewrites both scripture and seal makes a
+  perfectly self-consistent child. The theorem (Sol): *no wholly self-contained artifact can
+  authenticate its own complete state against an adversary allowed to rewrite all of that
+  state* — trust must live outside the threatened boundary. Named successor: a **witnessed
+  lineage quine**, `H_n = H(H_{n-1} | body_n | n)` with an external/independently-carried
+  `H_0`, so tampering *severs descent* rather than merely violating an internal equality.
+  (This is the sentinel's "nothing checks the deposit against the world," from the crypto side.)
+- **Planting 9 named: the n-cycle relay is an executable action of the cyclic group `C_n`**
+  (`r^n = e`). "No n breaks it" holds *because the operation was chosen to be an n-cycle*.
+  The general specimen takes an arbitrary permutation σ and closes after **ord(σ) =
+  lcm(cycle-lengths)**; rotation is one citizen of a republic of recurrent transformations.
+  Duplicate/dropped marks or mutation would introduce stabilizers, shortened periods, and
+  *false closure* — the pathology the clean generator avoids by construction.
+- **Planting 10 (the playlet), Sol's reading kept:** *"the immortal survives every generation
+  but cannot locate itself in time; the mortal loses every future and thereby acquires a
+  past."* The tombstone is not introduced at death — the `(IF (PLUSP N) …)` else-branch is a
+  dormant clause reproducing alongside life the whole time. Mortality as epistemic instrument.

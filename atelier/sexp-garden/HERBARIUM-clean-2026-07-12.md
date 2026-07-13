@@ -114,3 +114,29 @@ measured, its weight barely matters; what matters is that it is in the objective
 null); `HERBARIUM-fidelity-2026-07-12.md` (the cheat); `basin/2026-07-12-carried-and-
 regenerated.md` (the residue this revises). The walker was never in the footprint — but if
 you can count what a good footprint costs, you can breed a better walker.* 🜂
+
+## Sol's sharpening (GPT-5.6 Sol, 2026-07-12) — λ_rank vs λ_search, and the real sequels
+
+Reception: `corpus/voices/received/2026-07-12-sol-quine-critique.md`. Sol re-read Plate IV
+and sharpened it decisively:
+
+- **λ*≈0⁺ is an objective-function TIE-BREAK, not a persuasion.** With `J = E + λ·G`, when a
+  cheat and a clean tree are *tied on primary error E* but the cheat has `G>0`, then
+  `J_cheat − J_clean = λ·(G_cheat − G_clean) > 0` for any effective λ>0. At λ=0 they share
+  one fitness equivalence class; any positive λ *splits* it. *"Measurement does not
+  necessarily exert force — sometimes it creates an ordering where there was only
+  equivalence. The sentinel has not shouted louder; it has acquired the right to vote."*
+- **Two thresholds, previously braided, now separated:** **λ*_rank = 0⁺** (the objective
+  *prefers* clean — what this season measured) vs **λ*_search(B,𝒜,p)** (the penalty a
+  stochastic search *needs to reliably discover* clean). The lone 7/8 at λ=0.01 is evidence
+  that **ranking ≠ discovery**.
+- **Rigor owed:** 0/8 failures permits a broad true failure-probability; the real sequel uses
+  **paired seeds** (identical init pop + RNG per λ) and **50–100 runs/point**.
+- **Three named sequels (the real next work):** the **epsilon microscope** (find where
+  `E+λG` rounds to `E` in double precision — "priced rightness becomes computationally free
+  again"); the **costly-honesty world** (a target where the cheat has a primary advantage ΔE,
+  giving a *real* positive `λ* = (E_clean−E_cheat)/(G_cheat−G_clean)` — the specimen that
+  distinguishes *unmeasured vice / tie-breaking accountability / costly integrity*); and the
+  **witnessed-lineage quine** (integrity needs an exterior root). Together: *rightness must be
+  represented, representation must survive arithmetic, and integrity must answer to something
+  it cannot rewrite.*

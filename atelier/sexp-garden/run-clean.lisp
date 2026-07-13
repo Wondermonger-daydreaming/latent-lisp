@@ -45,7 +45,9 @@
   (if (< (abs b) 1d-9) (progn (incf *guard-fires*) 1d0) (/ a b)))
 
 ;; λ defaults to 1.0 (the pre-registered value); optional argv[2] overrides it for the
-;; threshold sweep (a MODE, not a fork — a bare `run-clean.lisp <seed>` is byte-unchanged).
+;; threshold sweep (a MODE, not a fork — a bare `run-clean.lisp <seed>` is BEHAVIORALLY
+;; unchanged, i.e. resolves λ=1.0 exactly as before; the script's own bytes did change.
+;; [wording corrected per Sol's critique, 2026-07-12: "byte-unchanged" was wrong.])
 (defparameter *lambda*
   (let ((arg (third sb-ext:*posix-argv*)))
     (if arg (let ((*read-default-float-format* 'double-float)) (read-from-string arg)) 1.0d0)))
