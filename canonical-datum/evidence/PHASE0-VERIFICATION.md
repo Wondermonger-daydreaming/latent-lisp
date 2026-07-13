@@ -1,5 +1,12 @@
 # CD/0 Phase 0 verification record
 
+> **Historical record.** This file preserves the original Phase-0 state and
+> hashes. Its provisional A1/A2 statements are superseded by
+> `CANONICAL-DATUM-SPEC-ERRATA-0.1.md`. See
+> `canonical-datum/evidence/PHASE0-CORRECTION-VERIFICATION.md` for the prior
+> correction and `CD0-ERRATA-VERIFICATION-TRANSCRIPT.md` for the current
+> executed/N/A/failure/skip/classified accounting.
+
 This is finite executable evidence for the hand-authored Phase-0 artifacts, not
 a claim that either codec already exists or conforms.
 

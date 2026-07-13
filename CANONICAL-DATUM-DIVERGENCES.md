@@ -1,6 +1,6 @@
 # Canonical Datum /0 divergences
 
-This append-only ledger records specification gaps found during the clean-room
+This append-only ledger records specification gaps found during the independently seeded
 Phase 0 executability review.  It does not amend
 `mneme/spec/CANONICAL-DATUM-SPEC.md` (SHA-256
 `d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc`).
@@ -192,3 +192,45 @@ The permanent machine-readable cases are in
 full input, budgets, competing per-host outcomes where applicable, specification
 sections, and warranted fields are retained there.  Repairing these cases did
 not make one codec imitate the other's unwarranted behavior.
+
+## Errata 0.1 closure addendum — 2026-07-13
+
+This addendum preserves A1--A9 above as the historical pre-adjudication record.
+They are no longer open after adoption of:
+
+- `CD0-POST-IMPLEMENTATION-RULING.md`, SHA-256
+  `1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc`;
+- `CANONICAL-DATUM-SPEC-ERRATA-0.1.md`, SHA-256
+  `5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271`.
+
+The historical A2 witness was a genuine split: Common Lisp reported
+`InvalidCanonicalGrammar/<specific-code>/host-import`, while Python reported
+`UnsupportedHostInput/<specific-code>/host-import`.  Errata 0.1 selects the
+Python-observed category because the operation is a host boundary, not because
+either implementation was treated as specification authority.  The historical
+A9 witness was likewise a genuine split: Common Lisp reapplied structural
+budgets during runtime encoding, while Python enforced only output, record-key
+work, and actual host allocation.  Errata 0.1 defines the latter operation
+boundary on its own stated rationale.
+
+| Entry | Normative closure | Permanent witness location | Format/equality effect |
+|---|---|---|---|
+| A1 | complete checkpoint-stage matrix; promised absent items use `count`; depth/nodes use `type-tag` | promoted 71-row manifest plus `cd0-errata-0.1.json` | none |
+| A2 | host invariant failures use `UnsupportedHostInput/<specific-code>/host-import` | A2 host/construction cases | none |
+| A3 | `bit_length(abs(component))`, zero is zero bits, supplied rationals checked before reduction | A3 boundary cases | none |
+| A4 | namespace and path segments aggregate | A4 decode/import cases | none |
+| A5 | depth, nodes, local, aggregate precedence | A5 simultaneous-breach cases | none |
+| A6 | `f0..ff` retains privileged precedence in record-key position | A6 first-octet cases | none |
+| A7 | construction metadata is distinct from normalized abstract datum metadata | three positive constructions plus A7 negative | none |
+| A8 | complete Identifier `ValueBytes` once per field occurrence | A8 exact/nested/duplicate cases | none |
+| A9 | per-operation resource jurisdiction; runtime encode enforces only output/key work/allocation | A9 isolated-operation cases | none |
+
+The permanent additive manifest contains 37 complete operation cases spanning
+A1--A9.  Phase-0 remains exactly 71 classified rows: 66 octet rows and 5 host
+rows.  Python executes 71.  Common Lisp executes 68 and records exactly three
+language-specific N/A dispositions.  N/A rows are neither passes nor failures;
+the intended final disposition is recorded separately as executed rows, N/A,
+failures, skips, and classified total.
+
+No closure entry authorizes a canonical-octet, abstract-equality, accepted
+document, datum-family, grammar, format-version, v1, or unrelated Mneme change.
