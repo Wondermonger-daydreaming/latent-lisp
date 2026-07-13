@@ -1,0 +1,248 @@
+{
+  "schema": "cd0-integration-regressions/v1",
+  "cases": [
+    {
+      "id": "cd0-reg-cl-rational-numerator-budget-precedence",
+      "op": "decode",
+      "input_hex": "4c504344001102",
+      "budget": {
+        "base": "cd0-conformance-default",
+        "max_integer_bits": 0
+      },
+      "expectations": {
+        "common-lisp": {
+          "status": "failure",
+          "failure": {
+            "category": "ResourceRefusal",
+            "code": "IntegerBudgetExceeded",
+            "stage": "rational-payload"
+          },
+          "warranted_fields": ["category", "code", "stage"]
+        },
+        "python": {
+          "status": "failure",
+          "failure": {
+            "category": "ResourceRefusal",
+            "code": "IntegerBudgetExceeded",
+            "stage": "rational-payload"
+          },
+          "warranted_fields": ["category", "code", "stage"]
+        }
+      },
+      "classification": "common-lisp-defect",
+      "sections": ["20.5(6)"],
+      "notes": [
+        "The complete numerator UVAR deterministically exceeds its magnitude budget before the missing denominator is read.",
+        "This was the first minimized normative cross-codec disagreement after the 71 shared negatives agreed."
+      ]
+    },
+    {
+      "id": "cd0-reg-fixture-negative-zero",
+      "op": "fixture-import",
+      "ast": {"t": "int", "v": "-0"},
+      "budget": "cd0-conformance-default",
+      "expectations": {
+        "common-lisp": {
+          "status": "failure",
+          "failure": {
+            "category": "UnsupportedHostInput",
+            "code": "UnsupportedHostType",
+            "stage": "host-import"
+          },
+          "warranted_fields": ["category", "stage"]
+        },
+        "python": {
+          "status": "failure",
+          "failure": {
+            "category": "UnsupportedHostInput",
+            "code": "UnsupportedHostType",
+            "stage": "host-import"
+          },
+          "warranted_fields": ["category", "stage"]
+        }
+      },
+      "classification": "fixture-adapter-defect-both",
+      "sections": ["27.2", "schema/$defs/decimalInteger", "A2"],
+      "notes": [
+        "The fixture schema excludes -0; the abstract Integer zero and its canonical wire encoding are unchanged.",
+        "A2 leaves the exact constructor/import code provisional, so the regression does not warrant that code."
+      ]
+    },
+    {
+      "id": "cd0-reg-fixture-integer-preflight",
+      "op": "fixture-import",
+      "generated_ast": {
+        "kind": "decimal-integer",
+        "digit": "1",
+        "digits": 5000
+      },
+      "budget": {
+        "base": "cd0-conformance-default",
+        "max_integer_bits": 8
+      },
+      "expectations": {
+        "common-lisp": {
+          "status": "failure",
+          "failure": {
+            "category": "ResourceRefusal",
+            "code": "IntegerBudgetExceeded",
+            "stage": "host-import"
+          },
+          "warranted_fields": ["category", "code", "stage"]
+        },
+        "python": {
+          "status": "failure",
+          "failure": {
+            "category": "ResourceRefusal",
+            "code": "IntegerBudgetExceeded",
+            "stage": "host-import"
+          },
+          "warranted_fields": ["category", "code", "stage"]
+        }
+      },
+      "classification": "host-import-preflight-defect-both",
+      "sections": ["17.5", "20.1", "21.2", "21.4"],
+      "notes": [
+        "The compact manifest expands to an exact 5000-digit typed fixture request.",
+        "The importer must refuse from bounded scanning rather than construct an unbounded host integer first."
+      ]
+    },
+    {
+      "id": "cd0-reg-python-ambient-decimal-ceiling",
+      "op": "fixture-import",
+      "generated_ast": {
+        "kind": "decimal-integer",
+        "digit": "1",
+        "digits": 641
+      },
+      "budget": {
+        "base": "cd0-conformance-default",
+        "max_varint_octets": 512
+      },
+      "expectations": {
+        "common-lisp": {
+          "status": "ok"
+        },
+        "python": {
+          "status": "ok"
+        }
+      },
+      "classification": "python-host-assumption-leak",
+      "sections": ["17.5", "27.2", "29.1", "29.13"],
+      "notes": [
+        "The runner starts Python with PYTHONINTMAXSTRDIGITS=640; 641 decimal digits are the smallest input beyond that ambient ceiling.",
+        "The fixture integer is within the declared 4096-bit datum budget and both codecs must return the same canonical bytes and normalized fixture AST.",
+        "The seed leaked ValueError here; the repair uses manual bounded decimal parsing and formatting."
+      ]
+    },
+    {
+      "id": "cd0-reg-fixture-bytes-preflight",
+      "op": "fixture-import",
+      "generated_ast": {
+        "kind": "bytes",
+        "octet": "00",
+        "count": 4096
+      },
+      "budget": {
+        "base": "cd0-conformance-default",
+        "max_single_bytes_octets": 0,
+        "max_aggregate_payload_octets": 0
+      },
+      "expectations": {
+        "common-lisp": {
+          "status": "failure",
+          "failure": {
+            "category": "ResourceRefusal",
+            "code": "ExcessiveDeclaredLength",
+            "stage": "host-import"
+          },
+          "warranted_fields": ["category", "code", "stage"]
+        },
+        "python": {
+          "status": "failure",
+          "failure": {
+            "category": "ResourceRefusal",
+            "code": "ExcessiveDeclaredLength",
+            "stage": "host-import"
+          },
+          "warranted_fields": ["category", "code", "stage"]
+        }
+      },
+      "classification": "python-host-import-preflight-defect",
+      "sections": ["21.2", "21.4"],
+      "notes": [
+        "The declared fixture payload length is known from the hex text before allocating decoded bytes.",
+        "Local instrumentation tests separately prove that conversion is not entered before refusal."
+      ]
+    },
+    {
+      "id": "cd0-reg-python-deep-decode-host-ceiling",
+      "op": "decode-probe",
+      "generated_input": {
+        "kind": "nested-singleton-sequence-document",
+        "depth": 1500
+      },
+      "budget": {
+        "base": "cd0-conformance-default",
+        "max_input_octets": 10000,
+        "max_output_octets": 10000,
+        "max_depth": 1500,
+        "max_nodes": 1500,
+        "max_sequence_items": 1
+      },
+      "expectations": {
+        "common-lisp": {
+          "status": "ok"
+        },
+        "python": {
+          "status": "failure",
+          "failure": {
+            "category": "ResourceRefusal",
+            "code": "AllocationRefused",
+            "stage": "allocation"
+          },
+          "warranted_fields": ["category", "code", "stage"]
+        }
+      },
+      "classification": "python-host-assumption-leak",
+      "sections": ["18.1", "18.2", "20.1", "21.2", "21.7", "29.16"],
+      "notes": [
+        "The document is canonical and its explicit semantic budgets are sufficient.",
+        "A host stack ceiling may vary, but it must surface as typed ResourceRefusal rather than raw RecursionError.",
+        "This host-specific AllocationRefused result is not a claim that every implementation must refuse."
+      ]
+    },
+    {
+      "id": "cd0-reg-python-deep-encode-host-ceiling",
+      "op": "nested-encode",
+      "depth": 1500,
+      "budget": {
+        "base": "cd0-conformance-default",
+        "max_output_octets": 10000,
+        "max_depth": 1500,
+        "max_nodes": 1500,
+        "max_sequence_items": 1
+      },
+      "expectations": {
+        "common-lisp": {
+          "status": "ok"
+        },
+        "python": {
+          "status": "failure",
+          "failure": {
+            "category": "ResourceRefusal",
+            "code": "AllocationRefused",
+            "stage": "allocation"
+          },
+          "warranted_fields": ["category", "code", "stage"]
+        }
+      },
+      "classification": "python-defect-with-a9-boundary",
+      "sections": ["17.1", "20.1", "21.2", "21.7", "A9"],
+      "notes": [
+        "A9 still leaves the runtime encoder's structural budget surface open.",
+        "Independent of A9, raw RecursionError is not a typed encode-exact outcome; this qualified host maps it to AllocationRefused."
+      ]
+    }
+  ]
+}

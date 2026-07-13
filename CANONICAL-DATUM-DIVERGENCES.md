@@ -169,3 +169,26 @@ stage is a testable proposal, not a normative adjudication:
 normative, while the exact constructor/importer code is not uniquely assigned.
 Differential conformance must compare only the warranted portions of these rows
 until the specification is adjudicated.
+
+## Phase 2 differential disposition — 2026-07-13
+
+The first process-isolated hand-corpus comparison found no disagreement in the
+22 positive rows, 71 negative dispositions, or complete 253-pair equality
+matrix.  Additional boundary probes found seven permanent integration cases.
+They do not amend A1--A9:
+
+| Case | Minimal or compact witness | Classification | Disposition |
+|---|---|---|---|
+| rational numerator precedence | `4c504344001102`, `max_integer_bits=0` | Common Lisp defect | resolved from Section 20.5(6); both now return `ResourceRefusal/IntegerBudgetExceeded/rational-payload` |
+| fixture negative zero | `{"t":"int","v":"-0"}` | fixture defect in both | refused; A2 still blocks a normative exact code |
+| bounded decimal preflight | compact 5,000-digit decimal, eight-bit budget | host-import preflight defect in both | incremental refusal before an input-sized integer is built |
+| ambient Python decimal guard | 641 digits with `PYTHONINTMAXSTRDIGITS=640` | Python host-assumption leak | both now succeed with identical bytes/AST under a sufficient budget |
+| fixture bytes preflight | 4,096 declared zero octets, zero byte budget | Python defect | declared length refuses before hex conversion |
+| deep exact decode | canonical depth-1,500 singleton sequence | Python host-assumption leak | raw recursion replaced by typed allocation refusal; Common Lisp success is allowed by host-allocation qualification |
+| deep exact encode | depth-1,500 singleton sequence | Python defect with A9 boundary | raw recursion replaced by typed allocation refusal; encoder budget-surface disagreement remains A9 |
+
+The permanent machine-readable cases are in
+`canonical-datum/integration/cases/cd0-integration-regressions.json`.  Their
+full input, budgets, competing per-host outcomes where applicable, specification
+sections, and warranted fields are retained there.  Repairing these cases did
+not make one codec imitate the other's unwarranted behavior.
