@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, fields as dataclass_fields
 import math
-import re
 from types import MappingProxyType
 from typing import Any, Iterable, Iterator, Mapping
 
@@ -24,10 +23,6 @@ RESOURCE_REFUSAL = "ResourceRefusal"
 UNSUPPORTED_HOST = "UnsupportedHostInput"
 PRIVILEGED_ATTEMPT = "PrivilegedRestorationAttempt"
 INTERNAL_FAILURE = "InternalInvariantFailure"
-
-_DECIMAL_RE = re.compile(r"^-?(?:0|[1-9][0-9]*)$")
-_HEX_RE = re.compile(r"^(?:[0-9a-f]{2})*$")
-
 
 class CD0Failure(Exception):
     """Typed CD/0 failure with the normative comparison triple."""
@@ -135,6 +130,100 @@ def _constructor_failure(code: str, detail: str | None = None) -> CD0Failure:
     # Constructor triples are unresolved by specification divergence A2.  This
     # seed consistently treats them as explicit host-input failures.
     return CD0Failure(UNSUPPORTED_HOST, code, "host-import", detail=detail)
+
+
+def _allocation_refusal(exc: BaseException, budget: ResourceBudget | None = None) -> CD0Failure:
+    """Translate host stack/allocation exhaustion at a public operation boundary."""
+
+    return CD0Failure(
+        RESOURCE_REFUSAL,
+        "AllocationRefused",
+        "allocation",
+        detail=type(exc).__name__,
+        budget_id=None if budget is None else budget.identifier,
+    )
+
+
+def _decimal_parts(value: Any) -> tuple[bool, str]:
+    """Validate the closed fixture decimal grammar without host integer parsing."""
+
+    if type(value) is not str or not value:
+        raise ValueError("decimal must be a nonempty exact str")
+    negative = value[0] == "-"
+    digits = value[1:] if negative else value
+    if not digits:
+        raise ValueError("minus without decimal digits")
+    if digits == "0":
+        if negative:
+            raise ValueError("negative zero is not a fixture integer")
+        return False, digits
+    if digits[0] == "0":
+        raise ValueError("leading zero in fixture integer")
+    if any(character < "0" or character > "9" for character in digits):
+        raise ValueError("non-decimal fixture integer")
+    return negative, digits
+
+
+def _bounded_decimal(value: Any, maximum_bits: int) -> int:
+    """Parse decimal incrementally, never growing beyond the declared bit budget."""
+
+    negative, digits = _decimal_parts(value)
+    magnitude = 0
+    for character in digits:
+        candidate = magnitude * 10 + (ord(character) - ord("0"))
+        if candidate.bit_length() > maximum_bits:
+            raise OverflowError("integer bit budget exceeded")
+        magnitude = candidate
+    return -magnitude if negative else magnitude
+
+
+def _small_decimal(value: int, width: int = 0) -> str:
+    """Format a nonnegative small integer without invoking decimal int formatting."""
+
+    digits: list[str] = []
+    while value:
+        value, remainder = divmod(value, 10)
+        digits.append(chr(ord("0") + remainder))
+    while len(digits) < max(1, width):
+        digits.append("0")
+    digits.reverse()
+    return "".join(digits)
+
+
+def _format_decimal(value: int) -> str:
+    """Format an arbitrary exact integer independently of Python's digit guard."""
+
+    if type(value) is not int:
+        raise TypeError("decimal formatting requires an exact int")
+    if value == 0:
+        return "0"
+    negative = value < 0
+    magnitude = -value if negative else value
+    chunks: list[int] = []
+    while magnitude:
+        magnitude, remainder = divmod(magnitude, 1_000_000_000)
+        chunks.append(remainder)
+    pieces = [_small_decimal(chunks.pop())]
+    while chunks:
+        pieces.append(_small_decimal(chunks.pop(), 9))
+    result = "".join(pieces)
+    return "-" + result if negative else result
+
+
+def _fixture_hex_octets(value: Any) -> int:
+    """Validate lowercase, even-length fixture hex and return its declared size."""
+
+    if type(value) is not str or len(value) % 2:
+        raise ValueError("fixture hex must have even length")
+    if any(not ("0" <= character <= "9" or "a" <= character <= "f") for character in value):
+        raise ValueError("fixture hex must use lowercase 0-9a-f")
+    return len(value) // 2
+
+
+def _fixture_hex_to_bytes(value: str) -> bytes:
+    """Allocation point kept separate so pre-allocation ordering is testable."""
+
+    return bytes.fromhex(value)
 
 
 def _require_scalar_string(value: Any, *, nonempty: bool = False) -> str:
@@ -372,7 +461,61 @@ def record(fields: Iterable[tuple[Identifier, Datum]]) -> Record:
 def equal_datum(left: Datum, right: Datum) -> bool:
     if not _is_datum(left) or not _is_datum(right):
         raise _constructor_failure("UnsupportedHostType", "equal_datum accepts only runtime datums")
-    return type(left) is type(right) and left == right
+    work: list[tuple[Datum, Datum]] = [(left, right)]
+    seen: set[tuple[int, int]] = set()
+    try:
+        while work:
+            current_left, current_right = work.pop()
+            if type(current_left) is not type(current_right):
+                return False
+            if current_left is current_right:
+                continue
+            family = type(current_left)
+            if family is Unit:
+                continue
+            if family is Boolean or family is Integer or family is String or family is ByteString:
+                if current_left.value != current_right.value:  # type: ignore[attr-defined]
+                    return False
+                continue
+            if family is Rational:
+                if (
+                    current_left.numerator != current_right.numerator  # type: ignore[attr-defined]
+                    or current_left.denominator != current_right.denominator  # type: ignore[attr-defined]
+                ):
+                    return False
+                continue
+            if family is Identifier:
+                if (
+                    current_left.namespace != current_right.namespace  # type: ignore[attr-defined]
+                    or current_left.path != current_right.path  # type: ignore[attr-defined]
+                ):
+                    return False
+                continue
+
+            pair = (id(current_left), id(current_right))
+            if pair in seen:
+                continue
+            seen.add(pair)
+            if family is Sequence:
+                left_items = current_left.items  # type: ignore[attr-defined]
+                right_items = current_right.items  # type: ignore[attr-defined]
+                if len(left_items) != len(right_items):
+                    return False
+                work.extend(zip(left_items, right_items))
+                continue
+            if family is Record:
+                left_fields = current_left.fields  # type: ignore[attr-defined]
+                right_fields = current_right.fields  # type: ignore[attr-defined]
+                if len(left_fields) != len(right_fields):
+                    return False
+                for (left_key, left_value), (right_key, right_value) in zip(left_fields, right_fields):
+                    work.append((left_key, right_key))
+                    work.append((left_value, right_value))
+                continue
+            raise CD0Failure(INTERNAL_FAILURE, "EncoderInvariantFailure", "internal")
+    except MemoryError as exc:
+        raise _allocation_refusal(exc) from exc
+    return True
 
 
 def _uvar_bytes(value: int) -> bytes:
@@ -546,13 +689,8 @@ def encode_exact(value: Datum, budget: ResourceBudget) -> bytes:
         raise _constructor_failure("UnsupportedHostType", "encode_exact accepts only runtime datums")
     try:
         return _Encoder(budget).encode(value)
-    except MemoryError as exc:
-        raise CD0Failure(
-            RESOURCE_REFUSAL,
-            "AllocationRefused",
-            "allocation",
-            budget_id=budget.identifier,
-        ) from exc
+    except (MemoryError, RecursionError) as exc:
+        raise _allocation_refusal(exc, budget) from exc
 
 
 def _utf8_failure(code: str, offset: int, budget_id: str) -> CD0Failure:
@@ -865,21 +1003,11 @@ def decode_exact(source: bytes | bytearray | memoryview, budget: ResourceBudget)
     except (TypeError, ValueError) as exc:
         raise _constructor_failure("UnsupportedHostType", str(exc)) from exc
     except MemoryError as exc:
-        raise CD0Failure(
-            RESOURCE_REFUSAL,
-            "AllocationRefused",
-            "allocation",
-            budget_id=budget.identifier,
-        ) from exc
+        raise _allocation_refusal(exc, budget) from exc
     try:
         return _Decoder(snapshot, budget).decode()
-    except MemoryError as exc:
-        raise CD0Failure(
-            RESOURCE_REFUSAL,
-            "AllocationRefused",
-            "allocation",
-            budget_id=budget.identifier,
-        ) from exc
+    except (MemoryError, RecursionError) as exc:
+        raise _allocation_refusal(exc, budget) from exc
 
 
 class _FixtureImporter:
@@ -928,20 +1056,25 @@ class _FixtureImporter:
         return value
 
     def decimal(self, value: Any) -> int:
-        if type(value) is not str or not _DECIMAL_RE.fullmatch(value):
-            self.fail("UnsupportedHostType", detail="invalid fixture decimal")
-        return int(value)
+        try:
+            return _bounded_decimal(value, self.budget.max_integer_bits)
+        except ValueError as exc:
+            self.fail("UnsupportedHostType", detail=str(exc))
+        except OverflowError:
+            self.fail("IntegerBudgetExceeded", category=RESOURCE_REFUSAL)
 
-    def hex_payload(self, value: Any, *, nonempty: bool = False) -> bytes:
-        if type(value) is not str or not _HEX_RE.fullmatch(value):
-            self.fail("UnsupportedHostType", detail="invalid lowercase fixture hex")
-        payload = bytes.fromhex(value)
-        if nonempty and not payload:
+    def hex_payload(self, value: Any, maximum: int, *, nonempty: bool = False) -> bytes:
+        try:
+            declared_octets = _fixture_hex_octets(value)
+        except ValueError as exc:
+            self.fail("UnsupportedHostType", detail=str(exc))
+        if nonempty and declared_octets == 0:
             self.fail("EmptyIdentifierSegment")
-        return payload
+        self.payload(declared_octets, maximum)
+        return _fixture_hex_to_bytes(value)
 
-    def text_payload(self, value: Any, *, nonempty: bool = False) -> tuple[str, bytes]:
-        payload = self.hex_payload(value, nonempty=nonempty)
+    def text_payload(self, value: Any, maximum: int, *, nonempty: bool = False) -> tuple[str, bytes]:
+        payload = self.hex_payload(value, maximum, nonempty=nonempty)
         try:
             text = _decode_strict_utf8(payload, 0, self.budget.identifier)
         except CD0Failure as exc:
@@ -960,21 +1093,19 @@ class _FixtureImporter:
             path_source = ast["path_utf8_hex"]
             if type(namespace_source) not in (list, tuple) or type(path_source) not in (list, tuple):
                 self.fail("UnsupportedHostType")
+            if not path_source:
+                self.fail("MissingIdentifierPath")
+            if len(namespace_source) + len(path_source) > self.budget.max_identifier_segments:
+                self.fail("ExcessiveIdentifierSegments", category=RESOURCE_REFUSAL)
             namespace_items = tuple(namespace_source)
             path_items = tuple(path_source)
-            if not path_items:
-                self.fail("MissingIdentifierPath")
-            if len(namespace_items) + len(path_items) > self.budget.max_identifier_segments:
-                self.fail("ExcessiveIdentifierSegments", category=RESOURCE_REFUSAL)
             namespace: list[str] = []
             path: list[str] = []
             for encoded in namespace_items:
-                text, payload = self.text_payload(encoded, nonempty=True)
-                self.payload(len(payload), self.budget.max_segment_octets)
+                text, _ = self.text_payload(encoded, self.budget.max_segment_octets, nonempty=True)
                 namespace.append(text)
             for encoded in path_items:
-                text, payload = self.text_payload(encoded, nonempty=True)
-                self.payload(len(payload), self.budget.max_segment_octets)
+                text, _ = self.text_payload(encoded, self.budget.max_segment_octets, nonempty=True)
                 path.append(text)
             return Identifier(tuple(namespace), tuple(path))
         finally:
@@ -998,27 +1129,21 @@ class _FixtureImporter:
             if tag == "int":
                 ast = self.exact_object(value, {"t", "v"})
                 number = self.decimal(ast["v"])
-                if abs(number).bit_length() > self.budget.max_integer_bits:
-                    self.fail("IntegerBudgetExceeded", category=RESOURCE_REFUSAL)
                 return Integer(number)
             if tag == "rat":
                 ast = self.exact_object(value, {"t", "p", "q"})
                 numerator = self.decimal(ast["p"])
                 denominator = self.decimal(ast["q"])
-                if max(abs(numerator).bit_length(), abs(denominator).bit_length()) > self.budget.max_integer_bits:
-                    self.fail("IntegerBudgetExceeded", category=RESOURCE_REFUSAL)
                 if numerator == 0 or denominator <= 1 or math.gcd(abs(numerator), denominator) != 1:
                     self.fail("UnsupportedHostType", detail="fixture rational is not an abstract Rational")
                 return Rational(numerator, denominator)
             if tag == "string":
                 ast = self.exact_object(value, {"t", "utf8_hex"})
-                text, payload = self.text_payload(ast["utf8_hex"])
-                self.payload(len(payload), self.budget.max_single_string_octets)
+                text, _ = self.text_payload(ast["utf8_hex"], self.budget.max_single_string_octets)
                 return String(text)
             if tag == "bytes":
                 ast = self.exact_object(value, {"t", "hex"})
-                payload = self.hex_payload(ast["hex"])
-                self.payload(len(payload), self.budget.max_single_bytes_octets)
+                payload = self.hex_payload(ast["hex"], self.budget.max_single_bytes_octets)
                 return ByteString(payload)
             if tag == "id":
                 # Reuse the current active marker and node accounting.
@@ -1030,11 +1155,11 @@ class _FixtureImporter:
                 source = ast["items"]
                 if type(source) not in (list, tuple):
                     self.fail("UnsupportedHostType")
+                if len(source) > self.budget.max_sequence_items:
+                    self.fail("ExcessiveContainerCount", category=RESOURCE_REFUSAL)
                 items_marker = self.enter(source)
                 try:
                     items = tuple(source)
-                    if len(items) > self.budget.max_sequence_items:
-                        self.fail("ExcessiveContainerCount", category=RESOURCE_REFUSAL)
                     return Sequence(tuple(self.parse(item, depth + 1) for item in items))
                 finally:
                     self.leave(items_marker)
@@ -1043,11 +1168,11 @@ class _FixtureImporter:
                 source = ast["fields"]
                 if type(source) not in (list, tuple):
                     self.fail("UnsupportedHostType")
+                if len(source) > self.budget.max_record_fields:
+                    self.fail("ExcessiveContainerCount", category=RESOURCE_REFUSAL)
                 fields_marker = self.enter(source)
                 try:
                     source_fields = tuple(source)
-                    if len(source_fields) > self.budget.max_record_fields:
-                        self.fail("ExcessiveContainerCount", category=RESOURCE_REFUSAL)
                     result: list[tuple[Identifier, Datum]] = []
                     seen: set[bytes] = set()
                     for field in source_fields:
@@ -1081,13 +1206,8 @@ def from_fixture_ast(value: Any, budget: ResourceBudget) -> Datum:
         raise _constructor_failure("UnsupportedHostType", "from_fixture_ast requires ResourceBudget")
     try:
         return _FixtureImporter(budget).parse(value)
-    except MemoryError as exc:
-        raise CD0Failure(
-            RESOURCE_REFUSAL,
-            "AllocationRefused",
-            "allocation",
-            budget_id=budget.identifier,
-        ) from exc
+    except (MemoryError, RecursionError) as exc:
+        raise _allocation_refusal(exc, budget) from exc
 
 
 class _HostDescriptorImporter:
@@ -1155,11 +1275,11 @@ class _HostDescriptorImporter:
             items = node.get("items")
             if type(items) not in (list, tuple):
                 self.fail("UnsupportedHostType", detail="host sequence items must be an array")
-            snapshot = tuple(items)
-            if len(snapshot) > self.budget.max_sequence_items:
+            if len(items) > self.budget.max_sequence_items:
                 self.fail("ExcessiveContainerCount", category=RESOURCE_REFUSAL)
             if host_type == "list" and node.get("tail") is not None:
                 self.fail("ImproperHostList")
+            snapshot = tuple(items)
             return Sequence(tuple(self.import_node(item, depth + 1) for item in snapshot))
         if host_type == "unit":
             return _UNIT
@@ -1170,10 +1290,11 @@ class _HostDescriptorImporter:
             return Boolean(value)
         if host_type == "integer":
             source = node.get("value")
-            if type(source) is not str or not _DECIMAL_RE.fullmatch(source):
-                self.fail("UnsupportedHostType")
-            value = int(source)
-            if abs(value).bit_length() > self.budget.max_integer_bits:
+            try:
+                value = _bounded_decimal(source, self.budget.max_integer_bits)
+            except ValueError as exc:
+                self.fail("UnsupportedHostType", detail=str(exc))
+            except OverflowError:
                 self.fail("IntegerBudgetExceeded", category=RESOURCE_REFUSAL)
             return Integer(value)
         if host_type == "string":
@@ -1188,17 +1309,17 @@ class _HostDescriptorImporter:
             return result
         if host_type == "bytes":
             source = node.get("hex")
-            if type(source) is not str or not _HEX_RE.fullmatch(source):
-                self.fail("UnsupportedHostType")
-            payload = bytes.fromhex(source)
-            self.add_payload(len(payload), self.budget.max_single_bytes_octets)
+            try:
+                declared_octets = _fixture_hex_octets(source)
+            except ValueError as exc:
+                self.fail("UnsupportedHostType", detail=str(exc))
+            self.add_payload(declared_octets, self.budget.max_single_bytes_octets)
+            payload = _fixture_hex_to_bytes(source)
             return ByteString(payload)
         self.fail("UnsupportedHostType", detail=f"unsupported host_type {host_type!r}")
 
 
-def import_host_descriptor(host_input: Any, importer: str, budget: ResourceBudget) -> Datum:
-    """Run one explicitly named importer over a shared hostile-host descriptor."""
-
+def _import_host_descriptor(host_input: Any, importer: str, budget: ResourceBudget) -> Datum:
     if type(budget) is not ResourceBudget or type(importer) is not str or type(host_input) is not dict:
         raise _constructor_failure("UnsupportedHostType", "invalid host descriptor invocation")
     if importer == "generic-sequence-import/v0":
@@ -1235,40 +1356,101 @@ def import_host_descriptor(host_input: Any, importer: str, budget: ResourceBudge
     raise _constructor_failure("UnsupportedHostType", "unknown importer")
 
 
+def import_host_descriptor(host_input: Any, importer: str, budget: ResourceBudget) -> Datum:
+    """Run one explicitly named importer over a shared hostile-host descriptor."""
+
+    if type(budget) is not ResourceBudget:
+        raise _constructor_failure("UnsupportedHostType", "invalid host descriptor invocation")
+    try:
+        return _import_host_descriptor(host_input, importer, budget)
+    except (MemoryError, RecursionError) as exc:
+        raise _allocation_refusal(exc, budget) from exc
+
+
 def to_fixture_ast(value: Datum) -> dict[str, Any]:
     """Return a new mutable JSON-compatible AST copy for an immutable datum."""
 
     if not _is_datum(value):
         raise _constructor_failure("UnsupportedHostType", "to_fixture_ast accepts only runtime datums")
-    if type(value) is Unit:
-        return {"t": "unit"}
-    if type(value) is Boolean:
-        return {"t": "bool", "v": value.value}
-    if type(value) is Integer:
-        return {"t": "int", "v": str(value.value)}
-    if type(value) is Rational:
-        return {"t": "rat", "p": str(value.numerator), "q": str(value.denominator)}
-    if type(value) is String:
-        return {"t": "string", "utf8_hex": value.value.encode("utf-8").hex()}
-    if type(value) is ByteString:
-        return {"t": "bytes", "hex": value.value.hex()}
-    if type(value) is Identifier:
-        return {
-            "t": "id",
-            "namespace_utf8_hex": [segment.encode("utf-8").hex() for segment in value.namespace],
-            "path_utf8_hex": [segment.encode("utf-8").hex() for segment in value.path],
-        }
-    if type(value) is Sequence:
-        return {"t": "seq", "items": [to_fixture_ast(item) for item in value.items]}
-    if type(value) is Record:
-        return {
-            "t": "record",
-            "fields": [
-                {"key": to_fixture_ast(key), "value": to_fixture_ast(field_value)}
-                for key, field_value in value.fields
-            ],
-        }
-    raise CD0Failure(INTERNAL_FAILURE, "EncoderInvariantFailure", "internal")
+    holder: list[Any] = [None]
+    work: list[tuple[str, Any, Any, Any]] = [("visit", value, holder, 0)]
+    active: set[int] = set()
+    try:
+        while work:
+            action, current, parent, slot = work.pop()
+            if action == "leave":
+                active.remove(current)
+                continue
+            if not _is_datum(current):
+                raise CD0Failure(INTERNAL_FAILURE, "EncoderInvariantFailure", "internal")
+            family = type(current)
+            if family is Unit:
+                ast: Any = {"t": "unit"}
+            elif family is Boolean:
+                ast = {"t": "bool", "v": current.value}
+            elif family is Integer:
+                ast = {"t": "int", "v": _format_decimal(current.value)}
+            elif family is Rational:
+                ast = {
+                    "t": "rat",
+                    "p": _format_decimal(current.numerator),
+                    "q": _format_decimal(current.denominator),
+                }
+            elif family is String:
+                ast = {"t": "string", "utf8_hex": current.value.encode("utf-8").hex()}
+            elif family is ByteString:
+                ast = {"t": "bytes", "hex": current.value.hex()}
+            elif family is Identifier:
+                ast = {
+                    "t": "id",
+                    "namespace_utf8_hex": [
+                        segment.encode("utf-8").hex() for segment in current.namespace
+                    ],
+                    "path_utf8_hex": [segment.encode("utf-8").hex() for segment in current.path],
+                }
+            elif family is Sequence:
+                marker = id(current)
+                if marker in active:
+                    raise CD0Failure(
+                        INTERNAL_FAILURE,
+                        "EncoderInvariantFailure",
+                        "internal",
+                        detail="cycle",
+                    )
+                active.add(marker)
+                children: list[Any] = [None] * len(current.items)
+                ast = {"t": "seq", "items": children}
+                work.append(("leave", marker, None, None))
+                for index in range(len(current.items) - 1, -1, -1):
+                    work.append(("visit", current.items[index], children, index))
+            elif family is Record:
+                marker = id(current)
+                if marker in active:
+                    raise CD0Failure(
+                        INTERNAL_FAILURE,
+                        "EncoderInvariantFailure",
+                        "internal",
+                        detail="cycle",
+                    )
+                active.add(marker)
+                exported_fields: list[Any] = [None] * len(current.fields)
+                ast = {"t": "record", "fields": exported_fields}
+                work.append(("leave", marker, None, None))
+                for index in range(len(current.fields) - 1, -1, -1):
+                    key, field_value = current.fields[index]
+                    field_ast: dict[str, Any] = {"key": None, "value": None}
+                    exported_fields[index] = field_ast
+                    work.append(("visit", field_value, field_ast, "value"))
+                    work.append(("visit", key, field_ast, "key"))
+            else:
+                raise CD0Failure(INTERNAL_FAILURE, "EncoderInvariantFailure", "internal")
+            parent[slot] = ast
+    except (MemoryError, RecursionError) as exc:
+        raise _allocation_refusal(exc) from exc
+    result = holder[0]
+    if type(result) is not dict:
+        raise CD0Failure(INTERNAL_FAILURE, "EncoderInvariantFailure", "internal")
+    return result
 
 
 def _render_string(value: str) -> str:
@@ -1293,9 +1475,7 @@ def _render_string(value: str) -> str:
     return "".join(result)
 
 
-def diagnostic_render(value: Datum) -> str:
-    """Render preferred diagnostic text; it has no identity authority."""
-
+def _diagnostic_render(value: Datum) -> str:
     if not _is_datum(value):
         raise _constructor_failure("UnsupportedHostType", "diagnostic_render accepts only runtime datums")
     if type(value) is Unit:
@@ -1303,9 +1483,9 @@ def diagnostic_render(value: Datum) -> str:
     if type(value) is Boolean:
         return "true" if value.value else "false"
     if type(value) is Integer:
-        return str(value.value)
+        return _format_decimal(value.value)
     if type(value) is Rational:
-        return f"rat({value.numerator},{value.denominator})"
+        return f"rat({_format_decimal(value.numerator)},{_format_decimal(value.denominator)})"
     if type(value) is String:
         return _render_string(value.value)
     if type(value) is ByteString:
@@ -1315,14 +1495,23 @@ def diagnostic_render(value: Datum) -> str:
         path = ",".join(_render_string(segment) for segment in value.path)
         return f"id(ns=[{namespace}],path=[{path}])"
     if type(value) is Sequence:
-        return "[" + ",".join(diagnostic_render(item) for item in value.items) + "]"
+        return "[" + ",".join(_diagnostic_render(item) for item in value.items) + "]"
     if type(value) is Record:
         contents = ",".join(
-            f"{diagnostic_render(key)}=>{diagnostic_render(field_value)}"
+            f"{_diagnostic_render(key)}=>{_diagnostic_render(field_value)}"
             for key, field_value in value.fields
         )
         return f"record{{{contents}}}"
     raise CD0Failure(INTERNAL_FAILURE, "EncoderInvariantFailure", "internal")
+
+
+def diagnostic_render(value: Datum) -> str:
+    """Render preferred diagnostic text; it has no identity authority."""
+
+    try:
+        return _diagnostic_render(value)
+    except (MemoryError, RecursionError) as exc:
+        raise _allocation_refusal(exc) from exc
 
 
 __all__ = [
