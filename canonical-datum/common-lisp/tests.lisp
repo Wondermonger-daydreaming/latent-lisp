@@ -211,7 +211,6 @@
 (defvar *octet-negative-count* 0)
 (defvar *host-negative-count* 0)
 (defvar *host-not-applicable-count* 0)
-(defvar *provisional-count* 0)
 (defvar *retry-count* 0)
 (defvar *distinct-pair-count* 0)
 (defvar *mutation-count* 0)
@@ -254,19 +253,10 @@
     (cd0-failure (condition)
       (check-string= (failure-category condition) (jget failure "category")
                      context)
-      (cond
-        ((and status (string= status "provisional-blocked-stage"))
-         ;; A1: only category and primary code are warranted.
-         (incf *provisional-count*)
-         (check-string= (failure-code condition) (jget failure "code") context))
-        ((and status (string= status "provisional-blocked-code"))
-         ;; A2: the fixture explicitly withholds the precise code.  The host
-         ;; refusal category and importer stage remain observable here.
-         (incf *provisional-count*)
-         (check-string= (failure-stage condition) (jget failure "stage") context))
-        (t
-         (check-string= (failure-code condition) (jget failure "code") context)
-         (check-string= (failure-stage condition) (jget failure "stage") context)))
+      (when status
+        (check-string= status "normative" context))
+      (check-string= (failure-code condition) (jget failure "code") context)
+      (check-string= (failure-stage condition) (jget failure "stage") context)
       condition)))
 
 (defun budget-keyword (name)
@@ -331,13 +321,20 @@
     (loop for row in rows
           for identifier = (jget row "id")
           for budget = (row-budget (jget row "budget") budgets identifier)
-          for datum = (datum-from-fixture-ast (jget row "abstract")
-                                              :budget budget)
+          for datum = (if (jget row "construction" nil)
+                          (datum-from-fixture-construction
+                           (jget row "construction") :budget budget)
+                          (datum-from-fixture-ast (jget row "abstract")
+                                                  :budget budget))
           for expected-hex = (jget row "canonical_hex")
           for encoded = (encode-exact datum :budget budget)
           for decoded = (decode-exact (octets-copy encoded) :budget budget)
           do
              (incf *positive-count*)
+             (check (equal (datum-to-fixture-ast datum)
+                           (jget row "expected_decoded"))
+                    "~A: construction did not normalize to abstract fixture"
+                    identifier)
              (check-string= (octets-to-hex encoded) expected-hex identifier)
              (check (equal (datum-to-fixture-ast decoded)
                            (jget row "expected_decoded"))
@@ -381,7 +378,7 @@
          (failure (jget row "expected_failure"))
          (status (jget row "status" nil)))
     ;; The descriptor and importer label are consumed as fixture metadata even
-    ;; where this clean-room codec deliberately exposes no such optional host
+    ;; where this independently seeded codec exposes no such optional host
     ;; adapter.
     (jget row "host_input")
     (jget row "importer")
@@ -401,10 +398,16 @@
          (expect-vector-failure
           (lambda () (make-sequence-datum improper :budget budget))
           failure status identifier)))
+      ((member identifier
+               '("cd0-neg-host-ambiguous-identifier"
+                 "cd0-neg-host-bool-as-integer"
+                 "cd0-neg-host-privileged-value")
+               :test #'string=)
+       ;; These are the closed three language-specific N/A dispositions.
+       (incf *host-not-applicable-count*))
       (t
-       ;; No symbol-mapping, Python-host, or evaluator-owned privileged-value
-       ;; importer is exposed by this isolated Common Lisp seed.
-       (incf *host-not-applicable-count*)))))
+       (error "unexpected Common Lisp host-vector N/A disposition: ~A"
+              identifier)))))
 
 (defun test-negative-vectors (rows budgets)
   (loop for row in rows
@@ -462,6 +465,18 @@
            "integral rational constructor did not normalize")
     (check (integer-datum-p (make-rational-datum 0 -7))
            "zero rational constructor did not normalize")
+    (expect-failure
+     (lambda () (make-rational-datum 1 0))
+     "UnsupportedHostInput" "ZeroDenominator" "host-import"
+     "A2 zero-denominator constructor")
+    (expect-failure
+     (lambda () (make-identifier-datum nil '("")))
+     "UnsupportedHostInput" "EmptyIdentifierSegment" "host-import"
+     "A2 empty identifier segment constructor")
+    (expect-failure
+     (lambda () (make-identifier-datum nil nil))
+     "UnsupportedHostInput" "MissingIdentifierPath" "host-import"
+     "A2 missing identifier path constructor")
     (check (not (equal-datum false (make-integer-datum 0)))
            "boolean collapsed into integer")
     (check (not (equal-datum unit (make-sequence-datum nil)))
@@ -484,7 +499,7 @@
        (lambda ()
          (make-record-datum
           (list (make-record-entry a one) (make-record-entry a truth))))
-       "InvalidCanonicalGrammar" "DuplicateRecordField" "host-import"
+       "UnsupportedHostInput" "DuplicateRecordField" "host-import"
        "duplicate constructor key"))
     (check (not (equal-datum (make-string-datum (string (code-char #xe9)))
                              (make-string-datum
@@ -811,6 +826,13 @@
              "A3 mathematical bit-length choice not applied")
       (resource (lambda () (decode-exact encoded :budget six))
                 "IntegerBudgetExceeded" "integer-payload" "integer boundary"))
+    (let* ((one-bit (copy-resource-budget (default-resource-budget)
+                                          :id "pre-reduction-one-bit"
+                                          :max-integer-bits 1)))
+      (resource (lambda () (make-rational-datum 1024 1024
+                                                :budget one-bit))
+                "IntegerBudgetExceeded" "host-import"
+                "A3 rational supplied magnitude before reduction"))
     (let ((small (copy-resource-budget (default-resource-budget)
                                        :id "output-5" :max-output-octets 5)))
       (resource (lambda () (encode-exact (make-unit-datum) :budget small))
@@ -823,8 +845,9 @@
                                         :id "varint-1" :max-varint-octets 1)))
       (resource (lambda () (decode-exact encoded :budget small))
                 "VarintBudgetExceeded" "integer-payload" "varint decode")
-      (resource (lambda () (encode-exact integer :budget small))
-                "VarintBudgetExceeded" "integer-payload" "varint encode"))
+      (check-string= (octets-to-hex (encode-exact integer :budget small))
+                     (octets-to-hex encoded)
+                     "A9 runtime encode ignores varint budget"))
     (let* ((identifier (make-identifier-datum '("n") '("p")))
            (encoded (encode-exact identifier))
            (small (copy-resource-budget (default-resource-budget)
@@ -841,6 +864,22 @@
       (resource (lambda () (encode-exact datum :budget small))
                 "RecordKeyWorkBudgetExceeded" "encode-ordering"
                 "record key work"))
+    (let* ((datum (make-sequence-datum
+                   (list (make-integer-datum 99)
+                         (make-string-datum "payload"))))
+           (structurally-zero
+             (make-resource-budget
+              :id "A9-runtime-structural-fields-zero"
+              :max-input-octets 0 :max-output-octets 1048576
+              :max-varint-octets 0 :max-integer-bits 0
+              :max-depth 0 :max-nodes 0 :max-sequence-items 0
+              :max-record-fields 0 :max-identifier-segments 0
+              :max-segment-octets 0 :max-single-string-octets 0
+              :max-single-bytes-octets 0 :max-aggregate-payload-octets 0
+              :max-total-record-key-octets 1048576)))
+      (check-string= (octets-to-hex (encode-exact datum :budget structurally-zero))
+                     (octets-to-hex (encode-exact datum))
+                     "A9 runtime encode ignores every structural field"))
     (let* ((value (ash 1 500))
            (datum (make-integer-datum value))
            (large (copy-resource-budget (default-resource-budget)
@@ -1037,6 +1076,15 @@
    (lambda () (decode-exact (hex-to-octets "4c504344002001c2")))
    "InvalidCanonicalGrammar" "InvalidUTF8" "utf8"
    "complete declared payload with incomplete scalar")
+  (dolist (case '(("4c504344003001" . "sequence promised item")
+                  ("4c504344003101" . "record promised key")
+                  ("4c5043440031012200010161" . "record promised value")
+                  ("4c504344002201" . "identifier namespace segment")
+                  ("4c50434400220001" . "identifier path segment")))
+    (incf *grammar-boundary-count*)
+    (expect-failure
+     (lambda () (decode-exact (hex-to-octets (car case))))
+     "InvalidCanonicalGrammar" "TruncatedInput" "count" (cdr case)))
   (expect-failure
    (lambda () (decode-exact (hex-to-octets "4c504344003101f0")))
    "PrivilegedRestorationAttempt" "ForbiddenPrivilegedTag" "type-tag"
@@ -1057,7 +1105,7 @@
                       "canonical-datum/vectors/cd0-distinct-pairs.json"))
   (setf *checks* 0 *positive-count* 0 *negative-count* 0
         *octet-negative-count* 0 *host-negative-count* 0
-        *host-not-applicable-count* 0 *provisional-count* 0
+        *host-not-applicable-count* 0
         *retry-count* 0 *distinct-pair-count* 0
         *mutation-count* 0 *resource-count* 0 *ambient-count* 0
         *property-count* 0 *grammar-boundary-count* 0
@@ -1066,7 +1114,7 @@
   (let* ((budgets (load-budgets budget-path))
          (positives (read-jsonl positive-path))
          (negatives (read-jsonl negative-path)))
-    (check (= (length positives) 22) "shared positive row count changed")
+    (check (= (length positives) 25) "shared positive row count changed")
     (check (= (length negatives) 71) "shared negative row count changed")
     (let ((by-id (test-positive-vectors positives budgets)))
       (test-distinct-pairs (read-json-document distinct-path) by-id))
@@ -1080,15 +1128,15 @@
   (test-deterministic-properties)
   (test-grammar-boundaries)
   (format t "CD/0 Common Lisp seed conformance: PASS~%")
-  (format t "shared positives: ~D/22~%" *positive-count*)
-  (format t "shared negative manifest rows dispositioned: ~D/71~%"
+  (format t "shared positives executed: ~D/25~%" *positive-count*)
+  (format t "shared negative classified total: ~D/71~%"
           *negative-count*)
   (format t "  octet rows executed: ~D/66~%" *octet-negative-count*)
   (format t "  applicable host rows executed: ~D/2~%" *host-negative-count*)
-  (format t "  optional host importers not exposed: ~D/3~%"
+  (format t "  language-specific N/A dispositions: ~D/3~%"
           *host-not-applicable-count*)
-  (format t "  provisional rows compared only on warranted components: ~D~%"
-          *provisional-count*)
+  (format t "  classified rows executed: ~D/68; failures: 0; skips: 0~%"
+          (+ *octet-negative-count* *host-negative-count*))
   (format t "resource-vector successful retries: ~D~%" *retry-count*)
   (format t "declared distinct pairs: ~D~%" *distinct-pair-count*)
   (format t "mutation probes: ~D~%" *mutation-count*)
