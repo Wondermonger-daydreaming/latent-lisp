@@ -1,0 +1,242 @@
+(in-package #:lisp-plus-lci0)
+
+;;;; Data-only JSON.  There is deliberately no Lisp reader, evaluator,
+;;;; package interning, object hook, or floating-point path in this parser.
+
+(defstruct (%json-state (:constructor %make-json-state (text)))
+  text
+  (position 0 :type integer))
+
+(defun %json-end-p (state)
+  (>= (%json-state-position state) (length (%json-state-text state))))
+
+(defun %json-peek (state)
+  (unless (%json-end-p state)
+    (char (%json-state-text state) (%json-state-position state))))
+
+(defun %json-read (state)
+  (when (%json-end-p state) (error "truncated JSON"))
+  (prog1 (%json-peek state) (incf (%json-state-position state))))
+
+(defun %json-skip-space (state)
+  (loop while (and (%json-peek state)
+                   (member (%json-peek state)
+                           '(#\Space #\Tab #\Return #\Newline)
+                           :test #'char=))
+        do (%json-read state)))
+
+(defun %json-expect (state character)
+  (unless (char= (%json-read state) character)
+    (error "expected JSON character ~S" character)))
+
+(defun %json-hex-digit (character)
+  (cond ((char<= #\0 character #\9)
+         (- (char-code character) (char-code #\0)))
+        ((char<= #\a character #\f)
+         (+ 10 (- (char-code character) (char-code #\a))))
+        ((char<= #\A character #\F)
+         (+ 10 (- (char-code character) (char-code #\A))))
+        (t (error "invalid JSON hex digit"))))
+
+(defun %json-u16 (state)
+  (loop repeat 4
+        for character = (%json-read state)
+        for digit = (%json-hex-digit character)
+        for value = digit then (+ (ash value 4) digit)
+        finally (return value)))
+
+(defun %json-push-code (code output)
+  (let ((character (code-char code)))
+    (unless character (error "JSON scalar unsupported by host"))
+    (vector-push-extend character output)))
+
+(defun %json-string (state)
+  (%json-expect state #\")
+  (let ((output (make-array 32 :element-type 'character
+                            :adjustable t :fill-pointer 0)))
+    (loop
+      (let ((character (%json-read state)))
+        (cond
+          ((char= character #\") (return (coerce output 'string)))
+          ((char= character #\\)
+           (let ((escape (%json-read state)))
+             (case escape
+               (#\" (vector-push-extend #\" output))
+               (#\\ (vector-push-extend #\\ output))
+               (#\/ (vector-push-extend #\/ output))
+               (#\b (vector-push-extend (code-char 8) output))
+               (#\f (vector-push-extend (code-char 12) output))
+               (#\n (vector-push-extend #\Newline output))
+               (#\r (vector-push-extend #\Return output))
+               (#\t (vector-push-extend #\Tab output))
+               (#\u
+                (let ((first (%json-u16 state)))
+                  (cond
+                    ((<= #xd800 first #xdbff)
+                     (%json-expect state #\\)
+                     (%json-expect state #\u)
+                     (let ((second (%json-u16 state)))
+                       (unless (<= #xdc00 second #xdfff)
+                         (error "invalid JSON surrogate pair"))
+                       (%json-push-code
+                        (+ #x10000 (ash (- first #xd800) 10)
+                           (- second #xdc00)) output)))
+                    ((<= #xdc00 first #xdfff)
+                     (error "isolated JSON low surrogate"))
+                    (t (%json-push-code first output)))))
+               (otherwise (error "invalid JSON escape")))))
+          ((< (char-code character) #x20)
+           (error "unescaped JSON control"))
+          (t (vector-push-extend character output)))))))
+
+(defun %json-literal (state spelling value)
+  (loop for expected across spelling
+        unless (char= (%json-read state) expected)
+          do (error "invalid JSON literal"))
+  value)
+
+(defun %json-number (state)
+  (let ((negative nil) (value 0) (digits 0))
+    (when (char= (%json-peek state) #\-)
+      (setf negative t)
+      (%json-read state))
+    (loop while (and (%json-peek state)
+                     (char<= #\0 (%json-peek state) #\9))
+          for character = (%json-read state)
+          do (incf digits)
+             (setf value (+ (* value 10)
+                            (- (char-code character) (char-code #\0)))))
+    (when (zerop digits) (error "invalid JSON number"))
+    (when (and (%json-peek state)
+               (find (%json-peek state) ".eE" :test #'char=))
+      (error "LCI fixture JSON accepts integer JSON numbers only"))
+    (if negative (- value) value)))
+
+(declaim (ftype function %json-value))
+
+(defun %json-array (state)
+  (%json-expect state #\[)
+  (%json-skip-space state)
+  (when (and (%json-peek state) (char= (%json-peek state) #\]))
+    (%json-read state)
+    (return-from %json-array nil))
+  (let ((items nil))
+    (loop
+      (push (%json-value state) items)
+      (%json-skip-space state)
+      (let ((separator (%json-read state)))
+        (cond ((char= separator #\]) (return (nreverse items)))
+              ((char= separator #\,) (%json-skip-space state))
+              (t (error "invalid JSON array separator")))))))
+
+(defun %json-object (state)
+  (%json-expect state #\{)
+  (%json-skip-space state)
+  (when (and (%json-peek state) (char= (%json-peek state) #\}))
+    (%json-read state)
+    (return-from %json-object nil))
+  (let ((pairs nil))
+    (loop
+      (unless (char= (%json-peek state) #\")
+        (error "JSON object key is not a string"))
+      (let ((key (%json-string state)))
+        (%json-skip-space state)
+        (%json-expect state #\:)
+        (%json-skip-space state)
+        (when (assoc key pairs :test #'string=)
+          (error "duplicate JSON object key ~S" key))
+        (push (cons key (%json-value state)) pairs))
+      (%json-skip-space state)
+      (let ((separator (%json-read state)))
+        (cond ((char= separator #\}) (return (nreverse pairs)))
+              ((char= separator #\,) (%json-skip-space state))
+              (t (error "invalid JSON object separator")))))))
+
+(defun %json-value (state)
+  (%json-skip-space state)
+  (let ((character (%json-peek state)))
+    (cond ((null character) (error "missing JSON value"))
+          ((char= character #\") (%json-string state))
+          ((char= character #\{) (%json-object state))
+          ((char= character #\[) (%json-array state))
+          ((char= character #\t) (%json-literal state "true" :json-true))
+          ((char= character #\f) (%json-literal state "false" :json-false))
+          ((char= character #\n) (%json-literal state "null" :json-null))
+          ((or (char= character #\-) (char<= #\0 character #\9))
+           (%json-number state))
+          (t (error "invalid JSON value")))))
+
+(defun parse-json (text)
+  (let* ((state (%make-json-state text))
+         (value (%json-value state)))
+    (%json-skip-space state)
+    (unless (%json-end-p state) (error "trailing JSON text"))
+    value))
+
+(defun read-json-document (path)
+  (parse-json
+   (with-open-file (stream path :direction :input :external-format :utf-8)
+     (let ((output (make-string-output-stream)))
+       (loop for line = (read-line stream nil nil)
+             while line
+             do (write-string line output)
+                (write-char #\Newline output))
+       (get-output-stream-string output)))))
+
+(defun read-jsonl (path)
+  (with-open-file (stream path :direction :input :external-format :utf-8)
+    (loop for line = (read-line stream nil nil)
+          while line
+          unless (zerop (length line))
+            collect (parse-json line))))
+
+(defparameter +json-missing+ (list :json-missing))
+
+(defun jget (object key &optional (default +json-missing+))
+  (let ((pair (and (listp object) (assoc key object :test #'string=))))
+    (cond (pair (cdr pair))
+          ((eq default +json-missing+) (error "missing JSON key ~A" key))
+          (t default))))
+
+(defun jhas-p (object key)
+  (not (null (and (listp object) (assoc key object :test #'string=)))))
+
+(defun %write-json-string (string stream)
+  (write-char #\" stream)
+  (loop for character across string
+        do (case character
+             (#\" (write-string "\\\"" stream))
+             (#\\ (write-string "\\\\" stream))
+             (#\Newline (write-string "\\n" stream))
+             (#\Return (write-string "\\r" stream))
+             (#\Tab (write-string "\\t" stream))
+             (otherwise
+              (if (< (char-code character) #x20)
+                  (format stream "\\u~4,'0X" (char-code character))
+                  (write-char character stream)))))
+  (write-char #\" stream))
+
+(defun write-json-value (value stream)
+  (cond ((eq value :json-true) (write-string "true" stream))
+        ((eq value :json-false) (write-string "false" stream))
+        ((eq value :json-null) (write-string "null" stream))
+        ((stringp value) (%write-json-string value stream))
+        ((integerp value) (princ value stream))
+        ((and (listp value)
+              (every (lambda (item)
+                       (and (consp item) (stringp (car item))))
+                     value))
+         (write-char #\{ stream)
+         (loop for pair in value for first = t then nil
+               do (unless first (write-char #\, stream))
+                  (%write-json-string (car pair) stream)
+                  (write-char #\: stream)
+                  (write-json-value (cdr pair) stream))
+         (write-char #\} stream))
+        ((listp value)
+         (write-char #\[ stream)
+         (loop for item in value for first = t then nil
+               do (unless first (write-char #\, stream))
+                  (write-json-value item stream))
+         (write-char #\] stream))
+        (t (error "cannot encode JSON host value ~S" value))))
