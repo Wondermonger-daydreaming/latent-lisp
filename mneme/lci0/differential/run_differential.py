@@ -678,8 +678,16 @@ def main() -> int:
         "adapter_runs": {"common_lisp": common_lisp_metadata, "python": python_metadata},
         "comparison": comparison,
         "post_convergence_phases": {
-            "host_perturbations": "eligible-not-run",
-            "randomized_properties": "eligible-not-run",
+            "host_perturbations": (
+                "eligible-not-run"
+                if only_authorial_blockers
+                else "not-run: non-authorial differential mismatch"
+            ),
+            "randomized_properties": (
+                "eligible-not-run"
+                if only_authorial_blockers
+                else "not-run: non-authorial differential mismatch"
+            ),
         },
     }
     summary_path = output_directory / "summary.json"
