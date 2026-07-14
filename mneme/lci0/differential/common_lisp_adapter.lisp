@@ -1,0 +1,272 @@
+(load "mneme/lci0/common-lisp/load.lisp")
+
+(in-package #:lisp-plus-lci0)
+
+(defparameter +integration-protocol+ "lisp-plus-lci0-differential/v1")
+(defparameter +integration-profile+ "0.1.0")
+(defparameter +integration-seed-commit+
+  "b3d28bc49c3b015096cb04c6ad08c19829f511a9")
+(defparameter +integration-seed-tree+
+  "d48c39f933cde591f3303fcd3c9f42a0dac1a869")
+(defparameter +integration-request-fields+
+  '("budget" "fixture_profile_version" "input_canonical_hex" "operation"
+    "protocol" "request_id"))
+
+(define-condition integration-protocol-failure (error)
+  ((code :initarg :code :reader integration-protocol-failure-code)
+   (path :initarg :path :initform nil :reader integration-protocol-failure-path)))
+
+(defun integration-protocol-fail (code &optional path)
+  (error 'integration-protocol-failure :code code :path path))
+
+(defun integration-json-boolean (value)
+  (if value :json-true :json-false))
+
+(defun integration-object-fields-exact-p (object expected)
+  (and (listp object)
+       (every (lambda (pair) (and (consp pair) (stringp (car pair)))) object)
+       (equal (sort (mapcar #'car object) #'string<) expected)))
+
+(defun integration-lower-hex-p (value)
+  (and (stringp value)
+       (evenp (length value))
+       (every (lambda (character)
+                (or (char<= #\0 character #\9)
+                    (char<= #\a character #\f)))
+              value)))
+
+(defun integration-validate-budget (budget)
+  (unless (and
+           (integration-object-fields-exact-p
+            budget
+            '("cd0_budget_id" "lci_budget_canonical_sha256"
+              "lci_budget_fixture_id"))
+           (string= (jget budget "cd0_budget_id")
+                    "lci0-first-implementation-cd0")
+           (string= (jget budget "lci_budget_fixture_id")
+                    "resource-budget.lci-first-implementation.0")
+           (string= (jget budget "lci_budget_canonical_sha256")
+                    "b574f188fbc24c99018a8095fb9846511f582136c416b5f4cd685ba67ee16c93"))
+    (integration-protocol-fail "UnpinnedDifferentialBudget" '("budget"))))
+
+(defun integration-validate-request (request)
+  (unless (integration-object-fields-exact-p request +integration-request-fields+)
+    (integration-protocol-fail "InvalidDifferentialRequest"))
+  (unless (and (stringp (jget request "protocol"))
+               (string= (jget request "protocol") +integration-protocol+))
+    (integration-protocol-fail "UnsupportedDifferentialProtocol" '("protocol")))
+  (unless (and (stringp (jget request "request_id"))
+               (plusp (length (jget request "request_id"))))
+    (integration-protocol-fail "InvalidDifferentialRequestId" '("request_id")))
+  (unless (and (stringp (jget request "operation"))
+               (plusp (length (jget request "operation"))))
+    (integration-protocol-fail "InvalidDifferentialOperation" '("operation")))
+  (unless (and (stringp (jget request "fixture_profile_version"))
+               (string= (jget request "fixture_profile_version")
+                        +integration-profile+))
+    (integration-protocol-fail "UnsupportedFixtureProfile"
+                               '("fixture_profile_version")))
+  (unless (integration-lower-hex-p (jget request "input_canonical_hex"))
+    (integration-protocol-fail "InvalidCanonicalHex" '("input_canonical_hex")))
+  (integration-validate-budget (jget request "budget"))
+  request)
+
+(defun integration-base-response (request)
+  (list
+   (cons "protocol" +integration-protocol+)
+   (cons "request_id" (jget request "request_id"))
+   (cons "operation" (jget request "operation"))
+   (cons "implementation" "common-lisp")
+   (cons "implementation_seed_commit" +integration-seed-commit+)
+   (cons "implementation_seed_tree" +integration-seed-tree+)))
+
+(defun integration-failure-json (condition)
+  (list
+   (cons "category" (lci-failure-category condition))
+   (cons "code" (lci-failure-code condition))
+   (cons "stage" (lci-failure-stage condition))
+   (cons "path" (copy-list (lci-failure-path condition)))))
+
+(defun integration-relation-failure-value (condition)
+  (cond
+    ((member (lci-failure-code condition)
+             '("ScopeIncompatible" "UnsupportedTemporalModel")
+             :test #'string=)
+     "incompatible")
+    ((member (lci-failure-code condition)
+             '("ScopeRelationUnknown" "AdmissibilityUndetermined")
+             :test #'string=)
+     "unknown")
+    (t nil)))
+
+(defun integration-run-relation (operation datum response)
+  (let ((left-name (if (string= operation "scope-relation-table")
+                       "left-scope" "left-subject-time"))
+        (right-name (if (string= operation "scope-relation-table")
+                        "right-scope" "right-subject-time")))
+    (handler-case
+        (let ((relation
+                (if (string= operation "scope-relation-table")
+                    (scope-relation (record-field-named datum left-name)
+                                    (record-field-named datum right-name))
+                    (temporal-relation (record-field-named datum left-name)
+                                       (record-field-named datum right-name)))))
+          (append response
+                  (list (cons "semantic_status" "success")
+                        (cons "relation" (identifier-last relation)))))
+      (lci-failure (condition)
+        (let ((relation (integration-relation-failure-value condition)))
+          (unless relation (error condition))
+          (append response
+                  (list (cons "semantic_status" "failure")
+                        (cons "failure" (integration-failure-json condition))
+                        (cons "relation" relation))))))))
+
+(defun integration-vector-components (datum)
+  (let ((expected '("fixture-profile-version" "kind" "operation" "payload"
+                    "schema-version" "vector-id")))
+    (unless (and (record-datum-p datum)
+                 (equal (sort (copy-list (record-field-names datum)) #'string<)
+                        expected))
+      (integration-protocol-fail "InvalidFixtureVectorEnvelope"
+                                 '("input_canonical_hex"))))
+  (values (datum-string-value* (record-field-named datum "vector-id"))
+          (record-field-named datum "operation")
+          (datum-string-value*
+           (record-field-named datum "fixture-profile-version"))
+          (record-field-named datum "payload")))
+
+(defun integration-run-semantic (operation datum response)
+  (multiple-value-bind (vector-id operation-id profile payload)
+      (integration-vector-components datum)
+    (unless (string= operation (operation-name operation-id))
+      (integration-protocol-fail "DifferentialOperationMismatch" '("operation")))
+    (unless (and profile (string= profile +integration-profile+))
+      (integration-protocol-fail "EmbeddedFixtureProfileMismatch"
+                                 '("input_canonical_hex")))
+    (handler-case
+        (let ((actual (execute-fixture-operation operation-id payload
+                                                 :vector-id vector-id)))
+          (append response
+                  (list
+                   (cons "vector_id" vector-id)
+                   (cons "semantic_status" "success")
+                   (cons "actual_canonical_cd0_hex"
+                         (octets-to-hex (canonical-octets actual))))))
+      (lci-failure (condition)
+        (let ((actual (failure-datum condition vector-id)))
+          (append response
+                  (list
+                   (cons "vector_id" vector-id)
+                   (cons "semantic_status" "failure")
+                   (cons "failure" (integration-failure-json condition))
+                   (cons "actual_canonical_cd0_hex"
+                         (octets-to-hex (canonical-octets actual))))))))))
+
+(defun integration-run-hostile-validation (operation datum response)
+  (handler-case
+      (progn
+        (cond ((string= operation "hostile-validate-stable-ref")
+               (validate-stable-ref datum))
+              ((string= operation "hostile-validate-claim-id")
+               (validate-claim-id datum))
+              (t (validate-warrant-target datum)))
+        (append response (list (cons "semantic_status" "success"))))
+    (lci-failure (condition)
+      (append response
+              (list (cons "semantic_status" "failure")
+                    (cons "failure" (integration-failure-json condition)))))))
+
+(defun integration-run-hostile-policy (datum response)
+  (handler-case
+      (progn
+        (evaluate-fixture-policy (record-field-named datum "policy")
+                                 (record-field-named datum "target-relation"))
+        (append response (list (cons "semantic_status" "success"))))
+    (lci-failure (condition)
+      (append response
+              (list (cons "semantic_status" "failure")
+                    (cons "failure" (integration-failure-json condition)))))))
+
+(defun integration-run-request (raw)
+  (handler-case
+      (let* ((request (integration-validate-request raw))
+             (response (integration-base-response request))
+             (operation (jget request "operation"))
+             (encoded (hex-to-octets (jget request "input_canonical_hex")))
+             (datum (decode-exact encoded))
+             (reencoded (canonical-octets datum)))
+        (unless (string= (jget request "input_canonical_hex")
+                         (octets-to-hex reencoded))
+          (integration-protocol-fail "NoncanonicalDifferentialInput"
+                                     '("input_canonical_hex")))
+        (setf response
+              (append response
+                      (list (cons "protocol_status" "success")
+                            (cons "input_reencoded_canonical_hex"
+                                  (octets-to-hex reencoded)))))
+        (cond
+          ((string= operation "document-roundtrip")
+           (append response (list (cons "semantic_status" "success"))))
+          ((member operation '("scope-relation-table" "temporal-relation-table")
+                   :test #'string=)
+           (integration-run-relation operation datum response))
+          ((member operation
+                   '("hostile-validate-stable-ref"
+                     "hostile-validate-claim-id"
+                     "hostile-validate-warrant-target")
+                   :test #'string=)
+           (integration-run-hostile-validation operation datum response))
+          ((string= operation "hostile-evaluate-policy-c")
+           (integration-run-hostile-policy datum response))
+          (t (integration-run-semantic operation datum response))))
+    (integration-protocol-failure (condition)
+      (list
+       (cons "protocol" +integration-protocol+)
+       (cons "request_id"
+             (if (and (listp raw) (jhas-p raw "request_id")
+                      (stringp (jget raw "request_id")))
+                 (jget raw "request_id") ""))
+       (cons "implementation" "common-lisp")
+       (cons "protocol_status" "failure")
+       (cons "protocol_failure"
+             (list
+              (cons "code" (integration-protocol-failure-code condition))
+              (cons "path" (integration-protocol-failure-path condition))))))
+    (error (condition)
+      (list
+       (cons "protocol" +integration-protocol+)
+       (cons "request_id"
+             (if (and (listp raw) (jhas-p raw "request_id")
+                      (stringp (jget raw "request_id")))
+                 (jget raw "request_id") ""))
+       (cons "implementation" "common-lisp")
+       (cons "protocol_status" "failure")
+       (cons "protocol_failure"
+             (list
+              (cons "code" "CommonLispAdapterDefect")
+              (cons "path" nil)
+              (cons "host_exception_type" (write-to-string (type-of condition)))
+              (cons "host_exception_text" (princ-to-string condition))))))))
+
+(loop for line = (read-line *standard-input* nil nil)
+      while line
+      unless (zerop (length line))
+        do (let ((response
+                   (handler-case
+                       (integration-run-request (parse-json line))
+                     (error (condition)
+                       (list
+                        (cons "protocol" +integration-protocol+)
+                        (cons "request_id" "")
+                        (cons "implementation" "common-lisp")
+                        (cons "protocol_status" "failure")
+                        (cons "protocol_failure"
+                              (list
+                               (cons "code" "InvalidRunnerJSON")
+                               (cons "path" nil)
+                               (cons "host_exception_text"
+                                     (princ-to-string condition)))))))))
+             (write-json-value response *standard-output*)
+             (terpri *standard-output*)
+             (finish-output *standard-output*)))

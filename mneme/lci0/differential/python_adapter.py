@@ -1,0 +1,366 @@
+"""Expected-free Python adapter for the LCI/0 differential protocol."""
+
+from __future__ import annotations
+
+import json
+import sys
+from typing import Any, Mapping, TextIO
+
+import cd0
+
+from lci0.core import (
+    CD0_BUDGET,
+    canonical_bytes,
+    evaluate_policy,
+    scope_relation,
+    temporal_relation,
+    validate_claim_id,
+    validate_stable_ref,
+    validate_warrant_target,
+)
+from lci0.model import ClaimIdEnvelope, LCIFailure, LCIValue, RelationResult, field_by_path, scalar
+from lci0.vector import execute, id_name, record_to_mapping
+
+from protocol import (
+    FIXTURE_PROFILE_VERSION,
+    PROTOCOL,
+    PYTHON_SEED_COMMIT,
+    PYTHON_SEED_TREE,
+    ProtocolError,
+    validate_request,
+)
+
+
+LCI = ("lisp-plus", "lci", "0")
+TAG = LCI + ("tag",)
+FAILURE = LCI + ("failure",)
+RELATION = LCI + ("relation",)
+FIXTURE = LCI + ("fixture",)
+FIXTURE_FIELD = FIXTURE + ("field",)
+
+STANDARD_PATH_FIELDS = frozenset(
+    {
+        "kind", "schema-version", "lci-version", "identity-policy",
+        "claim-profile", "proposition", "location", "scope", "subject-time",
+        "basis", "interpretation-frame", "profile-location", "policy-id",
+        "policy-version", "profile-id", "profile-version", "calculus",
+        "expression", "mode", "parameters", "corpus", "revision", "slice",
+        "semantic-boundary", "frame-schema", "components", "coordinates",
+        "temporal-model", "domain", "scheme", "material", "issuer",
+        "target-kind", "target-schema", "claim", "boundaries", "operation",
+        "source", "lost-dimensions", "consequence", "account",
+        "represented-loss", "digest",
+    }
+)
+
+PROPOSITION_PATH_ARGUMENTS = frozenset(
+    {
+        "artifact", "content", "scope-locator", "subject-time-locator",
+        "basis-locator", "frame-locator", "measure", "expected", "unit",
+        "population-domain", "query", "corpus-locator",
+        "dataset-slice-locator", "semantic-boundary-locator", "procedure",
+        "input", "left", "right", "predicate", "quantified-domain",
+        "embedded-proposition", "probability", "uncertainty-model", "producer",
+        "invocation", "value", "source-text", "source-language",
+        "target-language", "candidate-readings", "ambiguity-mode",
+    }
+)
+
+
+def _identifier(namespace: tuple[str, ...], *path: str) -> cd0.Identifier:
+    return cd0.identifier(namespace, path)
+
+
+def _record(namespace: tuple[str, ...], values: Mapping[str, cd0.Datum]) -> cd0.Record:
+    return cd0.record((_identifier(namespace, name), value) for name, value in values.items())
+
+
+def _fixture_record(values: Mapping[str, cd0.Datum]) -> cd0.Record:
+    return _record(FIXTURE_FIELD, values)
+
+
+def _path_part(part: str, previous: str | None) -> cd0.Identifier:
+    if part.startswith("fixture-field:"):
+        return _identifier(FIXTURE_FIELD, part[14:])
+    if previous == "arguments":
+        return _identifier(FIXTURE + ("mneme-proposition", "argument"), part)
+    if (
+        previous in PROPOSITION_PATH_ARGUMENTS
+        and part in {"kind", "schema-version", "placement", "value", "coordinate", "locator-role"}
+    ):
+        return _identifier(FIXTURE + ("mneme-proposition", "field"), part)
+    if part in STANDARD_PATH_FIELDS:
+        return _identifier(LCI, part)
+    if part == "arguments":
+        return _identifier(FIXTURE + ("mneme-proposition", "field"), part)
+    return _identifier(FIXTURE_FIELD, part)
+
+
+def _path_datum(path: tuple[str, ...]) -> cd0.Sequence:
+    previous: str | None = None
+    parts: list[cd0.Datum] = []
+    for part in path:
+        parts.append(_path_part(part, previous))
+        previous = part
+    return cd0.sequence(parts)
+
+
+def _failure_datum(failure: LCIFailure, vector_id: str) -> cd0.Record:
+    context = _fixture_record({"vector-id": cd0.string(vector_id)})
+    return _record(
+        LCI,
+        {
+            "kind": _identifier(TAG, "failure"),
+            "schema-version": cd0.integer(0),
+            "category": _identifier(FAILURE, failure.category),
+            "code": _identifier(FAILURE, failure.code),
+            "stage": _identifier(FAILURE, failure.stage),
+            "path": _path_datum(failure.path),
+            "context": context,
+        },
+    )
+
+
+def _embedded_failure(value: Mapping[str, Any]) -> cd0.Record:
+    path = tuple(str(part) for part in value["path"])
+    return _record(
+        LCI,
+        {
+            "kind": _identifier(TAG, "failure"),
+            "schema-version": cd0.integer(0),
+            "category": _identifier(FAILURE, str(value["category"])),
+            "code": _identifier(FAILURE, str(value["code"])),
+            "stage": _identifier(FAILURE, str(value["stage"])),
+            "path": _path_datum(path),
+            "context": _fixture_record({}),
+        },
+    )
+
+
+def _native_datum(value: Any, *, operation: str, path: tuple[str, ...] = ()) -> cd0.Datum:
+    if isinstance(value, (ClaimIdEnvelope, LCIValue)):
+        return value.datum
+    if type(value) in (
+        cd0.Unit, cd0.Boolean, cd0.Integer, cd0.Rational, cd0.String,
+        cd0.ByteString, cd0.Identifier, cd0.Sequence, cd0.Record,
+    ):
+        return value
+    if type(value) is bytes:
+        return cd0.byte_string(value)
+    if type(value) is bool:
+        return cd0.boolean(value)
+    if type(value) is int:
+        return cd0.integer(value)
+    if type(value) is str:
+        field = path[-1] if path else ""
+        if field == "surface":
+            return cd0.string(value)
+        if field in {"relation", "scope-relation-left-to-right"} and "/" not in value:
+            return _identifier(RELATION, value)
+        if "/" in value:
+            return _identifier(FIXTURE, *value.split("/"))
+        raise TypeError(f"unclassified integration string at {path!r}: {value!r}")
+    if isinstance(value, Mapping):
+        if path and path[-1] == "incomplete-failure":
+            return _embedded_failure(value)
+        return _fixture_record(
+            {
+                str(name): _native_datum(item, operation=operation, path=path + (str(name),))
+                for name, item in value.items()
+            }
+        )
+    if isinstance(value, (list, tuple)):
+        return cd0.sequence(
+            _native_datum(item, operation=operation, path=path + (str(index),))
+            for index, item in enumerate(value)
+        )
+    raise TypeError(f"unclassified integration result at {path!r}: {type(value)!r}")
+
+
+def _result_datum(
+    operation_identifier: cd0.Identifier,
+    operation: str,
+    outputs: Mapping[str, Any],
+    payload: Mapping[str, cd0.Datum],
+) -> cd0.Record:
+    # The Python seed's semantic view intentionally simplifies these two
+    # receipts.  Restore their exact immutable input datums before encoding the
+    # result; this is representation, not semantic inference.
+    if operation == "translate-exactly":
+        outputs = dict(outputs)
+        lineage = dict(outputs["lineage"])
+        lineage["source"] = payload["source-receipt"]
+        lineage["target"] = payload["target-receipt"]
+        outputs["lineage"] = lineage
+    encoded_outputs = {
+        str(name): _native_datum(item, operation=operation, path=(str(name),))
+        for name, item in outputs.items()
+    }
+    return _fixture_record(
+        {
+            "kind": _identifier(FIXTURE, "tag", "fixture-operation-result"),
+            "schema-version": cd0.integer(0),
+            "status": _identifier(FIXTURE, "result-status", "success"),
+            "operation": operation_identifier,
+            "outputs": _fixture_record(encoded_outputs),
+        }
+    )
+
+
+def _failure_object(failure: LCIFailure) -> dict[str, Any]:
+    return {
+        "category": failure.category,
+        "code": failure.code,
+        "stage": failure.stage,
+        "path": list(failure.path),
+    }
+
+
+def _base_response(request: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "protocol": PROTOCOL,
+        "request_id": request["request_id"],
+        "operation": request["operation"],
+        "implementation": "python",
+        "implementation_seed_commit": PYTHON_SEED_COMMIT,
+        "implementation_seed_tree": PYTHON_SEED_TREE,
+    }
+
+
+def _relation_failure_value(failure: LCIFailure) -> str | None:
+    if failure.code in {"ScopeIncompatible", "UnsupportedTemporalModel"}:
+        return "incompatible"
+    if failure.code in {"ScopeRelationUnknown", "AdmissibilityUndetermined"}:
+        return "unknown"
+    return None
+
+
+def run_request(raw: Any) -> dict[str, Any]:
+    try:
+        request = validate_request(raw)
+    except ProtocolError as failure:
+        return {
+            "protocol": PROTOCOL,
+            "request_id": raw.get("request_id", "") if type(raw) is dict else "",
+            "implementation": "python",
+            "protocol_status": "failure",
+            "protocol_failure": {"code": failure.code, "path": list(failure.path)},
+        }
+    response = _base_response(request)
+    try:
+        encoded = bytes.fromhex(request["input_canonical_hex"])
+        datum = cd0.decode_exact(encoded, CD0_BUDGET)
+        reencoded = canonical_bytes(datum)
+        if reencoded != encoded:
+            raise ProtocolError("NoncanonicalDifferentialInput", ("input_canonical_hex",))
+        operation = request["operation"]
+        response["protocol_status"] = "success"
+        response["input_reencoded_canonical_hex"] = reencoded.hex()
+        if operation == "document-roundtrip":
+            response["semantic_status"] = "success"
+            return response
+        if operation in {"scope-relation-table", "temporal-relation-table"}:
+            fields = record_to_mapping(datum)
+            left_name, right_name = (
+                ("left-scope", "right-scope")
+                if operation == "scope-relation-table"
+                else ("left-subject-time", "right-subject-time")
+            )
+            try:
+                relation = (
+                    scope_relation(fields[left_name], fields[right_name])
+                    if operation == "scope-relation-table"
+                    else temporal_relation(fields[left_name], fields[right_name])
+                )
+            except LCIFailure as failure:
+                relation = _relation_failure_value(failure)
+                if relation is None:
+                    raise
+                response["semantic_status"] = "failure"
+                response["failure"] = _failure_object(failure)
+            else:
+                response["semantic_status"] = "success"
+            response["relation"] = relation
+            return response
+        if operation == "hostile-validate-stable-ref":
+            validate_stable_ref(datum)
+            response["semantic_status"] = "success"
+            return response
+        if operation == "hostile-validate-claim-id":
+            validate_claim_id(datum)
+            response["semantic_status"] = "success"
+            return response
+        if operation == "hostile-validate-warrant-target":
+            validate_warrant_target(datum)
+            response["semantic_status"] = "success"
+            return response
+        if operation == "hostile-evaluate-policy-c":
+            fields = record_to_mapping(datum)
+            policy_name = id_name(fields["policy"]).split("/")[-1]
+            relation_name = id_name(field_by_path(fields["target-relation"], "relation")).split("/")[-1]
+            evaluate_policy(policy_name, RelationResult(relation_name))
+            response["semantic_status"] = "success"
+            return response
+
+        envelope = record_to_mapping(datum)
+        required = {"kind", "schema-version", "vector-id", "operation", "fixture-profile-version", "payload"}
+        if set(envelope) != required:
+            raise ProtocolError("InvalidFixtureVectorEnvelope", ("input_canonical_hex",))
+        embedded_operation = id_name(envelope["operation"]).split("/")[-1]
+        if embedded_operation != operation:
+            raise ProtocolError("DifferentialOperationMismatch", ("operation",))
+        if scalar(envelope["fixture-profile-version"]) != FIXTURE_PROFILE_VERSION:
+            raise ProtocolError("EmbeddedFixtureProfileMismatch", ("input_canonical_hex",))
+        vector_id = scalar(envelope["vector-id"])
+        payload = record_to_mapping(envelope["payload"])
+        outcome = execute(operation, payload, vector_id=vector_id)
+        response["vector_id"] = vector_id
+        if outcome.failure is not None:
+            actual = _failure_datum(outcome.failure, vector_id)
+            response["semantic_status"] = "failure"
+            response["failure"] = _failure_object(outcome.failure)
+        else:
+            actual = _result_datum(envelope["operation"], operation, outcome.outputs or {}, payload)
+            response["semantic_status"] = "success"
+        response["actual_canonical_cd0_hex"] = canonical_bytes(actual).hex()
+        return response
+    except ProtocolError as failure:
+        response["protocol_status"] = "failure"
+        response["protocol_failure"] = {"code": failure.code, "path": list(failure.path)}
+        return response
+    except cd0.CD0Failure as failure:
+        response["protocol_status"] = "failure"
+        response["protocol_failure"] = {
+            "code": failure.code,
+            "path": [str(part) for part in failure.path],
+        }
+        return response
+    except LCIFailure as failure:
+        response["semantic_status"] = "failure"
+        response["failure"] = _failure_object(failure)
+        return response
+    except Exception as failure:  # integration harness defects remain visible
+        response["protocol_status"] = "failure"
+        response["protocol_failure"] = {
+            "code": "PythonAdapterDefect",
+            "path": [],
+            "host_exception_type": type(failure).__name__,
+            "host_exception_text": str(failure),
+        }
+        return response
+
+
+def run_lines(source: TextIO, sink: TextIO) -> int:
+    for line_number, line in enumerate(source, 1):
+        try:
+            raw = json.loads(line)
+        except json.JSONDecodeError:
+            raw = {"request_id": f"invalid-json-line-{line_number}"}
+        response = run_request(raw)
+        sink.write(json.dumps(response, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n")
+        sink.flush()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(run_lines(sys.stdin, sys.stdout))
