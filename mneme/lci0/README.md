@@ -23,3 +23,25 @@ and `python/`; cross-reading starts only after both seed commits exist.
 The accurate independence statement is: independently seeded implementations
 under shared normative infrastructure, with procedural—not OS-enforced—
 isolation.
+
+## Current implementation status
+
+The Common Lisp and Python successors converge on every implementation-owned
+path exercised by the frozen package and the seeded post-convergence harness.
+The exact sweep reproduces 1,593/1,593 embedded CD/0 documents in each
+language and obtains identical determinate results for 211/215 vectors. Four
+vectors, 38 relation companion paths, and eight hostile result tuples remain
+explicitly blocked because the frozen authorial materials do not pin a unique
+complete result. They are not counted as passes, failures, skips, or N/A.
+
+Accordingly, the bounded disposition is: unaffected implementation and
+evidence are ready for independent audit; overall LCI/0 conformance remains
+blocked pending authorial closure. This is not a merge-eligibility claim.
+
+Start with:
+
+- `evidence/LCI0-FABLE-IMPLEMENTATION-RELAY.md` for the paste-ready relay;
+- `evidence/LCI0-FINAL-VERIFICATION-TRANSCRIPT.md` for commands and counts;
+- `evidence/LCI0-IMPLEMENTATION-DIVERGENCES.md` for the append-only divergence
+  record and ten authorial-return packets; and
+- `differential/POST-CONVERGENCE-HARNESS.md` for replay instructions.
