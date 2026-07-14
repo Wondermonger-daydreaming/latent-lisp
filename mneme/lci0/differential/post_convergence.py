@@ -364,6 +364,7 @@ class PropertyCase:
         tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]], ...
     ] = ()
     authorial_blocked_failure_coordinates: tuple[str, ...] = ()
+    authorial_blocked_result_coordinates: tuple[str, ...] = ()
 
     def manifest_row(self) -> dict[str, Any]:
         encoded = canonical_bytes(self.datum)
@@ -377,6 +378,9 @@ class PropertyCase:
             "expected": {
                 "authorial_blocked_failure_coordinates": list(
                     self.authorial_blocked_failure_coordinates
+                ),
+                "authorial_blocked_result_coordinates": list(
+                    self.authorial_blocked_result_coordinates
                 ),
                 "failure_code": self.failure_code,
                 "failure_path": list(self.failure_path) if self.failure_path else None,
@@ -723,9 +727,18 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
                 operation, datum, "success",
             )
         )
+        bridge_payload = _field(
+            _vector_datum(rows, "LCI0-E7-BRIDGE-ABSENT"), "payload"
+        )
+        bridge_payload = replace_record_field(
+            bridge_payload, "left-reference", stable
+        )
+        bridge_payload = replace_record_field(
+            bridge_payload, "right-reference", reference
+        )
         operation, datum = _custom_vector(
             rows, "LCI0-E7-BRIDGE-ABSENT", "LCI0-PROPERTY-IDENTIFIER-BOUNDARY",
-            _record({"left-reference": stable, "right-reference": reference}),
+            bridge_payload,
         )
         cases.append(
             PropertyCase(
@@ -950,6 +963,9 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
                     ("testimony-class", "limited-testimony"),
                 ),
             ),
+            authorial_blocked_result_coordinates=(
+                "outputs/policy-b-decision/reasons",
+            ),
         )
     )
 
@@ -1093,7 +1109,10 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
         cases.append(
             PropertyCase(
                 f"resource-{number:02d}-at-limit", "resource-boundary", operation,
-                datum, "success",
+                datum, "success", output_boolean=("within-budget", True),
+                authorial_blocked_result_coordinates=(
+                    "outputs/requested", "outputs/resource"
+                ),
             )
         )
         # Exact over-limit fixture retained under a stable embedded vector id.
@@ -1142,6 +1161,12 @@ def _semantic_view_for_case(
         }
         # The canonical result document embeds the full failure tuple, so it is
         # likewise not comparable while any of those coordinates are blocked.
+        view.pop("actual_canonical_cd0_hex", None)
+    if case.authorial_blocked_result_coordinates:
+        # Generated cases assert only their explicitly declared output
+        # predicates while the package leaves the remaining result coordinates
+        # open.  Preserve the full documents as blocked observations, but do
+        # not let either implementation become an oracle for those bytes.
         view.pop("actual_canonical_cd0_hex", None)
     return view
 
@@ -1215,6 +1240,7 @@ def compare_property_results(
     failures: list[dict[str, Any]] = []
     counts = Counter()
     blocked_observations: list[dict[str, Any]] = []
+    blocked_result_observations: list[dict[str, Any]] = []
 
     for case in cases:
         request_id = f"property:{case.case_id}"
@@ -1228,6 +1254,8 @@ def compare_property_results(
             counts[f"{name}:cases"] += 1
             if case.authorial_blocked_failure_coordinates:
                 counts[f"{name}:authorial-blocked-cases"] += 1
+            if case.authorial_blocked_result_coordinates:
+                counts[f"{name}:authorial-blocked-result-cases"] += 1
             if response.get("protocol_status") != "success":
                 failures.append({"case_id": case.case_id, "run": name, "reason": "protocol-failure", "view": view})
                 continue
@@ -1303,6 +1331,22 @@ def compare_property_results(
                             "observed_failure": response.get("failure"),
                         }
                     )
+                if case.authorial_blocked_result_coordinates:
+                    actual = response.get("actual_canonical_cd0_hex")
+                    blocked_result_observations.append(
+                        {
+                            "case_id": case.case_id,
+                            "implementation": name,
+                            "blocked_coordinates": list(
+                                case.authorial_blocked_result_coordinates
+                            ),
+                            "observed_result_sha256": (
+                                _sha256(bytes.fromhex(actual))
+                                if type(actual) is str
+                                else None
+                            ),
+                        }
+                    )
         if len(reference_views) == 2 and reference_views[0][1] != reference_views[1][1]:
             failures.append({"case_id": case.case_id, "reason": "cross-implementation", "views": dict(reference_views)})
 
@@ -1351,8 +1395,8 @@ def compare_property_results(
             try:
                 _require(type(actual_hex) is str, "migration result document absent")
                 result = _result_output_datum(actual_hex, "migration-result")
-                result_source = _direct_field(result, "source")
-                claim_id = _direct_field(result, "claim-id")
+                result_source = _field(result, "source")
+                claim_id = _field(result, "claim-id")
                 wrapper = _field(_field(case.datum, "payload"), "source")
                 explicit_source = _field(wrapper, "source-artifact")
                 _require(result_source is not None, "migration result source absent")
@@ -1401,6 +1445,15 @@ def compare_property_results(
                 }
             ),
             "observations": blocked_observations,
+            "status": "blocked-not-pass-skip-or-na",
+        },
+        "authorial_blocked_result_coordinates": {
+            "case_count": len(
+                {
+                    item["case_id"] for item in blocked_result_observations
+                }
+            ),
+            "observations": blocked_result_observations,
             "status": "blocked-not-pass-skip-or-na",
         },
         "counts": dict(sorted(counts.items())),
@@ -1757,6 +1810,9 @@ def main() -> int:
         "authorial_return_required": True,
         "authorial_blocked": comparison[
             "authorial_blocked_failure_coordinates"
+        ],
+        "authorial_blocked_results": comparison[
+            "authorial_blocked_result_coordinates"
         ],
         "comparison": comparison,
         "commands": len(transcript),

@@ -360,6 +360,13 @@ class PropertyConstructionTests(unittest.TestCase):
             ),
             104,
         )
+        self.assertEqual(
+            sum(
+                bool(case.authorial_blocked_result_coordinates)
+                for case in self.first
+            ),
+            14,
+        )
 
     def test_case_ids_are_closed_unique_and_cover_required_families(self):
         ids = [case.case_id for case in self.first]
@@ -403,6 +410,9 @@ class PropertyConstructionTests(unittest.TestCase):
         compare_cases = [case for case in cases if case.output_boolean is not None]
         self.assertEqual(len(compare_cases), 4)
         self.assertEqual(len({subject.canonical_bytes(case.datum) for case in compare_cases}), 4)
+        for case in compare_cases:
+            payload = subject._field(case.datum, "payload")
+            self.assertIsNotNone(subject._field(payload, "bridge-registry"))
 
     def test_property_input_identity_is_not_a_cross_language_tautology(self):
         case = self.first[0]
@@ -451,6 +461,27 @@ class PropertyConstructionTests(unittest.TestCase):
             subject._semantic_view_for_case(common, case),
             subject._semantic_view_for_case(python, case),
         )
+
+    def test_unpinned_result_coordinates_are_blocked_but_predicates_remain(self):
+        case = next(
+            case
+            for case in self.first
+            if case.authorial_blocked_result_coordinates
+        )
+        common = {
+            "protocol_status": "success",
+            "semantic_status": "success",
+            "actual_canonical_cd0_hex": "00",
+        }
+        python = {
+            **common,
+            "actual_canonical_cd0_hex": "01",
+        }
+        self.assertEqual(
+            subject._semantic_view_for_case(common, case),
+            subject._semantic_view_for_case(python, case),
+        )
+        self.assertTrue(case.output_boolean or case.output_identifiers)
 
     def test_output_identifier_requires_full_namespace_and_segmented_path(self):
         case = subject.PropertyCase(
