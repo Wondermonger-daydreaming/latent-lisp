@@ -197,6 +197,7 @@ class PropertyCase:
     equivalence_group: str | None = None
     distinct_group: str | None = None
     output_boolean: tuple[str, bool] | None = None
+    output_identifiers: tuple[tuple[tuple[str, ...], str], ...] = ()
 
     def manifest_row(self) -> dict[str, Any]:
         encoded = canonical_bytes(self.datum)
@@ -212,6 +213,10 @@ class PropertyCase:
                 "failure_path": list(self.failure_path) if self.failure_path else None,
                 "failure_stage": self.failure_stage,
                 "output_boolean": list(self.output_boolean) if self.output_boolean else None,
+                "output_identifiers": [
+                    [list(path), expected]
+                    for path, expected in self.output_identifiers
+                ],
                 "semantic_status": self.expected_status,
             },
             "family": self.family,
@@ -565,6 +570,139 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
             )
         )
 
+    # Every operation-specific payload is closed.  The frozen package does not
+    # pin a complete failure tuple for these novel malformed wrappers, so this
+    # phase asserts only the authorized fail-closed codes plus process and
+    # cross-language stability; the authorial-return packet retains the tuple
+    # coverage boundary.
+    operation_templates: dict[str, str] = {}
+    for vector_id, row in rows.items():
+        operation_templates.setdefault(row["operation"], vector_id)
+    _require(len(operation_templates) == 52, "fixture operation census drift")
+    for operation_name, template_id in sorted(operation_templates.items()):
+        source = _vector_datum(rows, template_id)
+        payload = _field(source, "payload")
+        _require(type(payload) is cd0.Record, f"{template_id}: payload is not record")
+        unknown_payload = _add_field(
+            payload,
+            "future-operation-payload-field",
+            cd0.unit(),
+            PROPERTY_NAMESPACE,
+        )
+        operation, datum = _custom_vector(
+            rows,
+            template_id,
+            f"LCI0-PROPERTY-PAYLOAD-UNKNOWN-{operation_name}",
+            unknown_payload,
+        )
+        cases.append(
+            PropertyCase(
+                f"payload-unknown-{operation_name}",
+                "operation-payload-closure",
+                operation,
+                datum,
+                "failure",
+                failure_code="UnknownField",
+            )
+        )
+        operation, datum = _custom_vector(
+            rows,
+            template_id,
+            f"LCI0-PROPERTY-PAYLOAD-MISSING-{operation_name}",
+            _record({}),
+        )
+        cases.append(
+            PropertyCase(
+                f"payload-missing-{operation_name}",
+                "operation-payload-closure",
+                operation,
+                datum,
+                "failure",
+                failure_code="MissingRequiredField",
+            )
+        )
+
+    # Vector dispatch must invoke the same proposition/location validator used
+    # by projection.  N014 pins the exact failure tuple for this disagreement.
+    placement = _vector_datum(rows, "LCI0-PLACEMENT-LOG-HORIZON-POS")
+    placement_payload = _field(placement, "payload")
+    placement_location = _field(placement_payload, "location")
+    neutral_location = _field(fixture_datum("claim-id.file-alpha-neutral"), "location")
+    bad_location = replace_record_field(
+        placement_location,
+        "basis",
+        _field(neutral_location, "basis"),
+    )
+    operation, datum = _custom_vector(
+        rows,
+        "LCI0-PLACEMENT-LOG-HORIZON-POS",
+        "LCI0-PROPERTY-PLACEMENT-DISPATCH-VALIDATION",
+        replace_record_field(placement_payload, "location", bad_location),
+    )
+    cases.append(
+        PropertyCase(
+            "placement-dispatch-validation",
+            "semantic-dispatch-validation",
+            operation,
+            datum,
+            "failure",
+            failure_code="PropositionLocationInconsistent",
+            failure_stage="basis",
+            failure_path=("location", "basis"),
+        )
+    )
+
+    # Occurrence dispatch likewise invokes recursive occurrence validation;
+    # malformed claimant data must never be reported as valid.
+    occurrence_template = _vector_datum(rows, "LCI0-METADATA-UNKNOWN-TOP-CLOSED")
+    occurrence_payload = _field(occurrence_template, "payload")
+    bad_occurrence = replace_record_field(
+        fixture_datum("claim-occurrence.alpha"), "claimant", cd0.unit()
+    )
+    operation, datum = _custom_vector(
+        rows,
+        "LCI0-METADATA-UNKNOWN-TOP-CLOSED",
+        "LCI0-PROPERTY-OCCURRENCE-DISPATCH-VALIDATION",
+        replace_record_field(occurrence_payload, "occurrence", bad_occurrence),
+    )
+    cases.append(
+        PropertyCase(
+            "occurrence-dispatch-validation",
+            "semantic-dispatch-validation",
+            operation,
+            datum,
+            "failure",
+        )
+    )
+
+    # Policy-evaluation is accepted by Policy-B only as limited meta-testimony;
+    # it never becomes direct support.  Policy-A rejects the target kind.
+    policy_template = _vector_datum(rows, "LCI0-P022")
+    policy_payload = _field(policy_template, "payload")
+    meta_target = fixture_datum("warrant-target.policy-evaluation.file-alpha.meta")
+    meta_payload = replace_record_field(policy_payload, "target", meta_target)
+    meta_payload = replace_record_field(meta_payload, "claim", _field(meta_target, "claim"))
+    operation, datum = _custom_vector(
+        rows,
+        "LCI0-P022",
+        "LCI0-PROPERTY-POLICY-META-TESTIMONY",
+        meta_payload,
+    )
+    cases.append(
+        PropertyCase(
+            "policy-meta-testimony",
+            "policy-meta-testimony",
+            operation,
+            datum,
+            "success",
+            output_identifiers=(
+                (("policy-a-decision", "outcome"), "reject-target-kind"),
+                (("policy-b-decision", "outcome"), "accept-limited-testimony"),
+                (("policy-b-decision", "support-class"), "limited-testimony"),
+            ),
+        )
+    )
+
     # Bounded non-evaluating legacy grammar: mutate only source bytes inside a
     # complete frozen LegacySourceFixture/0 record.
     legacy = fixture_datum("legacy-source.hostile-read-eval")
@@ -710,6 +848,15 @@ def _result_output_datum(actual_hex: str, name: str) -> cd0.Datum:
     return value
 
 
+def _result_output_path(actual_hex: str, path: tuple[str, ...]) -> cd0.Datum:
+    _require(path, "result output path is empty")
+    value = _result_output_datum(actual_hex, path[0])
+    for name in path[1:]:
+        value = _direct_field(value, name)
+        _require(value is not None, f"result output path component absent: {name}")
+    return value
+
+
 def compare_property_results(
     cases: Sequence[PropertyCase],
     implementation_runs: Mapping[str, Mapping[str, Mapping[str, Any]]],
@@ -752,6 +899,33 @@ def compare_property_results(
                     observed = f"decode-error:{type(exc).__name__}"
                 if observed != case.output_boolean[1]:
                     failures.append({"case_id": case.case_id, "run": name, "reason": "output-boolean", "expected": case.output_boolean, "observed": observed})
+            if case.output_identifiers and case.expected_status == "success":
+                actual = response.get("actual_canonical_cd0_hex")
+                for output_path, expected_tail in case.output_identifiers:
+                    try:
+                        observed_value = (
+                            _result_output_path(actual, output_path)
+                            if isinstance(actual, str)
+                            else None
+                        )
+                        observed_tail = (
+                            observed_value.path[-1]
+                            if type(observed_value) is cd0.Identifier
+                            else None
+                        )
+                    except Exception as exc:
+                        observed_tail = f"decode-error:{type(exc).__name__}"
+                    if observed_tail != expected_tail:
+                        failures.append(
+                            {
+                                "case_id": case.case_id,
+                                "run": name,
+                                "reason": "output-identifier",
+                                "output_path": list(output_path),
+                                "expected": expected_tail,
+                                "observed": observed_tail,
+                            }
+                        )
             if name in reference_names:
                 reference_views.append((name, view))
         if len(reference_views) == 2 and reference_views[0][1] != reference_views[1][1]:

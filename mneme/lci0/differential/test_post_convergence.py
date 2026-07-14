@@ -112,7 +112,7 @@ class PropertyConstructionTests(unittest.TestCase):
             [case.manifest_row() for case in self.first],
             [case.manifest_row() for case in self.second],
         )
-        self.assertEqual(len(self.first), 96)
+        self.assertEqual(len(self.first), 203)
 
     def test_case_ids_are_closed_unique_and_cover_required_families(self):
         ids = [case.case_id for case in self.first]
@@ -126,14 +126,18 @@ class PropertyConstructionTests(unittest.TestCase):
                 "target-schema-boundary", "target-unknown-boundary",
                 "e6-failure-order", "migration-grammar",
                 "migration-inertness", "migration-source-provenance",
-                "resource-boundary",
+                "operation-payload-closure", "semantic-dispatch-validation",
+                "policy-meta-testimony", "resource-boundary",
             }
             <= families
         )
 
     def test_projection_cases_use_exact_four_field_core(self):
         projection_cases = [
-            case for case in self.first if case.operation == "project-claim-id"
+            case
+            for case in self.first
+            if case.operation == "project-claim-id"
+            and case.expected_status == "success"
         ]
         self.assertTrue(projection_cases)
         for case in projection_cases:

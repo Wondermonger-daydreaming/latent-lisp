@@ -29,15 +29,18 @@ Default seed: `1279478064` (`0x4c434930`).
 
 Default allocation/mutation iterations: `64`.
 
-The default generator emits 220 cases covering independent record allocation
+The default generator emits 327 cases covering independent record allocation
 and insertion order, fresh four-field ClaimId projection, identity-coordinate
 changes, occurrence metadata neutrality, NFC/NFD distinctions, rational and
 segmented-Identifier boundaries, all eleven target schemas, E6 failure order,
 bounded legacy grammar and inertness, explicit migration-source provenance
-neutrality, and the inclusive/over limit boundary for all thirteen resources.
-Both adapters receive the same canonical requests and are compared
-symmetrically. Metamorphic expectations come from the frozen fixtures and
-specification rules.
+neutrality, closed missing/unknown payloads for all 52 operation families,
+semantic-dispatch validation, Policy-B limited meta-testimony, and the
+inclusive/over limit boundary for all thirteen resources. Both adapters
+receive the same canonical requests and are compared symmetrically.
+Metamorphic expectations come from the frozen fixtures and specification
+rules. Novel operation-payload failure tuple coverage remains explicitly
+authorial-return-bound even though fail-closed behavior is tested.
 
 ## Host phase
 
