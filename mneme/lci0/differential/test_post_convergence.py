@@ -22,7 +22,11 @@ def _failure(path: list[str]) -> dict:
 
 def _successor_summary(cross_ids=()) -> dict:
     mismatches = [
-        {"request_id": request_id, "kind": "vector"}
+        {
+            "request_id": request_id,
+            "kind": "vector",
+            "disposition": "authorial-blocked",
+        }
         for request_id in sorted(subject.BLOCKED_VECTOR_REQUESTS)
     ]
     cross = [
@@ -41,6 +45,9 @@ def _successor_summary(cross_ids=()) -> dict:
     return {
         "protocol": subject.PROTOCOL,
         "fixture_profile_version": subject.FIXTURE_PROFILE_VERSION,
+        "status": "converged-unaffected-with-authorial-blockers",
+        "authorial_return_required": True,
+        "authorial_blocked_vectors": sorted(subject.BLOCKED_VECTOR_REQUESTS),
         "authorial_blocked_relation_paths": sorted(
             subject.BLOCKED_RELATION_PATH_REQUESTS
         ),
@@ -53,8 +60,14 @@ def _successor_summary(cross_ids=()) -> dict:
         },
         "comparison": {
             "implementations": {
-                "common-lisp": {"mismatches": list(mismatches)},
-                "python": {"mismatches": list(mismatches)},
+                "common-lisp": {
+                    "counts": {"vector_passed": 212, "vector_blocked": 3},
+                    "mismatches": list(mismatches),
+                },
+                "python": {
+                    "counts": {"vector_passed": 212, "vector_blocked": 3},
+                    "mismatches": list(mismatches),
+                },
             },
             "cross_implementation_mismatches": cross,
         },

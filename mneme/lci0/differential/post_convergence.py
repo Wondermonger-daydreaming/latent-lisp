@@ -225,6 +225,19 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         summary.get("fixture_profile_version") == FIXTURE_PROFILE_VERSION,
         "successor summary profile drift",
     )
+    _require(
+        summary.get("status") == "converged-unaffected-with-authorial-blockers",
+        "successor summary has not converged on every unaffected path",
+    )
+    _require(
+        summary.get("authorial_return_required") is True,
+        "successor summary lost the authorial-return boundary",
+    )
+    _require(
+        set(summary.get("authorial_blocked_vectors", ()))
+        == BLOCKED_VECTOR_REQUESTS,
+        "successor vector-blocker declaration drift",
+    )
     counts = summary.get("counts")
     _require(type(counts) is dict, "successor summary counts missing")
     for name, expected in (
@@ -246,6 +259,17 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
     )
     blocked_vectors: dict[str, list[str]] = {}
     for implementation, result in implementations.items():
+        implementation_counts = result.get("counts")
+        _require(
+            type(implementation_counts) is dict
+            and implementation_counts.get("vector_passed") == 212
+            and implementation_counts.get("vector_blocked") == 3
+            and not any(
+                name.endswith("_failed") and count
+                for name, count in implementation_counts.items()
+            ),
+            f"{implementation}: blocked/pass accounting drift",
+        )
         mismatches = result.get("mismatches")
         _require(type(mismatches) is list, f"{implementation}: mismatches missing")
         ids = [item.get("request_id") for item in mismatches]
@@ -256,7 +280,11 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         _require(not unexpected, f"{implementation}: non-authorial mismatches {sorted(unexpected)}")
         _require(not missing, f"{implementation}: authorial blockers silently absent {sorted(missing)}")
         _require(
-            all(item.get("kind") == "vector" for item in mismatches),
+            all(
+                item.get("kind") == "vector"
+                and item.get("disposition") == "authorial-blocked"
+                for item in mismatches
+            ),
             f"{implementation}: blocker kind drift",
         )
         blocked_vectors[implementation] = sorted(ids)
