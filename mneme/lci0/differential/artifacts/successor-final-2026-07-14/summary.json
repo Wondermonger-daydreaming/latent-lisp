@@ -8,14 +8,14 @@
         "--script",
         "/home/gauss/Codex-Lab/latent-lisp-lci0-integration-successor/mneme/lci0/differential/common_lisp_adapter.lisp"
       ],
-      "elapsed_monotonic_ns": 20769104729,
+      "elapsed_monotonic_ns": 20627528338,
       "exit_code": 0,
-      "request_bytes": 24284515,
-      "request_sha256": "650a8b7e03caad5ec94b8d27439fe82f372431a5291b51f01ab1903f4330e01e",
-      "requests": 2287,
-      "response_bytes": 25588506,
-      "response_sha256": "1bdb0e51fc33c6222426054713a44eb2afdafb2336a8809fa6fb63e4aafcfb10",
-      "responses": 2287,
+      "request_bytes": 24458265,
+      "request_sha256": "b6b17160d2fec5177d0faad0542d9b35c2047d521925ed302bc54e5d206d3e9c",
+      "requests": 2295,
+      "response_bytes": 25763401,
+      "response_sha256": "46695fbdcc3d7b449297c7d591473fb842ea1db93a151bb8e65e9c9492a693a7",
+      "responses": 2295,
       "stderr_bytes": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
@@ -24,14 +24,14 @@
         "/home/gauss/OpenGauss/venv/bin/python3",
         "/home/gauss/Codex-Lab/latent-lisp-lci0-integration-successor/mneme/lci0/differential/python_adapter.py"
       ],
-      "elapsed_monotonic_ns": 11219825074,
+      "elapsed_monotonic_ns": 11232851902,
       "exit_code": 0,
-      "request_bytes": 24284515,
-      "request_sha256": "650a8b7e03caad5ec94b8d27439fe82f372431a5291b51f01ab1903f4330e01e",
-      "requests": 2287,
-      "response_bytes": 25578229,
-      "response_sha256": "4a7d2fabf2ee44b64ef8a8def87a8c53b9d118406abbbb7ebe4bd65bcf7f7b9f",
-      "responses": 2287,
+      "request_bytes": 24458265,
+      "request_sha256": "b6b17160d2fec5177d0faad0542d9b35c2047d521925ed302bc54e5d206d3e9c",
+      "requests": 2295,
+      "response_bytes": 25753084,
+      "response_sha256": "5b185919ab0599d43e845f9624faa17940c03bc6efb3c4988a4604505cff3542",
+      "responses": 2295,
       "stderr_bytes": 0,
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
@@ -1482,6 +1482,98 @@
         "request_id": "hostile:stable-ref-alias-main-case-folded"
       },
       {
+        "canonical_octets": 542,
+        "canonical_sha256": "84e58c2fa92abdd3f36b803a2d34a9a963b25bb27812adbd2df3973fe191c1c7",
+        "common_lisp": {
+          "authority_gap": null,
+          "failure": {
+            "category": "reference-refusal",
+            "code": "UnresolvedAlias",
+            "path": [
+              "material",
+              "fixture-field:object-id"
+            ],
+            "stage": "stable-reference"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "expected_authority_gap": null,
+        "expected_failure": {
+          "category": "reference-refusal",
+          "code": "UnresolvedAlias",
+          "path": [
+            "material",
+            "fixture-field:object-id"
+          ],
+          "stage": "stable-reference"
+        },
+        "expected_semantic_status": "failure",
+        "python": {
+          "authority_gap": null,
+          "failure": {
+            "category": "reference-refusal",
+            "code": "UnresolvedAlias",
+            "path": [
+              "material",
+              "fixture-field:object-id"
+            ],
+            "stage": "stable-reference"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "request_id": "hostile:stable-ref-alias-production"
+      },
+      {
+        "canonical_octets": 545,
+        "canonical_sha256": "56e26fc828792a37af541668125cf2b4676126eb147f27440977394fe4abf35c",
+        "common_lisp": {
+          "authority_gap": null,
+          "failure": {
+            "category": "reference-refusal",
+            "code": "UnresolvedAlias",
+            "path": [
+              "material",
+              "fixture-field:object-id"
+            ],
+            "stage": "stable-reference"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "expected_authority_gap": null,
+        "expected_failure": {
+          "category": "reference-refusal",
+          "code": "UnresolvedAlias",
+          "path": [
+            "material",
+            "fixture-field:object-id"
+          ],
+          "stage": "stable-reference"
+        },
+        "expected_semantic_status": "failure",
+        "python": {
+          "authority_gap": null,
+          "failure": {
+            "category": "reference-refusal",
+            "code": "UnresolvedAlias",
+            "path": [
+              "material",
+              "fixture-field:object-id"
+            ],
+            "stage": "stable-reference"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "request_id": "hostile:stable-ref-alias-model-current"
+      },
+      {
         "canonical_octets": 543,
         "canonical_sha256": "5e5f94e85f5da8cd170933be7b408b3d149b87e5a155653557548ec26f212437",
         "common_lisp": {
@@ -1718,6 +1810,282 @@
         "request_id": "hostile:claim-nested-expression-kind-key-namespace"
       },
       {
+        "canonical_octets": 8498,
+        "canonical_sha256": "86515c865baca48ca66ab56f5b2131625b3e73df6446ff89c5b2af2b03504671",
+        "common_lisp": {
+          "authority_gap": null,
+          "failure": {
+            "category": "invalid-input",
+            "code": "MissingRequiredField",
+            "path": [
+              "identity-policy"
+            ],
+            "stage": "claim-shape"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "expected_authority_gap": null,
+        "expected_failure": {
+          "category": "invalid-input",
+          "code": "MissingRequiredField",
+          "path": [
+            "identity-policy"
+          ],
+          "stage": "claim-shape"
+        },
+        "expected_semantic_status": "failure",
+        "python": {
+          "authority_gap": null,
+          "failure": {
+            "category": "invalid-input",
+            "code": "MissingRequiredField",
+            "path": [
+              "identity-policy"
+            ],
+            "stage": "claim-shape"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "request_id": "hostile:project-claim-id-carrier-future-field"
+      },
+      {
+        "canonical_octets": 8535,
+        "canonical_sha256": "e26bfdf1e5f48b96e860d7ce1b1eb9c1a82bd25715190e115e75bab793948fa3",
+        "common_lisp": {
+          "authority_gap": null,
+          "failure": {
+            "category": "invalid-input",
+            "code": "UnknownField",
+            "path": [
+              "location",
+              "profile-location",
+              "kind"
+            ],
+            "stage": "profile-location"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "expected_authority_gap": null,
+        "expected_failure": {
+          "category": "invalid-input",
+          "code": "UnknownField",
+          "path": [
+            "location",
+            "profile-location",
+            "kind"
+          ],
+          "stage": "profile-location"
+        },
+        "expected_semantic_status": "failure",
+        "python": {
+          "authority_gap": null,
+          "failure": {
+            "category": "invalid-input",
+            "code": "UnknownField",
+            "path": [
+              "location",
+              "profile-location",
+              "kind"
+            ],
+            "stage": "profile-location"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "request_id": "hostile:claim-tagged-empty-profile-location"
+      },
+      {
+        "canonical_octets": 21806,
+        "canonical_sha256": "ecb0ce29079ec21580c04a858f4d020d1adabc57a06579248db9933193c10aa2",
+        "common_lisp": {
+          "authority_gap": null,
+          "failure": {
+            "category": "target-mismatch",
+            "code": "PropositionMismatch",
+            "path": [
+              "claim",
+              "proposition"
+            ],
+            "stage": "target-relation"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "expected_authority_gap": null,
+        "expected_failure": {
+          "category": "target-mismatch",
+          "code": "PropositionMismatch",
+          "path": [
+            "claim",
+            "proposition"
+          ],
+          "stage": "target-relation"
+        },
+        "expected_semantic_status": "failure",
+        "python": {
+          "authority_gap": null,
+          "failure": {
+            "category": "target-mismatch",
+            "code": "PropositionMismatch",
+            "path": [
+              "claim",
+              "proposition"
+            ],
+            "stage": "target-relation"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "request_id": "hostile:match-target-beta-proposition"
+      },
+      {
+        "canonical_octets": 21845,
+        "canonical_sha256": "852089bc793985306052cce08312c9900a4ff9334f0d751dedfd6248df45a0e1",
+        "common_lisp": {
+          "authority_gap": null,
+          "failure": {
+            "category": "target-mismatch",
+            "code": "PropositionMismatch",
+            "path": [
+              "claim",
+              "proposition"
+            ],
+            "stage": "target-relation"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "expected_authority_gap": null,
+        "expected_failure": {
+          "category": "target-mismatch",
+          "code": "PropositionMismatch",
+          "path": [
+            "claim",
+            "proposition"
+          ],
+          "stage": "target-relation"
+        },
+        "expected_semantic_status": "failure",
+        "python": {
+          "authority_gap": null,
+          "failure": {
+            "category": "target-mismatch",
+            "code": "PropositionMismatch",
+            "path": [
+              "claim",
+              "proposition"
+            ],
+            "stage": "target-relation"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "request_id": "hostile:match-target-proposition-before-subject-time"
+      },
+      {
+        "canonical_octets": 23282,
+        "canonical_sha256": "9371481cd0ef16b5b9a5e5f4c1b63033cb4aa8c52bb1a7771072fba50cd0882c",
+        "common_lisp": {
+          "authority_gap": null,
+          "failure": {
+            "category": "target-mismatch",
+            "code": "ScopeNarrowingNotDeclared",
+            "path": [
+              "claim",
+              "location",
+              "scope"
+            ],
+            "stage": "target-relation"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "expected_authority_gap": null,
+        "expected_failure": {
+          "category": "target-mismatch",
+          "code": "ScopeNarrowingNotDeclared",
+          "path": [
+            "claim",
+            "location",
+            "scope"
+          ],
+          "stage": "target-relation"
+        },
+        "expected_semantic_status": "failure",
+        "python": {
+          "authority_gap": null,
+          "failure": {
+            "category": "target-mismatch",
+            "code": "ScopeNarrowingNotDeclared",
+            "path": [
+              "claim",
+              "location",
+              "scope"
+            ],
+            "stage": "target-relation"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "request_id": "hostile:match-target-nonmonotone-before-insufficient-coverage"
+      },
+      {
+        "canonical_octets": 106,
+        "canonical_sha256": "ccb885ca8793e00940ff2da76a5818e163a488b52e6cbce9e150c51f98ac8b00",
+        "common_lisp": {
+          "authority_gap": null,
+          "failure": {
+            "category": "invalid-input",
+            "code": "MissingRequiredField",
+            "path": [
+              "kind"
+            ],
+            "stage": "claim-shape"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "expected_authority_gap": null,
+        "expected_failure": {
+          "category": "invalid-input",
+          "code": "MissingRequiredField",
+          "path": [
+            "kind"
+          ],
+          "stage": "claim-shape"
+        },
+        "expected_semantic_status": "failure",
+        "python": {
+          "authority_gap": null,
+          "failure": {
+            "category": "invalid-input",
+            "code": "MissingRequiredField",
+            "path": [
+              "kind"
+            ],
+            "stage": "claim-shape"
+          },
+          "protocol_status": "success",
+          "semantic_status": "failure",
+          "status": null
+        },
+        "request_id": "hostile:claim-id-equality-rejects-empty-records"
+      },
+      {
         "canonical_octets": 5533,
         "canonical_sha256": "303c5fb2c0f25b99211fdcf6b0662caa2483e121ba4d36ceadf4a4c2fdc3632d",
         "common_lisp": {
@@ -1940,8 +2308,8 @@
           "document_passed": 1593,
           "document_requests": 1593,
           "hostile_blocked": 8,
-          "hostile_passed": 13,
-          "hostile_requests": 21,
+          "hostile_passed": 21,
+          "hostile_requests": 29,
           "relation_blocked": 38,
           "relation_passed": 420,
           "relation_requests": 458,
@@ -4193,8 +4561,8 @@
           "document_passed": 1593,
           "document_requests": 1593,
           "hostile_blocked": 8,
-          "hostile_passed": 13,
-          "hostile_requests": 21,
+          "hostile_passed": 21,
+          "hostile_requests": 29,
           "relation_blocked": 38,
           "relation_passed": 420,
           "relation_requests": 458,
@@ -6465,7 +6833,7 @@
   },
   "counts": {
     "baseline_requests_per_implementation": 2266,
-    "hostile_requests_per_implementation": 21,
+    "hostile_requests_per_implementation": 29,
     "magic_registry_values": 1133,
     "magic_vector_values": 460,
     "official_documents": 1105,
@@ -6474,7 +6842,7 @@
     "supplementary_nested_e1_documents": 30,
     "supplementary_relation_documents": 458,
     "total_documents": 1593,
-    "total_requests_per_implementation": 2287,
+    "total_requests_per_implementation": 2295,
     "vector_operation_families": {
       "apply-admissibility-floor": 4,
       "apply-occurrence-corrections": 1,

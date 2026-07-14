@@ -56,7 +56,7 @@
     },
     "command-transcript.jsonl": {
       "bytes": 27472,
-      "sha256": "2c08ca21f9c2eaee0be115d00350f3aa318c6feb6885ffd63f4d8f3b511ffb92"
+      "sha256": "2cadd48fb70d93a8939088d5a95c9e619b7e6847b196bdb349d864ac78997c9a"
     },
     "native-common-lisp-baseline.stderr.txt": {
       "bytes": 0,
@@ -168,7 +168,7 @@
     },
     "suite-python-perturbation-surface.stderr.txt": {
       "bytes": 107,
-      "sha256": "9022cf5596fc4223859cf1d2804981f61799a0a4dcc1085444d53e6f7c828dbb"
+      "sha256": "d926e2bfb8d4e5abddd99e34d9d95a172451697495e6bb372942f6b99152d873"
     },
     "suite-python-perturbation-surface.stdout.txt": {
       "bytes": 0,
@@ -176,7 +176,7 @@
     },
     "summary.json": {
       "bytes": 357939,
-      "sha256": "3af5304be13b4370c8d8bd1cde9c6534cbd87cafeac25745233a0be7bd8593b3"
+      "sha256": "0a318264436c6b6dd018fa31188315610d4bea8486bd0c61463d9e6a9fdcce6c"
     }
   }
 }

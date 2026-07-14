@@ -8760,9 +8760,9 @@
   },
   "protocol": "lisp-plus-lci0-differential/v1",
   "repository": {
-    "head": "ad3da1b45dfcc85cec52ca87650c30e7dd8a7427",
+    "head": "e6983952ea726366b69435b29eeb37eb76f8504d",
     "path": "/home/gauss/Codex-Lab/latent-lisp-lci0-integration-successor",
-    "tree": "9749175feab7192abfbaf9dde6f53e12ae1bf71a"
+    "tree": "daaef9bad97eced6c242fc8052cbedc8920d355a"
   },
   "runtime": {
     "available_locales": [
@@ -8777,41 +8777,41 @@
   },
   "status": "converged-unaffected-with-authorial-blockers",
   "successor_artifacts": {
-    "directory": "/tmp/lci0-exact-final-head-r3-20260714",
+    "directory": "/tmp/lci0-exact-final-head-r4-20260714",
     "manifest_bytes": 804,
-    "manifest_sha256": "13880643dbca5c3c247510f8811ac5b7dca0bccfe6a487289a640059033e87ad",
+    "manifest_sha256": "d81d084cac92b10bdc8bbde66f3f5a6e89dcf55f4b6b718762653ae4d1c6b994",
     "members": {
       "common-lisp-responses.jsonl": {
-        "bytes": 25588506,
-        "sha256": "1bdb0e51fc33c6222426054713a44eb2afdafb2336a8809fa6fb63e4aafcfb10"
+        "bytes": 25763401,
+        "sha256": "46695fbdcc3d7b449297c7d591473fb842ea1db93a151bb8e65e9c9492a693a7"
       },
       "common-lisp-stderr.txt": {
         "bytes": 0,
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "python-responses.jsonl": {
-        "bytes": 25578229,
-        "sha256": "4a7d2fabf2ee44b64ef8a8def87a8c53b9d118406abbbb7ebe4bd65bcf7f7b9f"
+        "bytes": 25753084,
+        "sha256": "5b185919ab0599d43e845f9624faa17940c03bc6efb3c4988a4604505cff3542"
       },
       "python-stderr.txt": {
         "bytes": 0,
         "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       "requests.jsonl": {
-        "bytes": 24284515,
-        "sha256": "650a8b7e03caad5ec94b8d27439fe82f372431a5291b51f01ab1903f4330e01e"
+        "bytes": 24458265,
+        "sha256": "b6b17160d2fec5177d0faad0542d9b35c2047d521925ed302bc54e5d206d3e9c"
       },
       "summary.json": {
-        "bytes": 1529994,
-        "sha256": "9f870fe9094cab469e2a0876fe04227a1cf720891bfca59cc3a2bc3156340d37"
+        "bytes": 1541123,
+        "sha256": "7f63cd0cb59c12d0d909f19e4fdc3d5625912c1ced7562c9aef7813ccfe25d7e"
       }
     },
-    "recomputed_requests_per_implementation": 2287,
-    "recomputed_total_responses": 4574
+    "recomputed_requests_per_implementation": 2295,
+    "recomputed_total_responses": 4590
   },
   "successor_summary": {
-    "bytes": 1529994,
-    "path": "/tmp/lci0-exact-final-head-r3-20260714/summary.json",
-    "sha256": "9f870fe9094cab469e2a0876fe04227a1cf720891bfca59cc3a2bc3156340d37"
+    "bytes": 1541123,
+    "path": "/tmp/lci0-exact-final-head-r4-20260714/summary.json",
+    "sha256": "7f63cd0cb59c12d0d909f19e4fdc3d5625912c1ced7562c9aef7813ccfe25d7e"
   }
 }
