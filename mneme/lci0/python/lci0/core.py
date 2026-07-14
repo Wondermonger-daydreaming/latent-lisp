@@ -455,6 +455,13 @@ STABLE_REF_DOMAINS = frozenset(
 
 
 def validate_stable_ref(value: cd0.Datum, *, path: tuple[str, ...] = ()) -> cd0.Datum:
+    if type(value) is not cd0.Record:
+        raise LCIFailure(
+            "reference-refusal",
+            "InvalidStableReference",
+            "stable-reference",
+            path,
+        )
     _closed(
         value,
         ("kind", "domain", "scheme", "material"),

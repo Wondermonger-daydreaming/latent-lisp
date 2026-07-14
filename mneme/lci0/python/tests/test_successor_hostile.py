@@ -177,6 +177,24 @@ class DeterministicClosedValidationTests(unittest.TestCase):
             project_occurrence(occurrence).canonical_bytes,
         )
 
+    def test_nonrecord_claimant_is_a_typed_recursive_stable_ref_failure(self):
+        occurrence = replace_field(
+            fixture_datum("claim-occurrence.alpha"),
+            "claimant",
+            cd0.unit(),
+        )
+        with self.assertRaises(LCIFailure) as caught:
+            project_occurrence(occurrence)
+        self.assertEqual(
+            caught.exception.comparison_key,
+            (
+                "reference-refusal",
+                "InvalidStableReference",
+                "stable-reference",
+                ("claimant",),
+            ),
+        )
+
     def test_n008_keeps_the_exact_machine_path(self):
         actual = execute_row(row("LCI0-N008"))
         expected = expected_outcome(row("LCI0-N008"))
@@ -561,11 +579,20 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
             "claimant",
             cd0.unit(),
         )
-        with self.assertRaises(FixtureAuthorityGap):
-            vector_module.execute(
-                "validate-occurrence",
-                {"occurrence": occurrence},
-            )
+        outcome = vector_module.execute(
+            "validate-occurrence",
+            {"occurrence": occurrence},
+        )
+        self.assertIsInstance(outcome.failure, LCIFailure)
+        self.assertEqual(
+            outcome.failure.comparison_key,
+            (
+                "reference-refusal",
+                "InvalidStableReference",
+                "stable-reference",
+                ("claimant",),
+            ),
+        )
 
     def test_policy_vector_results_change_with_supplied_kind_trust_query_and_loss(self):
         p022 = input_payload_by_id("LCI0-P022")
