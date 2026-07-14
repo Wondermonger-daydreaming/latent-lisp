@@ -1,4 +1,0 @@
-VECTOR FAIL LCI0-N012 (match-target)
-VECTOR FAIL LCI0-E5-COVERAGE-INSUFFICIENT (match-target)
-VECTOR FAIL LCI0-P024 (revive-inert-occurrence)
-VECTOR FAIL LCI0-P029 (migrate-v1-collision-pair)
