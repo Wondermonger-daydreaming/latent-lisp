@@ -1,8 +1,0 @@
-# Lisp+ Canonical Datum /0 merge/freeze artifact SHA-256 manifest
-# Generated 2026-07-13 from the exact files committed beside this manifest.
-# The checksum manifest is excluded from itself; its own SHA-256 is reported
-# by the final reconciliation receipt and reference-packet manifest.
-53bc6fe5d1a2f4784b96b1cd1131b56fdc913cc6a4721ecb13dd0e019ca2b024  CD0-MERGE-RECEIPT.md
-fa4cf3ca7f9f54771e8ab1b3024889022028b1116fbba1e2730f6c713a8fb540  CD0-MAIN-READBACK-RECEIPT.md
-12848cdb5e6ead2497dce4fc47c557ced71e19f87d70e4d5188f25bfdc3eb1f1  CD0-POST-MERGE-VERIFICATION.md
-bbaa5ed8b28843e7429f51a979b12229e88f035f3749c236eca5e2cea29f256a  CD0-FREEZE-DECLARATION.md
