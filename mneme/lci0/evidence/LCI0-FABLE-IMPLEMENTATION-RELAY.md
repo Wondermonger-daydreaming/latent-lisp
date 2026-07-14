@@ -175,6 +175,7 @@ r3/final5 evidence remains at `041d537...`; protected nonregression raw files
 were refreshed at `e552346...`. Archive commit `37cdf0a...` preserves every
 stream, and cleanup commit `e21ef1a...` removes only recoverable loose copies
 from the final tip.
+The exact final-tip net inventory is `LCI0-CHANGED-FILES.txt` (123 paths).
 
 | Item | Status |
 | --- | --- |

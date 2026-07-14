@@ -48,6 +48,7 @@ Start with:
   loose-transcript cleanup;
 - `evidence/LCI0-PUBLICATION-READBACK-RECEIPT.md` for the non-force successor
   publication and object-level remote verification;
+- `evidence/LCI0-CHANGED-FILES.txt` for the exact final-tip net file inventory;
 - `evidence/LCI0-FINAL-VERIFICATION-TRANSCRIPT.md` for commands and counts;
 - `evidence/LCI0-IMPLEMENTATION-DIVERGENCES.md` for the append-only divergence
   record and ten authorial-return packets; and

@@ -253,8 +253,13 @@ Integration added the independent adapter/protocol validation,
 post-convergence harness and host probes, `run-unit-tests.lisp`, archive
 builder/tests, ten authorial packets, divergence/receipt documentation, and
 the exact/post raw artifact directories. Documentation, archive, checksum, and
-cleanup identities are recorded above. Publication/read-back remains the only
-repository-lifecycle item pending in this transcript.
+cleanup identities are recorded above. Publication/read-back is complete; only
+an external reviewer disposition remains pending.
+
+`LCI0-CHANGED-FILES.txt` records the exact 123-path final-tip net inventory
+against preimplementation commit `26ac543856e30c340cc2dd4359802442636f4b94`:
+122 paths mechanically emitted through publication-receipt source commit
+`a7811dbf598583604e3ea77d971ccb410f8439e9`, plus the inventory file itself.
 
 ## 9. Ten authorial returns
 
@@ -289,7 +294,7 @@ and generated detritus → non-force branch publication → remote read-back.
 | Reproducible evidence archive members/bytes/SHA-256 | 180 members; 9,573,988 bytes; `afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa` |
 | Deterministic archive rebuild comparison | PASS: two byte-identical builds; 179 declared payloads, zero missing/mismatched/extra after extraction |
 | Loose-file/detritus cleanup commit and deletion inventory | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb`; 63 archive-covered files, 232,093,546 loose bytes; exact paths in commit name-status |
-| Successor branch publication | PASS: atomic non-force creation of Common Lisp `2513c354...`, Python `db627cb6...`, and integration content `05d985bc...` |
+| Successor branch publication | PASS: atomic non-force creation of Common Lisp `2513c354...`, Python `db627cb6...`, and integration content `05d985bc...`; receipt/inventory follow-up is pushed and re-read in the final handoff |
 | Remote read-back | PASS: `ls-remote` and fetched refs exact; remote integration archive blob SHA-256 `afad708a...`; remote main unchanged at `26ac543...` |
 | Independent reviewer PASS | none |
 
