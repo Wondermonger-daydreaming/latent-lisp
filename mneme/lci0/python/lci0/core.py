@@ -5,6 +5,7 @@ from __future__ import annotations
 from contextvars import ContextVar
 from dataclasses import replace
 from functools import wraps
+import hashlib
 from typing import Any, Callable
 
 import cd0
@@ -929,9 +930,10 @@ def validate_basis(value: cd0.Datum, *, projection: bool = False, path: tuple[st
         # The frozen fixture calculus binds the only registered corpus
         # revisions to their slice/boundary coordinates.  This is a named
         # cross-field check, after recursive validation, rather than a lookup
-        # or an inference from display text.  InvalidBasis is authorized for
-        # the fail-closed result; the exact stage/path for this previously
-        # unvectored cross-product remains recorded as authorially unpinned.
+        # or an inference from display text.  LCI0-AC-006-CORPUS-BASIS-
+        # COHERENCE rules the exact tuple for the slice-boundary-coherent
+        # manifest/revision mismatch below; the remaining cross-products stay
+        # fail-closed InvalidBasis without an inferred inverse matrix.
         slice_expression = field_by_path(dataset_slice, "expression")
         slice_form = _id_tail(field_by_path(slice_expression, "form"))[-1]
         if slice_form == "predicate" and canonical_bytes(
@@ -981,11 +983,30 @@ def validate_basis(value: cd0.Datum, *, projection: bool = False, path: tuple[st
                 ),
             }
             if manifest_identity != expected_manifests.get(revision_identity):
+                # LCI0-AC-006-CORPUS-BASIS-COHERENCE: the ruled exact tuple
+                # for a manifest whose revision disagrees with the basis
+                # revision, after the declared cross-field order
+                # (mode-shape-exact, revision-belongs-to-corpus,
+                # slice-boundary-coherent).  Context carries both revision
+                # numbers, derived from the validated input.
+                basis_revision = field_by_path(revision_material, "object-version").value
+                manifest_revision_tail = manifest_identity[0][-1]
+                context: tuple[tuple[str, cd0.Datum], ...] = (
+                    ("fixture-field:basis-revision", cd0.integer(basis_revision)),
+                )
+                if manifest_revision_tail.isdigit():
+                    context += (
+                        (
+                            "fixture-field:semantic-boundary-manifest-revision",
+                            cd0.integer(int(manifest_revision_tail)),
+                        ),
+                    )
                 raise LCIFailure(
                     "invalid-input",
-                    "InvalidBasis",
-                    "basis",
-                    path + ("semantic-boundary", "expression", "manifest"),
+                    "BasisMismatch",
+                    "corpus-basis",
+                    path + ("semantic-boundary", "manifest", "revision"),
+                    context,
                 )
     _reject_unknown(value, allowed, stage="basis", prefix=path, namespace=LCI)
     return value
@@ -2312,6 +2333,29 @@ def _target_kind_coherence(target: cd0.Datum, target_kind: str) -> None:
                 ("boundaries", "fixture-field:completion-receipt-or-trace"),
             )
 
+    if target_kind == "derived":
+        # LCI0-AC-009-TARGET-BOUNDARY-COHERENCE: /0 carries no independent
+        # derivation-event premise set, so premise/derivation coupling cannot
+        # be adjudicated as mismatch.  The frozen fixture calculus pins
+        # exactly the registered derived premise configuration; any other
+        # premise ClaimId is the deferred novel path and fails closed with
+        # the ruled explicit-deferral tuple.  All independently pinned shape,
+        # type/version, ClaimId-coordinate, and scope checks are retained.
+        registered_premise_digests = {
+            # warrant-target.derived.one-equals-one /boundaries/premise-claim-ids/0
+            "15d40baab74591fb2ddc50932157b478527dfffc48fcb847158e0792ebea9398",
+        }
+        premises = field_by_path(boundaries, "premise-claim-ids")
+        for index, premise in enumerate(premises.items):
+            digest = hashlib.sha256(canonical_bytes(premise)).hexdigest()
+            if digest not in registered_premise_digests:
+                raise LCIFailure(
+                    "unsupported-fixture-behavior",
+                    "LCI0-UNSUPPORTED-FIXTURE-BEHAVIOR",
+                    "fixture",
+                    ("boundaries", "fixture-field:premise-claim-ids", str(index)),
+                )
+
     if target_kind == "translated":
         target_frame = field_by_path(boundaries, "target-interpretation-frame")
         if canonical_bytes(target_frame) != canonical_bytes(field_by_path(location, "interpretation-frame")):
@@ -2367,6 +2411,9 @@ def _require_target_coverage(
         _coverage_supports_scope(coverage, claimed_scope)
         and _coverage_supports_scope(coverage, candidate_scope)
     ):
+        # LCI0-AC-003-E5-COVERAGE-CONTEXT: the failure context carries only
+        # input-derived data.  The previously emitted actual-coverage-scope
+        # datum is removed per the ruled input-derived context document.
         raise LCIFailure(
             "target-mismatch",
             "ScopeNarrowingCoverageInsufficient",
@@ -2374,7 +2421,6 @@ def _require_target_coverage(
             ("boundaries", "fixture-field:coverage-scope"),
             (
                 ("fixture-field:target-kind", field_by_path(target, "target-kind")),
-                ("fixture-field:actual-coverage-scope", coverage),
                 ("fixture-field:required-candidate-scope", candidate_scope),
             ),
         )
@@ -2407,6 +2453,24 @@ def match_target(target: cd0.Datum, candidate: cd0.Datum) -> RelationResult:
                 raise LCIFailure("target-mismatch", code, "target-relation", ("claim", "location", coordinate))
         left_scope = field_by_path(left_location, "scope")
         right_scope = field_by_path(right_location, "scope")
+        # LCI0-AC-001-N012-MATCHER: the matcher-level symbolic guard.  Inspect
+        # the candidate scope at /claim/location/scope before consuming any
+        # frozen relation row and before any policy consultation.  A symbolic
+        # candidate scope prevents proof of the required coverage proposition,
+        # so the relation is undetermined; mismatch is returned only when the
+        # frozen relation rules prove mismatch.  Both frozen scope-table rows
+        # (universal->symbolic wider, symbolic->universal narrower) remain
+        # authoritative for the direct scope engine below.
+        candidate_scope_form = _id_tail(
+            field_by_path(field_by_path(right_scope, "expression"), "form")
+        )[-1]
+        if candidate_scope_form == "symbolic-predicate":
+            raise LCIFailure(
+                "relation-undetermined",
+                "ScopeRelationUnknown",
+                "target-relation",
+                ("claim", "location", "scope"),
+            )
         try:
             relation = scope_relation(left_scope, right_scope)
         except LCIFailure as exc:
@@ -2495,23 +2559,22 @@ def evaluate_policy(
         "policy-evaluation": 168,
     }
 
+    # LCI0-AC-005-POLICY-EVALUATION-ORDER: the ruled total evaluation order is
+    # target-relation floor, target kind, boundary coherence, represented
+    # loss, inherited/external treatment, freshness, scope narrowing, final
+    # disposition.  Represented loss and external trust are evaluated before
+    # freshness (the all-at-once stale/loss/trust witness rejects represented
+    # loss first), and the untrusted-external refusal uses the registered
+    # decision Identifier spelling reject-external-principal.
     if policy_name == "policy-a":
         if target_kind not in policy_a_kinds:
             return PolicyDecision(False, "reject-target-kind")
         if not boundary_coherent:
             return PolicyDecision(False, "reject-boundary-coherence")
-        threshold = policy_a_kinds[target_kind]
-        stale = threshold is not None and age > threshold
-        if stale and represented_loss is not None:
-            raise LCIFailure(
-                "relation-undetermined",
-                "AdmissibilityUndetermined",
-                "admissibility",
-                ("policy-evaluation-order",),
-            )
         if represented_loss is not None:
             return PolicyDecision(False, "reject-represented-loss")
-        if stale:
+        threshold = policy_a_kinds[target_kind]
+        if threshold is not None and age > threshold:
             return PolicyDecision(False, "reject-stale")
         if relation.relation == "supports-by-scope-narrowing":
             return PolicyDecision(True, "accept-scope-narrowed")
@@ -2522,32 +2585,14 @@ def evaluate_policy(
     if not boundary_coherent:
         return PolicyDecision(False, "reject-boundary-coherence")
     limited_testimony = target_kind in {"reported", "inherited", "translated", "policy-evaluation"}
-    loss_rejected = represented_loss in {"identity-bearing-loss", "unknown-consequence"}
-    external_untrusted = target_kind == "externally-attested" and not trusted_external
-    threshold = policy_b_kinds[target_kind]
-    stale = threshold is not None and age > threshold
-    if stale and (loss_rejected or external_untrusted):
-        raise LCIFailure(
-            "relation-undetermined",
-            "AdmissibilityUndetermined",
-            "admissibility",
-            ("policy-evaluation-order",),
-        )
-    if loss_rejected:
+    if represented_loss in {"identity-bearing-loss", "unknown-consequence"}:
         return PolicyDecision(False, "reject-represented-loss")
     if represented_loss in {"authority-or-custody-loss", "semantic-translation-loss"}:
         limited_testimony = True
-    if external_untrusted:
-        # Package prose and the frozen policy record disagree on the exact
-        # decision vocabulary for this refusal.  Preserve the no-support
-        # boundary without silently selecting either spelling.
-        raise LCIFailure(
-            "relation-undetermined",
-            "AdmissibilityUndetermined",
-            "admissibility",
-            ("external-principal-decision-vocabulary",),
-        )
-    if stale:
+    if target_kind == "externally-attested" and not trusted_external:
+        return PolicyDecision(False, "reject-external-principal")
+    threshold = policy_b_kinds[target_kind]
+    if threshold is not None and age > threshold:
         return PolicyDecision(False, "reject-stale")
     if limited_testimony:
         return PolicyDecision(True, "accept-limited-testimony")

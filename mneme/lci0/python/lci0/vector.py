@@ -945,21 +945,13 @@ def _evaluate_fixture_policy(
 
     if result.relation not in spec["accepted"]:
         raise LCIFailure("relation-undetermined", "AdmissibilityUndetermined", "admissibility", ("target-relation",))
-    if result.relation == "supports-by-scope-narrowing" and not spec["scope-narrowing"]:
-        decision = _admissibility_decision(
-            policy,
-            target_kind,
-            relation_value,
-            query_time,
-            freshness_value,
-            "reject-scope-narrowing",
-            False,
-            ("target-relation-success", "scope-narrowing-rejected"),
-            "rejected",
-            True,
-        )
-        return decision, False
 
+    # LCI0-AC-005-POLICY-EVALUATION-ORDER: the ruled total order is
+    # target-relation floor, target kind, boundary coherence, represented
+    # loss, inherited/external treatment, freshness, scope narrowing, final
+    # disposition.  The all-at-once stale/loss/trust witness rejects
+    # represented loss first, and the untrusted-external refusal carries the
+    # registered decision Identifier spelling reject-external-principal.
     represented_loss = field_by_path(boundaries, "represented-loss", None)
     loss_disposition: str | None = None
     if represented_loss is not None:
@@ -968,20 +960,6 @@ def _evaluate_fixture_policy(
         loss_disposition = spec["loss-rules"].get(consequence)
         if loss_disposition is None:
             raise FixtureAuthorityGap("unsupported fixture policy")
-
-    trusted_external = True
-    if target_kind == "externally-attested":
-        principal = field_by_path(boundaries, "external-principal")
-        trusted_external = canonical_bytes(principal) in spec["trusted"]
-
-    stale = freshness_mode == "maximum-age" and age > threshold
-    if stale and (represented_loss is not None or not trusted_external):
-        raise LCIFailure(
-            "relation-undetermined",
-            "AdmissibilityUndetermined",
-            "admissibility",
-            ("policy-evaluation-order",),
-        )
     if loss_disposition == "reject":
         decision = _admissibility_decision(
             policy,
@@ -996,14 +974,27 @@ def _evaluate_fixture_policy(
             True,
         )
         return decision, False
-    if target_kind == "externally-attested" and disposition == "direct-if-trusted-principal" and not trusted_external:
-        raise LCIFailure(
-            "relation-undetermined",
-            "AdmissibilityUndetermined",
-            "admissibility",
-            ("external-principal-decision-vocabulary",),
-        )
 
+    trusted_external = True
+    if target_kind == "externally-attested":
+        principal = field_by_path(boundaries, "external-principal")
+        trusted_external = canonical_bytes(principal) in spec["trusted"]
+    if target_kind == "externally-attested" and disposition == "direct-if-trusted-principal" and not trusted_external:
+        decision = _admissibility_decision(
+            policy,
+            target_kind,
+            relation_value,
+            query_time,
+            freshness_value,
+            "reject-external-principal",
+            False,
+            ("target-relation-success", "kind-permitted", "external-principal-untrusted"),
+            "rejected",
+            True,
+        )
+        return decision, False
+
+    stale = freshness_mode == "maximum-age" and age > threshold
     if freshness_mode == "maximum-age":
         freshness_value = _freshness("maximum-age", threshold, age, not stale)
     elif freshness_mode == "not-applicable":
@@ -1020,6 +1011,21 @@ def _evaluate_fixture_policy(
             "reject-stale",
             False,
             ("target-relation-success", "kind-permitted", "age-exceeds-threshold"),
+            "rejected",
+            True,
+        )
+        return decision, False
+
+    if result.relation == "supports-by-scope-narrowing" and not spec["scope-narrowing"]:
+        decision = _admissibility_decision(
+            policy,
+            target_kind,
+            relation_value,
+            query_time,
+            freshness_value,
+            "reject-scope-narrowing",
+            False,
+            ("target-relation-success", "scope-narrowing-rejected"),
             "rejected",
             True,
         )

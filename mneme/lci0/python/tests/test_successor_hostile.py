@@ -622,7 +622,20 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
                 "claim": field_by_path(untrusted, "claim"),
             },
         )
-        self.assertEqual(untrusted_outcome.failure.code, "AdmissibilityUndetermined")
+        # LCI0-AC-005-POLICY-EVALUATION-ORDER closed the decision-vocabulary
+        # gap: the untrusted external principal is now a deterministic
+        # refusal with the registered spelling reject-external-principal
+        # under Policy-B, and a target-kind refusal under Policy-A.
+        self.assertIsNone(untrusted_outcome.failure)
+        self.assertEqual(
+            field_by_path(untrusted_outcome.outputs["policy-a-decision"], "decision").path[-1],
+            "reject-target-kind",
+        )
+        self.assertEqual(
+            field_by_path(untrusted_outcome.outputs["policy-b-decision"], "decision").path[-1],
+            "reject-external-principal",
+        )
+        self.assertFalse(untrusted_outcome.outputs["admissibility-differs"])
 
         inherited = fixture_datum("warrant-target.inherited.file-alpha")
         loss_outcome = vector_module.execute(
@@ -1063,15 +1076,18 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
         self.assertFalse(decision.accepted)
         self.assertEqual(decision.code, "reject-represented-loss")
 
-        with self.assertRaises(LCIFailure) as caught:
-            evaluate_policy(
-                "policy-b",
-                narrowed,
-                target_kind="externally-attested",
-                age=0,
-                trusted_external=False,
-            )
-        self.assertEqual(caught.exception.code, "AdmissibilityUndetermined")
+        # LCI0-AC-005-POLICY-EVALUATION-ORDER: the untrusted external
+        # principal refusal is deterministic and precedes freshness, with
+        # the registered decision spelling reject-external-principal.
+        decision = evaluate_policy(
+            "policy-b",
+            narrowed,
+            target_kind="externally-attested",
+            age=0,
+            trusted_external=False,
+        )
+        self.assertFalse(decision.accepted)
+        self.assertEqual(decision.code, "reject-external-principal")
 
         decision = evaluate_policy(
             "policy-b",
