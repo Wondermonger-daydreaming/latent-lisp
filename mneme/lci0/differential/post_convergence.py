@@ -1808,7 +1808,7 @@ def main() -> int:
         ),
         (
             "suite-common-lisp-unit",
-            ["sbcl", "--noinform", "--disable-debugger", "--script", str(root / "mneme/lci0/common-lisp/run-tests.lisp")],
+            ["sbcl", "--noinform", "--disable-debugger", "--script", str(root / "mneme/lci0/common-lisp/run-unit-tests.lisp")],
             {"LC_ALL": "C", "LANG": "C"},
         ),
     )
