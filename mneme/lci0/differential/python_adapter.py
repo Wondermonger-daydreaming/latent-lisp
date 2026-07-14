@@ -360,7 +360,15 @@ def run_request(raw: Any) -> dict[str, Any]:
         if scalar(envelope["fixture-profile-version"]) != FIXTURE_PROFILE_VERSION:
             raise ProtocolError("EmbeddedFixtureProfileMismatch", ("input_canonical_hex",))
         vector_id = scalar(envelope["vector-id"])
-        payload = record_to_mapping(envelope["payload"])
+        try:
+            payload = record_to_mapping(envelope["payload"])
+        except LCIFailure as failure:
+            actual = _failure_datum(failure, vector_id)
+            response["vector_id"] = vector_id
+            response["semantic_status"] = "failure"
+            response["failure"] = _failure_object(failure)
+            response["actual_canonical_cd0_hex"] = canonical_bytes(actual).hex()
+            return response
         outcome = execute(operation, payload, vector_id=vector_id)
         response["vector_id"] = vector_id
         if outcome.failure is not None:

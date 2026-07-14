@@ -12,7 +12,9 @@ import cd0
 import python_adapter as subject
 from protocol import request
 from lci0.model import LCIFailure
+from lci0.package import iter_vectors
 from lci0.vector import record_to_mapping
+from response_validation import canonical_report_matches
 
 
 class FailureEncodingTests(unittest.TestCase):
@@ -42,6 +44,50 @@ class FailureEncodingTests(unittest.TestCase):
 
 
 class AdapterProtocolTests(unittest.TestCase):
+    def test_payload_namespace_failure_is_a_closed_operation_response(self):
+        row = next(iter(iter_vectors()))
+        datum = cd0.decode_exact(
+            bytes.fromhex(row["inputs"]["canonical_cd0_hex"]),
+            subject.CD0_BUDGET,
+        )
+        envelope = record_to_mapping(datum)
+        payload = envelope["payload"]
+        first_key, first_value = payload.fields[0]
+        malformed_payload = cd0.record(
+            (
+                (cd0.identifier(("foreign", "namespace"), first_key.path), first_value)
+                if key == first_key
+                else (key, value)
+            )
+            for key, value in payload.fields
+        )
+        altered = cd0.record(
+            (key, malformed_payload if key.path == ("payload",) else value)
+            for key, value in datum.fields
+        )
+
+        response = subject.run_request(
+            request(
+                "property:foreign-payload-field",
+                row["operation"],
+                subject.canonical_bytes(altered).hex(),
+            )
+        )
+
+        self.assertEqual(response["protocol_status"], "success")
+        self.assertEqual(response["vector_id"], row["vector_id"])
+        self.assertEqual(response["semantic_status"], "failure")
+        self.assertEqual(
+            response["failure"],
+            {
+                "category": "invalid-input",
+                "code": "UnknownField",
+                "stage": "fixture-vector-input",
+                "path": [],
+            },
+        )
+        self.assertTrue(canonical_report_matches(response))
+
     def test_echoes_fixture_profile_on_valid_requests(self):
         encoded = subject.canonical_bytes(cd0.unit()).hex()
         response = subject.run_request(
