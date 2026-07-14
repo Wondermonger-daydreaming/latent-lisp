@@ -617,6 +617,32 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
             output_boolean=("live-warrants-created", False),
         )
     )
+
+    # Source artifacts are explicit provenance.  A valid replacement must be
+    # retained in MigrationResult/lineage without changing the reconstructed
+    # ClaimId or consulting a fixture-name/revision oracle.
+    migration_source = fixture_datum("legacy-source.time-100")
+    migration_source_v2 = replace_record_field(
+        migration_source,
+        "source-artifact",
+        fixture_datum("stable-ref.artifact.source.v1.2"),
+    )
+    for suffix, source in (("v1-1", migration_source), ("v1-2", migration_source_v2)):
+        operation, datum = _custom_vector(
+            rows,
+            "LCI0-E9-INERT-PREDECESSOR",
+            "LCI0-PROPERTY-MIGRATION-SOURCE-PROVENANCE",
+            _record({"source": source}),
+        )
+        cases.append(
+            PropertyCase(
+                f"migration-source-{suffix}",
+                "migration-source-provenance",
+                operation,
+                datum,
+                "success",
+            )
+        )
     operation, datum = _custom_vector(
         rows, "LCI0-E9-LIVE-RESTORATION", "LCI0-PROPERTY-LIVE-RESTORATION",
         _record({"source": fixture_datum("legacy-source.attempt-live-restoration")}),
@@ -699,6 +725,14 @@ def _result_output_boolean(actual_hex: str, name: str) -> bool:
     return value.value
 
 
+def _result_output_datum(actual_hex: str, name: str) -> cd0.Datum:
+    datum = cd0.decode_exact(bytes.fromhex(actual_hex), CD0_BUDGET)
+    outputs = _direct_field(datum, "outputs")
+    value = _direct_field(outputs, name) if outputs is not None else None
+    _require(value is not None, f"result output {name} is absent")
+    return value
+
+
 def compare_property_results(
     cases: Sequence[PropertyCase],
     implementation_runs: Mapping[str, Mapping[str, Mapping[str, Any]]],
@@ -775,6 +809,63 @@ def compare_property_results(
     for name, values in distinct_groups.items():
         if any(type(value) is not str for value in values) or len(set(values)) != len(values):
             failures.append({"group": name, "reason": "metamorphic-not-distinct", "cases": len(values), "unique": len(set(map(str, values)))})
+
+    # Preserve explicit migration provenance while proving that it is not a
+    # reconstructed semantic ClaimId coordinate.
+    migration_cases = [
+        case for case in cases if case.family == "migration-source-provenance"
+    ]
+    _require(len(migration_cases) == 2, "migration source provenance pair missing")
+    for run_name, responses in implementation_runs.items():
+        claim_ids: list[bytes] = []
+        result_sources: list[bytes] = []
+        for case in migration_cases:
+            response = responses[f"property:{case.case_id}"]
+            actual_hex = response.get("actual_canonical_cd0_hex")
+            try:
+                _require(type(actual_hex) is str, "migration result document absent")
+                result = _result_output_datum(actual_hex, "migration-result")
+                result_source = _direct_field(result, "source")
+                claim_id = _direct_field(result, "claim-id")
+                wrapper = _field(_field(case.datum, "payload"), "source")
+                explicit_source = _field(wrapper, "source-artifact")
+                _require(result_source is not None, "migration result source absent")
+                _require(claim_id is not None, "migration result ClaimId absent")
+                if canonical_bytes(result_source) != canonical_bytes(explicit_source):
+                    failures.append(
+                        {
+                            "case_id": case.case_id,
+                            "run": run_name,
+                            "reason": "migration-source-not-propagated",
+                        }
+                    )
+                claim_ids.append(canonical_bytes(claim_id))
+                result_sources.append(canonical_bytes(result_source))
+            except Exception as exc:  # record host type, never prose
+                failures.append(
+                    {
+                        "case_id": case.case_id,
+                        "run": run_name,
+                        "reason": "migration-provenance-decode",
+                        "exception_type": type(exc).__name__,
+                    }
+                )
+        if len(claim_ids) == 2 and len(set(claim_ids)) != 1:
+            failures.append(
+                {
+                    "family": "migration-source-provenance",
+                    "run": run_name,
+                    "reason": "source-artifact-changed-claim-id",
+                }
+            )
+        if len(result_sources) == 2 and len(set(result_sources)) != 2:
+            failures.append(
+                {
+                    "family": "migration-source-provenance",
+                    "run": run_name,
+                    "reason": "distinct-source-artifacts-collapsed",
+                }
+            )
 
     return {
         "counts": dict(sorted(counts.items())),

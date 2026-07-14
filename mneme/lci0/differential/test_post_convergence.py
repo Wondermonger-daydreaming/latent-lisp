@@ -99,7 +99,7 @@ class PropertyConstructionTests(unittest.TestCase):
             [case.manifest_row() for case in self.first],
             [case.manifest_row() for case in self.second],
         )
-        self.assertEqual(len(self.first), 94)
+        self.assertEqual(len(self.first), 96)
 
     def test_case_ids_are_closed_unique_and_cover_required_families(self):
         ids = [case.case_id for case in self.first]
@@ -112,7 +112,8 @@ class PropertyConstructionTests(unittest.TestCase):
                 "rational-boundary", "identifier-boundary",
                 "target-schema-boundary", "target-unknown-boundary",
                 "e6-failure-order", "migration-grammar",
-                "migration-inertness", "resource-boundary",
+                "migration-inertness", "migration-source-provenance",
+                "resource-boundary",
             }
             <= families
         )
