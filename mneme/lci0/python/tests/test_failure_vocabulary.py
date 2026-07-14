@@ -179,6 +179,103 @@ class FailureVocabularyTests(unittest.TestCase):
         self.assertNotIn("authority_gap", response)
         self.assertNotIn("failure", response)
 
+    def test_payload_namespace_failure_remains_a_closed_operation_response(self):
+        row = self.rows[0]
+        datum = cd0.decode_exact(
+            bytes.fromhex(row["inputs"]["canonical_cd0_hex"]),
+            CD0_BUDGET,
+        )
+        envelope = {
+            key.path[0]: item
+            for key, item in datum.fields
+        }
+        payload = envelope["payload"]
+        first_key, first_value = payload.fields[0]
+        malformed_payload = cd0.record(
+            (
+                (cd0.identifier(("foreign", "namespace"), first_key.path), first_value)
+                if key == first_key
+                else (key, value)
+            )
+            for key, value in payload.fields
+        )
+        altered = _replace_field(datum, "payload", malformed_payload)
+
+        response = run_request(
+            request(
+                "hostile:foreign-payload-field",
+                row["operation"],
+                canonical_bytes(altered).hex(),
+            )
+        )
+
+        self.assertEqual(
+            set(response),
+            {
+                "protocol",
+                "request_id",
+                "operation",
+                "fixture_profile_version",
+                "implementation",
+                "implementation_seed_commit",
+                "implementation_seed_tree",
+                "protocol_status",
+                "input_reencoded_canonical_hex",
+                "vector_id",
+                "status",
+                "failure",
+            },
+        )
+        self.assertEqual(response["protocol_status"], "success")
+        self.assertEqual(response["vector_id"], row["vector_id"])
+        self.assertEqual(response["status"], "failure")
+        self.assertEqual(
+            response["failure"],
+            {
+                "category": "invalid-input",
+                "code": "UnknownField",
+                "stage": "fixture-vector-input",
+                "path": [],
+                "context": {},
+            },
+        )
+        self.assertNotIn("protocol_failure", response)
+
+    def test_outer_envelope_namespace_failure_remains_a_protocol_failure(self):
+        row = self.rows[0]
+        datum = cd0.decode_exact(
+            bytes.fromhex(row["inputs"]["canonical_cd0_hex"]),
+            CD0_BUDGET,
+        )
+        first_key, first_value = datum.fields[0]
+        malformed_envelope = cd0.record(
+            (
+                (cd0.identifier(("foreign", "namespace"), first_key.path), first_value)
+                if key == first_key
+                else (key, value)
+            )
+            for key, value in datum.fields
+        )
+
+        response = run_request(
+            request(
+                "hostile:foreign-envelope-field",
+                row["operation"],
+                canonical_bytes(malformed_envelope).hex(),
+            )
+        )
+
+        self.assertEqual(response["protocol_status"], "failure")
+        self.assertEqual(
+            response["protocol_failure"],
+            {
+                "code": "InvalidFixtureVectorEnvelope",
+                "path": ["input_canonical_hex"],
+            },
+        )
+        self.assertNotIn("vector_id", response)
+        self.assertNotIn("failure", response)
+
 
 if __name__ == "__main__":
     unittest.main()
