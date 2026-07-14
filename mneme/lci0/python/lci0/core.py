@@ -484,14 +484,18 @@ def validate_stable_ref(value: cd0.Datum, *, path: tuple[str, ...] = ()) -> cd0.
         namespace=FIXTURE_FIELD,
         check_unknown=False,
     )
-    _require_kind(
-        material,
-        "fixture-stable-material",
-        "InvalidStableReference",
-        "stable-reference",
-        path + ("material",),
-        namespace=FIXTURE,
-    )
+    material_kind = field_by_path(material, "kind")
+    if (
+        type(material_kind) is not cd0.Identifier
+        or material_kind.namespace != FIXTURE
+        or material_kind.path != ("tag", "fixture-stable-material")
+    ):
+        raise LCIFailure(
+            "reference-refusal",
+            "InvalidStableReference",
+            "stable-reference",
+            path + ("material", "kind"),
+        )
     _integer_zero(
         field_by_path(material, "schema-version"),
         "RecursiveUnsupportedNestedVersion",
@@ -503,8 +507,13 @@ def validate_stable_ref(value: cd0.Datum, *, path: tuple[str, ...] = ()) -> cd0.
         raise LCIFailure("reference-refusal", "InvalidStableReference", "stable-reference", path + ("material", "object-id"))
     lowered = tuple(segment.casefold() for segment in object_id.path)
     aliases = {"latest", "main", "display-model", "filename", "file.txt", "mutable-url"}
-    if any(segment in aliases for segment in lowered) or any(
-        segment.startswith("http://") or segment.startswith("https://") for segment in lowered
+    if (
+        any(segment in aliases for segment in lowered)
+        or any(
+            segment.startswith("http://") or segment.startswith("https://")
+            for segment in lowered
+        )
+        or any("::" in segment for segment in object_id.path)
     ):
         failure_path = path + ("material", "fixture-field:object-id")
         raise LCIFailure("reference-refusal", "UnresolvedAlias", "stable-reference", failure_path)
@@ -2181,7 +2190,7 @@ def validate_warrant_target(value: cd0.Datum) -> cd0.Datum:
         or type(object_version) is not cd0.Integer
         or object_version.value != 0
     ):
-        raise LCIFailure("invalid-input", "TargetSchemaKindMismatch", "target-shape", ("target-schema",))
+        raise LCIFailure("invalid-input", "TargetSchemaKindMismatch", "target-schema", ("target-schema",))
     return value
 
 
