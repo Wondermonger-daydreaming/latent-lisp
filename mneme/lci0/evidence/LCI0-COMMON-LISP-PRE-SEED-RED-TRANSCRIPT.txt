@@ -1,0 +1,25 @@
+Command:
+  sbcl --noinform --disable-debugger --script mneme/lci0/common-lisp/run-pre-seed-red.lisp
+
+Exit status: 1
+
+RED   01-neutral-base-reference-and-bytes -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   02-one-identity-coordinate-changes-envelope -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   03-nonidentity-metadata-preserves-envelope -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   04-undetermined-hard-inadmissible-policy-not-consulted -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   05-nonmonotone-narrowing-not-declared -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   06-narrowing-coverage-insufficient -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   07-temporal-containment-not-direct-support -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   08-digest-does-not-replace-envelope -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   09-mutable-aliases-rejected -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   10-unknown-nested-versions-fail-closed -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   11-proposition-location-placement-disagreement -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   12-legacy-fingerprint-collision-does-not-collapse-claim-id -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   13-migrated-warrant-remains-inert -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   14-unknown-fields-fail-closed -- The function LISP-PLUS-LCI0:RUN-VECTOR-SELECTION is undefined.
+RED   15-source-mutation-cannot-change-claim-id-bytes -- The function LISP-PLUS-LCI0:RUN-MUTATION-SNAPSHOT-TEST is undefined.
+LCI0 PRE-SEED RISK SUMMARY: 0 green, 15 red, 15 total
+
+This is the required pre-implementation red baseline. Line wrapping in the
+terminal was collapsed only for archival readability; test names, conditions,
+summary, command, and exit status are unchanged.

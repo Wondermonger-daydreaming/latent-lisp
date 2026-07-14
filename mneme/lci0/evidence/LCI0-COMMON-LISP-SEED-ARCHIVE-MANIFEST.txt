@@ -1,0 +1,43 @@
+LCI/0 Common Lisp seed evidence archive manifest
+Date: 2026-07-14
+Archive: LCI0-COMMON-LISP-SEED-EVIDENCE-2026-07-14.tar.gz
+
+Prompt context
+==============
+
+Implement the independently seeded Common Lisp half of Lisp+ Located Claim
+Identity /0 under the effective Fable PASS authorization, consume the shared
+frozen fixture package, preserve CD/0 and v1 behavior, and produce auditable
+seed evidence before any cross-reading of the Python seed.
+
+Authorship and provenance
+=========================
+
+The implementation and seed-specific evidence were produced by the Codex
+Common Lisp seed agent in the repository worktree
+/home/gauss/Codex-Lab/latent-lisp-lci0-common-lisp. Normative specifications,
+fixtures, CD/0 behavior, and Fable receipts are externally supplied frozen
+inputs and are not represented as Codex-authored material.
+
+Factual standing
+================
+
+Source files are implementation artifacts. Test transcripts and receipts state
+locally observed command results. Normative claims are bounded to the identified
+frozen artifacts. This archive is evidence for an independently seeded
+implementation under procedural -- not OS-enforced -- isolation; it does not
+claim clean-room independence, production warrant authority, or independent
+reviewer approval.
+
+Archive members
+===============
+
+mneme/lci0/common-lisp/
+mneme/lci0/evidence/LCI0-COMMON-LISP-PRE-SEED-RED-TRANSCRIPT.txt
+mneme/lci0/evidence/LCI0-COMMON-LISP-INSPECTED-FILES.txt
+mneme/lci0/evidence/LCI0-COMMON-LISP-SEED-VERIFICATION-TRANSCRIPT.txt
+mneme/lci0/evidence/LCI0-COMMON-LISP-SEED-ARCHIVE-MANIFEST.txt
+
+The archive deliberately excludes its own checksum manifest and the seed
+receipt, preventing self-referential identities. Those companion files identify
+and verify the completed archive from outside it.

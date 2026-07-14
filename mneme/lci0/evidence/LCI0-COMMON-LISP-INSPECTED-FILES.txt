@@ -1,0 +1,97 @@
+LCI/0 Common Lisp seed inspected-file inventory
+Date: 2026-07-14
+Branch: codex/lci0-common-lisp
+Pre-seed base commit: ab353b4b7f30d5e46323d274862e6c1212ebf514
+Pre-seed base tree: 26d0714ba873ce4a44a978f7acf98d21fd3fc176
+
+Standing of this inventory
+==========================
+
+This is the complete inspection boundary recorded before the first Common Lisp
+seed commit. The shared preflight was completed before this language worktree
+was populated with implementation source. The seed subsequently inspected the
+listed shared normative infrastructure and frozen Common Lisp interfaces while
+developing and verifying the implementation. Machine-readable package members
+were consumed as data; legacy v1 source was never loaded by the migration code.
+
+The Common Lisp seed did not inspect any Python LCI/0 implementation source or
+the Python seed worktree before its first seed commit. Isolation was procedural,
+not OS-enforced. Existing frozen CD/0 Python files named in the shared preflight
+inventory are normative reference artifacts, not Python LCI/0 seed source.
+
+Shared preflight: read and identity-verified in full before seed implementation
+=============================================================================
+
+mneme/lci0/spec/LOCATED-CLAIM-IDENTITY-SPEC.md
+mneme/lci0/spec/LCI0-POST-REVIEW-RULING.md
+mneme/lci0/spec/LOCATED-CLAIM-IDENTITY-SPEC-ERRATA-0.1.md
+mneme/lci0/spec/LCI0-NORMATIVE-FIXTURE-PACKAGE-SPEC.md
+mneme/lci0/fixtures/LCI0-FIXTURE-PACKAGE-MANIFEST.md
+mneme/lci0/fixtures/LCI0-FIXTURE-SHA256SUMS.txt
+mneme/lci0/spec/FABLE-LCI0-CONSTITUTIONAL-REVIEW.md
+mneme/lci0/spec/FABLE-LCI0-ISSUE-REGISTER.md
+mneme/lci0/spec/FABLE-LCI0-IMPLEMENTATION-READINESS-RELAY.md
+mneme/lci0/spec/FABLE-LCI0-ERRATA-0.1-FIXTURE-PACKAGE-PASS-RECEIPT.md
+mneme/lci0/fixtures/archives/FABLE-LCI0-PASS-RECEIPT-PACKET-2026-07-14.zip
+mneme/lci0/fixtures/archives/lci0-errata-0.1-fixture-package-2026-07-14.zip
+mneme/lci0/evidence/LCI0-PREFLIGHT-RECEIPT.md
+mneme/lci0/evidence/LCI0-CD0-FROZEN-INVENTORY.md
+mneme/lci0/evidence/LCI0-IMPLEMENTATION-DIVERGENCES.md
+mneme/lci0/evidence/LCI0-IMPLEMENTATION-LEDGER.md
+mneme/lci0/README.md
+
+The fixture archive members LCI0-FIXTURE-REGISTRY.json and
+LCI0-FIXTURE-VECTORS.jsonl were read completely and machine-parsed from the
+verified archive through the extracted, read-only seed paths
+/tmp/lci0-seed-fixtures-20260714/LCI0-FIXTURE-REGISTRY.json and
+/tmp/lci0-seed-fixtures-20260714/LCI0-FIXTURE-VECTORS.jsonl. Their authoritative
+SHA-256 identities are recorded in the seed receipt.
+
+Frozen CD/0 corpus read in full by shared preflight
+===================================================
+
+canonical-datum/common-lisp/README.md
+canonical-datum/common-lisp/cd0.lisp
+canonical-datum/common-lisp/lisp-plus-cd0.asd
+canonical-datum/common-lisp/package.lisp
+canonical-datum/common-lisp/run-tests.lisp
+canonical-datum/common-lisp/tests.lisp
+canonical-datum/python/README.md
+canonical-datum/python/cd0/__init__.py
+canonical-datum/python/tests/test_cd0.py
+canonical-datum/integration/README.md
+canonical-datum/integration/common_lisp_adapter.lisp
+canonical-datum/integration/python_adapter.py
+canonical-datum/integration/run_differential.py
+canonical-datum/integration/cases/cd0-integration-regressions.json
+canonical-datum/schema/cd0-fixtures.schema.json
+canonical-datum/vectors/cd0-budgets.json
+canonical-datum/vectors/cd0-distinct-pairs.json
+canonical-datum/vectors/cd0-errata-0.1.json
+canonical-datum/vectors/cd0-negative.jsonl
+canonical-datum/vectors/cd0-positive.jsonl
+
+Direct Common Lisp seed source/interface inspection
+===================================================
+
+canonical-datum/common-lisp/README.md
+canonical-datum/common-lisp/package.lisp
+canonical-datum/common-lisp/cd0.lisp
+canonical-datum/common-lisp/tests.lisp
+canonical-datum/common-lisp/run-tests.lisp
+canonical-datum/common-lisp/lisp-plus-cd0.asd
+mneme/lci0/shared/fixture_package.py
+mneme/lci0/shared/test_fixture_package.py
+mneme/verify-all.sh
+
+Existing v1 suites were invoked only through mneme/verify-all.sh as a frozen
+nonregression boundary. The LCI/0 migration implementation parses bounded
+fixture bytes as inert data and performs no current registry, package, symbol,
+procedure, or runtime lookup.
+
+Files explicitly excluded before the seed commit
+================================================
+
+Any mneme/lci0/python implementation file.
+Any file in the Python seed worktree.
+Any implementation result produced by the Python seed.
