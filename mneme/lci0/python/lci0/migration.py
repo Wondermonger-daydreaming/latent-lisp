@@ -37,7 +37,13 @@ from .core import (
     validate_scope,
     validate_stable_ref,
 )
-from .model import LCIFailure, scalar
+from .model import (
+    AUTHORIZED_LCI_FAILURE_CODES,
+    FixtureAuthorityGap,
+    FixtureIntegrityError,
+    LCIFailure,
+    scalar,
+)
 from .package import fixture_datum
 
 
@@ -73,7 +79,7 @@ AS_OF_ROLE_MAP = {
 def _registry_package_symbol_map() -> dict[tuple[str, str, str], tuple[str, ...]]:
     rows = fixture_datum("migration.package-symbol-map.0")
     if type(rows) is not cd0.Sequence or len(rows.items) != 12:
-        raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+        raise FixtureIntegrityError("frozen package-symbol map registry mismatch")
     result: dict[tuple[str, str, str], tuple[str, ...]] = {}
     for index, row in enumerate(rows.items):
         fields = _field_map(
@@ -96,7 +102,7 @@ def _registry_package_symbol_map() -> dict[tuple[str, str, str], tuple[str, ...]
             or type(destination) is not cd0.Identifier
             or destination.namespace != FIXTURE
         ):
-            raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+            raise FixtureIntegrityError("frozen package-symbol map registry mismatch")
         _reject_unknown(
             row,
             ("source-package", "source-symbol", "semantic-role", "destination-identifier"),
@@ -106,10 +112,10 @@ def _registry_package_symbol_map() -> dict[tuple[str, str, str], tuple[str, ...]
         )
         key = (source_package.value, source_symbol.value, role.path[1])
         if key in result:
-            raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+            raise FixtureIntegrityError("duplicate frozen package-symbol map entry")
         result[key] = destination.path
     if result != PACKAGE_SYMBOL_MAP:
-        raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+        raise FixtureIntegrityError("frozen package-symbol map registry mismatch")
     return result
 
 
@@ -117,7 +123,7 @@ def _registry_package_symbol_map() -> dict[tuple[str, str, str], tuple[str, ...]
 def _registry_as_of_role_map() -> dict[str, str | None]:
     rows = fixture_datum("migration.as-of-role-map.0")
     if type(rows) is not cd0.Sequence or len(rows.items) != 7:
-        raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+        raise FixtureIntegrityError("frozen as-of role map registry mismatch")
     result: dict[str, str | None] = {}
     for index, row in enumerate(rows.items):
         fields = _field_map(
@@ -146,7 +152,7 @@ def _registry_as_of_role_map() -> dict[str, str | None]:
             or len(classification.path) != 2
             or classification.path[0] != "temporal-role-class"
         ):
-            raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+            raise FixtureIntegrityError("frozen as-of role map registry mismatch")
         _reject_unknown(
             row,
             ("source-record", "source-field", "destination-role", "classification"),
@@ -157,10 +163,10 @@ def _registry_as_of_role_map() -> dict[str, str | None]:
         exact = classification.path[1] == "exact"
         ambiguous = classification.path[1] == "ambiguous-refuse" and role.path[1] == "unclassified"
         if not exact and not ambiguous:
-            raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+            raise FixtureIntegrityError("frozen as-of role map classification mismatch")
         result[source_record.path[1]] = role.path[1] if exact else None
     if result != AS_OF_ROLE_MAP:
-        raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+        raise FixtureIntegrityError("frozen as-of role map registry mismatch")
     return result
 
 
@@ -175,6 +181,8 @@ def _migration_failure(
     *,
     category: str = "migration-refusal",
 ) -> LCIFailure:
+    if code not in AUTHORIZED_LCI_FAILURE_CODES:
+        raise FixtureIntegrityError("migration requested an unauthorized LCI failure code")
     return LCIFailure(category, code, stage, path)
 
 
@@ -645,18 +653,18 @@ def _stable_ref(domain: str, *object_tail: str, object_version: int = 0) -> cd0.
 def _scope_reconstruction_map() -> dict[str, cd0.Datum]:
     rows = fixture_datum("migration.scope-map.0")
     if type(rows) is not cd0.Sequence:
-        raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+        raise FixtureIntegrityError("frozen scope reconstruction map registry mismatch")
     result: dict[str, cd0.Datum] = {}
     for index, row in enumerate(rows.items):
         path = (str(index),)
         values = _field_map(row, ("legacy-form", "scope"), "migration-mapping", path)
         legacy_form, scope = values["legacy-form"], values["scope"]
         if type(legacy_form) is not cd0.String:
-            raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping", path)
+            raise FixtureIntegrityError("frozen scope reconstruction key mismatch")
         validate_scope(scope, path=path + ("scope",))
         _reject_unknown(row, ("legacy-form", "scope"), stage="migration-mapping", prefix=path, namespace=FIXTURE_FIELD)
         if legacy_form.value in result:
-            raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping", path)
+            raise FixtureIntegrityError("duplicate frozen scope reconstruction key")
         result[legacy_form.value] = scope
     if set(result) != {
         "MNEME::UNIVERSAL",
@@ -664,7 +672,7 @@ def _scope_reconstruction_map() -> dict[str, cd0.Datum]:
         '(MNEME::TENANT "b")',
         '(MNEME::DEPARTMENT "research")',
     }:
-        raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+        raise FixtureIntegrityError("frozen scope reconstruction map registry mismatch")
     return result
 
 
@@ -673,18 +681,22 @@ def _corpus_frame_reconstruction_maps() -> tuple[dict[tuple[str, int], cd0.Datum
     rules = fixture_datum("migration.corpus-frame-reconstruction-rules.0")
     allowed = ("kind", "schema-version", "corpus-rules", "frame-rules", "missing-corpus-behavior", "missing-frame-behavior", "mutable-revision-alias-behavior")
     values = _field_map(rules, allowed, "migration-mapping", ())
-    _require_kind(rules, "migration-reconstruction-rules", "FixtureRegistryMismatch", "migration-mapping", (), namespace=FIXTURE)
-    _integer_zero(values["schema-version"], "FixtureRegistryMismatch", "migration-mapping", ("schema-version",))
+    kind = values["kind"]
+    if type(kind) is not cd0.Identifier or kind.namespace != FIXTURE or kind.path != ("tag", "migration-reconstruction-rules"):
+        raise FixtureIntegrityError("frozen corpus/frame reconstruction rules kind mismatch")
+    version = values["schema-version"]
+    if type(version) is not cd0.Integer or version.value != 0:
+        raise FixtureIntegrityError("frozen corpus/frame reconstruction rules version mismatch")
     corpus_rows, frame_rows = values["corpus-rules"], values["frame-rules"]
     if type(corpus_rows) is not cd0.Sequence or type(frame_rows) is not cd0.Sequence:
-        raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+        raise FixtureIntegrityError("frozen corpus/frame reconstruction rules registry mismatch")
     corpus_map: dict[tuple[str, int], cd0.Datum] = {}
     for index, row in enumerate(corpus_rows.items):
         path = ("corpus-rules", str(index))
         fields = _field_map(row, ("source-corpus", "source-revision", "basis"), "migration-mapping", path)
         source_corpus, source_revision, basis = fields["source-corpus"], fields["source-revision"], fields["basis"]
         if type(source_corpus) is not cd0.String or type(source_revision) is not cd0.Integer:
-            raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping", path)
+            raise FixtureIntegrityError("frozen corpus reconstruction key mismatch")
         validate_basis(basis, path=path + ("basis",))
         _reject_unknown(row, ("source-corpus", "source-revision", "basis"), stage="migration-mapping", prefix=path, namespace=FIXTURE_FIELD)
         corpus_map[(source_corpus.value, source_revision.value)] = basis
@@ -694,7 +706,7 @@ def _corpus_frame_reconstruction_maps() -> tuple[dict[tuple[str, int], cd0.Datum
         fields = _field_map(row, ("source-frame", "frame"), "migration-mapping", path)
         source_frame, frame = fields["source-frame"], fields["frame"]
         if type(source_frame) is not cd0.String:
-            raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping", path)
+            raise FixtureIntegrityError("frozen frame reconstruction key mismatch")
         validate_frame(frame, path + ("frame",))
         _reject_unknown(row, ("source-frame", "frame"), stage="migration-mapping", prefix=path, namespace=FIXTURE_FIELD)
         frame_map[source_frame.value] = frame
@@ -703,7 +715,7 @@ def _corpus_frame_reconstruction_maps() -> tuple[dict[tuple[str, int], cd0.Datum
         "MNEME::SELF-DESCRIBING",
         "MNEME::ANIMAL-SI-V1",
     }:
-        raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "migration-mapping")
+        raise FixtureIntegrityError("frozen corpus/frame reconstruction maps mismatch")
     return corpus_map, frame_map
 
 
@@ -855,13 +867,15 @@ def validate_migration_result(value: cd0.Datum) -> cd0.Datum:
         "live-warrants-created",
     )
     _closed(value, allowed, stage="migration-result", namespace=LCI, check_unknown=False)
-    _require_kind(value, "migration-result", "InvalidMigrationResult", "migration-result", ())
+    kind = field_by_path(value, "kind", None)
+    if type(kind) is not cd0.Identifier or kind.namespace != TAG or kind.path != ("migration-result",):
+        raise FixtureAuthorityGap("unsupported migration-result shape")
     _integer_zero(field_by_path(value, "schema-version"), "RecursiveUnsupportedNestedVersion", "migration-result", ("schema-version",))
     source = field_by_path(value, "source")
     _stable_object_id(source, "artifact", ("source",))
     adapter = field_by_path(value, "adapter")
     if _stable_object_id(adapter, "procedure", ("adapter",)) != ("object", "procedure", "migrate-v1"):
-        raise _migration_failure("InvalidMigrationResult", "migration-result", ("adapter",), category="invalid-input")
+        raise FixtureAuthorityGap("unsupported migration-result adapter")
     classification = field_by_path(value, "classification")
     if (
         type(classification) is not cd0.Identifier
@@ -876,7 +890,7 @@ def validate_migration_result(value: cd0.Datum) -> cd0.Datum:
             ("migration-classification", "privileged-runtime-relation-outside-claim-id"),
         }
     ):
-        raise _migration_failure("InvalidMigrationResult", "migration-result", ("classification",), category="invalid-input")
+        raise FixtureAuthorityGap("unsupported migration-result classification")
     claim = field_by_path(value, "claim")
     claim_fields = _field_map(claim, ("proposition", "location"), "migration-result", ("claim",))
     projected = project_claim_id(_projection_input(claim_fields["proposition"], claim_fields["location"]))
@@ -885,18 +899,18 @@ def validate_migration_result(value: cd0.Datum) -> cd0.Datum:
     project_claim_id(claim_id)
     lineage = field_by_path(value, "lineage")
     if type(lineage) is not cd0.Sequence:
-        raise _migration_failure("InvalidMigrationResult", "migration-result", ("lineage",), category="invalid-input")
+        raise FixtureAuthorityGap("unsupported migration-result lineage")
     for index, edge in enumerate(lineage.items):
         edge_path = ("lineage", str(index))
         edge_fields = _field_map(edge, ("relation", "source"), "migration-result", edge_path)
         relation = edge_fields["relation"]
         if type(relation) is not cd0.Identifier or relation.namespace != FIXTURE or relation.path != ("lineage-relation", "migration"):
-            raise _migration_failure("InvalidMigrationResult", "migration-result", edge_path + ("relation",), category="invalid-input")
+            raise FixtureAuthorityGap("unsupported migration-result lineage relation")
         _stable_object_id(edge_fields["source"], "artifact", edge_path + ("source",))
         _reject_unknown(edge, ("relation", "source"), stage="migration-result", prefix=edge_path, namespace=FIXTURE_FIELD)
     losses = field_by_path(value, "represented-loss")
     if type(losses) is not cd0.Sequence:
-        raise _migration_failure("InvalidMigrationResult", "migration-result", ("represented-loss",), category="invalid-input")
+        raise FixtureAuthorityGap("unsupported migration-result represented loss")
     for index, loss in enumerate(losses.items):
         validate_represented_loss(loss, ("represented-loss", str(index)))
     if (
@@ -912,13 +926,13 @@ def validate_migration_result(value: cd0.Datum) -> cd0.Datum:
         )
     testimony = field_by_path(value, "legacy-testimony")
     if type(testimony) is not cd0.Sequence:
-        raise _migration_failure("InvalidMigrationResult", "migration-result", ("legacy-testimony",), category="invalid-input")
+        raise FixtureAuthorityGap("unsupported migration-result testimony")
     for index, item in enumerate(testimony.items):
         item_path = ("legacy-testimony", str(index))
         item_fields = _field_map(item, ("kind", "artifact"), "migration-result", item_path)
         kind = item_fields["kind"]
         if type(kind) is not cd0.Identifier or kind.namespace != FIXTURE or kind.path != ("legacy-testimony", "predecessor-warrant"):
-            raise _migration_failure("InvalidMigrationResult", "migration-result", item_path + ("kind",), category="invalid-input")
+            raise FixtureAuthorityGap("unsupported migration-result testimony kind")
         _stable_object_id(item_fields["artifact"], "artifact", item_path + ("artifact",))
         _reject_unknown(item, ("kind", "artifact"), stage="migration-result", prefix=item_path, namespace=FIXTURE_FIELD)
     live = field_by_path(value, "live-warrants-created")
@@ -928,7 +942,7 @@ def validate_migration_result(value: cd0.Datum) -> cd0.Datum:
     if canonical_bytes(claim_id) != projected.canonical_bytes:
         raise _migration_failure("ClaimIdCacheMismatch", "claim-id-cache", ("claim-id",), category="projection-refusal")
     if len(lineage.items) != 1 or canonical_bytes(field_by_path(lineage.items[0], "source")) != canonical_bytes(source):
-        raise _migration_failure("InvalidMigrationResult", "migration-result", ("lineage",), category="invalid-input")
+        raise FixtureAuthorityGap("unsupported migration-result lineage binding")
     return value
 
 

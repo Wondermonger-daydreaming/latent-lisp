@@ -10,7 +10,10 @@ from typing import Any, Callable
 import cd0
 
 from .model import (
+    AUTHORIZED_LCI_FAILURE_CODES,
     ClaimIdEnvelope,
+    FixtureAuthorityGap,
+    FixtureIntegrityError,
     LCIFailure,
     PolicyDecision,
     RelationResult,
@@ -97,7 +100,7 @@ def _path_names(
     prefix: tuple[str, ...] = (),
 ) -> tuple[str, ...]:
     if type(value) is not cd0.Record:
-        raise LCIFailure("invalid-input", "ExpectedRecord", stage, prefix)
+        raise FixtureAuthorityGap("unsupported fixture record shape")
     names: list[str] = []
     for key, _ in value.fields:
         if len(key.path) != 1 or (namespace is not None and key.namespace != namespace):
@@ -118,7 +121,7 @@ def _closed(
     check_unknown: bool = True,
 ) -> None:
     if type(value) is not cd0.Record:
-        raise LCIFailure("invalid-input", "ExpectedRecord", stage, prefix)
+        raise FixtureAuthorityGap("unsupported fixture record shape")
     names = tuple(
         key.path[0]
         for key, _ in value.fields
@@ -147,13 +150,15 @@ def _reject_unknown(
 
 
 def _integer_zero(value: cd0.Datum, code: str, stage: str, path: tuple[str, ...]) -> None:
+    if code not in AUTHORIZED_LCI_FAILURE_CODES:
+        raise FixtureIntegrityError("internal validator requested an unauthorized LCI failure code")
     if type(value) is not cd0.Integer or value.value != 0:
         raise LCIFailure("unsupported-version-or-profile", code, stage, path)
 
 
 def _id_tail(value: cd0.Datum) -> tuple[str, ...]:
     if type(value) is not cd0.Identifier:
-        raise LCIFailure("invalid-input", "ExpectedIdentifier", "shape")
+        raise FixtureAuthorityGap("unsupported fixture identifier shape")
     return value.path
 
 
@@ -172,6 +177,8 @@ def _require_kind(
     *,
     namespace: tuple[str, ...] = TAG,
 ) -> None:
+    if code not in AUTHORIZED_LCI_FAILURE_CODES:
+        raise FixtureIntegrityError("internal validator requested an unauthorized LCI failure code")
     kind = field_by_path(value, "kind", None)
     expected_path = (expected,) if namespace == TAG else ("tag", expected)
     if type(kind) is not cd0.Identifier or kind.namespace != namespace or kind.path != expected_path:
@@ -359,12 +366,7 @@ def proposition_normalization_work(
     """Frozen work formula: source nodes + emitted nodes + loss entries."""
 
     if type(represented_loss_entries) is not int or represented_loss_entries < 0:
-        raise LCIFailure(
-            "invalid-input",
-            "InvalidRepresentedLoss",
-            "normalization",
-            ("represented-loss-entries",),
-        )
+        raise FixtureAuthorityGap("unsupported represented-loss work input")
     return (
         _datum_node_count(source)
         + _datum_node_count(normalized)
@@ -426,7 +428,7 @@ def _boundary_value_node_count(value: cd0.Datum) -> int:
 
 def target_boundary_work(boundaries: cd0.Datum) -> int:
     if type(boundaries) is not cd0.Record:
-        raise LCIFailure("invalid-input", "ExpectedRecord", "target-boundaries", ("boundaries",))
+        raise FixtureAuthorityGap("unsupported fixture boundary shape")
     return len(boundaries.fields) + sum(
         _boundary_value_node_count(item) for _, item in boundaries.fields
     )
@@ -465,7 +467,7 @@ def validate_stable_ref(value: cd0.Datum, *, path: tuple[str, ...] = ()) -> cd0.
     domain = field_by_path(value, "domain")
     scheme = field_by_path(value, "scheme")
     if type(domain) is not cd0.Identifier or type(scheme) is not cd0.Identifier:
-        raise LCIFailure("reference-refusal", "UnstableReference", "stable-reference", path)
+        raise LCIFailure("reference-refusal", "InvalidStableReference", "stable-reference", path)
     if domain.namespace != FIXTURE or len(domain.path) != 2 or domain.path[0] != "domain":
         raise LCIFailure("reference-refusal", "InvalidStableReference", "stable-reference", path + ("domain",))
     domain_name = domain.path[1]
@@ -538,9 +540,19 @@ def _validate_versioned_expression(
     stage: str,
     path: tuple[str, ...],
     kind_name: str,
+    *,
+    invalid_code: str | None,
 ) -> str:
+    if invalid_code is not None and invalid_code not in AUTHORIZED_LCI_FAILURE_CODES:
+        raise FixtureIntegrityError("internal validator requested an unauthorized LCI failure code")
+
+    def reject() -> None:
+        if invalid_code is None:
+            raise FixtureAuthorityGap(f"unsupported fixture {stage} expression")
+        raise LCIFailure("invalid-input", invalid_code, stage, path)
+
     if type(value) is not cd0.Record:
-        raise LCIFailure("invalid-input", f"Invalid{stage.title().replace('-', '')}", stage, path)
+        reject()
     _closed(
         value,
         ("kind", "schema-version", "form"),
@@ -559,7 +571,13 @@ def _validate_versioned_expression(
     }[kind_name]
     form = form_value.path[1] if type(form_value) is cd0.Identifier and len(form_value.path) == 2 else None
     allowed = allowed_by_form.get(form) if form is not None else None
-    _require_kind(value, kind_name, f"Invalid{stage.title().replace('-', '')}", stage, path, namespace=FIXTURE)
+    kind = field_by_path(value, "kind", None)
+    if (
+        type(kind) is not cd0.Identifier
+        or kind.namespace != FIXTURE
+        or kind.path != ("tag", kind_name)
+    ):
+        reject()
     _integer_zero(
         field_by_path(value, "schema-version"),
         "RecursiveUnsupportedNestedVersion",
@@ -567,7 +585,9 @@ def _validate_versioned_expression(
         path + ("schema-version",),
     )
     if allowed is None or form_value.namespace != FIXTURE or form_value.path != (form_prefix, form):
-        raise LCIFailure("invalid-input", f"Invalid{stage.title().replace('-', '')}", stage, path + ("form",))
+        if invalid_code is None:
+            raise FixtureAuthorityGap(f"unsupported fixture {stage} expression")
+        raise LCIFailure("invalid-input", invalid_code, stage, path + ("form",))
     assert form is not None
     return form
 
@@ -615,7 +635,12 @@ def validate_scope(value: cd0.Datum, *, path: tuple[str, ...] = ("location", "sc
         raise LCIFailure("invalid-input", "InvalidScope", "scope", path + ("calculus",))
     try:
         form = _validate_versioned_expression(
-            field_by_path(value, "expression"), SCOPE_FORMS, "scope", path + ("expression",), "scope-expression"
+            field_by_path(value, "expression"),
+            SCOPE_FORMS,
+            "scope",
+            path + ("expression",),
+            "scope-expression",
+            invalid_code="InvalidScope",
         )
         expression = field_by_path(value, "expression")
         _closed(
@@ -655,7 +680,12 @@ def validate_subject_time(value: cd0.Datum, *, projection: bool = False, path: t
         raise LCIFailure("invalid-input", "InvalidSubjectTime", "subject-time", path + ("temporal-model",))
     expression = field_by_path(value, "expression")
     form = _validate_versioned_expression(
-        expression, TEMPORAL_FORMS, "subject-time", path + ("expression",), "temporal-expression"
+        expression,
+        TEMPORAL_FORMS,
+        "subject-time",
+        path + ("expression",),
+        "temporal-expression",
+        invalid_code="InvalidSubjectTime",
     )
     if projection and form == "relative":
         raise LCIFailure("projection-refusal", "UnresolvedRelativeTime", "subject-time", path + ("expression",))
@@ -680,28 +710,35 @@ def validate_subject_time(value: cd0.Datum, *, projection: bool = False, path: t
 
 def validate_dataset_slice(value: cd0.Datum, path: tuple[str, ...]) -> cd0.Datum:
     _closed(value, ("kind", "schema-version", "calculus", "expression"), stage="dataset-slice", prefix=path, namespace=LCI, check_unknown=False)
-    _require_kind(value, "dataset-slice", "InvalidDatasetSlice", "dataset-slice", path)
+    kind = field_by_path(value, "kind", None)
+    if type(kind) is not cd0.Identifier or kind.namespace != TAG or kind.path != ("dataset-slice",):
+        raise FixtureAuthorityGap("unsupported fixture dataset-slice shape")
     _integer_zero(field_by_path(value, "schema-version"), "RecursiveUnsupportedNestedVersion", "dataset-slice", path + ("schema-version",))
     validate_stable_ref(field_by_path(value, "calculus"), path=path + ("calculus",))
     if _id_tail(field_by_path(field_by_path(value, "calculus"), "domain"))[-1] != "dataset-slice-calculus":
-        raise LCIFailure("invalid-input", "InvalidDatasetSlice", "dataset-slice", path + ("calculus",))
+        raise FixtureAuthorityGap("unsupported fixture dataset-slice calculus")
     form = _validate_versioned_expression(
-        field_by_path(value, "expression"), SLICE_FORMS, "dataset-slice", path + ("expression",), "dataset-slice-expression"
+        field_by_path(value, "expression"),
+        SLICE_FORMS,
+        "dataset-slice",
+        path + ("expression",),
+        "dataset-slice-expression",
+        invalid_code=None,
     )
     expression = field_by_path(value, "expression")
     _closed(expression, SLICE_FORMS[form], stage="dataset-slice", prefix=path + ("expression",), namespace=FIXTURE_FIELD, check_unknown=False)
     if form == "explicit-members":
         members = field_by_path(expression, "members")
         if type(members) is not cd0.Sequence or not members.items:
-            raise LCIFailure("invalid-input", "InvalidDatasetSlice", "dataset-slice", path + ("expression", "members"))
+            raise FixtureAuthorityGap("unsupported fixture dataset-slice members")
         encoded: list[bytes] = []
         for index, member in enumerate(members.items):
             validate_stable_ref(member, path=path + ("expression", "members", str(index)))
             if _id_tail(field_by_path(member, "domain"))[-1] != "artifact":
-                raise LCIFailure("invalid-input", "InvalidDatasetSlice", "dataset-slice", path + ("expression", "members", str(index)))
+                raise FixtureAuthorityGap("unsupported fixture dataset-slice member domain")
             encoded.append(canonical_bytes(member))
         if encoded != sorted(set(encoded)):
-            raise LCIFailure("invalid-input", "InvalidDatasetSlice", "dataset-slice", path + ("expression", "members"))
+            raise FixtureAuthorityGap("unsupported fixture dataset-slice member ordering")
     if form == "predicate":
         predicate = field_by_path(expression, "predicate")
         if (
@@ -710,11 +747,11 @@ def validate_dataset_slice(value: cd0.Datum, path: tuple[str, ...]) -> cd0.Datum
             or predicate.path != ("slice-predicate", "artifact-object-id-prefix")
             or type(field_by_path(expression, "argument")) is not cd0.String
         ):
-            raise LCIFailure("invalid-input", "InvalidDatasetSlice", "dataset-slice", path + ("expression",))
+            raise FixtureAuthorityGap("unsupported fixture dataset-slice predicate")
         evaluation_domain = field_by_path(expression, "evaluation-domain")
         validate_stable_ref(evaluation_domain, path=path + ("expression", "evaluation-domain"))
         if _id_tail(field_by_path(evaluation_domain, "domain"))[-1] != "immutable-corpus-revision":
-            raise LCIFailure("invalid-input", "InvalidDatasetSlice", "dataset-slice", path + ("expression", "evaluation-domain"))
+            raise FixtureAuthorityGap("unsupported fixture dataset-slice evaluation domain")
     _reject_unknown(expression, SLICE_FORMS[form], stage="dataset-slice", prefix=path + ("expression",), namespace=FIXTURE_FIELD)
     _reject_unknown(value, ("kind", "schema-version", "calculus", "expression"), stage="dataset-slice", prefix=path, namespace=LCI)
     return value
@@ -722,13 +759,20 @@ def validate_dataset_slice(value: cd0.Datum, path: tuple[str, ...]) -> cd0.Datum
 
 def validate_semantic_boundary(value: cd0.Datum, path: tuple[str, ...]) -> cd0.Datum:
     _closed(value, ("kind", "schema-version", "calculus", "expression"), stage="semantic-boundary", prefix=path, namespace=LCI, check_unknown=False)
-    _require_kind(value, "semantic-boundary", "InvalidSemanticBoundary", "semantic-boundary", path)
+    kind = field_by_path(value, "kind", None)
+    if type(kind) is not cd0.Identifier or kind.namespace != TAG or kind.path != ("semantic-boundary",):
+        raise FixtureAuthorityGap("unsupported fixture semantic-boundary shape")
     _integer_zero(field_by_path(value, "schema-version"), "RecursiveUnsupportedNestedVersion", "semantic-boundary", path + ("schema-version",))
     validate_stable_ref(field_by_path(value, "calculus"), path=path + ("calculus",))
     if _id_tail(field_by_path(field_by_path(value, "calculus"), "domain"))[-1] != "semantic-boundary-calculus":
-        raise LCIFailure("invalid-input", "InvalidSemanticBoundary", "semantic-boundary", path + ("calculus",))
+        raise FixtureAuthorityGap("unsupported fixture semantic-boundary calculus")
     form = _validate_versioned_expression(
-        field_by_path(value, "expression"), BOUNDARY_FORMS, "semantic-boundary", path + ("expression",), "semantic-boundary-expression"
+        field_by_path(value, "expression"),
+        BOUNDARY_FORMS,
+        "semantic-boundary",
+        path + ("expression",),
+        "semantic-boundary-expression",
+        invalid_code=None,
     )
     expression = field_by_path(value, "expression")
     _closed(expression, BOUNDARY_FORMS[form], stage="semantic-boundary", prefix=path + ("expression",), namespace=FIXTURE_FIELD, check_unknown=False)
@@ -736,12 +780,12 @@ def validate_semantic_boundary(value: cd0.Datum, path: tuple[str, ...]) -> cd0.D
         manifest = field_by_path(expression, "manifest")
         validate_stable_ref(manifest, path=path + ("expression", "manifest"))
         if field_by_path(manifest, "domain") != ident(FIXTURE, "domain", "artifact"):
-            raise LCIFailure("invalid-input", "InvalidSemanticBoundary", "semantic-boundary", path + ("expression", "manifest"))
+            raise FixtureAuthorityGap("unsupported fixture semantic-boundary manifest")
     if form == "log-horizon":
         stream = field_by_path(expression, "stream")
         validate_stable_ref(stream, path=path + ("expression", "stream"))
         if field_by_path(stream, "domain") != ident(FIXTURE, "domain", "artifact"):
-            raise LCIFailure("invalid-input", "InvalidSemanticBoundary", "semantic-boundary", path + ("expression", "stream"))
+            raise FixtureAuthorityGap("unsupported fixture semantic-boundary stream")
         horizon = field_by_path(expression, "horizon")
         horizon_form = _validate_versioned_expression(
             horizon,
@@ -749,6 +793,7 @@ def validate_semantic_boundary(value: cd0.Datum, path: tuple[str, ...]) -> cd0.D
             "subject-time",
             path + ("expression", "horizon"),
             "temporal-expression",
+            invalid_code="InvalidSubjectTime",
         )
         _closed(horizon, TEMPORAL_FORMS[horizon_form], stage="subject-time", prefix=path + ("expression", "horizon"), namespace=FIXTURE_FIELD, check_unknown=False)
         _reject_unknown(
@@ -762,13 +807,13 @@ def validate_semantic_boundary(value: cd0.Datum, path: tuple[str, ...]) -> cd0.D
         root = scalar(field_by_path(expression, "path"))
         semantics_value = field_by_path(expression, "path-semantics")
         if type(root) is not str or not root.startswith("/") or root == "/" or "//" in root or "/../" in root or root.endswith("/.."):
-            raise LCIFailure("invalid-input", "InvalidSemanticBoundary", "semantic-boundary", path + ("expression", "path"))
+            raise FixtureAuthorityGap("unsupported fixture semantic-boundary path")
         if (
             type(semantics_value) is not cd0.Identifier
             or semantics_value.namespace != FIXTURE
             or semantics_value.path != ("path-semantics", "posix-absolute-byte-exact-utf8")
         ):
-            raise LCIFailure("invalid-input", "InvalidSemanticBoundary", "semantic-boundary", path + ("expression", "path-semantics"))
+            raise FixtureAuthorityGap("unsupported fixture semantic-boundary path semantics")
     _reject_unknown(expression, BOUNDARY_FORMS[form], stage="semantic-boundary", prefix=path + ("expression",), namespace=FIXTURE_FIELD)
     _reject_unknown(value, ("kind", "schema-version", "calculus", "expression"), stage="semantic-boundary", prefix=path, namespace=LCI)
     return value
@@ -1206,7 +1251,7 @@ def validate_location(value: cd0.Datum, *, projection: bool = False) -> cd0.Datu
     validate_frame(field_by_path(value, "interpretation-frame"))
     profile = field_by_path(value, "profile-location")
     if type(profile) is not cd0.Record:
-        raise LCIFailure("invalid-input", "InvalidProfileLocation", "profile-location", ("location", "profile-location"))
+        raise FixtureAuthorityGap("unsupported fixture profile-location shape")
     # The neutral Mneme/0 value is the exact empty record.  N009 also freezes
     # recursive closure for the explicit tagged schema, whose coordinates
     # remain empty in this fixture profile.
@@ -1219,13 +1264,9 @@ def validate_location(value: cd0.Datum, *, projection: bool = False) -> cd0.Datu
             namespace=LCI,
             check_unknown=False,
         )
-        _require_kind(
-            profile,
-            "profile-location",
-            "InvalidProfileLocation",
-            "profile-location",
-            ("location", "profile-location"),
-        )
+        kind = field_by_path(profile, "kind", None)
+        if type(kind) is not cd0.Identifier or kind.namespace != TAG or kind.path != ("profile-location",):
+            raise FixtureAuthorityGap("unsupported fixture profile-location shape")
         _integer_zero(
             field_by_path(profile, "schema-version"),
             "RecursiveUnsupportedNestedVersion",
@@ -1369,7 +1410,7 @@ def project_claim_id(value: Any) -> ClaimIdEnvelope:
         # mutations are interpreted; no semantic field is inferred.
         source = getattr(value, "_lci_source_datum", None)
         if source is None:
-            raise LCIFailure("invalid-input", "UnsupportedHostInput", "projection")
+            raise FixtureAuthorityGap("unsupported host projection input")
         unknown = set(value) - {"kind", "lci-version", "identity-policy", "claim-profile", "proposition", "location"}
         if unknown:
             raise LCIFailure("invalid-input", "UnknownField", "claim-shape", (sorted(unknown)[0],))
@@ -1397,7 +1438,7 @@ def project_claim_id(value: Any) -> ClaimIdEnvelope:
 
 def replace_record_field(value: cd0.Datum, name: str, replacement_value: cd0.Datum) -> cd0.Record:
     if type(value) is not cd0.Record:
-        raise LCIFailure("invalid-input", "ExpectedRecord", "shape")
+        raise FixtureAuthorityGap("unsupported fixture record shape")
     found = False
     result: list[tuple[cd0.Identifier, cd0.Datum]] = []
     for key, item in value.fields:
@@ -1771,6 +1812,8 @@ def _require_stable_domain(
     stage: str = "target-boundaries",
     code: str = "TargetBoundaryMismatch",
 ) -> None:
+    if code not in AUTHORIZED_LCI_FAILURE_CODES:
+        raise FixtureIntegrityError("internal validator requested an unauthorized LCI failure code")
     validate_stable_ref(value, path=path)
     if field_by_path(value, "domain") != ident(FIXTURE, "domain", domain):
         raise LCIFailure("invalid-input", code, stage, path)
@@ -1784,6 +1827,8 @@ def _validate_event_time(
     stage: str = "target-boundaries",
     code: str = "TargetBoundaryMismatch",
 ) -> None:
+    if code not in AUTHORIZED_LCI_FAILURE_CODES:
+        raise FixtureIntegrityError("internal validator requested an unauthorized LCI failure code")
     allowed = ("kind", "schema-version", "temporal-model", "temporal-role", "expression")
     _closed(
         value,
@@ -1806,6 +1851,7 @@ def _validate_event_time(
         stage,
         path + ("expression",),
         "temporal-expression",
+        invalid_code=code,
     )
     _closed(
         expression,
@@ -1861,14 +1907,13 @@ def validate_loss_account(
                     "represented-loss",
                     path + (f"fixture-field:{name}",),
                 )
-    _require_kind(
-        account,
-        "represented-loss-account",
-        "InvalidRepresentedLoss",
-        "represented-loss",
-        path,
-        namespace=FIXTURE,
-    )
+    kind = field_by_path(account, "kind", None)
+    if (
+        type(kind) is not cd0.Identifier
+        or kind.namespace != FIXTURE
+        or kind.path != ("tag", "represented-loss-account")
+    ):
+        raise FixtureAuthorityGap("unsupported represented-loss account shape")
     _integer_zero(
         field_by_path(account, "schema-version"),
         "RecursiveUnsupportedNestedVersion",
@@ -1889,47 +1934,35 @@ def validate_loss_account(
         item_path = path + (f"fixture-field:{name}",)
         if type_name == "identifier":
             if type(item) is not cd0.Identifier:
-                raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", item_path)
+                raise FixtureAuthorityGap("unsupported represented-loss account value")
         elif type_name == "identifiers":
             if type(item) is not cd0.Sequence:
-                raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", item_path)
+                raise FixtureAuthorityGap("unsupported represented-loss account value")
             for index, member in enumerate(item.items):
                 if type(member) is not cd0.Identifier:
-                    raise LCIFailure(
-                        "invalid-input",
-                        "InvalidRepresentedLoss",
-                        "represented-loss",
-                        item_path + (str(index),),
-                    )
+                    raise FixtureAuthorityGap("unsupported represented-loss account value")
         elif type_name.startswith("stable:"):
             domain = type_name.split(":", 1)[1]
-            _require_stable_domain(
-                item,
-                domain,
-                item_path,
-                stage="represented-loss",
-                code="InvalidRepresentedLoss",
-            )
+            validate_stable_ref(item, path=item_path)
+            if field_by_path(item, "domain") != ident(FIXTURE, "domain", domain):
+                raise FixtureAuthorityGap("unsupported represented-loss stable-reference domain")
         elif type_name.startswith("stable-sequence:"):
             domain = type_name.split(":", 1)[1]
             if type(item) is not cd0.Sequence:
-                raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", item_path)
+                raise FixtureAuthorityGap("unsupported represented-loss account value")
             for index, member in enumerate(item.items):
-                _require_stable_domain(
-                    member,
-                    domain,
-                    item_path + (str(index),),
-                    stage="represented-loss",
-                    code="InvalidRepresentedLoss",
-                )
+                member_path = item_path + (str(index),)
+                validate_stable_ref(member, path=member_path)
+                if field_by_path(member, "domain") != ident(FIXTURE, "domain", domain):
+                    raise FixtureAuthorityGap("unsupported represented-loss stable-reference domain")
         elif type_name == "boolean":
             if type(item) is not cd0.Boolean:
-                raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", item_path)
+                raise FixtureAuthorityGap("unsupported represented-loss account value")
         elif type_name == "integer":
             if type(item) is not cd0.Integer or item.value < 0:
-                raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", item_path)
+                raise FixtureAuthorityGap("unsupported represented-loss account value")
         elif type_name != "datum":
-            raise LCIFailure("internal-invariant-failure", "UnknownLossAccountType", "internal", item_path)
+            raise FixtureIntegrityError("unknown frozen represented-loss account field type")
     entries = sum(len(item.items) for _, item in account.fields if type(item) is cd0.Sequence)
     if entries > LCI_RESOURCE_LIMITS["represented-loss-account-entries"]:
         _resource_failure(
@@ -1964,27 +1997,21 @@ def validate_represented_loss(value: cd0.Datum, path: tuple[str, ...] = ("repres
         namespace=LCI,
         check_unknown=False,
     )
-    _require_kind(value, "represented-loss", "InvalidRepresentedLoss", "represented-loss", path)
+    kind = field_by_path(value, "kind", None)
+    if type(kind) is not cd0.Identifier or kind.namespace != TAG or kind.path != ("represented-loss",):
+        raise FixtureAuthorityGap("unsupported represented-loss shape")
     _integer_zero(field_by_path(value, "schema-version"), "RecursiveUnsupportedNestedVersion", "represented-loss", path + ("schema-version",))
     operation_ref = field_by_path(value, "operation")
-    _require_stable_domain(
-        operation_ref,
-        "procedure",
-        path + ("operation",),
-        stage="represented-loss",
-        code="InvalidRepresentedLoss",
-    )
+    validate_stable_ref(operation_ref, path=path + ("operation",))
+    if field_by_path(operation_ref, "domain") != ident(FIXTURE, "domain", "procedure"):
+        raise FixtureAuthorityGap("unsupported represented-loss operation domain")
     source_ref = field_by_path(value, "source")
-    _require_stable_domain(
-        source_ref,
-        "artifact",
-        path + ("source",),
-        stage="represented-loss",
-        code="InvalidRepresentedLoss",
-    )
+    validate_stable_ref(source_ref, path=path + ("source",))
+    if field_by_path(source_ref, "domain") != ident(FIXTURE, "domain", "artifact"):
+        raise FixtureAuthorityGap("unsupported represented-loss source domain")
     dimensions = field_by_path(value, "lost-dimensions")
     if type(dimensions) is not cd0.Sequence:
-        raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", path + ("lost-dimensions",))
+        raise FixtureAuthorityGap("unsupported represented-loss dimensions")
     for index, item in enumerate(dimensions.items):
         if (
             type(item) is not cd0.Identifier
@@ -1992,15 +2019,10 @@ def validate_represented_loss(value: cd0.Datum, path: tuple[str, ...] = ("repres
             or len(item.path) != 2
             or item.path[0] != "lost-dimension"
         ):
-            raise LCIFailure(
-                "invalid-input",
-                "InvalidRepresentedLoss",
-                "represented-loss",
-                path + ("lost-dimensions", str(index)),
-            )
+            raise FixtureAuthorityGap("unsupported represented-loss dimension")
     consequence = field_by_path(value, "consequence")
     if type(consequence) is not cd0.Identifier or consequence.namespace != LCI + ("relation",):
-        raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", path + ("consequence",))
+        raise FixtureAuthorityGap("unsupported represented-loss consequence")
     account = field_by_path(value, "account")
     account_operation = validate_loss_account(account, path + ("account",))
     _reject_unknown(value, allowed, stage="represented-loss", prefix=path, namespace=LCI)
@@ -2014,28 +2036,28 @@ def validate_represented_loss(value: cd0.Datum, path: tuple[str, ...] = ("repres
     }
     expected_account = operation_accounts.get(operation_leaf)
     if expected_account != account_operation:
-        raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", path + ("account", "account-schema"))
+        raise FixtureAuthorityGap("unsupported represented-loss account binding")
     expected_dimensions = {
         "v1-migration": ("source-record-field-order",),
         "translation": ("lexical-sense-resolution",),
         "handoff": ("live-authority", "custody-continuity"),
     }[account_operation]
     if tuple(item.path[1] for item in dimensions.items) != expected_dimensions:
-        raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", path + ("lost-dimensions",))
+        raise FixtureAuthorityGap("unsupported represented-loss dimensions")
     expected_consequence = {
         "v1-migration": "identity-neutral-loss",
         "translation": "semantic-translation-loss",
         "handoff": "authority-or-custody-loss",
     }[account_operation]
     if consequence.path != (expected_consequence,):
-        raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", path + ("consequence",))
+        raise FixtureAuthorityGap("unsupported represented-loss consequence")
     if account_operation == "v1-migration" and canonical_bytes(operation_ref) != canonical_bytes(field_by_path(account, "adapter")):
-        raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", path + ("account", "adapter"))
+        raise FixtureAuthorityGap("unsupported represented-loss adapter binding")
     if account_operation == "handoff":
         if canonical_bytes(operation_ref) != canonical_bytes(field_by_path(account, "handoff-procedure")):
-            raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", path + ("account", "handoff-procedure"))
+            raise FixtureAuthorityGap("unsupported represented-loss handoff binding")
         if canonical_bytes(source_ref) != canonical_bytes(field_by_path(account, "predecessor-occurrence")):
-            raise LCIFailure("invalid-input", "InvalidRepresentedLoss", "represented-loss", path + ("account", "predecessor-occurrence"))
+            raise FixtureAuthorityGap("unsupported represented-loss predecessor binding")
 
 
 def _validate_target_relation(value: cd0.Datum, path: tuple[str, ...]) -> None:
@@ -2085,7 +2107,7 @@ def _validate_target_boundary(value: cd0.Datum, type_name: str, path: tuple[str,
         if type(value) is not cd0.Identifier:
             raise LCIFailure("invalid-input", "TargetBoundaryMismatch", "target-boundaries", path)
     elif type_name != "datum":
-        raise LCIFailure("internal-invariant-failure", "UnknownTargetBoundaryType", "internal", path)
+        raise FixtureIntegrityError("unknown frozen target-boundary field type")
 
 
 def validate_warrant_target(value: cd0.Datum) -> cd0.Datum:
@@ -2348,6 +2370,8 @@ def match_target(target: cd0.Datum, candidate: cd0.Datum) -> RelationResult:
 
 
 def failure(code: str) -> RelationResult:
+    if code not in AUTHORIZED_LCI_FAILURE_CODES:
+        raise FixtureAuthorityGap("unsupported fixture relation failure code")
     return RelationResult(failure=LCIFailure("relation-undetermined", code, "target-relation"))
 
 
@@ -2368,12 +2392,7 @@ def evaluate_policy(
     boundary_coherent: bool = True,
 ) -> PolicyDecision:
     if policy_name not in {"policy-a", "policy-b"}:
-        raise LCIFailure(
-            "invalid-input",
-            "UnsupportedFixturePolicy",
-            "admissibility",
-            ("policy",),
-        )
+        raise FixtureAuthorityGap("unsupported fixture policy")
     floor = apply_admissibility_floor(relation, lambda r: PolicyDecision(True, "floor-passed"))
     if floor.hard_inadmissible:
         return floor

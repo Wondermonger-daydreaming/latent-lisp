@@ -9,6 +9,104 @@ from typing import Any, Mapping
 import cd0
 
 
+AUTHORIZED_LCI_FAILURE_CODES = frozenset(
+    {
+        "AdmissibilityUndetermined",
+        "AmbiguousIdentifier",
+        "BasisMismatch",
+        "ClaimIdCacheMismatch",
+        "ClaimProfileMismatch",
+        "ClaimTargetMismatch",
+        "CorpusCompletionInsufficient",
+        "CorpusRevisionIdentityInsufficient",
+        "IdentityBearingLoss",
+        "IdentityPolicyMismatch",
+        "InterpretationFrameMismatch",
+        "InvalidBasis",
+        "InvalidClaimLocation",
+        "InvalidClaimRecord",
+        "InvalidInterpretationFrame",
+        "InvalidProposition",
+        "InvalidScope",
+        "InvalidStableReference",
+        "InvalidSubjectTime",
+        "InvalidWarrantTarget",
+        "LCIAggregatePayloadBudgetExceeded",
+        "LCIIdentifierSegmentBudgetExceeded",
+        "LCIMaxNestingExceeded",
+        "LCINodeCountExceeded",
+        "LCIRecordFieldBudgetExceeded",
+        "LCISequenceLengthBudgetExceeded",
+        "LegacyFingerprintNotClaimId",
+        "LegacyWarrantInert",
+        "LineageUnverified",
+        "MeaningChangingNormalizerVersionReuse",
+        "MigrationInputSizeExceeded",
+        "MissingRequiredField",
+        "MutableReference",
+        "NormalizerContentIdentityMismatch",
+        "NormalizerRevisionEvidenceMissing",
+        "PremiseMismatch",
+        "PrivilegedRestorationAttempt",
+        "ProcedureIdentityInsufficient",
+        "ProcedureMismatch",
+        "ProfileLocationMismatch",
+        "ProjectionNonDeterminism",
+        "PropositionLocationInconsistent",
+        "PropositionMismatch",
+        "PropositionNormalizationWorkExceeded",
+        "RecursiveUnsupportedNestedVersion",
+        "ReplayAuthorizationRequired",
+        "RepresentedLossAccountSizeExceeded",
+        "RepresentedLossRequired",
+        "ScopeDisjoint",
+        "ScopeIncompatible",
+        "ScopeNarrowingCoverageInsufficient",
+        "ScopeNarrowingNotDeclared",
+        "ScopeOverlapInsufficient",
+        "ScopeRelationUnknown",
+        "ScopeRelationWorkExceeded",
+        "ScopeWideningForbidden",
+        "SelfDeclaredClaimId",
+        "SemanticIdentifierMappingMismatch",
+        "StableReferenceMaterialBudgetExceeded",
+        "SubjectTimeMismatch",
+        "TargetBoundaryMismatch",
+        "TargetBoundaryMissing",
+        "TargetBoundaryUnknown",
+        "TargetBoundaryWorkExceeded",
+        "TargetSchemaKindMismatch",
+        "TemporalCoverageInsufficient",
+        "TemporalRelationWorkExceeded",
+        "TranslationBoundaryMismatch",
+        "UnclassifiedAsOf",
+        "UnexpectedUnit",
+        "UnknownField",
+        "UnnormalizedProposition",
+        "UnresolvedAlias",
+        "UnresolvedRelativeTime",
+        "UnsupportedClaimProfile",
+        "UnsupportedIdentityPolicy",
+        "UnsupportedInterpretationFrame",
+        "UnsupportedLCIVersion",
+        "UnsupportedLegacyForm",
+        "UnsupportedReferenceScheme",
+        "UnsupportedRepresentedLossAccountSchema",
+        "UnsupportedScopeCalculus",
+        "UnsupportedTargetKind",
+        "UnsupportedTemporalModel",
+    }
+)
+
+
+class FixtureAuthorityGap(RuntimeError):
+    """The frozen package defines no normative LCI result for this path."""
+
+
+class FixtureIntegrityError(RuntimeError):
+    """Internal fixture/package state contradicts a sealed invariant."""
+
+
 @dataclass(frozen=True, slots=True)
 class LCIFailure(Exception):
     category: str
@@ -18,6 +116,10 @@ class LCIFailure(Exception):
     context: tuple[tuple[str, Any], ...] = ()
 
     def __post_init__(self) -> None:
+        if self.code not in AUTHORIZED_LCI_FAILURE_CODES:
+            raise FixtureIntegrityError(
+                f"unauthorized LCI failure code construction: {self.code!r}"
+            )
         Exception.__init__(self, f"{self.category}/{self.code}/{self.stage}")
 
     @property
@@ -158,14 +260,14 @@ def id_key(value: cd0.Identifier) -> tuple[tuple[str, ...], tuple[str, ...]]:
 
 def record_map(value: cd0.Datum) -> dict[tuple[tuple[str, ...], tuple[str, ...]], cd0.Datum]:
     if type(value) is not cd0.Record:
-        raise LCIFailure("invalid-input", "ExpectedRecord", "shape")
+        raise FixtureAuthorityGap("unsupported fixture record shape")
     return {id_key(key): item for key, item in value.fields}
 
 
 def field_by_path(value: cd0.Datum, name: str, default: Any = ...):
     if type(value) is not cd0.Record:
         if default is ...:
-            raise LCIFailure("invalid-input", "ExpectedRecord", "shape")
+            raise FixtureAuthorityGap("unsupported fixture record shape")
         return default
     matches = [item for key, item in value.fields if key.path == (name,)]
     if len(matches) == 1:
@@ -182,4 +284,4 @@ def scalar(value: cd0.Datum) -> Any:
         return "/".join(value.path)
     if type(value) is cd0.Unit:
         return None
-    raise LCIFailure("invalid-input", "ExpectedScalar", "shape")
+    raise FixtureAuthorityGap("unsupported fixture scalar shape")

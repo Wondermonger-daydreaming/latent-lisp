@@ -47,7 +47,16 @@ from .core import (
     validate_subject_time,
     validate_warrant_target,
 )
-from .model import ClaimIdEnvelope, LCIFailure, PolicyDecision, RelationResult, scalar
+from .model import (
+    AUTHORIZED_LCI_FAILURE_CODES,
+    ClaimIdEnvelope,
+    FixtureAuthorityGap,
+    FixtureIntegrityError,
+    LCIFailure,
+    PolicyDecision,
+    RelationResult,
+    scalar,
+)
 from .migration import legacy_inert, migrate, refuse_legacy_source, validate_migration_result
 from .package import iter_vectors
 
@@ -61,14 +70,6 @@ class Outcome:
     @property
     def status(self) -> str:
         return "failure" if self.failure is not None else "success"
-
-
-class FixtureAuthorityGap(RuntimeError):
-    """Host-side stop for an inverse case with no frozen LCI result schema.
-
-    This is deliberately not an :class:`LCIFailure`: the fixture package did
-    not authorize a normative category/code/stage/path tuple for these paths.
-    """
 
 
 OPERATION_PAYLOAD_SCHEMAS: dict[str, tuple[tuple[str, ...], ...]] = {
@@ -169,7 +170,7 @@ def record_to_mapping(
     namespace: tuple[str, ...] = FIXTURE_FIELD,
 ) -> dict[str, cd0.Datum]:
     if type(value) is not cd0.Record:
-        raise LCIFailure("invalid-input", "ExpectedRecord", "fixture-vector-input")
+        raise FixtureAuthorityGap("unsupported fixture vector record shape")
     result: dict[str, cd0.Datum] = {}
     for key, item in value.fields:
         if key.namespace != namespace or len(key.path) != 1 or key.path[0] in result:
@@ -180,7 +181,7 @@ def record_to_mapping(
 
 def id_name(value: cd0.Datum) -> str:
     if type(value) is not cd0.Identifier:
-        raise LCIFailure("invalid-input", "ExpectedIdentifier", "fixture-vector-input")
+        raise FixtureAuthorityGap("unsupported fixture vector identifier shape")
     return "/".join(value.path)
 
 
@@ -525,7 +526,7 @@ def _validate_fixture_bridge(value: cd0.Datum) -> dict[str, Any]:
         or type(fields["independent-test-required"]) is not cd0.Boolean
         or not fields["independent-test-required"].value
     ):
-        raise LCIFailure("invalid-input", "InvalidStableRefBridge", "stable-reference-bridge", ("bridge",))
+        raise FixtureAuthorityGap("unsupported fixture stable-reference bridge")
     mapping = _closed_fixture_record(
         mappings.items[0],
         ("source-material", "target-reference"),
@@ -533,7 +534,7 @@ def _validate_fixture_bridge(value: cd0.Datum) -> dict[str, Any]:
         path=("bridge", "fixture-field:mapping", "0"),
     )
     if type(mapping["source-material"]) is not cd0.String or mapping["source-material"].value != "alpha-file":
-        raise LCIFailure("invalid-input", "InvalidStableRefBridge", "stable-reference-bridge", ("bridge", "fixture-field:mapping", "0"))
+        raise FixtureAuthorityGap("unsupported fixture stable-reference bridge mapping")
     target = mapping["target-reference"]
     validate_stable_ref(target, path=("bridge", "fixture-field:mapping", "0", "fixture-field:target-reference"))
     if (
@@ -543,7 +544,7 @@ def _validate_fixture_bridge(value: cd0.Datum) -> dict[str, Any]:
         != ("object", "artifact", "file", "alpha.txt")
         or field_by_path(field_by_path(target, "material"), "object-version").value != 0
     ):
-        raise LCIFailure("invalid-input", "InvalidStableRefBridge", "stable-reference-bridge", ("bridge", "fixture-field:mapping", "0", "fixture-field:target-reference"))
+        raise FixtureAuthorityGap("unsupported fixture stable-reference bridge target")
     return {
         "source-material": "alpha-file",
         "target-reference": target,
@@ -596,14 +597,14 @@ def _fixture_policy_spec(policy: cd0.Datum) -> dict[str, Any]:
         or type(values["schema-version"]) is not cd0.Integer
         or values["schema-version"].value != 0
     ):
-        raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy",))
+        raise FixtureAuthorityGap("unsupported fixture policy")
     name_value = values["policy-name"]
     if (
         type(name_value) is not cd0.Identifier
         or name_value.namespace != FIXTURE
         or name_value.path not in (("fixture-policy", "policy-a"), ("fixture-policy", "policy-b"))
     ):
-        raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:policy-name"))
+        raise FixtureAuthorityGap("unsupported fixture policy")
     name = name_value.path[-1]
     policy_ref = values["policy"]
     validate_stable_ref(policy_ref, path=("policy", "fixture-field:policy"))
@@ -614,11 +615,11 @@ def _fixture_policy_spec(policy: cd0.Datum) -> dict[str, Any]:
         or field_by_path(material, "object-id").path != expected_object
         or field_by_path(material, "object-version").value != 0
     ):
-        raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:policy"))
+        raise FixtureAuthorityGap("unsupported fixture policy")
 
     rules_value = values["target-kind-rules"]
     if type(rules_value) is not cd0.Sequence:
-        raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:target-kind-rules"))
+        raise FixtureAuthorityGap("unsupported fixture policy")
     rules: dict[str, tuple[str, str, int]] = {}
     for index, rule in enumerate(rules_value.items):
         rule_path = ("policy", "fixture-field:target-kind-rules", str(index))
@@ -651,12 +652,12 @@ def _fixture_policy_spec(policy: cd0.Datum) -> dict[str, Any]:
             or threshold.value < 0
             or kind.path[-1] in rules
         ):
-            raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", rule_path)
+            raise FixtureAuthorityGap("unsupported fixture policy")
         rules[kind.path[-1]] = (disposition.path[-1], mode.path[-1], threshold.value)
 
     loss_rules_value = values["represented-loss-rules"]
     if type(loss_rules_value) is not cd0.Sequence:
-        raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:represented-loss-rules"))
+        raise FixtureAuthorityGap("unsupported fixture policy")
     loss_rules: dict[str, str] = {}
     for index, rule in enumerate(loss_rules_value.items):
         rule_path = ("policy", "fixture-field:represented-loss-rules", str(index))
@@ -677,12 +678,12 @@ def _fixture_policy_spec(policy: cd0.Datum) -> dict[str, Any]:
             or disposition.path[0] != "policy-loss-disposition"
             or consequence.path[-1] in loss_rules
         ):
-            raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", rule_path)
+            raise FixtureAuthorityGap("unsupported fixture policy")
         loss_rules[consequence.path[-1]] = disposition.path[-1]
 
     accepted_value = values["accepted-target-relations"]
     if type(accepted_value) is not cd0.Sequence:
-        raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:accepted-target-relations"))
+        raise FixtureAuthorityGap("unsupported fixture policy")
     accepted: set[str] = set()
     for index, relation in enumerate(accepted_value.items):
         if (
@@ -690,17 +691,17 @@ def _fixture_policy_spec(policy: cd0.Datum) -> dict[str, Any]:
             or relation.namespace != LCI + ("relation",)
             or relation.path not in (("exact-target",), ("supports-by-scope-narrowing",))
         ):
-            raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:accepted-target-relations", str(index)))
+            raise FixtureAuthorityGap("unsupported fixture policy")
         accepted.add(relation.path[-1])
 
     trusted_value = values["trusted-external-principals"]
     if type(trusted_value) is not cd0.Sequence:
-        raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:trusted-external-principals"))
+        raise FixtureAuthorityGap("unsupported fixture policy")
     trusted: set[bytes] = set()
     for index, principal in enumerate(trusted_value.items):
         validate_stable_ref(principal, path=("policy", "fixture-field:trusted-external-principals", str(index)))
         if field_by_path(principal, "domain").path != ("domain", "principal"):
-            raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:trusted-external-principals", str(index)))
+            raise FixtureAuthorityGap("unsupported fixture policy")
         trusted.add(canonical_bytes(principal))
 
     for flag in (
@@ -709,7 +710,7 @@ def _fixture_policy_spec(policy: cd0.Datum) -> dict[str, Any]:
         "policy-evaluation-is-meta-testimony",
     ):
         if type(values[flag]) is not cd0.Boolean:
-            raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", f"fixture-field:{flag}"))
+            raise FixtureAuthorityGap("unsupported fixture policy")
     return {
         "name": name,
         "rules": rules,
@@ -755,7 +756,7 @@ def _event_tick(value: cd0.Datum, role: str) -> int:
         or expression["form"].path != ("temporal-form", "instant")
         or type(expression["tick"]) is not cd0.Integer
     ):
-        raise LCIFailure("invalid-input", "InvalidPolicyQueryTime", "admissibility", ("query-time",))
+        raise FixtureAuthorityGap("unsupported fixture policy query time")
     return expression["tick"].value
 
 
@@ -763,16 +764,16 @@ def _relation_result_from_datum(value: cd0.Datum) -> RelationResult:
     fields = record_to_mapping(value)
     status = field_by_path(value, "status")
     if type(status) is not cd0.Identifier or status.namespace != FIXTURE or len(status.path) != 2 or status.path[0] != "result-status":
-        raise LCIFailure("invalid-input", "InvalidTargetRelationResult", "admissibility", ("target-relation",))
+        raise FixtureAuthorityGap("unsupported fixture target-relation result")
     if status.path[-1] == "success":
         if set(fields) != {"kind", "schema-version", "status", "relation"}:
-            raise LCIFailure("invalid-input", "InvalidTargetRelationResult", "admissibility", ("target-relation",))
+            raise FixtureAuthorityGap("unsupported fixture target-relation result")
         relation = field_by_path(value, "relation")
         if type(relation) is not cd0.Identifier or relation.namespace != LCI + ("relation",) or relation.path not in (("exact-target",), ("supports-by-scope-narrowing",)):
-            raise LCIFailure("invalid-input", "InvalidTargetRelationResult", "admissibility", ("target-relation", "relation"))
+            raise FixtureAuthorityGap("unsupported fixture target-relation result")
         return RelationResult(relation.path[-1])
     if status.path[-1] != "failure" or set(fields) != {"kind", "schema-version", "status", "failure"}:
-        raise LCIFailure("invalid-input", "InvalidTargetRelationResult", "admissibility", ("target-relation",))
+        raise FixtureAuthorityGap("unsupported fixture target-relation result")
     failure_value = field_by_path(value, "failure")
     category = field_by_path(failure_value, "category")
     code = field_by_path(failure_value, "code")
@@ -780,12 +781,20 @@ def _relation_result_from_datum(value: cd0.Datum) -> RelationResult:
     path_value = field_by_path(failure_value, "path")
     if (
         type(category) is not cd0.Identifier
+        or category.namespace != LCI + ("failure",)
+        or len(category.path) != 1
         or type(code) is not cd0.Identifier
+        or code.namespace != LCI + ("failure",)
+        or len(code.path) != 1
         or type(stage) is not cd0.Identifier
+        or stage.namespace != LCI + ("failure",)
+        or len(stage.path) != 1
         or type(path_value) is not cd0.Sequence
-        or any(type(item) is not cd0.Identifier for item in path_value.items)
+        or any(type(item) is not cd0.Identifier or not item.path for item in path_value.items)
     ):
-        raise LCIFailure("invalid-input", "InvalidTargetRelationResult", "admissibility", ("target-relation", "failure"))
+        raise FixtureAuthorityGap("unsupported fixture target-relation failure")
+    if code.path[-1] not in AUTHORIZED_LCI_FAILURE_CODES:
+        raise FixtureAuthorityGap("unsupported fixture target-relation failure code")
     return RelationResult(
         failure=LCIFailure(
             category.path[-1],
@@ -911,11 +920,11 @@ def _evaluate_fixture_policy(
         event_tick = query_tick
     age = query_tick - event_tick
     if age < 0:
-        raise LCIFailure("invalid-input", "InvalidPolicyQueryTime", "admissibility", ("query-time",))
+        raise FixtureAuthorityGap("unsupported fixture policy query time")
 
     rule = spec["rules"].get(target_kind)
     if rule is None:
-        raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:target-kind-rules"))
+        raise FixtureAuthorityGap("unsupported fixture policy")
     disposition, freshness_mode, threshold = rule
     freshness_value = _freshness("not-evaluated", 0, 0, False)
     if disposition in {"reject", "reject-inherited"}:
@@ -958,7 +967,7 @@ def _evaluate_fixture_policy(
         consequence = field_by_path(represented_loss, "consequence").path[-1]
         loss_disposition = spec["loss-rules"].get(consequence)
         if loss_disposition is None:
-            raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:represented-loss-rules"))
+            raise FixtureAuthorityGap("unsupported fixture policy")
 
     trusted_external = True
     if target_kind == "externally-attested":
@@ -1000,7 +1009,7 @@ def _evaluate_fixture_policy(
     elif freshness_mode == "not-applicable":
         freshness_value = _freshness("not-applicable", 0, 0, True)
     else:
-        raise LCIFailure("invalid-input", "UnsupportedFixturePolicy", "admissibility", ("policy", "fixture-field:target-kind-rules"))
+        raise FixtureAuthorityGap("unsupported fixture policy")
     if stale:
         decision = _admissibility_decision(
             policy,
@@ -1127,12 +1136,7 @@ def _validate_preprojection_contract(value: cd0.Datum, coordinate: str) -> None:
         and coordinate in expected_coordinates
     )
     if not valid:
-        raise LCIFailure(
-            "invalid-input",
-            "UnsupportedNormalizer",
-            "normalization",
-            ("fixture-field:normalizer",),
-        )
+        raise FixtureAuthorityGap("unsupported fixture normalizer")
 
 
 def _normalize_preprojection_coordinate(
@@ -1148,12 +1152,7 @@ def _normalize_preprojection_coordinate(
         or len(coordinate_value.path) != 2
         or coordinate_value.path[0] != "claim-coordinate"
     ):
-        raise LCIFailure(
-            "invalid-input",
-            "UnsupportedNormalizer",
-            "normalization",
-            ("fixture-field:coordinate",),
-        )
+        raise FixtureAuthorityGap("unsupported fixture normalizer coordinate")
     coordinate = coordinate_value.path[-1]
     _validate_preprojection_contract(normalizer, coordinate)
     path = (f"fixture-field:{side}",)
@@ -1166,12 +1165,7 @@ def _normalize_preprojection_coordinate(
     }
     validator = validators.get(coordinate)
     if validator is None:
-        raise LCIFailure(
-            "invalid-input",
-            "UnsupportedNormalizer",
-            "normalization",
-            ("fixture-field:coordinate",),
-        )
+        raise FixtureAuthorityGap("unsupported fixture normalizer coordinate")
     validator(value)
     # The frozen contract declares structural preservation for these already
     # canonical fixture values; it authorizes no denotational inference.
@@ -1201,7 +1195,7 @@ def _validate_differential_evidence(value: cd0.Datum) -> tuple[cd0.Datum, cd0.Da
         or type(fields["schema-version"]) is not cd0.Integer
         or fields["schema-version"].value != 0
     ):
-        raise LCIFailure("invalid-input", "InvalidDifferentialEvidence", "projection", ("fixture-field:evidence",))
+        raise FixtureAuthorityGap("unsupported fixture differential evidence")
     validate_proposition_location_consistency(
         fields["same-input"],
         field_by_path(fields["left-output"], "location"),
@@ -1209,10 +1203,10 @@ def _validate_differential_evidence(value: cd0.Datum) -> tuple[cd0.Datum, cd0.Da
     left = validate_claim_id(fields["left-output"])
     right = validate_claim_id(fields["right-output"])
     if canonical_bytes(fields["same-input"]) != canonical_bytes(field_by_path(left, "proposition")):
-        raise LCIFailure("invalid-input", "InvalidDifferentialEvidence", "projection", ("fixture-field:evidence", "fixture-field:same-input"))
+        raise FixtureAuthorityGap("unsupported fixture differential evidence")
     profile = record_to_mapping(fields["declared-profile"], namespace=LCI)
     if set(profile) != {"kind", "profile-id", "profile-version"}:
-        raise LCIFailure("invalid-input", "InvalidDifferentialEvidence", "claim-profile", ("fixture-field:evidence", "fixture-field:declared-profile"))
+        raise FixtureAuthorityGap("unsupported fixture differential evidence")
     if (
         field_by_path(fields["left-output"], "claim-profile") != fields["declared-profile"]
         or field_by_path(fields["right-output"], "claim-profile") != fields["declared-profile"]
@@ -1225,12 +1219,12 @@ def _validate_differential_evidence(value: cd0.Datum) -> tuple[cd0.Datum, cd0.Da
         or type(profile["profile-version"]) is not cd0.Integer
         or profile["profile-version"].value != 0
     ):
-        raise LCIFailure("invalid-input", "InvalidDifferentialEvidence", "claim-profile", ("fixture-field:evidence", "fixture-field:declared-profile"))
+        raise FixtureAuthorityGap("unsupported fixture differential evidence")
     for side in ("left", "right"):
         normalizer = fields[f"{side}-normalizer"]
         validate_stable_ref(normalizer, path=("fixture-field:evidence", f"fixture-field:{side}-normalizer"))
         if field_by_path(normalizer, "domain").path != ("domain", "procedure"):
-            raise LCIFailure("invalid-input", "InvalidDifferentialEvidence", "projection", ("fixture-field:evidence", f"fixture-field:{side}-normalizer"))
+            raise FixtureAuthorityGap("unsupported fixture differential evidence")
     return left, right
 
 
@@ -1254,7 +1248,7 @@ def _validate_claim_profile(value: cd0.Datum, path: tuple[str, ...]) -> None:
 def _validate_stable_domain(value: cd0.Datum, domain: str, path: tuple[str, ...]) -> None:
     validate_stable_ref(value, path=path)
     if field_by_path(value, "domain").path != ("domain", domain):
-        raise LCIFailure("invalid-input", "InvalidConformanceEvidence", "normalizer-conformance", path)
+        raise FixtureAuthorityGap("unsupported fixture conformance evidence")
 
 
 def _validate_surface_proposition(value: cd0.Datum, path: tuple[str, ...]) -> None:
@@ -1276,7 +1270,7 @@ def _validate_surface_proposition(value: cd0.Datum, path: tuple[str, ...]) -> No
         or fields["operator"].namespace != FIXTURE
         or type(fields["arguments"]) is not cd0.Record
     ):
-        raise LCIFailure("invalid-input", "InvalidConformanceEvidence", "normalizer-conformance", path)
+        raise FixtureAuthorityGap("unsupported fixture conformance evidence")
 
 
 def _validate_normalizer_conformance(
@@ -1313,7 +1307,7 @@ def _validate_normalizer_conformance(
         or type(binding["normalizer-revision"]) is not cd0.Integer
         or binding["normalizer-revision"].value != 0
     ):
-        raise LCIFailure("invalid-input", "InvalidConformanceEvidence", "normalizer-conformance", ("fixture-field:binding",))
+        raise FixtureAuthorityGap("unsupported fixture conformance evidence")
     _validate_claim_profile(binding["claim-profile"], ("fixture-field:binding", "fixture-field:claim-profile"))
     _validate_stable_domain(binding["normalizer-procedure"], "procedure", ("fixture-field:binding", "fixture-field:normalizer-procedure"))
     for name in ("normalizer-content-identity", "mutation-vector", "semantic-projection-ledger"):
@@ -1330,7 +1324,7 @@ def _validate_normalizer_conformance(
             field_by_path(material, "object-id").path != expected_object
             or field_by_path(material, "object-version").value != 0
         ):
-            raise LCIFailure("invalid-input", "InvalidConformanceEvidence", "normalizer-conformance", ("fixture-field:binding", f"fixture-field:{name}"))
+            raise FixtureAuthorityGap("unsupported fixture conformance evidence")
     for name in (
         "total-over-declared-domain",
         "deterministic",
@@ -1339,7 +1333,7 @@ def _validate_normalizer_conformance(
         "loss-reporting",
     ):
         if type(binding[name]) is not cd0.Boolean or not binding[name].value:
-            raise LCIFailure("invalid-input", "InvalidConformanceEvidence", "normalizer-conformance", ("fixture-field:binding", f"fixture-field:{name}"))
+            raise FixtureAuthorityGap("unsupported fixture conformance evidence")
 
     mutation = _closed_fixture_record(
         mutation_value,
@@ -1371,7 +1365,7 @@ def _validate_normalizer_conformance(
         or mutation_record["field"].namespace != FIXTURE_FIELD
         or len(mutation_record["field"].path) != 1
     ):
-        raise LCIFailure("invalid-input", "InvalidConformanceEvidence", "normalizer-conformance", ("fixture-field:mutation-vector",))
+        raise FixtureAuthorityGap("unsupported fixture conformance evidence")
     _validate_surface_proposition(mutation["base-input"], ("fixture-field:mutation-vector", "fixture-field:base-input"))
 
     ledger = _closed_fixture_record(
@@ -1409,11 +1403,11 @@ def _validate_normalizer_conformance(
         or type(ledger["mappings"]) is not cd0.Sequence
         or not ledger["mappings"].items
     ):
-        raise LCIFailure("invalid-input", "InvalidConformanceEvidence", "normalizer-conformance", ("fixture-field:semantic-projection-ledger",))
+        raise FixtureAuthorityGap("unsupported fixture conformance evidence")
     _validate_stable_domain(ledger["normative-source"], "artifact", ("fixture-field:semantic-projection-ledger", "fixture-field:normative-source"))
     _validate_stable_domain(ledger["after-frame-schema"], "interpretation-frame-schema", ("fixture-field:semantic-projection-ledger", "fixture-field:after-frame-schema"))
     if canonical_bytes(ledger["normative-source"]) != canonical_bytes(binding["normalizer-content-identity"]):
-        raise LCIFailure("invalid-input", "InvalidConformanceEvidence", "normalizer-conformance", ("fixture-field:semantic-projection-ledger", "fixture-field:normative-source"))
+        raise FixtureAuthorityGap("unsupported fixture conformance evidence")
     for name in (
         "accepted-abstract-input-change",
         "normalized-proposition-change",
@@ -1422,7 +1416,7 @@ def _validate_normalizer_conformance(
         "failure-change",
     ):
         if type(ledger[name]) is not cd0.Boolean:
-            raise LCIFailure("invalid-input", "InvalidConformanceEvidence", "normalizer-conformance", ("fixture-field:semantic-projection-ledger", f"fixture-field:{name}"))
+            raise FixtureAuthorityGap("unsupported fixture conformance evidence")
     for index, mapping in enumerate(ledger["mappings"].items):
         item = _closed_fixture_record(
             mapping,
@@ -1455,7 +1449,7 @@ def _migration_classification_name(value: cd0.Datum) -> str:
         or value.path[0] != "migration-classification"
         or value.path[-1] not in MIGRATION_CLASSIFICATIONS
     ):
-        raise LCIFailure("invalid-input", "InvalidMigrationClassification", "migration-mapping", ("fixture-field:lci-classification",))
+        raise FixtureAuthorityGap("unsupported fixture migration classification")
     return value.path[-1]
 
 
@@ -1473,7 +1467,7 @@ def _validate_translation_receipt(value: cd0.Datum, path: tuple[str, ...]) -> cd
         or len(fields["source-language"].path) != 2
         or fields["source-language"].path[0] != "language"
     ):
-        raise LCIFailure("invalid-input", "InvalidTranslationReceipt", "translation", path)
+        raise FixtureAuthorityGap("unsupported fixture translation receipt")
     validate_claim_id(fields["normalized-claim-id"])
     return fields["normalized-claim-id"]
 
@@ -1483,7 +1477,7 @@ def _claim_content_utf8(value: cd0.Datum) -> bytes:
     arguments = field_by_path(proposition, "arguments")
     content = field_by_path(field_by_path(arguments, "content"), "value")
     if type(content) is not cd0.String:
-        raise LCIFailure("invalid-input", "InvalidUnicodeFixture", "fixture-operation", ("proposition", "arguments", "content"))
+        raise FixtureAuthorityGap("unsupported fixture Unicode claim")
     return content.value.encode("utf-8")
 
 
@@ -1577,14 +1571,14 @@ def _validate_resource_workload(operation: str, workload_value: cd0.Datum) -> tu
     resource_value = workload["resource"]
     generator = workload["generator"]
     if type(kind) is not cd0.Identifier or kind.namespace != FIXTURE or kind.path != ("tag", "deterministic-resource-workload"):
-        raise LCIFailure("invalid-input", "InvalidResourceWorkload", "resource-workload", ("fixture-field:workload", "fixture-field:kind"))
+        raise FixtureAuthorityGap("unsupported fixture resource workload")
     version, seed, requested = workload["schema-version"], workload["seed"], workload["requested"]
     if type(version) is not cd0.Integer or version.value != 0 or type(seed) is not cd0.Integer or seed.value != 0:
-        raise LCIFailure("invalid-input", "InvalidResourceWorkload", "resource-workload", ("fixture-field:workload",))
+        raise FixtureAuthorityGap("unsupported fixture resource workload")
     if type(requested) is not cd0.Integer or requested.value < 0:
-        raise LCIFailure("invalid-input", "InvalidResourceWorkload", "resource-workload", ("fixture-field:workload", "fixture-field:requested"))
+        raise FixtureAuthorityGap("unsupported fixture resource workload")
     if type(resource_value) is not cd0.Identifier or resource_value.namespace != FIXTURE or len(resource_value.path) != 2 or resource_value.path[0] != "resource":
-        raise LCIFailure("invalid-input", "InvalidResourceWorkload", "resource-workload", ("fixture-field:workload", "fixture-field:resource"))
+        raise FixtureAuthorityGap("unsupported fixture resource workload")
     resource = resource_value.path[1]
     expected_generator = RESOURCE_GENERATORS.get(resource)
     if (
@@ -1594,7 +1588,7 @@ def _validate_resource_workload(operation: str, workload_value: cd0.Datum) -> tu
         or generator.path != ("workload-generator", *expected_generator)
         or operation not in RESOURCE_OPERATIONS[resource]
     ):
-        raise LCIFailure("invalid-input", "InvalidResourceWorkload", "resource-workload", ("fixture-field:workload", "fixture-field:generator"))
+        raise FixtureAuthorityGap("unsupported fixture resource workload")
     return resource, requested.value
 
 
@@ -1606,7 +1600,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
         if operation == "validate-pinned-fixture":
             value = payload["fixture-value"]
             if canonical_bytes(value) != canonical_bytes(payload["registry-definition"]):
-                raise LCIFailure("invalid-input", "PinnedFixtureMismatch", "fixture-validation", ("fixture-value",))
+                raise FixtureIntegrityError("pinned fixture value differs from registry definition")
             outputs = {"validated-value": value, "canonical-octets": canonical_bytes(value), "shared-octet-obligation": True}
         elif operation == "canonicalize-record-order":
             left, right = payload["left-claim"], payload["right-claim"]
@@ -1633,14 +1627,14 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                     or {item.path[-1] for item in construction.items} != required_order
                     or len(construction.items) != len(required_order)
                 ):
-                    raise LCIFailure("invalid-input", "InvalidConstructionOrder", "fixture-operation", (f"fixture-field:{name}",))
+                    raise FixtureAuthorityGap("unsupported fixture construction order")
             outputs = {"canonical-claim-id": left, "same-canonical-octets": canonical_bytes(left) == canonical_bytes(right)}
         elif operation == "compare-claim-ids":
             outputs = {"comparison": _claim_coordinate_difference(payload["left"], payload["right"])}
         elif operation == "compare-claim-id-set":
             claims_value = payload["claims"]
             if type(claims_value) is not cd0.Sequence or len(claims_value.items) < 2:
-                raise LCIFailure("invalid-input", "InvalidClaimSet", "fixture-operation", ("fixture-field:claims",))
+                raise FixtureAuthorityGap("unsupported fixture claim set")
             claims = claims_value.items
             for claim in claims:
                 validate_claim_id(claim)
@@ -1689,12 +1683,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                             ("nonidentity-coordinate", "lineage"),
                         }
                     ):
-                        raise LCIFailure(
-                            "invalid-input",
-                            "InvalidComparisonCoordinate",
-                            "fixture-operation",
-                            ("fixture-field:comparison-coordinate",),
-                        )
+                        raise FixtureAuthorityGap("unsupported fixture comparison coordinate")
                     left_value = field_by_path(
                         payload["left-occurrence"], coordinate.path[-1]
                     )
@@ -1702,12 +1691,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                         payload["right-occurrence"], coordinate.path[-1]
                     )
                     if canonical_bytes(left_value) == canonical_bytes(right_value):
-                        raise LCIFailure(
-                            "invalid-input",
-                            "InvalidComparisonCoordinate",
-                            "fixture-operation",
-                            ("fixture-field:comparison-coordinate",),
-                        )
+                        raise FixtureAuthorityGap("unsupported fixture comparison coordinate")
                     outputs = {"same-claim-id": same, "claim-id": left.datum}
                 else:
                     outputs = {
@@ -1752,12 +1736,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
             if complete.failure is not None:
                 raise complete.failure
             if incomplete.failure is None:
-                raise LCIFailure(
-                    "internal-invariant-failure",
-                    "FixtureRegistryMismatch",
-                    "internal",
-                    ("fixture-field:incomplete-target",),
-                )
+                raise FixtureIntegrityError("incomplete corpus-completion fixture unexpectedly matched")
             outputs = {
                 "embedded-claim-same": claim_ids_equal(field_by_path(payload["complete-target"], "claim"), field_by_path(payload["incomplete-target"], "claim")),
                 "targets-distinct": canonical_bytes(payload["complete-target"]) != canonical_bytes(payload["incomplete-target"]),
@@ -1822,7 +1801,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
             left_material = _validate_external_artifact_reference(left)
             registry = payload["bridge-registry"]
             if type(registry) is not cd0.Sequence:
-                raise LCIFailure("invalid-input", "InvalidStableRefBridge", "stable-reference-bridge", ("fixture-field:bridge-registry",))
+                raise FixtureAuthorityGap("unsupported fixture stable-reference bridge registry")
             equivalent = False
             for bridge in registry.items:
                 mapped = _bridge_target(bridge, left)
@@ -1936,7 +1915,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
         elif operation == "validate-profile-location":
             profile_location = payload["profile-location"]
             if type(profile_location) is not cd0.Record:
-                raise LCIFailure("invalid-input", "InvalidProfileLocation", "profile-location", ("fixture-field:profile-location",))
+                raise FixtureAuthorityGap("unsupported fixture profile-location shape")
             if profile_location.fields:
                 key = profile_location.fields[0][0]
                 raise LCIFailure(
@@ -1950,12 +1929,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
             op_name = id_name(payload["operation"]).split("/")[-1]
             account_operation = validate_loss_account(payload["account"], ("account",))
             if account_operation != op_name:
-                raise LCIFailure(
-                    "invalid-input",
-                    "InvalidRepresentedLoss",
-                    "represented-loss",
-                    ("account", "fixture-field:account-schema"),
-                )
+                raise FixtureAuthorityGap("unsupported represented-loss account operation binding")
             account = record_to_mapping(payload["account"])
             outputs = {"valid": True, "closed": True, "account-schema": account["account-schema"]}
         elif operation.startswith("conformance-") or operation == "normalize-proposition":
@@ -1989,7 +1963,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                 or len(change_value.path) != 2
                 or change_value.path[0] != "change-class"
             ):
-                raise LCIFailure("invalid-input", "UnsupportedVersionChange", "version-governance", ("fixture-field:change",))
+                raise FixtureAuthorityGap("unsupported fixture version change")
             change = change_value.path[-1]
             axis = {
                 "proposition-grammar": "required-version-axis/claim-profile",
@@ -1999,7 +1973,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                 "semantics-preserving-implementation-correction": "required-version-axis/none",
             }.get(change)
             if axis is None:
-                raise LCIFailure("invalid-input", "UnsupportedVersionChange", "version-governance", ("fixture-field:change",))
+                raise FixtureAuthorityGap("unsupported fixture version change")
             invariants = (
                 "accepted-abstract-inputs-unchanged",
                 "normalized-propositions-unchanged",
@@ -2008,11 +1982,11 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                 "projection-field-set-unchanged",
             )
             if any(type(payload[name]) is not cd0.Boolean for name in invariants):
-                raise LCIFailure("invalid-input", "InvalidVersionGovernanceEvidence", "version-governance", ("fixture-field:change",))
+                raise FixtureAuthorityGap("unsupported fixture version-governance evidence")
             unchanged = all(payload[name].value for name in invariants)
             implementation_correction = change == "semantics-preserving-implementation-correction"
             if unchanged != implementation_correction:
-                raise LCIFailure("invalid-input", "InvalidVersionGovernanceEvidence", "version-governance", ("fixture-field:change",))
+                raise FixtureAuthorityGap("unsupported fixture version-governance evidence")
             outputs = {"version-bump-required": not implementation_correction, "required-version-axis": axis, "conformance-evidence-required": True, "implementation-binary-in-claim-id": False}
         elif operation == "validate-normalizer-revision":
             proposal = _closed_fixture_record(
@@ -2039,7 +2013,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                 or proposal["schema-version"].value != 0
                 or type(proposal["known-input"]) is not cd0.String
             ):
-                raise LCIFailure("invalid-input", "InvalidNormalizerRevisionProposal", "claim-profile", ("fixture-field:proposal",))
+                raise FixtureAuthorityGap("unsupported fixture normalizer revision proposal")
             for name in ("before-normalizer", "after-normalizer"):
                 _validate_stable_domain(proposal[name], "procedure", ("fixture-field:proposal", f"fixture-field:{name}"))
             _validate_stable_domain(proposal["declared-frame-schema"], "interpretation-frame-schema", ("fixture-field:proposal", "fixture-field:declared-frame-schema"))
@@ -2050,7 +2024,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                 field_by_path(before, "claim-profile") != proposal["declared-claim-profile"]
                 or field_by_path(after, "claim-profile") != proposal["declared-claim-profile"]
             ):
-                raise LCIFailure("invalid-input", "InvalidNormalizerRevisionProposal", "claim-profile", ("fixture-field:proposal", "fixture-field:declared-claim-profile"))
+                raise FixtureAuthorityGap("unsupported fixture normalizer revision proposal")
             if canonical_bytes(before) != canonical_bytes(after):
                 raise LCIFailure("unsupported-version-or-profile", "MeaningChangingNormalizerVersionReuse", "claim-profile", ("fixture-field:declared-claim-profile", "profile-version"))
             raise FixtureAuthorityGap(
@@ -2074,7 +2048,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                 or type(payload["left-operational-digest"]) is not cd0.ByteString
                 or type(payload["right-operational-digest"]) is not cd0.ByteString
             ):
-                raise LCIFailure("invalid-input", "UnsupportedDigestFixture", "fixture-operation", ("fixture-field:digest-scheme",))
+                raise FixtureAuthorityGap("unsupported fixture digest comparison")
             digests_equal = canonical_bytes(payload["left-operational-digest"]) == canonical_bytes(payload["right-operational-digest"])
             envelopes_equal = claim_ids_equal(payload["left-claim-id"], payload["right-claim-id"])
             outputs = {"digests-equal": digests_equal, "claim-id-envelopes-equal": envelopes_equal, "semantic-claim-id-equal": envelopes_equal, "envelope-resolution-required": digests_equal and not envelopes_equal}
@@ -2147,7 +2121,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
             name = _migration_classification_name(classification)
             prior = payload["prior-ruling-terms"]
             if type(prior) is not cd0.Sequence:
-                raise LCIFailure("invalid-input", "InvalidMigrationClassification", "migration-mapping", ("fixture-field:prior-ruling-terms",))
+                raise FixtureAuthorityGap("unsupported fixture migration classification mapping")
             characters: list[str] = []
             for index, item in enumerate(prior.items):
                 if (
@@ -2157,7 +2131,7 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                     or item.path[0] != "prior-ruling-migration-classification"
                     or len(item.path[1]) != 1
                 ):
-                    raise LCIFailure("invalid-input", "InvalidMigrationClassification", "migration-mapping", ("fixture-field:prior-ruling-terms", str(index)))
+                    raise FixtureAuthorityGap("unsupported fixture migration classification mapping")
                 characters.append(item.path[1])
             expected_prior = {
                 "exact": "exact",
@@ -2169,11 +2143,11 @@ def _execute_semantics(operation: str, payload: Mapping[str, cd0.Datum], *, vect
                 "privileged-runtime-relation-outside-claim-id": "profile-adapted",
             }[name]
             if "".join(characters) != expected_prior:
-                raise LCIFailure("invalid-input", "InvalidMigrationClassification", "migration-mapping", ("fixture-field:prior-ruling-terms",))
+                raise FixtureAuthorityGap("unsupported fixture migration classification mapping")
             outputs = {"mapping-defined": True, "lci-classification": classification, "prior-ruling-terms": payload["prior-ruling-terms"], "semantic-case": f"migration-mapping-case/{name}"}
         elif operation == "parse-legacy-source":
             refuse_legacy_source(payload["source"])
-            raise LCIFailure("internal-invariant-failure", "FixtureRegistryMismatch", "internal", ("fixture-field:source",))
+            raise FixtureIntegrityError("legacy parser unexpectedly returned from a refusal operation")
         elif operation == "parse-and-migrate-printer-variants":
             compact, pretty = payload["compact-source"], payload["pretty-source"]
             ci, pi = _legacy_inert(compact), _legacy_inert(pretty)
@@ -2256,6 +2230,9 @@ def expected_outcome(row: dict) -> Outcome:
     kind = id_name(kind_value).split("/")[-1]
     fields = record_to_mapping(expected, namespace=LCI if kind == "failure" else FIXTURE_FIELD)
     if kind == "failure":
+        expected_code = id_name(fields["code"]).split("/")[-1]
+        if expected_code not in AUTHORIZED_LCI_FAILURE_CODES:
+            raise FixtureIntegrityError("frozen vector expected an unauthorized LCI failure code")
         path = tuple(
             f"fixture-field:{item.path[-1]}"
             if item.namespace == ("lisp-plus", "lci", "0", "fixture", "field")
@@ -2275,7 +2252,7 @@ def expected_outcome(row: dict) -> Outcome:
             row["operation"],
             failure=LCIFailure(
                 id_name(fields["category"]).split("/")[-1],
-                id_name(fields["code"]).split("/")[-1],
+                expected_code,
                 id_name(fields["stage"]).split("/")[-1],
                 path,
                 context,

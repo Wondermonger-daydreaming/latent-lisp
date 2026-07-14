@@ -46,7 +46,7 @@ from lci0.core import (
 )
 from lci0.migration import migrate, refuse_legacy_source, validate_migration_result
 from lci0.package import fixture_datum, iter_vectors
-from lci0.model import RelationResult
+from lci0.model import FixtureAuthorityGap, FixtureIntegrityError, RelationResult
 from lci0.vector import comparison_signature, execute_row, expected_outcome, input_payload_by_id
 
 
@@ -308,7 +308,7 @@ class ActualResourceJurisdictionTests(unittest.TestCase):
 
 
 class GuardAndFreshConstructionTests(unittest.TestCase):
-    def test_every_public_resource_guard_preserves_frozen_failure_tuples(self):
+    def test_every_public_resource_guard_returns_only_authorized_lci_or_authority_gap(self):
         unit = cd0.unit()
         empty = cd0.record(())
         guarded_calls = {
@@ -337,14 +337,17 @@ class GuardAndFreshConstructionTests(unittest.TestCase):
         }
         for name, invoke in guarded_calls.items():
             with self.subTest(name=name):
-                with self.assertRaises(LCIFailure) as caught:
+                try:
                     invoke()
-                failure = caught.exception
-                self.assertEqual(len(failure.comparison_key), 4)
-                self.assertIs(type(failure.path), tuple)
-        relation = match_target(unit, unit)
-        self.assertIsInstance(relation.failure, LCIFailure)
-        self.assertIs(type(relation.failure.path), tuple)
+                except FixtureAuthorityGap:
+                    pass
+                except LCIFailure as failure:
+                    self.assertEqual(len(failure.comparison_key), 4)
+                    self.assertIs(type(failure.path), tuple)
+                else:
+                    self.fail("malformed hostile input unexpectedly succeeded")
+        with self.assertRaises(FixtureAuthorityGap):
+            match_target(unit, unit)
 
     def test_migration_uses_fresh_projection_and_never_reads_result_fixtures(self):
         source = fixture_datum("legacy-source.time-100")
@@ -490,12 +493,11 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
             "claimant",
             cd0.unit(),
         )
-        validation = vector_module.execute(
-            "validate-occurrence",
-            {"occurrence": occurrence},
-        )
-        self.assertIsInstance(validation.failure, LCIFailure)
-        self.assertEqual(validation.failure.code, "ExpectedRecord")
+        with self.assertRaises(FixtureAuthorityGap):
+            vector_module.execute(
+                "validate-occurrence",
+                {"occurrence": occurrence},
+            )
 
     def test_policy_vector_results_change_with_supplied_kind_trust_query_and_loss(self):
         p022 = input_payload_by_id("LCI0-P022")
@@ -627,9 +629,8 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
                         ("migration-classification", classification),
                     ),
                 )
-                with self.assertRaises(LCIFailure) as caught:
+                with self.assertRaises(FixtureAuthorityGap):
                     validate_migration_result(candidate)
-                self.assertNotEqual(caught.exception.path, ("classification",))
 
     def test_corpus_completion_operation_does_not_fabricate_matcher_failure(self):
         payload = input_payload_by_id("LCI0-P021")
@@ -647,11 +648,11 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
             "boundaries",
             incomplete_boundaries,
         )
-        outcome = vector_module.execute(
-            "compare-corpus-completion-targets",
-            {**payload, "incomplete-target": now_complete},
-        )
-        self.assertEqual(outcome.failure.code, "FixtureRegistryMismatch")
+        with self.assertRaises(FixtureIntegrityError):
+            vector_module.execute(
+                "compare-corpus-completion-targets",
+                {**payload, "incomplete-target": now_complete},
+            )
 
     def test_unpinned_proposition_form_does_not_reuse_universal_output(self):
         claim = fixture_datum("claim-id.file-alpha-neutral")
@@ -684,11 +685,11 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
             "mapping",
             cd0.sequence((mapping,)),
         )
-        altered = vector_module.execute(
-            "apply-stable-ref-bridge",
-            {**payload, "bridge": altered_bridge},
-        )
-        self.assertEqual(altered.failure.code, "InvalidStableRefBridge")
+        with self.assertRaises(FixtureAuthorityGap):
+            vector_module.execute(
+                "apply-stable-ref-bridge",
+                {**payload, "bridge": altered_bridge},
+            )
 
         source_material = replace_field(
             field_by_path(payload["source-reference"], "material"),
@@ -720,32 +721,26 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
 
     def test_version_governance_rejects_unknown_and_inconsistent_evidence(self):
         payload = input_payload_by_id("LCI0-E3-IMPLEMENTATION-CORRECTION")
-        unknown = vector_module.execute(
-            "classify-version-governance",
-            {
-                **payload,
-                "change": cd0.identifier(FIXTURE, ("change-class", "future-change")),
-            },
-        )
-        self.assertEqual(unknown.failure.code, "UnsupportedVersionChange")
+        with self.assertRaises(FixtureAuthorityGap):
+            vector_module.execute(
+                "classify-version-governance",
+                {
+                    **payload,
+                    "change": cd0.identifier(FIXTURE, ("change-class", "future-change")),
+                },
+            )
 
-        inconsistent = vector_module.execute(
-            "classify-version-governance",
-            {**payload, "claim-ids-unchanged": cd0.boolean(False)},
-        )
-        self.assertEqual(
-            inconsistent.failure.code,
-            "InvalidVersionGovernanceEvidence",
-        )
+        with self.assertRaises(FixtureAuthorityGap):
+            vector_module.execute(
+                "classify-version-governance",
+                {**payload, "claim-ids-unchanged": cd0.boolean(False)},
+            )
 
-        wrong_type = vector_module.execute(
-            "classify-version-governance",
-            {**payload, "claim-ids-unchanged": cd0.integer(1)},
-        )
-        self.assertEqual(
-            wrong_type.failure.code,
-            "InvalidVersionGovernanceEvidence",
-        )
+        with self.assertRaises(FixtureAuthorityGap):
+            vector_module.execute(
+                "classify-version-governance",
+                {**payload, "claim-ids-unchanged": cd0.integer(1)},
+            )
 
     def test_normalizer_evidence_and_equal_revision_are_not_shortcuts(self):
         evidence = input_payload_by_id("LCI0-E3-NORMALIZER-BINDING")
@@ -763,11 +758,11 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
             "deterministic",
             cd0.boolean(False),
         )
-        mutated = vector_module.execute(
-            "validate-normalizer-conformance-evidence",
-            {**evidence, "binding": mutated_binding},
-        )
-        self.assertEqual(mutated.failure.code, "InvalidConformanceEvidence")
+        with self.assertRaises(FixtureAuthorityGap):
+            vector_module.execute(
+                "validate-normalizer-conformance-evidence",
+                {**evidence, "binding": mutated_binding},
+            )
 
         revision = input_payload_by_id("LCI0-E3-MEANING-CHANGE-SAME-VERSION")
         proposal = revision["proposal"]
@@ -792,27 +787,27 @@ class SuccessorAuditRegressionTests(unittest.TestCase):
                 ),
             )
         )
-        outcome = vector_module.execute(
-            "map-migration-classification",
-            {**payload, "prior-ruling-terms": wrong_terms},
-        )
-        self.assertEqual(outcome.failure.code, "InvalidMigrationClassification")
+        with self.assertRaises(FixtureAuthorityGap):
+            vector_module.execute(
+                "map-migration-classification",
+                {**payload, "prior-ruling-terms": wrong_terms},
+            )
 
     def test_claim_comparison_operations_derive_equal_and_invalid_cases(self):
         canonical = input_payload_by_id("LCI0-P002")
-        invalid_order = vector_module.execute(
-            "canonicalize-record-order",
-            {
-                **canonical,
-                "left-construction-order": cd0.sequence(()),
-            },
-        )
-        self.assertEqual(invalid_order.failure.code, "InvalidConstructionOrder")
-        invalid_claim = vector_module.execute(
-            "canonicalize-record-order",
-            {**canonical, "left-claim": cd0.unit()},
-        )
-        self.assertIsInstance(invalid_claim.failure, LCIFailure)
+        with self.assertRaises(FixtureAuthorityGap):
+            vector_module.execute(
+                "canonicalize-record-order",
+                {
+                    **canonical,
+                    "left-construction-order": cd0.sequence(()),
+                },
+            )
+        with self.assertRaises(FixtureAuthorityGap):
+            vector_module.execute(
+                "canonicalize-record-order",
+                {**canonical, "left-claim": cd0.unit()},
+            )
 
         claim_set = input_payload_by_id("LCI0-P008")
         first = claim_set["claims"].items[0]
