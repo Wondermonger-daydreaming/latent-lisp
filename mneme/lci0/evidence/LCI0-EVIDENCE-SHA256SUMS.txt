@@ -1,0 +1,12 @@
+afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa  mneme/lci0/evidence/LCI0-IMPLEMENTATION-EVIDENCE-2026-07-14.tar.gz
+1e9b2d0d88da5ab50ffb777360e7a6f9f908b4fd7057d0038c757e24038819d7  mneme/lci0/fixtures/LCI0-FIXTURE-PACKAGE-MANIFEST.md
+d394678a851043e40d42cb7d382f77f113a54b5fcfe0bebcfed8825af6ec1050  mneme/lci0/fixtures/LCI0-FIXTURE-SHA256SUMS.txt
+89cd11ac52478a9e3ff9ebdefcc60b2fff8fa2c8707e159b4f4bd0b6e2cefdfd  mneme/lci0/fixtures/archives/FABLE-LCI0-PASS-RECEIPT-PACKET-2026-07-14.zip
+36cc71ccf3c310a055199c54e84bf436c4505d92a6378f22e8b1d932f02e987d  mneme/lci0/fixtures/archives/lci0-errata-0.1-fixture-package-2026-07-14.zip
+45f52cf4bfba7c486575cd752fdf51dcd4176731c9a8032b16cbb1f048efc31f  mneme/lci0/differential/artifacts/baseline-2026-07-14/summary.json
+33a351f621a7b78d52bef55de71c98c98a891ab4b3fd6981d5ff00e3205a3b7f  mneme/lci0/differential/artifacts/baseline-2026-07-14/sha256-manifest.json
+7f63cd0cb59c12d0d909f19e4fdc3d5625912c1ced7562c9aef7813ccfe25d7e  mneme/lci0/differential/artifacts/successor-final-2026-07-14/summary.json
+d81d084cac92b10bdc8bbde66f3f5a6e89dcf55f4b6b718762653ae4d1c6b994  mneme/lci0/differential/artifacts/successor-final-2026-07-14/sha256-manifest.json
+0a318264436c6b6dd018fa31188315610d4bea8486bd0c61463d9e6a9fdcce6c  mneme/lci0/differential/artifacts/post-convergence-final-2026-07-14/summary.json
+8ef26d59732db292ad307ae0bfc3b5db5d512a2291b771e208965afdbe449ead  mneme/lci0/differential/artifacts/post-convergence-final-2026-07-14/sha256-manifest.json
+a87d3a4a438712cf6e45bdbea7189de32bd08a7abb573b765b23b93361d2dcaf  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/SHA256SUMS.txt
