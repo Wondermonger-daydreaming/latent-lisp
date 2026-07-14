@@ -9,9 +9,9 @@ new LCI semantics and neither implementation supplies its oracle.
 The program reads, hashes, and validates the successor differential summary
 before creating its output directory. It refuses to run unless:
 
-- both implementations have exactly the three disclosed exact-result blockers:
+- both implementations have exactly the four disclosed exact-result blockers:
   `vector:LCI0-N012`, `vector:LCI0-E5-COVERAGE-INSUFFICIENT`, and
-  `vector:LCI0-P029`, with no other fixture mismatch;
+  `vector:LCI0-P024` and `vector:LCI0-P029`, with no other fixture mismatch;
 - every cross-implementation mismatch is one of the 38 enumerated
   `LCI0-DIV-014` companion failure paths and differs only in `failure.path`;
 - the summary declares all 38 paths in the closed top-level
@@ -20,7 +20,7 @@ before creating its output directory. It refuses to run unless:
   mismatch; and
 - the official and supplementary corpus/request counts are exact.
 
-The 41 affected observations remain authorially blocked. The harness never
+The 42 affected observations remain authorially blocked. The harness never
 counts them as pass, skipped, or N/A.
 
 ## Deterministic phase

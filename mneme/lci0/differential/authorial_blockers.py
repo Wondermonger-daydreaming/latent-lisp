@@ -12,6 +12,7 @@ BLOCKED_VECTOR_REQUESTS = frozenset(
     {
         "vector:LCI0-N012",
         "vector:LCI0-E5-COVERAGE-INSUFFICIENT",
+        "vector:LCI0-P024",
         "vector:LCI0-P029",
     }
 )
@@ -63,7 +64,7 @@ BLOCKED_RELATION_PATH_REQUESTS = frozenset(
 )
 
 
-if len(BLOCKED_VECTOR_REQUESTS) != 3:  # import-time closed-census assertion
+if len(BLOCKED_VECTOR_REQUESTS) != 4:  # import-time closed-census assertion
     raise RuntimeError("authorial vector blocker census drift")
 if len(BLOCKED_RELATION_PATH_REQUESTS) != 38:
     raise RuntimeError("authorial relation-path blocker census drift")

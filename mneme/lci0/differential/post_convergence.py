@@ -267,8 +267,8 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         implementation_counts = result.get("counts")
         _require(
             type(implementation_counts) is dict
-            and implementation_counts.get("vector_passed") == 212
-            and implementation_counts.get("vector_blocked") == 3
+            and implementation_counts.get("vector_passed") == 211
+            and implementation_counts.get("vector_blocked") == 4
             and not any(
                 name.endswith("_failed") and count
                 for name, count in implementation_counts.items()

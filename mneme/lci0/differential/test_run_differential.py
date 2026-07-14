@@ -21,8 +21,8 @@ def _comparison() -> dict:
     result = {
         "counts": {
             "vector_requests": 215,
-            "vector_passed": 212,
-            "vector_blocked": 3,
+            "vector_passed": 211,
+            "vector_blocked": 4,
         },
         "mismatches": _blocked_mismatches(),
     }

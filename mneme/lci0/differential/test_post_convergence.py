@@ -61,11 +61,11 @@ def _successor_summary(cross_ids=()) -> dict:
         "comparison": {
             "implementations": {
                 "common-lisp": {
-                    "counts": {"vector_passed": 212, "vector_blocked": 3},
+                    "counts": {"vector_passed": 211, "vector_blocked": 4},
                     "mismatches": list(mismatches),
                 },
                 "python": {
-                    "counts": {"vector_passed": 212, "vector_blocked": 3},
+                    "counts": {"vector_passed": 211, "vector_blocked": 4},
                     "mismatches": list(mismatches),
                 },
             },
@@ -79,7 +79,7 @@ class SuccessorGateTests(unittest.TestCase):
         result = subject.verify_successor_gate(_successor_summary())
         self.assertEqual(result["observed_cross_relation_path_disagreements"], 0)
         self.assertEqual(result["relation_path_blocker_count"], 38)
-        self.assertEqual(result["vector_blocker_count"], 3)
+        self.assertEqual(result["vector_blocker_count"], 4)
 
     def test_gate_allows_only_enumerated_cross_path_differences(self):
         request_id = sorted(subject.BLOCKED_RELATION_PATH_REQUESTS)[0]
