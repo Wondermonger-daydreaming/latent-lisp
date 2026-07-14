@@ -45,9 +45,8 @@ Status vocabulary in result columns is deliberately bounded:
   assertion for the affected path. It is not a pass, failure, skip, or N/A.
 - `PASS-PROTECTED` is used only for the independently rerun CD/0 or Mneme/v1
   nonregression floors.
-- `PENDING` is retained only for publication/read-back or an external
-  independent reviewer disposition not yet available when this ledger was
-  refreshed.
+- `PENDING` is retained only for an external independent reviewer disposition
+  not yet available when this ledger was refreshed.
 
 ## Core implementation crosswalk
 
@@ -99,7 +98,7 @@ Status vocabulary in result columns is deliberately bounded:
 | NONREG-2 | Preserve existing v1 and production Mneme behavior; introduce no live authority/warrant object | Preflight and seed receipts | `mneme/verify-all.sh` 6/6; protected production objects unchanged; no live system introduced | PASS-PROTECTED |
 | EVIDENCE-1 | Produce checksummed reproducible evidence archive | Common Lisp seed archive only | Commit `37cdf0a...`; 180 members; 9,573,988 bytes; SHA-256 `afad708a...`; deterministic rebuild and extracted-manifest verification | COMPLETE-ARCHIVED |
 | CLEANUP-1 | Commit raw transcripts and archive before deleting safe loose detritus | Baseline raw files are retained in Git history | Commit `e21ef1a...`; 63 recoverable loose files / 232,093,546 bytes removed after archive commit; compact summaries/manifests retained | COMPLETE-CLEAN |
-| PUBLISH-1 | Push successor branches non-force and verify remote read-back without merging main | No final publication claim exists | Atomic/non-force push command, remote object IDs, read-back fetch, branch protection observation | PENDING |
+| PUBLISH-1 | Push successor branches non-force and verify remote read-back without merging main | `LCI0-PUBLICATION-READBACK-RECEIPT.md` | Atomic push created all three refs; exact `ls-remote` and fetched-ref equality; remote archive blob verified; main unchanged | COMPLETE-PUBLISHED |
 | AUDIT-1 | Fresh independent implementation audit after convergence and evidence completion | `LCI0-CORRECTION-VERIFICATION-AUDIT.md` records a separately tasked scope-limited correction audit; no external reviewer PASS exists | All six prior defect families closed; eight cross-language hostile witnesses exact; overall conformance cannot close before authorial returns | PASS-CORRECTION-SCOPE / BLOCKED-OVERALL |
 
 ## Authorial-return gates
@@ -137,7 +136,7 @@ Status vocabulary in result columns is deliberately bounded:
 | v1 nonregression | PASS-PROTECTED, 6/6 |
 | Evidence archive members/bytes/SHA-256 | 180 / 9,573,988 / `afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa`; source commit `a8bfdbd...`; archive commit `37cdf0a...` |
 | Cleanup commit and retained/deleted inventory | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb`; 63 files / 232,093,546 bytes deleted; nine compact raw summaries/manifests/inventories retained plus archive |
-| Branch publication and remote read-back | PENDING |
+| Branch publication and remote read-back | PASS: Common Lisp `2513c354...`, Python `db627cb6...`, integration content `05d985bc...`; atomic non-force push and fetched remote equality; main `26ac543...` unchanged |
 | Independent reviewer PASS | PENDING |
 | Independent audit standing | Corrected unaffected implementation/evidence ready for audit; overall completion BLOCKED pending authorial closure; no reviewer PASS |
 
@@ -155,4 +154,5 @@ with procedural—not OS-enforced—isolation.
 | Deterministic mutation/host matrix | 329 cases across six adapters plus ten native profiles | BLOCKED | 104 failure-coordinate and 14 result-coordinate cases are deliberately not promoted |
 | Protected CD/0 and v1 behavior | five independent nonregression gates and protected-object comparison | PASS-PROTECTED | finite tests, not a formal proof |
 | Archive/cleanup | deterministic archive rebuild, full extracted-manifest verification, Git deletion census | COMPLETE | archive source predates its own receipt and cleanup by design; all later identities are recorded outside the archive |
-| Publication/reviewer | not available at this refresh | PENDING | remote read-back and external reviewer disposition |
+| Publication | atomic non-force push, `ls-remote`, fetched-ref equality, and remote archive-blob hash | COMPLETE-PUBLISHED | receipt-containing integration commit is verified in the final handoff because a receipt cannot name its own commit |
+| External reviewer | no PASS exists | PENDING | independent reviewer disposition |

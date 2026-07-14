@@ -46,6 +46,8 @@ Start with:
 - `evidence/LCI0-EVIDENCE-ARCHIVE-RECEIPT.md` and
   `evidence/LCI0-CLEANUP-RECEIPT.md` for the reproducible archive and safe
   loose-transcript cleanup;
+- `evidence/LCI0-PUBLICATION-READBACK-RECEIPT.md` for the non-force successor
+  publication and object-level remote verification;
 - `evidence/LCI0-FINAL-VERIFICATION-TRANSCRIPT.md` for commands and counts;
 - `evidence/LCI0-IMPLEMENTATION-DIVERGENCES.md` for the append-only divergence
   record and ten authorial-return packets; and

@@ -289,8 +289,8 @@ and generated detritus → non-force branch publication → remote read-back.
 | Reproducible evidence archive members/bytes/SHA-256 | 180 members; 9,573,988 bytes; `afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa` |
 | Deterministic archive rebuild comparison | PASS: two byte-identical builds; 179 declared payloads, zero missing/mismatched/extra after extraction |
 | Loose-file/detritus cleanup commit and deletion inventory | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb`; 63 archive-covered files, 232,093,546 loose bytes; exact paths in commit name-status |
-| Successor branch publication | PENDING; must be non-force |
-| Remote read-back | PENDING |
+| Successor branch publication | PASS: atomic non-force creation of Common Lisp `2513c354...`, Python `db627cb6...`, and integration content `05d985bc...` |
+| Remote read-back | PASS: `ls-remote` and fetched refs exact; remote integration archive blob SHA-256 `afad708a...`; remote main unchanged at `26ac543...` |
 | Independent reviewer PASS | none |
 
 Frozen specs/fixtures, immutable seeds, authored receipts, the standalone

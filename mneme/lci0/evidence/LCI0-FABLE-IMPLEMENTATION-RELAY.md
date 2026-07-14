@@ -181,7 +181,7 @@ from the final tip.
 | Reproducible evidence archive members/bytes/SHA-256 | 180 / 9,573,988 / `afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa` |
 | Deterministic archive rebuild | PASS; two byte-identical builds and zero extracted manifest discrepancy |
 | Cleanup commit and loose-file deletion inventory | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb`; 63 files / 232,093,546 bytes; exact path list in Git name-status |
-| Non-force branch push and remote read-back | PENDING |
+| Non-force branch push and remote read-back | PASS: atomic three-branch push; exact `ls-remote`/fetched-ref equality; archive blob verified; main unchanged |
 | Independent reviewer disposition | PENDING; no PASS exists |
 
 Main was not merged. Frozen artifacts, seeds, authored receipts, the standalone
