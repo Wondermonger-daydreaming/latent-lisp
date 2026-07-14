@@ -1,0 +1,12 @@
+c09063ff037c369a69acb8fc5aec72e54c13ecc57d9256182e71d58cc2c26206  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/COMMANDS.md
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/cd0-differential.stderr.txt
+b78d98e55d5274ab7b1c0a3ed41d766c80b7ce54b867d0345b04552deac42b4c  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/cd0-differential.stdout.json
+e19e217df378e8f1cfdc20e2f9e734e38b12db89d6ea2c5e9f22a07ee6e06fc8  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/cd0-frozen-inventory.sha256
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/common-lisp-cd0.stderr.txt
+fe4272bb6617642e184c50e68a6f42398969273952ab970f2573847a467415f5  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/common-lisp-cd0.stdout.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/mneme-v1.stderr.txt
+2f54c64cfdf081d2c7a7d3003236a5385695c2655c332fd9045c105f59ae55f8  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/mneme-v1.stdout.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/phase0.stderr.txt
+e057f315ac01a7554e57d3a763cad6203415fbb4b74956bdaae1f97bce1442f3  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/phase0.stdout.txt
+22b9e5749f86df1e78b455c9a93cb7903be2c85771a975c75f318bed2cc38cee  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/python-cd0.stderr.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  mneme/lci0/evidence/raw/nonregression-final-2026-07-14/python-cd0.stdout.txt

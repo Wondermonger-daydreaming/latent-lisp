@@ -1,0 +1,16 @@
+
+════════════════════════════════════════════════════════════════════
+  MNEME — verify-all : one floor, one exit code
+════════════════════════════════════════════════════════════════════
+
+  PASS  conformance-walk              expected 7 ✓, got 7 (L1–L7 hold)
+  PASS  adversarial-conformance       expected 18 passed 0 failed, got 18 passed 0 failed
+  PASS  counterexample-closure        expected 10 passed 0 failed, got 10 passed 0 failed
+  PASS  boundary                      expected 9 passed 0 failed, got 9 passed 0 failed
+  PASS  atelier                       expected 4 pass-banners, got 4 (6 specimens + jurisdiction wing + decad + post-decad)
+  PASS  language-a-fixtures           expected 14 PASS + SUITE PASSED, got 14 PASS / suite-line 1
+
+════════════════════════════════════════════════════════════════════
+  ALL FLOORS HOLD — 6/6 suites green.
+════════════════════════════════════════════════════════════════════
+
