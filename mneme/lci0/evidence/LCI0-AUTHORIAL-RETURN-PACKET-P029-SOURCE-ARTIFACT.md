@@ -75,5 +75,12 @@ The response should include replacement artifact hashes, version consequences,
 and a permanent regression vector. Until then, the required successor
 disposition is to preserve the explicit source binding, construct zero live
 warrants, and report the P029 right-result expected-document comparison as
-blocked rather than passed, failed, skipped, or N/A. Final execution evidence
-is PENDING.
+blocked rather than passed, failed, skipped, or N/A.
+
+## 2026-07-14 successor execution note
+
+The final exact sweep executed P029 in both implementations. Each preserved
+the explicit source artifact and produced zero live warrants; the unsourced
+right-result discrepancy remained blocked and was not counted as pass,
+failure, skip, or N/A. The post-convergence migration source/provenance and
+inertness cases converged outside the declared result coordinate.

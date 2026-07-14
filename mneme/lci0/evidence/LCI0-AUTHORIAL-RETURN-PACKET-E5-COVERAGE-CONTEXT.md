@@ -49,4 +49,11 @@ The response should provide successor artifact hashes, version consequences,
 and a permanent regression vector. Until then, the required successor
 disposition is to preserve the failure tuple using only input-derived context
 and report this exact expected document as blocked rather than passed, failed,
-skipped, or N/A. Final execution evidence is PENDING.
+skipped, or N/A.
+
+## 2026-07-14 successor execution note
+
+Both final adapters executed E5 from the frozen input and retained the
+input-derived failure as one of four blocked vector results. No implementation
+fabricated the expected tenant coverage, and E5 was not counted as pass,
+failure, skip, or N/A. Unaffected vector results converged.

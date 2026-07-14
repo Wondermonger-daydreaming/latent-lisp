@@ -82,3 +82,11 @@ Implementations may add a fail-closed rejection without accepting the witness,
 but the exact result-document comparison for this novel path remains BLOCKED
 until authorial closure. Valid registered CorpusBasis fixtures remain
 unaffected.
+
+## 2026-07-14 successor execution note
+
+The final successor unit census retained the novel CorpusBasis coherence
+witness as blocked while passing the independently pinned corpus/revision
+coherence tests. The exact 215-vector and 458-relation fixture paths showed no
+new implementation-owned mismatch. No local result tuple was promoted to
+normative standing.

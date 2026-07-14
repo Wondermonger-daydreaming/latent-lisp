@@ -144,3 +144,12 @@ Please publish, with replacement artifact hashes:
 Until closure, the combined path and untrusted-principal decision spelling are
 BLOCKED. Existing vectors whose inputs activate only one pinned branch remain
 executable; this packet does not add an implementation-local expected result.
+
+## 2026-07-14 successor execution note
+
+The final post-convergence run executed the combined policy/meta-testimony
+witness under all six adapter profiles. Every nonblocked predicate converged;
+only `outputs/policy-b-decision/reasons` remained redacted as the declared
+unpinned coordinate. The exact sweep also retained the unknown Policy-C case
+as an authority gap rather than inventing an LCI failure. These observations
+are covered by this packet and do not create an eleventh authorial return.

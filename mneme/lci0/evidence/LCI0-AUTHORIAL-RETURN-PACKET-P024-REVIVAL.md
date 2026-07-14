@@ -76,3 +76,11 @@ registry lookup.
 
 Until closure, `LCI0-P024` is BLOCKED and is not counted as pass, failure,
 skip, or N/A. Unaffected migration and occurrence vectors may continue.
+
+## 2026-07-14 successor execution note
+
+The final exact sweep again executed P024 in both implementations and retained
+the unsourced beta occurrence as one of the four blocked vector results. The
+post-convergence source-buffer mutation and independently allocated-value
+probes converged, and no live warrant was created. P024 remains outside the
+pass/failure/skip/N/A counts pending authorial closure.

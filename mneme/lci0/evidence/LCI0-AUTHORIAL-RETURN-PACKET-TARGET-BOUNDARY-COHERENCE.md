@@ -86,3 +86,13 @@ including:
 Until closure, hostile unvectored kind-specific mismatch paths are BLOCKED.
 Implementations must continue enforcing all independently pinned shape,
 type/version, ClaimId-coordinate, scope, and official-vector obligations.
+
+## 2026-07-14 successor execution note
+
+The final exact hostile matrix executed all 21 requests per implementation:
+13 passed their exact pinned result and 8 remained blocked. The two
+kind/schema boundary witnesses and nested-selector witness continued to fail
+closed; only their authorially unpinned result coordinates were withheld from
+conformance comparison. The seeded post-convergence run separately executed
+11 target-schema and 11 unknown-target boundary cases with no nonblocked
+failure.

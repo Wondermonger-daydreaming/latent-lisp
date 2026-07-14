@@ -106,3 +106,14 @@ Until then, accepting an unknown field or exposing a host exception is a
 defect; deterministic typed rejection may be tested; exact tuple convergence
 for these 104 novel witnesses remains BLOCKED. No official well-formed vector
 is reclassified by this packet.
+
+## 2026-07-14 successor execution note
+
+The seeded post-convergence run executed all 104 unknown/missing payload cases
+through six adapter profiles (624 requests). Both implementations failed
+closed without host exception prose. Known failure code/predicate obligations
+held; the unpinned category, stage, path, and context coordinates produced 208
+recorded baseline observations and remain blocked. Thirteen inclusive-limit
+resource cases and one policy case additionally retained only their explicitly
+named unpinned result coordinates. Those observations are already within this
+packet and the policy packet; no eleventh packet was created.

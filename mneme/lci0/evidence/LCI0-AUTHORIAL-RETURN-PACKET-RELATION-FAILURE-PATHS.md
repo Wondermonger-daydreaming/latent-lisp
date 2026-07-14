@@ -59,3 +59,12 @@ documents for both orientations of each F-valued relation family, including:
 Until then, the 458 relation values remain testable and determinate, while
 these 38 companion paths are blocked rather than passed, failed, skipped, or
 N/A.
+
+## 2026-07-14 successor execution note
+
+The final exact sweep executed all 458 relation rows in each implementation.
+All 458 relation values converged; 420 complete result documents passed and
+the same closed set of 38 companion failure paths remained blocked (24 scope,
+14 temporal). No relation outside that set differed. The post-convergence
+harness preserved the set as blocked evidence and did not treat either
+implementation as the oracle.

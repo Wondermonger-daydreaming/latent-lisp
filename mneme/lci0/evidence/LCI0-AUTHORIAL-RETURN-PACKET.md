@@ -80,3 +80,11 @@ count it as pass, failure, skip, or N/A. Relative to this packet alone, the
 remaining 214 vectors retain their independent standing; across all ten
 current packets the unaffected exact-vector ceiling is 211/215. Unaffected
 relation-table entries likewise retain their independent standing.
+
+## 2026-07-14 successor execution note
+
+The final exact sweep (`summary.json` SHA-256 `9f870fe9094cab469e2a0876fe04227a1cf720891bfca59cc3a2bc3156340d37`)
+again executed N012 in both implementations and retained it as one of exactly
+four blocked vector results. It was not counted as pass, failure, skip, or
+N/A. The other 211 vector results converged on the machine fixtures. No
+authorial response had been received when this note was recorded.
