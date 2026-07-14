@@ -23,8 +23,9 @@ For integration eligibility, those result claims are superseded by
 - `LCI0-P029` — expected source artifact differs from the explicit input.
 
 Those four exact result documents are authorially BLOCKED, not pass, failure,
-skip, or N/A. The current unaffected ceiling is 211/215; fresh committed
-successor execution and final counts are PENDING. The seed identity, tree,
+skip, or N/A. The current unaffected ceiling is 211/215. Successor execution
+was still pending when this first addendum was written; the final addendum
+below now records it. The seed identity, tree,
 pre-cross-reading inventory, and procedural-isolation facts remain unchanged.
 This addendum does not rewrite the seed commit, claim PASS, or establish
 eligibility for independent implementation audit.
@@ -191,3 +192,41 @@ commits exist. This branch is not merged or pushed by the seed agent. It is
 ready to be imported unchanged into the integration worktree; independent audit
 eligibility remains an integration-level conclusion, not a claim of this seed
 receipt.
+
+## Integration-successor execution addendum — 2026-07-14
+
+This addendum records later integration evidence without altering any seed-era
+observation above. The immutable seed remains
+`b3d28bc49c3b015096cb04c6ad08c19829f511a9`, tree
+`d48c39f933cde591f3303fcd3c9f42a0dac1a869`. Its reviewed successor is
+`2513c354721bac6120b8c0a5eef1ed13252cf75b`, tree
+`9ce6786ee374f3dafe859c6ea5977b27e6c6f718`; Git ancestry confirms the seed
+was preserved rather than rewritten.
+
+Audit history: exact r3/post final5 led an independent audit to six Python
+boundary defect families. They were corrected in `db627cb6...`, and eight new
+cross-language hostile regressions were integrated at `e6983952...`. The older
+counts remain historical; the r4/final6 counts below are current.
+
+At integration code commit `e6983952ea726366b69435b29eeb37eb76f8504d`,
+tree `daaef9bad97eced6c242fc8052cbedc8920d355a`, the Common Lisp adapter
+received 2,295 exact requests:
+
+- 1,593/1,593 canonical documents reproduced;
+- 211/215 vector results exact and four authorially BLOCKED;
+- 420/458 relation results exact and 38 companion paths BLOCKED;
+- 21/29 hostile results exact and eight exact-result paths BLOCKED; and
+- zero mismatch outside those declared blockers.
+
+Post-convergence final6 ran 329 deterministic cases at seed `0x4C434930`
+through two Common Lisp adapter profiles and six native Common Lisp host
+profiles. The native unit census was 77 pass, 0 fail, 18 BLOCKED. Across the
+full six-adapter comparison there were zero nonblocked failures; 104
+failure-coordinate and 14 result-coordinate cases remain authorially blocked.
+
+This supersedes the seed's semantic `215/215` standing only for current
+integration conclusions; it does not rewrite the historical command output.
+The corrected unaffected dual implementation/evidence is ready for independent
+audit. Overall completion remains **BLOCKED pending authorial closure**.
+Archive, publication, remote read-back, and reviewer PASS are not claimed by
+this seed receipt.

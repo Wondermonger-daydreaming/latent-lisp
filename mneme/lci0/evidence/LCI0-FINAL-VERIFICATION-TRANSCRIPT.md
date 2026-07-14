@@ -1,375 +1,307 @@
 # LCI/0 Final Verification Transcript
 
-Date opened: 2026-07-14
+Date: 2026-07-14
 
-Status: DRAFT; successor verification PENDING; ten provisional authorial-return
-packets BLOCKED
+Status: **corrected unaffected implementation/evidence ready for independent
+audit; overall conformance BLOCKED pending authorial closure.** Exact r4 and
+post final6 include the six Python boundary families found by the independent
+audit and have zero unaffected mismatch. This is not overall conformance,
+reviewer PASS, merge eligibility, or production authorization.
 
-This is a fill-forward transcript for the final integration-successor run. It
-contains verified preflight, immutable-seed, and baseline facts, but it is not a
-final PASS transcript and must not be used to assert audit eligibility.
+## 1. Evidence boundary and implementation identities
 
-## 1. Evidence boundary: baseline versus successor
-
-The baseline is the unchanged dual-seed integration used to discover and
-classify disagreements. The successor is the independently corrected language
-branches merged only after baseline evidence was frozen. These evidentiary
-roles must not be collapsed.
-
-| Layer | Commit/tree | What it establishes | What it does not establish |
+| Layer | Commit | Tree | Standing |
 | --- | --- | --- | --- |
-| Shared infrastructure | Commit `ab353b4b7f30d5e46323d274862e6c1212ebf514` | Frozen normative/fixture infrastructure and worktree base | Any language implementation result |
-| Common Lisp immutable seed | Commit `b3d28bc49c3b015096cb04c6ad08c19829f511a9`; tree `d48c39f933cde591f3303fcd3c9f42a0dac1a869` | Procedurally isolated first implementation and seed-gate evidence | Cross-language convergence or post-baseline corrections |
-| Python immutable seed | Commit `4ec2e519d05aeacd2412cb8aedc5f76bde702571`; tree `9f7915b460f449976a5d7fa856861ad5ce1d36ca` | Procedurally isolated first implementation and seed-gate evidence | Cross-language convergence or post-baseline corrections |
-| Unchanged seed integration | Commit `71f7cfc5ebe392d59d820203dad11cc2e86a0542` | Both immutable seeds imported without copying one into the other | Correctness after discovered divergences |
-| Baseline evidence | Commit `80f1202cc6d176d891179ca408d41136c9a28a97`; tree `c2e12bb976a923b9a17148ddf27c52489b5a0c9a` | Raw differential requests/responses and initial classifications | Successor convergence, final nonregression, archive/cleanup, or publication |
-| Common Lisp successor | PENDING | Independently reasoned corrections from baseline witnesses | PENDING |
-| Python successor | PENDING | Independently reasoned corrections from baseline witnesses | PENDING |
-| Integration successor | PENDING | Recombined corrected implementations and rerun evidence | PENDING |
+| Shared infrastructure | `ab353b4b7f30d5e46323d274862e6c1212ebf514` | `26d0714ba873ce4a44a978f7acf98d21fd3fc176` | Frozen shared normative/fixture base |
+| Common Lisp immutable seed | `b3d28bc49c3b015096cb04c6ad08c19829f511a9` | `d48c39f933cde591f3303fcd3c9f42a0dac1a869` | First procedurally isolated implementation |
+| Python immutable seed | `4ec2e519d05aeacd2412cb8aedc5f76bde702571` | `9f7915b460f449976a5d7fa856861ad5ce1d36ca` | First procedurally isolated implementation |
+| Unchanged-seed integration | `71f7cfc5ebe392d59d820203dad11cc2e86a0542` | `2bcc1c6ea363b9de2114db673a9ca509632fa68b` | Imports the seeds unchanged; discovery only |
+| Baseline raw evidence | `80f1202cc6d176d891179ca408d41136c9a28a97` | `c2e12bb976a923b9a17148ddf27c52489b5a0c9a` | Initial divergences and minimized witnesses |
+| Common Lisp successor | `2513c354721bac6120b8c0a5eef1ed13252cf75b` | `9ce6786ee374f3dafe859c6ea5977b27e6c6f718` | Independently reasoned Common Lisp corrections |
+| Python successor | `db627cb6ca23abc0626aebc6f9982ab9b4406dbf` | `74c6a7e5c144d3286b83a933b27cff3d5865921d` | Corrected audited Python successor |
+| Integration code tested | `e6983952ea726366b69435b29eeb37eb76f8504d` | `daaef9bad97eced6c242fc8052cbedc8920d355a` | Exact r4, new audit-hostile regressions, and post final6 identity |
+| Current exact/post raw transcript commit | `7ff074fdc234d826a113b0beb5e36b490d94b579` | `3b6834114f8c1df4f8810b4a56f66f0bf66de8e2` | Commits complete r4/final6 loose raw transcripts |
+| Superseded r3/final5 raw transcript commit | `041d53740165a122e27b08bf2cb097f0bd391161` | `ba00e2837cad7f107d846377bfbe33601802665f` | Retained audit history; not current evidence |
+| Nonregression raw transcript commit | `e552346123a35225023f5b33d8f288c7064e11da` | `62c405b0358a949c5590dbcc55b50c52a515ec8c` | Refreshes the five protected-floor transcripts after the audit fixes |
+| Documentation/archive/cleanup commits | PENDING | PENDING | Must be filled without rewriting any seed |
 
-### Immutable seed-receipt limitation and supersession
+Both successor commits descend from their immutable seeds, and both successor
+commits are ancestors of the tested integration commit. The accurate claim is:
 
-The receipt blobs in the two immutable seed commits remain historical records
-of what each seed observed before cross-reading; those seed objects are not
-amended or rewritten. The integration-successor copies now carry prominent
-audit addenda so the historical `215/215` and zero-underdetermined observations
-cannot be mistaken for current conformance. For successor/final conclusions,
-their implementation-result claims are superseded by the baseline divergence
-ledger, the closed four-vector blocker census, and the future successor
-receipts wherever those later artifacts add a narrower witness or
-contradiction.
+> Independently seeded implementations under shared normative infrastructure,
+> with procedural—not OS-enforced—isolation.
 
-Specifically:
+The seed receipts' historical `215/215` statements are not current conformance
+claims. Their seed chronology and inspection inventories remain valid; their
+semantic conclusions are superseded by the current four-vector blocker census
+where the later evidence is narrower.
 
-- seed corpus and red-baseline transcripts retain their historical standing;
-- seed claims of zero unresolved implementation-versus-fixture mismatch do not
-  govern after `LCI0-DIV-002` through `LCI0-DIV-015` were observed;
-- no successor correction may rewrite a seed commit or weaken the accurate
-  independence statement;
-- only the final successor trees and their fresh evidence may support a final
-  implementation conclusion.
+### Independent-audit correction history
 
-The accurate claim is: independently seeded implementations under shared
-normative infrastructure, with procedural—not OS-enforced—isolation.
+The first r3/final5 audit found six Python defect families: a ClaimId projection
+path could unwrap an occurrence and bypass the outer closed schema; a tagged
+Mneme profile-location with empty coordinates was admitted, while N009's
+existing nested diagnostic was preserved; target matching omitted proposition/identity-policy/profile/
+profile-location code and ordering checks; narrowing coverage was tested before
+nonmonotonicity; `production` and `model-current` aliases were admitted; and
+ClaimId equality did not validate both operands. Commit `db627cb6...` corrected all six and
+added ten direct Python regression tests. Integration commit `e6983952...`
+added eight cross-language hostile requests and corresponding adapter/harness
+tests. The corrected Python suite is 100/100, differential units are 53/53,
+and Common Lisp remains 77 pass, 0 fail, 18 authorially blocked. The audit
+history remains evidence; r4/final6 is the current execution boundary.
+The separately tasked correction-verification result is preserved in
+`LCI0-CORRECTION-VERIFICATION-AUDIT.md`; it is scope-limited and is not the
+external reviewer PASS required for merge eligibility.
 
-### Pre-seed red-evidence limitation
+## 2. Repository, host, backup, and branch boundary
 
-The preserved red transcripts establish that the fifteen named boundary tests
-were present before successful LCI behavior. Their initial failures, however,
-are dominated by missing modules or undefined entry points; they do not show
-fifteen independently reached semantic refusals at the relevant boundaries.
-They therefore establish implementation chronology, not complete boundary-level
-red semantics. Fresh successor hostile tests must supply that missing evidence,
-and the historical red transcripts must not be counted as fifteen semantic
-conformance passes or failures.
+| Field | Value |
+| --- | --- |
+| Integration worktree | `/home/gauss/Codex-Lab/latent-lisp-lci0-integration-successor` |
+| Origin | `https://github.com/Wondermonger-daydreaming/latent-lisp.git` |
+| Fetched `origin/main` | `26ac543856e30c340cc2dd4359802442636f4b94` |
+| OS | Ubuntu 24.04.3 LTS under WSL2; Linux `6.18.33.2-microsoft-standard-WSL2`, x86-64 |
+| Python | CPython 3.11.14 |
+| Common Lisp | SBCL 2.4.6 |
+| Immutable backup ref | `refs/backup/lci0-preimplementation-2026-07-14-26ac543` → `26ac543856e30c340cc2dd4359802442636f4b94` |
+| Standalone preimplementation bundle | 252,666,673 bytes; SHA-256 `b3bf606b892d8e47353248a69a3a534bff4cd4ad2708c587d7ebcbc57c54c936` |
+| Development branches | `codex/lci0-common-lisp-successor`, `codex/lci0-python-successor`, `codex/lci0-integration-successor` |
+| Main merge | Not performed and not authorized |
 
-## 2. Repository, host, and authority record
+The previously disclosed integration-worktree current-directory deviation is
+unchanged: seed merge objects `376f870e7b47c054f5cae4958259ef5a60ccf1cf`
+and `71f7cfc5ebe392d59d820203dad11cc2e86a0542` were preserved without
+amendment; only the branch/worktree pointers were corrected. This is a
+procedural disclosure, not a content rewrite.
 
-| Field | Verified preflight value | Final-run value |
-| --- | --- | --- |
-| Repository | `/home/gauss/Codex-Lab/latent-lisp` | PENDING |
-| Origin fetch/push URL | `https://github.com/Wondermonger-daydreaming/latent-lisp.git` | PENDING read-back |
-| Fetched `origin/main` | `26ac543856e30c340cc2dd4359802442636f4b94` | PENDING confirmation |
-| Host | Ubuntu 24.04.3 LTS under WSL2; Linux `6.18.33.2-microsoft-standard-WSL2`, x86-64 | PENDING |
-| Locale/timezone | `C.UTF-8`; `America/Sao_Paulo` | PENDING |
-| Git | 2.43.0 | PENDING |
-| Common Lisp | SBCL 2.4.6 | PENDING |
-| Python | CPython 3.11.14 | PENDING |
+## 3. Normative identities
 
-## 3. Normative and package identities
+Final rechecking reproduced the authoritative identities:
 
-| Artifact | Verified SHA-256 | Final recheck |
-| --- | --- | --- |
-| `LOCATED-CLAIM-IDENTITY-SPEC.md` | `6fa2965ed727b4d89b09a3d9c171bcfa3aea8c23f486ef87dc33f85bcb9ae5ba` | PENDING |
-| `LCI0-POST-REVIEW-RULING.md` | `c2ee9dbb2b3fc72abf4745f5e9a8b4a04d9e1bfeab0fbe224d5c7946e11360a7` | PENDING |
-| `LOCATED-CLAIM-IDENTITY-SPEC-ERRATA-0.1.md` | `f2bcea1db0e08fe271fdaa79c1f9d4406b94c2c730ab547c0024495ce962c5ea` | PENDING |
-| `LCI0-NORMATIVE-FIXTURE-PACKAGE-SPEC.md` | `ac0c9265e9583c698c397801099efa548cdbf33f686ebff5bacc8bbea7cbcd2f` | PENDING |
-| `LCI0-FIXTURE-REGISTRY.json` | `dd19c6d6543a875b2e7e1e6a234ad731ce019f64495b447b317462c63f826327` | PENDING |
-| `LCI0-FIXTURE-VECTORS.jsonl` | `387e76963f3087f6e41ec4363ec3eea29b1456c2a6b3c5a0cf5763418bffe3a4` | PENDING |
-| Fixture manifest | `1e9b2d0d88da5ab50ffb777360e7a6f9f908b4fd7057d0038c757e24038819d7` | PENDING |
-| Fixture checksum file | `d394678a851043e40d42cb7d382f77f113a54b5fcfe0bebcfed8825af6ec1050` | PENDING |
-| Fixture ZIP | `36cc71ccf3c310a055199c54e84bf436c4505d92a6378f22e8b1d932f02e987d` | PENDING |
-| Fable PASS packet | `89cd11ac52478a9e3ff9ebdefcc60b2fff8fa2c8707e159b4f4bd0b6e2cefdfd` | PENDING |
-| Frozen CD/0 packet | `bc54a23bbd235fc0ee4d0485c2091585e506dbc7cf74b0e16318580465aa1f81` | PENDING |
+| Artifact | SHA-256 |
+| --- | --- |
+| `LOCATED-CLAIM-IDENTITY-SPEC.md` | `6fa2965ed727b4d89b09a3d9c171bcfa3aea8c23f486ef87dc33f85bcb9ae5ba` |
+| `LCI0-POST-REVIEW-RULING.md` | `c2ee9dbb2b3fc72abf4745f5e9a8b4a04d9e1bfeab0fbe224d5c7946e11360a7` |
+| `LOCATED-CLAIM-IDENTITY-SPEC-ERRATA-0.1.md` | `f2bcea1db0e08fe271fdaa79c1f9d4406b94c2c730ab547c0024495ce962c5ea` |
+| `LCI0-NORMATIVE-FIXTURE-PACKAGE-SPEC.md` | `ac0c9265e9583c698c397801099efa548cdbf33f686ebff5bacc8bbea7cbcd2f` |
+| `LCI0-FIXTURE-REGISTRY.json` | `dd19c6d6543a875b2e7e1e6a234ad731ce019f64495b447b317462c63f826327` |
+| `LCI0-FIXTURE-VECTORS.jsonl` | `387e76963f3087f6e41ec4363ec3eea29b1456c2a6b3c5a0cf5763418bffe3a4` |
+| Fixture package manifest | `1e9b2d0d88da5ab50ffb777360e7a6f9f908b4fd7057d0038c757e24038819d7` |
+| Fixture checksum file | `d394678a851043e40d42cb7d382f77f113a54b5fcfe0bebcfed8825af6ec1050` |
+| Frozen fixture ZIP | `36cc71ccf3c310a055199c54e84bf436c4505d92a6378f22e8b1d932f02e987d` |
+| Fable PASS packet | `89cd11ac52478a9e3ff9ebdefcc60b2fff8fa2c8707e159b4f4bd0b6e2cefdfd` |
+| Frozen CD/0 packet | `bc54a23bbd235fc0ee4d0485c2091585e506dbc7cf74b0e16318580465aa1f81` |
 
-If any final recheck differs, stop. Do not continue with a nearby or regenerated
-revision.
+No normative document, registry, vector, package archive, or frozen CD/0
+artifact was modified.
 
-## 4. Backup and branch/worktree preservation
+## 4. Exact differential r4
 
-| Item | Verified or required value | Final status |
-| --- | --- | --- |
-| Immutable backup ref | `refs/backup/lci0-preimplementation-2026-07-14-26ac543` → `26ac543856e30c340cc2dd4359802442636f4b94` | PENDING confirmation |
-| Standalone preimplementation bundle | 252,666,673 bytes; SHA-256 `b3bf606b892d8e47353248a69a3a534bff4cd4ad2708c587d7ebcbc57c54c936` | PENDING recheck |
-| Common Lisp seed branch preserved | `codex/lci0-common-lisp` | PENDING ancestry audit |
-| Python seed branch preserved | `codex/lci0-python` | PENDING ancestry audit |
-| Integration baseline preserved | `codex/lci0-integration` at/after evidence commit | PENDING final branch map |
-| Common Lisp successor branch | PENDING | PENDING |
-| Python successor branch | PENDING | PENDING |
-| Integration successor branch | PENDING | PENDING |
-| Main modified or merged | Must be no | PENDING confirmation |
-
-### Procedural worktree correction
-
-The two immutable-seed merge commands were initially issued from the shared
-infrastructure worktree rather than the newly created integration worktree.
-The resulting merge objects were not amended or recreated:
-
-- `376f870e7b47c054f5cae4958259ef5a60ccf1cf` has parents shared
-  infrastructure `ab353b4b7f30d5e46323d274862e6c1212ebf514` and Common Lisp
-  seed `b3d28bc49c3b015096cb04c6ad08c19829f511a9`;
-- `71f7cfc5ebe392d59d820203dad11cc2e86a0542` has parents `376f870...`
-  and Python seed `4ec2e519d05aeacd2412cb8aedc5f76bde702571`.
-
-At 2026-07-14 03:43:28 -0300 the branch pointers were corrected so
-`codex/lci0-integration` retained `71f7cfc...` and
-`codex/lci0-infrastructure` returned to `ab353b4...`. The reflogs retain the
-merge and correction entries. This was a worktree/cwd procedural deviation,
-not a content change, rewritten seed, or rewritten merge, and it remains
-disclosed for audit.
-
-## 5. Baseline differential transcript
-
-Command run from the integration worktree:
+Command shape:
 
 ```text
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=mneme/lci0/differential:mneme/lci0/python:canonical-datum/python python3 mneme/lci0/differential/run_differential.py
+PYTHONDONTWRITEBYTECODE=1 \
+PYTHONPATH=mneme/lci0/differential:mneme/lci0/python:canonical-datum/python \
+python3 mneme/lci0/differential/run_differential.py \
+  --output /tmp/lci0-exact-final-head-r4-20260714
 ```
 
-| Baseline class | Per implementation |
-| --- | ---:|
-| Official document roundtrips | 1,105 |
-| Supplementary relation document roundtrips | 458 |
-| Supplementary nested E1 roundtrips | 30 |
-| Shared vector semantic executions | 215 |
-| Full relation semantic executions | 458 |
-| Baseline subtotal | 2,266 |
-| Deterministic hostile witnesses | 15 |
-| Total | 2,281 |
+| Measure | Common Lisp | Python |
+| --- | ---:| ---:|
+| Requests | 2,295 | 2,295 |
+| Official embedded documents | 1,105/1,105 | 1,105/1,105 |
+| Supplementary relation documents | 458/458 | 458/458 |
+| Supplementary nested E1 documents | 30/30 | 30/30 |
+| Complete recursive corpus | 1,593/1,593 | 1,593/1,593 |
+| Shared vectors | 211 exact + 4 BLOCKED | 211 exact + 4 BLOCKED |
+| Relation semantics | 420 exact + 38 path BLOCKED | 420 exact + 38 path BLOCKED |
+| Hostile inputs | 21 exact + 8 result BLOCKED | 21 exact + 8 result BLOCKED |
 
-The adapters returned 4,562 uniquely keyed responses with empty stderr. Both
-roundtripped 1,593/1,593 documents. Common Lisp reproduced 215/215 baseline
-vector expected documents; Python reproduced 210/215. Common Lisp matched
-117/169 scope and 259/289 temporal relation values; Python matched all 458.
-The hostile matrix exposed shared and language-specific closure defects. These
-are baseline defect observations, not successor results.
+There were 4,590 uniquely keyed responses and empty adapter stderr. The 41
+allowed cross-implementation differences consist only of 38 authorially
+unpinned relation failure paths and three authorially blocked hostile results.
+Both implementations have zero mismatch outside the declared blocked set.
 
-Baseline raw evidence is retained under
-`mneme/lci0/differential/artifacts/baseline-2026-07-14/` and bound in
-`LCI0-DIFFERENTIAL-RECEIPT.md`.
+The four blocked vector documents are `LCI0-N012`,
+`LCI0-E5-COVERAGE-INSUFFICIENT`, `LCI0-P024`, and `LCI0-P029`. They are not
+pass, failure, skip, N/A, or implementation-local expected results.
 
-## 6. Successor commits and changed-file inventories
+Exact raw identities:
 
-| Branch | Commit | Tree | Parent/seed ancestry | Immutable after review |
-| --- | --- | --- | --- | --- |
-| Common Lisp successor | PENDING | PENDING | PENDING | PENDING |
-| Python successor | PENDING | PENDING | PENDING | PENDING |
-| Integration successor | PENDING | PENDING | PENDING | PENDING |
-| Documentation/archive commit | PENDING | PENDING | PENDING | PENDING |
-| Cleanup commit | PENDING | PENDING | PENDING | PENDING |
+| Member | Bytes | SHA-256 |
+| --- | ---:| --- |
+| `requests.jsonl` | 24,458,265 | `b6b17160d2fec5177d0faad0542d9b35c2047d521925ed302bc54e5d206d3e9c` |
+| `common-lisp-responses.jsonl` | 25,763,401 | `46695fbdcc3d7b449297c7d591473fb842ea1db93a151bb8e65e9c9492a693a7` |
+| `python-responses.jsonl` | 25,753,084 | `5b185919ab0599d43e845f9624faa17940c03bc6efb3c4988a4604505cff3542` |
+| `summary.json` | 1,541,123 | `7f63cd0cb59c12d0d909f19e4fdc3d5625912c1ced7562c9aef7813ccfe25d7e` |
+| `sha256-manifest.json` | 804 | `d81d084cac92b10bdc8bbde66f3f5a6e89dcf55f4b6b718762653ae4d1c6b994` |
 
-### Common Lisp changed files
+## 5. Post-convergence property, mutation, and host run final6
 
-PENDING exact `git diff --name-status` inventory.
+The post-convergence gate consumed the exact r4 artifacts rather than
+reconstructing a second oracle. Its status is
+`converged-unaffected-with-authorial-blockers`.
 
-### Python changed files
-
-PENDING exact `git diff --name-status` inventory.
-
-### Integration/evidence changed files
-
-PENDING exact `git diff --name-status` inventory, including differential
-harness, receipts, raw transcript commit, archive commit, and cleanup commit.
-
-### Protected-path diff
-
-PENDING. Expected empty for `canonical-datum/`, `mneme/latent-mvp/`, frozen
-normative/fixture content, and `mneme/verify-all.sh`.
-
-## 7. Successor verification command log
-
-| Seq. | Worktree/commit | Exact command | Runtime/profile | Exit | Count/result | Duration | Evidence member |
-| ---:| --- | --- | --- | ---:| --- | --- | --- |
-| 01 | Common Lisp successor | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 02 | Python successor | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 03 | Integration successor exact differential | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 04 | Integration corpus sweep | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 05 | Common Lisp host perturbations | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 06 | Python host perturbations | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 07 | Shared mutation/property suite | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 08 | v1 fixture migration suite | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 09 | Frozen CD/0 Phase 0 | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 10 | Frozen CD/0 Common Lisp | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 11 | Frozen CD/0 Python | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 12 | Frozen CD/0 differential | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 13 | Existing Mneme/v1 floor | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 14 | Evidence checksum/archive verification | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-| 15 | Fresh independent implementation audit | PENDING | PENDING | PENDING | PENDING | PENDING | PENDING |
-
-## 8. Successor count ledger
-
-| Evidence class | Common Lisp | Python | Coordinator/differential | Status |
-| --- | ---:| ---:| ---:| --- |
-| Official embedded documents | PENDING | PENDING | Required 1,105 | PENDING |
-| Supplementary relation documents | PENDING | PENDING | Required 458 | PENDING |
-| Supplementary nested E1 documents | PENDING | PENDING | Required 30 | PENDING |
-| Total recursive corpus | PENDING | PENDING | Required 1,593 | PENDING |
-| Unique vector IDs | PENDING | PENDING | Required 215 | BLOCKED for four exact vector documents; determinate ceiling 211/215 |
-| Required P001–P030 | PENDING | PENDING | Required 30 | BLOCKED for P024 and P029 exact results |
-| Required N001–N032 | PENDING | PENDING | Required 32 | BLOCKED for N012 |
-| Relation values | PENDING | PENDING | Required 458 | PENDING values; 38 paths BLOCKED |
-| Exact differential requests | PENDING | PENDING | PENDING | PENDING |
-| Hostile-input requests | PENDING | PENDING | PENDING | PENDING |
-| Property cases/requests | PENDING | PENDING | PENDING | PENDING |
-| Mutation cases/requests | PENDING | PENDING | PENDING | PENDING |
-| Underdetermined results | PENDING | PENDING | Required 0 outside blocked paths | PENDING |
-| Implementation-local expected results | PENDING | PENDING | Required 0 | PENDING |
-
-## 9. Property, mutation, and host profiles
-
-| Field | Value/status |
+| Measure | Result |
 | --- | --- |
-| Exact-convergence gate | PENDING |
-| Property generator/hash | PENDING |
-| Seeds | PENDING |
-| Cases per seed | PENDING |
-| Total property requests | PENDING |
-| Mutation count | PENDING |
-| Common Lisp package/printer/readtable/hash profiles | PENDING |
-| Python hash-seed/dictionary/locale profiles | PENDING |
-| Separate-process profiles | PENDING |
-| Unavailable filesystem/network profiles | PENDING |
-| Wall-clock/runtime-state profiles | PENDING |
-| Minimized disagreements | PENDING |
+| Deterministic seed | `0x4C434930` (`1279478064`) |
+| Generated cases | 329 |
+| Adapter profiles | 6 (2 Common Lisp, 4 Python) |
+| Adapter requests | 1,974 (`329 × 6`) |
+| Failure-coordinate-blocked cases | 104; 208 cross-language baseline observations |
+| Result-coordinate-blocked cases | 14; 28 cross-language baseline observations |
+| Nonblocked failures | 0 |
+| Direct commands | 20 |
+| Separate processes | 24, including four nested Python runners |
+| Common Lisp native suite | 77 pass, 0 fail, 18 BLOCKED |
+| Python focused native suite | 8/8 pass |
 
-## 10. Migration fixture result
+The 329 families include 64 metadata-neutrality cases, 64 record-allocation
+order cases, 9 identity-coordinate cases, 26 resource boundaries, 22 target
+schema/unknown boundaries, 104 payload-closure mutations, migration grammar
+and inertness cases, rational/Unicode/identifier boundaries, and semantic
+anti-shortcut twins.
 
-| Field | Value/status |
+Host profiles cover Common Lisp package, printer, readtable, hash insertion,
+baseline, and unavailable-I/O/clock settings; Python hash seeds
+`0,1,42,4294967295` with locales `C,C,C.utf8,POSIX`; independently allocated
+equal values; mutated source buffers; unavailable filesystem/network probes;
+and changed wall-clock/runtime markers. Cross-adapter I/O denial is limited by
+the need to load the frozen package: Python native probes patch filesystem,
+socket, and clock entry points after setup; Common Lisp uses an unavailable
+default pathname and procedural network isolation because no socket subsystem
+is loaded.
+
+Post-run raw identities include:
+
+| Member | Bytes | SHA-256 |
+| --- | ---:| --- |
+| `requests.jsonl` | 8,818,612 | `41f979e6b946b22fda82c5fd3dae3ee17137ce21ecea86fc044d3213783fde89` |
+| `cases.json` | 243,600 | `5a573656458f41a8418e9d2fc8a8f5d97aea5cd3c373dd30cc5999b1f281f6d1` |
+| `command-transcript.jsonl` | 27,472 | `2cadd48fb70d93a8939088d5a95c9e619b7e6847b196bdb349d864ac78997c9a` |
+| `summary.json` | 357,939 | `0a318264436c6b6dd018fa31188315610d4bea8486bd0c61463d9e6a9fdcce6c` |
+| `sha256-manifest.json` | 6,897 | `8ef26d59732db292ad307ae0bfc3b5db5d512a2291b771e208965afdbe449ead` |
+
+## 6. Migration and inertness boundary
+
+All official migration operation families were executed in both languages.
+Input-derived, normatively determinate migration results agree; represented
+loss remains a closed fixture account; live-warrant restoration is refused;
+zero live warrants are created; and no legacy runtime code, current v1
+registry, or procedure is loaded or invoked. Exact P024 revival, P029 source
+rebinding, and the novel classification/content coupling matrix remain
+authorially BLOCKED. See `LCI0-V1-MIGRATION-FIXTURE-RECEIPT.md`.
+
+## 7. Nonregression
+
+| Gate | Final result |
 | --- | --- |
-| Valid fixture grammar cases | PENDING |
-| Rejected undeclared grammar/source cases | PENDING |
-| Exact mapping cases | PENDING |
-| Classification counts | PENDING |
-| Represented-loss account counts | PENDING |
-| Inert migration results | PENDING |
-| Live warrants created | PENDING; must be 0 |
-| Live-restoration attempts refused | PENDING |
-| Legacy runtime loads/lookups | PENDING; must be 0 |
+| Frozen CD/0 Phase 0 | PASS: 17 worked; 71 classified negatives; 39 Errata cases |
+| Frozen CD/0 Common Lisp | PASS: 2,633 assertions; three declared N/A retained as N/A |
+| Frozen CD/0 Python | PASS: 167/167 |
+| Frozen CD/0 differential | PASS: 467 requests/codec; zero issues |
+| Existing Mneme/v1 | PASS: 6/6 suites |
+| Protected tracked-source diff | Empty for CD/0, `mneme/latent-mvp`, `mneme/verify-all.sh`, frozen specs, and fixtures |
+| Live production systems introduced | Zero |
 
-See `LCI0-V1-MIGRATION-FIXTURE-RECEIPT.md` for the detailed fill-in table.
+The protected `canonical-datum`, `mneme/latent-mvp`, and
+`mneme/verify-all.sh` object IDs are unchanged from the shared seed base. The
+three Common Lisp CD/0 N/A dispositions are not counted as pass.
 
-## 11. Authorial-return register
+## 8. Changed-file inventory
 
-| Packet | Smallest blocked surface | Current disposition | Final authorial response/hash |
-| --- | --- | --- | --- |
-| `LCI0-AUTHORIAL-RETURN-PACKET.md` | N012 universal/symbolic direct matcher composition | BLOCKED; 211/215 vectors remain unaffected across all exact-vector blockers | PENDING |
-| `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | 38 unpinned companion failure paths | BLOCKED; 458 relation values remain testable | PENDING |
-| `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | Expected-only E5 `actual-coverage-scope` context | BLOCKED; failure tuple remains testable | PENDING |
-| `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | P029 right-result source changes explicit `.../v1/1` to expected `.../v1/2` | BLOCKED; other migration fixtures remain testable | PENDING |
-| `LCI0-AUTHORIAL-RETURN-PACKET-POLICY-EVALUATION-ORDER.md` | Fixture §8.1 and canonical Policy-A/B records order stale/loss/trust checks differently and disagree on one decision Identifier | BLOCKED for the combined witness; pinned single-branch vectors remain testable | PENDING |
-| `LCI0-AUTHORIAL-RETURN-PACKET-CORPUS-BASIS-COHERENCE.md` | Alpha-r3 corpus basis carrying the alpha-r4 semantic boundary must reject, but the exact failure tuple is unpinned | BLOCKED for exact tuple; acceptance remains a defect | PENDING |
-| `LCI0-AUTHORIAL-RETURN-PACKET-OPERATION-PAYLOAD-FAILURES.md` | Missing/unknown fields across 52 closed operation payload families lack complete pinned failure tuples | BLOCKED for 104 novel exact-tuple comparisons; official valid payloads remain testable | PENDING |
-| `LCI0-AUTHORIAL-RETURN-PACKET-MIGRATION-CLASSIFICATION-COUPLING.md` | MigrationResult classification/content coupling lacks a closed result schema and complete validity/failure matrix | BLOCKED outside individually pinned migration vectors | PENDING |
-| `LCI0-AUTHORIAL-RETURN-PACKET-TARGET-BOUNDARY-COHERENCE.md` | Fixture §7 step 6 names kind-specific target coherence through opaque algorithm IDs without executable definitions or negative vectors | BLOCKED for novel coherence semantics; official positive/first-missing fixtures remain testable | PENDING |
-| `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md` | P024 expected result injects beta occurrence fields absent from the canonical request and labels lineage as independent reassertion | BLOCKED exact P024 result; no implementation may restore by registry lookup | PENDING |
+The Common Lisp successor changed these twelve seed-owned files:
 
-No implementation is an oracle. No missing semantic rule may be resolved by
-copying the other implementation. These blocked paths are not N/A and are not
-included in pass counts.
+```text
+mneme/lci0/common-lisp/calculi.lisp
+mneme/lci0/common-lisp/fixture-adapter.lisp
+mneme/lci0/common-lisp/harness.lisp
+mneme/lci0/common-lisp/matching.lisp
+mneme/lci0/common-lisp/migration.lisp
+mneme/lci0/common-lisp/operations.lisp
+mneme/lci0/common-lisp/package.lisp
+mneme/lci0/common-lisp/policy.lisp
+mneme/lci0/common-lisp/registry.lisp
+mneme/lci0/common-lisp/tests.lisp
+mneme/lci0/common-lisp/validation.lisp
+mneme/lci0/common-lisp/values.lisp
+```
 
-## 12. Divergence ledger closure
+The Python successor changed or added these fourteen seed-owned files:
 
-| Classification | Open | Resolved | Permanent regression | Status |
-| --- | ---:| ---:| ---:| --- |
-| Common Lisp defect | PENDING | PENDING | PENDING | PENDING |
-| Python defect | PENDING | PENDING | PENDING | PENDING |
-| Fixture-adapter defect | PENDING | PENDING | PENDING | PENDING |
-| Fixture-package ambiguity | PENDING | PENDING | PENDING | BLOCKED where authorial packet applies |
-| Specification/errata ambiguity | PENDING | PENDING | PENDING | BLOCKED where authorial packet applies |
-| Harness defect | PENDING | PENDING | PENDING | PENDING |
-| Host semantic leak | PENDING | PENDING | PENDING | PENDING |
+```text
+mneme/lci0/python/evidence/LCI0-PYTHON-FAILURE-VOCABULARY-AUDIT.md
+mneme/lci0/python/lci0/__init__.py
+mneme/lci0/python/lci0/core.py
+mneme/lci0/python/lci0/migration.py
+mneme/lci0/python/lci0/model.py
+mneme/lci0/python/lci0/protocol.py
+mneme/lci0/python/lci0/runner.py
+mneme/lci0/python/lci0/vector.py
+mneme/lci0/python/tests/blocked_scope_authority_conflict.py
+mneme/lci0/python/tests/test_audit_regressions.py
+mneme/lci0/python/tests/test_failure_vocabulary.py
+mneme/lci0/python/tests/test_perturbations.py
+mneme/lci0/python/tests/test_successor_hostile.py
+mneme/lci0/python/tests/test_vectors.py
+```
 
-Complete dispositions remain in `LCI0-IMPLEMENTATION-DIVERGENCES.md`.
+Integration added the independent adapter/protocol validation,
+post-convergence harness and host probes, `run-unit-tests.lisp`, archive
+builder/tests, ten authorial packets, divergence/receipt documentation, and
+the exact/post raw artifact directories. The final documentation, archive,
+checksum, cleanup, and publication receipt additions will be bound to their
+own later commits; their identities are PENDING here.
 
-## 13. Nonregression
+## 9. Ten authorial returns
 
-| Gate | Expected | Final result |
+| Packet | Blocked surface | Unaffected standing |
 | --- | --- | --- |
-| Frozen CD/0 Phase 0 | Existing counts/hashes unchanged | PENDING |
-| Frozen CD/0 Common Lisp | 2,633 assertions; three N/A retained as N/A | PENDING |
-| Frozen CD/0 Python | 167/167 | PENDING |
-| Frozen CD/0 differential | 467 requests per codec; zero issues | PENDING |
-| Existing Mneme/v1 | 6/6 suites green | PENDING |
-| Protected tracked-source diff | Empty | PENDING |
-| Live warrant/authority/standing additions | Zero | PENDING |
+| `LCI0-AUTHORIAL-RETURN-PACKET.md` | N012 universal/symbolic matcher composition | 211/215 vectors unaffected across all four vector blockers |
+| `...-RELATION-FAILURE-PATHS.md` | 38 unpinned companion failure paths | all 458 relation values executed; 420 exact nonblocked |
+| `...-E5-COVERAGE-CONTEXT.md` | expected-only `actual-coverage-scope` | typed/input-derived failure material remains testable |
+| `...-P029-SOURCE-ARTIFACT.md` | expected `.../v1/2` replaces explicit input `.../v1/1` | other migration fixtures remain inert and executable |
+| `...-POLICY-EVALUATION-ORDER.md` | combined stale/loss/trust order and decision Identifier | pinned single-branch policy behavior remains executable |
+| `...-CORPUS-BASIS-COHERENCE.md` | exact mixed-revision rejection tuple | binary fail closure and valid bases remain executable |
+| `...-OPERATION-PAYLOAD-FAILURES.md` | exact tuples for 104 missing/unknown payload mutations | typed binary rejection and all valid official payloads remain executable |
+| `...-MIGRATION-CLASSIFICATION-COUPLING.md` | total seven-class result coupling | exact N028 and frozen valid documents remain executable |
+| `...-TARGET-BOUNDARY-COHERENCE.md` | opaque step-6 kind-specific algorithms | official positives/first-missing negatives and pinned shape rules remain executable |
+| `...-P024-REVIVAL.md` | expected occurrence fields absent from input | input-derived inert behavior remains executable |
 
-See `LCI0-NONREGRESSION-RECEIPT.md` for the exact protected inventory and
-command slots.
+The eight exact hostile result gaps and 14 post-convergence result-coordinate
+cases are covered by these existing packets; no implementation or harness
+defect was promoted into an eleventh authorial return.
 
-## 14. Raw evidence, archive, and cleanup sequence
+## 10. Evidence archive, cleanup, publication, and audit
 
-The required order is: commit raw transcripts; build and inspect a reproducible
-archive containing them; commit the archive and checksum manifest; only then
-delete safe loose copies and other operation detritus in a separate cleanup
-commit. Git history and the archive must retain the raw evidence.
+Required order is raw transcript commit → reproducible archive build and
+commit → listing/hash verification → deletion of recoverable loose raw files
+and generated detritus → non-force branch publication → remote read-back.
 
-Self-reference boundary: the archive contains the transcript/relay snapshot at
-the raw-evidence commit and an internal per-member manifest. A mandatory builder
-gate first verifies a clean Git tree and exact equality between HEAD and the
-declared source commit. The finished
-archive's own bytes and SHA-256 are recorded afterward in the external
-`LCI0-EVIDENCE-ARCHIVE-RECEIPT.md` and checksum file, which are intentionally
-not members of that archive. The receipt records the exact source commit needed
-for deterministic reconstruction after loose raw files are removed from the
-final tree.
-
-| Step | Commit | Tree | Members/count | Bytes | SHA-256/result |
-| --- | --- | --- | --- | ---:| --- |
-| Baseline raw transcript evidence | `80f1202cc6d176d891179ca408d41136c9a28a97` | `c2e12bb976a923b9a17148ddf27c52489b5a0c9a` | 7 baseline members | 76,840,551 known bytes across listed files | Per-member hashes in differential receipt |
-| Successor raw transcripts | PENDING | PENDING | PENDING | PENDING | PENDING |
-| Reproducible evidence archive | PENDING | PENDING | PENDING | PENDING | PENDING |
-| Archive deterministic rebuild | PENDING | PENDING | PENDING | PENDING | PENDING |
-| Cleanup of loose raw files/detritus | PENDING | PENDING | PENDING deletion inventory | PENDING | PENDING |
-| Post-cleanup checksum/tree audit | PENDING | PENDING | PENDING | PENDING | PENDING |
-
-Safe cleanup candidates must be proven generated and recoverable before
-deletion. Frozen specs, fixtures, seeds, authored receipts, user files, and the
-standalone preimplementation bundle are not detritus.
-
-## 15. Publication and remote read-back
-
-| Field | Value/status |
+| Item | Status |
 | --- | --- |
-| Branches pushed | PENDING |
-| Push mode | PENDING; must be non-force, atomic where practical |
-| Push command/output | PENDING |
-| Remote Common Lisp successor object | PENDING |
-| Remote Python successor object | PENDING |
-| Remote integration successor object | PENDING |
-| Fresh fetch/read-back command | PENDING |
-| Local/remote object equality | PENDING |
-| Main merge | Must be no; PENDING confirmation |
+| Current exact/post loose raw transcripts | committed at `7ff074fdc234d826a113b0beb5e36b490d94b579` |
+| Superseded r3/final5 raw transcripts | retained in history at `041d53740165a122e27b08bf2cb097f0bd391161` |
+| Final nonregression loose raw transcripts | committed at `e552346123a35225023f5b33d8f288c7064e11da` |
+| Reproducible evidence archive members/bytes/SHA-256 | PENDING |
+| Deterministic archive rebuild comparison | PENDING |
+| Loose-file/detritus cleanup commit and deletion inventory | PENDING |
+| Successor branch publication | PENDING; must be non-force |
+| Remote read-back | PENDING |
+| Independent reviewer PASS | none |
 
-## 16. Fresh independent audit
+Frozen specs/fixtures, immutable seeds, authored receipts, the standalone
+preimplementation bundle, and user files are not cleanup detritus.
 
-| Field | Value/status |
-| --- | --- |
-| Reviewer/agent and independence boundary | PENDING |
-| Reviewed commits/trees | PENDING |
-| Reviewed archive/checksum manifest | PENDING |
-| Audit commands | PENDING |
-| Findings | PENDING |
-| Required changes | PENDING |
-| Reviewer disposition | PENDING; no PASS exists |
+## 11. Current bounded disposition
 
-## 17. Current final-status line
+```text
+BLOCKED — authorial closure required for overall conformance. The corrected
+unaffected implementation and r4/final6 evidence are ready for independent
+implementation audit; reviewer PASS, merge eligibility, and production
+authorization are not claimed.
+```
 
-`BLOCKED — not eligible for independent implementation audit while ten
-provisional authorial-return packets and successor/final evidence remain
-unresolved.`
-
-This line may be replaced only after authorial closure, non-blocked exact
-convergence, final nonregression, archive/cleanup verification, publication
-read-back, and the required independent implementation audit evidence. Do not
-merge main and do not begin production warrant, standing, cryptographic,
-module-authority, or live-v1-migration work.
+Do not merge main. Do not begin production warrant, standing, cryptographic,
+module-authority, custody/lineage, or live-v1-migration work.

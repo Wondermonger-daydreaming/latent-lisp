@@ -8,7 +8,7 @@ new LCI semantics and neither implementation supplies its oracle.
 
 Before creating its output directory, the program verifies the exact six-file
 successor artifact census and checksum manifest, mechanically rebuilds all
-2,287 requests, strictly reparses both 2,287-line response streams, recomputes
+2,295 requests, strictly reparses both 2,295-line response streams, recomputes
 the differential comparison, and requires the summary to equal that replay.
 It refuses to run unless:
 

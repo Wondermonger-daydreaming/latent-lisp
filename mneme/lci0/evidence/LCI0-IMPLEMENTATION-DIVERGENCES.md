@@ -826,3 +826,310 @@ oracle.
 - Permanent regression-vector status: exact 84-code equality, static literal
   census, dynamic unauthorized-construction refusal, and all-215 runtime code
   census are permanent language gates.
+
+## LCI0-DIV-025 — post-convergence harness and adapter defects obscured exact comparison boundaries
+
+- Status: RESOLVED as harness and Python implementation-boundary defects. The
+  final exact and post-convergence runs have zero unaffected mismatch; existing
+  authorial blockers remain explicit.
+- Sources: `POST-CONVERGENCE-HARNESS.md`; Errata I12 deterministic closed-record
+  and failure comparison rules; E7 bridge-absence fixture; the exact LCI
+  `MigrationResult/0` field namespace; the operation-payload, policy-order,
+  resource, P024, and P029 authorial boundaries.
+- Minimal inputs and observations:
+  - the corrected first identifier-boundary request is 1,453 bytes, SHA-256
+    `18f969c81afa679a74c7f5b79ca501d656e4295767e79a347aa93b32cd72f999`;
+    it preserves E7's external-source left reference and empty bridge registry,
+    changes only the right reference, and produces `structural-equality=false`
+    in a 626-byte result with SHA-256
+    `1161dba54bd885c78f6e42c1bac59c064fcc2b4271dc3e48c095f8ebc38db63f`;
+  - migration source witnesses `migration-source-v1-1` and
+    `migration-source-v1-2` are each 3,301 bytes, with SHA-256 respectively
+    `6e090227359e5686ae86f76ea7c384ef7d1b27eca42c85f0d2f98101651e0adc`
+    and
+    `532bf9f1f5c35919fd65847f061df2720ceed1a9fc24232eafdc8675607db31f`;
+    the first harness lookup incorrectly searched fixture-field namespace for
+    LCI-owned `source` and `claim-id` fields; and
+  - the 39,644-byte policy meta-testimony request, SHA-256
+    `cd9ba9b80741be7496c88c468983490e47234ad1ebd20c140a6bb4d7bf36d331`,
+    demonstrated that dropping the whole result document when one reason-list
+    coordinate was blocked could conceal disagreements in independently pinned
+    decision and testimony coordinates. Thirteen at-limit resource cases had
+    the same over-redaction defect for only `resource` and `requested`.
+- Common Lisp result: semantic results already carried the required input and
+  output material. An initial native-suite command nevertheless loaded the
+  intentionally preserved pre-seed red transcript and returned nonzero for
+  authorial blockers. The dedicated successor unit runner now reports 77 pass,
+  0 fail, and 18 blocked while retaining blocked witnesses separately.
+- Python result: initial malformed-payload responses omitted closed response
+  fields, and an invalid occurrence claimant escaped as a non-normative fixture
+  authority gap. Commits `252a14cd413e04e93b7b2fbcd63ddee786574d0a`
+  and `477ad6ef4f249f9b9cd4280731e1da934ca41e12` closed the typed
+  payload response path; `0706f353fd9634a65f4be1fa5b55b14ee603c953`
+  closed the nonrecord StableRef occurrence refusal.
+- Expected fixture result: the coordinator must generate the declared mutation,
+  compare every pinned response coordinate, inspect LCI fields in their exact
+  namespace, redact only explicitly blocked coordinates, and keep the immutable
+  red baseline distinct from the implementation-owned unit exit gate.
+- Classification: harness defect plus Python implementation defect. This is not
+  a fixture-package or specification/errata ambiguity.
+- May implementation continue: yes. Commit
+  `8acd6a3a49fa7a9af82655715b2c26ffddca3dd5` corrected E7 mutation,
+  LCI namespace lookup, and coordinate-level result redaction; commit
+  `ad3da1b45dfcc85cec52ca87650c30e7dd8a7427` separated the native unit
+  gate. Final run `/tmp/lci0-post-convergence-final5-20260714` executed 329
+  cases across six adapter profiles (1,974 requests), 20 zero-exit commands,
+  and 24 processes with zero nonblocked comparison failure.
+- Proposed disposition: resolved locally; retain the corrected harness and all
+  minimized inputs. No eleventh authorial-return packet is warranted or
+  created. The ten existing packets continue to own only their previously
+  identified normative gaps.
+- Permanent regression-vector status: corrected E7 operand selection, exact
+  LCI namespace extraction, coordinate-only redaction, malformed response
+  closure, invalid occurrence typing, and the separated unit gate are permanent
+  harness/adapter regressions.
+
+## LCI0-DIV-026 — direct Python ClaimId projection unwrapped an occurrence-like carrier
+
+- Status: RESOLVED as a Python closed-projection-boundary defect. Overall
+  LCI/0 conformance remains BLOCKED only on the ten existing authorial-return
+  packets.
+- Sources: LCI/0 §§7.11 and 8.1–8.3; Errata I12(d); the closed
+  ClaimIdEnvelope/0 and fixture claim-occurrence schemas.
+- Minimal input: `project-claim-id-carrier-future-field`, 8,498 bytes,
+  SHA-256
+  `86515c865baca48ca66ab56f5b2131625b3e73df6446ff89c5b2af2b03504671`.
+  The direct projection operand carries fixture-field `semantic-claim-core`
+  plus an unknown fixture-field `future`; it is neither a ClaimId envelope nor
+  the exact four-field projection core.
+- Common Lisp result: exact typed refusal
+  `invalid-input/MissingRequiredField/claim-shape`, path `identity-policy`.
+  This result is evidence from an independently seeded implementation, not an
+  oracle.
+- Python result: before correction, the projector treated the presence of
+  `semantic-claim-core` as permission to unwrap any record and ignored the
+  sibling field. Commit `db627cb6ca23abc0626aebc6f9982ab9b4406dbf`
+  removed that implicit carrier conversion; the r4 run now returns the same
+  exact typed refusal as Common Lisp.
+- Expected fixture result: direct projection accepts only a validated closed
+  ClaimId envelope or exact closed projection core. The separately named
+  occurrence projection path validates the full occurrence wrapper before
+  extracting its semantic core. No unknown outer field is inferred away.
+- Classification: Python implementation defect; no specification/errata or
+  fixture-package ambiguity.
+- May implementation continue: yes; the correction preserves valid
+  occurrence metadata-neutrality through the explicit occurrence operation.
+- Proposed disposition: resolved locally by `db627cb`; retain the exact
+  cross-language hostile added by
+  `e6983952ea726366b69435b29eeb37eb76f8504d`. No new authorial-return packet
+  was created; the existing ten packets are unchanged.
+- Permanent regression-vector status: the 8,498-byte hostile and Python tests
+  for outer occurrence closure and valid explicit occurrence projection are
+  permanent.
+
+## LCI0-DIV-027 — Python accepted a nonempty tagged Mneme/0 profile-location carrier
+
+- Status: RESOLVED as a Python closed-schema defect; the ten existing
+  authorial blockers remain unchanged.
+- Sources: LCI/0 §§7.8 and 8.3; Errata I12(a);
+  `closed-schema.profile-location.0` and
+  `mneme.profile-location.empty.0`; vectors `LCI0-N009` and
+  `LCI0-I12-PROFILE-LOCATION-RESERVED`.
+- Minimal input: `claim-tagged-empty-profile-location`, 8,535 bytes,
+  SHA-256
+  `e26bfdf1e5f48b96e860d7ce1b1eb9c1a82bd25715190e115e75bab793948fa3`.
+  It replaces the exact empty Mneme/0 record with a tagged
+  profile-location/schema-version/empty-coordinates record.
+- Common Lisp result: exact typed refusal
+  `invalid-input/UnknownField/profile-location`, path
+  `location / profile-location / kind`; it is corroborating independent
+  evidence, not an oracle.
+- Python result: before correction, validation admitted the tagged carrier
+  when its nested coordinates record was empty. Commit `db627cb` now accepts
+  exactly the empty record, preserves N009's more specific frozen nested-
+  unknown diagnostic, and produces the exact `kind` refusal for this hostile.
+- Expected fixture result: Mneme/0's reserved profile-location value is the
+  exact closed empty record. A tagged extension carrier would require a later
+  profile and identity-policy version and cannot be accepted under version 0.
+- Classification: Python implementation defect; no authorial ambiguity.
+- May implementation continue: yes; the exact neutral record and N009 remain
+  byte-for-byte unchanged.
+- Proposed disposition: resolved locally by `db627cb`; retain the exact
+  cross-language hostile added by `e698395`. No new authorial-return packet
+  was created.
+- Permanent regression-vector status: the 8,535-byte tagged-empty hostile,
+  exact-empty positive, and unchanged N009 nested-unknown diagnostic are
+  permanent.
+
+## LCI0-DIV-028 — Python target matching omitted and misordered non-scope ClaimId coordinates
+
+- Status: RESOLVED as a Python target-matcher defect. This does not resolve or
+  widen the separate kind-specific target-coherence ambiguity in DIV-021.
+- Sources: LCI/0 §§10, 18.7, and 18.9; Fixture Package §7 common matching
+  algorithm and registered `PropositionMismatch`, `IdentityPolicyMismatch`,
+  `ClaimProfileMismatch`, and `ProfileLocationMismatch` codes.
+- Minimal exact inputs:
+  - `match-target-beta-proposition`, 21,806 bytes, SHA-256
+    `ecb0ce29079ec21580c04a858f4d020d1adabc57a06579248db9933193c10aa2`;
+    and
+  - `match-target-proposition-before-subject-time`, 21,845 bytes, SHA-256
+    `852089bc793985306052cce08312c9900a4ff9334f0d751dedfd6248df45a0e1`.
+- Common Lisp result: both requests return
+  `target-mismatch/PropositionMismatch/target-relation`, path
+  `claim / proposition`. The second proves that proposition comparison
+  precedes subject-time comparison. Common Lisp remains an independent
+  corroborating implementation, not an oracle.
+- Python result: before correction, proposition comparison followed
+  subject-time/basis/frame and mislabeled a proposition mismatch as
+  `ProfileLocationMismatch`; identity-policy, claim-profile, and
+  profile-location comparisons were absent. Commit `db627cb` added all four
+  explicit comparisons, registered codes, paths, and required ordering. The
+  r4 run matches both exact hostile results.
+- Expected fixture result: every non-scope ClaimId coordinate is compared
+  exactly before scope relation, using its own registered mismatch code;
+  proposition validation/comparison precedes location coordinates under the
+  closed failure order.
+- Classification: Python implementation defect. The frozen profile exposes
+  only one valid identity-policy, claim-profile, and profile-location value,
+  so matcher ownership for those three comparisons is proved by focused unit
+  regressions rather than fabricated valid fixture operands.
+- May implementation continue: yes. Kind-specific unvectored coherence paths
+  remain independently blocked under DIV-021.
+- Proposed disposition: resolved locally by `db627cb`; `e698395` retains both
+  exact proposition hostiles, while unit regressions retain the three
+  single-valued-coordinate checks. No new authorial-return packet was created.
+- Permanent regression-vector status: both exact hostiles and focused tests
+  for proposition, identity-policy, claim-profile, and profile-location code,
+  path, and order are permanent.
+
+## LCI0-DIV-029 — Python evaluated scope coverage before the monotonicity declaration
+
+- Status: RESOLVED as a Python target-matcher ordering defect; the existing
+  blocked E5 expected-only context is unaffected.
+- Sources: LCI/0 §§10 and 18.9; Errata E5;
+  `LCI0-E5-NONMONOTONE-NARROWING`; Fixture Package §7 matching steps 8–10.
+- Minimal input: `match-target-nonmonotone-before-insufficient-coverage`,
+  23,282 bytes, SHA-256
+  `9371481cd0ef16b5b9a5e5f4c1b63033cb4aa8c52bb1a7771072fba50cd0882c`.
+  It combines broad-to-narrow scope, a nonmonotone proposition form, and a
+  coverage scope insufficient for the candidate.
+- Common Lisp result: exact typed refusal
+  `target-mismatch/ScopeNarrowingNotDeclared/target-relation`, path
+  `claim / location / scope`; this is independent evidence, not an oracle.
+- Python result: before correction, the shared coverage helper ran first and
+  returned `ScopeNarrowingCoverageInsufficient`. Commit `db627cb` now checks
+  the exact target-schema/proposition-form monotonicity declaration before
+  evaluating coverage; r4 returns the exact narrowing-not-declared result.
+- Expected fixture result: broad-to-narrow support first requires an explicit
+  downward-monotonicity declaration. Coverage cannot authorize or preempt a
+  proposition form for which narrowing was never declared.
+- Classification: Python implementation defect; no new normative ambiguity.
+- May implementation continue: yes. The separately blocked context field in
+  the official coverage-insufficient witness remains under its existing
+  authorial packet and is not silently resolved here.
+- Proposed disposition: resolved locally by `db627cb`; retain the exact
+  multi-fault precedence hostile added by `e698395`. No new authorial-return
+  packet was created.
+- Permanent regression-vector status: the 23,282-byte hostile and the original
+  single-fault E5 witnesses are permanent.
+
+## LCI0-DIV-030 — Python's mutable StableRef alias census omitted production and model-current
+
+- Status: RESOLVED as a Python fixture StableRef validation defect.
+- Sources: LCI/0 §§15.5, 20.6, and 24.9; the fourteen frozen StableRef fixture
+  schemes; Errata fixture StableRef validation rules.
+- Minimal inputs:
+  - `stable-ref-alias-production`, 542 bytes, SHA-256
+    `84e58c2fa92abdd3f36b803a2d34a9a963b25bb27812adbd2df3973fe191c1c7`;
+    and
+  - `stable-ref-alias-model-current`, 545 bytes, SHA-256
+    `56e26fc828792a37af541668125cf2b4676126eb147f27440977394fe4abf35c`.
+- Common Lisp result: each returns exact
+  `reference-refusal/UnresolvedAlias/stable-reference`, path
+  `material / fixture-field:object-id`; Common Lisp is corroborating evidence,
+  not an oracle.
+- Python result: before correction, the explicit alias set included `latest`,
+  `main`, display/file/URL examples, but omitted the two prose-pinned aliases
+  above and accepted them as object-id segments. Commit `db627cb` added both;
+  r4 now returns the exact typed refusal for each.
+- Expected fixture result: `production` and `model-current` are explicitly
+  mutable names and cannot satisfy fixture stable identity. Rejection performs
+  no alias resolution, registry lookup, or semantic inference.
+- Classification: Python implementation defect; not authorization for a
+  universal production StableRef scheme.
+- May implementation continue: yes; all valid frozen StableRefs remain
+  unchanged.
+- Proposed disposition: resolved locally by `db627cb`; retain both exact
+  cross-language hostiles added by `e698395`. No new authorial-return packet
+  was created.
+- Permanent regression-vector status: both exact hostiles and the complete
+  language-level mutable-alias census are permanent.
+
+## LCI0-DIV-031 — Python ClaimId equality canonicalized unvalidated operands
+
+- Status: RESOLVED as a Python semantic-equality boundary defect.
+- Sources: LCI/0 §§7, 18.9, and 20.2; Errata E8; exact envelope-equality and
+  digest anti-authority requirements.
+- Minimal input: `claim-id-equality-rejects-empty-records`, 106 bytes,
+  SHA-256
+  `ccb885ca8793e00940ff2da76a5818e163a488b52e6cbce9e150c51f98ac8b00`.
+  Both purported ClaimIds are independently allocated empty CD/0 records.
+- Common Lisp result: exact typed refusal
+  `invalid-input/MissingRequiredField/claim-shape`, path `kind`; this is
+  independently seeded evidence, not an oracle.
+- Python result: before correction, equality required only two records and
+  compared their canonical octets, so two empty records returned true. Commit
+  `db627cb` validates the left and right ClaimId envelopes before byte
+  comparison; the r4 run returns the exact left-operand refusal.
+- Expected fixture result: semantic ClaimId equality is equality of validated
+  complete ClaimId envelopes, witnessed by canonical CD/0 octets. Equal bytes,
+  equal digests, or equal malformed records do not establish ClaimId equality.
+- Classification: Python implementation defect; no cryptographic algorithm or
+  production identity semantics were introduced.
+- May implementation continue: yes; independently allocated valid equal
+  envelopes remain equal and distinct valid envelopes remain unequal.
+- Proposed disposition: resolved locally by `db627cb`; retain the exact
+  cross-language hostile added by `e698395`. No new authorial-return packet
+  was created; all ten prior packets remain unchanged.
+- Permanent regression-vector status: the 106-byte empty-record hostile,
+  independently allocated valid-equality test, and valid-inequality test are
+  permanent.
+
+## 2026-07-14 current-status reconciliation addendum
+
+This append-only addendum supersedes only the preliminary `PENDING` execution
+language in earlier entries; it does not rewrite their observations or resolve
+an authorial gap locally.
+
+- `LCI0-DIV-016` through `LCI0-DIV-021`: successor execution and exact
+  differential verification are complete. Their implementation-owned
+  fail-closed behavior is exercised by exact r4 and post final6. The residual
+  P029 source binding, policy order/decision identity, CorpusBasis tuple,
+  operation-payload tuples, migration classification coupling, and target-kind
+  algorithms remain authorially BLOCKED under their existing packets.
+- `LCI0-DIV-022`: the fixture-result shortcut defect is RESOLVED. The corrected
+  Python successor derives results through validation and semantic dispatch;
+  Common Lisp independently executed the corresponding operations. The two
+  anti-shortcut twins, input mutations, 100/100 Python suite, 53/53
+  differential units, exact r4, and 329-case post final6 all pass on unaffected
+  coordinates. The authorially unpinned inverse outputs named in the original
+  entry remain blocked and were not promoted to implementation-local oracles.
+- `LCI0-DIV-023`: both successors no longer restore P024 by trusting the
+  registry expected-result document. The implementation shortcut component is
+  RESOLVED; the expected beta occurrence still contains fields absent from the
+  predecessor and requested-claim inputs, so `LCI0-P024` remains authorially
+  BLOCKED under `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md`.
+- `LCI0-DIV-025`: post final5 first closed the listed harness/adapter defects.
+  Corrected exact r4 and post final6 reconfirmed the closure after the six later
+  Python boundary corrections, with zero unaffected mismatch and all 20 post
+  commands exiting zero.
+- `LCI0-DIV-026` through `LCI0-DIV-031`: all six correction families are
+  RESOLVED and retained by ten focused Python regressions plus eight exact
+  cross-language hostile requests. The separately tasked result is recorded in
+  `LCI0-CORRECTION-VERIFICATION-AUDIT.md`.
+
+Current bounded status: every observed implementation or harness defect on an
+unaffected path is resolved. Four vector results, 38 relation companion paths,
+and eight hostile result tuples remain covered by the same ten authorial-return
+packets. No blocked item is counted as pass, failure, skip, or N/A, and no
+eleventh packet was created for an implementation defect.

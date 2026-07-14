@@ -1,137 +1,164 @@
-# LCI/0 Baseline Differential Receipt
+# LCI/0 Successor Differential Receipt
 
 Date: 2026-07-14
 
-Status: not converged; successor corrections and ten provisional narrow
-authorial returns required
+Status: unaffected paths converged; overall conformance BLOCKED pending
+authorial closure
 
-## Bound inputs and implementations
+## Evidence boundary
 
-- Integration base commit: `71f7cfc5ebe392d59d820203dad11cc2e86a0542`.
-- Common Lisp seed: commit
-  `b3d28bc49c3b015096cb04c6ad08c19829f511a9`, tree
-  `d48c39f933cde591f3303fcd3c9f42a0dac1a869`.
-- Python seed: commit
-  `4ec2e519d05aeacd2412cb8aedc5f76bde702571`, tree
-  `9f7915b460f449976a5d7fa856861ad5ce1d36ca`.
+This receipt binds the final exact successor run and the post-convergence run.
+It does not convert an authorial blocker into a pass, failure, skip, or N/A,
+and neither implementation is treated as an oracle.
+
+The correct independence statement remains: independently seeded
+implementations under shared normative infrastructure, with procedural—not
+OS-enforced—isolation.
+
+## Bound implementations and run identity
+
+| Artifact | Commit | Tree |
+| --- | --- | --- |
+| Common Lisp immutable seed | `b3d28bc49c3b015096cb04c6ad08c19829f511a9` | `d48c39f933cde591f3303fcd3c9f42a0dac1a869` |
+| Common Lisp successor | `2513c354721bac6120b8c0a5eef1ed13252cf75b` | `9ce6786ee374f3dafe859c6ea5977b27e6c6f718` |
+| Python immutable seed | `4ec2e519d05aeacd2412cb8aedc5f76bde702571` | `9f7915b460f449976a5d7fa856861ad5ce1d36ca` |
+| Audited Python successor | `db627cb6ca23abc0626aebc6f9982ab9b4406dbf` | `74c6a7e5c144d3286b83a933b27cff3d5865921d` |
+| Integration tree executed | `e6983952ea726366b69435b29eeb37eb76f8504d` | `daaef9bad97eced6c242fc8052cbedc8920d355a` |
+| Refreshed raw-transcript commit | `7ff074fdc234d826a113b0beb5e36b490d94b579` | `3b6834114f8c1df4f8810b4a56f66f0bf66de8e2` |
+
 - Protocol: `lisp-plus-lci0-differential/v1`.
 - Fixture profile: `0.1.0`.
-- LCI budget: `resource-budget.lci-first-implementation.0`, canonical
-  SHA-256
-  `b574f188fbc24c99018a8095fb9846511f582136c416b5f4cd685ba67ee16c93`.
 - Runtime: SBCL 2.4.6; Python 3.11.14; Linux x86-64 under WSL2.
+- Exact run source: `/tmp/lci0-exact-final-head-r4-20260714`.
+- Post-convergence source:
+  `/tmp/lci0-post-convergence-final6-20260714`.
 
-Adapter requests contained only protocol/request identifiers, operation,
-fixture profile, canonical input octets, and pinned budget identity. Expected
-results remained coordinator-side.
-
-## Mechanical request census
+## Mechanical exact-request census
 
 Per implementation:
 
 | Class | Requests |
-|---|---:|
+| --- | ---: |
 | Official embedded document roundtrips | 1,105 |
 | Supplementary relation-table document roundtrips | 458 |
 | Supplementary nested E1 roundtrips | 30 |
 | Shared vector semantic executions | 215 |
 | Full relation-table semantic executions | 458 |
-| Baseline subtotal | 2,266 |
-| Deterministic hostile witnesses | 15 |
-| Total | 2,281 |
+| Exact baseline subtotal | 2,266 |
+| Deterministic hostile witnesses | 29 |
+| Total | 2,295 |
 
-The two isolated adapters returned 4,562 uniquely keyed responses. Both stderr
-streams were empty. The runner mechanically confirmed 215 unique vector IDs,
-all required P001–P030 and N001–N032 IDs, and 52 operation families.
+The adapters returned 4,590 responses. Both adapter processes exited zero and
+both stderr streams were empty. The coordinator mechanically confirmed 215
+unique vector IDs, all required P001–P030 and N001–N032 IDs, and 52 operation
+families.
 
-## Results
+## Exact results
 
-| Surface | Common Lisp | Python |
-|---|---:|---:|
-| 1,593 document roundtrips | 1,593 pass | 1,593 pass |
-| 215 exact vector result documents | 215 pass | 210 pass, 5 fail |
-| 169 scope-table relations | 117 pass, 52 fail | 169 pass |
-| 289 temporal-table relations | 259 pass, 30 fail | 289 pass |
-| 15 hostile expectations | 2 pass, 13 fail | 0 pass, 15 fail |
+| Surface | Common Lisp | Python | Cross-language disposition |
+| --- | ---: | ---: | --- |
+| Recursive canonical documents | 1,593 pass | 1,593 pass | Identical unaffected result |
+| Official vector results | 211 pass, 4 blocked | 211 pass, 4 blocked | Zero unaffected mismatch |
+| Relation semantics | 420 pass, 38 path-blocked | 420 pass, 38 path-blocked | Same relation values; paths blocked |
+| Hostile expectations | 21 pass, 8 blocked | 21 pass, 8 blocked | Zero unaffected mismatch |
 
-The 82 Common Lisp relation-value disagreements are recorded in
-`LCI0-DIV-004` and `LCI0-DIV-005`. Of the five Python exact result-document
-disagreements, four are `LCI0-DIV-007`; the E5 coverage-context disagreement
-was reclassified as the normative conflict `LCI0-DIV-015` after an
-input-provenance audit. Shared and language-specific hostile defects are
-`LCI0-DIV-008` through `LCI0-DIV-013`. Thirty-eight additional
-relation-failure path disagreements are `LCI0-DIV-014` and have their own
-narrowly scoped authorial-return packet.
+The 41 recorded cross-implementation differences are wholly inside declared
+authorial boundaries: 38 relation companion paths and three of the eight
+hostile result gaps. There are zero Common Lisp and zero Python mismatches on
+unaffected exact paths.
 
-The universal/symbolic table and `LCI0-N012` expose the true normative conflict
-`LCI0-DIV-006`. Its exact matcher path is blocked and has a separate authorial
-return packet; it is not counted as N/A.
+The four blocked exact vector documents are:
 
-The E5 expected coverage context introduces a tenant scope absent from its
-canonical input. Its exact document is likewise blocked with a separate
-authorial-return packet; the failure tuple itself remains determinate.
+- `LCI0-N012` — universal/symbolic composition conflict;
+- `LCI0-E5-COVERAGE-INSUFFICIENT` — expected-only coverage context;
+- `LCI0-P024` — unbound beta occurrence in revival; and
+- `LCI0-P029` — expected migration source differs from the bound input source.
 
-Successor removal of whole-result migration lookup exposed a fourth conflict:
-both P029 source inputs bind `object/artifact/legacy-source/v1/1`, while the
-expected corpus-r4 right result and lineage use `.../v1/2`. Preliminary,
-non-commit-bound successor snapshots preserved the explicit input source under
-LCI/0 §23.3; committed successor verification remains PENDING. The exact
-right-result comparison is blocked by
-`LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md`.
+The unaffected official-vector ceiling is therefore 211/215. The 38 relation
+paths and eight hostile requests are separately reported and are not silently
+deducted from another denominator.
 
-A subsequent preliminary successor review found that P024 likewise cannot be
-derived from its canonical input: the expected result injects the separately
-registered beta occurrence, including claimant, time, provenance, lineage,
-presentation, and nonidentity metadata that the request does not carry. That
-exact result is blocked by `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md`.
+Eight new determinate hostile witnesses from the independent implementation
+audit passed in both languages: closed direct projection, exact empty
+profile-location, two proposition matching/order cases, nonmonotonicity before
+coverage, validated ClaimId equality, and the `production` and
+`model-current` StableRef aliases. They increase only the hostile denominator;
+they create no authorial blocker or return packet.
 
-The same review produced five further narrow packets for policy evaluation
-order, CorpusBasis coherence failure tuples, operation-payload closure tuples,
-MigrationResult classification/content coupling, and kind-specific target
-boundary coherence. These are post-baseline findings, not observations encoded
-in the retained baseline transcript. They constrain successor implementation
-and novel hostile/property conclusions without changing the historical request
-or response counts above.
+## Post-convergence differential
 
-## Retained raw evidence
+The post-convergence harness ran after unaffected exact convergence:
 
-Directory:
-`mneme/lci0/differential/artifacts/baseline-2026-07-14/`
+| Measure | Result |
+| --- | ---: |
+| Deterministic seed | `1279478064` (`0x4C434930`) |
+| Generated logical cases | 329 |
+| Adapter profiles | 6 |
+| Adapter requests | 1,974 |
+| Generated failure-coordinate cases with authorial gaps | 104 |
+| Generated result-coordinate cases with authorial gaps | 14 |
+| Nonblocked comparison failures | 0 |
+| Direct commands | 20, all exit zero |
+| Separate processes, including four nested Python runners | 24 |
+
+All six profiles agreed after redacting only the exact named blocked
+coordinates. The 104 payload-closure cases still assert their pinned
+fail-closed code/predicate; category, stage, path, and context remain blocked.
+The 14 result cases retain every nonblocked coordinate: one policy reason-list
+coordinate and the `resource`/`requested` fields of thirteen at-limit resource
+cases remain unpinned. These are blocked observations, not passes.
+
+## Raw evidence
+
+Exact directory:
+`mneme/lci0/differential/artifacts/successor-final-2026-07-14/`
 
 | Member | Bytes | SHA-256 |
-|---|---:|---|
-| `requests.jsonl` | 24,275,425 | `45be08faf24a4cbeea8979d6e77aefa9ec8ef84926b73b54555d22a5bad40f55` |
-| `common-lisp-responses.jsonl` | 25,598,224 | `30ebc7954cb2a449d55db7e6bc1d381a185651b7ad1f73f07cb0d885a3adc4fb` |
-| `common-lisp-stderr.txt` | 0 | `e3b0c44298fc1c149afbf4c8996fb92427ae41e464b934ca495991b7852b855` |
-| `python-responses.jsonl` | 25,640,350 | `b7d5ac2a10ae2c5f3dff130092233594c100a9caea7f41710b920e18d0e3dc2c` |
-| `python-stderr.txt` | 0 | `e3b0c44298fc1c149afbf4c8996fb92427ae41e464b934ca495991b7852b855` |
-| `summary.json` | 1,325,748 | `45f52cf4bfba7c486575cd752fdf51dcd4176731c9a8032b16cbb1f048efc31f` |
-| `sha256-manifest.json` | 804 | `33a351f621a7b78d52bef55de71c98c98a891ab4b3fd6981d5ff00e3205a3b7f` |
+| --- | ---: | --- |
+| `requests.jsonl` | 24,458,265 | `b6b17160d2fec5177d0faad0542d9b35c2047d521925ed302bc54e5d206d3e9c` |
+| `common-lisp-responses.jsonl` | 25,763,401 | `46695fbdcc3d7b449297c7d591473fb842ea1db93a151bb8e65e9c9492a693a7` |
+| `common-lisp-stderr.txt` | 0 | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `python-responses.jsonl` | 25,753,084 | `5b185919ab0599d43e845f9624faa17940c03bc6efb3c4988a4604505cff3542` |
+| `python-stderr.txt` | 0 | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `summary.json` | 1,541,123 | `7f63cd0cb59c12d0d909f19e4fdc3d5625912c1ced7562c9aef7813ccfe25d7e` |
+| `sha256-manifest.json` | 804 | `d81d084cac92b10bdc8bbde66f3f5a6e89dcf55f4b6b718762653ae4d1c6b994` |
 
-Raw JSONL files are retained for the evidence/archive commit sequence. They are
-not intended to remain loose at the final branch tip after a verified archive
-contains them and the cleanup commit preserves recoverability in history.
+Post-convergence directory:
+`mneme/lci0/differential/artifacts/post-convergence-final-2026-07-14/`
 
-## Deferred phases
+| Member | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `requests.jsonl` | 8,818,612 | `41f979e6b946b22fda82c5fd3dae3ee17137ce21ecea86fc044d3213783fde89` |
+| `cases.json` | 243,600 | `5a573656458f41a8418e9d2fc8a8f5d97aea5cd3c373dd30cc5999b1f281f6d1` |
+| `command-transcript.jsonl` | 27,472 | `2cadd48fb70d93a8939088d5a95c9e619b7e6847b196bdb349d864ac78997c9a` |
+| `summary.json` | 357,939 | `0a318264436c6b6dd018fa31188315610d4bea8486bd0c61463d9e6a9fdcce6c` |
+| `sha256-manifest.json` | 6,897 | `8ef26d59732db292ad307ae0bfc3b5db5d512a2291b771e208965afdbe449ead` |
 
-Host ambient-state perturbations and randomized/property generation were not
-run because the exact fixture baseline did not converge. They are not passes,
-skips, or N/A. A successor phase may run them only after every non-blocked exact
-fixture converges. Four exact vector documents are currently blocked: N012,
-E5-COVERAGE-INSUFFICIENT, P024, and P029. The resulting ceiling is 211/215
-determinate official vector documents pending authorial closure. The separately
-declared 38 relation-path observations and novel witnesses covered by the other
-packets must also remain explicitly blocked rather than silently removed from
-their respective totals.
+Raw files were committed before the evidence-archive and later loose-file
+cleanup sequence. Commit history remains the recovery boundary if the final
+tip removes loose bulk transcripts after archive verification.
 
-## Command
+## Commands
 
 From the integration worktree root:
 
 ```text
-PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=mneme/lci0/differential:mneme/lci0/python:canonical-datum/python python3 mneme/lci0/differential/run_differential.py
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=mneme/lci0/differential:mneme/lci0/python:canonical-datum/python python3 mneme/lci0/differential/run_differential.py --output /tmp/lci0-exact-final-head-r4-20260714
 ```
 
-The first baseline runner did not record an internal elapsed-time field.
-Therefore this receipt makes no exact duration claim; successor receipts must
-record monotonic wall time explicitly.
+```text
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=mneme/lci0/differential:mneme/lci0/python:canonical-datum/python python3 mneme/lci0/differential/post_convergence.py --successor-artifacts /tmp/lci0-exact-final-head-r4-20260714 --output /tmp/lci0-post-convergence-final6-20260714 --seed 1279478064 --allocation-cases 64
+```
+
+The exact adapter monotonic durations were 20,627,528,338 ns for Common Lisp
+and 11,232,851,902 ns for Python. The post-convergence command transcript
+records the 20 subprocess invocations and their exit statuses but no elapsed
+duration field, so no post-convergence duration is inferred.
+
+## Disposition
+
+The unaffected dual implementation and post-convergence evidence are ready for
+independent inspection. Overall LCI/0 conformance remains BLOCKED pending
+authorial closure of the ten existing narrow return packets. This receipt does
+not claim PASS, merge eligibility, or authority for any production warrant,
+standing, cryptographic, module-authority, or live-v1-migration system.

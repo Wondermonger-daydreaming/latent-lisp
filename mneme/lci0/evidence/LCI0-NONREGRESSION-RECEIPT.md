@@ -2,133 +2,119 @@
 
 Date: 2026-07-14
 
-Status: final successor nonregression PENDING
+Status: **PASS within the protected CD/0 and Mneme/v1 nonregression scope.**
+This is not an LCI/0 conformance PASS: the overall implementation remains
+BLOCKED on ten narrow authorial-return packets.
+
+Audit history: an independent review after exact r3/post final5 found six
+Python boundary defect families. They were corrected in successor
+`db627cb6ca23abc0626aebc6f9982ab9b4406dbf`, integrated with new hostile
+regressions, and followed by exact r4/post final6 at `e6983952...`. The
+protected CD/0/v1 results remain separately bound to this receipt and stayed
+green; the superseded r3/final5 snapshot is not used as current evidence.
 
 ## Protected invariants
 
-The LCI/0 work must leave all of the following unchanged:
+The LCI/0 work was required to leave unchanged:
 
 - frozen CD/0 specification, errata, ruling, source, schemas, vectors, codecs,
   canonical octets, and behavior;
 - existing Mneme/v1 tests and production behavior;
-- `mneme/latent-mvp` and `mneme/verify-all.sh` protected source;
-- the absence of live warrant, standing, capability, authority,
-  cryptographic-selection, production identity, custody, verified-lineage, and
-  live-migration systems.
+- `mneme/latent-mvp` and `mneme/verify-all.sh` protected source; and
+- the absence of production warrant, standing, capability, authority,
+  cryptographic-selection, custody, verified-lineage, and live-migration
+  systems.
 
-## Bound baseline identities
+## Bound identities
 
-| Object | Pre-implementation identity |
+| Object | Identity |
 | --- | --- |
-| Fetched `origin/main` commit | `26ac543856e30c340cc2dd4359802442636f4b94` |
-| Fetched `origin/main` tree | `5d0fd36ad1a5b432181d491e748957355a436810` |
-| Frozen CD/0 acceptance commit | `efe52efe3e0e5a24181ee324e18b23e266129104` |
-| Frozen CD/0 acceptance tree | `13871b0b0ec81e667611163bc78976b3a91ff4b7` |
-| Frozen `canonical-datum` tree at seed base | `ce6e41deca3fe237ff6d0edafa2666d098ae62e8` |
-| Frozen `mneme/latent-mvp` tree at seed base | `41c2934e34a04461cf50cb378394c32c7c11d344` |
+| Fetched `origin/main` commit/tree | `26ac543856e30c340cc2dd4359802442636f4b94` / `5d0fd36ad1a5b432181d491e748957355a436810` |
+| Frozen CD/0 acceptance commit/tree | `efe52efe3e0e5a24181ee324e18b23e266129104` / `13871b0b0ec81e667611163bc78976b3a91ff4b7` |
+| Frozen `canonical-datum` tree | `ce6e41deca3fe237ff6d0edafa2666d098ae62e8` |
+| Frozen `mneme/latent-mvp` tree | `41c2934e34a04461cf50cb378394c32c7c11d344` |
+| Frozen `mneme/verify-all.sh` blob | `b001ec4fde1e5e42c334589dc3fc0f34a0038a9b` |
+| Integration code verified by the final exact/post runs | commit `e6983952ea726366b69435b29eeb37eb76f8504d`; tree `daaef9bad97eced6c242fc8052cbedc8920d355a` |
+| Current raw exact/post transcript commit | `7ff074fdc234d826a113b0beb5e36b490d94b579`; tree `3b6834114f8c1df4f8810b4a56f66f0bf66de8e2` |
+| Superseded raw exact/post transcript commit | `041d53740165a122e27b08bf2cb097f0bd391161`; tree `ba00e2837cad7f107d846377bfbe33601802665f` |
+| Raw nonregression transcript commit | `e552346123a35225023f5b33d8f288c7064e11da`; tree `62c405b0358a949c5590dbcc55b50c52a515ec8c` |
 | Frozen CD/0 packet ZIP SHA-256 | `bc54a23bbd235fc0ee4d0485c2091585e506dbc7cf74b0e16318580465aa1f81` |
 | Frozen CD/0 specification SHA-256 | `d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc` |
 | Frozen CD/0 Errata 0.1 SHA-256 | `5f1568e53c4e6ef5fc8de2e125e7a6ef2d861392048c7ead144c7df05eb16271` |
 | Frozen CD/0 ruling SHA-256 | `1a0e8ff844790c93e681f7541a23266aa73d2ee8e9ca9a6e0d753bf4e044b2bc` |
 
-The exact 20-file protected CD/0 hash inventory is retained in
-`LCI0-CD0-FROZEN-INVENTORY.md` and must be rechecked from the final successor
-tree.
+The complete protected 20-file checksum inventory remains in
+`LCI0-CD0-FROZEN-INVENTORY.md`.
 
-## Historical preflight floor
+## Final execution
 
-Before tracked LCI implementation changes, the following commands were observed
-green from the accepted CD/0 main worktree:
+All commands were run from the integration-successor worktree with CPython
+3.11.14 and SBCL 2.4.6. Each command exited zero.
 
-| Gate | Historical result | Final successor result |
-| --- | --- | --- |
-| `python3 canonical-datum/tools/verify_phase0.py` | PASS; 17 worked vectors, 71 classified negatives, 39 Errata vectors | PENDING |
-| `sbcl --noinform --disable-debugger --script canonical-datum/common-lisp/run-tests.lisp` | PASS; 2,633 assertions; three declared N/A dispositions not counted as pass | PENDING |
-| `env PYTHONPATH=canonical-datum/python python3 -m unittest discover -s canonical-datum/python/tests -v` | PASS; 167/167 | PENDING |
-| `python3 canonical-datum/integration/run_differential.py --json` | PASS; 467 requests per codec; zero issues | PENDING |
-| `bash mneme/verify-all.sh` | PASS; 6/6 existing Mneme/v1 suites | PENDING |
+| ID | Command | Observed result | Raw transcript |
+| --- | --- | --- | --- |
+| NR-01 | `python3 canonical-datum/tools/verify_phase0.py` | PASS: 17/17 worked vectors; 71 classified negatives; 39 Errata cases; zero failures/skips | `mneme/lci0/evidence/raw/nonregression-final-2026-07-14/phase0.*` |
+| NR-02 | `sbcl --noinform --disable-debugger --script canonical-datum/common-lisp/run-tests.lisp` | PASS: 2,633 assertions; 68/68 applicable classified rows; 3 declared N/A | `mneme/lci0/evidence/raw/nonregression-final-2026-07-14/common-lisp-cd0.*` |
+| NR-03 | `env PYTHONPATH=canonical-datum/python python3 -m unittest discover -s canonical-datum/python/tests -v` | PASS: 167/167 | `mneme/lci0/evidence/raw/nonregression-final-2026-07-14/python-cd0.*` |
+| NR-04 | `python3 canonical-datum/integration/run_differential.py --json` | PASS: 467 requests per codec; zero issues; both processes exit zero | `mneme/lci0/evidence/raw/nonregression-final-2026-07-14/cd0-differential.*` |
+| NR-05 | `bash mneme/verify-all.sh` | PASS: 6/6 existing Mneme/v1 suites | `mneme/lci0/evidence/raw/nonregression-final-2026-07-14/mneme-v1.*` |
 
-These results are a baseline, not a substitute for rerunning against the final
-integration-successor commit.
-
-## Required final commands
-
-| ID | Exact command | Runtime | Exit/result | Raw evidence | Status |
-| --- | --- | --- | --- | --- | --- |
-| NR-01 | `python3 canonical-datum/tools/verify_phase0.py` | PENDING | PENDING | PENDING | PENDING |
-| NR-02 | `sbcl --noinform --disable-debugger --script canonical-datum/common-lisp/run-tests.lisp` | PENDING | PENDING | PENDING | PENDING |
-| NR-03 | `env PYTHONPATH=canonical-datum/python python3 -m unittest discover -s canonical-datum/python/tests -v` | PENDING | PENDING | PENDING | PENDING |
-| NR-04 | `python3 canonical-datum/integration/run_differential.py --json` | PENDING | PENDING | PENDING | PENDING |
-| NR-05 | `bash mneme/verify-all.sh` | PENDING | PENDING | PENDING | PENDING |
-| NR-06 | Recompute `LCI0-CD0-FROZEN-INVENTORY.md` hashes | PENDING | PENDING | PENDING | PENDING |
-| NR-07 | Compare protected subtree object IDs/diffs to seed base | Git PENDING | PENDING | PENDING | PENDING |
-| NR-08 | Inspect introduced public symbols/types for live warrant/authority systems | PENDING | PENDING | PENDING | PENDING |
+The Common Lisp suite's three optional-host importer dispositions remain N/A.
+They are not passes. There were no new N/A, skips, failures, CD/0 differential
+issues, or v1 floor failures.
 
 ## Protected-tree comparison
 
-| Protected path/object | Expected identity or diff | Observed final identity/diff | Result |
+The captured command `git diff --name-status
+26ac543856e30c340cc2dd4359802442636f4b94..7ff074fdc234d826a113b0beb5e36b490d94b579
+-- canonical-datum mneme/latent-mvp mneme/verify-all.sh` produced no entries.
+A separate receipt recheck—not an additional raw transcript member—compared
+`mneme/lci0/spec` and `mneme/lci0/fixtures` between shared base
+`ab353b4b7f30d5e46323d274862e6c1212ebf514` and executed integration commit
+`e6983952ea726366b69435b29eeb37eb76f8504d`; it also produced no entries.
+
+| Protected object | Seed-base object | Verified object | Result |
 | --- | --- | --- | --- |
-| `canonical-datum/` | No tracked source/schema/vector change | PENDING | PENDING |
-| `mneme/latent-mvp/` | No tracked production change | PENDING | PENDING |
-| `mneme/verify-all.sh` | No tracked change | PENDING | PENDING |
-| `mneme/lci0/spec/` | Exact frozen normative copies, unedited | PENDING | PENDING |
-| `mneme/lci0/fixtures/` | Exact frozen archives/manifests, unedited | PENDING | PENDING |
-| CD/0 canonical outputs | Byte-identical on all frozen vectors | PENDING | PENDING |
-| Existing v1 behavior | 6/6 suites green, no production semantic change | PENDING | PENDING |
-| Live warrant/authority object inventory | Zero | PENDING | PENDING |
+| `canonical-datum/` | `ce6e41deca3fe237ff6d0edafa2666d098ae62e8` | same | PASS |
+| `mneme/latent-mvp/` | `41c2934e34a04461cf50cb378394c32c7c11d344` | same | PASS |
+| `mneme/verify-all.sh` | `b001ec4fde1e5e42c334589dc3fc0f34a0038a9b` | same | PASS |
+| Frozen LCI specs/fixtures | no tracked content change | no diff | PASS |
+| CD/0 canonical behavior | 467-request differential floor | zero issues | PASS |
+| Existing v1 behavior | 6 suites | 6/6 green | PASS |
 
-## N/A and failure accounting
+The added code remains under `mneme/lci0/` and is fixture-only. Review found no
+production warrant, WarrantId, standing, capability, authority,
+cryptographic-selection, custody, verified-lineage, or live-migration object.
+No live warrant was created by migration fixtures.
 
-The Common Lisp CD/0 suite historically reports three declared optional-host
-importer dispositions as N/A. They must remain reported as N/A and must never be
-added to a pass count. Any unavailable final command, skipped test, new N/A,
-changed count, protected-tree diff, or canonical-byte difference must be listed
-as a distinct unresolved item.
+## Artifact-identity recheck
 
-| Classification | Count/detail |
-| --- | --- |
-| Final failures | PENDING |
-| Final skips | PENDING |
-| Declared historical Common Lisp N/A | PENDING confirmation; expected 3 and not pass |
-| New N/A | PENDING; expected 0 |
-| Protected-tree differences | PENDING; expected empty |
-| Canonical-octet differences | PENDING; expected 0 |
+The final worktree reproduced the required LCI candidate, ruling, Errata,
+fixture-package specification, fixture manifest/checksum file, fixture ZIP,
+and Fable PASS packet hashes. In particular, the candidate, ruling, Errata,
+fixture-package specification, registry, and vectors remained respectively:
 
-## Authorial returns and nonregression
+```text
+6fa2965ed727b4d89b09a3d9c171bcfa3aea8c23f486ef87dc33f85bcb9ae5ba
+c2ee9dbb2b3fc72abf4745f5e9a8b4a04d9e1bfeab0fbe224d5c7946e11360a7
+f2bcea1db0e08fe271fdaa79c1f9d4406b94c2c730ab547c0024495ce962c5ea
+ac0c9265e9583c698c397801099efa548cdbf33f686ebff5bacc8bbea7cbcd2f
+dd19c6d6543a875b2e7e1e6a234ad731ce019f64495b447b317462c63f826327
+387e76963f3087f6e41ec4363ec3eea29b1456c2a6b3c5a0cf5763418bffe3a4
+```
 
-Ten provisional authorial packets now block exact LCI integration conclusions.
-They do not waive any CD/0 or v1 nonregression gate. Nonregression must be run
-and reported independently of their disposition.
+## Evidence lifecycle still pending
 
-| Packet | Authorial response/hash | Effect on final nonregression result |
-| --- | --- | --- |
-| `LCI0-AUTHORIAL-RETURN-PACKET.md` | PENDING | Matcher path BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
-| `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | PENDING | Thirty-eight paths BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
-| `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | PENDING | Expected context BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
-| `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | PENDING | P029 right result BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
-| `LCI0-AUTHORIAL-RETURN-PACKET-POLICY-EVALUATION-ORDER.md` | PENDING | Combined policy decision BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
-| `LCI0-AUTHORIAL-RETURN-PACKET-CORPUS-BASIS-COHERENCE.md` | PENDING | Exact coherence failure tuple BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
-| `LCI0-AUTHORIAL-RETURN-PACKET-OPERATION-PAYLOAD-FAILURES.md` | PENDING | Novel payload failure tuples BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
-| `LCI0-AUTHORIAL-RETURN-PACKET-MIGRATION-CLASSIFICATION-COUPLING.md` | PENDING | Unpinned migration coupling matrix BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
-| `LCI0-AUTHORIAL-RETURN-PACKET-TARGET-BOUNDARY-COHERENCE.md` | PENDING | Novel target-coherence semantics BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
-| `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md` | PENDING | P024 exact result BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
+The final nonregression raw files are committed at
+`e552346123a35225023f5b33d8f288c7064e11da`. Reproducible archive
+bytes/SHA-256, cleanup commit, branch publication, and remote read-back are
+intentionally left for the later archive/publication receipts. No archive or
+remote identity is guessed here.
 
-## Archive, cleanup, and publication fill-in
+## Disposition
 
-| Item | Status/value |
-| --- | --- |
-| Final successor commit/tree tested | PENDING |
-| Raw nonregression transcripts committed | PENDING |
-| Transcript member bytes/SHA-256 | PENDING |
-| Reproducible evidence archive membership | PENDING |
-| Archive bytes/SHA-256 | PENDING |
-| Loose transcripts removed only after archive commit | PENDING |
-| Safe detritus cleanup inventory and commit | PENDING |
-| Non-force branch publication | PENDING |
-| Remote read-back of tested objects | PENDING |
-
-## Current disposition
-
-Final CD/0 and v1 nonregression are PENDING. This receipt does not claim final
-nonregression, convergence, PASS, archive completion, cleanup completion,
-publication, or eligibility for independent implementation audit.
+The protected CD/0 and Mneme/v1 nonregression obligation is satisfied by
+independent frozen-suite, differential, protected-object, and source-diff
+evidence. This does not cure the ten LCI/0 authorial blockers. The corrected
+unaffected LCI implementation/evidence is ready for independent audit, while
+overall completion remains **BLOCKED pending authorial closure**.

@@ -41,6 +41,8 @@ blocked pending authorial closure. This is not a merge-eligibility claim.
 Start with:
 
 - `evidence/LCI0-FABLE-IMPLEMENTATION-RELAY.md` for the paste-ready relay;
+- `evidence/LCI0-CORRECTION-VERIFICATION-AUDIT.md` for the fresh,
+  scope-limited audit of the six corrected defect families;
 - `evidence/LCI0-FINAL-VERIFICATION-TRANSCRIPT.md` for commands and counts;
 - `evidence/LCI0-IMPLEMENTATION-DIVERGENCES.md` for the append-only divergence
   record and ten authorial-return packets; and

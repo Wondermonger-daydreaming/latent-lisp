@@ -26,8 +26,9 @@ For integration eligibility, those result claims are superseded by
 - `LCI0-P029` — expected source artifact differs from the explicit input.
 
 Those four exact result documents are authorially BLOCKED, not pass, failure,
-skip, or N/A. The current unaffected ceiling is 211/215; fresh committed
-successor execution and final counts are PENDING. The seed identity, tree,
+skip, or N/A. The current unaffected ceiling is 211/215. Successor execution
+was still pending when this first addendum was written; the final addendum
+below now records it. The seed identity, tree,
 pre-cross-reading inventory, and procedural-isolation facts remain unchanged.
 This addendum does not rewrite the seed commit, claim PASS, or establish
 eligibility for independent implementation audit.
@@ -201,3 +202,45 @@ module-authority system changed. Divergence status at the seed boundary: zero
 unresolved implementation-versus-fixture mismatches and no specification or
 fixture ambiguity discovered. Cross-language divergence classification belongs
 to the integration worktree after both seed commits exist.
+
+## Integration-successor execution addendum — 2026-07-14
+
+This addendum records later integration evidence without changing the seed-era
+observations above. The immutable seed remains
+`4ec2e519d05aeacd2412cb8aedc5f76bde702571`, tree
+`9f7915b460f449976a5d7fa856861ad5ce1d36ca`. Its reviewed successor is
+`db627cb6ca23abc0626aebc6f9982ab9b4406dbf`, tree
+`74c6a7e5c144d3286b83a933b27cff3d5865921d`; Git ancestry confirms the seed
+was preserved rather than rewritten. The corrected successor's full LCI
+language suite is 100/100 green, differential units are 53/53, and the final
+post-convergence focused native suite is 8/8.
+
+Audit history: exact r3/post final5 led an independent audit to six Python
+boundary defect families: occurrence projection/outer closure; tagged-empty
+profile-location admission, with N009's existing diagnostic preserved; target matching coordinates and
+order; nonmonotonicity-before-coverage; mutable aliases; and bilateral ClaimId
+validation. Corrected r4/final6 retains each as a direct
+or cross-language hostile regression; the older counts remain historical.
+
+At integration code commit `e6983952ea726366b69435b29eeb37eb76f8504d`,
+tree `daaef9bad97eced6c242fc8052cbedc8920d355a`, the Python adapter
+received 2,295 exact requests:
+
+- 1,593/1,593 canonical documents reproduced;
+- 211/215 vector results exact and four authorially BLOCKED;
+- 420/458 relation results exact and 38 companion paths BLOCKED;
+- 21/29 hostile results exact and eight exact-result paths BLOCKED; and
+- zero mismatch outside those declared blockers.
+
+Post-convergence final6 ran 329 deterministic cases at seed `0x4C434930`
+through four Python adapter profiles (`PYTHONHASHSEED` 0, 1, 42, and
+4294967295; locales C, C, C.utf8, and POSIX) plus four native probes. Across
+the full six-adapter comparison there were zero nonblocked failures; 104
+failure-coordinate and 14 result-coordinate cases remain authorially blocked.
+
+This supersedes the seed's semantic `215/215` standing only for current
+integration conclusions; it does not rewrite the historical command output.
+The corrected unaffected Python successor/evidence is ready for independent
+audit. Overall completion remains **BLOCKED pending authorial closure**. Archive,
+publication, remote read-back, and reviewer PASS are not claimed by this seed
+receipt.
