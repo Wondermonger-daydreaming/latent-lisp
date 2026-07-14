@@ -1,6 +1,10 @@
 (in-package #:lisp-plus-lci0)
 
-(defparameter *fixture-root* "/tmp/lci0-seed-fixtures-20260714")
+(defparameter *fixture-root*
+  ;; Honor the harness-wide environment override everywhere the default root
+  ;; is consumed; the historical constant remains the fallback.
+  (or (sb-ext:posix-getenv "LCI0_FIXTURE_ROOT")
+      "/tmp/lci0-seed-fixtures-20260714"))
 (defparameter *registry-definition-cache* (make-hash-table :test #'equal))
 
 (defun fixture-path (root name)
