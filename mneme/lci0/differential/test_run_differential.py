@@ -101,5 +101,29 @@ class AuthorialBlockerGateTests(unittest.TestCase):
         self.assertFalse(subject._only_authorial_blockers(value))
 
 
+class HostileConstructionTests(unittest.TestCase):
+    def test_named_mutable_aliases_are_exact_fail_closed_witnesses(self):
+        cases = {case["name"]: case for case in subject._hostile_cases()}
+        expected = {
+            "stable-ref-alias-display-model",
+            "stable-ref-alias-bare-filename",
+            "stable-ref-alias-mutable-url",
+            "stable-ref-alias-latest-case-folded",
+            "stable-ref-alias-main-case-folded",
+            "stable-ref-alias-package-symbol-spelling",
+        }
+        self.assertTrue(expected <= set(cases))
+        for name in expected:
+            self.assertEqual(
+                cases[name]["expected_failure"],
+                {
+                    "category": "reference-refusal",
+                    "code": "UnresolvedAlias",
+                    "stage": "stable-reference",
+                    "path": ["material", "object-id"],
+                },
+            )
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -146,6 +146,33 @@ def _hostile_cases() -> list[dict[str, Any]]:
     wrong_material = _replace_identifier_path(material, "object-id", wrong_object_id)
     cases.append({"name": "stable-ref-object-id-prefix", "operation": "hostile-validate-stable-ref", "datum": replace_record_field(stable, "material", wrong_material)})
 
+    # Exact mutable-alias witnesses required by Errata E7 and the implementation
+    # authorization.  Registered segmented/case-sensitive object identifiers
+    # remain valid; these display-like spellings never become stable identity.
+    alias_paths = {
+        "display-model": ("object", "artifact", "display-model"),
+        "bare-filename": ("object", "artifact", "file.txt"),
+        "mutable-url": ("object", "artifact", "https://mutable.invalid/x"),
+        "latest-case-folded": ("object", "artifact", "LaTeSt"),
+        "main-case-folded": ("object", "artifact", "MAIN"),
+        "package-symbol-spelling": ("object", "artifact", "MNEME::FILE"),
+    }
+    for name, path in alias_paths.items():
+        alias_material = _replace_identifier_path(material, "object-id", path)
+        cases.append(
+            {
+                "name": f"stable-ref-alias-{name}",
+                "operation": "hostile-validate-stable-ref",
+                "datum": replace_record_field(stable, "material", alias_material),
+                "expected_failure": {
+                    "category": "reference-refusal",
+                    "code": "UnresolvedAlias",
+                    "stage": "stable-reference",
+                    "path": ["material", "object-id"],
+                },
+            }
+        )
+
     observed = from_package_json(definitions()["warrant-target.observed.file-alpha.exact"]["abstract_cd0"], CD0_BUDGET)
     executed = from_package_json(definitions()["warrant-target.executed.call-17"]["abstract_cd0"], CD0_BUDGET)
     cases.append({"name": "observed-with-executed-target-schema", "operation": "hostile-validate-warrant-target", "datum": replace_record_field(observed, "target-schema", field_by_path(executed, "target-schema"))})
