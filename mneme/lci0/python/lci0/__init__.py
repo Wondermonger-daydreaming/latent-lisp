@@ -21,6 +21,7 @@ from .core import (
     evaluate_policy,
     failure,
     match_target as _match_target,
+    normalize_proposition,
     project_claim_id,
     project_occurrence,
     restore_live_warrant,
