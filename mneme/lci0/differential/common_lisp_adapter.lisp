@@ -189,6 +189,55 @@
               (list (cons "semantic_status" "failure")
                     (cons "failure" (integration-failure-json condition)))))))
 
+(defun integration-run-hostile-projection (datum response)
+  (handler-case
+      (progn
+        ;; This is direct projection, not occurrence projection.  The carrier
+        ;; therefore reaches the ordinary four-field ClaimId input validator
+        ;; unchanged.
+        (project-claim-id datum)
+        (append response (list (cons "semantic_status" "success"))))
+    (lci-failure (condition)
+      (append response
+              (list (cons "semantic_status" "failure")
+                    (cons "failure" (integration-failure-json condition)))))))
+
+(defun integration-require-exact-hostile-carrier (datum fields)
+  (unless (%resource-exact-record-shape-p
+           datum +fixture-field-namespace+ fields)
+    (integration-protocol-fail "InvalidHostileCarrier" '("operation")))
+  datum)
+
+(defun integration-run-hostile-match (datum response)
+  (integration-require-exact-hostile-carrier
+   datum '("target" "candidate-claim"))
+  (handler-case
+      (progn
+        (match-warrant-target (record-field-named datum "target")
+                              (record-field-named datum "candidate-claim"))
+        (append response (list (cons "semantic_status" "success"))))
+    (lci-failure (condition)
+      (append response
+              (list (cons "semantic_status" "failure")
+                    (cons "failure" (integration-failure-json condition)))))))
+
+(defun integration-run-hostile-claim-id-equality (datum response)
+  (integration-require-exact-hostile-carrier
+   datum '("left-claim-id" "right-claim-id"))
+  (handler-case
+      (let ((left (record-field-named datum "left-claim-id"))
+            (right (record-field-named datum "right-claim-id")))
+        ;; Structural equality is meaningful here only after both operands are
+        ;; validated ClaimId envelopes.
+        (validate-claim-id left)
+        (validate-claim-id right)
+        (equal-datum left right)
+        (append response (list (cons "semantic_status" "success"))))
+    (lci-failure (condition)
+      (append response
+              (list (cons "semantic_status" "failure")
+                    (cons "failure" (integration-failure-json condition)))))))
+
 (defun integration-run-hostile-policy (datum response)
   (let ((target-relation (and (record-datum-p datum)
                               (record-field-named datum "target-relation"))))
@@ -280,6 +329,12 @@
               (cond
                 ((string= operation "hostile-evaluate-policy-c")
                  (integration-run-hostile-policy datum response))
+                ((string= operation "hostile-project-claim-id")
+                 (integration-run-hostile-projection datum response))
+                ((string= operation "hostile-match-target")
+                 (integration-run-hostile-match datum response))
+                ((string= operation "hostile-claim-ids-equal")
+                 (integration-run-hostile-claim-id-equality datum response))
                 ((string= operation "document-roundtrip")
                  (append response (list (cons "semantic_status" "success"))))
                 ((member operation

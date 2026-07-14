@@ -158,8 +158,8 @@ EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS = {
     "document_passed": 1593,
     "document_requests": 1593,
     "hostile_blocked": 8,
-    "hostile_passed": 13,
-    "hostile_requests": 21,
+    "hostile_passed": 21,
+    "hostile_requests": 29,
     "relation_blocked": 38,
     "relation_passed": 420,
     "relation_requests": 458,
@@ -170,7 +170,7 @@ EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS = {
 
 EXPECTED_SUCCESSOR_REQUEST_COUNTS = {
     "baseline_requests_per_implementation": 2266,
-    "hostile_requests_per_implementation": 21,
+    "hostile_requests_per_implementation": 29,
     "magic_registry_values": 1133,
     "magic_vector_values": 460,
     "official_documents": 1105,
@@ -179,7 +179,7 @@ EXPECTED_SUCCESSOR_REQUEST_COUNTS = {
     "supplementary_nested_e1_documents": 30,
     "supplementary_relation_documents": 458,
     "total_documents": 1593,
-    "total_requests_per_implementation": 2287,
+    "total_requests_per_implementation": 2295,
     "vector_semantic_requests": 215,
 }
 
@@ -238,5 +238,5 @@ if set(BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS) != BLOCKED_HOSTILE_REQUESTS:
     raise RuntimeError("authorial hostile cross-field census drift")
 if len(BLOCKED_RELATION_PATH_REQUESTS) != 38:
     raise RuntimeError("authorial relation-path blocker census drift")
-if sum(EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS.values()) != 4574:
+if sum(EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS.values()) != 4590:
     raise RuntimeError("successor implementation count census drift")

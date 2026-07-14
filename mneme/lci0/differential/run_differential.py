@@ -148,8 +148,17 @@ def _replace_identifier_path(
     return replace_record_field(record, field_name, cd0.identifier(value.namespace, path))
 
 
+def _fixture_carrier(fields: Iterable[tuple[str, cd0.Datum]]) -> cd0.Record:
+    """Build an exact integration-only carrier in frozen fixture-field space."""
+
+    return cd0.record(
+        (cd0.identifier(FIXTURE_FIELD, (name,)), value) for name, value in fields
+    )
+
+
 def _hostile_cases() -> list[dict[str, Any]]:
     cases: list[dict[str, Any]] = []
+    vector_rows = {row["vector_id"]: row for row in iter_vectors()}
 
     stable = from_package_json(definitions()["stable-ref.artifact.file.alpha"]["abstract_cd0"], CD0_BUDGET)
     cases.append({"name": "stable-ref-domain-namespace", "operation": "hostile-validate-stable-ref", "datum": _replace_identifier_namespace(stable, "domain", HOSTILE_NAMESPACE)})
@@ -184,6 +193,8 @@ def _hostile_cases() -> list[dict[str, Any]]:
         "mutable-url": ("object", "artifact", "https://mutable.invalid/x"),
         "latest-case-folded": ("object", "artifact", "LaTeSt"),
         "main-case-folded": ("object", "artifact", "MAIN"),
+        "production": ("object", "artifact", "production"),
+        "model-current": ("object", "artifact", "model-current"),
         "package-symbol-spelling": ("object", "artifact", "MNEME::FILE"),
     }
     for name, path in alias_paths.items():
@@ -225,6 +236,167 @@ def _hostile_cases() -> list[dict[str, Any]]:
     hostile_location = replace_record_field(location, "scope", hostile_scope)
     cases.append({"name": "claim-nested-expression-kind-key-namespace", "operation": "hostile-validate-claim-id", "datum": replace_record_field(claim, "location", hostile_location)})
 
+    # Direct projection accepts only a ClaimId envelope or the four-field LCI
+    # projection input.  An occurrence-like fixture carrier is not an alternate
+    # projection schema, even when semantic-claim-core contains a valid claim.
+    projection_carrier = _fixture_carrier(
+        (
+            ("semantic-claim-core", claim),
+            ("future", cd0.unit()),
+        )
+    )
+    cases.append(
+        {
+            "name": "project-claim-id-carrier-future-field",
+            "operation": "hostile-project-claim-id",
+            "datum": projection_carrier,
+            "expected_failure": {
+                "category": "invalid-input",
+                "code": "MissingRequiredField",
+                "stage": "claim-shape",
+                "path": ["identity-policy"],
+            },
+        }
+    )
+
+    # N009 supplies the tagged profile-location schema.  Removing its sole
+    # future coordinate leaves a nonempty tagged wrapper, which Mneme/0 still
+    # rejects because the only valid ClaimId coordinate is the exact empty
+    # record frozen by LCI/0 section 7.9 and Errata I12(a).
+    n009_envelope = from_package_json(
+        vector_rows["LCI0-N009"]["inputs"]["abstract_cd0"], CD0_BUDGET
+    )
+    n009_claim = field_by_path(field_by_path(n009_envelope, "payload"), "claim")
+    n009_location = field_by_path(n009_claim, "location")
+    tagged_profile = field_by_path(n009_location, "profile-location")
+    tagged_empty_profile = replace_record_field(
+        tagged_profile, "coordinates", cd0.record(())
+    )
+    tagged_location = replace_record_field(
+        n009_location, "profile-location", tagged_empty_profile
+    )
+    cases.append(
+        {
+            "name": "claim-tagged-empty-profile-location",
+            "operation": "hostile-validate-claim-id",
+            "datum": replace_record_field(n009_claim, "location", tagged_location),
+            "expected_failure": {
+                "category": "invalid-input",
+                "code": "UnknownField",
+                "stage": "profile-location",
+                "path": ["location", "profile-location", "kind"],
+            },
+        }
+    )
+
+    # Exact two-field target carriers expose the E6 precedence boundary without
+    # borrowing either implementation as an oracle.
+    beta_claim = from_package_json(
+        definitions()["claim-id.file-beta-neutral"]["abstract_cd0"], CD0_BUDGET
+    )
+    proposition_failure = {
+        "category": "target-mismatch",
+        "code": "PropositionMismatch",
+        "stage": "target-relation",
+        "path": ["claim", "proposition"],
+    }
+    cases.append(
+        {
+            "name": "match-target-beta-proposition",
+            "operation": "hostile-match-target",
+            "datum": _fixture_carrier(
+                (("target", observed), ("candidate-claim", beta_claim))
+            ),
+            "expected_failure": proposition_failure,
+        }
+    )
+
+    timed_claim = from_package_json(
+        definitions()["claim-id.file-alpha-today"]["abstract_cd0"], CD0_BUDGET
+    )
+    beta_location = field_by_path(beta_claim, "location")
+    mismatched_time_location = replace_record_field(
+        beta_location,
+        "subject-time",
+        field_by_path(field_by_path(timed_claim, "location"), "subject-time"),
+    )
+    beta_and_time_mismatch = replace_record_field(
+        beta_claim, "location", mismatched_time_location
+    )
+    cases.append(
+        {
+            "name": "match-target-proposition-before-subject-time",
+            "operation": "hostile-match-target",
+            "datum": _fixture_carrier(
+                (("target", observed), ("candidate-claim", beta_and_time_mismatch))
+            ),
+            "expected_failure": proposition_failure,
+        }
+    )
+
+    nonmonotone_envelope = from_package_json(
+        vector_rows["LCI0-E5-NONMONOTONE-NARROWING"]["inputs"]["abstract_cd0"],
+        CD0_BUDGET,
+    )
+    insufficient_envelope = from_package_json(
+        vector_rows["LCI0-E5-COVERAGE-INSUFFICIENT"]["inputs"]["abstract_cd0"],
+        CD0_BUDGET,
+    )
+    nonmonotone_payload = field_by_path(nonmonotone_envelope, "payload")
+    insufficient_payload = field_by_path(insufficient_envelope, "payload")
+    nonmonotone_target = field_by_path(nonmonotone_payload, "target")
+    nonmonotone_boundaries = field_by_path(nonmonotone_target, "boundaries")
+    insufficient_boundaries = field_by_path(
+        field_by_path(insufficient_payload, "target"), "boundaries"
+    )
+    combined_boundaries = replace_record_field(
+        nonmonotone_boundaries,
+        "coverage-scope",
+        field_by_path(insufficient_boundaries, "coverage-scope"),
+    )
+    combined_target = replace_record_field(
+        nonmonotone_target, "boundaries", combined_boundaries
+    )
+    cases.append(
+        {
+            "name": "match-target-nonmonotone-before-insufficient-coverage",
+            "operation": "hostile-match-target",
+            "datum": _fixture_carrier(
+                (
+                    ("target", combined_target),
+                    (
+                        "candidate-claim",
+                        field_by_path(nonmonotone_payload, "candidate-claim"),
+                    ),
+                )
+            ),
+            "expected_failure": {
+                "category": "target-mismatch",
+                "code": "ScopeNarrowingNotDeclared",
+                "stage": "target-relation",
+                "path": ["claim", "location", "scope"],
+            },
+        }
+    )
+
+    # ClaimId equality is defined only for validated envelopes.  Structurally
+    # equal empty records are not ClaimIds and must not compare as such.
+    cases.append(
+        {
+            "name": "claim-id-equality-rejects-empty-records",
+            "operation": "hostile-claim-ids-equal",
+            "datum": _fixture_carrier(
+                (("left-claim-id", cd0.record(())), ("right-claim-id", cd0.record(())))
+            ),
+            "expected_failure": {
+                "category": "invalid-input",
+                "code": "MissingRequiredField",
+                "stage": "claim-shape",
+                "path": ["kind"],
+            },
+        }
+    )
+
     # Resource-boundary witnesses.  The 5,000-octet material segment is within
     # CD/0's frozen decoder budget but exceeds the fixture StableRef material
     # budget.  The second witness moves RESOURCE-01 from 65 to the inclusive
@@ -245,7 +417,6 @@ def _hostile_cases() -> list[dict[str, Any]]:
         }
     )
 
-    vector_rows = {row["vector_id"]: row for row in iter_vectors()}
     resource_envelope = from_package_json(vector_rows["LCI0-RESOURCE-01"]["inputs"]["abstract_cd0"], CD0_BUDGET)
     resource_payload = field_by_path(resource_envelope, "payload")
     workload = field_by_path(resource_payload, "workload")

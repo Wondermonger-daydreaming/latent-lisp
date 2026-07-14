@@ -615,6 +615,8 @@ class HostileConstructionTests(unittest.TestCase):
             "stable-ref-alias-mutable-url",
             "stable-ref-alias-latest-case-folded",
             "stable-ref-alias-main-case-folded",
+            "stable-ref-alias-production",
+            "stable-ref-alias-model-current",
             "stable-ref-alias-package-symbol-spelling",
         }
         self.assertTrue(expected <= set(cases))
@@ -628,6 +630,86 @@ class HostileConstructionTests(unittest.TestCase):
                     "path": ["material", "fixture-field:object-id"],
                 },
             )
+
+    def test_independent_audit_hostiles_are_closed_determinate_requests(self):
+        cases = {case["name"]: case for case in subject._hostile_cases()}
+        expected = {
+            "project-claim-id-carrier-future-field": {
+                "category": "invalid-input",
+                "code": "MissingRequiredField",
+                "stage": "claim-shape",
+                "path": ["identity-policy"],
+            },
+            "claim-tagged-empty-profile-location": {
+                "category": "invalid-input",
+                "code": "UnknownField",
+                "stage": "profile-location",
+                "path": ["location", "profile-location", "kind"],
+            },
+            "match-target-beta-proposition": {
+                "category": "target-mismatch",
+                "code": "PropositionMismatch",
+                "stage": "target-relation",
+                "path": ["claim", "proposition"],
+            },
+            "match-target-proposition-before-subject-time": {
+                "category": "target-mismatch",
+                "code": "PropositionMismatch",
+                "stage": "target-relation",
+                "path": ["claim", "proposition"],
+            },
+            "match-target-nonmonotone-before-insufficient-coverage": {
+                "category": "target-mismatch",
+                "code": "ScopeNarrowingNotDeclared",
+                "stage": "target-relation",
+                "path": ["claim", "location", "scope"],
+            },
+            "claim-id-equality-rejects-empty-records": {
+                "category": "invalid-input",
+                "code": "MissingRequiredField",
+                "stage": "claim-shape",
+                "path": ["kind"],
+            },
+        }
+        self.assertEqual(len(cases), 29)
+        for name, failure in expected.items():
+            with self.subTest(name=name):
+                self.assertEqual(cases[name]["expected_failure"], failure)
+                self.assertNotIn(f"hostile:{name}", subject.BLOCKED_HOSTILE_REQUESTS)
+
+        for name in (
+            "match-target-beta-proposition",
+            "match-target-proposition-before-subject-time",
+            "match-target-nonmonotone-before-insufficient-coverage",
+        ):
+            with self.subTest(carrier=name):
+                carrier = subject.cd0.decode_exact(
+                    bytes.fromhex(cases[name]["canonical_hex"]), subject.CD0_BUDGET
+                )
+                self.assertEqual(
+                    {key.path for key, _ in carrier.fields},
+                    {("target",), ("candidate-claim",)},
+                )
+                self.assertTrue(
+                    all(key.namespace == subject.FIXTURE_FIELD for key, _ in carrier.fields)
+                )
+
+    def test_request_census_includes_all_determinate_audit_hostiles(self):
+        requests, oracles, counts = subject.build_requests()
+        self.assertEqual(counts["hostile_requests_per_implementation"], 29)
+        self.assertEqual(counts["total_requests_per_implementation"], 2295)
+        self.assertEqual(len(requests), len(oracles), 2295)
+        expected = {
+            "hostile:project-claim-id-carrier-future-field",
+            "hostile:claim-tagged-empty-profile-location",
+            "hostile:match-target-beta-proposition",
+            "hostile:match-target-proposition-before-subject-time",
+            "hostile:match-target-nonmonotone-before-insufficient-coverage",
+            "hostile:claim-id-equality-rejects-empty-records",
+            "hostile:stable-ref-alias-production",
+            "hostile:stable-ref-alias-model-current",
+        }
+        self.assertTrue(expected <= set(oracles))
 
     def test_policy_c_is_an_authority_gap_not_an_invented_lci_failure(self):
         cases = {case["name"]: case for case in subject._hostile_cases()}

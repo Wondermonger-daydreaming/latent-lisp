@@ -10,6 +10,7 @@ from unittest import mock
 import cd0
 
 import python_adapter as subject
+import run_differential as coordinator
 from protocol import request
 from lci0.model import LCIFailure
 from lci0.package import iter_vectors
@@ -44,6 +45,105 @@ class FailureEncodingTests(unittest.TestCase):
 
 
 class AdapterProtocolTests(unittest.TestCase):
+    def test_independent_audit_hostiles_return_exact_typed_failures(self):
+        cases = {case["name"]: case for case in coordinator._hostile_cases()}
+        names = (
+            "project-claim-id-carrier-future-field",
+            "claim-tagged-empty-profile-location",
+            "match-target-beta-proposition",
+            "match-target-proposition-before-subject-time",
+            "match-target-nonmonotone-before-insufficient-coverage",
+            "claim-id-equality-rejects-empty-records",
+            "stable-ref-alias-production",
+            "stable-ref-alias-model-current",
+        )
+        for name in names:
+            with self.subTest(name=name):
+                case = cases[name]
+                response = subject.run_request(
+                    request(
+                        f"hostile:{name}",
+                        case["operation"],
+                        case["canonical_hex"],
+                    )
+                )
+                self.assertEqual(response["protocol_status"], "success")
+                self.assertEqual(response["semantic_status"], "failure")
+                self.assertEqual(response["failure"], case["expected_failure"])
+
+    def test_common_lisp_independent_audit_hostiles_return_exact_typed_failures(self):
+        cases = {case["name"]: case for case in coordinator._hostile_cases()}
+        names = (
+            "project-claim-id-carrier-future-field",
+            "claim-tagged-empty-profile-location",
+            "match-target-beta-proposition",
+            "match-target-proposition-before-subject-time",
+            "match-target-nonmonotone-before-insufficient-coverage",
+            "claim-id-equality-rejects-empty-records",
+            "stable-ref-alias-production",
+            "stable-ref-alias-model-current",
+        )
+        requests = [
+            request(f"hostile:{name}", cases[name]["operation"], cases[name]["canonical_hex"])
+            for name in names
+        ]
+        root = Path(__file__).resolve().parents[3]
+        process = subprocess.run(
+            [
+                "sbcl", "--noinform", "--disable-debugger", "--script",
+                str(root / "mneme/lci0/differential/common_lisp_adapter.lisp"),
+            ],
+            cwd=root,
+            input="".join(json.dumps(item, sort_keys=True) + "\n" for item in requests),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(process.returncode, 0, process.stderr)
+        responses = {
+            response["request_id"]: response
+            for response in map(json.loads, process.stdout.splitlines())
+        }
+        self.assertEqual(set(responses), {item["request_id"] for item in requests})
+        for name in names:
+            with self.subTest(name=name):
+                response = responses[f"hostile:{name}"]
+                self.assertEqual(response["protocol_status"], "success")
+                self.assertEqual(response["semantic_status"], "failure")
+                self.assertEqual(response["failure"], cases[name]["expected_failure"])
+
+    def test_new_two_field_hostile_carriers_fail_closed(self):
+        case = next(
+            case
+            for case in coordinator._hostile_cases()
+            if case["name"] == "match-target-beta-proposition"
+        )
+        carrier = cd0.decode_exact(
+            bytes.fromhex(case["canonical_hex"]), subject.CD0_BUDGET
+        )
+        open_carrier = cd0.record(
+            (
+                *carrier.fields,
+                (
+                    cd0.identifier(subject.FIXTURE_FIELD, ("future",)),
+                    cd0.unit(),
+                ),
+            )
+        )
+        response = subject.run_request(
+            request(
+                "hostile:open-match-carrier",
+                "hostile-match-target",
+                subject.canonical_bytes(open_carrier).hex(),
+            )
+        )
+        self.assertEqual(response["protocol_status"], "failure")
+        self.assertEqual(
+            response["protocol_failure"],
+            {"code": "InvalidHostileCarrier", "path": ["operation"]},
+        )
+
     def test_payload_namespace_failure_is_a_closed_operation_response(self):
         row = next(iter(iter_vectors()))
         datum = cd0.decode_exact(
@@ -231,7 +331,36 @@ class AdapterProtocolTests(unittest.TestCase):
         )
         duplicate_serialized = json.dumps(duplicate_base, sort_keys=True)
         duplicate = '{"protocol":"WRONG",' + duplicate_serialized[1:]
-        stdin = json.dumps(nearby, sort_keys=True) + "\n" + duplicate + "\n"
+        match_case = next(
+            case
+            for case in coordinator._hostile_cases()
+            if case["name"] == "match-target-beta-proposition"
+        )
+        match_carrier = cd0.decode_exact(
+            bytes.fromhex(match_case["canonical_hex"]), subject.CD0_BUDGET
+        )
+        open_match_carrier = cd0.record(
+            (
+                *match_carrier.fields,
+                (
+                    cd0.identifier(subject.FIXTURE_FIELD, ("future",)),
+                    cd0.unit(),
+                ),
+            )
+        )
+        open_match = request(
+            "hostile:cl-open-match-carrier",
+            "hostile-match-target",
+            subject.canonical_bytes(open_match_carrier).hex(),
+        )
+        stdin = (
+            json.dumps(nearby, sort_keys=True)
+            + "\n"
+            + duplicate
+            + "\n"
+            + json.dumps(open_match, sort_keys=True)
+            + "\n"
+        )
         root = Path(__file__).resolve().parents[3]
         process = subprocess.run(
             [
@@ -247,7 +376,7 @@ class AdapterProtocolTests(unittest.TestCase):
         )
         self.assertEqual(process.returncode, 0, process.stderr)
         responses = [json.loads(line) for line in process.stdout.splitlines()]
-        self.assertEqual(len(responses), 2)
+        self.assertEqual(len(responses), 3)
         self.assertEqual(
             responses[0]["protocol_failure"],
             {"code": "InvalidPolicyCCarrier", "path": ["operation"]},
@@ -256,6 +385,10 @@ class AdapterProtocolTests(unittest.TestCase):
         self.assertEqual(
             responses[1]["protocol_failure"]["code"],
             "InvalidRunnerJSON",
+        )
+        self.assertEqual(
+            responses[2]["protocol_failure"],
+            {"code": "InvalidHostileCarrier", "path": ["operation"]},
         )
 
 

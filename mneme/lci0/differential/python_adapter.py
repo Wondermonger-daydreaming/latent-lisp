@@ -11,7 +11,10 @@ import cd0
 from lci0.core import (
     CD0_BUDGET,
     canonical_bytes,
+    claim_ids_equal,
     evaluate_policy,
+    match_target,
+    project_claim_id,
     scope_relation,
     temporal_relation,
     validate_claim_id,
@@ -314,6 +317,35 @@ def run_request(raw: Any) -> dict[str, Any]:
             return response
         if operation == "hostile-validate-warrant-target":
             validate_warrant_target(datum)
+            response["semantic_status"] = "success"
+            return response
+        if operation == "hostile-project-claim-id":
+            project_claim_id(datum)
+            response["semantic_status"] = "success"
+            return response
+        if operation in {"hostile-match-target", "hostile-claim-ids-equal"}:
+            try:
+                fields = record_to_mapping(datum)
+            except (LCIFailure, FixtureAuthorityGap) as failure:
+                raise ProtocolError(
+                    "InvalidHostileCarrier", ("operation",)
+                ) from failure
+            expected = (
+                {"target", "candidate-claim"}
+                if operation == "hostile-match-target"
+                else {"left-claim-id", "right-claim-id"}
+            )
+            if set(fields) != expected:
+                raise ProtocolError("InvalidHostileCarrier", ("operation",))
+            if operation == "hostile-match-target":
+                relation = match_target(fields["target"], fields["candidate-claim"])
+                if relation.failure is not None:
+                    response["semantic_status"] = "failure"
+                    response["failure"] = _failure_object(relation.failure)
+                else:
+                    response["semantic_status"] = "success"
+                return response
+            claim_ids_equal(fields["left-claim-id"], fields["right-claim-id"])
             response["semantic_status"] = "success"
             return response
         if operation == "hostile-evaluate-policy-c":

@@ -73,7 +73,7 @@ def _successor_summary(cross_ids=()) -> dict:
         ),
         "counts": {
             "baseline_requests_per_implementation": 2266,
-            "hostile_requests_per_implementation": 21,
+            "hostile_requests_per_implementation": 29,
             "magic_registry_values": 1133,
             "magic_vector_values": 460,
             "official_documents": 1105,
@@ -81,7 +81,7 @@ def _successor_summary(cross_ids=()) -> dict:
             "supplementary_nested_e1_documents": 30,
             "supplementary_relation_documents": 458,
             "total_documents": 1593,
-            "total_requests_per_implementation": 2287,
+            "total_requests_per_implementation": 2295,
             "vector_semantic_requests": 215,
             "relation_semantic_requests": 458,
             "vector_operation_families": dict(

@@ -48,6 +48,9 @@ INTEGRATION_OPERATIONS = frozenset(
         "hostile-validate-stable-ref",
         "hostile-validate-claim-id",
         "hostile-validate-warrant-target",
+        "hostile-project-claim-id",
+        "hostile-match-target",
+        "hostile-claim-ids-equal",
         "hostile-evaluate-policy-c",
     }
 )
