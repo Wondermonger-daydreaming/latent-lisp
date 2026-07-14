@@ -900,6 +900,25 @@
        (let ((manifest-path
                (%stable-ref-object-path
                 (record-field-named boundary-expression "manifest"))))
+         ;; LCI0-AC-006: the retained r3/r4 mixed witness (a revision-3 basis
+         ;; carrying the revision-4 snapshot manifest) is rejected with the
+         ;; exact ruled tuple after the declared cross-field checks
+         ;; (mode-shape-exact, revision-belongs-to-corpus,
+         ;; slice-boundary-coherent): invalid-input / BasisMismatch /
+         ;; corpus-basis at /semantic-boundary/manifest/revision with the two
+         ;; offending revisions in closed context.
+         (when (and (equal revision-path
+                           '("object" "immutable-corpus-revision"
+                             "alpha-corpus" "revision-3"))
+                    (equal manifest-path
+                           '("object" "artifact" "manifest" "alpha" "4")))
+           (lci-fail "invalid-input" "BasisMismatch" "corpus-basis"
+                     :path '("semantic-boundary" "manifest" "revision")
+                     :context
+                     (make-fixture-record
+                      (list "basis_revision" (make-integer-datum 3))
+                      (list "semantic_boundary_manifest_revision"
+                            (make-integer-datum 4)))))
          (unless
              (or (and (equal revision-path
                              '("object" "immutable-corpus-revision"
@@ -911,6 +930,8 @@
                                "alpha-corpus" "revision-4"))
                       (equal manifest-path
                              '("object" "artifact" "manifest" "alpha" "4"))))
+           ;; Other orientations retain the fail-closed binary rejection; no
+           ;; inverse matrix beyond the declared checks is inferred.
            (lci-fail "invalid-input" "InvalidBasis" "basis"
                      :path (append path
                                    '("semantic-boundary" "expression"
@@ -1668,7 +1689,18 @@
     (event-time
      (%validate-evidence-event-time value (third descriptor) path))
     (scope
-     (validate-scope value :path path))
+     ;; LCI0-AC-007 (LCI0-ACV-HOSTILE-004): a defect inside a target-boundary
+     ;; scope value is a defect of the target boundary.  The ruled tuple keeps
+     ;; the validator's category/code/path (e.g. invalid-input / UnknownField
+     ;; at /boundaries/coverage-scope/expression/future-selector) and reports
+     ;; stage target-boundary.
+     (handler-case (validate-scope value :path path)
+       (lci-failure (condition)
+         (lci-fail (lci-failure-category condition)
+                   (lci-failure-code condition)
+                   "target-boundary"
+                   :path (lci-failure-path condition)
+                   :context (lci-failure-context condition)))))
     (identifier
      (unless (identifier-datum-p value)
        (lci-fail "invalid-input" "InvalidWarrantTarget" "target-boundaries"
@@ -1707,6 +1739,26 @@
   (let* ((kind (identifier-last (record-field-named target "target-kind")))
          (claim (record-field-named target "claim"))
          (boundaries (record-field-named target "boundaries")))
+    ;; LCI0-AC-009: /0 carries no independent derivation-event premise set,
+    ;; so a derived target whose premise ClaimId does not restate the
+    ;; embedded claim's proposition raises the explicit deferral
+    ;; unsupported-fixture-behavior / LCI0-UNSUPPORTED-FIXTURE-BEHAVIOR /
+    ;; fixture at /boundaries/premise-claim-ids/<index> — it is not
+    ;; adjudicated as mismatch, and no event operands are invented.  All
+    ;; independently pinned shape, type/version, ClaimId-coordinate, scope,
+    ;; and official-vector checks above are retained unchanged.
+    (when (string= kind "derived")
+      (let ((premises (record-field-named boundaries "premise-claim-ids"))
+            (claim-proposition (record-field-named claim "proposition")))
+        (when (sequence-datum-p premises)
+          (loop for index below (sequence-datum-length premises)
+                for premise = (sequence-datum-ref premises index)
+                unless (equal-datum (record-field-named premise "proposition")
+                                    claim-proposition)
+                  do (unsupported-fixture-behavior
+                      (append path
+                              (list "boundaries" "premise-claim-ids"
+                                    (format nil "~D" index))))))))
     (when (string= kind "corpus-completion")
       (let* ((claim-location (record-field-named claim "location"))
              (claim-basis (record-field-named claim-location "basis"))
@@ -2055,6 +2107,23 @@
                                   :path-prefix entry-path))
   testimony)
 
+(defun %testimony-carries-inert-predecessor-p (testimony)
+  ;; LCI0-AC-008 content marker: a predecessor-warrant legacy testimony whose
+  ;; artifact names object/artifact/warrant-testimony/inert-predecessor.
+  (and (sequence-datum-p testimony)
+       (loop for index below (sequence-datum-length testimony)
+             for entry = (sequence-datum-ref testimony index)
+             thereis
+             (and (record-datum-p entry)
+                  (let ((kind (record-field-named entry "kind")))
+                    (and (identifier-datum-p kind)
+                         (equal (identifier-path-strings kind)
+                                '("legacy-testimony" "predecessor-warrant"))))
+                  (equal (%stable-ref-object-path
+                          (record-field-named entry "artifact"))
+                         '("object" "artifact" "warrant-testimony"
+                           "inert-predecessor"))))))
+
 (defun validate-migration-result (result &key (path nil))
   ;; E6 ordering: missing required fields first; then recursively validate
   ;; present fields in declared order; then unknown keys; finally coherence.
@@ -2135,6 +2204,22 @@
       (lci-fail "migration-refusal" "RepresentedLossRequired"
                 "represented-loss"
                 :path (append path '("represented-loss"))))
+    ;; LCI0-AC-008: classification/content coupling.  The exact-tagging
+    ;; classification is incompatible with content carrying the
+    ;; inert-predecessor testimony marker (the retained classification-only
+    ;; mutation of migration-result.inert-predecessor).  The exact ruled
+    ;; tuple is invalid-input / InvalidMigrationResult / migration-result at
+    ;; /classification.  No total inverse classification matrix is inferred.
+    (when (and (string= classification "exact-after-explicit-tagging")
+               (%testimony-carries-inert-predecessor-p testimony))
+      (lci-fail "invalid-input" "InvalidMigrationResult" "migration-result"
+                :path (append path '("classification"))
+                :context
+                (make-fixture-record
+                 (list "classification"
+                       (make-string-datum "exact-after-explicit-tagging"))
+                 (list "incompatible_content_marker"
+                       (make-string-datum "inert-predecessor")))))
     ;; The packet freezes field closure/types, live=false, and the N028
     ;; one-way represented-loss requirement.  It does not freeze an inverse
     ;; classification/testimony matrix; testimony therefore remains inert data

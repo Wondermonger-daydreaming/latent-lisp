@@ -95,8 +95,17 @@
                 "target-boundaries"
                 :path '("boundaries" "completion-receipt-or-trace")))
     (let* ((target-scope (%claim-coordinate embedded "scope"))
-           (candidate-scope (%claim-coordinate candidate "scope"))
-           (relation
+           (candidate-scope (%claim-coordinate candidate "scope")))
+      ;; LCI0-AC-001: the matcher-level symbolic guard.  Inspect the candidate
+      ;; scope at /claim/location/scope before consuming the direct scope
+      ;; relation and before any policy consultation.  A symbolic scope form
+      ;; prevents proof of the required coverage proposition; that is
+      ;; undetermined relation, not mismatch (mismatch requires a determinate
+      ;; frozen relation proving non-match).  Neither policy is consulted.
+      (when (string= (or (%scope-form candidate-scope) "") "symbolic-predicate")
+        (%target-fail "ScopeRelationUnknown" '("claim" "location" "scope")
+                      :category "relation-undetermined"))
+      (let* ((relation
              (handler-case (scope-relation target-scope candidate-scope)
                (lci-failure (condition)
                  (if (member (lci-failure-code condition)
@@ -128,14 +137,19 @@
            (let ((coverage-relation (scope-relation coverage candidate-scope)))
              (unless (member (identifier-last coverage-relation)
                              '("equal" "wider") :test #'string=)
+               ;; LCI0-AC-003: the failure context carries only material the
+               ;; matcher surface derives for the caller — the target kind and
+               ;; the required candidate scope.  The declared coverage scope is
+               ;; not restated into the expected context (the 0.1 expectation
+               ;; synthesized an unbound tenant-a value here; the ruled
+               ;; successor context is input-derived only).
                (%target-fail
                 "ScopeNarrowingCoverageInsufficient"
                 '("boundaries" "coverage-scope")
                 :context
                 (make-fixture-record
                  (list "target-kind" (record-field-named target "target-kind"))
-                 (list "required-candidate-scope" candidate-scope)
-                 (list "actual-coverage-scope" coverage)))))
+                 (list "required-candidate-scope" candidate-scope)))))
          (%target-relation-result "supports-by-scope-narrowing")))
         ((string= relation-name "narrower")
          (%target-fail "ScopeWideningForbidden" '("claim" "location" "scope")))
@@ -144,7 +158,7 @@
         ((string= relation-name "disjoint")
          (%target-fail "ScopeDisjoint" '("claim" "location" "scope")))
         (t (%target-fail "ScopeRelationUnknown" '("claim" "location" "scope")
-                         :category "relation-undetermined"))))))
+                         :category "relation-undetermined")))))))
 
 (defun match-warrant-target (target candidate)
   (if *lci-resource-check-active*

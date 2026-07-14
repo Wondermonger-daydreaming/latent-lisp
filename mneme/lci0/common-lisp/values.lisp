@@ -6,7 +6,8 @@
     "CorpusCompletionInsufficient" "CorpusRevisionIdentityInsufficient"
     "IdentityBearingLoss" "IdentityPolicyMismatch"
     "InterpretationFrameMismatch" "InvalidBasis" "InvalidClaimLocation"
-    "InvalidClaimRecord" "InvalidInterpretationFrame" "InvalidProposition"
+    "InvalidClaimRecord" "InvalidInterpretationFrame" "InvalidMigrationResult"
+    "InvalidProposition"
     "InvalidScope" "InvalidStableReference" "InvalidSubjectTime"
     "InvalidWarrantTarget" "LCIAggregatePayloadBudgetExceeded"
     "LCIIdentifierSegmentBudgetExceeded" "LCIMaxNestingExceeded"
@@ -94,6 +95,28 @@ CODE is deliberately not projected into the frozen LCI failure namespace."
                      (lci-failure-code condition)
                      (lci-failure-stage condition)
                      (lci-failure-path condition)))))
+
+(define-condition lci-unsupported-fixture-behavior (error)
+  ;; LCI0-AC-009: the explicit /0 deferral for behavior the fixture corpus
+  ;; does not adjudicate.  Deliberately not LCIFailure/0 (like the authorial
+  ;; gap): category unsupported-fixture-behavior, code
+  ;; LCI0-UNSUPPORTED-FIXTURE-BEHAVIOR, stage fixture, at the deferred path.
+  ((path :initarg :path :initform nil
+         :reader lci-unsupported-fixture-behavior-path))
+  (:report
+   (lambda (condition stream)
+     (format stream
+             "LCI/0 unsupported-fixture-behavior/LCI0-UNSUPPORTED-FIXTURE-BEHAVIOR at fixture~@[ path ~{~A~^/~}~]"
+             (lci-unsupported-fixture-behavior-path condition)))))
+
+(defparameter +unsupported-fixture-behavior-category+
+  "unsupported-fixture-behavior")
+(defparameter +unsupported-fixture-behavior-code+
+  "LCI0-UNSUPPORTED-FIXTURE-BEHAVIOR")
+(defparameter +unsupported-fixture-behavior-stage+ "fixture")
+
+(defun unsupported-fixture-behavior (path)
+  (error 'lci-unsupported-fixture-behavior :path (copy-list path)))
 
 (defun lci-fail (category code stage &key path context)
   ;; This boundary is the last line of defense against implementation-local
