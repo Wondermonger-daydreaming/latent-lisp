@@ -395,7 +395,7 @@ return the semantic result document."
           (format t "CLOSURE FAIL ~A~%" (car result)))))
     (values (= passed (length results)) passed (length results))))
 
-(defun run-closure-vectors (&optional (root *fixture-root*) &key (verbose t))
+(defun run-closure-vectors (&optional (root *fixture-root*) (verbose t))
   "Execute all fifty successor closure vectors against the installed 0.2
 overlay: 4 superseded originals, 38 relation companions, 8 hostile cases."
   (let ((overlay (or (load-fixture-overlay root)

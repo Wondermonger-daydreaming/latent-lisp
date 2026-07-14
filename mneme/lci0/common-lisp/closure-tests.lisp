@@ -23,8 +23,7 @@
   ;; hostile requests (LCI0-AC-005, LCI0-AC-007).
   (lci0-check "all-fifty-successor-closure-vectors-pass"
     (multiple-value-bind (ok passed total)
-        (lisp-plus-lci0:run-closure-vectors (%closure-fixture-root)
-                                            :verbose nil)
+        (lisp-plus-lci0:run-closure-vectors (%closure-fixture-root) nil)
       (and ok (= passed 50) (= total 50))))
 
   ;; The overlay itself: digest-verified, exactly four supersession keys,

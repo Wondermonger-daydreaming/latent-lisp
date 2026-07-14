@@ -3,6 +3,10 @@
 (defstruct vector-result
   id operation passed actual expected detail)
 
+;; Defined in closure-surface.lisp (loaded after this file); called only at
+;; run time when a fixture root carries the 0.2 fixture-authority overlay.
+(declaim (ftype function execute-overlay-superseded-vector))
+
 (defun first-datum-difference (left right &optional (path nil))
   (when (equal-datum left right)
     (return-from first-datum-difference (values nil nil nil)))
