@@ -412,7 +412,24 @@ class PropertyConstructionTests(unittest.TestCase):
         self.assertEqual(len({subject.canonical_bytes(case.datum) for case in compare_cases}), 4)
         for case in compare_cases:
             payload = subject._field(case.datum, "payload")
-            self.assertIsNotNone(subject._field(payload, "bridge-registry"))
+            self.assertEqual(
+                {key.path[-1] for key, _ in payload.fields},
+                {"left-reference", "right-reference", "bridge-registry"},
+            )
+            left = subject._field(payload, "left-reference")
+            right = subject._field(payload, "right-reference")
+            self.assertEqual(
+                subject._field(left, "scheme").path,
+                ("stable-ref-scheme", "external-fixture-source", "artifact", "0"),
+            )
+            self.assertEqual(
+                subject._field(right, "scheme").path,
+                ("scheme", "artifact", "structural", "0"),
+            )
+            self.assertEqual(
+                subject._field(payload, "bridge-registry").items,
+                (),
+            )
 
     def test_property_input_identity_is_not_a_cross_language_tautology(self):
         case = self.first[0]
@@ -463,25 +480,66 @@ class PropertyConstructionTests(unittest.TestCase):
         )
 
     def test_unpinned_result_coordinates_are_blocked_but_predicates_remain(self):
-        case = next(
-            case
-            for case in self.first
-            if case.authorial_blocked_result_coordinates
+        case = subject.PropertyCase(
+            case_id="blocked-result-probe",
+            family="probe",
+            operation="probe",
+            datum=subject._record({"vector-id": subject.cd0.string("probe")}),
+            expected_status="success",
+            output_boolean=("within-budget", True),
+            authorial_blocked_result_coordinates=(("outputs", "requested"),),
         )
+
+        def result(within_budget, requested, extra=False):
+            outputs = {
+                "within-budget": subject.cd0.boolean(within_budget),
+                "requested": subject.cd0.integer(requested),
+            }
+            if extra:
+                outputs["undeclared"] = subject.cd0.unit()
+            return subject.canonical_bytes(
+                subject._record({"outputs": subject._record(outputs)})
+            ).hex()
+
         common = {
             "protocol_status": "success",
             "semantic_status": "success",
-            "actual_canonical_cd0_hex": "00",
+            "actual_canonical_cd0_hex": result(True, 1),
         }
         python = {
             **common,
-            "actual_canonical_cd0_hex": "01",
+            "actual_canonical_cd0_hex": result(True, 2),
         }
         self.assertEqual(
             subject._semantic_view_for_case(common, case),
             subject._semantic_view_for_case(python, case),
         )
         self.assertTrue(case.output_boolean or case.output_identifiers)
+        changed_predicate = {
+            **python,
+            "actual_canonical_cd0_hex": result(False, 2),
+        }
+        self.assertNotEqual(
+            subject._semantic_view_for_case(common, case),
+            subject._semantic_view_for_case(changed_predicate, case),
+        )
+        undeclared = {
+            **python,
+            "actual_canonical_cd0_hex": result(True, 2, True),
+        }
+        self.assertNotEqual(
+            subject._semantic_view_for_case(common, case),
+            subject._semantic_view_for_case(undeclared, case),
+        )
+
+    def test_namespace_aware_field_lookup_rejects_attacker_namespace(self):
+        value = subject.cd0.record(
+            ((
+                subject.cd0.identifier(("attacker",), ("source",)),
+                subject.cd0.unit(),
+            ),),
+        )
+        self.assertIsNone(subject._direct_field(value, "source", subject.LCI))
 
     def test_output_identifier_requires_full_namespace_and_segmented_path(self):
         case = subject.PropertyCase(

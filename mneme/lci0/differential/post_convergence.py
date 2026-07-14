@@ -61,6 +61,7 @@ from response_validation import (
 
 PROPERTY_SEED = 0x4C434930
 PROPERTY_CASES = 64
+LCI = ("lisp-plus", "lci", "0")
 FIXTURE = ("lisp-plus", "lci", "0", "fixture")
 FIXTURE_FIELD = FIXTURE + ("field",)
 PROPERTY_NAMESPACE = FIXTURE + ("post-convergence",)
@@ -364,7 +365,7 @@ class PropertyCase:
         tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]], ...
     ] = ()
     authorial_blocked_failure_coordinates: tuple[str, ...] = ()
-    authorial_blocked_result_coordinates: tuple[str, ...] = ()
+    authorial_blocked_result_coordinates: tuple[tuple[str, ...], ...] = ()
 
     def manifest_row(self) -> dict[str, Any]:
         encoded = canonical_bytes(self.datum)
@@ -379,9 +380,10 @@ class PropertyCase:
                 "authorial_blocked_failure_coordinates": list(
                     self.authorial_blocked_failure_coordinates
                 ),
-                "authorial_blocked_result_coordinates": list(
-                    self.authorial_blocked_result_coordinates
-                ),
+                "authorial_blocked_result_coordinates": [
+                    list(coordinate)
+                    for coordinate in self.authorial_blocked_result_coordinates
+                ],
                 "failure_code": self.failure_code,
                 "failure_path": list(self.failure_path) if self.failure_path else None,
                 "failure_stage": self.failure_stage,
@@ -731,9 +733,6 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
             _vector_datum(rows, "LCI0-E7-BRIDGE-ABSENT"), "payload"
         )
         bridge_payload = replace_record_field(
-            bridge_payload, "left-reference", stable
-        )
-        bridge_payload = replace_record_field(
             bridge_payload, "right-reference", reference
         )
         operation, datum = _custom_vector(
@@ -964,7 +963,7 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
                 ),
             ),
             authorial_blocked_result_coordinates=(
-                "outputs/policy-b-decision/reasons",
+                ("outputs", "policy-b-decision", "reasons"),
             ),
         )
     )
@@ -1111,7 +1110,7 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
                 f"resource-{number:02d}-at-limit", "resource-boundary", operation,
                 datum, "success", output_boolean=("within-budget", True),
                 authorial_blocked_result_coordinates=(
-                    "outputs/requested", "outputs/resource"
+                    ("outputs", "requested"), ("outputs", "resource")
                 ),
             )
         )
@@ -1149,6 +1148,30 @@ def _semantic_view(response: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _remove_fixture_coordinate(
+    value: cd0.Datum, coordinate: tuple[str, ...]
+) -> cd0.Datum:
+    _require(coordinate, "blocked result coordinate is empty")
+    _require(
+        type(value) is cd0.Record,
+        "blocked result coordinate crosses non-record",
+    )
+    key = cd0.identifier(FIXTURE_FIELD, (coordinate[0],))
+    matches = [(candidate, item) for candidate, item in value.fields if candidate == key]
+    if not matches:
+        return value
+    _require(len(matches) == 1, "blocked result coordinate is ambiguous")
+    if len(coordinate) == 1:
+        return cd0.record(
+            (candidate, item) for candidate, item in value.fields if candidate != key
+        )
+    replacement = _remove_fixture_coordinate(matches[0][1], coordinate[1:])
+    return cd0.record(
+        (candidate, replacement if candidate == key else item)
+        for candidate, item in value.fields
+    )
+
+
 def _semantic_view_for_case(
     response: Mapping[str, Any], case: PropertyCase
 ) -> dict[str, Any]:
@@ -1163,11 +1186,12 @@ def _semantic_view_for_case(
         # likewise not comparable while any of those coordinates are blocked.
         view.pop("actual_canonical_cd0_hex", None)
     if case.authorial_blocked_result_coordinates:
-        # Generated cases assert only their explicitly declared output
-        # predicates while the package leaves the remaining result coordinates
-        # open.  Preserve the full documents as blocked observations, but do
-        # not let either implementation become an oracle for those bytes.
-        view.pop("actual_canonical_cd0_hex", None)
+        actual = view.get("actual_canonical_cd0_hex")
+        _require(type(actual) is str, "blocked result document is absent")
+        value = cd0.decode_exact(bytes.fromhex(actual), CD0_BUDGET)
+        for coordinate in case.authorial_blocked_result_coordinates:
+            value = _remove_fixture_coordinate(value, coordinate)
+        view["actual_canonical_cd0_hex"] = canonical_bytes(value).hex()
     return view
 
 
@@ -1177,13 +1201,17 @@ def _case_input_roundtrips(case: PropertyCase, response: Mapping[str, Any]) -> b
     ).hex()
 
 
-def _direct_field(record: cd0.Datum, name: str) -> cd0.Datum | None:
+def _direct_field(
+    record: cd0.Datum,
+    name: str,
+    namespace: tuple[str, ...] = FIXTURE_FIELD,
+) -> cd0.Datum | None:
     if type(record) is not cd0.Record:
         return None
     matches = [
         value
         for key, value in record.fields
-        if key.namespace == FIXTURE_FIELD and key.path == (name,)
+        if key.namespace == namespace and key.path == (name,)
     ]
     return matches[0] if len(matches) == 1 else None
 
@@ -1337,9 +1365,10 @@ def compare_property_results(
                         {
                             "case_id": case.case_id,
                             "implementation": name,
-                            "blocked_coordinates": list(
-                                case.authorial_blocked_result_coordinates
-                            ),
+                            "blocked_coordinates": [
+                                list(coordinate)
+                                for coordinate in case.authorial_blocked_result_coordinates
+                            ],
                             "observed_result_sha256": (
                                 _sha256(bytes.fromhex(actual))
                                 if type(actual) is str
@@ -1395,8 +1424,8 @@ def compare_property_results(
             try:
                 _require(type(actual_hex) is str, "migration result document absent")
                 result = _result_output_datum(actual_hex, "migration-result")
-                result_source = _field(result, "source")
-                claim_id = _field(result, "claim-id")
+                result_source = _direct_field(result, "source", LCI)
+                claim_id = _direct_field(result, "claim-id", LCI)
                 wrapper = _field(_field(case.datum, "payload"), "source")
                 explicit_source = _field(wrapper, "source-artifact")
                 _require(result_source is not None, "migration result source absent")
