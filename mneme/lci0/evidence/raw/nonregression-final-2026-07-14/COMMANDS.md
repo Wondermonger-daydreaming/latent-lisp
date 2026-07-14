@@ -4,8 +4,11 @@ Date: 2026-07-14
 
 Working directory: `/home/gauss/Codex-Lab/latent-lisp-lci0-integration-successor`
 
-Tested integration-successor HEAD: `041d537` (raw-transcript commit; no
-protected source changed by the contemporaneous documentation worktree edits)
+Tested corrected integration-successor HEAD:
+`7ff074fdc234d826a113b0beb5e36b490d94b579`, tree
+`3b6834114f8c1df4f8810b4a56f66f0bf66de8e2` (corrected raw-transcript
+commit; no protected source changed by the contemporaneous documentation
+worktree edits)
 
 Each command below exited 0. Standard output and standard error were captured
 in the sibling files named here.
@@ -28,7 +31,7 @@ in the sibling files named here.
 6. `sha256sum` over the exact 20 paths frozen in
    `LCI0-CD0-FROZEN-INVENTORY.md`
    - output: `cd0-frozen-inventory.sha256`
-7. `git diff --name-status 26ac543856e30c340cc2dd4359802442636f4b94..041d537 -- canonical-datum mneme/latent-mvp mneme/verify-all.sh`
+7. `git diff --name-status 26ac543856e30c340cc2dd4359802442636f4b94..7ff074f -- canonical-datum mneme/latent-mvp mneme/verify-all.sh`
    - output: empty
 8. `git rev-parse` comparisons for the three protected objects
    - `canonical-datum`: `ce6e41deca3fe237ff6d0edafa2666d098ae62e8`
