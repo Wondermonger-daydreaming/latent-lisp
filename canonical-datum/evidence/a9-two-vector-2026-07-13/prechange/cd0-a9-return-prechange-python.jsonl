@@ -1,0 +1,2 @@
+{"implementation":"python","protocol":"lisp-plus-cd0-differential/v1","request_id":"prechange:a9-seq-unit-depth-one","result":{"canonical_hex":"4c50434400300100"},"status":"ok"}
+{"implementation":"python","protocol":"lisp-plus-cd0-differential/v1","request_id":"prechange:a9-seq-unit-nodes-one","result":{"canonical_hex":"4c50434400300100"},"status":"ok"}

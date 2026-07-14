@@ -1,0 +1,16 @@
+CD/0 Common Lisp seed conformance: PASS
+shared positives executed: 25/25
+shared negative classified total: 71/71
+  octet rows executed: 66/66
+  applicable host rows executed: 2/2
+  language-specific N/A dispositions: 3/3
+  classified rows executed: 68/68; failures: 0; skips: 0
+resource-vector successful retries: 12
+declared distinct pairs: 5
+mutation probes: 15
+resource refusal/retry probes: 20
+ambient-state variants: 2
+deterministic generated round trips: 500
+grammar/Unicode boundary cases: 20
+integration regression witnesses: 20
+total assertions: 2633

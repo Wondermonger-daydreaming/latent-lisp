@@ -1,0 +1,2250 @@
+{
+  "batch_artifact_ledger": [
+    {
+      "batch": 1,
+      "request_count": 2048,
+      "request_octets": 1549116,
+      "request_sha256": "3f21fe06b4f994a5b47d52cf3ac77b59838eeab39031b7887c9ef45caffc4638",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.654465,
+          "response_count": 2048,
+          "response_octets": 1192232,
+          "response_sha256": "6ce7fb5b1dd1d730d01cf4f393c6d687c7854a1644c92f98c6f9fd2c51aa101a",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.322757,
+          "response_count": 2048,
+          "response_octets": 1181992,
+          "response_sha256": "93242d78214d7903a3935d2f9caf41a6303b48697c153374aacaa2c7f2cc729d",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 2,
+      "request_count": 2048,
+      "request_octets": 1556565,
+      "request_sha256": "81f2d84be8c361345004b57b04430f21e046660e3919a5cf22e6e522272f659b",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.55606,
+          "response_count": 2048,
+          "response_octets": 1205277,
+          "response_sha256": "a7a40872213d613f17c1a34adbf9fff557cdb7f9794036f4019db0ee4d6667c3",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.311486,
+          "response_count": 2048,
+          "response_octets": 1195037,
+          "response_sha256": "9d98ad253b1da44c47e80c83a4fac7adbe7dc06497c4d4c69e9a5d01d5de94a9",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 3,
+      "request_count": 2048,
+      "request_octets": 1561471,
+      "request_sha256": "47ac1c38a3e129a5ab8eead5970677a1b3c9397fbdba4f0bdfe3f6adcb67a39e",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.561524,
+          "response_count": 2048,
+          "response_octets": 1221463,
+          "response_sha256": "8359ea0f0ae1731728c1bf7346680098db8d003fc40763890b5f17aa0183608b",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.312954,
+          "response_count": 2048,
+          "response_octets": 1211223,
+          "response_sha256": "b43d2ad7ea5e521bbf158499e947e451e74492c8fed97e8eceac817f8a45b597",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 4,
+      "request_count": 2048,
+      "request_octets": 1564264,
+      "request_sha256": "34cf65a1562b9f2257c8eda6d7a16fcf8608fb1a50c3a452c129657cc8b90ac4",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.577238,
+          "response_count": 2048,
+          "response_octets": 1225888,
+          "response_sha256": "dcc47fddb2d48f3817faf33d80d92bf8fee009a147bc8b2c56de43cca9460290",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.311999,
+          "response_count": 2048,
+          "response_octets": 1215648,
+          "response_sha256": "b4e8493bdda5e96aa28545eee3b4dff3e9b39ccbfe8822b3b020aa56a89cf7f8",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 5,
+      "request_count": 2048,
+      "request_octets": 1604137,
+      "request_sha256": "05deb9868917955e1d96b027ee7501eebef02a7347984f311a0a272240a11cf5",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.586731,
+          "response_count": 2048,
+          "response_octets": 1173314,
+          "response_sha256": "ddf5ad2cb9b0ebf228b0ee10e8aa70a59fabb88f94f51ffe68013d0912f0d01b",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.320094,
+          "response_count": 2048,
+          "response_octets": 1163074,
+          "response_sha256": "1663be517cbb7b0c18ef290157b3bc123b9c51ff575179708c94be150a17a3f2",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 6,
+      "request_count": 2048,
+      "request_octets": 2018566,
+      "request_sha256": "d9c9fb32dbc8dab828906aeb816eaccf74470398e05d5fc813c7dc466db968ad",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.592021,
+          "response_count": 2048,
+          "response_octets": 816532,
+          "response_sha256": "9048bfa8e0d3ebead1d36a32ac117e4bd2e32e8062aebeeae3e3b7eca701ac5a",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.283565,
+          "response_count": 2048,
+          "response_octets": 806292,
+          "response_sha256": "0e9375ec672ed7188651b5a10c23969e4966fa4cccec19bed4912d58a8391949",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 7,
+      "request_count": 2048,
+      "request_octets": 2036382,
+      "request_sha256": "806fb87b5af3fc3e7c056d69a7f880c146f5b52b8e85724743ea35cea64f77c9",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.586077,
+          "response_count": 2048,
+          "response_octets": 821054,
+          "response_sha256": "4220f632ac2d5fc3c94d9cffa50c7fc5649bdaf343d14c29665e54dd245c5ef0",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.294442,
+          "response_count": 2048,
+          "response_octets": 810814,
+          "response_sha256": "6780ac4f19cd52fe603c66c8790da6bf26b698b847835ef2f74c3b82a23858e2",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 8,
+      "request_count": 2048,
+      "request_octets": 2036255,
+      "request_sha256": "2238dc7dd50b7972117fbc4c82a6aa9701544a46e477cc2ffcff2d7fe59e2a02",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.575197,
+          "response_count": 2048,
+          "response_octets": 822826,
+          "response_sha256": "dd6aa7ca846bca4bc030f82a4161e062d0ceec5ca13a0bc966842125ca04cf0a",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.291444,
+          "response_count": 2048,
+          "response_octets": 812586,
+          "response_sha256": "dffa18d7f3dfef55604c263b30e72883dbfd467cc8c7d5f0e6e1d9bbafeb1ee2",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 9,
+      "request_count": 2048,
+      "request_octets": 2034027,
+      "request_sha256": "d1567ec9f79b26dd503e8e69ac2c9d4b5b8acb78d61de12aac297d7f282d87ef",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.588495,
+          "response_count": 2048,
+          "response_octets": 820270,
+          "response_sha256": "de6461ad2e2f04af365d85151a11d70b75730bb7bf311d32a0f68599f81a8e6f",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.2912,
+          "response_count": 2048,
+          "response_octets": 810030,
+          "response_sha256": "720aacf3ceb8f2e7d82371ef7d97b788cf2c63c394031e3be8504f459b29a5cd",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 10,
+      "request_count": 2048,
+      "request_octets": 2034330,
+      "request_sha256": "233adb72cc6c52ff98195ad37ff6a8e8c3b46bbefa6f94e74d78ad672be83b0d",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.657359,
+          "response_count": 2048,
+          "response_octets": 829362,
+          "response_sha256": "4d9a631c0d4c07998bb4cdd3069301a6ca8e95f0fe5b57f81c47a25b713a8e16",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.294581,
+          "response_count": 2048,
+          "response_octets": 819122,
+          "response_sha256": "29933619e698b7ee6f02f357534526629936b720d41c9e96c4feadc666ea4851",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 11,
+      "request_count": 2048,
+      "request_octets": 2066652,
+      "request_sha256": "36401eec8f5d60a0ae7cb54789f76b8fca623e00f7d6b68cd78214e6f36acc85",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.591663,
+          "response_count": 2048,
+          "response_octets": 839298,
+          "response_sha256": "e17607ac2ffeec0620c8b2d41b283a5d209b51f0a39db281ef0ccc4574cee908",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.300502,
+          "response_count": 2048,
+          "response_octets": 829058,
+          "response_sha256": "60ffc6658737d5cee288d3913f6eb01b785a9bf5bd668c27184f64c91a06d8b3",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 12,
+      "request_count": 2048,
+      "request_octets": 2051943,
+      "request_sha256": "431345e713b4b36656c0a8b2cac5aefae7aa3b3804ead035c05070b76bdf6348",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.581128,
+          "response_count": 2048,
+          "response_octets": 833988,
+          "response_sha256": "056eb66c1eb2ae797d9b390569ab2afd9ac4fa9a37be1c8184fc37f02a38d945",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.296324,
+          "response_count": 2048,
+          "response_octets": 823748,
+          "response_sha256": "573251b6b1e1315422c8149de88b0cae34b559dfc7f022eee6268132decad9c3",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 13,
+      "request_count": 2048,
+      "request_octets": 2048521,
+      "request_sha256": "9e4e21d22e18d589c1bd4ce335018bed7d84af770b511e525a867cd19aef1a14",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.627254,
+          "response_count": 2048,
+          "response_octets": 833090,
+          "response_sha256": "5385ee529d81e18300c14da35ae07b95cca08483de5af55b27a0fa3ae8a76571",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.291605,
+          "response_count": 2048,
+          "response_octets": 822850,
+          "response_sha256": "163ba32e7bac030aea0d2b3f0f520acbe475f2a2eaea933b4c51d2486ffcbb95",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 14,
+      "request_count": 2048,
+      "request_octets": 2049006,
+      "request_sha256": "a4311a82501466a9652028ec2848d41d72d4c91cf677ce4e1efb354cfd326c3d",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.586547,
+          "response_count": 2048,
+          "response_octets": 835126,
+          "response_sha256": "8e1424321b65968208256daeea345b18a4feaeceecbe0132481cf1cc99ce7d26",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.2915,
+          "response_count": 2048,
+          "response_octets": 824886,
+          "response_sha256": "b3e6916c396c106cff5e2498d293860bed5798e0eff28ecf9d8981d813ed2a79",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 15,
+      "request_count": 2048,
+      "request_octets": 1798251,
+      "request_sha256": "8d0d669d409f431d83caf0ce2c8a1ce4868aa94512c50271bbd787b8d6cc6eb8",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.536087,
+          "response_count": 2048,
+          "response_octets": 726740,
+          "response_sha256": "3e0706b37c611495e68ff9d6e5d91795b66c26c9e960a399eff3f5e2e22b6732",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.226919,
+          "response_count": 2048,
+          "response_octets": 716562,
+          "response_sha256": "46b577a664148393bc2a3b78a70013a1c05239bf2d2047e2b61e15af90c415dd",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 16,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "1cfff4f884335036c598fd724d812b0fa971a936cfaa0edd28dbb0f9238817aa",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.446614,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "417ec84318efd1c504d341f66f293fba847c25d39cc470ff3eceb23dfb7b4fd8",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.108142,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "c2269e5f5fbba4e90fdb9e9d86a1d2c33f6df359120d6e9821796e2a26bc0217",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 17,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "950b636212f53784747ff95dfc0a55d5125f3f1bb6316f1ff7c3ab1d5107b8a6",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.440488,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "b216c27cf108c4d988bedf73e492fac180db8a08ccb90608302460009d9323ef",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.107362,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "bd80756dc5dd363cc50f0461536b6cf7774be02a61bcea92e1faba6cf903f531",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 18,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "fb9f5545142156c0498998648f9297ab475e42bbcceeb4b0648514bbb0763dfe",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.432516,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "8f7af16b2eaeeeab27b548b091e2f7dd59687edacd4afcd744b06fce9ae39d56",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.107256,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "61a16d69687797644ec25b00a393ba5606f59afa3e3466d19aea996bfe350c5c",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 19,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "19aaa8a7d6da6023cbdd6e5ff03f3364692dfd9c9b0287779069c405806b0285",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.433741,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "d35f66accfef3e069c06117bb25d235f2911402a3f8f663e23eae9ce0c2480e0",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.107348,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "8932a96ff62954d050e54100e25d1bee66cb3296a47ba22a671db05b780cfb5f",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 20,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "7a513e82aa82400281046bcd7559c49fd8ebad92c4e4fb4fc4dfe0c8c6910701",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.498454,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "08720172fe3dfc2b6b85b01f26ebf9d28f42c816146fde4bb13a91794295107c",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.11065,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "fd80730724a1f0549d9bd5dd53241a5c39ff6574fbde09d0e5a59c4875846665",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 21,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "9b16b94e0bd41aa7a85965207856430199cf5a8b216ed166f87cc363fdfdd7dd",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.457668,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "1d3722be4eee081a19bcf000668290f3e42ad6d858ee6dfd4079315ebbdf7dc8",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.154888,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "16e8512bcae1f9d9dd746c65c5357e38033240f4164383ca9c76ec042e726e3d",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 22,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "940967bade6316c92cf01c14b0c7a116a7d544792f54c6243a72eac6c7b0eeb1",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.451624,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "1fbb4265a176c11784804c85422d3020098463413e2cd8bf7a0bf415d80c4c6b",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.110168,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "997cf16274629028ca90a94f201abed643da765565d7550efdaf2de2d96a35b5",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 23,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "83aa4fab32c020e9e8421729d15b1fbd9043e4a907ad940f7b07350677aed0e3",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.446937,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "cd648326f3dca4329072e9613480cedacada61f25cf30713025e16857db20057",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.108089,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "86f8bd464bf5718399dbb624a02a3d99b202361eae0e288608ecbcfa75770700",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 24,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "b7ddeba7fd3017e7cd07485d5e7f41bef453bf717dae52dd9539e95ff2c20b25",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.47078,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "14bac8ad4394525c097a58fdfc4d5616ee0a8e36fa7661d2a45232862037910a",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.110705,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "257eea34030010b003c7a13f8983b16f512e2af7a136ee35aa0649d0e8ee239d",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 25,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "b5cb6c80f6e14d72c4bffdc62dc0993858c38e202aab353682a934e329af5025",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.435041,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "7ae555d683d69a68833e09c9ba4bf8c42c0509905e7147de21f7bbc14bdbbf75",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.108589,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "0d1e8b4c188146c704fb5366c0993e8136bf1053f462bef51f4668d9c2ffb545",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 26,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "6a5aab5f9fc2d6603b6fa0f36ac82fc7464bbd2a98149f783e21ffa6a1944564",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.476722,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "e1cd749c44556a62731d434f164372256b08dce9fe1bff10e6133c574b1a00ee",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.111788,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "ae29f98600c194a824e601a0236500c7cad4e9bfc6074d60622037fbe74f625e",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 27,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "13a6d5f67a112308f1f7c5e5e4feb8a54cc894f4715c9f187856dadc830b56de",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.462163,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "02d6be894e56a4e1ad94ef949da1fd30363bd7ff7180b205215471ae13d817b6",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.110374,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "b0924abfec95ec1ed0efc71e4b9a8d68bbca6b4e31cc9e0b5e70b4177d375506",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 28,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "7e4f075e6b30ef3c91f3740188497ee5f99a8028f742438feacbbeb511a1dcee",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.450325,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "46efa108ee812d988cf559b2f3cdd77cd1b51c45c171b1b0b2b16f004faf4975",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.107141,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "30362526b5f5cd0737d9d9938d2f001c642dfd2fdaefc36f23d1688624d74ca0",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 29,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "5aa7a44d458402cb951a04faf6ddc8523434a786e647ffa697ffcaa0e8ad4227",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.457289,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "57b66c1727e4af6b00a5cf197c5825539db0ff2a1c548e30fd2f00819e538ddb",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.109882,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "588464afdd3cd06c5b581ae4c6cf28020a7f60e2302eceb5379c8e9d176fb934",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 30,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "d1cddc25143950b1ea7a68b6efb2c39207665b9c7ae230183b4b6f35c1cb40e4",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.438464,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "91c46a38cb10f11ee960f93b340b9d308b5750c3afdf28b91c350fe96d0aaf42",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.114206,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "6804bf7a170e3b62cb47dedfb82fc92627648ee19b14e4a0fd42c4c488c64dd1",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 31,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "73394efa8bbfe73000eb5b7e34d2408b4d3e469e938fe7fe0ab6fac866876dfb",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.435178,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "a66f318b006bb8eea4aa95fcb6827c683506c949c8057960d5d008bd089f49d1",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.107633,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "63eb01fd94165cd07a0c5daea8dca5e5f18812cea44e171ae5a6b2c09dd44e19",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 32,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "4ba5f80cde7e5d60d3875864755ab1e993ba6ef94925b8b62a62337e08247728",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.435095,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "d385b20c47cec96cc7bce96a567d763dff55830a8e27fdf4574e7067554bc286",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.152542,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "319c98ed72be6d47a85279398322d4b2b6699abb06c55908aa25c9f2d69f3b25",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 33,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "ef3fb646eaee844a1e6f84f692a96012ce6d74bfeeb663086f74ea382d4b3d57",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.433625,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "265b9701013f600452407fa1dc21b477b0663f5491523c559759cb2d38740683",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.110417,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "367eaaf97ba97fa4320275283db48693ba364e7f88055252c9f2e539f11a5706",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 34,
+      "request_count": 2048,
+      "request_octets": 1327104,
+      "request_sha256": "f9390a973d0203fd57e97fc9d1eeb0781a959e5d0b68d7f47daad6e633ab850d",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.442039,
+          "response_count": 2048,
+          "response_octets": 521216,
+          "response_sha256": "bb87433d28001af297726e2215ca173509a02d8f2f6425ab98f9c07615c9085f",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.11038,
+          "response_count": 2048,
+          "response_octets": 510976,
+          "response_sha256": "c7923ea18c3fd3db2094c231e89b82af124df32f2a63fa8a0c2b35c378804692",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 35,
+      "request_count": 2048,
+      "request_octets": 1220112,
+      "request_sha256": "be1e58fc33a9469f402cb8e9e43a34af554e40cc94d0a16d289e15a11d24e166",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.428001,
+          "response_count": 2048,
+          "response_octets": 487177,
+          "response_sha256": "6a39627d592cca03834edbd4bc1e56c470eff2ead63cb4b1cd7e8e747c132c9f",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.106289,
+          "response_count": 2048,
+          "response_octets": 476937,
+          "response_sha256": "2ea87df70c41672cb984a7653669015c15a2a7f3d0a8203d3f500df4e38b0f5c",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 36,
+      "request_count": 2048,
+      "request_octets": 1169358,
+      "request_sha256": "8d1a17bee47e2d0f1da10ea534374a272995bd3f5c0088686bbbb75afba31468",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.417006,
+          "response_count": 2048,
+          "response_octets": 472665,
+          "response_sha256": "3b5577c2f2633cd08a980f2f91e77324df201f67bad12657c1de1e2aec239939",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.108698,
+          "response_count": 2048,
+          "response_octets": 462425,
+          "response_sha256": "abe3b888463cb9bcf86a3441320ee35d254df48c3655dd02ac5be8dcc6c7a59f",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 37,
+      "request_count": 2048,
+      "request_octets": 1169336,
+      "request_sha256": "ba000d62da9465340386b30af2880b3e4be5702fa7bcac7317a08b35d2d7decb",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.434056,
+          "response_count": 2048,
+          "response_octets": 472361,
+          "response_sha256": "aef9f61219f1f41412a989c3aacfacfc8d0d92f35c80f50d14caa226e53b0629",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.109126,
+          "response_count": 2048,
+          "response_octets": 462121,
+          "response_sha256": "01228d466edf3e543a71d8bf0fc0502ff3a81bc13d11189a071abf90ef7852ad",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 38,
+      "request_count": 2048,
+      "request_octets": 1169196,
+      "request_sha256": "d4ca565746cc00086f2c11df43243f96886da58e3c20de6d251cca25ca7e37d3",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.42398,
+          "response_count": 2048,
+          "response_octets": 472498,
+          "response_sha256": "791bf95a167cf1c9a0979b1a9cc86047e6b12d1cdae4801a114b1bdd47c2f799",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.103656,
+          "response_count": 2048,
+          "response_octets": 462258,
+          "response_sha256": "f5a656d0d9d95b183501d4063b3832068fbd4f5eafacae7799acf41f90e5a8f4",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 39,
+      "request_count": 2048,
+      "request_octets": 1169168,
+      "request_sha256": "345f607fe9b93ac2bcbcadec12a07ef2daa9c609d66a3180425b73a5b8e9aaa4",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.423331,
+          "response_count": 2048,
+          "response_octets": 472792,
+          "response_sha256": "3a6904cdb981a890fa3887477d73b3c786988229c9d602b0b6c072187fccbc56",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.105109,
+          "response_count": 2048,
+          "response_octets": 462552,
+          "response_sha256": "922ce701a966f0ad040ff8f6fe710c203116b50d0251e5002095cfd52165199c",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 40,
+      "request_count": 2048,
+      "request_octets": 1168516,
+      "request_sha256": "214f017d53a7741d374f4464819c3b804c351c9b8ae67a674adfba1601b805ee",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.448777,
+          "response_count": 2048,
+          "response_octets": 472267,
+          "response_sha256": "52ae6d6804a9222d823186e4012d6fd52a7fa590353e6acfc643f479fc37fbec",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.14495,
+          "response_count": 2048,
+          "response_octets": 462027,
+          "response_sha256": "c56fca8eb692819be015285c0ce1de61bfaae105a49076f622185724d0bf568d",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 41,
+      "request_count": 2048,
+      "request_octets": 1168898,
+      "request_sha256": "1487216a5c0cdd95af3c22177bdfa7d74696d7eacc28df3ae5e0d3849f93584c",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.432453,
+          "response_count": 2048,
+          "response_octets": 472829,
+          "response_sha256": "3e245478d0e28fa305a05219cb015d93abac102dd839f1ed70017fc9a3a417ef",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.140383,
+          "response_count": 2048,
+          "response_octets": 462589,
+          "response_sha256": "41407e7399741ca221f5d43ccb4306061d574c9f1faacc3435fa89ad04b070f1",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 42,
+      "request_count": 2048,
+      "request_octets": 1168214,
+      "request_sha256": "890a42a0a87285ae8c6b3ec015b704818cf76379e7aedca51124bc128f28c48f",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.443069,
+          "response_count": 2048,
+          "response_octets": 472436,
+          "response_sha256": "6fa1268015419cd91521a9c777100ed47713fccac0401d9cb9a91047318f0987",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.108596,
+          "response_count": 2048,
+          "response_octets": 462196,
+          "response_sha256": "a22da1edb1925e240b612e62e750954f35a9b8733bf1b944bc4e239ad938deec",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 43,
+      "request_count": 2048,
+      "request_octets": 1169344,
+      "request_sha256": "b0f670764ea46b94ae174943737378d97ca84bd352512bc55945bfe8a88cfbd3",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.429142,
+          "response_count": 2048,
+          "response_octets": 472917,
+          "response_sha256": "f2f57ae3402f152a0e7e680ae20b9e8cea367a7e4da58e10c90cc3bb25ea7a41",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.107532,
+          "response_count": 2048,
+          "response_octets": 462677,
+          "response_sha256": "01e1e8e14d3bcf3e14c45c0086cc7038b8d998b604c612c77f481b02b7b798f7",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 44,
+      "request_count": 2048,
+      "request_octets": 1169516,
+      "request_sha256": "c10ad85cec82cb94c6cd55e9203133abcf9d14280c39677b78098ae680449b5b",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.434368,
+          "response_count": 2048,
+          "response_octets": 472569,
+          "response_sha256": "6b9c177407993ad1ecfdbc4c77ebdd2c44ba86e43fa158739f329722915a6c9b",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.153452,
+          "response_count": 2048,
+          "response_octets": 462329,
+          "response_sha256": "550a2a96822e54ac1bb61c1863a01198c1fab9a3afcf010665a5ce9c45b9da0f",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 45,
+      "request_count": 2048,
+      "request_octets": 1195042,
+      "request_sha256": "fbfed8df98fd51337bfb27fc842dc12b92784a18e9324fe1c44f9cfb97909a67",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.439088,
+          "response_count": 2048,
+          "response_octets": 495180,
+          "response_sha256": "adb0824f5849bbe41a4fc732bedbacced2a0a8726bc8da64b2f6e85af27207e7",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.115674,
+          "response_count": 2048,
+          "response_octets": 484940,
+          "response_sha256": "689071f821945cff4cb336d773a70644bbed67131f6d1318d1abe46b64318dca",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 46,
+      "request_count": 2048,
+      "request_octets": 1814630,
+      "request_sha256": "2db6d521521076c5323012227b4499b25d2688b0e985c9376a3e58c5d44b371a",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.486051,
+          "response_count": 2048,
+          "response_octets": 497606,
+          "response_sha256": "2bd8074cf4e9933d5a52a3c857242e2f462fe929731e77654139be048dd8c88a",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.187569,
+          "response_count": 2048,
+          "response_octets": 487366,
+          "response_sha256": "be2c543a88a210f904996b747eb6ec3ff033adbb6d627abca20849d4d73d5467",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 47,
+      "request_count": 2048,
+      "request_octets": 1557452,
+      "request_sha256": "438fe0596f735c24e40408f28aaa2b169e3ae3db8d269a34f2f08c6604895213",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.493531,
+          "response_count": 2048,
+          "response_octets": 491167,
+          "response_sha256": "2dceee6e6a69fae02ff67923eb87de3f40cbbc467d9d3c97efab428b383c9bd9",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.200161,
+          "response_count": 2048,
+          "response_octets": 480927,
+          "response_sha256": "287b5b6a4cbf0e63bf28fe0211f8ee217f2afe6415e68edd5eaab93da3e182df",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 48,
+      "request_count": 2048,
+      "request_octets": 1327026,
+      "request_sha256": "5c65ac125836e23a836b331789690eb877dc5ad309b215fb898d26f02356aa98",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.455256,
+          "response_count": 2048,
+          "response_octets": 487726,
+          "response_sha256": "80c85680f53963f7c59f54c6cb166953bdbc5129e8870079083b1f30c2cd3f79",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.13513,
+          "response_count": 2048,
+          "response_octets": 477486,
+          "response_sha256": "125586607c907229edbffa52fbe494f0a72072bd4896a78b8807122b571f55ab",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 49,
+      "request_count": 2048,
+      "request_octets": 1293754,
+      "request_sha256": "2bfdaaec31583f079a4e6bd12703aecbf0aea01c7e44e7b3c6d2953f4237f460",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.474587,
+          "response_count": 2048,
+          "response_octets": 479047,
+          "response_sha256": "b3932c9984f737df92892cc6e39b3267a6a0aa972e7173f0309ec38565b2b2cd",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.130814,
+          "response_count": 2048,
+          "response_octets": 468807,
+          "response_sha256": "9ba78f43619870991e5830ab0753ee7de2b894c54d511213c6000e5779a581a9",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    },
+    {
+      "batch": 50,
+      "request_count": 472,
+      "request_octets": 299860,
+      "request_sha256": "026bcbfb0407ee9957192c0ec20512064fe430f7a3bd7d45c9ae33f7c76fdefb",
+      "responses": {
+        "common-lisp": {
+          "command": [
+            "sbcl",
+            "--noinform",
+            "--disable-debugger",
+            "--script",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/common_lisp_adapter.lisp",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.397381,
+          "response_count": 472,
+          "response_octets": 111985,
+          "response_sha256": "f11ab034dcbb43855b7b967481d5460abbb53769b87aeff1713b5d5acc9cb86d",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "python": {
+          "command": [
+            "/home/gauss/OpenGauss/venv/bin/python3",
+            "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/integration/python_adapter.py",
+            "<batch-requests.jsonl>"
+          ],
+          "elapsed_seconds": 0.069137,
+          "response_count": 472,
+          "response_octets": 109625,
+          "response_sha256": "95807ae77a9b67ac52eba6db6f8d8c6f512c935df1923b02ea1986aed9cac283",
+          "stderr_octets": 0,
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    }
+  ],
+  "corpus": {
+    "artifact_sha256": {
+      "cd0-generated-negative-derivations.jsonl": "2ffd77257e18dfbc70abef0cc5fae1603d50b1a8b005226af95200708c29ca02",
+      "cd0-generated-negative.jsonl": "e57d0d49acf6ce13570ffb8e889d70cb06f023d2ae8a47b3ea8622e5e6d427a5",
+      "cd0-generated-positive.jsonl": "2e10bf3807480ee78144ed807a24c4e22882665823f3ab4f124acb9061ae8cd8",
+      "cd0-host-property-scenarios.json": "6fdd3550a2455f2d69eb0ace440a9a74d5e4d1646b1c396b4822d12ab1c2f2fe",
+      "cd0-mutation-candidates.jsonl": "5473a4fade005746d674e442b71501bb828ea75af6aa6c0f81d9549b6c8566b8"
+    },
+    "corpus_sha256": "83e35b3ac9641e06a6573fbec404149ca78130ca0a0ff9d550ff693dbdd819be",
+    "counts": {
+      "authored_and_host_coverage_negative": 308,
+      "classified_adversarial_total": 20308,
+      "classified_negative": 20308,
+      "classified_negative_by_status": {
+        "normative": 20302,
+        "provisional-blocked-code": 1,
+        "provisional-blocked-stage": 5
+      },
+      "demonstrated_primary_minimal_negative": 20000,
+      "host_property_scenarios": 9,
+      "negative_by_minimization_kind": {
+        "authored-primary-template": 303,
+        "byte-deletion-primary-minimal": 20000,
+        "host-graph-scenario": 5
+      },
+      "negative_derivations": 20308,
+      "negative_retry_verified": 20012,
+      "positive": 10000,
+      "resource_boundary_scenarios": 14,
+      "unclassified_mutation_candidates": 30504
+    },
+    "deterministic_seed": 3439329281,
+    "directory": "/home/gauss/Codex-Lab/latent-lisp-cd0-integration/canonical-datum/generated/release-v0",
+    "generator_version": "cd0-corpus-generator/3",
+    "manifest_sha256": "2b3fee981a2db8f46a03909d8a7c1a505248875b5a8aa9686e0afcef0f8410c3",
+    "mechanically_verified_demonstrated_primary_minimal": 20000,
+    "qualifies_for_release": true,
+    "release_thresholds": {
+      "adversarial_total_minimum": 20000,
+      "allow_small_test_mode": false,
+      "count_scope": "qualification requires at least 20000 demonstrated byte-deletion-primary-minimal rows; authored/host coverage rows are additional, while provisional rows remain separately reported",
+      "demonstrated_primary_minimal_minimum": 20000,
+      "observed_adversarial_total": 20308,
+      "observed_demonstrated_primary_minimal": 20000,
+      "positive_minimum": 10000,
+      "preferred_negative_count": 20308,
+      "qualifies": true
+    },
+    "source_input_sha256": {
+      "after_generation": {
+        "CANONICAL-DATUM-DIVERGENCES.md": "f72cd1727b0af510d1c73942f7bc858e622658f0bada9fa9998b0a6bd9b8e3a3",
+        "canonical-datum/generator/generate_corpus.py": "3f8f7ed0f3da322aaa116afbe8b7185679ca614cac55788dfdade7e7df94492e",
+        "canonical-datum/python/cd0/__init__.py": "f821934129779dab0908134377b9a81b2ab33f1fd995fd2451031b5bc0e99fba",
+        "canonical-datum/schema/cd0-fixtures.schema.json": "4ae8789b791128591dae47c811d99049e7d5fffee4fdc65857633874409e5e13",
+        "canonical-datum/vectors/cd0-budgets.json": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
+        "canonical-datum/vectors/cd0-distinct-pairs.json": "ee966c62c49e2f64f6378901e1bc33db352a5b2a7d69f0dd606947eb02e73d27",
+        "canonical-datum/vectors/cd0-negative.jsonl": "6000f52e1559ea579d866eca25fd25e443f07ac35cc65d3ff7166499e64de4a5",
+        "canonical-datum/vectors/cd0-positive.jsonl": "f7e3a26760350f021041bd0d492da95ce3be20c27d5410e49d29370128c35dce",
+        "mneme/spec/CANONICAL-DATUM-SPEC.md": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+      },
+      "before_generation": {
+        "CANONICAL-DATUM-DIVERGENCES.md": "f72cd1727b0af510d1c73942f7bc858e622658f0bada9fa9998b0a6bd9b8e3a3",
+        "canonical-datum/generator/generate_corpus.py": "3f8f7ed0f3da322aaa116afbe8b7185679ca614cac55788dfdade7e7df94492e",
+        "canonical-datum/python/cd0/__init__.py": "f821934129779dab0908134377b9a81b2ab33f1fd995fd2451031b5bc0e99fba",
+        "canonical-datum/schema/cd0-fixtures.schema.json": "4ae8789b791128591dae47c811d99049e7d5fffee4fdc65857633874409e5e13",
+        "canonical-datum/vectors/cd0-budgets.json": "ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98",
+        "canonical-datum/vectors/cd0-distinct-pairs.json": "ee966c62c49e2f64f6378901e1bc33db352a5b2a7d69f0dd606947eb02e73d27",
+        "canonical-datum/vectors/cd0-negative.jsonl": "6000f52e1559ea579d866eca25fd25e443f07ac35cc65d3ff7166499e64de4a5",
+        "canonical-datum/vectors/cd0-positive.jsonl": "f7e3a26760350f021041bd0d492da95ce3be20c27d5410e49d29370128c35dce",
+        "mneme/spec/CANONICAL-DATUM-SPEC.md": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+      }
+    },
+    "source_revision": "aed2f393781456dfd495ac5d5822bdcd58bea711",
+    "source_worktree": {
+      "clean_before": true,
+      "dirty_override_requested": false,
+      "dirty_override_used": false,
+      "release_requires_clean": true,
+      "status_before": []
+    }
+  },
+  "counts": {
+    "adapter_requests_per_implementation": 100824,
+    "classified_negative_rows": 20308,
+    "common-lisp_negative_executions": 20305,
+    "common_lisp_host_not_applicable": 3,
+    "equality_judgments": 20000,
+    "equality_neighbor_pairs": 10000,
+    "equality_self_pairs": 10000,
+    "negative_fully_executed_rows": 20305,
+    "negative_normative_rows": 20302,
+    "negative_partial_language_applicability_rows": 3,
+    "negative_provisional-blocked-code_rows": 1,
+    "negative_provisional-blocked-stage_rows": 5,
+    "positive_rows": 10000,
+    "python_negative_executions": 20308,
+    "retry_budget_checks": 20012,
+    "unclassified_mutation_candidates": 30504
+  },
+  "failure_status_counts": {
+    "normative": 20302,
+    "provisional_blocked_code": 1,
+    "provisional_blocked_stage": 5
+  },
+  "host_negative_dispositions": [
+    {
+      "common_lisp": "executed-failure",
+      "common_lisp_n_a_counts_as_pass": null,
+      "id": "cd0-neg-generated-00000303-host-cycle",
+      "importer": "generic-sequence-import/v0",
+      "python": "executed-failure",
+      "row_disposition": "fully-executed"
+    },
+    {
+      "common_lisp": "executed-failure",
+      "common_lisp_n_a_counts_as_pass": null,
+      "id": "cd0-neg-generated-00000304-host-improper-list",
+      "importer": "generic-sequence-import/v0",
+      "python": "executed-failure",
+      "row_disposition": "fully-executed"
+    },
+    {
+      "common_lisp": "not-applicable",
+      "common_lisp_n_a_counts_as_pass": false,
+      "id": "cd0-neg-generated-00000305-host-symbol",
+      "importer": "symbol-to-identifier/v0",
+      "python": "executed-failure",
+      "row_disposition": "partial-language-applicability"
+    },
+    {
+      "common_lisp": "not-applicable",
+      "common_lisp_n_a_counts_as_pass": false,
+      "id": "cd0-neg-generated-00000306-host-python-bool-int",
+      "importer": "strict-integer-import/v0",
+      "python": "executed-failure",
+      "row_disposition": "partial-language-applicability"
+    },
+    {
+      "common_lisp": "not-applicable",
+      "common_lisp_n_a_counts_as_pass": false,
+      "id": "cd0-neg-generated-00000307-host-live-capability",
+      "importer": "core-datum-import/v0",
+      "python": "executed-failure",
+      "row_disposition": "partial-language-applicability"
+    }
+  ],
+  "host_property_dispositions": [
+    {
+      "counts_as_exercised": true,
+      "disposition": "covered-by-equivalent-classified-host-negative",
+      "evidence_owner": "generated differential runner",
+      "id": "cd0-host-property-cycle",
+      "kind": "negative-host-graph",
+      "metadata_disposition_alone_counts_as_pass": false
+    },
+    {
+      "counts_as_exercised": true,
+      "disposition": "covered-by-equivalent-classified-host-negative",
+      "evidence_owner": "generated differential runner",
+      "id": "cd0-host-property-improper-list",
+      "kind": "negative-host-graph",
+      "metadata_disposition_alone_counts_as_pass": false
+    },
+    {
+      "counts_as_exercised": false,
+      "disposition": "metadata-validated; property-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "id": "cd0-host-property-shared-acyclic",
+      "kind": "positive-host-graph",
+      "metadata_disposition_alone_counts_as_pass": false
+    },
+    {
+      "counts_as_exercised": false,
+      "disposition": "metadata-validated; property-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "id": "cd0-host-property-mutable-aliases",
+      "kind": "mutation-resistance-property",
+      "metadata_disposition_alone_counts_as_pass": false
+    },
+    {
+      "counts_as_exercised": false,
+      "disposition": "metadata-validated; property-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "id": "cd0-host-property-symbols-bool",
+      "kind": "disjoint-host-types-property",
+      "metadata_disposition_alone_counts_as_pass": false
+    },
+    {
+      "counts_as_exercised": false,
+      "disposition": "metadata-validated; property-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "id": "cd0-host-property-namespaces",
+      "kind": "equality-property",
+      "metadata_disposition_alone_counts_as_pass": false
+    },
+    {
+      "counts_as_exercised": false,
+      "disposition": "metadata-validated; property-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "id": "cd0-host-property-live-privileged",
+      "kind": "negative-host-value",
+      "metadata_disposition_alone_counts_as_pass": false
+    },
+    {
+      "counts_as_exercised": false,
+      "disposition": "canonical-shapes-validated; inertness-instrumentation-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "id": "cd0-host-property-inert-records",
+      "kind": "positive-inertness-property",
+      "metadata_disposition_alone_counts_as_pass": false
+    },
+    {
+      "counts_as_exercised": false,
+      "disposition": "metadata-validated; property-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "id": "cd0-host-property-rational-construction",
+      "kind": "constructor-normalization-property",
+      "metadata_disposition_alone_counts_as_pass": false
+    }
+  ],
+  "interpretation": "PASS means every warranted, applicable comparison agreed. Common Lisp N/A rows and unexecuted host-property metadata are not counted as passes.",
+  "issues": {
+    "count": 0,
+    "sample_limit": 100,
+    "samples": [],
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "mutation_disagreements": {
+    "count": 0,
+    "sample_limit": 32,
+    "samples": [],
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "truncated": false
+  },
+  "provisional_unwarranted_field_observations": [],
+  "residual_boundaries": [
+    "A1-A9 remain open and provisional fixture fields are not promoted by agreement.",
+    "Unclassified mutations receive no expected triple; any disagreement requires minimization.",
+    "Seven host-property scenarios remain owned by Phase-4 qualification or instrumentation.",
+    "All fourteen resource-boundary scenario descriptors remain pending Phase-4 execution.",
+    "Three Common Lisp optional/language-specific importer rows remain N/A, not pass."
+  ],
+  "resource_boundary_dispositions": [
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "normative",
+      "id": "cd0-resource-boundary-input",
+      "limit": "max_input_octets",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "provisional-blocked-stage",
+      "id": "cd0-resource-boundary-output",
+      "limit": "max_output_octets",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "encode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "normative",
+      "id": "cd0-resource-boundary-varint",
+      "limit": "max_varint_octets",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "implementation-local-pending-adjudication",
+      "id": "cd0-resource-boundary-integer",
+      "limit": "max_integer_bits",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "provisional-blocked-stage",
+      "id": "cd0-resource-boundary-depth",
+      "limit": "max_depth",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "provisional-blocked-stage",
+      "id": "cd0-resource-boundary-nodes",
+      "limit": "max_nodes",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "normative",
+      "id": "cd0-resource-boundary-sequence-count",
+      "limit": "max_sequence_items",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "normative",
+      "id": "cd0-resource-boundary-record-count",
+      "limit": "max_record_fields",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "provisional-blocked-stage",
+      "id": "cd0-resource-boundary-identifier-count",
+      "limit": "max_identifier_segments",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "provisional-blocked-stage",
+      "id": "cd0-resource-boundary-segment",
+      "limit": "max_segment_octets",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "normative",
+      "id": "cd0-resource-boundary-string",
+      "limit": "max_single_string_octets",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "normative",
+      "id": "cd0-resource-boundary-bytes",
+      "limit": "max_single_bytes_octets",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "normative",
+      "id": "cd0-resource-boundary-aggregate",
+      "limit": "max_aggregate_payload_octets",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "decode-exact"
+    },
+    {
+      "disposition": "metadata-validated; boundary-probe-not-run-here",
+      "evidence_owner": "Phase-4 qualification",
+      "expected_status": "provisional-blocked-accounting",
+      "id": "cd0-resource-boundary-record-key-work",
+      "limit": "max_total_record_key_octets",
+      "metadata_disposition_alone_counts_as_pass": false,
+      "operation": "fixture-import-then-encode-exact"
+    }
+  ],
+  "runner": {
+    "adapter_sha256": {
+      "common_lisp": "5caa574534c3dc0d1975138abb228e6735807ca20dcc7da1c4c7c95887cc092c",
+      "python": "3b1d8017ed3a6cad375b6604e9fdcf2c01b9bdc5bccf3b336f95140abaf71db9"
+    },
+    "ambient_python": {
+      "PYTHONHASHSEED": "137",
+      "PYTHONINTMAXSTRDIGITS": "640"
+    },
+    "batch_count": 50,
+    "batch_size": 2048,
+    "batch_timeout_seconds": 120.0,
+    "path": "canonical-datum/release/run_generated_differential.py",
+    "sha256": "5c8c6b3e7cf8e6fe01fc5b0923ea84e9b4fbf1cf6113d1f07475cf02ea56f9a8"
+  },
+  "schema": "cd0-generated-differential-summary/v1",
+  "specification": {
+    "path": "mneme/spec/CANONICAL-DATUM-SPEC.md",
+    "sha256": "d578e86e4d411611b091cca0bed1cafac2636c0908e95447fd4a13badcab6abc"
+  },
+  "status": "PASS",
+  "unclassified_mutation_outcomes": {
+    "both_failure_same_triple": 30049,
+    "both_success_identical": 455
+  }
+}

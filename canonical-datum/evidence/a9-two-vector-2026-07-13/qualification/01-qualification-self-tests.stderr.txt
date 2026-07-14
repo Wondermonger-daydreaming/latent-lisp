@@ -1,0 +1,14 @@
+test_ephemeral_value_generation_is_deterministic (canonical-datum.qualification.test_qualification.GeneratorTests.test_ephemeral_value_generation_is_deterministic) ... ok
+test_equivalent_record_variant_changes_source_order_only (canonical-datum.qualification.test_qualification.GeneratorTests.test_equivalent_record_variant_changes_source_order_only) ... ok
+test_every_root_family_has_a_fixed_witness (canonical-datum.qualification.test_qualification.GeneratorTests.test_every_root_family_has_a_fixed_witness) ... ok
+test_generated_values_are_json_roundtrip_stable (canonical-datum.qualification.test_qualification.GeneratorTests.test_generated_values_are_json_roundtrip_stable) ... ok
+test_all_classified_failures_warrant_all_three_fields (canonical-datum.qualification.test_qualification.ManifestTests.test_all_classified_failures_warrant_all_three_fields) ... ok
+test_every_request_has_a_resolved_immutable_budget_shape (canonical-datum.qualification.test_qualification.ManifestTests.test_every_request_has_a_resolved_immutable_budget_shape) ... ok
+test_hostile_rows_are_classified_and_single_purpose (canonical-datum.qualification.test_qualification.ManifestTests.test_hostile_rows_are_classified_and_single_purpose) ... ok
+test_normative_inputs_and_errata_counts_are_pinned (canonical-datum.qualification.test_qualification.ManifestTests.test_normative_inputs_and_errata_counts_are_pinned) ... ok
+test_request_ids_are_unique_and_complete (canonical-datum.qualification.test_qualification.ManifestTests.test_request_ids_are_unique_and_complete) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.008s
+
+OK

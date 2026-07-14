@@ -1,0 +1,16 @@
+CD/0 Common Lisp seed conformance: PASS
+shared positives: 22/22
+shared negative manifest rows dispositioned: 71/71
+  octet rows executed: 66/66
+  applicable host rows executed: 2/2
+  optional host importers not exposed: 3/3
+  provisional rows compared only on warranted components: 11
+resource-vector successful retries: 12
+declared distinct pairs: 5
+mutation probes: 15
+resource refusal/retry probes: 11
+ambient-state variants: 2
+deterministic generated round trips: 500
+grammar/Unicode boundary cases: 15
+integration regression witnesses: 20
+total assertions: 2510
