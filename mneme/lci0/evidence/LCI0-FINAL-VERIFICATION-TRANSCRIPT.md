@@ -293,7 +293,7 @@ and generated detritus → non-force branch publication → remote read-back.
 | Final nonregression loose raw transcripts | committed at `e552346123a35225023f5b33d8f288c7064e11da` |
 | Reproducible evidence archive members/bytes/SHA-256 | 180 members; 9,573,988 bytes; `afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa` |
 | Deterministic archive rebuild comparison | PASS: two byte-identical builds; 179 declared payloads, zero missing/mismatched/extra after extraction |
-| Loose-file/detritus cleanup commit and deletion inventory | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb`; 63 archive-covered files, 232,093,546 loose bytes; exact paths in commit name-status |
+| Loose-file/detritus cleanup commit and deletion inventory | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb`; 63 archive-covered files / 232,093,546 loose bytes; final hygiene also removed 27 task `/tmp` entries / 1,783,094,359 bytes and 11 ignored cache directories; all seven LCI worktrees clean |
 | Successor branch publication | PASS: atomic non-force creation of Common Lisp `2513c354...`, Python `db627cb6...`, and integration content `05d985bc...`; receipt/inventory follow-up is pushed and re-read in the final handoff |
 | Remote read-back | PASS: `ls-remote` and fetched refs exact; remote integration archive blob SHA-256 `afad708a...`; remote main unchanged at `26ac543...` |
 | Independent reviewer PASS | none |

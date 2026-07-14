@@ -70,6 +70,21 @@ members. After the tracked cleanup commit, task-specific temporary replay,
 extraction, and duplicate-archive files may also be removed from `/tmp` because
 their authoritative archive and receipts are committed.
 
+The final local hygiene pass then removed 27 task-specific `/tmp` entries
+matching the operation's `lci0*`/`LCI0*` names, with an aggregate pre-removal
+`du -sb` size of 1,783,094,359 bytes. These included fixture materializations,
+exact/post replay directories, cache directories, audit scratch files, the
+archive extraction used for verification, and the duplicate first archive
+build. It also removed 11 ignored `__pycache__` directories from the isolated
+LCI worktrees. A repeat census found zero matching task temporary entries and
+zero such cache directories.
+
+All seven retained LCI worktrees reported clean, including ignored-file status.
+The standalone preimplementation bundle remains at
+`/home/gauss/Codex-Lab/latent-lisp-lci0-preimplementation-2026-07-14.bundle`,
+252,666,673 bytes, SHA-256
+`b3bf606b892d8e47353248a69a3a534bff4cd4ad2708c587d7ebcbc57c54c936`.
+
 ## Explicitly preserved boundaries
 
 No frozen CD/0, LCI/0 normative file, fixture, seed commit, implementation
