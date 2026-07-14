@@ -513,7 +513,16 @@ def validate_stable_ref(value: cd0.Datum, *, path: tuple[str, ...] = ()) -> cd0.
     if type(object_id) is not cd0.Identifier:
         raise LCIFailure("reference-refusal", "InvalidStableReference", "stable-reference", path + ("material", "object-id"))
     lowered = tuple(segment.casefold() for segment in object_id.path)
-    aliases = {"latest", "main", "display-model", "filename", "file.txt", "mutable-url"}
+    aliases = {
+        "latest",
+        "main",
+        "production",
+        "model-current",
+        "display-model",
+        "filename",
+        "file.txt",
+        "mutable-url",
+    }
     if (
         any(segment in aliases for segment in lowered)
         or any(
@@ -1268,37 +1277,51 @@ def validate_location(value: cd0.Datum, *, projection: bool = False) -> cd0.Datu
     profile = field_by_path(value, "profile-location")
     if type(profile) is not cd0.Record:
         raise FixtureAuthorityGap("unsupported fixture profile-location shape")
-    # The neutral Mneme/0 value is the exact empty record.  N009 also freezes
-    # recursive closure for the explicit tagged schema, whose coordinates
-    # remain empty in this fixture profile.
+    # Mneme/0 reserves exactly Record{} here.  N009 carries an author-supplied
+    # tagged witness solely to pin the more specific nested-unknown diagnostic;
+    # that diagnostic does not authorize the tagged carrier itself.
     if len(profile.fields):
-        _closed(
-            profile,
-            ("kind", "schema-version", "coordinates"),
-            stage="profile-location",
-            prefix=("location", "profile-location"),
-            namespace=LCI,
-            check_unknown=False,
-        )
         kind = field_by_path(profile, "kind", None)
-        if type(kind) is not cd0.Identifier or kind.namespace != TAG or kind.path != ("profile-location",):
-            raise FixtureAuthorityGap("unsupported fixture profile-location shape")
-        _integer_zero(
-            field_by_path(profile, "schema-version"),
-            "RecursiveUnsupportedNestedVersion",
-            "profile-location",
-            ("location", "profile-location", "schema-version"),
-        )
-        coordinates = field_by_path(profile, "coordinates")
-        if type(coordinates) is not cd0.Record or len(coordinates.fields):
-            name = _path_names(coordinates)[0] if type(coordinates) is cd0.Record and coordinates.fields else "coordinates"
-            raise LCIFailure("invalid-input", "UnknownField", "profile-location", ("location", "profile-location", "coordinates", f"fixture-field:{name}"))
-        _reject_unknown(
+        schema_version = field_by_path(profile, "schema-version", None)
+        coordinates = field_by_path(profile, "coordinates", None)
+        names = _path_names(
             profile,
-            ("kind", "schema-version", "coordinates"),
+            namespace=LCI,
             stage="profile-location",
             prefix=("location", "profile-location"),
-            namespace=LCI,
+        )
+        if (
+            set(names) == {"kind", "schema-version", "coordinates"}
+            and type(kind) is cd0.Identifier
+            and kind.namespace == TAG
+            and kind.path == ("profile-location",)
+            and type(schema_version) is cd0.Integer
+            and schema_version.value == 0
+            and type(coordinates) is cd0.Record
+            and coordinates.fields
+        ):
+            coordinate_names = _path_names(
+                coordinates,
+                namespace=FIXTURE_FIELD,
+                stage="profile-location",
+                prefix=("location", "profile-location", "coordinates"),
+            )
+            raise LCIFailure(
+                "invalid-input",
+                "UnknownField",
+                "profile-location",
+                (
+                    "location",
+                    "profile-location",
+                    "coordinates",
+                    f"fixture-field:{coordinate_names[0]}",
+                ),
+            )
+        raise LCIFailure(
+            "invalid-input",
+            "UnknownField",
+            "profile-location",
+            ("location", "profile-location", names[0]),
         )
     _reject_unknown(
         value,
@@ -1397,50 +1420,89 @@ def validate_claim_id(value: cd0.Datum, *, projection: bool = False) -> cd0.Datu
     return value
 
 
+CLAIM_OCCURRENCE_FIELDS = (
+    "kind",
+    "schema-version",
+    "semantic-claim-core",
+    "claimant",
+    "assertion-time",
+    "provenance",
+    "lineage",
+    "cached-claim-id",
+    "presentation",
+    "nonidentity-metadata",
+)
+
+
 def project_claim_id(value: Any) -> ClaimIdEnvelope:
     """Pure ClaimId projection; no cache, digest, ambient state, or lookup."""
 
     if isinstance(value, ClaimIdEnvelope):
-        datum = value.datum
+        resource_source = value.datum
     elif type(value) is cd0.Record:
-        names = _path_names(value)
-        if "semantic-claim-core" in names:
-            _path_names(value, namespace=FIXTURE_FIELD, stage="claim-shape")
-            datum = field_by_path(value, "semantic-claim-core")
-        elif set(names) == {"identity-policy", "claim-profile", "proposition", "location"}:
-            _path_names(value, namespace=LCI, stage="claim-shape")
-            datum = cd0.record(
-                (
-                    record_field(LCI, "kind", ident(TAG, "claim-id-envelope")),
-                    record_field(LCI, "lci-version", cd0.integer(0)),
-                    record_field(LCI, "identity-policy", field_by_path(value, "identity-policy")),
-                    record_field(LCI, "claim-profile", field_by_path(value, "claim-profile")),
-                    record_field(LCI, "proposition", field_by_path(value, "proposition")),
-                    record_field(LCI, "location", field_by_path(value, "location")),
-                )
-            )
-        else:
-            datum = value
+        resource_source = value
     else:
-        # Mutable test views carry an immutable source datum.  Only explicit
-        # mutations are interpreted; no semantic field is inferred.
-        source = getattr(value, "_lci_source_datum", None)
-        if source is None:
+        resource_source = getattr(value, "_lci_source_datum", None)
+        if resource_source is None:
             raise FixtureAuthorityGap("unsupported host projection input")
-        unknown = set(value) - {"kind", "lci-version", "identity-policy", "claim-profile", "proposition", "location"}
-        if unknown:
-            raise LCIFailure("invalid-input", "UnknownField", "claim-shape", (sorted(unknown)[0],))
-        if getattr(value, "_nested_version_changed", False):
-            raise LCIFailure("unsupported-version-or-profile", "RecursiveUnsupportedNestedVersion", "scope", ("location", "scope", "schema-version"))
-        datum = source
-        coordinate_override = getattr(value, "_lci_coordinate_override", None)
-        if coordinate_override is not None:
-            coordinate, replacement_value = coordinate_override
-            location = field_by_path(datum, "location")
-            replaced_location = replace_record_field(location, coordinate, replacement_value)
-            datum = replace_record_field(datum, "location", replaced_location)
-    with operation_resource_guard(datum, stage="projection"):
+
+    with operation_resource_guard(resource_source, stage="projection"):
+        projection_core = None
+        if isinstance(value, ClaimIdEnvelope):
+            datum = value.datum
+        elif type(value) is cd0.Record:
+            kind = field_by_path(value, "kind", None)
+            if (
+                type(kind) is cd0.Identifier
+                and kind.namespace == TAG
+                and kind.path == ("claim-id-envelope",)
+            ):
+                datum = value
+            else:
+                core_fields = ("identity-policy", "claim-profile", "proposition", "location")
+                _closed(
+                    value,
+                    core_fields,
+                    stage="claim-shape",
+                    namespace=LCI,
+                    check_unknown=False,
+                )
+                projection_core = value
+                datum = cd0.record(
+                    (
+                        record_field(LCI, "kind", ident(TAG, "claim-id-envelope")),
+                        record_field(LCI, "lci-version", cd0.integer(0)),
+                        record_field(LCI, "identity-policy", field_by_path(value, "identity-policy")),
+                        record_field(LCI, "claim-profile", field_by_path(value, "claim-profile")),
+                        record_field(LCI, "proposition", field_by_path(value, "proposition")),
+                        record_field(LCI, "location", field_by_path(value, "location")),
+                    )
+                )
+        else:
+            # Mutable test views carry an immutable source datum.  Only explicit
+            # mutations are interpreted; no semantic field is inferred.
+            source = resource_source
+            unknown = set(value) - {"kind", "lci-version", "identity-policy", "claim-profile", "proposition", "location"}
+            if unknown:
+                raise LCIFailure("invalid-input", "UnknownField", "claim-shape", (sorted(unknown)[0],))
+            if getattr(value, "_nested_version_changed", False):
+                raise LCIFailure("unsupported-version-or-profile", "RecursiveUnsupportedNestedVersion", "scope", ("location", "scope", "schema-version"))
+            datum = source
+            coordinate_override = getattr(value, "_lci_coordinate_override", None)
+            if coordinate_override is not None:
+                coordinate, replacement_value = coordinate_override
+                location = field_by_path(datum, "location")
+                replaced_location = replace_record_field(location, coordinate, replacement_value)
+                datum = replace_record_field(datum, "location", replaced_location)
+
         validate_claim_id(datum, projection=True)
+        if projection_core is not None:
+            _reject_unknown(
+                projection_core,
+                ("identity-policy", "claim-profile", "proposition", "location"),
+                stage="claim-shape",
+                namespace=LCI,
+            )
         proposition = field_by_path(datum, "proposition")
         _check_operation_work(
             "proposition-normalization-work",
@@ -1469,18 +1531,7 @@ def replace_record_field(value: cd0.Datum, name: str, replacement_value: cd0.Dat
 
 
 def project_occurrence(value: cd0.Datum) -> ClaimIdEnvelope:
-    allowed = (
-        "kind",
-        "schema-version",
-        "semantic-claim-core",
-        "claimant",
-        "assertion-time",
-        "provenance",
-        "lineage",
-        "cached-claim-id",
-        "presentation",
-        "nonidentity-metadata",
-    )
+    allowed = CLAIM_OCCURRENCE_FIELDS
     _closed(
         value,
         allowed,
@@ -1590,7 +1641,9 @@ def project_occurrence(value: cd0.Datum) -> ClaimIdEnvelope:
 def claim_ids_equal(left: Any, right: Any) -> bool:
     left_datum = left.datum if isinstance(left, ClaimIdEnvelope) else left
     right_datum = right.datum if isinstance(right, ClaimIdEnvelope) else right
-    return type(left_datum) is cd0.Record and type(right_datum) is cd0.Record and canonical_bytes(left_datum) == canonical_bytes(right_datum)
+    validate_claim_id(left_datum)
+    validate_claim_id(right_datum)
+    return canonical_bytes(left_datum) == canonical_bytes(right_datum)
 
 
 def _ref_id(value: cd0.Datum) -> tuple[str, ...]:
@@ -2336,15 +2389,22 @@ def match_target(target: cd0.Datum, candidate: cd0.Datum) -> RelationResult:
         _target_kind_coherence(target, target_kind)
         left_location = field_by_path(claimed, "location")
         right_location = field_by_path(candidate, "location")
+        if canonical_bytes(field_by_path(claimed, "proposition")) != canonical_bytes(field_by_path(candidate, "proposition")):
+            raise LCIFailure("target-mismatch", "PropositionMismatch", "target-relation", ("claim", "proposition"))
+        for coordinate, code in (
+            ("identity-policy", "IdentityPolicyMismatch"),
+            ("claim-profile", "ClaimProfileMismatch"),
+        ):
+            if canonical_bytes(field_by_path(claimed, coordinate)) != canonical_bytes(field_by_path(candidate, coordinate)):
+                raise LCIFailure("target-mismatch", code, "target-relation", ("claim", coordinate))
         for coordinate, code in (
             ("subject-time", "SubjectTimeMismatch"),
             ("basis", "BasisMismatch"),
             ("interpretation-frame", "InterpretationFrameMismatch"),
+            ("profile-location", "ProfileLocationMismatch"),
         ):
             if canonical_bytes(field_by_path(left_location, coordinate)) != canonical_bytes(field_by_path(right_location, coordinate)):
                 raise LCIFailure("target-mismatch", code, "target-relation", ("claim", "location", coordinate))
-        if canonical_bytes(field_by_path(claimed, "proposition")) != canonical_bytes(field_by_path(candidate, "proposition")):
-            raise LCIFailure("target-mismatch", "ProfileLocationMismatch", "target-relation", ("claim", "proposition"))
         left_scope = field_by_path(left_location, "scope")
         right_scope = field_by_path(right_location, "scope")
         try:
@@ -2353,9 +2413,8 @@ def match_target(target: cd0.Datum, candidate: cd0.Datum) -> RelationResult:
             if exc.code in {"ScopeIncompatible", "ScopeRelationUnknown"}:
                 raise LCIFailure(exc.category, exc.code, exc.stage, ("claim", "location", "scope")) from exc
             raise
-        if relation in {"equal", "wider"}:
-            _require_target_coverage(target, left_scope, right_scope)
         if relation == "equal":
+            _require_target_coverage(target, left_scope, right_scope)
             return RelationResult("exact-target")
         if relation == "wider":
             proposition_form_value = field_by_path(field_by_path(claimed, "proposition"), "form")
@@ -2372,6 +2431,7 @@ def match_target(target: cd0.Datum, candidate: cd0.Datum) -> RelationResult:
                         ("fixture-field:proposition-form", proposition_form_value),
                     ),
                 )
+            _require_target_coverage(target, left_scope, right_scope)
             return RelationResult("supports-by-scope-narrowing")
         failures = {
             "narrower": "ScopeWideningForbidden",
