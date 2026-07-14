@@ -61,5 +61,6 @@
    #:execute-fixture-vector
    #:run-vector-selection
    #:run-all-vectors
+   #:verify-fixture-relation-tables
    #:run-mutation-snapshot-test
    #:write-json-line-result))

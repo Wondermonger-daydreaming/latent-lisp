@@ -1,7 +1,10 @@
 (in-package #:lisp-plus-lci0)
 
 (defun %adapter-fail (code &optional path)
-  (lci-fail "fixture-adapter-refusal" code "fixture-adapter" :path path))
+  ;; Package-JSON adaptation precedes LCI semantic validation.  Its closed
+  ;; surface diagnostics are implementation/package integrity faults, not
+  ;; members of the frozen LCIFailure/0 vocabulary.
+  (internal-integrity-fail "fixture-adapter" code "fixture-adapter" :path path))
 
 (defun %json-object-keys (object)
   (unless (and (listp object)
@@ -83,9 +86,15 @@ No lookup or semantic inference is performed.  Every surface schema is closed."
                         (jget node "num") (append path '("num"))))
             (denominator (%decimal-fixture-integer
                           (jget node "den") (append path '("den")))))
-       (when (zerop denominator)
-         (%adapter-fail "InvalidFixtureRational" path))
-       ;; Constructor performs the exact frozen CD/0 normalization.
+       ;; The package surface represents an abstract rational, not CD/0
+       ;; constructor input.  Translation from num/den to p/q therefore must
+       ;; preserve an already-canonical value; reducing, moving a denominator
+       ;; sign, or collapsing an integral/zero rational would be semantic
+       ;; inference by the adapter.
+       (unless (and (not (zerop numerator))
+                    (> denominator 1)
+                    (= 1 (gcd (abs numerator) denominator)))
+         (%adapter-fail "NoncanonicalFixtureRational" path))
        (make-rational-datum numerator denominator)))
     (:bytes
      (%require-json-keys node '("t" "hex") path)

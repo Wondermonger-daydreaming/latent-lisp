@@ -94,6 +94,66 @@
         (format *error-output* "VECTOR MISSING ~A~%" id)))
     all-pass))
 
+(defun verify-fixture-relation-tables (&optional (root *fixture-root*))
+  "Execute every sealed scope and temporal relation-table document against
+the local calculus.  This is distinct from the canonical-document sweep: it
+checks all 458 recorded semantic results, not merely their CD/0 round trips."
+  (labels ((table-result (table relation-function left right)
+             (handler-case (funcall relation-function left right)
+               (lci-failure (condition)
+                 ;; The tables record the abstract calculus relation while the
+                 ;; public engines expose the corresponding typed failure at
+                 ;; an undetermined/incompatible operational boundary.
+                 (let ((relation
+                         (cond
+                           ((and (string= table "scope_relation_table_0")
+                                 (string= (lci-failure-code condition)
+                                          "ScopeIncompatible"))
+                            "incompatible")
+                           ((and (string= table "scope_relation_table_0")
+                                 (string= (lci-failure-code condition)
+                                          "ScopeRelationUnknown"))
+                            "unknown")
+                           ((and (string= table "temporal_relation_table_0")
+                                 (string= (lci-failure-code condition)
+                                          "UnsupportedTemporalModel"))
+                            "incompatible")
+                           ((and (string= table "temporal_relation_table_0")
+                                 (string= (lci-failure-code condition)
+                                          "AdmissibilityUndetermined"))
+                            "unknown"))))
+                   (if relation (%relation-id relation) (error condition))))))
+           (verify-table (table left-field right-field relation-function)
+             (let ((count 0))
+               (map-registry-relation-entries
+                root table
+                (lambda (entry)
+                  (verify-fixture-document entry)
+                  (let* ((row (fixture-json-to-datum
+                               (jget entry "abstract_cd0")))
+                         (left (record-field-named row left-field))
+                         (right (record-field-named row right-field))
+                         (expected (record-field-named row "relation"))
+                         (actual (table-result table relation-function
+                                               left right)))
+                    (unless (equal-datum actual expected)
+                      (internal-integrity-fail
+                       "fixture-package" "RelationTableMismatch"
+                       "fixture-corpus"
+                       :path (list table (format nil "~D" count))))
+                    (incf count))))
+               count)))
+    (let ((scope (verify-table "scope_relation_table_0"
+                               "left-scope" "right-scope" #'scope-relation))
+          (temporal (verify-table "temporal_relation_table_0"
+                                  "left-subject-time" "right-subject-time"
+                                  #'temporal-relation)))
+      (unless (= (+ scope temporal) 458)
+        (internal-integrity-fail "fixture-package"
+                                 "FixtureCorpusCensusMismatch"
+                                 "fixture-corpus"))
+      (list :scope scope :temporal temporal :total (+ scope temporal)))))
+
 (defun run-all-vectors (&rest arguments)
   ;; Accept the historical positional ROOT followed by keywords without the
   ;; ambiguous &OPTIONAL/&KEY lambda-list combination.

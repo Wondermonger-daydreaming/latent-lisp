@@ -19,11 +19,20 @@
    (list "relation" (make-id '("lisp-plus" "lci" "0" "relation")
                               (list relation)))))
 
-(defun %monotone-declared-p (target-kind proposition-form)
-  (member proposition-form
-          (cdr (assoc target-kind +scope-monotone-target-forms+
-                      :test #'string=))
-          :test #'string=))
+(defun %monotone-declared-p (target target-kind proposition-form)
+  ;; Monotonicity belongs jointly to the exact schema/kind pair and form.  A
+  ;; transplanted proposition or coverage boundary cannot borrow another
+  ;; schema's declaration.
+  (and (%exact-identifier-p
+        (record-field-named target "target-kind")
+        +fixture-identifier-namespace+ (list "target-kind" target-kind))
+       (%stable-ref-material-exact-p
+        (record-field-named target "target-schema") "module"
+        (list "target-schema" target-kind) 0)
+       (member proposition-form
+               (cdr (assoc target-kind +scope-monotone-target-forms+
+                           :test #'string=))
+               :test #'string=)))
 
 (defun %target-fail (code path &key context
                                       (category "target-mismatch"))
@@ -32,6 +41,14 @@
 (defun %coverage-scope (target)
   (record-field-named (record-field-named target "boundaries") "coverage-scope"))
 
+(defun %exact-coverage-sufficient-p (target candidate-scope)
+  (let ((coverage (%coverage-scope target)))
+    (and coverage
+         (handler-case
+             (member (identifier-last (scope-relation coverage candidate-scope))
+                     '("equal" "wider") :test #'string=)
+           (lci-failure () nil)))))
+
 (defun %stable-reference-object-name (reference)
   (let ((material (and (record-datum-p reference)
                        (record-field-named reference "material"))))
@@ -39,21 +56,7 @@
          (let ((object-id (record-field-named material "object-id")))
            (and (identifier-datum-p object-id) (identifier-last object-id))))))
 
-(defun %make-fixture-scope-object (like form field object-name)
-  (let* ((expression (make-fixture-record
-                      (list "kind" (fixture-id "tag" "scope-expression"))
-                      (list "schema-version" (make-integer-datum 0))
-                      (list "form" (fixture-id "scope-form" form))
-                      (list "organization"
-                            (fixture-id "scope-object" "organization" "acme"))
-                      (list field (fixture-id "scope-object" field object-name)))))
-    (make-lci-record
-     (list "kind" (lci-tag "scope"))
-     (list "schema-version" (make-integer-datum 0))
-     (list "calculus" (record-field-named like "calculus"))
-     (list "expression" expression))))
-
-(defun match-warrant-target (target candidate)
+(defun %match-warrant-target-unbudgeted (target candidate)
   (validate-warrant-target target)
   (validate-claim-id candidate)
   (let* ((embedded (record-field-named target "claim"))
@@ -61,13 +64,13 @@
          (proposition (record-field-named embedded "proposition"))
          (proposition-form (exact-form-name proposition)))
     (unless (equal-datum proposition (record-field-named candidate "proposition"))
-      (%target-fail "ProfileLocationMismatch" '("claim" "proposition")))
+      (%target-fail "PropositionMismatch" '("claim" "proposition")))
     (unless (equal-datum (record-field-named embedded "identity-policy")
                          (record-field-named candidate "identity-policy"))
-      (%target-fail "ProfileLocationMismatch" '("claim" "identity-policy")))
+      (%target-fail "IdentityPolicyMismatch" '("claim" "identity-policy")))
     (unless (equal-datum (record-field-named embedded "claim-profile")
                          (record-field-named candidate "claim-profile"))
-      (%target-fail "ProfileLocationMismatch" '("claim" "claim-profile")))
+      (%target-fail "ClaimProfileMismatch" '("claim" "claim-profile")))
     (unless (equal-datum (%claim-coordinate embedded "subject-time")
                          (%claim-coordinate candidate "subject-time"))
       (%target-fail "SubjectTimeMismatch" '("claim" "location" "subject-time")))
@@ -106,9 +109,12 @@
            (relation-name (identifier-last relation)))
       (cond
         ((string= relation-name "equal")
+         (unless (%exact-coverage-sufficient-p target candidate-scope)
+           (%target-fail "TargetBoundaryMismatch"
+                         '("boundaries" "coverage-scope")))
          (%target-relation-result "exact-target"))
         ((string= relation-name "wider")
-         (unless (%monotone-declared-p target-kind proposition-form)
+         (unless (%monotone-declared-p target target-kind proposition-form)
            (%target-fail
             "ScopeNarrowingNotDeclared" '("claim" "location" "scope")
             :context
@@ -122,26 +128,15 @@
            (let ((coverage-relation (scope-relation coverage candidate-scope)))
              (unless (member (identifier-last coverage-relation)
                              '("equal" "wider") :test #'string=)
-               ;; The observed sampled fixture records actual inspected scope
-               ;; as tenant/a independently of its declared planned scope.
-               (let ((actual
-                       (if (and (string= target-kind "observed")
-                                (id-path=
-                                 (record-field-named
-                                  (record-field-named target "boundaries")
-                                  "observation-mode")
-                                 "observation-mode" "sampled"))
-                           (%make-fixture-scope-object coverage "tenant" "tenant" "a")
-                           coverage)))
-                 (%target-fail
-                  "ScopeNarrowingCoverageInsufficient"
-                  '("boundaries" "coverage-scope")
-                  :context
-                  (make-fixture-record
-                   (list "target-kind" (record-field-named target "target-kind"))
-                   (list "required-candidate-scope" candidate-scope)
-                   (list "actual-coverage-scope" actual)))))))
-         (%target-relation-result "supports-by-scope-narrowing"))
+               (%target-fail
+                "ScopeNarrowingCoverageInsufficient"
+                '("boundaries" "coverage-scope")
+                :context
+                (make-fixture-record
+                 (list "target-kind" (record-field-named target "target-kind"))
+                 (list "required-candidate-scope" candidate-scope)
+                 (list "actual-coverage-scope" coverage)))))
+         (%target-relation-result "supports-by-scope-narrowing")))
         ((string= relation-name "narrower")
          (%target-fail "ScopeWideningForbidden" '("claim" "location" "scope")))
         ((string= relation-name "overlap")
@@ -150,3 +145,14 @@
          (%target-fail "ScopeDisjoint" '("claim" "location" "scope")))
         (t (%target-fail "ScopeRelationUnknown" '("claim" "location" "scope")
                          :category "relation-undetermined"))))))
+
+(defun match-warrant-target (target candidate)
+  (if *lci-resource-check-active*
+      (%match-warrant-target-unbudgeted target candidate)
+      (let ((*lci-resource-check-active* t)
+            (*lci-resource-phase* "matching"))
+        (enforce-lci-structural-budgets
+         (make-fixture-record (list "target" target)
+                              (list "candidate-claim" candidate))
+         "matching")
+        (%match-warrant-target-unbudgeted target candidate))))
