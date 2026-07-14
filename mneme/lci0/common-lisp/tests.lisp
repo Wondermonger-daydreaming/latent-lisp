@@ -515,6 +515,22 @@
                             (lisp-plus-lci0::fixture-field-id "future-boundary")
                             (lisp-plus-cd0:make-unit-datum)))
          (open-target (lci0-record-replace target "boundaries" open-boundaries))
+         (coverage
+           (lisp-plus-lci0::record-field-named boundaries "coverage-scope"))
+         (coverage-expression
+           (lisp-plus-lci0::record-field-named coverage "expression"))
+         (open-coverage-expression
+           (lci0-record-add
+            coverage-expression
+            (lisp-plus-lci0::fixture-field-id "future-selector")
+            (lisp-plus-cd0:make-unit-datum)))
+         (open-coverage
+           (lci0-record-replace coverage "expression"
+                                open-coverage-expression))
+         (nested-open-target
+           (lci0-record-replace
+            target "boundaries"
+            (lci0-record-replace boundaries "coverage-scope" open-coverage)))
          (different-proposition
            (lisp-plus-lci0::registry-datum "claim-id.file-beta-neutral")))
     (lci0-check "target-schema-kind-swap-refused"
@@ -526,6 +542,21 @@
                (lci0-refusal-code
                 (lambda ()
                   (lisp-plus-lci0:validate-warrant-target open-target)))))
+    (lci0-check "nested-scope-unknown-field-retains-depth-first-failure"
+      (let ((condition
+              (lci0-capture-refusal
+               (lambda ()
+                 (lisp-plus-lci0:validate-warrant-target
+                  nested-open-target)))))
+        (and condition
+             (string= (lisp-plus-lci0:lci-failure-category condition)
+                      "invalid-input")
+             (string= (lisp-plus-lci0:lci-failure-code condition)
+                      "UnknownField")
+             (string= (lisp-plus-lci0:lci-failure-stage condition) "scope")
+             (equal (lisp-plus-lci0:lci-failure-path condition)
+                    '("boundaries" "coverage-scope" "expression"
+                      "future-selector")))))
     (lci0-check "target-proposition-mismatch-uses-specific-frozen-code"
       (string= "PropositionMismatch"
                (lci0-refusal-code

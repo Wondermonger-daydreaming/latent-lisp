@@ -556,10 +556,11 @@
         (%finish-versioned-expression expression +scope-form-fields+ "scope"
                                       expression-path))
     (lci-failure (condition)
-      ;; A malformed scope expression is one closed InvalidScope witness.  A
-      ;; nested version refusal remains separately governed by Errata 0.1.
-      (if (member (lci-failure-code condition)
-                  '("MissingRequiredField" "UnknownField") :test #'string=)
+      ;; LCI0-N010 pins an incomplete declared scope form to InvalidScope at
+      ;; the expression boundary.  Errata E6 independently requires an
+      ;; otherwise valid closed form's unknown member to retain UnknownField
+      ;; and its depth-first structural path.
+      (if (string= (lci-failure-code condition) "MissingRequiredField")
           (lci-fail "invalid-input" "InvalidScope" "scope"
                     :path (append path '("expression")))
           (error condition))))
