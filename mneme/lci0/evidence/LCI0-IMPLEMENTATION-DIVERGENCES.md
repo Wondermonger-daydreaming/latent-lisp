@@ -196,23 +196,20 @@ oracle.
   permanent conflict witnesses. N012 is blocked, not passed, failed, skipped,
   or N/A, until authorial closure.
 
-## LCI0-DIV-007 — Python does not reproduce five exact failure documents
+## LCI0-DIV-007 — Python does not reproduce four determinate failure documents
 
-- Status: confirmed by the retained 215-vector differential baseline; exact
-  vector convergence is blocked.
+- Status: corrected after provenance review of the five baseline mismatches.
+  Four are Python representation defects. The coverage-context mismatch is the
+  separate normative conflict `LCI0-DIV-015`.
 - Sources: Errata I12 deterministic structural paths and failure comparison;
   Fixture Package Specification §§11–13; vectors `LCI0-N025`,
-  `LCI0-E5-COVERAGE-INSUFFICIENT`, `LCI0-E5-NONMONOTONE-NARROWING`,
-  `LCI0-E8-DIGEST-ONLY-LOOKUP`, and `LCI0-E9-NEAR-MISS-PACKAGE`.
+  `LCI0-E5-NONMONOTONE-NARROWING`, `LCI0-E8-DIGEST-ONLY-LOOKUP`, and
+  `LCI0-E9-NEAR-MISS-PACKAGE`.
 - Minimal observations:
   - `LCI0-N025`: expected-result SHA-256
     `2b3fa8dbb819467953fdc3c2578b3ecfb13b6ece40e186982031472940d2a83e`;
     Python result SHA-256
     `00878b9614fd4effe8583bbc01e8c25102a5b8c9404dfc9c55cc09e93961b2c7`.
-  - `LCI0-E5-COVERAGE-INSUFFICIENT`: expected
-    `dcc9deda2e494a8adab5e04a39c04d61c056d5b9bcb0a390c1667c67351dc613`;
-    Python
-    `86ca74bf1999bbbe934fe480d7d5d45c95f1ca4d1ee74b7e58b571ccc2f528bf`.
   - `LCI0-E5-NONMONOTONE-NARROWING`: expected
     `00b98b050860db66a61ddd8c0ad913b526e7693a2eedf4080a0a1e636b131fa0`;
     Python
@@ -225,19 +222,21 @@ oracle.
     `b27f9c2b2511bd4911c9fea9418d41a8a34bad0bf6a28b47d09990f96975173c`;
     Python
     `c8ade50ba7fc2c41ad9adb4cfcaeac7c27db10fa43c1e252e4cb1054e2ee6d21`.
-- Common Lisp result: reproduces all five exact expected documents.
+- Common Lisp baseline result: reproduces all four exact expected documents.
 - Python result: category, code, stage, and path segment names agree, but three
-  structural path identifiers carry the wrong namespace and two target
-  failures omit the pinned context records.
-- Expected fixture result: exact canonical expected-result documents, including
-  structural path identifier identity and closed context.
-- Classification: Python failure-document representation defect.
-- May implementation continue: yes on unaffected paths; these five vector
+  structural path identifiers carry the wrong namespace and the nonmonotone
+  target failure omits its input-derived pinned context record.
+- Expected fixture result: the four exact canonical expected-result documents,
+  including structural path identifier identity and closed context.
+- Classification: Python failure-document representation defect for these
+  four vectors. No classification from one implementation was used as an
+  oracle.
+- May implementation continue: yes on unaffected paths; these four vector
   results cannot be counted as passes.
 - Proposed disposition: correct on a reviewed Python successor without
   consulting expected results at execution time; retain exact result-document
   comparison in the integration coordinator.
-- Permanent regression-vector status: all five existing vectors are permanent.
+- Permanent regression-vector status: the four existing vectors are permanent.
 
 ## LCI0-DIV-008 — both StableRef validators accept non-exact fixture identifiers
 
@@ -423,3 +422,40 @@ oracle.
   isolated in `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md`.
 - Permanent regression-vector status: retain all 38 observations; add machine
   fixtures when authorial closure supplies exact paths.
+
+## LCI0-DIV-015 — E5 expected context introduces an unbound coverage scope
+
+- Status: confirmed fixture/specification conflict; the exact
+  `LCI0-E5-COVERAGE-INSUFFICIENT` result-document path is blocked for authorial
+  disposition.
+- Sources: LCI/0 §9.3 (no target boundary may be inferred), §10.6; Errata
+  E5; Fixture Package Specification §§2 and 7; vector
+  `LCI0-E5-COVERAGE-INSUFFICIENT`.
+- Input witness: 21,896 bytes, SHA-256
+  `08cbf5bde9a42d9180161f90f75c8b6bd5c7d8c2e453ed9aaa31718c6d42e773`.
+  Its target coverage is tenant `b`; its required candidate scope is department
+  `research`; it contains no tenant `a` scope.
+- Expected witness: 2,923 bytes, SHA-256
+  `dcc9deda2e494a8adab5e04a39c04d61c056d5b9bcb0a390c1667c67351dc613`.
+  Its failure context records `actual-coverage-scope` as tenant `a`, a datum
+  absent from the operation input.
+- Common Lisp baseline result: reproduces the expected document by a
+  target-kind/mode-specific tenant-`a` construction not stated by the
+  specification or carried by the target.
+- Python baseline result: returns the same category, code, stage, and path but
+  omits the expected-only context, producing SHA-256
+  `86ca74bf1999bbbe934fe480d7d5d45c95f1ca4d1ee74b7e58b571ccc2f528bf`.
+- Expected fixture result: the exact document and the no-inferred-boundary law
+  cannot both be derived from the supplied input under pure target matching.
+- Classification: fixture-package/specification ambiguity; the initial
+  baseline classification as solely a Python defect is superseded for this
+  vector.
+- May implementation continue: yes on unaffected matcher paths. Successor
+  implementations must not synthesize expected-only identity-bearing data.
+- Proposed disposition: authorial closure must either bind the actual inspected
+  coverage in the WarrantTarget input, normatively define a pure derivation
+  that does not depend on hidden fixture state, or revise the expected context.
+  See `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md`.
+- Permanent regression-vector status: the existing input and expected hashes
+  are permanent conflict witnesses. The vector is blocked, not passed, failed,
+  skipped, or N/A.

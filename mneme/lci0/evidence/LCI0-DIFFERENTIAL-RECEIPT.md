@@ -2,7 +2,7 @@
 
 Date: 2026-07-14
 
-Status: not converged; successor corrections and one authorial return required
+Status: not converged; successor corrections and three narrow authorial returns required
 
 ## Bound inputs and implementations
 
@@ -54,15 +54,21 @@ all required P001–P030 and N001–N032 IDs, and 52 operation families.
 | 15 hostile expectations | 2 pass, 13 fail | 0 pass, 15 fail |
 
 The 82 Common Lisp relation-value disagreements are recorded in
-`LCI0-DIV-004` and `LCI0-DIV-005`. The five Python exact result-document
-disagreements are `LCI0-DIV-007`. Shared and language-specific hostile defects
-are `LCI0-DIV-008` through `LCI0-DIV-013`. Thirty-eight additional
+`LCI0-DIV-004` and `LCI0-DIV-005`. Of the five Python exact result-document
+disagreements, four are `LCI0-DIV-007`; the E5 coverage-context disagreement
+was reclassified as the normative conflict `LCI0-DIV-015` after an
+input-provenance audit. Shared and language-specific hostile defects are
+`LCI0-DIV-008` through `LCI0-DIV-013`. Thirty-eight additional
 relation-failure path disagreements are `LCI0-DIV-014` and have their own
 narrowly scoped authorial-return packet.
 
 The universal/symbolic table and `LCI0-N012` expose the true normative conflict
 `LCI0-DIV-006`. Its exact matcher path is blocked and has a separate authorial
 return packet; it is not counted as N/A.
+
+The E5 expected coverage context introduces a tenant scope absent from its
+canonical input. Its exact document is likewise blocked with a separate
+authorial-return packet; the failure tuple itself remains determinate.
 
 ## Retained raw evidence
 
