@@ -93,8 +93,9 @@ so no final result is inferred from them.
 Any prose, registry, vector, adapter, or implementation inconsistency must be
 reduced to a smallest witness and added to
 `LCI0-IMPLEMENTATION-DIVERGENCES.md`. Corpus verification itself is not
-currently blocked by the three authorial packets, which concern N012 matching,
-38 unpinned companion failure paths, and one expected-only E5 coverage context.
+currently blocked by the four authorial packets, which concern N012 matching,
+38 unpinned companion failure paths, one expected-only E5 coverage context,
+and one P029 cross-document source-artifact binding.
 If a corpus identity or canonical document differs, this receipt becomes
 `BLOCKED` and implementation must not substitute a nearby revision.
 
@@ -103,6 +104,7 @@ If a corpus identity or canonical document differs, this receipt becomes
 | `LCI0-AUTHORIAL-RETURN-PACKET.md` | No canonical roundtrip impact known; semantic N012 result remains BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | Relation values/documents remain testable; 38 unpinned paths remain BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | Input and expected bytes remain discoverable; semantic derivation remains BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | Input and expected bytes round-trip; cross-document source binding remains BLOCKED |
 
 ## Archive, cleanup, and publication fill-in
 

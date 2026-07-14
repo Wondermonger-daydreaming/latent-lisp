@@ -2,7 +2,7 @@
 
 Date: 2026-07-14
 
-Status: integration successor verification PENDING; three authorial closures
+Status: integration successor verification PENDING; four authorial closures
 BLOCKED
 
 This ledger is a requirements crosswalk, not a PASS receipt. It binds each
@@ -55,7 +55,7 @@ Status vocabulary in result columns is deliberately limited to `PENDING` and
 | G3 | Every F-valued match is hard-inadmissible before policy consultation | LCI §§10, 17; Errata E2 | N vectors; policy-floor witnesses | `common-lisp/matching.lisp`, `common-lisp/policy.lisp`, `common-lisp/pre-seed-red-tests.lisp` | `python/lci0/core.py`, `python/tests/test_red_boundaries.py` | Relation-undetermined hostile and policy-call boundary | PENDING | Policy may reject success but never promote failure |
 | H1 | Exact finite fixture Policy-A and Policy-B decision records | LCI §17; Errata E2, E5 | Policy definitions; P022–P023; E2 | `common-lisp/policy.lisp`, `common-lisp/operations.lisp`, `common-lisp/tests.lisp` | `python/lci0/core.py`, `python/tests/test_surface.py` | Policy vector execution; `LCI0-DIV-013` | PENDING | Deterministic conformance instruments, not production admissibility |
 | H2 | Fixture freshness, represented loss, inherited testimony, external attestation, and narrowing permission | LCI §17; Errata E2, E5 | Policy A/B records and associated vectors | `common-lisp/policy.lisp`, `common-lisp/operations.lisp` | `python/lci0/core.py`, `python/tests/test_surface.py` | Exact decision-record comparison | PENDING | Unknown policy identity must fail closed |
-| I1 | Non-evaluating bounded v1 fixture grammar and exact frozen mappings | LCI §23; Errata E9, I12(e) | Migration definitions; P024–P030; E9 | `common-lisp/migration.lisp`, `common-lisp/operations.lisp`, `common-lisp/tests.lisp` | `python/lci0/core.py`, `python/tests/test_surface.py`, `python/tests/test_vectors.py` | Migration vectors and hostile grammar/source requests; `LCI0-DIV-012` | PENDING | No current v1 registry/procedure lookup and no legacy code loading |
+| I1 | Non-evaluating bounded v1 fixture grammar and exact frozen mappings | LCI §23; Errata E9, I12(e) | Migration definitions; P024–P030; E9 | `common-lisp/migration.lisp`, `common-lisp/operations.lisp`, `common-lisp/tests.lisp` | `python/lci0/core.py`, `python/tests/test_surface.py`, `python/tests/test_vectors.py` | Migration vectors and hostile grammar/source requests; `LCI0-DIV-012`, `016` | BLOCKED | P029 source identity awaits closure; no current v1 registry/procedure lookup and no legacy code loading |
 | I2 | Exact/tagged/new-identity/lossy/rejected/deferred/privileged-runtime classifications and closed loss accounts | LCI §23; Errata E9 | E9 and LOSS families | `common-lisp/migration.lisp`, `common-lisp/values.lisp` | `python/lci0/core.py`, `python/lci0/model.py` | Exact migration/loss result comparison | PENDING | Old fingerprints are inert predecessor metadata only |
 | I3 | Zero live warrants and refusal of live-warrant restoration | LCI §23; Errata E9, I12(e) | Migration inertness vectors; privileged-restoration negative | `common-lisp/migration.lisp`, `common-lisp/pre-seed-red-tests.lisp` | `python/lci0/core.py`, `python/tests/test_red_boundaries.py` | Inert/live result and typed failure comparison | PENDING | `PrivilegedRestorationAttempt` remains an LCI failure code |
 | J1 | Exact resource budgets, structural counters, and operation jurisdictions | LCI §18; Errata E6, I12; Fixture §10 | N032; RESOURCE-01–13 | `common-lisp/validation.lisp`, `common-lisp/operations.lisp`, `common-lisp/tests.lisp` | `python/lci0/core.py`, `python/tests/test_surface.py` | Resource vectors and limit/over-limit hostile requests; `LCI0-DIV-011` | PENDING | CD/0 failures remain in the CD/0 namespace |
@@ -71,7 +71,7 @@ Status vocabulary in result columns is deliberately limited to `PENDING` and
 | CENSUS-2 | Verify 1,105 official embedded canonical documents separately from 458 relation plus 30 nested E1 supplementary documents | Baseline reports 1,593/1,593 roundtrips in both seeds | Successor 1,105 + 488 sweep; checksum/byte-count validation; magic-prefix completeness proof | PENDING |
 | VECTOR-1 | Execute 215 unique shared vectors with P001–P030 and N001–N032 complete and no local expected results | Both seed receipts; baseline request census | Exact successor comparison of input/expected octets and every required semantic projection | BLOCKED |
 | VECTOR-2 | Preserve minimal witnesses for all disagreements and never select an implementation as oracle | `LCI0-IMPLEMENTATION-DIVERGENCES.md` and baseline raw evidence | Successor divergence disposition and permanent regression status for every entry | BLOCKED |
-| RED-1 | Preserve fifteen pre-seed red boundaries before green implementation | Common Lisp and Python red transcripts and seed receipts | Confirm immutable seed objects and archive membership; do not rewrite seed commits | PENDING |
+| RED-1 | Preserve fifteen named pre-seed red tests before green implementation | Common Lisp and Python red transcripts and seed receipts; initial failures are dominated by missing modules/undefined entry points rather than fifteen reached semantic refusals | Confirm immutable seed objects and archive membership; supply fresh successor hostile evidence for boundary semantics; do not rewrite seed commits | PARTIAL |
 | SEED-CL | Independently seeded Common Lisp implementation under procedural isolation | Commit `b3d28bc49c3b015096cb04c6ad08c19829f511a9`, tree `d48c39f933cde591f3303fcd3c9f42a0dac1a869`; inspected-file inventory | Successor correction commit/tree and unchanged-seed ancestry audit | PENDING |
 | SEED-PY | Independently seeded Python implementation under procedural isolation | Commit `4ec2e519d05aeacd2412cb8aedc5f76bde702571`, tree `9f7915b460f449976a5d7fa856861ad5ce1d36ca`; seed receipt | Successor correction commit/tree and unchanged-seed ancestry audit | PENDING |
 | DIFF-1 | Integrate both seeds unchanged, classify disagreements, then correct independently | Baseline integration `71f7cfc5ebe392d59d820203dad11cc2e86a0542`; evidence commit `80f1202cc6d176d891179ca408d41136c9a28a97`; 2,281 requests per implementation | Merge successor commits; rerun exact suite; record request/response counts and hashes | BLOCKED |
@@ -91,6 +91,7 @@ Status vocabulary in result columns is deliberately limited to `PENDING` and
 | `LCI0-AUTHORIAL-RETURN-PACKET.md` | D1, G2, VECTOR-1 | `LCI0-N012` universal/symbolic direct matcher result and ordering | Other 214 vectors and unaffected relation entries | BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | A3, D1, D2, J2 | Thirty-eight unpinned companion failure paths | All 458 machine-pinned relation values | BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | G2, VECTOR-1 | Expected-only `actual-coverage-scope` context in `LCI0-E5-COVERAGE-INSUFFICIENT` | Failure category/code/stage/path and all input-derived context | BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | I1, VECTOR-1 | P029 right-result and lineage source artifact change from input `.../v1/1` to expected `.../v1/2` | Other migration fixtures, mapped ClaimIds, inertness, and live-restoration refusal | BLOCKED |
 
 ## Final fill-in register
 
@@ -102,7 +103,7 @@ Status vocabulary in result columns is deliberately limited to `PENDING` and
 | Exact changed-file inventory | PENDING |
 | Successor runtime versions | PENDING |
 | Official/supplementary corpus counts | PENDING |
-| Vector and differential request counts | BLOCKED pending the three exact authorial dispositions; unaffected counts PENDING |
+| Vector and differential request counts | BLOCKED pending three exact-vector dispositions plus the relation-path disposition; unaffected counts PENDING |
 | Property/mutation counts and seeds | PENDING |
 | Divergence ledger closure | BLOCKED |
 | CD/0 nonregression | PENDING |

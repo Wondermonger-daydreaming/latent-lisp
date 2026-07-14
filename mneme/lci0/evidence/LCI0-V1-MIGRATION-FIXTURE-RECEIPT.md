@@ -88,15 +88,17 @@ exception prose is never a comparison oracle.
 
 ## Authorial-return boundary
 
-The three current authorial packets do not directly reopen the declared v1
-migration grammar or its inertness obligation. Their standing must nevertheless
-be included in the final relay:
+Of the four current authorial packets, three do not directly reopen the
+declared v1 migration grammar or its inertness obligation; the P029 packet does
+block one exact migration-result path. All four must be included in the final
+relay:
 
 | Packet | Migration impact |
 | --- | --- |
 | `LCI0-AUTHORIAL-RETURN-PACKET.md` | No direct migration impact identified; matcher path remains BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | No direct migration impact identified; 38 companion paths remain BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | No direct migration impact identified; expected result context remains BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | Direct migration impact: explicit corpus-r4 source is `.../v1/1` while expected right result uses `.../v1/2`; P029 right result BLOCKED |
 
 Any new migration ambiguity must stop only its affected path and receive its own
 minimal witness and authorial-return packet.

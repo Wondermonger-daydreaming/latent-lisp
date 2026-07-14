@@ -4,7 +4,7 @@ Date: 2026-07-14
 
 Relay status: DRAFT / NOT READY FOR PASS REVIEW
 
-Requested disposition: authorial closure on three narrow packets; implementation
+Requested disposition: authorial closure on four narrow packets; implementation
 audit request PENDING
 
 > Paste-ready boundary: this relay currently reports a blocked implementation
@@ -71,6 +71,12 @@ seed receipt for successor/final correctness conclusions without erasing the
 seed's historical observation. The future successor receipts, not amended seed
 commits, must carry the corrections and fresh evidence.
 
+The pre-seed red transcripts prove that fifteen named tests preceded successful
+behavior, but their initial output is dominated by absent modules or undefined
+entry points rather than fifteen independently reached semantic boundary
+refusals. They are chronology evidence, not a substitute for fresh successor
+hostile tests, and are not counted as fifteen semantic results.
+
 ## 4. Baseline versus successor evidence
 
 | Layer | Identity | Standing |
@@ -90,7 +96,16 @@ classified in `LCI0-IMPLEMENTATION-DIVERGENCES.md`.
 These are discovery results. They are not successor results and do not support
 a final PASS.
 
-## 5. Three narrow authorial returns
+Procedural disclosure: the two seed merge commands initially ran in the shared
+infrastructure worktree because of an incorrect current directory. The exact
+merge objects `376f870e7b47c054f5cae4958259ef5a60ccf1cf` and
+`71f7cfc5ebe392d59d820203dad11cc2e86a0542` were preserved without amendment;
+only branch/worktree pointers were corrected, as retained in reflogs, so the
+integration branch kept `71f7cfc...` and the infrastructure branch returned to
+`ab353b4...`. This is disclosed as a procedural deviation, not described as
+perfect worktree isolation.
+
+## 5. Four narrow authorial returns
 
 ### AR-1 — N012 universal/symbolic matcher composition
 
@@ -119,11 +134,23 @@ The `LCI0-E5-COVERAGE-INSUFFICIENT` expected result contains an
 canonical input. The failure tuple remains determinate; that exact expected
 context is BLOCKED.
 
+### AR-4 — P029 changes an explicitly bound source artifact
+
+Packet: `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md`
+
+Both P029 source inputs explicitly bind legacy source `.../v1/1`, while the
+expected corpus-r4 right result and its lineage bind `.../v1/2`. LCI/0 §23.3
+requires binding and linking the supplied source artifact, and no reviewed rule
+authorizes this replacement. Both successors preserve the explicit input and
+therefore expose the same exact-result conflict. The P029 right-result path is
+BLOCKED; unaffected migration fixtures remain executable and inert.
+
 | Requested authorial response | Status |
 | --- | --- |
 | Exact governing rule/order for AR-1 | PENDING |
 | Exact category/code/stage/path documents for AR-2 orientations | PENDING |
 | Input binding or pure derivation/revised expectation for AR-3 | PENDING |
+| Corrected binding/result or explicit source-rebinding rule for AR-4 | PENDING |
 | Successor normative version and replacement hashes | PENDING |
 | Permanent regression-vector identities | PENDING |
 
@@ -158,7 +185,7 @@ suite was green.
 | Evidence | Required | Final observed | Status |
 | --- | ---:| ---:| --- |
 | Registry definitions | 675 | PENDING | PENDING |
-| Unique vector IDs | 215 | PENDING | BLOCKED for two exact expected paths |
+| Unique vector IDs | 215 | PENDING | BLOCKED for three exact expected paths |
 | P001–P030 | 30 | PENDING | PENDING |
 | N001–N032 | 32 | PENDING | BLOCKED for N012 |
 | Official embedded canonical documents | 1,105 | PENDING | PENDING |

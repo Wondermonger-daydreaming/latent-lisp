@@ -459,3 +459,53 @@ oracle.
 - Permanent regression-vector status: the existing input and expected hashes
   are permanent conflict witnesses. The vector is blocked, not passed, failed,
   skipped, or N/A.
+
+## LCI0-DIV-016 — P029 changes an explicitly bound migration source artifact
+
+- Status: independently confirmed fixture/specification conflict; the right
+  result of `LCI0-P029` is blocked for authorial disposition.
+- Sources: LCI/0 §23.3 steps 1 and 13 and §§23.5, 24.5 P029; Errata E9;
+  Fixture Package Specification §9; registry fixtures
+  `legacy-source.corpus-r4` and `migration-result.corpus-r4`; vector
+  `LCI0-P029`.
+- Minimal input witness: `LCI0-P029` input, 6,166 bytes, SHA-256
+  `3dd8e067335f659062ba4d9df3945351be693f4016f27c8366c56c61561e017c`.
+  Both its `left-source` and `right-source` records explicitly bind
+  `source-artifact` object-id
+  `object/artifact/legacy-source/v1/1`.
+- Expected witness: `LCI0-P029` expected result, 54,022 bytes, SHA-256
+  `de95395165f2e7e170989246caedfe0e278027bc9d90a44a785e18059cf235a7`.
+  The left result preserves `.../v1/1`, while the right result's `source` and
+  migration-lineage `source` are both `object/artifact/legacy-source/v1/2`.
+- Registry corroboration: `legacy-source.corpus-r4` is 2,836 bytes, SHA-256
+  `fae0d97d77f291a6cf5fb54be0d48422d656c976e30dcd87d05e903939669632`
+  and explicitly carries `.../v1/1`; `migration-result.corpus-r4` is 26,660
+  bytes, SHA-256
+  `001de18804d4826f10106efd9ba0979d372dada832cda854466c2b3681062e19`
+  and carries `.../v1/2` in both source positions.
+- Common Lisp successor result: independently constructs the right migration
+  result from the validated input and preserves `.../v1/1`, disagreeing with
+  the expected right result at `outputs/right-result/source/material/object-id`.
+- Python successor result: independently constructs the right migration result
+  from the validated input and preserves `.../v1/1`, with the same first
+  disagreement.
+- Expected fixture result: the frozen expected document requires `.../v1/2`,
+  but no package rule authorizes replacing the explicitly bound source
+  artifact based on corpus revision, fixture name, pair position, or another
+  inferred coordinate. LCI/0 §23.3 instead requires the exact source bytes to
+  be bound and the receipt to link that source artifact to the new occurrence.
+- Classification: fixture-package/specification ambiguity. Constructing
+  `.../v1/2` would be semantic inference from package-local expectations;
+  preserving `.../v1/1` fails the exact frozen expected document.
+- May implementation continue: yes on all unaffected migration fixtures. The
+  `LCI0-P029` right-result path is blocked and cannot be counted as pass,
+  failure, skip, or N/A.
+- Proposed disposition: authorial closure must either correct the
+  `legacy-source.corpus-r4`/P029 input source-artifact to `.../v1/2`, revise
+  the expected migration result to preserve `.../v1/1`, or publish an exact
+  source-rebinding rule with its identity and loss/lineage consequences. See
+  `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md`.
+- Permanent regression-vector status: the two registry documents and the
+  P029 input/expected hashes are permanent conflict witnesses. Both
+  implementations retain a regression proving that explicit source binding
+  wins over fixture-name or corpus-revision inference until authorial closure.

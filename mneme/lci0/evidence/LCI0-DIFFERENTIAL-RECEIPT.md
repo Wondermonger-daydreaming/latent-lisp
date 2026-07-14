@@ -2,7 +2,7 @@
 
 Date: 2026-07-14
 
-Status: not converged; successor corrections and three narrow authorial returns required
+Status: not converged; successor corrections and four narrow authorial returns required
 
 ## Bound inputs and implementations
 
@@ -70,6 +70,13 @@ The E5 expected coverage context introduces a tenant scope absent from its
 canonical input. Its exact document is likewise blocked with a separate
 authorial-return packet; the failure tuple itself remains determinate.
 
+Successor removal of whole-result migration lookup exposed a fourth conflict:
+both P029 source inputs bind `object/artifact/legacy-source/v1/1`, while the
+expected corpus-r4 right result and lineage use `.../v1/2`. Both language
+successors preserve the explicit input source under LCI/0 §23.3. The exact
+right-result comparison is blocked by
+`LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md`.
+
 ## Retained raw evidence
 
 Directory:
@@ -94,8 +101,9 @@ contains them and the cleanup commit preserves recoverability in history.
 Host ambient-state perturbations and randomized/property generation were not
 run because the exact fixture baseline did not converge. They are not passes,
 skips, or N/A. A successor phase may run them only after every non-blocked exact
-fixture converges, excluding solely the authorial-blocked N012 matcher witness
-by exact ID.
+fixture converges, excluding solely the three exact authorial-blocked vector
+witnesses N012, E5-COVERAGE-INSUFFICIENT, and P029 by exact request ID, plus
+the separately declared 38 relation-path observations.
 
 ## Command
 

@@ -63,7 +63,7 @@ reached. Deferred work is not a pass, failure, skip, or N/A.
 ## Property-generation gate and record
 
 Deterministic randomized/property generation may begin only after every
-non-blocked exact fixture has converged. The three authorial-blocked paths must
+non-blocked exact fixture has converged. The four authorial-blocked classes must
 be excluded by exact witness identity and reported as blocked, never silently
 removed from totals.
 
@@ -98,6 +98,7 @@ removed from totals.
 | `LCI0-AUTHORIAL-RETURN-PACKET.md` | N012 universal/symbolic direct matcher composition | BLOCKED; retain exact witness; do not generate an implementation-local oracle |
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | 38 unpinned companion paths | BLOCKED for exact path comparison; relation values remain eligible for perturbation |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | E5 expected-only coverage context | BLOCKED for exact expected document; failure tuple and input-derived invariants remain eligible |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | P029 right-result source replacement | BLOCKED for exact expected document; explicit-source preservation and all unaffected migration invariants remain eligible |
 
 ## Cleanup and publication fill-in
 

@@ -2,7 +2,8 @@
 
 Date opened: 2026-07-14
 
-Status: DRAFT; successor verification PENDING; three authorial paths BLOCKED
+Status: DRAFT; successor verification PENDING; four authorial-return classes
+BLOCKED
 
 This is a fill-forward transcript for the final integration-successor run. It
 contains verified preflight, immutable-seed, and baseline facts, but it is not a
@@ -47,6 +48,17 @@ Specifically:
 
 The accurate claim is: independently seeded implementations under shared
 normative infrastructure, with procedural—not OS-enforced—isolation.
+
+### Pre-seed red-evidence limitation
+
+The preserved red transcripts establish that the fifteen named boundary tests
+were present before successful LCI behavior. Their initial failures, however,
+are dominated by missing modules or undefined entry points; they do not show
+fifteen independently reached semantic refusals at the relevant boundaries.
+They therefore establish implementation chronology, not complete boundary-level
+red semantics. Fresh successor hostile tests must supply that missing evidence,
+and the historical red transcripts must not be counted as fifteen semantic
+conformance passes or failures.
 
 ## 2. Repository, host, and authority record
 
@@ -93,6 +105,25 @@ revision.
 | Python successor branch | PENDING | PENDING |
 | Integration successor branch | PENDING | PENDING |
 | Main modified or merged | Must be no | PENDING confirmation |
+
+### Procedural worktree correction
+
+The two immutable-seed merge commands were initially issued from the shared
+infrastructure worktree rather than the newly created integration worktree.
+The resulting merge objects were not amended or recreated:
+
+- `376f870e7b47c054f5cae4958259ef5a60ccf1cf` has parents shared
+  infrastructure `ab353b4b7f30d5e46323d274862e6c1212ebf514` and Common Lisp
+  seed `b3d28bc49c3b015096cb04c6ad08c19829f511a9`;
+- `71f7cfc5ebe392d59d820203dad11cc2e86a0542` has parents `376f870...`
+  and Python seed `4ec2e519d05aeacd2412cb8aedc5f76bde702571`.
+
+At 2026-07-14 03:43:28 -0300 the branch pointers were corrected so
+`codex/lci0-integration` retained `71f7cfc...` and
+`codex/lci0-infrastructure` returned to `ab353b4...`. The reflogs retain the
+merge and correction entries. This was a worktree/cwd procedural deviation,
+not a content change, rewritten seed, or rewritten merge, and it remains
+disclosed for audit.
 
 ## 5. Baseline differential transcript
 
@@ -180,7 +211,7 @@ normative/fixture content, and `mneme/verify-all.sh`.
 | Supplementary relation documents | PENDING | PENDING | Required 458 | PENDING |
 | Supplementary nested E1 documents | PENDING | PENDING | Required 30 | PENDING |
 | Total recursive corpus | PENDING | PENDING | Required 1,593 | PENDING |
-| Unique vector IDs | PENDING | PENDING | Required 215 | BLOCKED for two exact vector documents |
+| Unique vector IDs | PENDING | PENDING | Required 215 | BLOCKED for three exact vector documents |
 | Required P001–P030 | PENDING | PENDING | Required 30 | PENDING |
 | Required N001–N032 | PENDING | PENDING | Required 32 | BLOCKED for N012 |
 | Relation values | PENDING | PENDING | Required 458 | PENDING values; 38 paths BLOCKED |
@@ -231,6 +262,7 @@ See `LCI0-V1-MIGRATION-FIXTURE-RECEIPT.md` for the detailed fill-in table.
 | `LCI0-AUTHORIAL-RETURN-PACKET.md` | N012 universal/symbolic direct matcher composition | BLOCKED; other 214 vectors may continue | PENDING |
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | 38 unpinned companion failure paths | BLOCKED; 458 relation values remain testable | PENDING |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | Expected-only E5 `actual-coverage-scope` context | BLOCKED; failure tuple remains testable | PENDING |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | P029 right-result source changes explicit `.../v1/1` to expected `.../v1/2` | BLOCKED; other migration fixtures remain testable | PENDING |
 
 No implementation is an oracle. No missing semantic rule may be resolved by
 copying the other implementation. These blocked paths are not N/A and are not
@@ -313,7 +345,7 @@ standalone preimplementation bundle are not detritus.
 
 ## 17. Current final-status line
 
-`BLOCKED — not eligible for independent implementation audit while three
+`BLOCKED — not eligible for independent implementation audit while four
 authorial-return packets and successor/final evidence remain unresolved.`
 
 This line may be replaced only after authorial closure, non-blocked exact
