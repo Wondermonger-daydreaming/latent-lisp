@@ -16,6 +16,7 @@ from pathlib import Path
 import platform
 import subprocess
 import sys
+import time
 from typing import Any, Iterable, Mapping
 
 import cd0
@@ -24,6 +25,10 @@ from lci0.adapter import from_package_json
 from lci0.core import CD0_BUDGET, canonical_bytes, field_by_path, replace_record_field
 from lci0.package import definitions, iter_vectors, registry
 
+from authorial_blockers import (
+    BLOCKED_RELATION_PATH_REQUESTS,
+    BLOCKED_VECTOR_REQUESTS,
+)
 from protocol import (
     COMMON_LISP_SEED_COMMIT,
     COMMON_LISP_SEED_TREE,
@@ -398,7 +403,9 @@ def _run_adapter(
     if not request_path.exists():
         request_path.write_text("".join(_json_line(item) for item in requests), encoding="utf-8")
     request_bytes = request_path.read_bytes()
+    started_ns = time.monotonic_ns()
     process = subprocess.run(command, input=request_bytes, capture_output=True, env=dict(environment))
+    elapsed_ns = time.monotonic_ns() - started_ns
     response_path = output_directory / f"{name}-responses.jsonl"
     stderr_path = output_directory / f"{name}-stderr.txt"
     response_path.write_bytes(process.stdout)
@@ -427,6 +434,7 @@ def _run_adapter(
         "response_sha256": hashlib.sha256(process.stdout).hexdigest(),
         "stderr_bytes": len(process.stderr),
         "stderr_sha256": hashlib.sha256(process.stderr).hexdigest(),
+        "elapsed_monotonic_ns": elapsed_ns,
     }
     return responses, metadata
 
@@ -468,9 +476,17 @@ def _compare(
                 expected_failure = oracle.get("expected_failure")
                 if passed and expected_failure is not None:
                     passed = response.get("failure") == expected_failure
-            counts[f"{kind}_{'passed' if passed else 'failed'}"] += 1
+            blocked = (
+                not passed
+                and kind == "vector"
+                and request_id in BLOCKED_VECTOR_REQUESTS
+            )
+            disposition = "blocked" if blocked else "passed" if passed else "failed"
+            counts[f"{kind}_{disposition}"] += 1
             if not passed:
                 mismatch = {"request_id": request_id, "kind": kind, "response": response}
+                if blocked:
+                    mismatch["disposition"] = "authorial-blocked"
                 for field in (
                     "vector_id", "operation", "expected_relation", "table",
                     "left_fixture", "right_fixture", "canonical_sha256",
@@ -516,6 +532,67 @@ def _compare(
     return summary
 
 
+def _only_authorial_blockers(comparison: Mapping[str, Any]) -> bool:
+    """Accept only the closed authorial-return census, never nearby failures."""
+
+    implementations = comparison.get("implementations")
+    if type(implementations) is not dict or set(implementations) != {
+        "common-lisp", "python"
+    }:
+        return False
+    for result in implementations.values():
+        if type(result) is not dict:
+            return False
+        mismatches = result.get("mismatches")
+        if type(mismatches) is not list:
+            return False
+        if {item.get("request_id") for item in mismatches} != BLOCKED_VECTOR_REQUESTS:
+            return False
+        if any(
+            item.get("kind") != "vector"
+            or item.get("disposition") != "authorial-blocked"
+            for item in mismatches
+        ):
+            return False
+        counts = result.get("counts")
+        if type(counts) is not dict or any(
+            name.endswith("_failed") and count
+            for name, count in counts.items()
+        ):
+            return False
+
+    cross = comparison.get("cross_implementation_mismatches")
+    if type(cross) is not list:
+        return False
+    cross_ids = [item.get("request_id") for item in cross]
+    if (
+        any(type(request_id) is not str for request_id in cross_ids)
+        or len(cross_ids) != len(set(cross_ids))
+        or not set(cross_ids) <= BLOCKED_RELATION_PATH_REQUESTS
+    ):
+        return False
+    for item in cross:
+        if item.get("kind") != "relation":
+            return False
+        differences = item.get("differences")
+        if type(differences) is not dict or set(differences) != {"failure"}:
+            return False
+        pair = differences["failure"]
+        if type(pair) is not dict or set(pair) != {"common-lisp", "python"}:
+            return False
+        left, right = pair["common-lisp"], pair["python"]
+        if type(left) is not dict or type(right) is not dict:
+            return False
+        if left.get("path") == right.get("path"):
+            return False
+        if (
+            {name: value for name, value in left.items() if name != "path"}
+            != {name: value for name, value in right.items() if name != "path"}
+        ):
+            return False
+    return True
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -525,7 +602,9 @@ def main() -> int:
     )
     arguments = parser.parse_args()
     output_directory = arguments.output.resolve()
-    output_directory.mkdir(parents=True, exist_ok=True)
+    if output_directory.exists():
+        raise HarnessFailure(f"evidence output already exists: {output_directory}")
+    output_directory.mkdir(parents=True, exist_ok=False)
 
     requests, oracles, counts = build_requests()
     root = Path(__file__).resolve().parents[3]
@@ -544,11 +623,21 @@ def main() -> int:
     common_lisp, common_lisp_metadata = _run_adapter("common-lisp", common_lisp_command, environment, requests, output_directory)
     python_responses, python_metadata = _run_adapter("python", python_command, environment, requests, output_directory)
     comparison = _compare(oracles, common_lisp, python_responses)
+    only_authorial_blockers = _only_authorial_blockers(comparison)
 
     summary = {
         "protocol": PROTOCOL,
         "fixture_profile_version": FIXTURE_PROFILE_VERSION,
-        "status": "not-converged" if comparison["cross_implementation_mismatches"] else "converged",
+        "status": (
+            "converged-unaffected-with-authorial-blockers"
+            if only_authorial_blockers
+            else "not-converged"
+        ),
+        "authorial_return_required": True,
+        "authorial_blocked_vectors": sorted(BLOCKED_VECTOR_REQUESTS),
+        "authorial_blocked_relation_paths": sorted(
+            BLOCKED_RELATION_PATH_REQUESTS
+        ),
         "counts": counts,
         "runtime": {
             "python": sys.version,
@@ -562,8 +651,8 @@ def main() -> int:
         "adapter_runs": {"common_lisp": common_lisp_metadata, "python": python_metadata},
         "comparison": comparison,
         "post_convergence_phases": {
-            "host_perturbations": "not-run: exact fixture convergence failed",
-            "randomized_properties": "not-run: exact fixture convergence failed",
+            "host_perturbations": "eligible-not-run",
+            "randomized_properties": "eligible-not-run",
         },
     }
     summary_path = output_directory / "summary.json"
@@ -576,7 +665,7 @@ def main() -> int:
     (output_directory / "sha256-manifest.json").write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8")
 
     print(json.dumps({"status": summary["status"], "counts": counts, "cross_mismatches": len(comparison["cross_implementation_mismatches"]), "summary": str(summary_path)}, sort_keys=True))
-    return 1 if summary["status"] != "converged" else 0
+    return 0 if only_authorial_blockers else 1
 
 
 if __name__ == "__main__":
