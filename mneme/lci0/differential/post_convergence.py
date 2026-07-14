@@ -696,9 +696,9 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
             datum,
             "success",
             output_identifiers=(
-                (("policy-a-decision", "outcome"), "reject-target-kind"),
-                (("policy-b-decision", "outcome"), "accept-limited-testimony"),
-                (("policy-b-decision", "support-class"), "limited-testimony"),
+                (("policy-a-decision", "decision"), "reject-target-kind"),
+                (("policy-b-decision", "decision"), "accept-limited-testimony"),
+                (("policy-b-decision", "testimony-class"), "limited-testimony"),
             ),
         )
     )
