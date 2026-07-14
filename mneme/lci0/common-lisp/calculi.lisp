@@ -24,22 +24,41 @@
 (defun %relation-id (name)
   (make-id '("lisp-plus" "lci" "0" "relation") (list name)))
 
-(defun scope-relation (left right)
+(defun %scope-finite-member-count (scope)
+  (let ((expression (%scope-expression scope)))
+    (if (and (string= (exact-form-name expression) "region-set")
+             (sequence-datum-p (record-field-named expression "members")))
+        (sequence-datum-length (record-field-named expression "members"))
+        0)))
+
+(defun %enforce-scope-relation-work (left right)
+  (let ((work (+ 2 (%scope-finite-member-count left)
+                   (%scope-finite-member-count right))))
+    (when (> work 4096)
+      (lci-fail "resource-refusal" "ScopeRelationWorkExceeded"
+                (or *lci-resource-phase* "matching") :path '("left-scope"))))
+  t)
+
+(defun %scope-relation-unbudgeted (left right)
   (validate-scope left :path '("left"))
   (validate-scope right :path '("right"))
+  (%enforce-scope-relation-work left right)
   (unless (%same-calculus-p left right)
     (lci-fail "relation-undetermined" "ScopeIncompatible" "target-relation"
               :path '("right")))
   (when (equal-datum left right)
-    (return-from scope-relation (%relation-id "equal")))
+    (return-from %scope-relation-unbudgeted (%relation-id "equal")))
   (let ((lf (%scope-form left)) (rf (%scope-form right)))
     (cond
+      ((string= lf "universal") (%relation-id "wider"))
+      ((string= rf "universal") (%relation-id "narrower"))
       ((or (string= lf "symbolic-predicate")
            (string= rf "symbolic-predicate"))
        (lci-fail "relation-undetermined" "ScopeRelationUnknown" "target-relation"
                  :path '("right")))
-      ((string= lf "universal") (%relation-id "wider"))
-      ((string= rf "universal") (%relation-id "narrower"))
+      ((not (eq (string= lf "region-set") (string= rf "region-set")))
+       (lci-fail "relation-undetermined" "ScopeRelationUnknown" "target-relation"
+                 :path '("right")))
       ((and (string= lf "organization")
             (member rf '("department" "tenant") :test #'string=)
             (equal-datum (%scope-object left "organization")
@@ -66,6 +85,17 @@
       ((and (string= lf "opaque-token") (string= rf "opaque-token"))
        (%relation-id "disjoint"))
       (t (%relation-id "disjoint")))))
+
+(defun scope-relation (left right)
+  (if *lci-resource-check-active*
+      (%scope-relation-unbudgeted left right)
+      (let ((*lci-resource-check-active* t)
+            (*lci-resource-phase* "matching"))
+        (enforce-lci-structural-budgets
+         (make-fixture-record (list "left-scope" left)
+                              (list "right-scope" right))
+         "matching")
+        (%scope-relation-unbudgeted left right))))
 
 (defun %temporal-model (time) (record-field-named time "temporal-model"))
 (defun %temporal-expression (time) (record-field-named time "expression"))
@@ -98,26 +128,44 @@
       (and (or (< os is) (and (= os is) (or osc (not isc))))
            (or (> oe ie) (and (= oe ie) (or oec (not iec))))))))
 
-(defun temporal-relation (left right)
+(defun %temporal-form-work (time)
+  (let ((form (%temporal-form time)))
+    (+ 1 (cond ((string= form "instant") 1)
+               ((string= form "interval") 4)
+               ((string= form "periodic-set") 2)
+               ((member form '("symbolic" "opaque-token" "relative")
+                        :test #'string=) 1)
+               (t 0)))))
+
+(defun %enforce-temporal-relation-work (left right)
+  (let ((work (+ 1 (%temporal-form-work left) (%temporal-form-work right))))
+    (when (> work 4096)
+      (lci-fail "resource-refusal" "TemporalRelationWorkExceeded"
+                (or *lci-resource-phase* "matching")
+                :path '("left-subject-time"))))
+  t)
+
+(defun %temporal-relation-unbudgeted (left right)
   (validate-subject-time left :path '("left"))
   (validate-subject-time right :path '("right"))
+  (%enforce-temporal-relation-work left right)
   (unless (equal-datum (%temporal-model left) (%temporal-model right))
     (lci-fail "relation-undetermined" "UnsupportedTemporalModel" "subject-time"
               :path '("right" "temporal-model")))
   (when (equal-datum left right)
-    (return-from temporal-relation (%relation-id "equal")))
+    (return-from %temporal-relation-unbudgeted (%relation-id "equal")))
   (let ((lf (%temporal-form left)) (rf (%temporal-form right)))
+    (when (or (string= lf "atemporal") (string= rf "atemporal"))
+      (return-from %temporal-relation-unbudgeted (%relation-id "incompatible")))
     (when (or (string= lf "symbolic") (string= rf "symbolic"))
       (lci-fail "relation-undetermined" "AdmissibilityUndetermined" "subject-time"
                 :path '("left")))
-    (when (or (string= lf "atemporal") (string= rf "atemporal"))
-      (return-from temporal-relation (%relation-id "disjoint")))
     (when (and (string= lf "periodic-set") (string= rf "periodic-set"))
       (let ((lm (%temporal-int left "modulus"))
             (lr (%temporal-int left "remainder"))
             (rm (%temporal-int right "modulus"))
             (rr (%temporal-int right "remainder")))
-        (return-from temporal-relation
+        (return-from %temporal-relation-unbudgeted
           (%relation-id (if (and (= lm rm) (= lr rr)) "equal" "disjoint")))))
     (let ((li (%interval-view left)) (ri (%interval-view right)))
       (unless (and li ri)
@@ -132,6 +180,17 @@
                 ((%interval-contains-p li ri) (%relation-id "contains"))
                 ((%interval-contains-p ri li) (%relation-id "contained-by"))
                 (t (%relation-id "overlap"))))))))
+
+(defun temporal-relation (left right)
+  (if *lci-resource-check-active*
+      (%temporal-relation-unbudgeted left right)
+      (let ((*lci-resource-check-active* t)
+            (*lci-resource-phase* "matching"))
+        (enforce-lci-structural-budgets
+         (make-fixture-record (list "left-subject-time" left)
+                              (list "right-subject-time" right))
+         "matching")
+        (%temporal-relation-unbudgeted left right))))
 
 (defun dataset-slice-relation (left right)
   (validate-dataset-slice left)

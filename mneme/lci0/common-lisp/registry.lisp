@@ -84,8 +84,8 @@ the 151 MiB registry as one host object."
            (when (string= (jget definition "fixture_id") fixture-id)
              (setf (gethash fixture-id *registry-definition-cache*) definition)
              (return-from found definition))))
-        (lci-fail "fixture-package-refusal" "MissingRegistryDefinition"
-                  "fixture-registry"))))
+        (internal-integrity-fail "fixture-package" "MissingRegistryDefinition"
+                                 "fixture-registry"))))
 
 (defun registry-datum (fixture-id &optional (root *fixture-root*))
   (fixture-json-to-datum
@@ -190,19 +190,19 @@ the 151 MiB registry as one host object."
          (checksum (jget document "sha256_checksum_of_canonical_octets"
                          (jget document "sha256" nil))))
     (unless (string= (octets-to-hex encoded) hex)
-      (lci-fail "fixture-package-refusal" "CanonicalOctetsMismatch"
-                "fixture-corpus"))
+      (internal-integrity-fail "fixture-package" "CanonicalOctetsMismatch"
+                               "fixture-corpus"))
     (when (and count (/= count (octets-length encoded)))
-      (lci-fail "fixture-package-refusal" "CanonicalByteCountMismatch"
-                "fixture-corpus"))
+      (internal-integrity-fail "fixture-package" "CanonicalByteCountMismatch"
+                               "fixture-corpus"))
     (when (and checksum (not (string= checksum (sha256-hex (octets-copy encoded)))))
-      (lci-fail "fixture-package-refusal" "CanonicalChecksumMismatch"
-                "fixture-corpus"))
+      (internal-integrity-fail "fixture-package" "CanonicalChecksumMismatch"
+                               "fixture-corpus"))
     (let ((decoded (decode-exact (octets-copy recorded))))
       (unless (and (equal-datum decoded expected-abstract)
                    (string= (octets-to-hex (canonical-octets decoded)) hex))
-        (lci-fail "fixture-package-refusal" "CanonicalRoundTripMismatch"
-                  "fixture-corpus")))
+        (internal-integrity-fail "fixture-package" "CanonicalRoundTripMismatch"
+                                 "fixture-corpus")))
     t))
 
 (defun %json-object-p (value)
@@ -250,8 +250,9 @@ from being counted as another document."
                 (decoded (decode-exact (octets-copy octets))))
            (unless (and expectation (equal-datum decoded expectation)
                         (string= (octets-to-hex (canonical-octets decoded)) hex))
-             (lci-fail "fixture-package-refusal"
-                       "NestedCanonicalRoundTripMismatch" "fixture-corpus"))
+             (internal-integrity-fail
+              "fixture-package" "NestedCanonicalRoundTripMismatch"
+              "fixture-corpus"))
            (incf count)))))
     count))
 
@@ -295,8 +296,9 @@ documents in the frozen package.  Returns a closed count plist for evidence."
                    (= official 1105) (= relation-documents 458)
                    (= nested-e1-documents 30) (= supplementary 488)
                    (= total 1593) (= magic-count total))
-        (lci-fail "fixture-package-refusal" "FixtureCorpusCensusMismatch"
-                  "fixture-corpus"))
+        (internal-integrity-fail "fixture-package"
+                                 "FixtureCorpusCensusMismatch"
+                                 "fixture-corpus"))
       (list :registry-definitions definitions
             :vectors vectors
             :official-documents official
