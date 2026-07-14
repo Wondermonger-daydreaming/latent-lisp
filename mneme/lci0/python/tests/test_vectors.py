@@ -10,11 +10,15 @@ from lci0.runner import run_request
 from lci0.vector import comparison_signature, execute_row, expected_outcome
 
 
+# The four 0.1 vector expectations superseded by fixture overlay 0.2
+# (LCI0-IMPLEMENTATION-CLOSURE-RULING.md).  Their frozen 0.1 expected
+# documents are historical; the ruled successor expectations are exercised
+# in test_closure_vectors.py against the verified overlay.
 BLOCKED_VECTOR_IDS = {
-    "LCI0-N012",  # vector pre-check conflicts with the frozen scope relation table
-    "LCI0-E5-COVERAGE-INSUFFICIENT",  # expected context contains unbound tenant/a
-    "LCI0-P024",  # expected revival invents nonidentity metadata absent from its input
-    "LCI0-P029",  # explicit source-artifact v1/1 conflicts with expected lineage source v1/2
+    "LCI0-N012",  # superseded: LCI0-AC-001-N012-MATCHER
+    "LCI0-E5-COVERAGE-INSUFFICIENT",  # superseded: LCI0-AC-003-E5-COVERAGE-CONTEXT
+    "LCI0-P024",  # superseded: LCI0-AC-010-P024-INERT-REVIVAL
+    "LCI0-P029",  # superseded: LCI0-AC-004-P029-SOURCE-PRESERVATION
 }
 
 
