@@ -45,8 +45,9 @@ Status vocabulary in result columns is deliberately bounded:
   assertion for the affected path. It is not a pass, failure, skip, or N/A.
 - `PASS-PROTECTED` is used only for the independently rerun CD/0 or Mneme/v1
   nonregression floors.
-- `PENDING` is retained only for archive, cleanup, publication, or independent
-  reviewer evidence not yet available when this ledger was refreshed.
+- `PENDING` is retained only for publication/read-back or an external
+  independent reviewer disposition not yet available when this ledger was
+  refreshed.
 
 ## Core implementation crosswalk
 
@@ -96,8 +97,8 @@ Status vocabulary in result columns is deliberately bounded:
 | PROPERTY-1 | Add deterministic randomized/property generation only after exact non-blocked fixture convergence | Python seed reports 256 cases at seed `0x4C434930` | final6: 329 deterministic cases, seed `0x4C434930`, 1,974 adapter requests; 104 failure-coordinate and 14 result-coordinate cases blocked | CONVERGED-UNAFFECTED / BLOCKED |
 | NONREG-1 | Preserve frozen CD/0 source, artifacts, canonical octets, and suites | Preflight and seed receipts | Phase 0 PASS; CL 2,633 assertions/3 N/A; Python 167/167; CD/0 differential 467/codec, zero issues; protected objects unchanged | PASS-PROTECTED |
 | NONREG-2 | Preserve existing v1 and production Mneme behavior; introduce no live authority/warrant object | Preflight and seed receipts | `mneme/verify-all.sh` 6/6; protected production objects unchanged; no live system introduced | PASS-PROTECTED |
-| EVIDENCE-1 | Produce checksummed reproducible evidence archive | Common Lisp seed archive only | Final integration archive members, bytes, SHA-256, deterministic rebuild comparison, and manifest | PENDING |
-| CLEANUP-1 | Commit raw transcripts and archive before deleting safe loose detritus | Baseline raw files are retained in Git history | Record raw-evidence commit, archive commit, cleanup commit, deletion inventory, and post-clean tree audit | PENDING |
+| EVIDENCE-1 | Produce checksummed reproducible evidence archive | Common Lisp seed archive only | Commit `37cdf0a...`; 180 members; 9,573,988 bytes; SHA-256 `afad708a...`; deterministic rebuild and extracted-manifest verification | COMPLETE-ARCHIVED |
+| CLEANUP-1 | Commit raw transcripts and archive before deleting safe loose detritus | Baseline raw files are retained in Git history | Commit `e21ef1a...`; 63 recoverable loose files / 232,093,546 bytes removed after archive commit; compact summaries/manifests retained | COMPLETE-CLEAN |
 | PUBLISH-1 | Push successor branches non-force and verify remote read-back without merging main | No final publication claim exists | Atomic/non-force push command, remote object IDs, read-back fetch, branch protection observation | PENDING |
 | AUDIT-1 | Fresh independent implementation audit after convergence and evidence completion | `LCI0-CORRECTION-VERIFICATION-AUDIT.md` records a separately tasked scope-limited correction audit; no external reviewer PASS exists | All six prior defect families closed; eight cross-language hostile witnesses exact; overall conformance cannot close before authorial returns | PASS-CORRECTION-SCOPE / BLOCKED-OVERALL |
 
@@ -126,7 +127,7 @@ Status vocabulary in result columns is deliberately bounded:
 | Current raw exact/post evidence commit/tree | `7ff074fdc234d826a113b0beb5e36b490d94b579` / `3b6834114f8c1df4f8810b4a56f66f0bf66de8e2` |
 | Superseded raw r3/final5 commit/tree | `041d53740165a122e27b08bf2cb097f0bd391161` / `ba00e2837cad7f107d846377bfbe33601802665f` |
 | Raw nonregression evidence commit/tree | `e552346123a35225023f5b33d8f288c7064e11da` / `62c405b0358a949c5590dbcc55b50c52a515ec8c` |
-| Exact changed-file inventory | Language inventories are recorded in the final transcript; final documentation/archive additions remain PENDING |
+| Exact changed-file inventory | Language inventories are recorded in the final transcript; Git name-status binds all documentation/archive/cleanup paths; final publication inventory will include the read-back receipt |
 | Successor runtime versions | SBCL 2.4.6; CPython 3.11.14; Linux 6.18.33.2 WSL2 |
 | Official/supplementary corpus counts | 1,105 official + 488 supplementary = 1,593 per implementation; all reproduced |
 | Vector and differential request counts | 2,295 requests/implementation; 4,590 responses; vectors 211/215 exact + 4 BLOCKED; relations 420/458 + 38 paths BLOCKED; hostile 21/29 + 8 BLOCKED |
@@ -134,8 +135,8 @@ Status vocabulary in result columns is deliberately bounded:
 | Divergence ledger closure | All implementation/harness defects on unaffected paths resolved; ten authorial packets remain BLOCKED |
 | CD/0 nonregression | PASS-PROTECTED |
 | v1 nonregression | PASS-PROTECTED, 6/6 |
-| Evidence archive members/bytes/SHA-256 | PENDING |
-| Cleanup commit and retained/deleted inventory | PENDING |
+| Evidence archive members/bytes/SHA-256 | 180 / 9,573,988 / `afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa`; source commit `a8bfdbd...`; archive commit `37cdf0a...` |
+| Cleanup commit and retained/deleted inventory | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb`; 63 files / 232,093,546 bytes deleted; nine compact raw summaries/manifests/inventories retained plus archive |
 | Branch publication and remote read-back | PENDING |
 | Independent reviewer PASS | PENDING |
 | Independent audit standing | Corrected unaffected implementation/evidence ready for audit; overall completion BLOCKED pending authorial closure; no reviewer PASS |
@@ -153,4 +154,5 @@ with procedural—not OS-enforced—isolation.
 | Relation and hostile boundaries | all 458 relations and 29 hostile requests per language | BLOCKED | 38 paths and 8 hostile exact results are unpinned; only three blocked cross-language hostile differences remain |
 | Deterministic mutation/host matrix | 329 cases across six adapters plus ten native profiles | BLOCKED | 104 failure-coordinate and 14 result-coordinate cases are deliberately not promoted |
 | Protected CD/0 and v1 behavior | five independent nonregression gates and protected-object comparison | PASS-PROTECTED | finite tests, not a formal proof |
-| Archive/publication/reviewer | not available at this refresh | PENDING | final archive identities, remote read-back, and reviewer disposition |
+| Archive/cleanup | deterministic archive rebuild, full extracted-manifest verification, Git deletion census | COMPLETE | archive source predates its own receipt and cleanup by design; all later identities are recorded outside the archive |
+| Publication/reviewer | not available at this refresh | PENDING | remote read-back and external reviewer disposition |

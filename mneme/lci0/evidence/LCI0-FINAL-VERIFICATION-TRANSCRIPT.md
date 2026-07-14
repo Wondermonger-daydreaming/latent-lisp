@@ -23,7 +23,9 @@ reviewer PASS, merge eligibility, or production authorization.
 | Current exact/post raw transcript commit | `7ff074fdc234d826a113b0beb5e36b490d94b579` | `3b6834114f8c1df4f8810b4a56f66f0bf66de8e2` | Commits complete r4/final6 loose raw transcripts |
 | Superseded r3/final5 raw transcript commit | `041d53740165a122e27b08bf2cb097f0bd391161` | `ba00e2837cad7f107d846377bfbe33601802665f` | Retained audit history; not current evidence |
 | Nonregression raw transcript commit | `e552346123a35225023f5b33d8f288c7064e11da` | `62c405b0358a949c5590dbcc55b50c52a515ec8c` | Refreshes the five protected-floor transcripts after the audit fixes |
-| Documentation/archive/cleanup commits | PENDING | PENDING | Must be filled without rewriting any seed |
+| Corrected documentation | `a8bfdbdc3f10e8c57b1b4a9c14edbea00b9ba270` | `6cefd2f09f30a65ce9d5e81eef756de6aaa0624b` | Detailed relay plus correction-verification audit |
+| Reproducible evidence archive | `37cdf0acbffc6e1f245c1870d9d68fd298151eca` | `fb0b6d765564eb7b155789fda8d8de228859fc10` | Commits archive, receipt, and checksum manifest before cleanup |
+| Archive-covered loose-file cleanup | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb` | `330c0c9aede619891c60a552a6cf745cc9463aeb` | Removes 63 recoverable streams only |
 
 Both successor commits descend from their immutable seeds, and both successor
 commits are ancestors of the tested integration commit. The accurate claim is:
@@ -250,9 +252,9 @@ mneme/lci0/python/tests/test_vectors.py
 Integration added the independent adapter/protocol validation,
 post-convergence harness and host probes, `run-unit-tests.lisp`, archive
 builder/tests, ten authorial packets, divergence/receipt documentation, and
-the exact/post raw artifact directories. The final documentation, archive,
-checksum, cleanup, and publication receipt additions will be bound to their
-own later commits; their identities are PENDING here.
+the exact/post raw artifact directories. Documentation, archive, checksum, and
+cleanup identities are recorded above. Publication/read-back remains the only
+repository-lifecycle item pending in this transcript.
 
 ## 9. Ten authorial returns
 
@@ -284,9 +286,9 @@ and generated detritus → non-force branch publication → remote read-back.
 | Current exact/post loose raw transcripts | committed at `7ff074fdc234d826a113b0beb5e36b490d94b579` |
 | Superseded r3/final5 raw transcripts | retained in history at `041d53740165a122e27b08bf2cb097f0bd391161` |
 | Final nonregression loose raw transcripts | committed at `e552346123a35225023f5b33d8f288c7064e11da` |
-| Reproducible evidence archive members/bytes/SHA-256 | PENDING |
-| Deterministic archive rebuild comparison | PENDING |
-| Loose-file/detritus cleanup commit and deletion inventory | PENDING |
+| Reproducible evidence archive members/bytes/SHA-256 | 180 members; 9,573,988 bytes; `afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa` |
+| Deterministic archive rebuild comparison | PASS: two byte-identical builds; 179 declared payloads, zero missing/mismatched/extra after extraction |
+| Loose-file/detritus cleanup commit and deletion inventory | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb`; 63 archive-covered files, 232,093,546 loose bytes; exact paths in commit name-status |
 | Successor branch publication | PENDING; must be non-force |
 | Remote read-back | PENDING |
 | Independent reviewer PASS | none |

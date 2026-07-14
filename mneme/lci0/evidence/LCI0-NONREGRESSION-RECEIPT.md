@@ -105,11 +105,14 @@ dd19c6d6543a875b2e7e1e6a234ad731ce019f64495b447b317462c63f826327
 
 ## Evidence lifecycle still pending
 
-The final nonregression raw files are committed at
-`e552346123a35225023f5b33d8f288c7064e11da`. Reproducible archive
-bytes/SHA-256, cleanup commit, branch publication, and remote read-back are
-intentionally left for the later archive/publication receipts. No archive or
-remote identity is guessed here.
+The final nonregression raw files were committed at
+`e552346123a35225023f5b33d8f288c7064e11da`. They are preserved in the
+9,573,988-byte reproducible archive with SHA-256
+`afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa`.
+Cleanup commit `e21ef1ae40335c7f8ac00de51edaf0c766f27feb` removes the ten
+loose stdout/stderr streams while retaining `COMMANDS.md`, `SHA256SUMS.txt`,
+and the frozen inventory at the branch tip. Publication and remote read-back
+remain documented separately.
 
 ## Disposition
 

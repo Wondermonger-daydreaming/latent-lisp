@@ -170,16 +170,17 @@ Protected floors were rerun at the final integration boundary:
 
 ## Evidence/archive/publication state
 
-The current exact/post raw files are committed at `7ff074f...`; superseded
+The current exact/post raw files were committed at `7ff074f...`; superseded
 r3/final5 evidence remains at `041d537...`; protected nonregression raw files
-are committed at `e552346...`. The following identities were not yet
-available when this relay was refreshed and are deliberately not invented:
+were refreshed at `e552346...`. Archive commit `37cdf0a...` preserves every
+stream, and cleanup commit `e21ef1a...` removes only recoverable loose copies
+from the final tip.
 
 | Item | Status |
 | --- | --- |
-| Reproducible evidence archive members/bytes/SHA-256 | PENDING |
-| Deterministic archive rebuild | PENDING |
-| Cleanup commit and loose-file deletion inventory | PENDING |
+| Reproducible evidence archive members/bytes/SHA-256 | 180 / 9,573,988 / `afad708a44b467c5945679001c0b49b5dbbfc6990e02a6c43d1fb4485b9a15fa` |
+| Deterministic archive rebuild | PASS; two byte-identical builds and zero extracted manifest discrepancy |
+| Cleanup commit and loose-file deletion inventory | `e21ef1ae40335c7f8ac00de51edaf0c766f27feb`; 63 files / 232,093,546 bytes; exact path list in Git name-status |
 | Non-force branch push and remote read-back | PENDING |
 | Independent reviewer disposition | PENDING; no PASS exists |
 
