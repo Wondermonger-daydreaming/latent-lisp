@@ -61,7 +61,7 @@ def run_request(request: Any) -> dict[str, Any]:
             "status": outcome.status,
         }
         if outcome.failure is not None:
-            result["failure"] = outcome.failure.as_dict()
+            result["failure"] = datum_native(outcome.failure)
         else:
             result["outputs"] = datum_native(outcome.outputs or {})
         return result
@@ -76,7 +76,7 @@ def run_request(request: Any) -> dict[str, Any]:
             },
         }
     except LCIFailure as exc:
-        return {"status": "failure", "failure": exc.as_dict()}
+        return {"status": "failure", "failure": datum_native(exc)}
 
 
 def run_lines(source: TextIO, sink: TextIO) -> int:
