@@ -106,7 +106,19 @@ def _path_datum(path: tuple[str, ...]) -> cd0.Sequence:
 
 
 def _failure_datum(failure: LCIFailure, vector_id: str) -> cd0.Record:
-    context = _fixture_record({"vector-id": cd0.string(vector_id)})
+    if failure.context:
+        context = cd0.record(
+            (
+                _identifier(
+                    FIXTURE_FIELD if name.startswith("fixture-field:") else LCI,
+                    name.split(":", 1)[-1],
+                ),
+                value,
+            )
+            for name, value in failure.context
+        )
+    else:
+        context = _fixture_record({"vector-id": cd0.string(vector_id)})
     return _record(
         LCI,
         {
