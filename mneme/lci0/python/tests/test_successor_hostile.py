@@ -183,6 +183,74 @@ class DeterministicClosedValidationTests(unittest.TestCase):
         self.assertEqual(comparison_signature(actual), comparison_signature(expected))
         self.assertEqual(actual.failure.path, ("location", "basis", "revision"))
 
+    def test_stable_material_kind_namespace_keeps_reference_category(self):
+        reference = fixture_datum("stable-ref.artifact.file.alpha")
+        material = field_by_path(reference, "material")
+        malformed = replace_field(
+            reference,
+            "material",
+            replace_field(
+                material,
+                "kind",
+                cd0.identifier(
+                    FIXTURE + ("hostile",),
+                    ("tag", "fixture-stable-material"),
+                ),
+            ),
+        )
+        with self.assertRaises(LCIFailure) as caught:
+            validate_stable_ref(malformed)
+        self.assertEqual(
+            caught.exception.comparison_key,
+            (
+                "reference-refusal",
+                "InvalidStableReference",
+                "stable-reference",
+                ("material", "kind"),
+            ),
+        )
+
+    def test_package_symbol_spelling_is_an_unresolved_alias(self):
+        reference = fixture_datum("stable-ref.artifact.file.alpha")
+        material = replace_field(
+            field_by_path(reference, "material"),
+            "object-id",
+            cd0.identifier(FIXTURE, ("object", "artifact", "MNEME::FILE")),
+        )
+        with self.assertRaises(LCIFailure) as caught:
+            validate_stable_ref(replace_field(reference, "material", material))
+        self.assertEqual(
+            caught.exception.comparison_key,
+            (
+                "reference-refusal",
+                "UnresolvedAlias",
+                "stable-reference",
+                ("material", "fixture-field:object-id"),
+            ),
+        )
+
+    def test_target_kind_schema_pair_failure_uses_target_schema_stage(self):
+        observed = fixture_datum("warrant-target.observed.file-alpha.exact")
+        executed = fixture_datum("warrant-target.executed.call-17")
+        for target, replacement in (
+            (observed, field_by_path(executed, "target-schema")),
+            (executed, field_by_path(observed, "target-schema")),
+        ):
+            with self.subTest(target_kind=field_by_path(target, "target-kind")):
+                with self.assertRaises(LCIFailure) as caught:
+                    validate_warrant_target(
+                        replace_field(target, "target-schema", replacement)
+                    )
+                self.assertEqual(
+                    caught.exception.comparison_key,
+                    (
+                        "invalid-input",
+                        "TargetSchemaKindMismatch",
+                        "target-schema",
+                        ("target-schema",),
+                    ),
+                )
+
 
 class ActualResourceJurisdictionTests(unittest.TestCase):
     def test_normalization_formula_and_projection_boundary(self):
