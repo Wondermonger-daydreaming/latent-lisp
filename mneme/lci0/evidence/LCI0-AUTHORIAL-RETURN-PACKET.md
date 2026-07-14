@@ -76,5 +76,7 @@ The authorial response should identify:
 - permanent regression witnesses.
 
 Until that response is received, report this exact path as blocked. Do not
-count it as pass, failure, skip, or N/A. The remaining 214 vectors and all
-unaffected relation-table entries retain their independent standing.
+count it as pass, failure, skip, or N/A. Relative to this packet alone, the
+remaining 214 vectors retain their independent standing; across all ten
+current packets the unaffected exact-vector ceiling is 211/215. Unaffected
+relation-table entries likewise retain their independent standing.

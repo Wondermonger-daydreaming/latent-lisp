@@ -60,7 +60,9 @@
          (lisp-plus-lci0::parse-json text))
         "accepted")
     (lisp-plus-lci0:lci-failure (condition)
-      (lisp-plus-lci0:lci-failure-code condition))))
+      (lisp-plus-lci0:lci-failure-code condition))
+    (lisp-plus-lci0::lci-internal-integrity-failure (condition)
+      (lisp-plus-lci0::lci-internal-integrity-failure-code condition))))
 
 (defun lci0-host-probe-rational-results ()
   (mapcar #'lci0-host-probe-adapter-result

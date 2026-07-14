@@ -1,9 +1,10 @@
 """Deterministic post-convergence LCI/0 property and host evidence harness.
 
 The exact fixture differential remains the gate.  This program refuses to
-start randomized work unless that summary contains only the four disclosed
-authorial-return classes: three exact-vector conflicts and 38 unpinned companion
-failure paths.  Blocked observations remain blocked; they are never counted as
+start randomized work unless that summary contains only the disclosed
+authorial-return census: four exact-vector conflicts and 38 unpinned companion
+failure paths, plus one unsupported-policy hostile witness whose exact LCI
+failure tuple is not authorized.  Blocked observations remain blocked; they are never counted as
 pass, skip, or N/A.
 
 Neither implementation supplies expectations for this phase.  Cases are
@@ -32,11 +33,30 @@ from lci0.adapter import from_package_json
 from lci0.core import CD0_BUDGET, canonical_bytes, field_by_path, replace_record_field
 from lci0.package import definitions, fixture_datum, iter_vectors
 
+import run_differential as exact_harness
+
 from authorial_blockers import (
+    BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS,
+    BLOCKED_HOSTILE_REQUESTS,
     BLOCKED_RELATION_PATH_REQUESTS,
     BLOCKED_VECTOR_REQUESTS,
+    EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS,
+    EXPECTED_SUCCESSOR_REQUEST_COUNTS,
 )
-from protocol import FIXTURE_PROFILE_VERSION, PROTOCOL, request
+from protocol import (
+    COMMON_LISP_SEED_COMMIT,
+    COMMON_LISP_SEED_TREE,
+    FIXTURE_PROFILE_VERSION,
+    PROTOCOL,
+    PYTHON_SEED_COMMIT,
+    PYTHON_SEED_TREE,
+    request,
+)
+from response_validation import (
+    canonical_report_matches,
+    loads_closed_json,
+    validate_response,
+)
 
 
 PROPERTY_SEED = 0x4C434930
@@ -64,6 +84,149 @@ def _json_bytes(value: Any, *, pretty: bool = False) -> bytes:
             value, sort_keys=True, separators=(",", ":"), ensure_ascii=False
         ) + "\n"
     return text.encode("utf-8")
+
+
+EXACT_ARTIFACT_MEMBERS = frozenset(
+    {
+        "common-lisp-responses.jsonl",
+        "common-lisp-stderr.txt",
+        "python-responses.jsonl",
+        "python-stderr.txt",
+        "requests.jsonl",
+        "summary.json",
+    }
+)
+
+
+def _exact_response_rows(
+    payload: bytes, label: str, expected_ids: set[str]
+) -> dict[str, dict[str, Any]]:
+    try:
+        lines = payload.decode("utf-8").splitlines()
+    except UnicodeDecodeError as exc:
+        raise EvidenceFailure(f"{label}: response is not UTF-8") from exc
+    responses: dict[str, dict[str, Any]] = {}
+    for line_number, line in enumerate(lines, 1):
+        try:
+            response = loads_closed_json(line)
+        except (json.JSONDecodeError, ValueError) as exc:
+            raise EvidenceFailure(
+                f"{label}:{line_number}: invalid or duplicate-member JSON"
+            ) from exc
+        _require(type(response) is dict, f"{label}:{line_number}: not an object")
+        request_id = response.get("request_id")
+        _require(
+            type(request_id) is str and request_id,
+            f"{label}:{line_number}: request id",
+        )
+        _require(request_id not in responses, f"{label}: duplicate response id")
+        responses[request_id] = response
+    _require(set(responses) == expected_ids, f"{label}: response ID set mismatch")
+    return responses
+
+
+def replay_successor_artifacts(directory: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Recompute the exact differential from hash-bound raw artifacts."""
+
+    directory = directory.resolve()
+    _require(directory.is_dir(), f"successor artifact directory missing: {directory}")
+    _require(not directory.is_symlink(), "successor artifact directory is a symlink")
+    manifest_path = directory / "sha256-manifest.json"
+    _require(manifest_path.is_file(), "successor artifact manifest missing")
+    manifest_payload = manifest_path.read_bytes()
+    try:
+        manifest = loads_closed_json(manifest_payload)
+    except (json.JSONDecodeError, ValueError) as exc:
+        raise EvidenceFailure("successor artifact manifest is invalid JSON") from exc
+    _require(type(manifest) is dict, "successor artifact manifest is not an object")
+    _require(set(manifest) == EXACT_ARTIFACT_MEMBERS, "successor artifact member census drift")
+
+    actual_names = {
+        path.name for path in directory.iterdir() if path.name != manifest_path.name
+    }
+    _require(actual_names == EXACT_ARTIFACT_MEMBERS, "successor artifact directory has extra/missing members")
+    payloads: dict[str, bytes] = {}
+    for name in sorted(EXACT_ARTIFACT_MEMBERS):
+        path = directory / name
+        _require(path.is_file() and not path.is_symlink(), f"successor member is not a regular file: {name}")
+        payload = path.read_bytes()
+        row = manifest.get(name)
+        _require(
+            type(row) is dict and set(row) == {"bytes", "sha256"},
+            f"successor manifest row is not closed: {name}",
+        )
+        _require(
+            row["bytes"] == len(payload) and row["sha256"] == _sha256(payload),
+            f"successor member identity mismatch: {name}",
+        )
+        payloads[name] = payload
+
+    requests, oracles, counts = exact_harness.build_requests()
+    expected_request_payload = "".join(
+        exact_harness._json_line(item) for item in requests
+    ).encode("utf-8")
+    _require(
+        payloads["requests.jsonl"] == expected_request_payload,
+        "successor request transcript is not the mechanically rebuilt census",
+    )
+    expected_ids = set(oracles)
+    common_lisp = _exact_response_rows(
+        payloads["common-lisp-responses.jsonl"], "common-lisp", expected_ids
+    )
+    python = _exact_response_rows(
+        payloads["python-responses.jsonl"], "python", expected_ids
+    )
+    comparison = exact_harness._compare(oracles, common_lisp, python)
+    _require(
+        exact_harness._only_authorial_blockers(comparison),
+        "raw successor responses do not reproduce the closed authorial-blocker census",
+    )
+
+    try:
+        summary = loads_closed_json(payloads["summary.json"])
+    except (json.JSONDecodeError, ValueError) as exc:
+        raise EvidenceFailure("successor summary is invalid JSON") from exc
+    _require(type(summary) is dict, "successor summary is not an object")
+    _require(summary.get("counts") == counts, "successor summary/request census mismatch")
+    _require(summary.get("comparison") == comparison, "successor summary/raw comparison mismatch")
+
+    request_sha = _sha256(payloads["requests.jsonl"])
+    adapter_runs = summary.get("adapter_runs")
+    _require(
+        type(adapter_runs) is dict and set(adapter_runs) == {"common_lisp", "python"},
+        "successor adapter run metadata drift",
+    )
+    for key, response_name, stderr_name in (
+        ("common_lisp", "common-lisp-responses.jsonl", "common-lisp-stderr.txt"),
+        ("python", "python-responses.jsonl", "python-stderr.txt"),
+    ):
+        row = adapter_runs[key]
+        _require(type(row) is dict, f"{key}: adapter metadata missing")
+        _require(
+            row.get("exit_code") == 0
+            and row.get("requests") == len(requests)
+            and row.get("responses") == len(requests)
+            and row.get("request_bytes") == len(expected_request_payload)
+            and row.get("request_sha256") == request_sha
+            and row.get("response_bytes") == len(payloads[response_name])
+            and row.get("response_sha256") == _sha256(payloads[response_name])
+            and row.get("stderr_bytes") == len(payloads[stderr_name])
+            and row.get("stderr_sha256") == _sha256(payloads[stderr_name]),
+            f"{key}: adapter metadata is not bound to raw transcripts",
+        )
+
+    receipt = {
+        "directory": str(directory),
+        "manifest_bytes": len(manifest_payload),
+        "manifest_sha256": _sha256(manifest_payload),
+        "members": {
+            name: {"bytes": len(payload), "sha256": _sha256(payload)}
+            for name, payload in sorted(payloads.items())
+        },
+        "recomputed_requests_per_implementation": len(requests),
+        "recomputed_total_responses": len(requests) * 2,
+    }
+    return summary, receipt
 
 
 def _sha256(payload: bytes) -> str:
@@ -197,7 +360,10 @@ class PropertyCase:
     equivalence_group: str | None = None
     distinct_group: str | None = None
     output_boolean: tuple[str, bool] | None = None
-    output_identifiers: tuple[tuple[tuple[str, ...], str], ...] = ()
+    output_identifiers: tuple[
+        tuple[tuple[str, ...], tuple[str, ...], tuple[str, ...]], ...
+    ] = ()
+    authorial_blocked_failure_coordinates: tuple[str, ...] = ()
 
     def manifest_row(self) -> dict[str, Any]:
         encoded = canonical_bytes(self.datum)
@@ -209,13 +375,16 @@ class PropertyCase:
             "embedded_vector_id": _field(self.datum, "vector-id").value,
             "equivalence_group": self.equivalence_group,
             "expected": {
+                "authorial_blocked_failure_coordinates": list(
+                    self.authorial_blocked_failure_coordinates
+                ),
                 "failure_code": self.failure_code,
                 "failure_path": list(self.failure_path) if self.failure_path else None,
                 "failure_stage": self.failure_stage,
                 "output_boolean": list(self.output_boolean) if self.output_boolean else None,
                 "output_identifiers": [
-                    [list(path), expected]
-                    for path, expected in self.output_identifiers
+                    [list(path), list(namespace), list(identifier_path)]
+                    for path, namespace, identifier_path in self.output_identifiers
                 ],
                 "semantic_status": self.expected_status,
             },
@@ -243,16 +412,37 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         == BLOCKED_VECTOR_REQUESTS,
         "successor vector-blocker declaration drift",
     )
+    _require(
+        set(summary.get("authorial_blocked_hostile_requests", ()))
+        == BLOCKED_HOSTILE_REQUESTS,
+        "successor hostile-blocker declaration drift",
+    )
     counts = summary.get("counts")
     _require(type(counts) is dict, "successor summary counts missing")
-    for name, expected in (
-        ("official_documents", 1105),
-        ("supplementary_documents", 488),
-        ("total_documents", 1593),
-        ("vector_semantic_requests", 215),
-        ("relation_semantic_requests", 458),
-    ):
+    for name, expected in EXPECTED_SUCCESSOR_REQUEST_COUNTS.items():
         _require(counts.get(name) == expected, f"successor count drift: {name}")
+    operation_counts = counts.get("vector_operation_families")
+    expected_operation_counts = dict(
+        sorted(Counter(row["operation"] for row in iter_vectors()).items())
+    )
+    _require(
+        operation_counts == expected_operation_counts,
+        "successor operation family census drift",
+    )
+    _require(
+        summary.get("pinned_seeds")
+        == {
+            "common_lisp": {
+                "commit": COMMON_LISP_SEED_COMMIT,
+                "tree": COMMON_LISP_SEED_TREE,
+            },
+            "python": {
+                "commit": PYTHON_SEED_COMMIT,
+                "tree": PYTHON_SEED_TREE,
+            },
+        },
+        "successor seed provenance drift",
+    )
 
     comparison = summary.get("comparison")
     _require(type(comparison) is dict, "successor comparison missing")
@@ -266,28 +456,40 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
     for implementation, result in implementations.items():
         implementation_counts = result.get("counts")
         _require(
-            type(implementation_counts) is dict
-            and implementation_counts.get("vector_passed") == 211
-            and implementation_counts.get("vector_blocked") == 4
-            and not any(
-                name.endswith("_failed") and count
-                for name, count in implementation_counts.items()
-            ),
-            f"{implementation}: blocked/pass accounting drift",
+            implementation_counts == EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS,
+            f"{implementation}: exact execution accounting drift",
         )
         mismatches = result.get("mismatches")
         _require(type(mismatches) is list, f"{implementation}: mismatches missing")
         ids = [item.get("request_id") for item in mismatches]
         _require(all(type(item) is str for item in ids), f"{implementation}: malformed mismatch")
         _require(len(ids) == len(set(ids)), f"{implementation}: duplicate mismatch")
-        unexpected = set(ids) - BLOCKED_VECTOR_REQUESTS
-        missing = BLOCKED_VECTOR_REQUESTS - set(ids)
+        expected_blockers = (
+            BLOCKED_VECTOR_REQUESTS
+            | BLOCKED_HOSTILE_REQUESTS
+            | BLOCKED_RELATION_PATH_REQUESTS
+        )
+        unexpected = set(ids) - expected_blockers
+        missing = expected_blockers - set(ids)
         _require(not unexpected, f"{implementation}: non-authorial mismatches {sorted(unexpected)}")
         _require(not missing, f"{implementation}: authorial blockers silently absent {sorted(missing)}")
         _require(
             all(
-                item.get("kind") == "vector"
-                and item.get("disposition") == "authorial-blocked"
+                item.get("disposition") == "authorial-blocked"
+                and (
+                    (
+                        item.get("request_id") in BLOCKED_VECTOR_REQUESTS
+                        and item.get("kind") == "vector"
+                    )
+                    or (
+                        item.get("request_id") in BLOCKED_HOSTILE_REQUESTS
+                        and item.get("kind") == "hostile"
+                    )
+                    or (
+                        item.get("request_id") in BLOCKED_RELATION_PATH_REQUESTS
+                        and item.get("kind") == "relation"
+                    )
+                )
                 for item in mismatches
             ),
             f"{implementation}: blocker kind drift",
@@ -299,7 +501,9 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
     cross_ids = [item.get("request_id") for item in cross]
     _require(all(type(item) is str for item in cross_ids), "malformed cross mismatch")
     _require(len(cross_ids) == len(set(cross_ids)), "duplicate cross mismatch")
-    unexpected = set(cross_ids) - BLOCKED_RELATION_PATH_REQUESTS
+    unexpected = set(cross_ids) - (
+        BLOCKED_RELATION_PATH_REQUESTS | BLOCKED_HOSTILE_REQUESTS
+    )
     _require(not unexpected, f"non-authorial cross mismatches {sorted(unexpected)}")
     declared_blocked_paths = summary.get("authorial_blocked_relation_paths")
     _require(
@@ -313,8 +517,28 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         "successor relation-path blocker declaration is not the exact 38-row census",
     )
     for item in cross:
-        _require(item.get("kind") == "relation", f"{item.get('request_id')}: kind drift")
+        request_id = item.get("request_id")
         differences = item.get("differences")
+        if request_id in BLOCKED_HOSTILE_REQUESTS:
+            allowed = BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS[request_id]
+            _require(
+                item.get("kind") == "hostile"
+                and type(differences) is dict
+                and bool(differences)
+                and set(differences) <= allowed,
+                f"{request_id}: hostile blocker difference drift",
+            )
+            _require(
+                all(
+                    type(pair) is dict
+                    and set(pair) == {"common-lisp", "python"}
+                    and pair["common-lisp"] != pair["python"]
+                    for pair in differences.values()
+                ),
+                f"{request_id}: malformed hostile difference pair",
+            )
+            continue
+        _require(item.get("kind") == "relation", f"{request_id}: kind drift")
         _require(
             type(differences) is dict and set(differences) == {"failure"},
             f"{item.get('request_id')}: more than companion failure differs",
@@ -336,13 +560,21 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
     return {
         "blocked_not_passed_or_na": {
             "exact_vector_results": sorted(BLOCKED_VECTOR_REQUESTS),
+            "hostile_result_gaps": sorted(BLOCKED_HOSTILE_REQUESTS),
             "relation_companion_failure_paths": sorted(BLOCKED_RELATION_PATH_REQUESTS),
         },
         "common_lisp_unaffected_mismatches": 0,
         "python_unaffected_mismatches": 0,
-        "observed_cross_relation_path_disagreements": len(cross_ids),
+        "observed_cross_relation_path_disagreements": sum(
+            request_id in BLOCKED_RELATION_PATH_REQUESTS
+            for request_id in cross_ids
+        ),
+        "observed_cross_hostile_blocker_disagreements": sum(
+            request_id in BLOCKED_HOSTILE_REQUESTS for request_id in cross_ids
+        ),
         "relation_path_blocker_count": len(BLOCKED_RELATION_PATH_REQUESTS),
         "vector_blocker_count": len(BLOCKED_VECTOR_REQUESTS),
+        "hostile_blocker_count": len(BLOCKED_HOSTILE_REQUESTS),
     }
 
 
@@ -603,6 +835,9 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
                 datum,
                 "failure",
                 failure_code="UnknownField",
+                authorial_blocked_failure_coordinates=(
+                    "category", "stage", "path", "context"
+                ),
             )
         )
         operation, datum = _custom_vector(
@@ -619,6 +854,9 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
                 datum,
                 "failure",
                 failure_code="MissingRequiredField",
+                authorial_blocked_failure_coordinates=(
+                    "category", "stage", "path", "context"
+                ),
             )
         )
 
@@ -696,10 +934,73 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
             datum,
             "success",
             output_identifiers=(
-                (("policy-a-decision", "decision"), "reject-target-kind"),
-                (("policy-b-decision", "decision"), "accept-limited-testimony"),
-                (("policy-b-decision", "testimony-class"), "limited-testimony"),
+                (
+                    ("policy-a-decision", "decision"),
+                    FIXTURE,
+                    ("admissibility-decision", "reject-target-kind"),
+                ),
+                (
+                    ("policy-b-decision", "decision"),
+                    FIXTURE,
+                    ("admissibility-decision", "accept-limited-testimony"),
+                ),
+                (
+                    ("policy-b-decision", "testimony-class"),
+                    FIXTURE,
+                    ("testimony-class", "limited-testimony"),
+                ),
             ),
+        )
+    )
+
+    # Anti-shortcut twins reverse four negative/split official witnesses while
+    # retaining their exact operation schemas.  Implementations must derive
+    # the result from the supplied values rather than memorize a vector outcome.
+    normalization = _vector_datum(rows, "LCI0-E4-STRUCTURAL-SUBJECT-TIME")
+    normalization_payload = _field(normalization, "payload")
+    normalization_payload = replace_record_field(
+        normalization_payload,
+        "right",
+        _field(normalization_payload, "left"),
+    )
+    operation, datum = _custom_vector(
+        rows,
+        "LCI0-E4-STRUCTURAL-SUBJECT-TIME",
+        "LCI0-PROPERTY-NORMALIZATION-EQUAL-INPUT",
+        normalization_payload,
+    )
+    cases.append(
+        PropertyCase(
+            "normalization-equal-input",
+            "semantic-anti-shortcut",
+            operation,
+            datum,
+            "success",
+            output_boolean=("claim-id-merge-permitted", True),
+        )
+    )
+
+    digest_comparison = _vector_datum(rows, "LCI0-E8-DIGEST-NOT-ENVELOPE")
+    digest_payload = _field(digest_comparison, "payload")
+    digest_payload = replace_record_field(
+        digest_payload,
+        "right-claim-id",
+        _field(digest_payload, "left-claim-id"),
+    )
+    operation, datum = _custom_vector(
+        rows,
+        "LCI0-E8-DIGEST-NOT-ENVELOPE",
+        "LCI0-PROPERTY-EQUAL-CLAIM-ID-ENVELOPES",
+        digest_payload,
+    )
+    cases.append(
+        PropertyCase(
+            "equal-claim-id-envelopes",
+            "semantic-anti-shortcut",
+            operation,
+            datum,
+            "success",
+            output_boolean=("semantic-claim-id-equal", True),
         )
     )
 
@@ -734,8 +1035,9 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
     )
 
     # Source artifacts are explicit provenance.  A valid replacement must be
-    # retained in MigrationResult/lineage without changing the reconstructed
-    # ClaimId or consulting a fixture-name/revision oracle.
+    # retained in the MigrationResult's top-level source without changing the
+    # reconstructed ClaimId or consulting a fixture-name/revision oracle.  The
+    # P029 packet keeps lineage-source behavior authorial-return-bound.
     migration_source = fixture_datum("legacy-source.time-100")
     migration_source_v2 = replace_record_field(
         migration_source,
@@ -804,6 +1106,11 @@ def build_property_cases(seed: int, allocation_cases: int) -> list[PropertyCase]
 
     ids = [case.case_id for case in cases]
     _require(len(ids) == len(set(ids)), "duplicate property case ID")
+    _require(
+        sum(bool(case.authorial_blocked_failure_coordinates) for case in cases)
+        == 104,
+        "operation-payload blocker census drift",
+    )
     return cases
 
 
@@ -823,13 +1130,37 @@ def _semantic_view(response: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _semantic_view_for_case(
+    response: Mapping[str, Any], case: PropertyCase
+) -> dict[str, Any]:
+    view = _semantic_view(response)
+    blocked = set(case.authorial_blocked_failure_coordinates)
+    failure = view.get("failure")
+    if blocked and type(failure) is dict:
+        view["failure"] = {
+            name: value for name, value in failure.items() if name not in blocked
+        }
+        # The canonical result document embeds the full failure tuple, so it is
+        # likewise not comparable while any of those coordinates are blocked.
+        view.pop("actual_canonical_cd0_hex", None)
+    return view
+
+
+def _case_input_roundtrips(case: PropertyCase, response: Mapping[str, Any]) -> bool:
+    return response.get("input_reencoded_canonical_hex") == canonical_bytes(
+        case.datum
+    ).hex()
+
+
 def _direct_field(record: cd0.Datum, name: str) -> cd0.Datum | None:
     if type(record) is not cd0.Record:
         return None
-    for key, value in record.fields:
-        if key.path == (name,):
-            return value
-    return None
+    matches = [
+        value
+        for key, value in record.fields
+        if key.namespace == FIXTURE_FIELD and key.path == (name,)
+    ]
+    return matches[0] if len(matches) == 1 else None
 
 
 def _result_output_boolean(actual_hex: str, name: str) -> bool:
@@ -857,6 +1188,23 @@ def _result_output_path(actual_hex: str, path: tuple[str, ...]) -> cd0.Datum:
     return value
 
 
+def _result_output_identifier_matches(
+    actual_hex: str,
+    output_path: tuple[str, ...],
+    expected_namespace: tuple[str, ...],
+    expected_path: tuple[str, ...],
+) -> bool:
+    try:
+        value = _result_output_path(actual_hex, output_path)
+    except (EvidenceFailure, ValueError, cd0.CD0Failure):
+        return False
+    return bool(
+        type(value) is cd0.Identifier
+        and value.namespace == expected_namespace
+        and value.path == expected_path
+    )
+
+
 def compare_property_results(
     cases: Sequence[PropertyCase],
     implementation_runs: Mapping[str, Mapping[str, Mapping[str, Any]]],
@@ -866,6 +1214,7 @@ def compare_property_results(
     reference_names = ("common-lisp/baseline", "python/hash-0-locale-C")
     failures: list[dict[str, Any]] = []
     counts = Counter()
+    blocked_observations: list[dict[str, Any]] = []
 
     for case in cases:
         request_id = f"property:{case.case_id}"
@@ -875,10 +1224,27 @@ def compare_property_results(
             if response is None:
                 failures.append({"case_id": case.case_id, "run": name, "reason": "missing-response"})
                 continue
-            view = _semantic_view(response)
+            view = _semantic_view_for_case(response, case)
             counts[f"{name}:cases"] += 1
+            if case.authorial_blocked_failure_coordinates:
+                counts[f"{name}:authorial-blocked-cases"] += 1
             if response.get("protocol_status") != "success":
                 failures.append({"case_id": case.case_id, "run": name, "reason": "protocol-failure", "view": view})
+                continue
+            if not _case_input_roundtrips(case, response):
+                failures.append(
+                    {
+                        "case_id": case.case_id,
+                        "run": name,
+                        "reason": "input-reencoding",
+                        "expected_sha256": _sha256(canonical_bytes(case.datum)),
+                        "observed_sha256": (
+                            _sha256(bytes.fromhex(response["input_reencoded_canonical_hex"]))
+                            if type(response.get("input_reencoded_canonical_hex")) is str
+                            else None
+                        ),
+                    }
+                )
                 continue
             if response.get("semantic_status") != case.expected_status:
                 failures.append({"case_id": case.case_id, "run": name, "reason": "status", "expected": case.expected_status, "view": view})
@@ -901,33 +1267,42 @@ def compare_property_results(
                     failures.append({"case_id": case.case_id, "run": name, "reason": "output-boolean", "expected": case.output_boolean, "observed": observed})
             if case.output_identifiers and case.expected_status == "success":
                 actual = response.get("actual_canonical_cd0_hex")
-                for output_path, expected_tail in case.output_identifiers:
-                    try:
-                        observed_value = (
-                            _result_output_path(actual, output_path)
-                            if isinstance(actual, str)
-                            else None
+                for output_path, expected_namespace, expected_path in case.output_identifiers:
+                    matches = bool(
+                        isinstance(actual, str)
+                        and _result_output_identifier_matches(
+                            actual,
+                            output_path,
+                            expected_namespace,
+                            expected_path,
                         )
-                        observed_tail = (
-                            observed_value.path[-1]
-                            if type(observed_value) is cd0.Identifier
-                            else None
-                        )
-                    except Exception as exc:
-                        observed_tail = f"decode-error:{type(exc).__name__}"
-                    if observed_tail != expected_tail:
+                    )
+                    if not matches:
                         failures.append(
                             {
                                 "case_id": case.case_id,
                                 "run": name,
                                 "reason": "output-identifier",
                                 "output_path": list(output_path),
-                                "expected": expected_tail,
-                                "observed": observed_tail,
+                                "expected": [
+                                    list(expected_namespace), list(expected_path)
+                                ],
+                                "observed_matches_exact_identity": False,
                             }
                         )
             if name in reference_names:
                 reference_views.append((name, view))
+                if case.authorial_blocked_failure_coordinates:
+                    blocked_observations.append(
+                        {
+                            "case_id": case.case_id,
+                            "implementation": name,
+                            "blocked_coordinates": list(
+                                case.authorial_blocked_failure_coordinates
+                            ),
+                            "observed_failure": response.get("failure"),
+                        }
+                    )
         if len(reference_views) == 2 and reference_views[0][1] != reference_views[1][1]:
             failures.append({"case_id": case.case_id, "reason": "cross-implementation", "views": dict(reference_views)})
 
@@ -1019,11 +1394,24 @@ def compare_property_results(
             )
 
     return {
+        "authorial_blocked_failure_coordinates": {
+            "case_count": len(
+                {
+                    item["case_id"] for item in blocked_observations
+                }
+            ),
+            "observations": blocked_observations,
+            "status": "blocked-not-pass-skip-or-na",
+        },
         "counts": dict(sorted(counts.items())),
         "failures": failures,
         "metamorphic_equal_groups": {name: len(values) for name, values in sorted(equal_groups.items())},
         "metamorphic_distinct_groups": {name: len(values) for name, values in sorted(distinct_groups.items())},
-        "status": "pass" if not failures else "fail",
+        "status": (
+            "converged-unaffected-with-authorial-blockers"
+            if not failures
+            else "fail"
+        ),
     }
 
 
@@ -1074,7 +1462,12 @@ def _run_command(
     return process, record
 
 
-def _parse_responses(payload: bytes, expected_ids: set[str], label: str) -> dict[str, dict[str, Any]]:
+def _parse_responses(
+    payload: bytes,
+    expectations: Mapping[str, Mapping[str, str]],
+    label: str,
+    implementation: str,
+) -> dict[str, dict[str, Any]]:
     responses: dict[str, dict[str, Any]] = {}
     try:
         lines = payload.decode("utf-8").splitlines()
@@ -1082,14 +1475,29 @@ def _parse_responses(payload: bytes, expected_ids: set[str], label: str) -> dict
         raise EvidenceFailure(f"{label}: response is not UTF-8") from exc
     for line_number, line in enumerate(lines, 1):
         try:
-            response = json.loads(line)
-        except json.JSONDecodeError as exc:
+            response = loads_closed_json(line)
+        except (json.JSONDecodeError, ValueError) as exc:
             raise EvidenceFailure(f"{label}:{line_number}: invalid JSON") from exc
         request_id = response.get("request_id")
         _require(type(request_id) is str and request_id, f"{label}:{line_number}: request id")
         _require(request_id not in responses, f"{label}: duplicate response {request_id}")
+        expectation = expectations.get(request_id)
+        _require(expectation is not None, f"{label}: unexpected response {request_id}")
+        valid, reason = validate_response(
+            response,
+            implementation=implementation,
+            request_id=request_id,
+            operation=expectation["operation"],
+            shape="fixture-operation",
+            expected_vector_id=expectation["vector_id"],
+        )
+        _require(valid, f"{label}:{request_id}: response schema: {reason}")
+        _require(
+            canonical_report_matches(response),
+            f"{label}:{request_id}: canonical result/report mismatch",
+        )
         responses[request_id] = response
-    _require(set(responses) == expected_ids, f"{label}: response ID set mismatch")
+    _require(set(responses) == set(expectations), f"{label}: response ID set mismatch")
     return responses
 
 
@@ -1140,16 +1548,18 @@ def _fixture_root_receipt() -> tuple[Path, dict[str, Any]]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--successor-summary", type=Path, required=True)
+    parser.add_argument("--successor-artifacts", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=PROPERTY_SEED)
     parser.add_argument("--allocation-cases", type=int, default=PROPERTY_CASES)
     arguments = parser.parse_args()
 
     # Refusal occurs before output-directory creation.
-    successor_path = arguments.successor_summary.resolve()
+    successor, successor_artifact_receipt = replay_successor_artifacts(
+        arguments.successor_artifacts
+    )
+    successor_path = arguments.successor_artifacts.resolve() / "summary.json"
     successor_payload = successor_path.read_bytes()
-    successor = json.loads(successor_payload)
     gate = verify_successor_gate(successor)
     fixture_root, fixture_receipt = _fixture_root_receipt()
 
@@ -1170,7 +1580,13 @@ def main() -> int:
     ]
     request_payload = b"".join(_json_bytes(item) for item in requests)
     (output / "requests.jsonl").write_bytes(request_payload)
-    expected_ids = {item["request_id"] for item in requests}
+    response_expectations = {
+        f"property:{case.case_id}": {
+            "operation": case.operation,
+            "vector_id": _field(case.datum, "vector-id").value,
+        }
+        for case in cases
+    }
 
     python_path = os.pathsep.join(
         (
@@ -1226,7 +1642,12 @@ def main() -> int:
             output_directory=output, stdin=request_payload,
         )
         transcript.append(record)
-        implementation_runs[run_name] = _parse_responses(process.stdout, expected_ids, label)
+        implementation_runs[run_name] = _parse_responses(
+            process.stdout,
+            response_expectations,
+            label,
+            run_name.split("/", 1)[0],
+        )
 
     comparison = compare_property_results(cases, implementation_runs)
 
@@ -1247,7 +1668,7 @@ def main() -> int:
             cwd=root, output_directory=output,
         )
         transcript.append(record)
-        native_probe_results[label] = json.loads(process.stdout)
+        native_probe_results[label] = loads_closed_json(process.stdout)
 
     common_lisp_probe = ["sbcl", "--noinform", "--disable-debugger", "--script", str(root / "mneme/lci0/differential/common_lisp_host_probe.lisp")]
     for profile in ("baseline", "package", "printer", "readtable", "hash-insertion", "unavailable-io-clock"):
@@ -1259,7 +1680,7 @@ def main() -> int:
             cwd=root, output_directory=output,
         )
         transcript.append(record)
-        native_probe_results[label] = json.loads(process.stdout)
+        native_probe_results[label] = loads_closed_json(process.stdout)
 
     py_hashes = {value["projection_sha256"] for key, value in native_probe_results.items() if key.startswith("native-python-")}
     cl_values = {value["projection_canonical_hex"] for key, value in native_probe_results.items() if key.startswith("native-common-lisp-")}
@@ -1322,13 +1743,21 @@ def main() -> int:
                 {"family": "native-suite", "reason": "nonzero-exit", "run": label, "exit_code": process.returncode}
             )
 
-    comparison["status"] = "pass" if not comparison["failures"] else "fail"
+    comparison["status"] = (
+        "converged-unaffected-with-authorial-blockers"
+        if not comparison["failures"]
+        else "fail"
+    )
 
     (output / "command-transcript.jsonl").write_bytes(
         b"".join(_json_bytes(item) for item in transcript)
     )
     family_counts = Counter(case.family for case in cases)
     summary = {
+        "authorial_return_required": True,
+        "authorial_blocked": comparison[
+            "authorial_blocked_failure_coordinates"
+        ],
         "comparison": comparison,
         "commands": len(transcript),
         "fixture_profile_version": FIXTURE_PROFILE_VERSION,
@@ -1369,12 +1798,13 @@ def main() -> int:
             "sbcl": runtime_results["runtime-sbcl-version"],
             "available_locales": runtime_results["runtime-locale-list"].splitlines(),
         },
-        "status": "pass" if comparison["status"] == "pass" else "fail",
+        "status": comparison["status"],
         "successor_summary": {
             "bytes": len(successor_payload),
             "path": str(successor_path),
             "sha256": _sha256(successor_payload),
         },
+        "successor_artifacts": successor_artifact_receipt,
     }
     (output / "summary.json").write_bytes(_json_bytes(summary, pretty=True))
     _write_manifest(output)
@@ -1389,7 +1819,11 @@ def main() -> int:
             sort_keys=True,
         )
     )
-    return 0 if summary["status"] == "pass" else 1
+    return (
+        0
+        if summary["status"] == "converged-unaffected-with-authorial-blockers"
+        else 1
+    )
 
 
 if __name__ == "__main__":

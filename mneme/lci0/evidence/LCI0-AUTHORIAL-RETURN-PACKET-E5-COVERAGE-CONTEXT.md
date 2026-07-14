@@ -46,6 +46,7 @@ The authorial response should choose and publish one coherent closure:
 3. revise the expected context to contain only data derivable from the input.
 
 The response should provide successor artifact hashes, version consequences,
-and a permanent regression vector. Until then, both successors preserve the
-failure tuple using only input-derived context and report this exact expected
-document as blocked rather than passed, failed, skipped, or N/A.
+and a permanent regression vector. Until then, the required successor
+disposition is to preserve the failure tuple using only input-derived context
+and report this exact expected document as blocked rather than passed, failed,
+skipped, or N/A. Final execution evidence is PENDING.

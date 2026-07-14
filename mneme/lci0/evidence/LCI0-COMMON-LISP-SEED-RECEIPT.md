@@ -1,7 +1,33 @@
 # LCI/0 Common Lisp Seed Receipt
 
 Date: 2026-07-14. Evidence standing: direct local observation unless explicitly
-identified as inherited frozen preflight evidence.
+identified as inherited frozen preflight evidence. Integration-audit
+supersession below controls every eligibility claim.
+
+## Integration-audit addendum — seed observations are not current conformance
+
+The `215/215 exact` and `0 underdetermined` statements below are preserved as
+historical observations of commands run against the immutable Common Lisp seed
+commit `b3d28bc49c3b015096cb04c6ad08c19829f511a9`, tree
+`d48c39f933cde591f3303fcd3c9f42a0dac1a869`. They establish what that seed
+runner reported before cross-language differential testing, anti-shortcut
+review, and the later authorial-gap audit. They do not establish current
+semantic conformance and must not be quoted as a present 215-vector PASS.
+
+For integration eligibility, those result claims are superseded by
+`LCI0-IMPLEMENTATION-DIVERGENCES.md` and the closed four-vector blocker census:
+
+- `LCI0-N012` — universal/symbolic matcher composition;
+- `LCI0-E5-COVERAGE-INSUFFICIENT` — expected-only coverage context;
+- `LCI0-P024` — unbound beta occurrence injected by revival; and
+- `LCI0-P029` — expected source artifact differs from the explicit input.
+
+Those four exact result documents are authorially BLOCKED, not pass, failure,
+skip, or N/A. The current unaffected ceiling is 211/215; fresh committed
+successor execution and final counts are PENDING. The seed identity, tree,
+pre-cross-reading inventory, and procedural-isolation facts remain unchanged.
+This addendum does not rewrite the seed commit, claim PASS, or establish
+eligibility for independent implementation audit.
 
 ## Seed identity and boundary
 

@@ -26,8 +26,15 @@ from lci0.core import CD0_BUDGET, canonical_bytes, field_by_path, replace_record
 from lci0.package import definitions, iter_vectors, registry
 
 from authorial_blockers import (
+    BLOCKED_HOSTILE_AUTHORITY_GAP_REQUESTS,
+    BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS,
+    BLOCKED_HOSTILE_FAILURE_CANDIDATES,
+    BLOCKED_HOSTILE_REQUESTS,
+    BLOCKED_HOSTILE_SUCCESS_REQUESTS,
     BLOCKED_RELATION_PATH_REQUESTS,
     BLOCKED_VECTOR_REQUESTS,
+    EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS,
+    EXPECTED_SUCCESSOR_REQUEST_COUNTS,
 )
 from protocol import (
     COMMON_LISP_SEED_COMMIT,
@@ -38,12 +45,22 @@ from protocol import (
     PYTHON_SEED_TREE,
     request,
 )
+from response_validation import (
+    canonical_failure_path,
+    canonical_report_matches,
+    failure_path_matches,
+    loads_closed_json,
+    validate_response,
+)
 
 
 MAGIC_HEX = "4c50434400"
 FIXTURE = ("lisp-plus", "lci", "0", "fixture")
 FIXTURE_FIELD = FIXTURE + ("field",)
 HOSTILE_NAMESPACE = FIXTURE + ("hostile",)
+LCI = ("lisp-plus", "lci", "0")
+TAG = LCI + ("tag",)
+FAILURE = LCI + ("failure",)
 
 
 class HarnessFailure(RuntimeError):
@@ -139,7 +156,19 @@ def _hostile_cases() -> list[dict[str, Any]]:
     cases.append({"name": "stable-ref-scheme-namespace", "operation": "hostile-validate-stable-ref", "datum": _replace_identifier_namespace(stable, "scheme", HOSTILE_NAMESPACE)})
     material = field_by_path(stable, "material")
     material_kind = _replace_identifier_namespace(material, "kind", HOSTILE_NAMESPACE)
-    cases.append({"name": "stable-ref-material-kind-namespace", "operation": "hostile-validate-stable-ref", "datum": replace_record_field(stable, "material", material_kind)})
+    cases.append(
+        {
+            "name": "stable-ref-material-kind-namespace",
+            "operation": "hostile-validate-stable-ref",
+            "datum": replace_record_field(stable, "material", material_kind),
+            "expected_failure": {
+                "category": "reference-refusal",
+                "code": "InvalidStableReference",
+                "stage": "stable-reference",
+                "path": ["material", "kind"],
+            },
+        }
+    )
     object_id = field_by_path(material, "object-id")
     _require(type(object_id) is cd0.Identifier and len(object_id.path) >= 3, "artifact object id shape")
     wrong_object_id = (object_id.path[0], "procedure", *object_id.path[2:])
@@ -287,19 +316,33 @@ def _hostile_cases() -> list[dict[str, Any]]:
             "name": "policy-c-fail-closed",
             "operation": "hostile-evaluate-policy-c",
             "datum": policy_carrier,
-            "expected_failure": {
-                "category": "invalid-input",
-                "code": "UnsupportedFixturePolicy",
-                "stage": "admissibility",
-                "path": ["policy"],
-            },
+            "expected_authority_gap": "unsupported fixture policy",
         }
     )
 
     result = []
     for case in cases:
-        encoded = canonical_bytes(case.pop("datum"))
+        datum = case.pop("datum")
+        encoded = canonical_bytes(datum)
         expected_status = case.pop("expected_semantic_status", "failure")
+        if "expected_failure" in case:
+            case["expected_failure"] = {
+                **case["expected_failure"],
+                "path": canonical_failure_path(
+                    case["expected_failure"].get("path", [])
+                ),
+            }
+        if "expected_authority_gap" in case:
+            response_shape = "fixture-authority-gap"
+            expected_vector_id = None
+        elif case["operation"].startswith("hostile-"):
+            response_shape = "hostile-validation"
+            expected_vector_id = None
+        else:
+            response_shape = "fixture-operation"
+            vector_id = field_by_path(datum, "vector-id")
+            _require(type(vector_id) is cd0.String, "hostile vector-id is not a string")
+            expected_vector_id = vector_id.value
         result.append(
             {
                 **case,
@@ -307,9 +350,115 @@ def _hostile_cases() -> list[dict[str, Any]]:
                 "canonical_octets": len(encoded),
                 "canonical_sha256": hashlib.sha256(encoded).hexdigest(),
                 "expected_semantic_status": expected_status,
+                "response_shape": response_shape,
+                "expected_vector_id": expected_vector_id,
             }
         )
     return result
+
+
+def _relation_failure_expectation(
+    *, code: str, stage: str, allowed_paths: tuple[tuple[str, ...], ...]
+) -> dict[str, Any]:
+    return {
+        "expected_semantic_status": "failure",
+        "expected_failure": {
+            "category": "relation-undetermined",
+            "code": code,
+            "stage": stage,
+        },
+        "allowed_failure_paths": [list(path) for path in allowed_paths],
+    }
+
+
+def _relation_expectation(
+    *,
+    request_id: str,
+    table_name: str,
+    relation: str,
+    left_fixture: str,
+    right_fixture: str,
+) -> dict[str, Any]:
+    """Return the frozen companion status/tuple for a pinned relation row.
+
+    The registry pins the relation token.  The LCI calculus and Errata E6 pin
+    whether that token is returned normally or as a typed F-valued failure.
+    Thirty-eight fixture rows leave only the structural path underdetermined;
+    those rows admit the two witnessed paths and nothing else.
+    """
+
+    if table_name == "scope_relation_table_0":
+        if relation == "unknown":
+            return _relation_failure_expectation(
+                code="ScopeRelationUnknown",
+                stage="target-relation",
+                allowed_paths=(("fixture-field:right",),),
+            )
+        if relation == "incompatible":
+            _require(
+                request_id in BLOCKED_RELATION_PATH_REQUESTS,
+                "unclassified scope incompatibility path",
+            )
+            return _relation_failure_expectation(
+                code="ScopeIncompatible",
+                stage="target-relation",
+                allowed_paths=(
+                    ("fixture-field:right",),
+                    ("fixture-field:right", "calculus"),
+                ),
+            )
+    elif table_name == "temporal_relation_table_0":
+        if relation == "unknown":
+            paths = (
+                (("fixture-field:left",), ("fixture-field:right",))
+                if request_id in BLOCKED_RELATION_PATH_REQUESTS
+                else (("fixture-field:left",),)
+            )
+            return _relation_failure_expectation(
+                code="AdmissibilityUndetermined",
+                stage="subject-time",
+                allowed_paths=paths,
+            )
+        if relation == "incompatible" and "subject-time.second.alpha" in {
+            left_fixture,
+            right_fixture,
+        }:
+            return _relation_failure_expectation(
+                code="UnsupportedTemporalModel",
+                stage="subject-time",
+                allowed_paths=(("fixture-field:right", "temporal-model"),),
+            )
+    else:
+        raise HarnessFailure(f"unknown relation table: {table_name}")
+
+    _require(
+        request_id not in BLOCKED_RELATION_PATH_REQUESTS,
+        "blocked relation path unexpectedly classified as success",
+    )
+    return {
+        "expected_semantic_status": "success",
+        "expected_failure": None,
+        "allowed_failure_paths": [],
+    }
+
+
+def _relation_response_matches(
+    response: Mapping[str, Any], oracle: Mapping[str, Any]
+) -> bool:
+    expected_status = oracle.get("expected_semantic_status")
+    if response.get("semantic_status") != expected_status:
+        return False
+    expected_failure = oracle.get("expected_failure")
+    if expected_status == "success":
+        return expected_failure is None and "failure" not in response
+    observed = response.get("failure")
+    if type(observed) is not dict or type(expected_failure) is not dict:
+        return False
+    return bool(
+        {name: observed.get(name) for name in ("category", "code", "stage")}
+        == expected_failure
+        and observed.get("path") in oracle.get("allowed_failure_paths", [])
+    )
 
 
 def build_requests() -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, Any]]:
@@ -328,7 +477,13 @@ def build_requests() -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], d
     def add(request_id: str, operation: str, input_hex: str, oracle: dict[str, Any]) -> None:
         _require(request_id not in oracles, f"duplicate request id: {request_id}")
         requests.append(request(request_id, operation, input_hex))
-        oracles[request_id] = oracle
+        _require("expected_input_hex" not in oracle, "oracle input identity collision")
+        _require("request_operation" not in oracle, "oracle operation identity collision")
+        oracles[request_id] = {
+            **oracle,
+            "expected_input_hex": input_hex,
+            "request_operation": operation,
+        }
 
     definition_rows = list(package_registry["definitions"])
     _require(len(definition_rows) == 675, "definition count is not 675")
@@ -360,9 +515,28 @@ def build_requests() -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], d
     ):
         for index, row in enumerate(tables[table_name]["entries"]):
             label = f"{table_name}:{index:03d}:{row['left_fixture']}:{row['right_fixture']}"
+            request_id = f"relation:{label}"
             encoded_hex = _verify_document_row(row, label)
             add(f"doc:relation:{label}", "document-roundtrip", encoded_hex, {"kind": "document", "expected_hex": encoded_hex, "class": "supplementary-relation-table"})
-            add(f"relation:{label}", operation, encoded_hex, {"kind": "relation", "expected_relation": row["relation"], "table": table_name, "left_fixture": row["left_fixture"], "right_fixture": row["right_fixture"]})
+            add(
+                request_id,
+                operation,
+                encoded_hex,
+                {
+                    "kind": "relation",
+                    "expected_relation": row["relation"],
+                    "table": table_name,
+                    "left_fixture": row["left_fixture"],
+                    "right_fixture": row["right_fixture"],
+                    **_relation_expectation(
+                        request_id=request_id,
+                        table_name=table_name,
+                        relation=row["relation"],
+                        left_fixture=row["left_fixture"],
+                        right_fixture=row["right_fixture"],
+                    ),
+                },
+            )
             relation_document_count += 1
             relation_semantic_count += 1
     _require(relation_document_count == relation_semantic_count == 458, "relation table count mismatch")
@@ -416,6 +590,10 @@ def build_requests() -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], d
     _require(counts["total_documents"] == 1593, "total document count is not 1,593")
     _require(counts["supplementary_documents"] == 488, "supplementary count is not 488")
     _require(counts["baseline_requests_per_implementation"] == 2266, "baseline request count is not 2,266")
+    for name, expected in EXPECTED_SUCCESSOR_REQUEST_COUNTS.items():
+        _require(counts[name] == expected, f"successor request count drift: {name}")
+    _require(len(operation_counts) == 52, "fixture operation family count is not 52")
+    _require(sum(operation_counts.values()) == 215, "fixture operation request count is not 215")
     return requests, oracles, counts
 
 
@@ -441,8 +619,8 @@ def _run_adapter(
     responses: dict[str, dict[str, Any]] = {}
     for line_number, line in enumerate(process.stdout.decode("utf-8").splitlines(), 1):
         try:
-            response = json.loads(line)
-        except json.JSONDecodeError as exc:
+            response = loads_closed_json(line)
+        except (json.JSONDecodeError, ValueError) as exc:
             raise HarnessFailure(f"{name} response line {line_number}: invalid JSON") from exc
         request_id = response.get("request_id")
         _require(type(request_id) is str and request_id, f"{name} response line {line_number}: missing request id")
@@ -482,31 +660,121 @@ def _compare(
         mismatches: list[dict[str, Any]] = []
         for request_id, oracle in oracles.items():
             response = responses[request_id]
-            if response.get("protocol_status") != "success":
-                counts["protocol_failures"] += 1
-                mismatches.append({"request_id": request_id, "kind": oracle["kind"], "reason": "protocol-failure", "response": response})
-                continue
             kind = oracle["kind"]
             counts[f"{kind}_requests"] += 1
-            if response.get("input_reencoded_canonical_hex") != next(
-                item for item in [response.get("input_reencoded_canonical_hex")]
-            ):
-                raise AssertionError("unreachable")
+            shape = (
+                oracle["response_shape"]
+                if kind == "hostile"
+                else "fixture-operation"
+                if kind == "vector"
+                else kind
+            )
+            expected_vector_id = (
+                oracle["vector_id"]
+                if kind == "vector"
+                else oracle.get("expected_vector_id")
+            )
+            schema_valid, schema_reason = validate_response(
+                response,
+                implementation=name,
+                request_id=request_id,
+                operation=oracle["request_operation"],
+                shape=shape,
+                expected_vector_id=expected_vector_id,
+                expected_authority_gap=oracle.get("expected_authority_gap"),
+            )
+            if not schema_valid:
+                counts["response_schema_failures"] += 1
+                mismatches.append(
+                    {
+                        "request_id": request_id,
+                        "kind": kind,
+                        "reason": schema_reason,
+                        "response": response,
+                    }
+                )
+                continue
+            input_passed = (
+                response.get("input_reencoded_canonical_hex")
+                == oracle["expected_input_hex"]
+            )
+            vector_metadata_passed = (
+                kind != "vector"
+                or (
+                    response.get("vector_id") == oracle["vector_id"]
+                    and response.get("operation") == oracle["operation"]
+                    and response.get("fixture_profile_version")
+                    == FIXTURE_PROFILE_VERSION
+                )
+            )
+            if kind == "hostile" and request_id in BLOCKED_HOSTILE_REQUESTS:
+                if input_passed and _valid_blocked_hostile_response(
+                    request_id, response, oracle
+                ):
+                    counts["hostile_blocked"] += 1
+                    mismatches.append(
+                        {
+                            "request_id": request_id,
+                            "kind": "hostile",
+                            "disposition": "authorial-blocked",
+                            "bounded_expectation": _blocked_hostile_expectation(
+                                request_id, oracle
+                            ),
+                            "response": response,
+                        }
+                    )
+                else:
+                    counts["hostile_failed"] += 1
+                    mismatches.append(
+                        {
+                            "request_id": request_id,
+                            "kind": "hostile",
+                            "reason": "blocked-hostile-response-outside-bounds",
+                            "response": response,
+                        }
+                    )
+                continue
+            if response.get("protocol_status") != "success":
+                counts["protocol_failures"] += 1
+                mismatches.append({"request_id": request_id, "kind": kind, "reason": "protocol-failure", "response": response})
+                continue
             if kind == "document":
-                passed = response.get("input_reencoded_canonical_hex") == oracle["expected_hex"]
+                passed = input_passed and oracle["expected_input_hex"] == oracle["expected_hex"]
             elif kind == "vector":
-                passed = response.get("actual_canonical_cd0_hex") == oracle["expected_hex"]
+                passed = (
+                    input_passed
+                    and vector_metadata_passed
+                    and response.get("actual_canonical_cd0_hex")
+                    == oracle["expected_hex"]
+                    and canonical_report_matches(response)
+                )
             elif kind == "relation":
-                passed = response.get("relation") == oracle["expected_relation"]
+                passed = (
+                    input_passed
+                    and response.get("relation") == oracle["expected_relation"]
+                    and _relation_response_matches(response, oracle)
+                )
             else:
-                passed = response.get("semantic_status") == oracle["expected_semantic_status"]
+                passed = input_passed and response.get("semantic_status") == oracle["expected_semantic_status"]
                 expected_failure = oracle.get("expected_failure")
                 if passed and expected_failure is not None:
                     passed = response.get("failure") == expected_failure
-            blocked = (
+                if passed and shape == "fixture-operation":
+                    passed = canonical_report_matches(response)
+            relation_path_blocked = bool(
+                passed
+                and kind == "relation"
+                and request_id in BLOCKED_RELATION_PATH_REQUESTS
+            )
+            if relation_path_blocked:
+                passed = False
+            blocked = relation_path_blocked or (
                 not passed
+                and input_passed
+                and vector_metadata_passed
                 and kind == "vector"
                 and request_id in BLOCKED_VECTOR_REQUESTS
+                and _valid_authorial_blocked_response(request_id, response, oracle)
             )
             disposition = "blocked" if blocked else "passed" if passed else "failed"
             counts[f"{kind}_{disposition}"] += 1
@@ -518,10 +786,19 @@ def _compare(
                     "vector_id", "operation", "expected_relation", "table",
                     "left_fixture", "right_fixture", "canonical_sha256",
                     "canonical_octets", "expected_semantic_status",
-                    "expected_failure",
+                    "expected_failure", "allowed_failure_paths",
                 ):
                     if field in oracle:
                         mismatch[field] = oracle[field]
+                mismatch["expected_input_canonical_sha256"] = hashlib.sha256(
+                    bytes.fromhex(oracle["expected_input_hex"])
+                ).hexdigest()
+                actual_input = response.get("input_reencoded_canonical_hex")
+                mismatch["actual_input_canonical_sha256"] = (
+                    hashlib.sha256(bytes.fromhex(actual_input)).hexdigest()
+                    if type(actual_input) is str
+                    else None
+                )
                 if kind == "vector":
                     mismatch["expected_canonical_sha256"] = hashlib.sha256(bytes.fromhex(oracle["expected_hex"])).hexdigest()
                     actual = response.get("actual_canonical_cd0_hex")
@@ -533,13 +810,13 @@ def _compare(
         left, right = common_lisp[request_id], python[request_id]
         kind = oracle["kind"]
         fields = (
-            ("input_reencoded_canonical_hex",)
+            ("protocol", "operation", "fixture_profile_version", "protocol_status", "input_reencoded_canonical_hex")
             if kind == "document"
-            else ("actual_canonical_cd0_hex", "semantic_status", "failure")
+            else ("protocol", "operation", "fixture_profile_version", "protocol_status", "input_reencoded_canonical_hex", "vector_id", "actual_canonical_cd0_hex", "semantic_status", "failure")
             if kind == "vector"
-            else ("relation", "semantic_status", "failure")
+            else ("protocol", "operation", "fixture_profile_version", "protocol_status", "input_reencoded_canonical_hex", "relation", "semantic_status", "failure")
             if kind == "relation"
-            else ("semantic_status", "failure")
+            else ("protocol", "operation", "fixture_profile_version", "protocol_status", "input_reencoded_canonical_hex", "status", "authority_gap", "vector_id", "actual_canonical_cd0_hex", "semantic_status", "failure")
         )
         differences = {field: {"common-lisp": left.get(field), "python": right.get(field)} for field in fields if left.get(field) != right.get(field)}
         if differences:
@@ -552,11 +829,319 @@ def _compare(
                     "canonical_sha256": oracle["canonical_sha256"],
                     "expected_semantic_status": oracle["expected_semantic_status"],
                     "expected_failure": oracle.get("expected_failure"),
-                    "common_lisp": {"semantic_status": left.get("semantic_status"), "failure": left.get("failure")},
-                    "python": {"semantic_status": right.get("semantic_status"), "failure": right.get("failure")},
+                    "expected_authority_gap": oracle.get("expected_authority_gap"),
+                    "common_lisp": {"protocol_status": left.get("protocol_status"), "status": left.get("status"), "authority_gap": left.get("authority_gap"), "semantic_status": left.get("semantic_status"), "failure": left.get("failure")},
+                    "python": {"protocol_status": right.get("protocol_status"), "status": right.get("status"), "authority_gap": right.get("authority_gap"), "semantic_status": right.get("semantic_status"), "failure": right.get("failure")},
                 }
             )
     return summary
+
+
+_BLOCKED_VECTOR_FAILURE_SHAPES = {
+    "vector:LCI0-N012": {
+        "category": "target-mismatch",
+        "code": "ScopeNarrowingNotDeclared",
+        "stage": "target-relation",
+        "path": ["claim", "location", "scope"],
+    },
+    "vector:LCI0-E5-COVERAGE-INSUFFICIENT": {
+        "category": "target-mismatch",
+        "code": "ScopeNarrowingCoverageInsufficient",
+        "stage": "target-relation",
+        "path": ["boundaries", "fixture-field:coverage-scope"],
+    },
+}
+
+_BLOCKED_VECTOR_SUCCESS_SHAPES = {
+    "vector:LCI0-P024": {
+        "operation": "revive-inert-occurrence",
+        "vector_id": "LCI0-P024",
+    },
+    "vector:LCI0-P029": {
+        "operation": "migrate-v1-collision-pair",
+        "vector_id": "LCI0-P029",
+    },
+}
+
+
+def _valid_authority_gap_response(
+    response: Mapping[str, Any], oracle: Mapping[str, Any]
+) -> bool:
+    return (
+        response.get("protocol_status") == "fixture-authority-gap"
+        and response.get("status") == "blocked"
+        and response.get("authority_gap") == oracle.get("expected_authority_gap")
+        and "failure" not in response
+        and "semantic_status" not in response
+        and "actual_canonical_cd0_hex" not in response
+    )
+
+
+def _blocked_hostile_expectation(
+    request_id: str, oracle: Mapping[str, Any]
+) -> dict[str, Any]:
+    if request_id in BLOCKED_HOSTILE_AUTHORITY_GAP_REQUESTS:
+        return {
+            "kind": "fixture-authority-gap",
+            "authority_gap": oracle.get("expected_authority_gap"),
+        }
+    if request_id in BLOCKED_HOSTILE_FAILURE_CANDIDATES:
+        return {
+            "kind": "bounded-failure-candidates",
+            "semantic_status": "failure",
+            "failure_candidates": list(
+                BLOCKED_HOSTILE_FAILURE_CANDIDATES[request_id]
+            ),
+        }
+    if request_id in BLOCKED_HOSTILE_SUCCESS_REQUESTS:
+        return {
+            "kind": "bounded-success",
+            "semantic_status": "success",
+            "required_output": {"within-budget": True},
+        }
+    raise HarnessFailure(f"unknown hostile blocker: {request_id}")
+
+
+def _valid_blocked_hostile_response(
+    request_id: str,
+    response: Mapping[str, Any],
+    oracle: Mapping[str, Any],
+) -> bool:
+    """Validate only the frozen subset of one authorially blocked result."""
+
+    if request_id in BLOCKED_HOSTILE_AUTHORITY_GAP_REQUESTS:
+        return _valid_authority_gap_response(response, oracle)
+    if request_id in BLOCKED_HOSTILE_FAILURE_CANDIDATES:
+        if not (
+            response.get("protocol_status") == "success"
+            and response.get("semantic_status") == "failure"
+            and response.get("failure")
+            in BLOCKED_HOSTILE_FAILURE_CANDIDATES[request_id]
+        ):
+            return False
+        return (
+            canonical_report_matches(response)
+            if "actual_canonical_cd0_hex" in response
+            else True
+        )
+    if request_id in BLOCKED_HOSTILE_SUCCESS_REQUESTS:
+        if not (
+            response.get("protocol_status") == "success"
+            and response.get("semantic_status") == "success"
+            and canonical_report_matches(response)
+        ):
+            return False
+        try:
+            decoded = cd0.decode_exact(
+                bytes.fromhex(response["actual_canonical_cd0_hex"]), CD0_BUDGET
+            )
+        except (KeyError, TypeError, ValueError, cd0.CD0Failure):
+            return False
+        fields = _closed_record_fields(decoded, FIXTURE_FIELD)
+        outputs = (
+            _closed_record_fields(fields["outputs"], FIXTURE_FIELD)
+            if fields is not None and "outputs" in fields
+            else None
+        )
+        within_budget = (
+            outputs.get("within-budget") if outputs is not None else None
+        )
+        return type(within_budget) is cd0.Boolean and within_budget.value is True
+    return False
+
+
+def _closed_record_fields(
+    value: cd0.Datum, namespace: tuple[str, ...]
+) -> dict[str, cd0.Datum] | None:
+    if type(value) is not cd0.Record:
+        return None
+    result: dict[str, cd0.Datum] = {}
+    for key, item in value.fields:
+        if key.namespace != namespace or len(key.path) != 1 or key.path[0] in result:
+            return None
+        result[key.path[0]] = item
+    return result
+
+
+def _identifier_is(
+    value: cd0.Datum, namespace: tuple[str, ...], path: tuple[str, ...]
+) -> bool:
+    return (
+        type(value) is cd0.Identifier
+        and value.namespace == namespace
+        and value.path == path
+    )
+
+
+def _decoded_failure_matches(
+    decoded: cd0.Datum, expected: Mapping[str, Any]
+) -> bool:
+    fields = _closed_record_fields(decoded, LCI)
+    if fields is None or set(fields) != {
+        "kind", "schema-version", "category", "code", "stage", "path", "context"
+    }:
+        return False
+    if not (
+        _identifier_is(fields["kind"], TAG, ("failure",))
+        and type(fields["schema-version"]) is cd0.Integer
+        and fields["schema-version"].value == 0
+        and _identifier_is(fields["category"], FAILURE, (expected["category"],))
+        and _identifier_is(fields["code"], FAILURE, (expected["code"],))
+        and _identifier_is(fields["stage"], FAILURE, (expected["stage"],))
+        and type(fields["path"]) is cd0.Sequence
+        and type(fields["context"]) is cd0.Record
+    ):
+        return False
+    observed_path: list[str] = []
+    for item in fields["path"].items:
+        if (
+            type(item) is not cd0.Identifier
+            or item.namespace not in {
+                LCI,
+                FIXTURE_FIELD,
+                FIXTURE + ("mneme-proposition", "argument"),
+                FIXTURE + ("mneme-proposition", "field"),
+            }
+            or len(item.path) != 1
+        ):
+            return False
+        observed_path.append(
+            f"fixture-field:{item.path[-1]}"
+            if item.namespace == FIXTURE_FIELD
+            else item.path[-1]
+        )
+    return (
+        observed_path == expected["path"]
+        and failure_path_matches(fields["path"].items, observed_path)
+    )
+
+
+def _field_named(record: cd0.Datum, name: str) -> cd0.Datum:
+    if type(record) is not cd0.Record:
+        raise ValueError(f"{name}: parent is not a record")
+    matches = [value for key, value in record.fields if key.path == (name,)]
+    if len(matches) != 1:
+        raise ValueError(f"{name}: expected one record field")
+    return matches[0]
+
+
+def _replace_named(
+    record: cd0.Datum, name: str, replacement: cd0.Datum
+) -> cd0.Record:
+    if type(record) is not cd0.Record:
+        raise ValueError(f"{name}: parent is not a record")
+    found = 0
+    fields: list[tuple[cd0.Identifier, cd0.Datum]] = []
+    for key, value in record.fields:
+        if key.path == (name,):
+            found += 1
+            fields.append((key, replacement))
+        else:
+            fields.append((key, value))
+    if found != 1:
+        raise ValueError(f"{name}: expected one record field")
+    return cd0.record(fields)
+
+
+def _blocked_success_candidate(
+    request_id: str, input_datum: cd0.Datum, expected: cd0.Datum
+) -> cd0.Datum:
+    """Construct the sole input-derived candidate tolerated under each blocker.
+
+    This is not an alternate fixture oracle.  It narrowly proves that a blocked
+    implementation response differs from the frozen expected result only where
+    the package contradicts its own explicit input, and that no ambient lookup
+    or arbitrary value was substituted.
+    """
+
+    input_payload = _field_named(input_datum, "payload")
+    expected_outputs = _field_named(expected, "outputs")
+    if request_id == "vector:LCI0-P024":
+        predecessor = _field_named(input_payload, "predecessor")
+        revival = _field_named(expected_outputs, "revival")
+        candidate_revival = _replace_named(revival, "new-occurrence", predecessor)
+        candidate_outputs = _replace_named(
+            expected_outputs, "revival", candidate_revival
+        )
+        return _replace_named(expected, "outputs", candidate_outputs)
+    if request_id == "vector:LCI0-P029":
+        right_source = _field_named(input_payload, "right-source")
+        source_artifact = _field_named(right_source, "source-artifact")
+        right_result = _field_named(expected_outputs, "right-result")
+        lineage = _field_named(right_result, "lineage")
+        if type(lineage) is not cd0.Sequence or len(lineage.items) != 1:
+            raise ValueError("P029: expected one right-result lineage edge")
+        candidate_edge = _replace_named(lineage.items[0], "source", source_artifact)
+        candidate_lineage = cd0.sequence((candidate_edge,))
+        candidate_right = _replace_named(right_result, "source", source_artifact)
+        candidate_right = _replace_named(
+            candidate_right, "lineage", candidate_lineage
+        )
+        candidate_outputs = _replace_named(
+            expected_outputs, "right-result", candidate_right
+        )
+        return _replace_named(expected, "outputs", candidate_outputs)
+    raise ValueError(f"no blocked-success candidate for {request_id}")
+
+
+def _decoded_success_matches(
+    request_id: str,
+    decoded: cd0.Datum,
+    input_datum: cd0.Datum,
+    expected: cd0.Datum,
+) -> bool:
+    try:
+        return decoded == _blocked_success_candidate(
+            request_id, input_datum, expected
+        )
+    except ValueError:
+        return False
+
+
+def _valid_authorial_blocked_response(
+    request_id: str,
+    response: Mapping[str, Any],
+    oracle: Mapping[str, Any],
+) -> bool:
+    actual_hex = response.get("actual_canonical_cd0_hex")
+    if (
+        type(actual_hex) is not str
+        or not actual_hex
+        or len(actual_hex) % 2
+        or actual_hex != actual_hex.lower()
+    ):
+        return False
+    try:
+        decoded = cd0.decode_exact(bytes.fromhex(actual_hex), CD0_BUDGET)
+    except (ValueError, cd0.CD0Failure):
+        return False
+    if canonical_bytes(decoded).hex() != actual_hex:
+        return False
+    if request_id in _BLOCKED_VECTOR_FAILURE_SHAPES:
+        expected = _BLOCKED_VECTOR_FAILURE_SHAPES[request_id]
+        return (
+            response.get("semantic_status") == "failure"
+            and response.get("failure") == expected
+            and _decoded_failure_matches(decoded, expected)
+        )
+    shape = _BLOCKED_VECTOR_SUCCESS_SHAPES.get(request_id)
+    try:
+        input_datum = cd0.decode_exact(
+            bytes.fromhex(oracle["expected_input_hex"]), CD0_BUDGET
+        )
+        expected = cd0.decode_exact(bytes.fromhex(oracle["expected_hex"]), CD0_BUDGET)
+    except (KeyError, TypeError, ValueError, cd0.CD0Failure):
+        return False
+    return bool(
+        shape is not None
+        and response.get("semantic_status") == "success"
+        and response.get("failure") is None
+        and response.get("vector_id") == shape["vector_id"]
+        and response.get("operation") == shape["operation"]
+        and _decoded_success_matches(
+            request_id, decoded, input_datum, expected
+        )
+    )
 
 
 def _only_authorial_blockers(comparison: Mapping[str, Any]) -> bool:
@@ -573,19 +1158,32 @@ def _only_authorial_blockers(comparison: Mapping[str, Any]) -> bool:
         mismatches = result.get("mismatches")
         if type(mismatches) is not list:
             return False
-        if {item.get("request_id") for item in mismatches} != BLOCKED_VECTOR_REQUESTS:
+        expected_blockers = (
+            BLOCKED_VECTOR_REQUESTS
+            | BLOCKED_HOSTILE_REQUESTS
+            | BLOCKED_RELATION_PATH_REQUESTS
+        )
+        if {item.get("request_id") for item in mismatches} != expected_blockers:
             return False
         if any(
-            item.get("kind") != "vector"
-            or item.get("disposition") != "authorial-blocked"
+            item.get("disposition") != "authorial-blocked"
+            or (
+                item.get("request_id") in BLOCKED_VECTOR_REQUESTS
+                and item.get("kind") != "vector"
+            )
+            or (
+                item.get("request_id") in BLOCKED_HOSTILE_REQUESTS
+                and item.get("kind") != "hostile"
+            )
+            or (
+                item.get("request_id") in BLOCKED_RELATION_PATH_REQUESTS
+                and item.get("kind") != "relation"
+            )
             for item in mismatches
         ):
             return False
         counts = result.get("counts")
-        if type(counts) is not dict or any(
-            name.endswith("_failed") and count
-            for name, count in counts.items()
-        ):
+        if counts != EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS:
             return False
 
     cross = comparison.get("cross_implementation_mismatches")
@@ -595,14 +1193,28 @@ def _only_authorial_blockers(comparison: Mapping[str, Any]) -> bool:
     if (
         any(type(request_id) is not str for request_id in cross_ids)
         or len(cross_ids) != len(set(cross_ids))
-        or not set(cross_ids) <= BLOCKED_RELATION_PATH_REQUESTS
+        or not set(cross_ids)
+        <= (BLOCKED_RELATION_PATH_REQUESTS | BLOCKED_HOSTILE_REQUESTS)
     ):
         return False
     for item in cross:
-        if item.get("kind") != "relation":
-            return False
+        request_id = item.get("request_id")
         differences = item.get("differences")
-        if type(differences) is not dict or set(differences) != {"failure"}:
+        if type(differences) is not dict or not differences:
+            return False
+        if request_id in BLOCKED_HOSTILE_REQUESTS:
+            allowed = BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS[request_id]
+            if item.get("kind") != "hostile" or not set(differences) <= allowed:
+                return False
+            if any(
+                type(pair) is not dict
+                or set(pair) != {"common-lisp", "python"}
+                or pair["common-lisp"] == pair["python"]
+                for pair in differences.values()
+            ):
+                return False
+            continue
+        if item.get("kind") != "relation" or set(differences) != {"failure"}:
             return False
         pair = differences["failure"]
         if type(pair) is not dict or set(pair) != {"common-lisp", "python"}:
@@ -662,6 +1274,7 @@ def main() -> int:
         ),
         "authorial_return_required": True,
         "authorial_blocked_vectors": sorted(BLOCKED_VECTOR_REQUESTS),
+        "authorial_blocked_hostile_requests": sorted(BLOCKED_HOSTILE_REQUESTS),
         "authorial_blocked_relation_paths": sorted(
             BLOCKED_RELATION_PATH_REQUESTS
         ),

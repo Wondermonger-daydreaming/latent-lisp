@@ -92,10 +92,10 @@ so no final result is inferred from them.
 
 Any prose, registry, vector, adapter, or implementation inconsistency must be
 reduced to a smallest witness and added to
-`LCI0-IMPLEMENTATION-DIVERGENCES.md`. Corpus verification itself is not
-currently blocked by the four authorial packets, which concern N012 matching,
-38 unpinned companion failure paths, one expected-only E5 coverage context,
-and one P029 cross-document source-artifact binding.
+`LCI0-IMPLEMENTATION-DIVERGENCES.md`. Canonical document discovery, decode,
+and byte-identical re-encoding are not currently blocked by the ten provisional
+authorial packets. The packets constrain semantic derivation or exact failure
+records; every cited witness document remains independently round-trippable.
 If a corpus identity or canonical document differs, this receipt becomes
 `BLOCKED` and implementation must not substitute a nearby revision.
 
@@ -105,6 +105,12 @@ If a corpus identity or canonical document differs, this receipt becomes
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | Relation values/documents remain testable; 38 unpinned paths remain BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | Input and expected bytes remain discoverable; semantic derivation remains BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | Input and expected bytes round-trip; cross-document source binding remains BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-POLICY-EVALUATION-ORDER.md` | Policy and minimized carrier documents round-trip; combined decision derivation remains BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-CORPUS-BASIS-COHERENCE.md` | Both revision-specific boundary documents round-trip; exact mixed-revision rejection tuple remains BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-OPERATION-PAYLOAD-FAILURES.md` | Official payload documents round-trip; novel missing/unknown failure tuples remain BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-MIGRATION-CLASSIFICATION-COUPLING.md` | Migration fixtures round-trip; the unpinned classification/content matrix remains BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-TARGET-BOUNDARY-COHERENCE.md` | Eleven target schema documents round-trip; opaque kind-coherence semantics remain BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md` | P024 input and expected documents round-trip; derivation of the injected beta occurrence remains BLOCKED |
 
 ## Archive, cleanup, and publication fill-in
 

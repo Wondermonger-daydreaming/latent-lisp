@@ -2,8 +2,8 @@
 
 Date opened: 2026-07-14
 
-Status: DRAFT; successor verification PENDING; four authorial-return classes
-BLOCKED
+Status: DRAFT; successor verification PENDING; ten provisional authorial-return
+packets BLOCKED
 
 This is a fill-forward transcript for the final integration-successor run. It
 contains verified preflight, immutable-seed, and baseline facts, but it is not a
@@ -29,12 +29,15 @@ roles must not be collapsed.
 
 ### Immutable seed-receipt limitation and supersession
 
-The two seed receipts remain immutable historical records of what each seed
-observed before cross-reading. They are not amended, rewritten, or retroactively
-declared false merely because hostile differential testing exposed incomplete
-closure. For successor/final conclusions, their implementation-result claims
-are superseded by the baseline divergence ledger and the future successor
-receipts wherever those later artifacts add a narrower witness or contradiction.
+The receipt blobs in the two immutable seed commits remain historical records
+of what each seed observed before cross-reading; those seed objects are not
+amended or rewritten. The integration-successor copies now carry prominent
+audit addenda so the historical `215/215` and zero-underdetermined observations
+cannot be mistaken for current conformance. For successor/final conclusions,
+their implementation-result claims are superseded by the baseline divergence
+ledger, the closed four-vector blocker census, and the future successor
+receipts wherever those later artifacts add a narrower witness or
+contradiction.
 
 Specifically:
 
@@ -211,8 +214,8 @@ normative/fixture content, and `mneme/verify-all.sh`.
 | Supplementary relation documents | PENDING | PENDING | Required 458 | PENDING |
 | Supplementary nested E1 documents | PENDING | PENDING | Required 30 | PENDING |
 | Total recursive corpus | PENDING | PENDING | Required 1,593 | PENDING |
-| Unique vector IDs | PENDING | PENDING | Required 215 | BLOCKED for three exact vector documents |
-| Required P001–P030 | PENDING | PENDING | Required 30 | PENDING |
+| Unique vector IDs | PENDING | PENDING | Required 215 | BLOCKED for four exact vector documents; determinate ceiling 211/215 |
+| Required P001–P030 | PENDING | PENDING | Required 30 | BLOCKED for P024 and P029 exact results |
 | Required N001–N032 | PENDING | PENDING | Required 32 | BLOCKED for N012 |
 | Relation values | PENDING | PENDING | Required 458 | PENDING values; 38 paths BLOCKED |
 | Exact differential requests | PENDING | PENDING | PENDING | PENDING |
@@ -259,10 +262,16 @@ See `LCI0-V1-MIGRATION-FIXTURE-RECEIPT.md` for the detailed fill-in table.
 
 | Packet | Smallest blocked surface | Current disposition | Final authorial response/hash |
 | --- | --- | --- | --- |
-| `LCI0-AUTHORIAL-RETURN-PACKET.md` | N012 universal/symbolic direct matcher composition | BLOCKED; other 214 vectors may continue | PENDING |
+| `LCI0-AUTHORIAL-RETURN-PACKET.md` | N012 universal/symbolic direct matcher composition | BLOCKED; 211/215 vectors remain unaffected across all exact-vector blockers | PENDING |
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | 38 unpinned companion failure paths | BLOCKED; 458 relation values remain testable | PENDING |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | Expected-only E5 `actual-coverage-scope` context | BLOCKED; failure tuple remains testable | PENDING |
 | `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | P029 right-result source changes explicit `.../v1/1` to expected `.../v1/2` | BLOCKED; other migration fixtures remain testable | PENDING |
+| `LCI0-AUTHORIAL-RETURN-PACKET-POLICY-EVALUATION-ORDER.md` | Fixture §8.1 and canonical Policy-A/B records order stale/loss/trust checks differently and disagree on one decision Identifier | BLOCKED for the combined witness; pinned single-branch vectors remain testable | PENDING |
+| `LCI0-AUTHORIAL-RETURN-PACKET-CORPUS-BASIS-COHERENCE.md` | Alpha-r3 corpus basis carrying the alpha-r4 semantic boundary must reject, but the exact failure tuple is unpinned | BLOCKED for exact tuple; acceptance remains a defect | PENDING |
+| `LCI0-AUTHORIAL-RETURN-PACKET-OPERATION-PAYLOAD-FAILURES.md` | Missing/unknown fields across 52 closed operation payload families lack complete pinned failure tuples | BLOCKED for 104 novel exact-tuple comparisons; official valid payloads remain testable | PENDING |
+| `LCI0-AUTHORIAL-RETURN-PACKET-MIGRATION-CLASSIFICATION-COUPLING.md` | MigrationResult classification/content coupling lacks a closed result schema and complete validity/failure matrix | BLOCKED outside individually pinned migration vectors | PENDING |
+| `LCI0-AUTHORIAL-RETURN-PACKET-TARGET-BOUNDARY-COHERENCE.md` | Fixture §7 step 6 names kind-specific target coherence through opaque algorithm IDs without executable definitions or negative vectors | BLOCKED for novel coherence semantics; official positive/first-missing fixtures remain testable | PENDING |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md` | P024 expected result injects beta occurrence fields absent from the canonical request and labels lineage as independent reassertion | BLOCKED exact P024 result; no implementation may restore by registry lookup | PENDING |
 
 No implementation is an oracle. No missing semantic rule may be resolved by
 copying the other implementation. These blocked paths are not N/A and are not
@@ -303,6 +312,16 @@ The required order is: commit raw transcripts; build and inspect a reproducible
 archive containing them; commit the archive and checksum manifest; only then
 delete safe loose copies and other operation detritus in a separate cleanup
 commit. Git history and the archive must retain the raw evidence.
+
+Self-reference boundary: the archive contains the transcript/relay snapshot at
+the raw-evidence commit and an internal per-member manifest. A mandatory builder
+gate first verifies a clean Git tree and exact equality between HEAD and the
+declared source commit. The finished
+archive's own bytes and SHA-256 are recorded afterward in the external
+`LCI0-EVIDENCE-ARCHIVE-RECEIPT.md` and checksum file, which are intentionally
+not members of that archive. The receipt records the exact source commit needed
+for deterministic reconstruction after loose raw files are removed from the
+final tree.
 
 | Step | Commit | Tree | Members/count | Bytes | SHA-256/result |
 | --- | --- | --- | --- | ---:| --- |
@@ -345,8 +364,9 @@ standalone preimplementation bundle are not detritus.
 
 ## 17. Current final-status line
 
-`BLOCKED — not eligible for independent implementation audit while four
-authorial-return packets and successor/final evidence remain unresolved.`
+`BLOCKED — not eligible for independent implementation audit while ten
+provisional authorial-return packets and successor/final evidence remain
+unresolved.`
 
 This line may be replaced only after authorial closure, non-blocked exact
 convergence, final nonregression, archive/cleanup verification, publication

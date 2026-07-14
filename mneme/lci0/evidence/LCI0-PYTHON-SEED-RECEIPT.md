@@ -2,8 +2,35 @@
 
 Date: 2026-07-14 (America/Sao_Paulo)
 
-Status: seed gates satisfied; independently seeded under shared normative
-infrastructure, with procedural—not OS-enforced—isolation.
+Status: historical seed gates observed; independently seeded under shared
+normative infrastructure, with procedural—not OS-enforced—isolation.
+Integration-audit supersession below controls every eligibility claim.
+
+## Integration-audit addendum — seed observations are not current conformance
+
+The `215/215 exact`, `zero underdetermined`, and `215/215 determinate`
+statements below are preserved as historical observations of commands run
+against the immutable Python seed commit
+`4ec2e519d05aeacd2412cb8aedc5f76bde702571`, tree
+`9f7915b460f449976a5d7fa856861ad5ce1d36ca`. They establish what that seed
+runner reported before cross-language differential testing, anti-shortcut
+review, and the later authorial-gap audit. They do not establish current
+semantic conformance and must not be quoted as a present 215-vector PASS.
+
+For integration eligibility, those result claims are superseded by
+`LCI0-IMPLEMENTATION-DIVERGENCES.md` and the closed four-vector blocker census:
+
+- `LCI0-N012` — universal/symbolic matcher composition;
+- `LCI0-E5-COVERAGE-INSUFFICIENT` — expected-only coverage context;
+- `LCI0-P024` — unbound beta occurrence injected by revival; and
+- `LCI0-P029` — expected source artifact differs from the explicit input.
+
+Those four exact result documents are authorially BLOCKED, not pass, failure,
+skip, or N/A. The current unaffected ceiling is 211/215; fresh committed
+successor execution and final counts are PENDING. The seed identity, tree,
+pre-cross-reading inventory, and procedural-isolation facts remain unchanged.
+This addendum does not rewrite the seed commit, claim PASS, or establish
+eligibility for independent implementation audit.
 
 ## Git and host identity
 

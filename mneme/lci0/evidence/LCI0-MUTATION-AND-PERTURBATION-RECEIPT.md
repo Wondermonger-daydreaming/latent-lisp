@@ -63,9 +63,13 @@ reached. Deferred work is not a pass, failure, skip, or N/A.
 ## Property-generation gate and record
 
 Deterministic randomized/property generation may begin only after every
-non-blocked exact fixture has converged. The four authorial-blocked classes must
-be excluded by exact witness identity and reported as blocked, never silently
-removed from totals.
+non-blocked exact fixture has converged. Ten provisional authorial-return
+classes are current. Four whole-result vector documents—N012, E5 coverage,
+P024, and P029—and separately named novel semantic witnesses are excluded from
+pass-oracle comparison by exact identity and reported as blocked, never silently
+removed from totals. The 104 generated operation-payload witnesses are still
+executed and compared on their pinned fail-closed coordinates; only their
+unpinned category, stage, path, and context coordinates remain blocked.
 
 | Field | Value/status |
 | --- | --- |
@@ -99,6 +103,12 @@ removed from totals.
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | 38 unpinned companion paths | BLOCKED for exact path comparison; relation values remain eligible for perturbation |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | E5 expected-only coverage context | BLOCKED for exact expected document; failure tuple and input-derived invariants remain eligible |
 | `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | P029 right-result source replacement | BLOCKED for exact expected document; explicit-source preservation and all unaffected migration invariants remain eligible |
+| `LCI0-AUTHORIAL-RETURN-PACKET-POLICY-EVALUATION-ORDER.md` | Combined stale/loss/untrusted Policy-B witness | BLOCKED for first-decision identity; pinned single-branch policy mutations remain eligible |
+| `LCI0-AUTHORIAL-RETURN-PACKET-CORPUS-BASIS-COHERENCE.md` | Alpha-r3 basis with alpha-r4 semantic boundary | BLOCKED for exact failure tuple; fail-closed acceptance property remains mandatory |
+| `LCI0-AUTHORIAL-RETURN-PACKET-OPERATION-PAYLOAD-FAILURES.md` | Missing and unknown fields across 52 closed payload families | BLOCKED for 104 exact novel tuples; typed fail-closed properties remain mandatory |
+| `LCI0-AUTHORIAL-RETURN-PACKET-MIGRATION-CLASSIFICATION-COUPLING.md` | Novel classification/content combinations | BLOCKED outside individually pinned fixtures; inertness and pinned classifications remain eligible |
+| `LCI0-AUTHORIAL-RETURN-PACKET-TARGET-BOUNDARY-COHERENCE.md` | Kind-specific target coherence beyond positive/first-missing fixtures | BLOCKED for novel semantic oracle; schema closure and pinned target cases remain eligible |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md` | P024 injected beta occurrence | BLOCKED for exact expected document; absence of registry/result lookup remains mandatory |
 
 ## Cleanup and publication fill-in
 

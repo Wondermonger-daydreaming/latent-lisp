@@ -96,11 +96,9 @@ as a distinct unresolved item.
 
 ## Authorial returns and nonregression
 
-The N012 matcher, relation-failure-path, E5 coverage-context, and P029
-source-artifact authorial packets block exact LCI integration conclusions.
-They do not waive any CD/0 or
-v1 nonregression gate. Nonregression must be run and reported independently of
-their disposition.
+Ten provisional authorial packets now block exact LCI integration conclusions.
+They do not waive any CD/0 or v1 nonregression gate. Nonregression must be run
+and reported independently of their disposition.
 
 | Packet | Authorial response/hash | Effect on final nonregression result |
 | --- | --- | --- |
@@ -108,6 +106,12 @@ their disposition.
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | PENDING | Thirty-eight paths BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | PENDING | Expected context BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
 | `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | PENDING | P029 right result BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
+| `LCI0-AUTHORIAL-RETURN-PACKET-POLICY-EVALUATION-ORDER.md` | PENDING | Combined policy decision BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
+| `LCI0-AUTHORIAL-RETURN-PACKET-CORPUS-BASIS-COHERENCE.md` | PENDING | Exact coherence failure tuple BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
+| `LCI0-AUTHORIAL-RETURN-PACKET-OPERATION-PAYLOAD-FAILURES.md` | PENDING | Novel payload failure tuples BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
+| `LCI0-AUTHORIAL-RETURN-PACKET-MIGRATION-CLASSIFICATION-COUPLING.md` | PENDING | Unpinned migration coupling matrix BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
+| `LCI0-AUTHORIAL-RETURN-PACKET-TARGET-BOUNDARY-COHERENCE.md` | PENDING | Novel target-coherence semantics BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md` | PENDING | P024 exact result BLOCKED; CD/0 and v1 gates remain PENDING and mandatory |
 
 ## Archive, cleanup, and publication fill-in
 

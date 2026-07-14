@@ -44,17 +44,19 @@ expected result performs that replacement twice.
 
 ## Independent implementation observations
 
-The Common Lisp and Python successors each removed their earlier whole-result
-fixture lookup and reconstructed migration results from declared component
-mappings. Without reading one another's successor source, both then exposed the
-same conflict: preserving the explicit input source produces `.../v1/1` and
-first disagrees at
+Preliminary, non-commit-bound Common Lisp and Python successor worktree
+snapshots each removed their earlier whole-result fixture lookup and
+reconstructed migration results from declared component mappings. Without
+reading one another's successor source, both snapshots then exposed the same
+conflict: preserving the explicit input source produces `.../v1/1` and first
+disagrees at
 `outputs/right-result/source/material/object-id`. Synthesizing `.../v1/2`
 would reproduce the expected bytes only by adding a package-local inference
 rule absent from the normative inputs.
 
 Neither implementation is an oracle. The shared observation establishes the
-witness; it does not decide the intended revision.
+witness; it does not decide the intended revision or establish a final
+successor result. Committed successor verification remains PENDING.
 
 ## Requested closure
 
@@ -70,7 +72,8 @@ The authorial response should publish one coherent successor package:
    lineage edge.
 
 The response should include replacement artifact hashes, version consequences,
-and a permanent regression vector. Until then, both successors preserve the
-explicit source binding, construct zero live warrants, and report the P029
-right-result expected-document comparison as blocked rather than passed,
-failed, skipped, or N/A.
+and a permanent regression vector. Until then, the required successor
+disposition is to preserve the explicit source binding, construct zero live
+warrants, and report the P029 right-result expected-document comparison as
+blocked rather than passed, failed, skipped, or N/A. Final execution evidence
+is PENDING.

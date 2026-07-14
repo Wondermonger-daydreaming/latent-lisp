@@ -4,7 +4,7 @@ Date: 2026-07-14
 
 Relay status: DRAFT / NOT READY FOR PASS REVIEW
 
-Requested disposition: authorial closure on four narrow packets; implementation
+Requested disposition: authorial closure on ten narrow packets; implementation
 audit request PENDING
 
 > Paste-ready boundary: this relay currently reports a blocked implementation
@@ -64,12 +64,15 @@ No unqualified clean-room claim is made. Neither seed is an oracle.
 
 ### Immutable seed-receipt limitation and successor supersession
 
-The seed receipts are immutable historical claims about their own gate runs.
-They are not rewritten after integration. Where the hostile differential later
-found narrower counterexamples, the baseline divergence ledger supersedes the
-seed receipt for successor/final correctness conclusions without erasing the
-seed's historical observation. The future successor receipts, not amended seed
-commits, must carry the corrections and fresh evidence.
+The receipt blobs in the immutable seed commits are historical claims about
+their own gate runs and are not rewritten after integration. The successor
+integration copies carry prominent audit addenda preserving those observations
+while stating that `215/215` and zero-underdetermined are not current
+conformance claims. Where differential and anti-shortcut review found narrower
+counterexamples or authorial gaps, the divergence ledger and closed four-vector
+blocker census supersede the seed results for successor/final conclusions. The
+future successor receipts, not amended seed commits, must carry corrections and
+fresh evidence.
 
 The pre-seed red transcripts prove that fifteen named tests preceded successful
 behavior, but their initial output is dominated by absent modules or undefined
@@ -105,7 +108,7 @@ integration branch kept `71f7cfc...` and the infrastructure branch returned to
 `ab353b4...`. This is disclosed as a procedural deviation, not described as
 perfect worktree isolation.
 
-## 5. Four narrow authorial returns
+## 5. Ten provisional narrow authorial returns
 
 ### AR-1 — N012 universal/symbolic matcher composition
 
@@ -114,7 +117,8 @@ Packet: `LCI0-AUTHORIAL-RETURN-PACKET.md`
 The frozen scope table returns `wider` for universal → symbolic, while Errata E2
 retains `LCI0-N012` as a direct unknown-relation witness. The incorporated
 materials do not pin the matcher-level rule that reconciles these obligations.
-The exact path is BLOCKED; the other 214 vectors may continue.
+The exact path is BLOCKED. Across all exact-vector returns, 211 of 215 vectors
+remain unaffected.
 
 ### AR-2 — unpinned relation failure paths
 
@@ -141,9 +145,72 @@ Packet: `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md`
 Both P029 source inputs explicitly bind legacy source `.../v1/1`, while the
 expected corpus-r4 right result and its lineage bind `.../v1/2`. LCI/0 §23.3
 requires binding and linking the supplied source artifact, and no reviewed rule
-authorizes this replacement. Both successors preserve the explicit input and
-therefore expose the same exact-result conflict. The P029 right-result path is
-BLOCKED; unaffected migration fixtures remain executable and inert.
+authorizes this replacement. Preliminary, non-commit-bound successor snapshots
+preserved the explicit input and exposed the same exact-result conflict;
+committed successor verification remains PENDING. The P029 right-result path
+is BLOCKED; unaffected migration fixtures remain executable and inert.
+
+### AR-5 — Policy-A/Policy-B evaluation order and decision identity
+
+Packet: `LCI0-AUTHORIAL-RETURN-PACKET-POLICY-EVALUATION-ORDER.md`
+
+Fixture §8.1 orders boundary coherence, represented loss, trust, and freshness
+differently from both canonical policy records. The prose and registry also
+name different external-principal rejection Identifiers. A minimized
+successful-relation witness activates stale, loss, and trust failures together;
+its first decision and exact code are BLOCKED. Single-branch pinned policy
+vectors remain executable.
+
+### AR-6 — CorpusBasis slice/boundary coherence tuple
+
+Packet: `LCI0-AUTHORIAL-RETURN-PACKET-CORPUS-BASIS-COHERENCE.md`
+
+The registry requires `slice-boundary-coherent` after
+`revision-belongs-to-corpus`, and the prose clearly refuses mixed revisions.
+An alpha-r3 basis carrying the alpha-r4 manifest boundary must fail closed, but
+no machine artifact pins category/code/stage/path. Acceptance is an
+implementation defect; the exact rejection record is BLOCKED.
+
+### AR-7 — Operation-specific payload closure failures
+
+Packet: `LCI0-AUTHORIAL-RETURN-PACKET-OPERATION-PAYLOAD-FAILURES.md`
+
+The 215 vectors contain 52 operation families whose payloads are normatively
+closed, but the package does not provide 52 payload schemas or complete
+missing/unknown failure documents. Typed fail closure remains required. Exact
+tuple comparison for the 104 deterministic novel mutations is BLOCKED; valid
+official inputs are unaffected.
+
+### AR-8 — MigrationResult classification/content coupling
+
+Packet: `LCI0-AUTHORIAL-RETURN-PACKET-MIGRATION-CLASSIFICATION-COUPLING.md`
+
+The seven migration classifications have normative meanings, but no closed
+MigrationResult schema defines their cross-field coupling. Changing the inert
+predecessor result's classification alone exposes the gap. N028 remains exact;
+the new classification/content path is BLOCKED and no inverse matrix is
+inferred from examples.
+
+### AR-9 — Kind-specific target boundary coherence
+
+Packet: `LCI0-AUTHORIAL-RETURN-PACKET-TARGET-BOUNDARY-COHERENCE.md`
+
+All eleven target schemas name opaque
+`target-boundary-algorithm/<kind>/0` references, fields, and failure
+vocabularies, but do not define the step-6 comparison operands or path rules.
+Official positive and first-field-missing vectors remain executable;
+unvectored mismatch semantics are BLOCKED.
+
+### AR-10 — P024 injects an unbound revival occurrence
+
+Packet: `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md`
+
+P024 supplies only a predecessor occurrence and requested ClaimId, while its
+expected result injects the registry beta occurrence's new claimant, time,
+provenance, lineage, presentation, and metadata. The expected lineage is
+`independent-reassertion`, not the prose's `freeze-revival`. No pure transform
+binds those values. P024 is BLOCKED; successor implementations must remove the
+registry/expected shortcut and keep any input-derived revival inert.
 
 | Requested authorial response | Status |
 | --- | --- |
@@ -151,6 +218,12 @@ BLOCKED; unaffected migration fixtures remain executable and inert.
 | Exact category/code/stage/path documents for AR-2 orientations | PENDING |
 | Input binding or pure derivation/revised expectation for AR-3 | PENDING |
 | Corrected binding/result or explicit source-rebinding rule for AR-4 | PENDING |
+| Exact policy order and external-principal decision Identifier for AR-5 | PENDING |
+| Executable CorpusBasis checks and exact failure tuples for AR-6 | PENDING |
+| Fifty-two closed payload schemas and exact tuple vectors for AR-7 | PENDING |
+| Total MigrationResult classification/content rule for AR-8 | PENDING |
+| Eleven executable target-boundary coherence definitions for AR-9 | PENDING |
+| Pure field-by-field revival transform or corrected P024 for AR-10 | PENDING |
 | Successor normative version and replacement hashes | PENDING |
 | Permanent regression-vector identities | PENDING |
 
@@ -185,8 +258,8 @@ suite was green.
 | Evidence | Required | Final observed | Status |
 | --- | ---:| ---:| --- |
 | Registry definitions | 675 | PENDING | PENDING |
-| Unique vector IDs | 215 | PENDING | BLOCKED for three exact expected paths |
-| P001–P030 | 30 | PENDING | PENDING |
+| Unique vector IDs | 215 | PENDING | BLOCKED for four exact expected paths; unaffected ceiling 211 |
+| P001–P030 | 30 | PENDING | BLOCKED for P024 and P029 |
 | N001–N032 | 32 | PENDING | BLOCKED for N012 |
 | Official embedded canonical documents | 1,105 | PENDING | PENDING |
 | Supplementary relation documents | 458 | PENDING | PENDING |
@@ -251,6 +324,15 @@ Detailed receipt: `LCI0-NONREGRESSION-RECEIPT.md`.
 The required sequence is raw-evidence commit → reproducible archive commit →
 verified listing/checksums → cleanup commit deleting only recoverable loose raw
 copies and safe generated detritus.
+
+The archive builder's mandatory clean-Git-tree gate verifies that HEAD equals
+the declared raw-evidence source commit and that selected worktree bytes have no
+tracked, untracked, or ignored divergence before construction. The archive
+contains that commit's relay/receipts plus its internal per-member manifest. Its own bytes and digest
+cannot be embedded into those same members without a self-reference cycle.
+Accordingly, a post-build `LCI0-EVIDENCE-ARCHIVE-RECEIPT.md` and checksum file
+are committed outside the archive and bind its final bytes, member count,
+listing inspection, deterministic rebuild, and source commit.
 
 | Item | Commit/tree | Members | Bytes | SHA-256/status |
 | --- | --- | ---:| ---:| --- |

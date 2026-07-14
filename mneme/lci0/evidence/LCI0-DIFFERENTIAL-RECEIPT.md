@@ -2,7 +2,8 @@
 
 Date: 2026-07-14
 
-Status: not converged; successor corrections and four narrow authorial returns required
+Status: not converged; successor corrections and ten provisional narrow
+authorial returns required
 
 ## Bound inputs and implementations
 
@@ -72,10 +73,25 @@ authorial-return packet; the failure tuple itself remains determinate.
 
 Successor removal of whole-result migration lookup exposed a fourth conflict:
 both P029 source inputs bind `object/artifact/legacy-source/v1/1`, while the
-expected corpus-r4 right result and lineage use `.../v1/2`. Both language
-successors preserve the explicit input source under LCI/0 §23.3. The exact
+expected corpus-r4 right result and lineage use `.../v1/2`. Preliminary,
+non-commit-bound successor snapshots preserved the explicit input source under
+LCI/0 §23.3; committed successor verification remains PENDING. The exact
 right-result comparison is blocked by
 `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md`.
+
+A subsequent preliminary successor review found that P024 likewise cannot be
+derived from its canonical input: the expected result injects the separately
+registered beta occurrence, including claimant, time, provenance, lineage,
+presentation, and nonidentity metadata that the request does not carry. That
+exact result is blocked by `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md`.
+
+The same review produced five further narrow packets for policy evaluation
+order, CorpusBasis coherence failure tuples, operation-payload closure tuples,
+MigrationResult classification/content coupling, and kind-specific target
+boundary coherence. These are post-baseline findings, not observations encoded
+in the retained baseline transcript. They constrain successor implementation
+and novel hostile/property conclusions without changing the historical request
+or response counts above.
 
 ## Retained raw evidence
 
@@ -101,9 +117,12 @@ contains them and the cleanup commit preserves recoverability in history.
 Host ambient-state perturbations and randomized/property generation were not
 run because the exact fixture baseline did not converge. They are not passes,
 skips, or N/A. A successor phase may run them only after every non-blocked exact
-fixture converges, excluding solely the three exact authorial-blocked vector
-witnesses N012, E5-COVERAGE-INSUFFICIENT, and P029 by exact request ID, plus
-the separately declared 38 relation-path observations.
+fixture converges. Four exact vector documents are currently blocked: N012,
+E5-COVERAGE-INSUFFICIENT, P024, and P029. The resulting ceiling is 211/215
+determinate official vector documents pending authorial closure. The separately
+declared 38 relation-path observations and novel witnesses covered by the other
+packets must also remain explicitly blocked rather than silently removed from
+their respective totals.
 
 ## Command
 

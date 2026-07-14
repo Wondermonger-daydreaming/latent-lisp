@@ -32,7 +32,7 @@ the successor migration surface. No final migration PASS is asserted here.
 | V1-02 | Use only exact frozen package/symbol mappings | `common-lisp/migration.lisp`, `common-lisp/registry.lisp` | `python/lci0/core.py`, `python/lci0/package.py` | Mapping mutation matrix | PENDING |
 | V1-03 | Use exact `as-of` source-site-to-role table | `common-lisp/migration.lisp` | `python/lci0/core.py` | Role-table vectors and hostile mutations | PENDING |
 | V1-04 | Use exact scope, time, corpus, and frame mappings | `common-lisp/migration.lisp`, `common-lisp/calculi.lisp` | `python/lci0/core.py` | Coordinate-by-coordinate comparison | PENDING |
-| V1-05 | Distinguish exact, tagged, new-identity, lossy, rejected, deferred, and privileged-runtime classifications | `common-lisp/migration.lisp`, `common-lisp/operations.lisp` | `python/lci0/core.py`, `python/lci0/runner.py` | P024–P030, E9, and classification requests | PENDING |
+| V1-05 | Distinguish exact, tagged, new-identity, lossy, rejected, deferred, and privileged-runtime classifications | `common-lisp/migration.lisp`, `common-lisp/operations.lisp` | `python/lci0/core.py`, `python/lci0/runner.py` | P024–P030, E9, and classification requests | BLOCKED for the unpinned classification/content coupling matrix; pinned fixture paths remain testable |
 | V1-06 | Produce exact closed represented-loss accounts | `common-lisp/migration.lisp`, `common-lisp/values.lisp` | `python/lci0/core.py`, `python/lci0/model.py` | LOSS family exact document comparison | PENDING |
 | V1-07 | Preserve old fingerprints as inert predecessor metadata only | `common-lisp/migration.lisp` | `python/lci0/core.py` | ClaimId neutrality and migration result checks | PENDING |
 | V1-08 | Create zero live warrants | `common-lisp/migration.lisp`, `common-lisp/pre-seed-red-tests.lisp` | `python/lci0/core.py`, `python/tests/test_red_boundaries.py` | Inert/live result field comparison | PENDING |
@@ -45,7 +45,7 @@ the successor migration surface. No final migration PASS is asserted here.
 
 | Family/result | Required or mechanically derived scope | Successor result |
 | --- | --- | --- |
-| P024–P030 | 7 required positive IDs | PENDING |
+| P024–P030 | 7 required positive IDs | BLOCKED for P024 and P029 exact results; other five P-family results remain testable |
 | E9 family | 15 mechanically observed fixture vectors | PENDING |
 | LOSS family | 14 mechanically observed fixture vectors | PENDING |
 | Privileged restoration refusal | Exact fixture witness | PENDING |
@@ -69,7 +69,7 @@ exception prose is never a comparison oracle.
 | Inert result count | PENDING | PENDING | PENDING | PENDING |
 | Live result count | PENDING | PENDING | Must be 0 | PENDING |
 | Typed failure mismatches | PENDING | PENDING | Must be 0 on non-blocked paths | PENDING |
-| Underdetermined results | PENDING | PENDING | Must be 0 | PENDING |
+| Underdetermined results | PENDING | PENDING | Must be 0 outside declared blocked paths | BLOCKED for P024, P029, and the unpinned classification/content coupling matrix |
 
 ## Exact command and environment fill-in
 
@@ -88,10 +88,10 @@ exception prose is never a comparison oracle.
 
 ## Authorial-return boundary
 
-Of the four current authorial packets, three do not directly reopen the
-declared v1 migration grammar or its inertness obligation; the P029 packet does
-block one exact migration-result path. All four must be included in the final
-relay:
+Ten provisional authorial packets are current. Three directly constrain the
+migration result surface: P024, P029, and classification/content coupling. The
+other seven do not presently reopen the declared bounded grammar or the
+zero-live-warrant obligation, but all ten must remain in the final relay:
 
 | Packet | Migration impact |
 | --- | --- |
@@ -99,6 +99,12 @@ relay:
 | `LCI0-AUTHORIAL-RETURN-PACKET-RELATION-FAILURE-PATHS.md` | No direct migration impact identified; 38 companion paths remain BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-E5-COVERAGE-CONTEXT.md` | No direct migration impact identified; expected result context remains BLOCKED |
 | `LCI0-AUTHORIAL-RETURN-PACKET-P029-SOURCE-ARTIFACT.md` | Direct migration impact: explicit corpus-r4 source is `.../v1/1` while expected right result uses `.../v1/2`; P029 right result BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-POLICY-EVALUATION-ORDER.md` | No direct bounded-grammar or inertness impact identified; combined policy witness remains BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-CORPUS-BASIS-COHERENCE.md` | No direct migration grammar impact identified; exact mixed-revision rejection tuple remains BLOCKED wherever migration validates a resulting basis |
+| `LCI0-AUTHORIAL-RETURN-PACKET-OPERATION-PAYLOAD-FAILURES.md` | Migration payloads remain closed, but exact missing/unknown-field tuples for novel payload mutations remain BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-MIGRATION-CLASSIFICATION-COUPLING.md` | Direct migration impact: the package does not pin the complete classification/content validity matrix or inverse failure tuples |
+| `LCI0-AUTHORIAL-RETURN-PACKET-TARGET-BOUNDARY-COHERENCE.md` | No direct bounded-grammar or inertness impact identified; novel kind-coherence witnesses remain BLOCKED |
+| `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md` | Direct migration impact: P024 expected output injects an occurrence not bound by its input; exact result BLOCKED |
 
 Any new migration ambiguity must stop only its affected path and receive its own
 minimal witness and authorial-return packet.

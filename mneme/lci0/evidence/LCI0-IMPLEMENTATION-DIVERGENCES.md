@@ -198,9 +198,11 @@ oracle.
 
 ## LCI0-DIV-007 — Python does not reproduce four determinate failure documents
 
-- Status: corrected after provenance review of the five baseline mismatches.
-  Four are Python representation defects. The coverage-context mismatch is the
-  separate normative conflict `LCI0-DIV-015`.
+- Status: correction implemented in a preliminary successor worktree after
+  provenance review of the five baseline mismatches; commit-bound fresh
+  verification remains pending. Four are Python representation defects. The
+  coverage-context mismatch is the separate normative conflict
+  `LCI0-DIV-015`.
 - Sources: Errata I12 deterministic structural paths and failure comparison;
   Fixture Package Specification §§11–13; vectors `LCI0-N025`,
   `LCI0-E5-NONMONOTONE-NARROWING`, `LCI0-E8-DIGEST-ONLY-LOOKUP`, and
@@ -386,13 +388,17 @@ oracle.
 - Common Lisp result: rejects with
   `invalid-input/UnsupportedFixturePolicy/admissibility` at `policy`.
 - Python result: returns an accepting decision through its non-A fallback.
-- Expected fixture result: the Common Lisp failure. The fixture policy set is
-  finite and closed.
-- Classification: Python fixture-policy dispatch defect.
+- Expected fixture result: no exact LCI failure document exists for Policy-C.
+  The finite, closed Policy-A/B set requires fail-closed dispatch, but the
+  Common Lisp baseline tuple used an unregistered code and is not an oracle.
+- Classification: Python fixture-policy dispatch defect plus fixture-package
+  ambiguity for the exact failure tuple.
 - May implementation continue: yes for exact Policy-A and Policy-B inputs;
-  unknown policy dispatch is blocked.
+  unknown policy dispatch remains authorial-return-blocked.
 - Proposed disposition: reject every policy identity other than the two exact
-  registered fixture policies.
+  registered fixture policies using a non-LCI fixture-authority-gap condition
+  until an exact LCI failure tuple is authorially pinned. Never mint a nearby
+  `LCIFailure/0` code.
 - Permanent regression-vector status: the witness hash is permanent.
 
 ## LCI0-DIV-014 — relation-table failure paths differ between implementations
@@ -483,12 +489,13 @@ oracle.
   bytes, SHA-256
   `001de18804d4826f10106efd9ba0979d372dada832cda854466c2b3681062e19`
   and carries `.../v1/2` in both source positions.
-- Common Lisp successor result: independently constructs the right migration
-  result from the validated input and preserves `.../v1/1`, disagreeing with
-  the expected right result at `outputs/right-result/source/material/object-id`.
-- Python successor result: independently constructs the right migration result
-  from the validated input and preserves `.../v1/1`, with the same first
-  disagreement.
+- Common Lisp preliminary successor observation: a non-commit-bound worktree
+  snapshot constructed the right migration result from validated input and
+  preserved `.../v1/1`, disagreeing with the expected right result at
+  `outputs/right-result/source/material/object-id`.
+- Python preliminary successor observation: a separately reasoned, non-commit-
+  bound worktree snapshot preserved `.../v1/1`, with the same first
+  disagreement. Committed final results in both languages remain PENDING.
 - Expected fixture result: the frozen expected document requires `.../v1/2`,
   but no package rule authorizes replacing the explicitly bound source
   artifact based on corpus revision, fixture name, pair position, or another
@@ -509,3 +516,313 @@ oracle.
   P029 input/expected hashes are permanent conflict witnesses. Both
   implementations retain a regression proving that explicit source binding
   wins over fixture-name or corpus-revision inference until authorial closure.
+
+## LCI0-DIV-017 — policy evaluation order and external-principal decision identity conflict
+
+- Status: confirmed prose/registry conflict; combined multi-predicate policy
+  paths and the untrusted-principal decision spelling are blocked.
+- Sources: Fixture Package Specification §8.1; registry
+  `admissibility-policy.a.0` (8,128 bytes, SHA-256
+  `467561cb0c91e644761006dac047dac7efde77840d49ec12bf113704256f6373`)
+  and `admissibility-policy.b.0` (8,782 bytes, SHA-256
+  `0e04628c6bf3f8361ca1f8f61b7ffe9288e17e056f4fada097f8f8f2f39ecc6f`).
+- Minimal input: a six-coordinate Policy-B diagnostic carrier with successful
+  exact target relation, externally-attested target kind, age 169, identity-
+  bearing loss, and the registered untrusted external principal: 1,686 bytes,
+  SHA-256
+  `a061ba268a0bf6960410f0e467fb2b548fe7aded8f29411909434171defa809c`.
+- Common Lisp result: no combined evaluation surface exists; the finite
+  evaluator handles only separately registered target/query cases.
+- Python result: a non-commit-bound preliminary helper snapshot returned
+  `reject-stale` because it evaluated freshness before loss and trust. Final
+  successor verification is PENDING; this is not an oracle.
+- Expected fixture result: package prose orders represented loss, trust, then
+  freshness; both canonical policies order freshness, loss, then trust, while
+  `direct-if-trusted-principal` does not pin which step evaluates trust. Prose
+  also names `reject-untrusted-external-principal` (91 bytes, SHA-256
+  `0200287fd1dcccc9ddec7ee798afdd0d092cb94f38ebc11d7e007dc5eec4bc7d`),
+  while the registry defines `reject-external-principal` (81 bytes, SHA-256
+  `84da031f081df165220acdbc1805377689c092a08cddc75c70e9a8336116d0d0`).
+- Classification: fixture-package/specification ambiguity.
+- May implementation continue: yes for single-branch exact vectors; no for
+  combined stale/loss/trust precedence or the unpinned decision Identifier.
+- Proposed disposition: authorially publish one exact evaluation order,
+  define when conditional target-kind trust is evaluated, and select one
+  decision Identifier. See
+  `LCI0-AUTHORIAL-RETURN-PACKET-POLICY-EVALUATION-ORDER.md`.
+- Permanent regression-vector status: the combined carrier and both decision
+  Identifier documents are retained; machine vectors are required on closure.
+
+## LCI0-DIV-018 — CorpusBasis names coherence checks without exact failure tuples
+
+- Status: rejection obligation confirmed; both validator snapshots inspected
+  during preliminary review accepted the minimized mixed-revision witness;
+  exact failure result is blocked and final successor verification is PENDING.
+- Sources: Fixture Package Specification §4; Errata I12/E6;
+  `closed-schema.corpus-basis.0`, 2,430 bytes, SHA-256
+  `189fbb4a81de03cd4836a36b826557d547a5bef081a6b550ccefc5c7f24c627a`.
+- Minimal input: valid `claim-basis.alpha-r3-all-manifest3` with only its
+  semantic boundary replaced by valid `semantic-boundary.manifest-alpha-4`;
+  4,005 bytes, SHA-256
+  `7c92ea0639c7de40dbed630587b9ecbf1ce36e374bb66db966d6536aa1c1a0be`.
+- Common Lisp result: the preliminary, non-commit-bound snapshot exposed an
+  acceptance path; it performed recursive shape checks but not
+  `revision-belongs-to-corpus` or `slice-boundary-coherent`.
+- Python result: the snapshot at the same review point accepted an executed
+  direct validation for the same reason. No final successor result is claimed.
+- Expected fixture result: fail closed because mixed immutable revision
+  material is expressly refused and `slice-boundary-coherent` is a declared
+  final cross-field check. The package does not pin category/code/stage/path or
+  context for this case or for logical-corpus/revision mismatch.
+- Classification: shared implementation defect for accepting the witness,
+  plus specification/fixture underdetermination for the exact failure tuple.
+- May implementation continue: yes on valid registered bases. A deterministic
+  rejection may be implemented, but no invented tuple may be counted as exact
+  convergence.
+- Proposed disposition: add executable cross-check definitions and exact
+  single-fault failure documents. See
+  `LCI0-AUTHORIAL-RETURN-PACKET-CORPUS-BASIS-COHERENCE.md`.
+- Permanent regression-vector status: required for r3/r4 boundary coherence
+  and corpus/revision mismatch in both orientations.
+
+## LCI0-DIV-019 — operation payloads are declared closed without per-operation failure documents
+
+- Status: preliminary implementation defect confirmed; binary fail closure is
+  repairable, while complete novel tuples are authorially blocked.
+- Sources: LCI/0 §§24–25; Errata I12/E6; all 215 sealed vectors. Mechanical
+  census yields 52 distinct operation payload families.
+- Minimal inputs: empty `migrate-v1` payload, 430 bytes, SHA-256
+  `e0be41da4dc38484102baa80a2c9478c2971999002913f4353e4cd54e55729ec`;
+  and valid `validate-profile-location` payload plus one unknown field, 588
+  bytes, SHA-256
+  `9b324a9fa3f905c6247665350ef565dde2535666489a9ad43090e9f461d4f091`.
+- Common Lisp result: full 104-witness execution is pending; several dispatch
+  branches read named fields without an explicit closed payload schema.
+- Python result: the snapshot inspected during preliminary review ignored
+  unknown fields on many branches and could expose host `KeyError` for missing
+  fields. A working-tree correction proposed a 52-operation schema census;
+  committed successor verification remains PENDING.
+- Expected fixture result: every unknown/missing mutation must return a typed
+  fail-closed LCI result. `UnknownField`/`MissingRequiredField` are authorized
+  codes, but category, stage, first-field path, and context are not machine-
+  pinned for these 104 novel documents.
+- Classification: Python implementation/harness defect where the typed
+  boundary is absent; fixture-package underdetermination for exact tuple
+  comparison across both languages.
+- May implementation continue: yes for well-formed official vectors and for
+  typed binary rejection. The exact novel result documents remain blocked.
+- Proposed disposition: publish all 52 closed payload schemas and exact
+  missing/unknown vectors. See
+  `LCI0-AUTHORIAL-RETURN-PACKET-OPERATION-PAYLOAD-FAILURES.md`.
+- Permanent regression-vector status: the deterministic 104-document family
+  is retained; official machine vectors are required on closure.
+
+## LCI0-DIV-020 — MigrationResult classification is not coupled to result content
+
+- Status: confirmed schema gap; no inverse classification matrix is inferred.
+- Sources: LCI/0 §§23.2–23.4; Errata E9; Fixture Package §9;
+  `migration.classification-map.0`, SHA-256
+  `685f33dfa7ec653aa9ee2ec924a91a4104f2bbcd9d99898ac97215f4ce4ab693`;
+  vector `LCI0-N028`.
+- Minimal input: `migration-result.inert-predecessor` with only classification
+  changed from `privileged-runtime-relation-outside-claim-id` to registered
+  `exact-after-explicit-tagging`; 31,107 bytes, SHA-256
+  `565494e413cb849836d922b3ae6455c771f2f7f2c0a31ac4b30d9991ccee3726`.
+- Common Lisp result: the preliminary, non-commit-bound validator snapshot
+  accepted because it checked Identifier shape and selected loss-presence
+  implications, not classification/content coherence.
+- Python result: the snapshot's `validate-migration-result` vector operation
+  unconditionally returned the N028 `RepresentedLossRequired` result, even
+  though this witness retained represented loss; it was not generic
+  validation. Final successor results remain PENDING.
+- Expected fixture result: classification meanings imply a cross-field
+  constraint, but no closed schema, check order, or exact
+  `InvalidMigrationResult` tuple is frozen for this mutation. N028 pins only
+  the lossy-without-loss direction.
+- Classification: specification/fixture schema gap plus implementation defects
+  in both validators/dispatch paths.
+- May implementation continue: yes for the five valid frozen result documents
+  and exact N028. The mutated classification path is blocked.
+- Proposed disposition: authorially define a total seven-class cross-field
+  rule and exact failure documents without deriving an inverse matrix from
+  examples. See
+  `LCI0-AUTHORIAL-RETURN-PACKET-MIGRATION-CLASSIFICATION-COUPLING.md`.
+- Permanent regression-vector status: mutation retained; machine vector
+  required on closure.
+
+## LCI0-DIV-021 — kind-specific target coherence algorithm references are opaque
+
+- Status: confirmed executable-definition gap; obvious and vectored rules
+  remain enforceable, unvectored mismatch semantics are blocked.
+- Sources: LCI/0 §§10 and 18.7; Fixture Package §7.1 step 6 and eleven
+  `target-schema-definition.*.0` records.
+- Minimal input: valid `warrant-target.derived.one-equals-one` with only its
+  premise ClaimId replaced by valid `claim-id.file-alpha-neutral`; 20,341
+  bytes, SHA-256
+  `d0baf4a9470db970e014b707509d79e1c25581b320c100fda1ee66a5f6218b0b`.
+- Common Lisp result: exhaustive kind-coherence hostile execution is pending;
+  its schema validator primarily enforces field presence/type and selected
+  corpus/translation paths.
+- Python result: a non-commit-bound preliminary review snapshot contained no
+  coherence rule for observed, tested, derived, externally-attested, replayed,
+  reported, or inherited and no path producing `PremiseMismatch`; other kinds
+  were partial. Final successor verification is PENDING.
+- Expected fixture result: each schema names
+  `target-boundary-algorithm/<kind>/0`, field/types, and failure vocabulary,
+  but no algorithm definition identifies comparison operands or path rules.
+  Only one positive and first-field-missing negative exist per kind.
+- Classification: Python implementation defect for omitted independently
+  pinned checks; specification/fixture ambiguity for unvectored procedure,
+  model, artifact, corpus, premise, translation, and policy mismatch semantics.
+- May implementation continue: yes for official positive/missing vectors and
+  separately pinned shape/coordinate/scope rules. Novel coherence paths are
+  blocked.
+- Proposed disposition: publish executable definitions and single-defect
+  vectors for all eleven algorithms. See
+  `LCI0-AUTHORIAL-RETURN-PACKET-TARGET-BOUNDARY-COHERENCE.md`.
+- Permanent regression-vector status: the derived premise mutation is
+  retained; full kind-by-rule coverage is required on closure.
+
+## LCI0-DIV-022 — Python vector dispatch contains fixture-result shortcuts
+
+- Status: confirmed by preliminary successor review; repairs are pending and
+  no affected result may be promoted on the strength of the old green vector
+  count.
+- Sources: the Python `lci0/vector.py` operation dispatcher; LCI/0 pure
+  operation requirements; official vectors `P010`, `P021`–`P023`, `N028`,
+  `N031`, E4, E8, placement/metadata/I12 fixtures, and post-convergence
+  semantic mutations.
+- Minimal observations:
+  - proposition/location dispatch returned success by proposition form without
+    validating the supplied location; the pinned N014-derived mutation is
+    9,657 bytes, SHA-256
+    `b9c3eefc3aa1d492d22023f9ee20d0cb1aeb15df4bb31251fe5755237d5b1d25`;
+  - policy and freshness operations returned registered expected decision
+    documents rather than evaluating the input; a Policy-B meta-testimony
+    mutation is 39,644 bytes, SHA-256
+    `cd9ba9b80741be7496c88c468983490e47234ad1ebd20c140a6bb4d7bf36d331`;
+  - occurrence validation checked only one unknown label and accepted a Unit
+    claimant; witness 20,416 bytes, SHA-256
+    `265d98b41f1e1d0c1d85529a2ed5f3926c3a61d0c1250edbbd1d1451b42ecb99`;
+  - normalization branches copied/compared declared normalized values without
+    executing the selected frozen normalizer semantics;
+  - `compare-corpus-completion-targets` fabricated
+    `CorpusCompletionInsufficient` when matching succeeded;
+  - `validate-migration-result` and `differential-project` returned the one
+    expected negative result unconditionally; and
+  - the revival branch injected the beta occurrence addressed separately by
+    DIV-023.
+- Two anti-shortcut twins now reverse input relations whose output fields are
+  already normatively defined:
+  - equal normalization operands, 4,220 bytes, SHA-256
+    `007ecfb3f0ae2af620cedc7a5e31247ea2d9fbb7afcfb1639d3aa0ff5814675f`,
+    require `claim-id-merge-permitted=true`;
+  - independently carried equal ClaimId envelopes, 17,648 bytes, SHA-256
+    `d48731943d5a85f4677949cf0835116a0108e0ac6fb5a059dcadaaad8cdfe2ca`,
+    require `semantic-claim-id-equal=true`.
+- A positive N028 result and equal-output N031 evidence were considered as
+  shortcut mutations, then excluded: the frozen package defines neither a
+  positive N028 output schema nor the equal-output N031 result/failure
+  vocabulary. Treating either as expected would create an implementation-local
+  oracle. Those inverses remain authorial-return-bound under DIV-020 and the
+  operation-semantics boundary.
+- Witness standing: the five exact property hashes above are coordinator-
+  generated from frozen fixture inputs by the deterministic post-convergence
+  harness and frozen CD/0 encoding. They are mutation identities, not package
+  expected results; independent Common Lisp reconstruction remains PENDING.
+- Common Lisp result: not an oracle; corresponding operations require their
+  own semantic-dispatch review and differential evidence.
+- Python result: official examples in the reviewed snapshot could match
+  expected documents despite not being input-sensitive. Working-tree
+  corrections and new metamorphic tests were observed, but committed successor
+  verification and a full rerun remain PENDING.
+- Expected fixture result: operations derive results from validated input and
+  frozen rules, never vector ID, expected document, fixture name, or a
+  one-branch fallback. Policy-B meta-policy testimony is limited testimony,
+  never direct support; the exact registry rule is independently pinned.
+- Classification: Python implementation defect. Where a mutation reaches
+  DIV-017–021 or DIV-023, only the underlying authorial path is blocked; the
+  shortcut itself remains a defect to remove.
+- May implementation continue: yes after semantic corrections and fresh exact,
+  differential, mutation, and hostile reruns. A prior 215-vector green count
+  is insufficient evidence for these paths.
+- Proposed disposition: replace every shortcut with validation and semantic
+  construction, retain expected-result decoding solely in the test-oracle
+  layer, and run the 329-case default deterministic post-convergence generator
+  after exact unaffected convergence. The final executed count remains
+  PENDING.
+- Permanent regression-vector status: the five exact property hashes above,
+  all official source vectors, payload-closure family, and input mutation
+  pairs are permanent.
+
+## LCI0-DIV-023 — P024 revival injects an unbound occurrence
+
+- Status: confirmed fixture/specification conflict; `LCI0-P024` is blocked.
+- Sources: LCI/0 §23.7, §24.5 P024, and §28.6; Errata I12(e); vector
+  `LCI0-P024`; registry `claim-occurrence.beta-metadata-different`.
+- Minimal input: P024 input, 29,375 bytes, SHA-256
+  `c730f6e1993b6bfa77191302aae856dc92b7c973622344a7d484ac88801bb0ff`;
+  its payload contains only `predecessor` and `requested-claim`.
+- Common Lisp result: the initial path selects/reconstructs the expected beta
+  occurrence rather than deriving all fields from the two supplied inputs;
+  successor removal is required.
+- Python result: the reviewed initial path read
+  `claim-occurrence.beta-metadata-different` from the registry; a working-tree
+  reconstruction observed during review still selected values not supplied by
+  the operation and was not normative closure. Final successor verification is
+  PENDING.
+- Expected fixture result: 30,591 bytes, SHA-256
+  `13c281e7654162ba566e8af3883ef022fb360f1c91bb8753147668fbb9389963`;
+  it embeds the exact beta occurrence, 21,360 bytes, SHA-256
+  `b9a1877ce6cebe014aeeefb40936c15d5d1f02da6bf93e58e428c7a70e1f11a7`.
+  Claimant, assertion time, provenance, lineage, presentation, and metadata
+  differ from the predecessor but are absent from the input. Its lineage is
+  `independent-reassertion`, while revival prose names `freeze-revival`.
+- Classification: fixture-package/specification ambiguity plus implementation
+  expected-result/registry shortcut.
+- May implementation continue: yes on unaffected operations. P024 is the
+  fourth exact blocked vector and cannot be counted as pass, failure, skip, or
+  N/A; unaffected vector ceiling is 211/215.
+- Proposed disposition: pin a pure field-by-field revival transform, bind all
+  new occurrence values in the input, or revise the expected result to an
+  input-derived defensive-copy form. See
+  `LCI0-AUTHORIAL-RETURN-PACKET-P024-REVIVAL.md`.
+- Permanent regression-vector status: input, expected result, alpha
+  predecessor, requested ClaimId, and beta occurrence hashes are permanent
+  conflict witnesses.
+
+## LCI0-DIV-024 — seed implementations exposed unregistered LCI failure codes
+
+- Status: RESOLVED as an implementation-boundary defect in both successors;
+  authorial questions remain owned by the existing ten narrow packets.
+- Sources: Errata I12 failure comparison and closed schemas; the exact 84
+  registry definitions whose class is `lci-failure-code-identifier`; all 215
+  official vector inputs and expected documents.
+- Minimal census: static seed-source review found 75 literal Common Lisp LCI
+  failure construction sites using 28 names absent from both registry and
+  normative prose, and 145 Python helper/constructor sites using 32 absent
+  names. The official execution path happened not to expose them: each
+  implementation produced 101 failure observations using the same 53
+  registered codes across 215 vectors.
+- Common Lisp result: reachable hostile/validator/internal paths could mint
+  implementation-local codes, including generic invalid-value and fixture
+  policy/operation diagnostics.
+- Python result: the same class included record/scalar/type diagnostics,
+  fixture/package mismatches, unsupported host/fixture surfaces, and generic
+  invalid-value umbrellas.
+- Expected fixture result: `LCIFailure/0` codes are members of the exact
+  84-code frozen registry. A host integrity defect, protocol refusal, or
+  authorial gap is not converted into a nearby normative failure.
+- Classification: Common Lisp defect and Python defect. This census does not
+  create an eleventh specification ambiguity.
+- May implementation continue: yes after constructor/dynamic-funnel guards and
+  regression tests. Unpinned semantic tuples remain blocked under DIV-018–021,
+  DIV-013/DIV-017, and the existing migration packets.
+- Proposed disposition: both successors enforce exact registry membership;
+  frozen package contradictions use host internal-integrity conditions;
+  unpinned semantics use non-LCI fixture-authority gaps; determinate stable
+  reference type refusal uses registered `InvalidStableReference`. The
+  operation-payload packet retains the broader recursive shape inventory.
+- Permanent regression-vector status: exact 84-code equality, static literal
+  census, dynamic unauthorized-construction refusal, and all-215 runtime code
+  census are permanent language gates.

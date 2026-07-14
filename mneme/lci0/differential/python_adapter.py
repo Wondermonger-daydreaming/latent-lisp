@@ -18,7 +18,15 @@ from lci0.core import (
     validate_stable_ref,
     validate_warrant_target,
 )
-from lci0.model import ClaimIdEnvelope, LCIFailure, LCIValue, RelationResult, field_by_path, scalar
+from lci0.model import (
+    ClaimIdEnvelope,
+    FixtureAuthorityGap,
+    LCIFailure,
+    LCIValue,
+    RelationResult,
+    field_by_path,
+    scalar,
+)
 from lci0.vector import execute, id_name, record_to_mapping
 
 from protocol import (
@@ -29,6 +37,7 @@ from protocol import (
     ProtocolError,
     validate_request,
 )
+from response_validation import canonical_failure_path, loads_closed_json
 
 
 LCI = ("lisp-plus", "lci", "0")
@@ -224,7 +233,7 @@ def _failure_object(failure: LCIFailure) -> dict[str, Any]:
         "category": failure.category,
         "code": failure.code,
         "stage": failure.stage,
-        "path": list(failure.path),
+        "path": canonical_failure_path(failure.path),
     }
 
 
@@ -233,6 +242,7 @@ def _base_response(request: Mapping[str, Any]) -> dict[str, Any]:
         "protocol": PROTOCOL,
         "request_id": request["request_id"],
         "operation": request["operation"],
+        "fixture_profile_version": request["fixture_profile_version"],
         "implementation": "python",
         "implementation_seed_commit": PYTHON_SEED_COMMIT,
         "implementation_seed_tree": PYTHON_SEED_TREE,
@@ -308,11 +318,37 @@ def run_request(raw: Any) -> dict[str, Any]:
             return response
         if operation == "hostile-evaluate-policy-c":
             fields = record_to_mapping(datum)
+            if set(fields) != {"policy", "target-relation"}:
+                raise ProtocolError("InvalidPolicyCCarrier", ("operation",))
             policy_name = id_name(fields["policy"]).split("/")[-1]
-            relation_name = id_name(field_by_path(fields["target-relation"], "relation")).split("/")[-1]
-            evaluate_policy(policy_name, RelationResult(relation_name))
-            response["semantic_status"] = "success"
-            return response
+            if fields["policy"] != _identifier(FIXTURE, "policy-name", "policy-c"):
+                raise ProtocolError("InvalidPolicyCCarrier", ("operation",))
+            relation_fields = record_to_mapping(fields["target-relation"])
+            if (
+                set(relation_fields)
+                != {"kind", "schema-version", "status", "relation"}
+                or relation_fields["kind"]
+                != _identifier(FIXTURE, "tag", "target-relation-result")
+                or relation_fields["schema-version"] != cd0.integer(0)
+                or relation_fields["status"]
+                != _identifier(FIXTURE, "result-status", "success")
+                or relation_fields["relation"]
+                != _identifier(RELATION, "exact-target")
+            ):
+                raise ProtocolError("InvalidPolicyCCarrier", ("operation",))
+            relation_name = "exact-target"
+            try:
+                evaluate_policy(policy_name, RelationResult(relation_name))
+            except FixtureAuthorityGap:
+                response["protocol_status"] = "fixture-authority-gap"
+                response["status"] = "blocked"
+                response["authority_gap"] = "unsupported fixture policy"
+                return response
+            except LCIFailure as failure:
+                raise ProtocolError(
+                    "UnexpectedPolicyCLciFailure", ("operation",)
+                ) from failure
+            raise ProtocolError("UnexpectedPolicyCSuccess", ("operation",))
 
         envelope = record_to_mapping(datum)
         required = {"kind", "schema-version", "vector-id", "operation", "fixture-profile-version", "payload"}
@@ -351,13 +387,18 @@ def run_request(raw: Any) -> dict[str, Any]:
         response["semantic_status"] = "failure"
         response["failure"] = _failure_object(failure)
         return response
-    except Exception as failure:  # integration harness defects remain visible
+    except FixtureAuthorityGap:
+        response["protocol_status"] = "failure"
+        response["protocol_failure"] = {
+            "code": "UnexpectedFixtureAuthorityGap",
+            "path": ["operation"],
+        }
+        return response
+    except Exception:  # adapter defects are visible without host exception prose
         response["protocol_status"] = "failure"
         response["protocol_failure"] = {
             "code": "PythonAdapterDefect",
             "path": [],
-            "host_exception_type": type(failure).__name__,
-            "host_exception_text": str(failure),
         }
         return response
 
@@ -365,8 +406,8 @@ def run_request(raw: Any) -> dict[str, Any]:
 def run_lines(source: TextIO, sink: TextIO) -> int:
     for line_number, line in enumerate(source, 1):
         try:
-            raw = json.loads(line)
-        except json.JSONDecodeError:
+            raw = loads_closed_json(line)
+        except (json.JSONDecodeError, ValueError):
             raw = {"request_id": f"invalid-json-line-{line_number}"}
         response = run_request(raw)
         sink.write(json.dumps(response, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n")

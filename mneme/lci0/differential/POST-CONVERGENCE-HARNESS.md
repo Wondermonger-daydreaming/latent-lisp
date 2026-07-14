@@ -6,22 +6,37 @@ new LCI semantics and neither implementation supplies its oracle.
 
 ## Gate
 
-The program reads, hashes, and validates the successor differential summary
-before creating its output directory. It refuses to run unless:
+Before creating its output directory, the program verifies the exact six-file
+successor artifact census and checksum manifest, mechanically rebuilds all
+2,287 requests, strictly reparses both 2,287-line response streams, recomputes
+the differential comparison, and requires the summary to equal that replay.
+It refuses to run unless:
 
-- both implementations have exactly the four disclosed exact-result blockers:
+- both implementations have exactly the four disclosed vector-result blockers,
+  eight disclosed hostile-result blockers, and 38 disclosed relation-path
+  blockers (420 complete relation rows and 38 blocked rows, never 458 passed
+  rows):
   `vector:LCI0-N012`, `vector:LCI0-E5-COVERAGE-INSUFFICIENT`, and
   `vector:LCI0-P024` and `vector:LCI0-P029`, with no other fixture mismatch;
-- every cross-implementation mismatch is one of the 38 enumerated
-  `LCI0-DIV-014` companion failure paths and differs only in `failure.path`;
+- every cross-implementation mismatch is either one of the 38 enumerated
+  `LCI0-DIV-014` companion failure paths differing only in `failure.path`, or
+  one of the closed hostile blocker fields whose complete tuple/result document
+  is absent from the frozen package;
 - the summary declares all 38 paths in the closed top-level
   `authorial_blocked_relation_paths` census, even when the implementations
   independently choose the same unpinned path and therefore have no cross
   mismatch; and
-- the official and supplementary corpus/request counts are exact.
+- the official and supplementary corpus/request counts, the mechanically
+  derived 52-operation census, and both immutable seed identities are exact.
 
-The 42 affected observations remain authorially blocked. The harness never
-counts them as pass, skipped, or N/A.
+The 50 exact-run gate observations remain authorially blocked. The property
+phase separately records 104 missing/unknown payload cases whose unpinned
+failure coordinates remain blocked. The harness never counts either census as
+pass, skipped, or N/A. The eight hostile blockers retain the frozen part of
+their outcome: required rejection or acceptance, pinned tuple coordinates, and
+canonical well-formedness. They comprise six incomplete failure-tuple requests,
+one unpinned within-budget success envelope, and Policy-C's non-LCI fixture
+authority gap.
 
 ## Deterministic phase
 
@@ -29,14 +44,16 @@ Default seed: `1279478064` (`0x4c434930`).
 
 Default allocation/mutation iterations: `64`.
 
-The default generator emits 327 cases covering independent record allocation
+The default generator emits 329 cases covering independent record allocation
 and insertion order, fresh four-field ClaimId projection, identity-coordinate
 changes, occurrence metadata neutrality, NFC/NFD distinctions, rational and
 segmented-Identifier boundaries, all eleven target schemas, E6 failure order,
 bounded legacy grammar and inertness, explicit migration-source provenance
-neutrality, closed missing/unknown payloads for all 52 operation families,
-semantic-dispatch validation, Policy-B limited meta-testimony, and the
-inclusive/over limit boundary for all thirteen resources. Both adapters
+propagation at the top-level result plus ClaimId neutrality (with lineage-source
+semantics still authorial-return-bound), closed missing/unknown payloads for all 52 operation families,
+semantic-dispatch validation, Policy-B limited meta-testimony, two reversed
+anti-shortcut witnesses, and the inclusive/over limit boundary for all
+thirteen resources. Both adapters
 receive the same canonical requests and are compared symmetrically.
 Metamorphic expectations come from the frozen fixtures and specification
 rules. Novel operation-payload failure tuple coverage remains explicitly
@@ -69,7 +86,7 @@ From the integration worktree root:
 ```sh
 PYTHONPATH=mneme/lci0/differential:mneme/lci0/python:canonical-datum/python \
 python3 mneme/lci0/differential/post_convergence.py \
-  --successor-summary /absolute/path/to/successor/summary.json \
+  --successor-artifacts /absolute/path/to/successor-artifact-directory \
   --output /absolute/path/to/new/evidence-directory
 ```
 

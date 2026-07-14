@@ -76,6 +76,8 @@
    (cons "protocol" +integration-protocol+)
    (cons "request_id" (jget request "request_id"))
    (cons "operation" (jget request "operation"))
+   (cons "fixture_profile_version"
+         (jget request "fixture_profile_version"))
    (cons "implementation" "common-lisp")
    (cons "implementation_seed_commit" +integration-seed-commit+)
    (cons "implementation_seed_tree" +integration-seed-tree+)))
@@ -85,7 +87,17 @@
    (cons "category" (lci-failure-category condition))
    (cons "code" (lci-failure-code condition))
    (cons "stage" (lci-failure-stage condition))
-   (cons "path" (copy-list (lci-failure-path condition)))))
+   (cons "path"
+         (let ((previous nil))
+           (loop for part in (lci-failure-path condition)
+                 for identifier = (%path-part-id part previous)
+                 collect (prog1
+                             (if (equal (identifier-namespace-strings identifier)
+                                        +fixture-field-namespace+)
+                                 (concatenate 'string "fixture-field:"
+                                              (identifier-last identifier))
+                                 (identifier-last identifier))
+                           (setf previous part)))))))
 
 (defun integration-relation-failure-value (condition)
   (cond
@@ -178,48 +190,129 @@
                     (cons "failure" (integration-failure-json condition)))))))
 
 (defun integration-run-hostile-policy (datum response)
+  (let ((target-relation (and (record-datum-p datum)
+                              (record-field-named datum "target-relation"))))
+    (unless (and
+             (%resource-exact-record-shape-p
+              datum +fixture-field-namespace+ '("policy" "target-relation"))
+             (%exact-identifier-p
+              (record-field-named datum "policy")
+              +fixture-identifier-namespace+ '("policy-name" "policy-c"))
+             (%resource-exact-record-shape-p
+              target-relation +fixture-field-namespace+
+              '("kind" "schema-version" "status" "relation"))
+             (%exact-identifier-p
+              (record-field-named target-relation "kind")
+              +fixture-identifier-namespace+
+              '("tag" "target-relation-result"))
+             (let ((version
+                     (datum-integer-value*
+                      (record-field-named target-relation "schema-version"))))
+               (and version (zerop version)))
+             (%exact-identifier-p
+              (record-field-named target-relation "status")
+              +fixture-identifier-namespace+ '("result-status" "success"))
+             (%exact-identifier-p
+              (record-field-named target-relation "relation")
+              '("lisp-plus" "lci" "0" "relation") '("exact-target")))
+      (integration-protocol-fail "InvalidPolicyCCarrier" '("operation"))))
   (handler-case
       (progn
         (evaluate-fixture-policy (record-field-named datum "policy")
                                  (record-field-named datum "target-relation"))
-        (append response (list (cons "semantic_status" "success"))))
-    (lci-failure (condition)
+        (integration-protocol-fail "UnexpectedPolicyCSuccess" '("operation")))
+    (fixture-operation-authorial-gap (condition)
+      (unless (and
+               (string= (fixture-operation-authorial-gap-operation condition)
+                        "evaluate-fixture-policy")
+               (equal (fixture-operation-authorial-gap-path condition)
+                      '("policy")))
+        (integration-protocol-fail "UnexpectedFixtureAuthorityGap"
+                                   '("operation")))
+      ;; This is a protocol-only disposition for the one validated hostile
+      ;; Policy-C request.  It is not LCIFailure/0 and carries no semantic,
+      ;; failure, vector, or actual-result member.
       (append response
-              (list (cons "semantic_status" "failure")
-                    (cons "failure" (integration-failure-json condition)))))))
+              (list (cons "status" "blocked")
+                    (cons "authority_gap" "unsupported fixture policy"))))
+    (lci-failure (condition)
+      (declare (ignore condition))
+      (integration-protocol-fail "UnexpectedPolicyCLciFailure"
+                                 '("operation")))))
+
+(defun integration-validated-protocol-failure-response
+    (request condition &optional input-reencoded-canonical-hex)
+  (append
+   (integration-base-response request)
+   (list (cons "protocol_status" "failure"))
+   (when input-reencoded-canonical-hex
+     (list (cons "input_reencoded_canonical_hex"
+                 input-reencoded-canonical-hex)))
+   (list
+    (cons "protocol_failure"
+          (list
+           (cons "code" (integration-protocol-failure-code condition))
+           (cons "path" (integration-protocol-failure-path condition)))))))
+
+(defun integration-run-validated-request (request)
+  (let* ((response (integration-base-response request))
+         (operation (jget request "operation"))
+         (encoded (hex-to-octets (jget request "input_canonical_hex")))
+         (datum (decode-exact encoded))
+         (reencoded (canonical-octets datum))
+         (reencoded-hex (octets-to-hex reencoded)))
+    (handler-case
+        (progn
+          (unless (string= (jget request "input_canonical_hex") reencoded-hex)
+            (integration-protocol-fail "NoncanonicalDifferentialInput"
+                                       '("input_canonical_hex")))
+          (setf response
+                (append response
+                        (list
+                         (cons "protocol_status"
+                               (if (string= operation
+                                            "hostile-evaluate-policy-c")
+                                   "fixture-authority-gap"
+                                   "success"))
+                         (cons "input_reencoded_canonical_hex"
+                               reencoded-hex))))
+          (handler-case
+              (cond
+                ((string= operation "hostile-evaluate-policy-c")
+                 (integration-run-hostile-policy datum response))
+                ((string= operation "document-roundtrip")
+                 (append response (list (cons "semantic_status" "success"))))
+                ((member operation
+                         '("scope-relation-table" "temporal-relation-table")
+                         :test #'string=)
+                 (integration-run-relation operation datum response))
+                ((member operation
+                         '("hostile-validate-stable-ref"
+                           "hostile-validate-claim-id"
+                           "hostile-validate-warrant-target")
+                         :test #'string=)
+                 (integration-run-hostile-validation operation datum response))
+                (t (integration-run-semantic operation datum response)))
+            (fixture-operation-authorial-gap (condition)
+              (declare (ignore condition))
+              ;; Exact-vector and every non-Policy-C authority gap is a closed
+              ;; adapter/protocol failure, never an accepted BLOCKED result.
+              (integration-protocol-fail "UnexpectedFixtureAuthorityGap"
+                                         '("operation")))))
+      (integration-protocol-failure (condition)
+        (integration-validated-protocol-failure-response
+         request condition reencoded-hex))
+      (error (condition)
+        (declare (ignore condition))
+        (integration-validated-protocol-failure-response
+         request
+         (make-condition 'integration-protocol-failure
+                         :code "CommonLispAdapterDefect" :path nil)
+         reencoded-hex)))))
 
 (defun integration-run-request (raw)
   (handler-case
-      (let* ((request (integration-validate-request raw))
-             (response (integration-base-response request))
-             (operation (jget request "operation"))
-             (encoded (hex-to-octets (jget request "input_canonical_hex")))
-             (datum (decode-exact encoded))
-             (reencoded (canonical-octets datum)))
-        (unless (string= (jget request "input_canonical_hex")
-                         (octets-to-hex reencoded))
-          (integration-protocol-fail "NoncanonicalDifferentialInput"
-                                     '("input_canonical_hex")))
-        (setf response
-              (append response
-                      (list (cons "protocol_status" "success")
-                            (cons "input_reencoded_canonical_hex"
-                                  (octets-to-hex reencoded)))))
-        (cond
-          ((string= operation "document-roundtrip")
-           (append response (list (cons "semantic_status" "success"))))
-          ((member operation '("scope-relation-table" "temporal-relation-table")
-                   :test #'string=)
-           (integration-run-relation operation datum response))
-          ((member operation
-                   '("hostile-validate-stable-ref"
-                     "hostile-validate-claim-id"
-                     "hostile-validate-warrant-target")
-                   :test #'string=)
-           (integration-run-hostile-validation operation datum response))
-          ((string= operation "hostile-evaluate-policy-c")
-           (integration-run-hostile-policy datum response))
-          (t (integration-run-semantic operation datum response))))
+      (integration-run-validated-request (integration-validate-request raw))
     (integration-protocol-failure (condition)
       (list
        (cons "protocol" +integration-protocol+)
@@ -234,6 +327,7 @@
               (cons "code" (integration-protocol-failure-code condition))
               (cons "path" (integration-protocol-failure-path condition))))))
     (error (condition)
+      (declare (ignore condition))
       (list
        (cons "protocol" +integration-protocol+)
        (cons "request_id"
@@ -245,9 +339,7 @@
        (cons "protocol_failure"
              (list
               (cons "code" "CommonLispAdapterDefect")
-              (cons "path" nil)
-              (cons "host_exception_type" (write-to-string (type-of condition)))
-              (cons "host_exception_text" (princ-to-string condition))))))))
+              (cons "path" nil)))))))
 
 (loop for line = (read-line *standard-input* nil nil)
       while line
@@ -256,6 +348,7 @@
                    (handler-case
                        (integration-run-request (parse-json line))
                      (error (condition)
+                       (declare (ignore condition))
                        (list
                         (cons "protocol" +integration-protocol+)
                         (cons "request_id" "")
@@ -264,9 +357,7 @@
                         (cons "protocol_failure"
                               (list
                                (cons "code" "InvalidRunnerJSON")
-                               (cons "path" nil)
-                               (cons "host_exception_text"
-                                     (princ-to-string condition)))))))))
+                               (cons "path" nil))))))))
              (write-json-value response *standard-output*)
              (terpri *standard-output*)
              (finish-output *standard-output*)))

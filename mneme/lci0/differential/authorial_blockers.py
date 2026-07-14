@@ -17,6 +17,172 @@ BLOCKED_VECTOR_REQUESTS = frozenset(
     }
 )
 
+BLOCKED_HOSTILE_AUTHORITY_GAP_REQUESTS = frozenset(
+    {"hostile:policy-c-fail-closed"}
+)
+
+# These generated hostile inputs have a pinned binary outcome or a pinned
+# subset of their failure tuple, but the frozen package does not determine the
+# complete result document.  The candidates below are the smallest witnessed
+# envelope set; they are blocker bounds, not alternate normative expectations.
+BLOCKED_HOSTILE_FAILURE_CANDIDATES = {
+    "hostile:stable-ref-alias-package-symbol-spelling": (
+        {
+            "category": "reference-refusal",
+            "code": "UnresolvedAlias",
+            "stage": "stable-reference",
+            "path": ["material", "fixture-field:object-id"],
+        },
+        {
+            "category": "reference-refusal",
+            "code": "MutableReference",
+            "stage": "stable-reference",
+            "path": ["material", "fixture-field:object-id"],
+        },
+    ),
+    "hostile:observed-with-executed-target-schema": (
+        {
+            "category": "invalid-input",
+            "code": "TargetSchemaKindMismatch",
+            "stage": "target-schema",
+            "path": ["target-schema"],
+        },
+        {
+            "category": "invalid-input",
+            "code": "TargetSchemaKindMismatch",
+            "stage": "target-shape",
+            "path": ["target-schema"],
+        },
+    ),
+    "hostile:executed-with-observed-target-schema": (
+        {
+            "category": "invalid-input",
+            "code": "TargetSchemaKindMismatch",
+            "stage": "target-schema",
+            "path": ["target-schema"],
+        },
+        {
+            "category": "invalid-input",
+            "code": "TargetSchemaKindMismatch",
+            "stage": "target-shape",
+            "path": ["target-schema"],
+        },
+    ),
+    "hostile:target-nested-coverage-future-selector": (
+        {
+            "category": "invalid-input",
+            "code": "UnknownField",
+            "stage": "scope",
+            "path": [
+                "boundaries",
+                "fixture-field:coverage-scope",
+                "expression",
+                "fixture-field:future-selector",
+            ],
+        },
+        {
+            "category": "invalid-input",
+            "code": "InvalidScope",
+            "stage": "scope",
+            "path": [
+                "boundaries",
+                "fixture-field:coverage-scope",
+                "expression",
+            ],
+        },
+    ),
+    "hostile:resource-stable-ref-material-5000": (
+        {
+            "category": "resource-refusal",
+            "code": "StableReferenceMaterialBudgetExceeded",
+            "stage": "validation",
+            "path": ["material"],
+        },
+        {
+            "category": "resource-refusal",
+            "code": "StableReferenceMaterialBudgetExceeded",
+            "stage": "validation",
+            "path": [],
+        },
+    ),
+    "hostile:migration-grammar-reference-substitution": (
+        {
+            "category": "migration-refusal",
+            "code": "UnsupportedLegacyForm",
+            "stage": "migration-source",
+            "path": ["fixture-field:grammar"],
+        },
+        {
+            "category": "reference-refusal",
+            "code": "InvalidStableReference",
+            "stage": "stable-reference",
+            "path": [
+                "fixture-field:grammar",
+                "material",
+                "fixture-field:object-id",
+            ],
+        },
+    ),
+}
+
+BLOCKED_HOSTILE_SUCCESS_REQUESTS = frozenset(
+    {"hostile:resource-maximum-nesting-at-limit-64"}
+)
+
+BLOCKED_HOSTILE_REQUESTS = frozenset(
+    BLOCKED_HOSTILE_AUTHORITY_GAP_REQUESTS
+    | BLOCKED_HOSTILE_FAILURE_CANDIDATES.keys()
+    | BLOCKED_HOSTILE_SUCCESS_REQUESTS
+)
+
+# Cross-language fields that may differ after each complete response has
+# independently satisfied the bounded blocker validator.
+BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS = {
+    "hostile:stable-ref-alias-package-symbol-spelling": frozenset({"failure"}),
+    "hostile:observed-with-executed-target-schema": frozenset({"failure"}),
+    "hostile:executed-with-observed-target-schema": frozenset({"failure"}),
+    "hostile:target-nested-coverage-future-selector": frozenset({"failure"}),
+    "hostile:resource-stable-ref-material-5000": frozenset({"failure"}),
+    "hostile:resource-maximum-nesting-at-limit-64": frozenset(
+        {"actual_canonical_cd0_hex"}
+    ),
+    "hostile:migration-grammar-reference-substitution": frozenset(
+        {"failure", "actual_canonical_cd0_hex"}
+    ),
+    "hostile:policy-c-fail-closed": frozenset(),
+}
+
+# Closed successful-execution census for each successor adapter.  Zero-valued
+# failure/protocol keys are deliberately absent because Counter omits them.
+EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS = {
+    "document_passed": 1593,
+    "document_requests": 1593,
+    "hostile_blocked": 8,
+    "hostile_passed": 13,
+    "hostile_requests": 21,
+    "relation_blocked": 38,
+    "relation_passed": 420,
+    "relation_requests": 458,
+    "vector_blocked": 4,
+    "vector_passed": 211,
+    "vector_requests": 215,
+}
+
+EXPECTED_SUCCESSOR_REQUEST_COUNTS = {
+    "baseline_requests_per_implementation": 2266,
+    "hostile_requests_per_implementation": 21,
+    "magic_registry_values": 1133,
+    "magic_vector_values": 460,
+    "official_documents": 1105,
+    "relation_semantic_requests": 458,
+    "supplementary_documents": 488,
+    "supplementary_nested_e1_documents": 30,
+    "supplementary_relation_documents": 458,
+    "total_documents": 1593,
+    "total_requests_per_implementation": 2287,
+    "vector_semantic_requests": 215,
+}
+
 # Exact enumeration from LCI0-DIV-014: 24 cross-calculus orientations and
 # 14 symbolic-right temporal orientations.  Their relation values are pinned
 # and equal; only the unpinned companion failure path remains blocked.
@@ -66,5 +232,11 @@ BLOCKED_RELATION_PATH_REQUESTS = frozenset(
 
 if len(BLOCKED_VECTOR_REQUESTS) != 4:  # import-time closed-census assertion
     raise RuntimeError("authorial vector blocker census drift")
+if len(BLOCKED_HOSTILE_REQUESTS) != 8:
+    raise RuntimeError("authorial hostile blocker census drift")
+if set(BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS) != BLOCKED_HOSTILE_REQUESTS:
+    raise RuntimeError("authorial hostile cross-field census drift")
 if len(BLOCKED_RELATION_PATH_REQUESTS) != 38:
     raise RuntimeError("authorial relation-path blocker census drift")
+if sum(EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS.values()) != 4574:
+    raise RuntimeError("successor implementation count census drift")
