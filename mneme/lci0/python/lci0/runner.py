@@ -115,12 +115,29 @@ def run_request(raw: Any) -> dict[str, Any]:
             raise ProtocolError("EmbeddedFixtureProfileMismatch", ("input_canonical_hex",))
         if type(vector_id) is not str:
             raise ProtocolError("InvalidFixtureVectorEnvelope", ("input_canonical_hex",))
-        payload = record_to_mapping(envelope["payload"])
+        payload_document = envelope["payload"]
     except ProtocolError as exc:
         response["protocol_status"] = "failure"
         response["protocol_failure"] = {"code": exc.code, "path": list(exc.path)}
         return response
     except (FixtureAuthorityGap, LCIFailure):
+        response["protocol_status"] = "failure"
+        response["protocol_failure"] = {
+            "code": "InvalidFixtureVectorEnvelope",
+            "path": ["input_canonical_hex"],
+        }
+        return response
+
+    try:
+        payload = record_to_mapping(payload_document)
+    except LCIFailure as exc:
+        return {
+            **response,
+            "vector_id": vector_id,
+            "status": "failure",
+            "failure": datum_native(exc),
+        }
+    except FixtureAuthorityGap:
         response["protocol_status"] = "failure"
         response["protocol_failure"] = {
             "code": "InvalidFixtureVectorEnvelope",
