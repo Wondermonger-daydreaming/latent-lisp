@@ -1,0 +1,43 @@
+LCI/0 PYTHON PRE-SEED RED BASELINE
+Date: 2026-07-14 America/Sao_Paulo
+Branch: codex/lci0-python
+Base commit: ab353b4b7f30d5e46323d274862e6c1212ebf514
+Base tree: 26d0714ba873ce4a44a978f7acf98d21fd3fc176
+
+Command:
+  PYTHONPATH=mneme/lci0/python:canonical-datum/python \
+    python3 -m unittest mneme/lci0/python/tests/test_red_boundaries.py -v
+
+This command was executed before lci0/__init__.py or any implementation module
+existed. Exit status was 1. The complete terminal outcome was 15 ERROR, 0 pass,
+0 failure, 0 skip. Every error was the same expected import barrier:
+
+  ModuleNotFoundError: No module named 'lci0'
+
+The fifteen red tests present at that point, in execution order, were:
+
+  ERROR test_01_fully_neutral_claim_has_pinned_base_bytes
+  ERROR test_02_changing_one_coordinate_changes_envelope
+  ERROR test_03_identity_neutral_metadata_preserves_envelope
+  ERROR test_04_undetermined_is_hard_inadmissible_without_policy_call
+  ERROR test_05_nonmonotone_narrowing_requires_declaration
+  ERROR test_06_narrowing_requires_sufficient_coverage
+  ERROR test_07_temporal_containment_is_not_direct_support
+  ERROR test_08_digest_equality_does_not_replace_envelope_equality
+  ERROR test_09_mutable_alias_is_not_a_stable_reference
+  ERROR test_10_unknown_nested_versions_fail_closed
+  ERROR test_11_proposition_location_placement_disagreement_fails
+  ERROR test_12_legacy_fingerprint_collision_does_not_collapse_claim_ids
+  ERROR test_13_migrated_legacy_warrant_remains_inert
+  ERROR test_14_unknown_fields_fail_closed
+  ERROR test_15_source_mutation_cannot_change_constructed_claim_id_bytes
+
+Terminal aggregate:
+
+  Ran 15 tests
+  FAILED (errors=15)
+
+Capture boundary: the individual repeated Python traceback frames were not
+copied into this tracked file; the contemporaneous command, exit status,
+exception class/message, test inventory, and aggregate are preserved exactly.
+No successful behavior existed when this baseline was taken.

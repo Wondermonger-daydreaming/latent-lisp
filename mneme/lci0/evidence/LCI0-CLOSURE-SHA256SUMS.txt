@@ -1,0 +1,24 @@
+# LCI/0 closure receipt set + key artifacts — SHA-256 sums
+# Generated 2026-07-15 by INTEGRATOR (Claude Fable 5). Self-excluding (this file is bound by the git commit and the evidence archive).
+774adb5be4554da68316a4d2f7ce6dd16ee849537509bd0e0b1e1de54a7ae9d4  mneme/lci0/evidence/LCI0-CLOSURE-IMPLEMENTATION-LEDGER.md
+9eed0363047a0f171e24fe07180dec2fe0793845e4bbbff3146115dd41a089c7  mneme/lci0/evidence/LCI0-CLOSURE-DIFFERENTIAL-RECEIPT.md
+9dbd3ef8ad0a691684d7e970bd482430c1b02a3f6f5d52314d379bd3fabfbcf5  mneme/lci0/evidence/LCI0-CLOSURE-RELATION-PATH-RECEIPT.md
+e95a78dc43eb8b79f65a990f5aa623f8ce1ae6e528f552e481b13c65ceb489e5  mneme/lci0/evidence/LCI0-CLOSURE-HOSTILE-RESULT-RECEIPT.md
+807700727c0c09f5b5e160d8ff06581724af9085b5a8c120e31078c4311bcefe  mneme/lci0/evidence/LCI0-CLOSURE-P024-RECEIPT.md
+eace359aa8cf208624d21ac0388036da7f7fc9a1e1734a69fd8362105e973c11  mneme/lci0/evidence/LCI0-CLOSURE-P029-RECEIPT.md
+fd8d96c871a235ece7110e99e510b5568ba4ae2c4c9f86d8bd31bdf3e4d94a9a  mneme/lci0/evidence/LCI0-CLOSURE-FIXTURE-OVERLAY-RECEIPT.md
+1b294adb832c7c8a88cb241e98100994bbc717772301d60f682f514cd50a13e7  mneme/lci0/evidence/LCI0-CLOSURE-NONREGRESSION-RECEIPT.md
+808b5fd3fcef8a475072999978b9975ae309f9d4cf5cae6bb570017ba0e27d23  mneme/lci0/evidence/LCI0-CLOSURE-FINAL-VERIFICATION-TRANSCRIPT.md
+c5c6099c7035b898b34966b0e329a5673aac63a87711c62f346dc68443a7453e  mneme/lci0/evidence/LCI0-CLOSURE-FINAL-REVIEW-RELAY.md
+2e0556a7889cb57a3f48ff969d96615d3f36fe16053d61aad026afe1a92635cb  mneme/lci0/evidence/LCI0-CLOSURE-CHANGED-FILES.txt
+301f7c38590d54fe26d81aa37b55c27c1d948166fb443fb2fcb0901fa78fe285  mneme/lci0/evidence/LCI0-IMPLEMENTATION-DIVERGENCES.md
+1d7c58d076fb9c74534e18385ecab4b5d281c88b8be9da044cde000791e3b4cc  mneme/lci0/differential/artifacts/closure-converged-2026-07-15/summary.json
+9ddca0ea63e4914ef62488bc10dda6b0e8d17dc0b59bce6b56ad3b15165b4d6a  mneme/lci0/differential/artifacts/closure-converged-2026-07-15/sha256-manifest.json
+033a906a280c56694abc7063cb4d57e28de48f64da8ac8e412729568319d4cdf  mneme/lci0/differential/artifacts/post-convergence-closure-2026-07-15/summary.json
+585d50ea520ace629ec449bf9238aa8b379521b7b877680ee8a823adbbb157ac  mneme/lci0/differential/artifacts/post-convergence-closure-2026-07-15/sha256-manifest.json
+5e03c2f5a17cf69f9b562dcfc5b7dfde85563fc7f88d52fcb01ffe858c1a10eb  mneme/lci0/fixtures/archives/lci0-fixture-overlay-0.2-2026-07-14.zip
+36cc71ccf3c310a055199c54e84bf436c4505d92a6378f22e8b1d932f02e987d  mneme/lci0/fixtures/archives/lci0-errata-0.1-fixture-package-2026-07-14.zip
+# Raw differential run (referenced, not committed; /tmp/lci0-integrator-exact-1784087974):
+b6b17160d2fec5177d0faad0542d9b35c2047d521925ed302bc54e5d206d3e9c  requests.jsonl (24458265 B)
+d8010accdce9e33d865b19157bdb0defba495371a7708294995060d47db48b25  common-lisp-responses.jsonl (25704560 B)
+4f6299c2e8107702e12024425f07bbd90efce0b35a2345de0d6816fb0b134237  python-responses.jsonl (25693085 B)

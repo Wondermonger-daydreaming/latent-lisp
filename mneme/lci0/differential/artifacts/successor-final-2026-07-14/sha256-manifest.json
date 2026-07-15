@@ -1,0 +1,26 @@
+{
+  "common-lisp-responses.jsonl": {
+    "bytes": 25763401,
+    "sha256": "46695fbdcc3d7b449297c7d591473fb842ea1db93a151bb8e65e9c9492a693a7"
+  },
+  "common-lisp-stderr.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "python-responses.jsonl": {
+    "bytes": 25753084,
+    "sha256": "5b185919ab0599d43e845f9624faa17940c03bc6efb3c4988a4604505cff3542"
+  },
+  "python-stderr.txt": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "requests.jsonl": {
+    "bytes": 24458265,
+    "sha256": "b6b17160d2fec5177d0faad0542d9b35c2047d521925ed302bc54e5d206d3e9c"
+  },
+  "summary.json": {
+    "bytes": 1541123,
+    "sha256": "7f63cd0cb59c12d0d909f19e4fdc3d5625912c1ced7562c9aef7813ccfe25d7e"
+  }
+}

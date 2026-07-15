@@ -1,0 +1,182 @@
+{
+  "algorithm": "SHA-256",
+  "manifest_excludes_itself": true,
+  "members": {
+    "adapter-cl-ambient-markers.responses.jsonl": {
+      "bytes": 11901537,
+      "sha256": "2606c215814cb153bd2d41c55ba9ebea65aa057841a705f0c465edc96f618a6c"
+    },
+    "adapter-cl-ambient-markers.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "adapter-cl-baseline.responses.jsonl": {
+      "bytes": 11901537,
+      "sha256": "2606c215814cb153bd2d41c55ba9ebea65aa057841a705f0c465edc96f618a6c"
+    },
+    "adapter-cl-baseline.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "adapter-py-hash-0-locale-C.responses.jsonl": {
+      "bytes": 11892642,
+      "sha256": "3df1b9034ac6b60ddff719a34b81ae4775460739e6a269220bec930abc291555"
+    },
+    "adapter-py-hash-0-locale-C.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "adapter-py-hash-1-locale-C.responses.jsonl": {
+      "bytes": 11892642,
+      "sha256": "3df1b9034ac6b60ddff719a34b81ae4775460739e6a269220bec930abc291555"
+    },
+    "adapter-py-hash-1-locale-C.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "adapter-py-hash-42-locale-C.utf8.responses.jsonl": {
+      "bytes": 11892642,
+      "sha256": "3df1b9034ac6b60ddff719a34b81ae4775460739e6a269220bec930abc291555"
+    },
+    "adapter-py-hash-42-locale-C.utf8.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "adapter-py-hash-max-locale-POSIX.responses.jsonl": {
+      "bytes": 11892642,
+      "sha256": "3df1b9034ac6b60ddff719a34b81ae4775460739e6a269220bec930abc291555"
+    },
+    "adapter-py-hash-max-locale-POSIX.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cases.json": {
+      "bytes": 243600,
+      "sha256": "5a573656458f41a8418e9d2fc8a8f5d97aea5cd3c373dd30cc5999b1f281f6d1"
+    },
+    "command-transcript.jsonl": {
+      "bytes": 27472,
+      "sha256": "2cadd48fb70d93a8939088d5a95c9e619b7e6847b196bdb349d864ac78997c9a"
+    },
+    "native-common-lisp-baseline.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-common-lisp-baseline.stdout.txt": {
+      "bytes": 17232,
+      "sha256": "43abd1a2fb83828f9bc9f894ffa3cc3ef9dfafe3831558a7036b295fb9c5bb04"
+    },
+    "native-common-lisp-hash-insertion.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-common-lisp-hash-insertion.stdout.txt": {
+      "bytes": 17238,
+      "sha256": "aaf2f6f31de14fb98fd7de0e0db8fc14392580fcf3f9232fa71f4991e2cba206"
+    },
+    "native-common-lisp-package.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-common-lisp-package.stdout.txt": {
+      "bytes": 17231,
+      "sha256": "4c917600fe0d70f3441687a6ffd3b46e87c1ec460fddaebc1210352f924b4268"
+    },
+    "native-common-lisp-printer.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-common-lisp-printer.stdout.txt": {
+      "bytes": 17231,
+      "sha256": "2120051afbc69bc059dbebd30c3919f29a06dc0472a4e5b941b94e705179627c"
+    },
+    "native-common-lisp-readtable.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-common-lisp-readtable.stdout.txt": {
+      "bytes": 17233,
+      "sha256": "81868c3974a356ceba1682e48ba41051cce1f2cc43002156deb9895f234b8afb"
+    },
+    "native-common-lisp-unavailable-io-clock.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-common-lisp-unavailable-io-clock.stdout.txt": {
+      "bytes": 17334,
+      "sha256": "88ad7d1eb05623729799cd012d38c854ece79b59d38c603c8b7a07687e0dc185"
+    },
+    "native-python-0.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-python-0.stdout.txt": {
+      "bytes": 973,
+      "sha256": "9b5efa3737c6bba674424d77daec9d876f9bb1b042a11d0e93e06c81dc311256"
+    },
+    "native-python-1.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-python-1.stdout.txt": {
+      "bytes": 973,
+      "sha256": "344189a0e0d1f41ef7ce71b4bfccd36eb6b3e880df54c23b704e4b15718d0fe6"
+    },
+    "native-python-2.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-python-2.stdout.txt": {
+      "bytes": 979,
+      "sha256": "3dd5144e662645fa28ee2f69f4f684d1a3de3e1692b1697424cf41475ddc01a9"
+    },
+    "native-python-3.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "native-python-3.stdout.txt": {
+      "bytes": 982,
+      "sha256": "c1b9c6ce261407f505d7eb4d582eac3342f60b099c81b80821b528009dd57fbc"
+    },
+    "requests.jsonl": {
+      "bytes": 8818612,
+      "sha256": "41f979e6b946b22fda82c5fd3dae3ee17137ce21ecea86fc044d3213783fde89"
+    },
+    "runtime-locale-list.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runtime-locale-list.stdout.txt": {
+      "bytes": 15,
+      "sha256": "28f9b2ecb95875afe1f2f4d89cb1c0009f2e90375490b2d74851bb3f8b97513f"
+    },
+    "runtime-sbcl-version.stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runtime-sbcl-version.stdout.txt": {
+      "bytes": 11,
+      "sha256": "15d11577923409174df80b643b47845c21b4ffa448882eff3f64c0416d8e629c"
+    },
+    "suite-common-lisp-unit.stderr.txt": {
+      "bytes": 192,
+      "sha256": "3fbe869d30d294ac0de2f49824d44f6968668df50f968620c4b68a26ffede0ed"
+    },
+    "suite-common-lisp-unit.stdout.txt": {
+      "bytes": 5372,
+      "sha256": "876acdc6171dabebf401ec7de26b5cc2c6d37fd834499dba90173b21b6db8b29"
+    },
+    "suite-python-perturbation-surface.stderr.txt": {
+      "bytes": 107,
+      "sha256": "d926e2bfb8d4e5abddd99e34d9d95a172451697495e6bb372942f6b99152d873"
+    },
+    "suite-python-perturbation-surface.stdout.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "summary.json": {
+      "bytes": 357939,
+      "sha256": "0a318264436c6b6dd018fa31188315610d4bea8486bd0c61463d9e6a9fdcce6c"
+    }
+  }
+}

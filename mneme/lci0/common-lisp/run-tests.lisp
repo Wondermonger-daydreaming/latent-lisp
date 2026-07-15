@@ -1,0 +1,8 @@
+(load "mneme/lci0/common-lisp/load.lisp")
+(load "mneme/lci0/common-lisp/tests.lisp")
+(unless (run-lci0-common-lisp-unit-tests)
+  (sb-ext:exit :code 1))
+(load "mneme/lci0/common-lisp/closure-tests.lisp")
+(unless (run-lci0-closure-regression-tests)
+  (sb-ext:exit :code 1))
+(load "mneme/lci0/common-lisp/pre-seed-red-tests.lisp")

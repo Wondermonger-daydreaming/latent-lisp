@@ -1,0 +1,2 @@
+c0a59d7edd717128cb305ec8473fd0bea2cd660d9c33e564338e84fa0fafa700  LCI0-CLOSURE-EVIDENCE-2026-07-15.tar.gz
+# Built twice from clean HEAD 6ed9cf28464a6abb976b73b144c211197240d428 (deterministic: sorted names, zeroed mtimes/uid/gid, zeroed gzip timestamp); the two builds were byte-identical. Second build retained in _staging/lci0-closure-reverify/phase2/integrator/.

@@ -1,0 +1,206 @@
+LCI/0 Common Lisp seed verification transcript
+Observed: 2026-07-14
+Working tree: /home/gauss/Codex-Lab/latent-lisp-lci0-common-lisp
+Branch: codex/lci0-common-lisp
+Pre-seed base: ab353b4b7f30d5e46323d274862e6c1212ebf514
+Runtime: SBCL 2.4.6
+Host: Linux 6.18.33.2-microsoft-standard-WSL2 x86_64 GNU/Linux
+
+PRE-SEED RED BASELINE
+=====================
+
+Command:
+  sbcl --noinform --disable-debugger --script mneme/lci0/common-lisp/run-pre-seed-red.lisp
+
+Observed before successful behavior existed:
+  LCI0 PRE-SEED RISK SUMMARY: 0 green, 15 red, 15 total
+  process exit: 1
+
+The complete output is preserved separately in
+LCI0-COMMON-LISP-PRE-SEED-RED-TRANSCRIPT.txt.
+
+FINAL COMMON LISP UNIT AND RISK GATES
+=====================================
+
+Command:
+  sbcl --noinform --disable-debugger --script mneme/lci0/common-lisp/run-tests.lisp
+
+Observed:
+  PASS adapter-schema-census
+  PASS adapter-all-datum-shapes-construct
+  PASS adapter-unknown-shape-fails-closed
+  PASS adapter-nonstring-tag-fails-closed
+  PASS adapter-redundant-string-verification
+  PASS adapter-preserves-boolean-versus-integer
+  PASS adapter-exact-rational-normalization
+  PASS adapter-source-mutation-isolated
+  PASS cd0-sha256-known-answer
+  PASS independently-allocated-values-equal
+  PASS record-insertion-order-neutral
+  PASS source-list-mutation-snapshot
+  PASS printer-package-readtable-ambient-neutrality
+  PASS filesystem-and-clock-ambient-neutrality
+  LCI0 COMMON LISP UNIT SUMMARY: 14 passed, 0 failed, 14 total
+  GREEN 01-neutral-base-reference-and-bytes
+  GREEN 02-one-identity-coordinate-changes-envelope
+  GREEN 03-nonidentity-metadata-preserves-envelope
+  GREEN 04-undetermined-hard-inadmissible-policy-not-consulted
+  GREEN 05-nonmonotone-narrowing-not-declared
+  GREEN 06-narrowing-coverage-insufficient
+  GREEN 07-temporal-containment-not-direct-support
+  GREEN 08-digest-does-not-replace-envelope
+  GREEN 09-mutable-aliases-rejected
+  GREEN 10-unknown-nested-versions-fail-closed
+  GREEN 11-proposition-location-placement-disagreement
+  GREEN 12-legacy-fingerprint-collision-does-not-collapse-claim-id
+  GREEN 13-migrated-warrant-remains-inert
+  GREEN 14-unknown-fields-fail-closed
+  GREEN 15-source-mutation-cannot-change-claim-id-bytes
+  LCI0 PRE-SEED RISK SUMMARY: 15 green, 0 red, 15 total
+  process exit: 0
+
+SHARED VECTOR EXECUTION
+=======================
+
+Command:
+  sbcl --noinform --disable-debugger --script mneme/lci0/common-lisp/run-vectors.lisp
+
+Observed:
+  LCI0 VECTOR SUMMARY: 215/215 exact; 0 failed
+  process exit: 0
+
+The harness mechanically established 215 unique IDs, including P001-P030 and
+N001-N032, and compared operation, canonical input and expected octets, decoded
+abstract values, result octets, and typed failure fields. There were zero
+missing, underdetermined, skipped, or implementation-local expected results.
+
+FIXTURE CORPUS SWEEP
+====================
+
+Command:
+  sbcl --noinform --disable-debugger --load mneme/lci0/common-lisp/load.lisp \
+    --eval '(format t "~&LCI0 CORPUS SUMMARY: ~S~%" (lisp-plus-lci0:verify-fixture-corpus))' \
+    --quit
+
+Observed:
+  (:REGISTRY-DEFINITIONS 675
+   :VECTORS 215
+   :OFFICIAL-DOCUMENTS 1105
+   :RELATION-TABLE-DOCUMENTS 458
+   :NESTED-E1-DOCUMENTS 30
+   :SUPPLEMENTARY-DOCUMENTS 488
+   :TOTAL-DOCUMENTS 1593
+   :MAGIC-PREFIXED-JSON-VALUES 1593)
+  process exit: 0
+
+Every discovered document was decoded with frozen CD/0, compared with its
+package abstract datum, and re-encoded byte-identically. Recorded byte lengths
+and SHA-256 values were checked wherever supplied. The independent recursive
+magic-prefix census found exactly the same 1,593 documents; none were missed by
+the semantic key census. Official 1,105 and supplementary 488 remain distinct.
+
+FRESH-PROCESS HOST PERTURBATIONS
+================================
+
+Commands, each in a separate SBCL process:
+  env LCI0_PERTURBATION=package sbcl --noinform --disable-debugger --script mneme/lci0/common-lisp/run-perturbation.lisp
+  env LCI0_PERTURBATION=printer sbcl --noinform --disable-debugger --script mneme/lci0/common-lisp/run-perturbation.lisp
+  env LCI0_PERTURBATION=readtable sbcl --noinform --disable-debugger --script mneme/lci0/common-lisp/run-perturbation.lisp
+  env LCI0_PERTURBATION=hash-insertion sbcl --noinform --disable-debugger --script mneme/lci0/common-lisp/run-perturbation.lisp
+
+Observed:
+  package:        215/215 exact; exit 0
+  printer:        215/215 exact; exit 0
+  readtable:      215/215 exact; exit 0
+  hash-insertion: 215/215 exact; exit 0
+
+The unit/risk gates additionally cover independently allocated equal values,
+mutated source buffers, record insertion order, package/printer/readtable state,
+unavailable filesystem use, and changed clock observations.
+
+ASDF COMPILE/LOAD AND PUBLIC SURFACE
+====================================
+
+Command:
+  sbcl --noinform --disable-debugger \
+    --eval '(require :asdf)' \
+    --eval '(asdf:initialize-output-translations (quote (:output-translations (t "/tmp/lci0-asdf-cache/") :ignore-inherited-configuration)))' \
+    --eval '(asdf:load-asd (truename "mneme/lci0/common-lisp/lisp-plus-lci0.asd"))' \
+    --eval '(asdf:load-system "lisp-plus-lci0" :force t)' \
+    --eval '(format t "~&LCI0 ASDF LOAD: PASS~%")' --quit
+
+Observed:
+  every frozen CD/0 and LCI/0 source file compiled to /tmp/lci0-asdf-cache
+  compilation warnings: 0
+  compilation failures: 0
+  compiler notes: 3 (unreachable-code notes only)
+  LCI0 ASDF LOAD: PASS
+  process exit: 0
+
+An external-symbol audit after load reported:
+  LCI0 UNBOUND EXPORTS: NIL
+
+FROZEN CD/0 NONREGRESSION
+=========================
+
+Command:
+  sbcl --noinform --disable-debugger --script canonical-datum/common-lisp/run-tests.lisp
+
+Observed:
+  CD/0 Common Lisp seed conformance: PASS
+  shared positives executed: 25/25
+  shared negative classified total: 71/71
+  classified rows executed: 68/68; failures: 0; skips: 0
+  language-specific N/A dispositions: 3/3
+  deterministic generated round trips: 500
+  total assertions: 2633
+  process exit: 0
+
+The three declared N/A optional host importers are recorded as N/A and are not
+counted as passes. The protected canonical-datum subtree has no tracked diff
+against the pre-seed base.
+
+EXISTING MNEME/V1 NONREGRESSION
+===============================
+
+Command:
+  bash mneme/verify-all.sh
+
+Observed:
+  PASS conformance-walk: 7/7
+  PASS adversarial-conformance: 18/18
+  PASS counterexample-closure: 10/10
+  PASS boundary: 9/9
+  PASS atelier: 4/4 pass banners
+  PASS language-a-fixtures: 14/14 plus suite line
+  ALL FLOORS HOLD -- 6/6 suites green
+  process exit: 0
+
+The protected mneme/latent-mvp subtree and mneme/verify-all.sh have no tracked
+diff against the pre-seed base.
+
+DEVELOPMENT-HARNESS DISCLOSURES
+===============================
+
+The first post-implementation unit-harness invocation reported 12/14 because
+one test selected the wrong fixture identifier and one test declaration
+triggered SBCL's package lock. Both were test-harness defects, were corrected
+before this final transcript, and did not change an implementation result or a
+normative fixture expectation. An earlier ASDF invocation used a malformed
+output-translation environment string and failed before compilation; the
+explicit ASDF command recorded above corrected only the command configuration.
+
+FINAL ACCOUNTING
+================
+
+Common Lisp unit tests: 14 pass, 0 fail, 0 skip, 0 N/A
+High-risk boundary tests: 15 pass, 0 fail, 0 skip, 0 N/A
+LCI/0 vectors: 215 exact, 0 fail, 0 skip, 0 N/A
+Official embedded documents: 1,105 exact
+Supplementary embedded documents: 488 exact
+Total embedded documents: 1,593 exact
+Fresh-process perturbation vector requests: 860 exact (4 x 215)
+Frozen CD/0 assertions: 2,633 pass; 3 declared N/A dispositions not counted pass
+Existing Mneme/v1 suites: 6 pass, 0 fail
+Unresolved Common Lisp implementation divergences: 0
+Retained package/prose disposition: LCI0-DIV-001, as authorized by Fable PASS
