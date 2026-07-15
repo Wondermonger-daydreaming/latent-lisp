@@ -1,0 +1,126 @@
+PASS adapter-schema-census
+PASS adapter-all-datum-shapes-construct
+PASS failure-code-registry-census-is-exactly-84
+PASS failure-code-allowlist-equals-frozen-registry-plus-closure
+PASS every-literal-lci-fail-code-is-frozen-authoritative
+PASS dynamic-unfrozen-lci-code-cannot-escape-as-lci-failure
+PASS adapter-unknown-shape-fails-closed
+PASS adapter-nonstring-tag-fails-closed
+PASS adapter-redundant-string-verification
+PASS adapter-preserves-boolean-versus-integer
+PASS adapter-rejects-reducible-rational-surface
+PASS adapter-rejects-negative-rational-denominator
+PASS adapter-source-mutation-isolated
+PASS cd0-sha256-known-answer
+PASS independently-allocated-values-equal
+PASS record-insertion-order-neutral
+PASS source-list-mutation-snapshot
+PASS printer-package-readtable-ambient-neutrality
+PASS filesystem-and-clock-ambient-neutrality
+PASS all-458-relation-table-semantics
+PASS malformed-stable-ref-object-id-is-typed
+PASS wrong-stable-ref-field-namespace-fails-closed
+PASS registered-file-reference-remains-valid
+PASS mutable-alias-display-model
+PASS mutable-alias-filename
+PASS mutable-alias-url
+PASS mutable-alias-latest-case-insensitive
+PASS mutable-alias-main-case-insensitive
+PASS mutable-alias-package-symbol
+PASS nested-stable-ref-alias-path-is-not-truncated
+PASS stable-ref-prefix-case-is-not-normalized
+PASS stable-ref-prefix-segmentation-is-not-normalized
+PASS stable-ref-tail-segmentation-remains-distinct
+PASS e6-nested-declared-fault-precedes-later-unknown
+PASS e6-kind-precedes-later-version
+PASS wrong-claim-field-namespace-is-missing-not-inferred
+PASS proposition-subject-content-allows-arbitrary-cd0
+PASS proposition-argument-wrapper-remains-closed
+PASS target-schema-kind-swap-refused
+PASS target-boundary-record-is-closed
+PASS nested-scope-unknown-field-retains-depth-first-failure
+PASS target-proposition-mismatch-uses-specific-frozen-code
+PASS nonmonotone-schema-cannot-borrow-proposition-narrowing
+PASS equal-target-scope-still-requires-exact-coverage
+PASS corpus-completion-exact-basis-is-cross-checked
+PASS corpus-and-revision-stable-refs-must-cohere
+PASS corpus-boundary-cross-coherence-exact-tuple-LCI0-AC-006
+PASS only-occurrence-metadata-entries-is-open
+PASS occurrence-wrapper-remains-closed
+PASS operation-recursively-validates-occurrence-wrapper
+BLOCKED represented-loss-field-type-has-no-frozen-lci-failure-code -- authorial return required
+PASS represented-loss-account-schema-is-finite
+PASS represented-loss-account-is-closed
+PASS successful-bare-inert-record-has-no-source-binding
+PASS migration-constructs-with-registry-result-oracle-poisoned
+PASS migration-propagates-explicit-source-artifact
+PASS migration-result-recomputes-claim-id
+PASS migration-result-is-closed
+PASS migration-recognizes-only-seven-errata-classifications
+PASS every-operation-empty-payload-refuses-with-typed-lci-failure
+PASS every-operation-unknown-payload-refuses-with-typed-lci-failure
+PASS placement-negative-remains-an-executed-regression
+BLOCKED equal-differential-evidence-has-no-frozen-result-vocabulary -- authorial return required
+BLOCKED unknown-normalizer-has-no-frozen-lci-failure-tuple -- authorial return required
+PASS normalization-operation-validates-coordinate-against-values
+PASS equal-e4-inputs-derive-merge-permitted
+PASS equal-e8-envelopes-derive-semantic-equality
+BLOCKED invalid-test-digest-material-has-no-frozen-lci-failure-tuple -- authorial return required
+BLOCKED valid-migration-result-has-no-frozen-positive-output-schema -- authorial return required
+PASS stable-ref-scheme-declaration-is-observed
+PASS bridge-nested-shape-refuses-before-host-access
+PASS live-restoration-source-is-recursively-validated
+BLOCKED record-order-mutation-has-no-frozen-lci-failure-tuple -- authorial return required
+BLOCKED version-governance-mutation-has-no-frozen-lci-failure-tuple -- authorial return required
+BLOCKED normalizer-evidence-mutation-has-no-frozen-lci-failure-tuple -- authorial return required
+BLOCKED equal-lossy-translation-has-no-frozen-result-tuple -- authorial return required
+PASS profile-location-operation-validates-closed-value
+PASS p024-inert-defensive-revival-without-registry-lookup
+PASS official-green-N012-closed-by-LCI0-AC-001
+PASS official-green-E5-closed-by-LCI0-AC-003
+PASS official-green-P024-closed-by-LCI0-AC-010
+PASS official-green-P029-closed-by-LCI0-AC-004
+PASS fixture-policies-construct-with-decision-oracles-poisoned
+BLOCKED policy-c-is-an-authorial-gap-not-an-lci-failure -- authorial return required
+PASS policy-freshness-is-derived-from-mutated-query-time
+PASS policy-b-observes-explicit-represented-loss
+PASS policy-b-untrusted-external-rejects-external-principal
+PASS policy-combined-witness-rejects-represented-loss-first
+PASS policy-evaluation-is-limited-meta-testimony-only
+PASS matching-combined-payload-budget-root
+PASS scope-combined-payload-budget-root
+PASS temporal-combined-payload-budget-root
+PASS unrelated-material-does-not-count-as-stable-reference
+PASS wrong-kind-target-does-not-count-boundary-work
+PASS wrong-kind-loss-does-not-count-account-entries
+LCI0 COMMON LISP UNIT SUMMARY: 85 passed, 0 failed, 10 blocked, 95 total
+LCI0 CLOSURE SUMMARY: 50/50 exact; 0 failed
+PASS all-fifty-successor-closure-vectors-pass
+PASS overlay-0.2-loads-with-exactly-the-ruled-member-census
+PASS ac-001-direct-scope-relation-agrees-with-frozen-rows
+PASS ac-001-n012-matcher-guard-fails-before-any-policy
+PASS ac-005-policy-a-consulted-then-policy-b
+PASS ac-008-classification-content-coupling-exact-tuple
+PASS ac-008-untouched-inert-predecessor-result-still-validates
+PASS ac-008-valid-exact-results-remain-accepted
+PASS ac-009-premise-mutation-fails-closed-on-the-deferral
+PASS ac-009-pinned-derived-positive-target-still-validates
+PASS ac-006-reverse-orientation-stays-fail-closed-invalid-basis
+PASS ac-010-revival-is-deterministic-and-defensively-copied
+LCI0 CLOSURE REGRESSION SUMMARY: 12 passed, 0 failed, 12 total
+GREEN 01-neutral-base-reference-and-bytes
+GREEN 02-one-identity-coordinate-changes-envelope
+GREEN 03-nonidentity-metadata-preserves-envelope
+GREEN 04-undetermined-hard-inadmissible-policy-not-consulted
+GREEN 05-nonmonotone-narrowing-not-declared
+GREEN 06-narrowing-coverage-insufficient
+GREEN 07-temporal-containment-not-direct-support
+GREEN 08-digest-does-not-replace-envelope
+GREEN 09-mutable-aliases-rejected
+GREEN 10-unknown-nested-versions-fail-closed
+GREEN 11-proposition-location-placement-disagreement
+GREEN 12-legacy-fingerprint-collision-does-not-collapse-claim-id
+GREEN 13-migrated-warrant-remains-inert
+GREEN 14-unknown-fields-fail-closed
+GREEN 15-source-mutation-cannot-change-claim-id-bytes
+LCI0 PRE-SEED RISK SUMMARY: 15 green, 0 red, 15 total

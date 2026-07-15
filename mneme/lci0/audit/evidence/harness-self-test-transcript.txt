@@ -1,0 +1,17 @@
+test_01_altered_external_identity_is_distinct (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_01_altered_external_identity_is_distinct) ... ok
+test_02_altered_internal_member_is_distinct (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_02_altered_internal_member_is_distinct) ... ok
+test_03_exact_generator_counts_and_no_duplicates (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_03_exact_generator_counts_and_no_duplicates) ... ok
+test_04_wrong_count_is_rejected (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_04_wrong_count_is_rejected) ... ok
+test_05_wrong_converse_negative_control_is_detected (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_05_wrong_converse_negative_control_is_detected) ... ok
+test_06_weakened_composition_set_is_detected (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_06_weakened_composition_set_is_detected) ... ok
+test_07_poisoned_policy_is_not_called_after_failure (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_07_poisoned_policy_is_not_called_after_failure) ... ok
+test_08_shared_failure_is_not_divergence (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_08_shared_failure_is_not_divergence) ... ok
+test_09_unresolved_fallback_is_not_pass_or_fail (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_09_unresolved_fallback_is_not_pass_or_fail) ... ok
+test_10_cross_010_negative_control_without_adoption (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_10_cross_010_negative_control_without_adoption) ... ok
+test_11_extension_probe_stays_outside_registered_census (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_11_extension_probe_stays_outside_registered_census) ... ok
+test_12_witness_serialization_order_is_byte_identical (mneme.lci0.audit.test_law_audit.HarnessIntegrityTests.test_12_witness_serialization_order_is_byte_identical) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 2.172s
+
+OK

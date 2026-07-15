@@ -1,0 +1,1 @@
+{"nested_e1_documents": 30, "official_documents": 1105, "registry_definitions": 675, "relation_table_documents": 458, "supplementary_documents": 488, "total_documents": 1593, "vectors": 215}
