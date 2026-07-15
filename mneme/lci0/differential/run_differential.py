@@ -26,11 +26,7 @@ from lci0.core import CD0_BUDGET, canonical_bytes, field_by_path, replace_record
 from lci0.package import definitions, iter_vectors, registry
 
 from authorial_blockers import (
-    BLOCKED_HOSTILE_AUTHORITY_GAP_REQUESTS,
-    BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS,
-    BLOCKED_HOSTILE_FAILURE_CANDIDATES,
     BLOCKED_HOSTILE_REQUESTS,
-    BLOCKED_HOSTILE_SUCCESS_REQUESTS,
     BLOCKED_RELATION_PATH_REQUESTS,
     BLOCKED_VECTOR_REQUESTS,
     EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS,
@@ -156,6 +152,129 @@ def _fixture_carrier(fields: Iterable[tuple[str, cd0.Datum]]) -> cd0.Record:
     )
 
 
+_OVERLAY_SUBDIR = "lci0-fixture-overlay-0.2-2026-07-14"
+_OVERLAY_INDEX_NAME = "LCI0-FIXTURE-OVERLAY-0.2-INDEX.json"
+
+
+def _overlay_index() -> dict[str, Any]:
+    """Load the ruled fixture overlay 0.2 index from the pinned fixture root.
+
+    The overlay owns the ruled results for the four superseded official vectors
+    and the eight hostile requests; the coordinator consults it directly so its
+    expectations are the ruling's, not either implementation's."""
+
+    root = os.environ.get("LCI0_FIXTURE_ROOT") or os.environ.get("LCI0_FIXTURE_DIR")
+    _require(
+        bool(root),
+        "LCI0_FIXTURE_ROOT/LCI0_FIXTURE_DIR must name the overlay-0.2 fixture root",
+    )
+    index_path = Path(root) / _OVERLAY_SUBDIR / _OVERLAY_INDEX_NAME
+    _require(index_path.is_file(), f"fixture overlay 0.2 index missing: {index_path}")
+    index = json.loads(index_path.read_text(encoding="utf-8"))
+    _require(type(index) is dict, "fixture overlay 0.2 index is not an object")
+    return index
+
+
+def _encode_semantic_value(value: Any) -> cd0.Datum:
+    if value is None:
+        return cd0.unit()
+    if type(value) is bool:
+        return cd0.boolean(value)
+    if type(value) is int:
+        return cd0.integer(value)
+    if type(value) is str:
+        return cd0.string(value)
+    if type(value) is dict:
+        return cd0.record(
+            tuple(
+                (cd0.identifier(FIXTURE_FIELD, (str(name),)), _encode_semantic_value(item))
+                for name, item in value.items()
+            )
+        )
+    raise HarnessFailure(f"unencodable ruled semantic value: {type(value)!r}")
+
+
+def _semantic_result_document(operation: str, outputs: Mapping[str, Any]) -> cd0.Record:
+    """Encode a ruled semantic success value into its canonical result document.
+
+    ``outputs`` are already the (flattened) fixture-operation-result outputs the
+    adapters emit; nested dicts become nested fixture-field records."""
+
+    return cd0.record(
+        (
+            (
+                cd0.identifier(FIXTURE_FIELD, ("kind",)),
+                cd0.identifier(FIXTURE, ("tag", "fixture-operation-result")),
+            ),
+            (cd0.identifier(FIXTURE_FIELD, ("schema-version",)), cd0.integer(0)),
+            (
+                cd0.identifier(FIXTURE_FIELD, ("status",)),
+                cd0.identifier(FIXTURE, ("result-status", "success")),
+            ),
+            (
+                cd0.identifier(FIXTURE_FIELD, ("operation",)),
+                cd0.identifier(FIXTURE, ("operation", operation)),
+            ),
+            (
+                cd0.identifier(FIXTURE_FIELD, ("outputs",)),
+                cd0.record(
+                    tuple(
+                        (cd0.identifier(FIXTURE_FIELD, (str(name),)), _encode_semantic_value(item))
+                        for name, item in outputs.items()
+                    )
+                ),
+            ),
+        )
+    )
+
+
+def _superseded_vector_expected_hexes(index: Mapping[str, Any]) -> dict[str, str]:
+    """The ruled overlay expected result hex for each of the four supersessions.
+
+    Three vectors pin a canonical hex directly; P024's inert-defensive revival is
+    pinned as a semantic document, which is re-encoded here into the exact
+    fixture-operation-result document both adapters emit (outputs are the
+    document's non-status coordinates)."""
+
+    supersessions = index.get("supersessions")
+    _require(type(supersessions) is dict, "overlay supersessions missing")
+    result: dict[str, str] = {}
+    for vector_id, entry in supersessions.items():
+        encoding = entry.get("expected_result_encoding")
+        if encoding == "canonical_cd0_hex":
+            hex_value = entry.get("expected_canonical_cd0_hex")
+            _require(type(hex_value) is str and bool(hex_value), f"{vector_id}: overlay hex missing")
+            result[vector_id] = hex_value
+        elif encoding == "semantic_json_document":
+            semantic = entry.get("expected_result")
+            _require(type(semantic) is dict, f"{vector_id}: overlay semantic result missing")
+            outputs = {name: item for name, item in semantic.items() if name != "status"}
+            document = _semantic_result_document(entry["operation"], outputs)
+            result[vector_id] = canonical_bytes(document).hex()
+        else:
+            raise HarnessFailure(f"{vector_id}: unknown overlay result encoding {encoding!r}")
+    return result
+
+
+def _at_inclusive_limit_conformance_expected_hex(index: Mapping[str, Any]) -> str:
+    """The ruled within-budget conformance value document (RESOURCE at limit 64).
+
+    The overlay pins it as a semantic value; the adapters flatten that value into
+    the fixture-operation-result outputs, and this rebuilds the same document."""
+
+    hostile = index.get("hostile")
+    _require(type(hostile) is dict, "overlay hostile section missing")
+    entry = hostile.get("resource-maximum-nesting-at-limit-64")
+    _require(type(entry) is dict, "overlay at-limit-64 hostile entry missing")
+    semantic = entry.get("expected_result")
+    _require(
+        type(semantic) is dict and type(semantic.get("value")) is dict,
+        "overlay at-limit-64 semantic value missing",
+    )
+    document = _semantic_result_document("conformance-validation", semantic["value"])
+    return canonical_bytes(document).hex()
+
+
 def _hostile_cases() -> list[dict[str, Any]]:
     cases: list[dict[str, Any]] = []
     vector_rows = {row["vector_id"]: row for row in iter_vectors()}
@@ -215,8 +334,14 @@ def _hostile_cases() -> list[dict[str, Any]]:
 
     observed = from_package_json(definitions()["warrant-target.observed.file-alpha.exact"]["abstract_cd0"], CD0_BUDGET)
     executed = from_package_json(definitions()["warrant-target.executed.call-17"]["abstract_cd0"], CD0_BUDGET)
-    cases.append({"name": "observed-with-executed-target-schema", "operation": "hostile-validate-warrant-target", "datum": replace_record_field(observed, "target-schema", field_by_path(executed, "target-schema"))})
-    cases.append({"name": "executed-with-observed-target-schema", "operation": "hostile-validate-warrant-target", "datum": replace_record_field(executed, "target-schema", field_by_path(observed, "target-schema"))})
+    _target_schema_mismatch = {
+        "category": "invalid-input",
+        "code": "TargetSchemaKindMismatch",
+        "stage": "target-schema",
+        "path": ["target-schema"],
+    }
+    cases.append({"name": "observed-with-executed-target-schema", "operation": "hostile-validate-warrant-target", "datum": replace_record_field(observed, "target-schema", field_by_path(executed, "target-schema")), "expected_failure": dict(_target_schema_mismatch)})
+    cases.append({"name": "executed-with-observed-target-schema", "operation": "hostile-validate-warrant-target", "datum": replace_record_field(executed, "target-schema", field_by_path(observed, "target-schema")), "expected_failure": dict(_target_schema_mismatch)})
 
     boundaries = field_by_path(observed, "boundaries")
     coverage = field_by_path(boundaries, "coverage-scope")
@@ -224,7 +349,24 @@ def _hostile_cases() -> list[dict[str, Any]]:
     future_expression = cd0.record((*expression.fields, (cd0.identifier(FIXTURE_FIELD, ("future-selector",)), cd0.unit())))
     future_coverage = replace_record_field(coverage, "expression", future_expression)
     future_boundaries = replace_record_field(boundaries, "coverage-scope", future_coverage)
-    cases.append({"name": "target-nested-coverage-future-selector", "operation": "hostile-validate-warrant-target", "datum": replace_record_field(observed, "boundaries", future_boundaries)})
+    cases.append(
+        {
+            "name": "target-nested-coverage-future-selector",
+            "operation": "hostile-validate-warrant-target",
+            "datum": replace_record_field(observed, "boundaries", future_boundaries),
+            "expected_failure": {
+                "category": "invalid-input",
+                "code": "UnknownField",
+                "stage": "target-boundary",
+                "path": [
+                    "boundaries",
+                    "fixture-field:coverage-scope",
+                    "expression",
+                    "fixture-field:future-selector",
+                ],
+            },
+        }
+    )
 
     claim = from_package_json(definitions()["claim-id.file-alpha-neutral"]["abstract_cd0"], CD0_BUDGET)
     cases.append({"name": "claim-outer-kind-key-namespace", "operation": "hostile-validate-claim-id", "datum": _replace_key_namespace(claim, "kind", HOSTILE_NAMESPACE)})
@@ -538,7 +680,11 @@ def _relation_failure_expectation(
             "code": code,
             "stage": stage,
         },
-        "allowed_failure_paths": [list(path) for path in allowed_paths],
+        # Render each ruled path exactly as the adapters emit it (the
+        # fixture-field / standard-field namespace normalization).
+        "allowed_failure_paths": [
+            canonical_failure_path(path) for path in allowed_paths
+        ],
     }
 
 
@@ -550,12 +696,14 @@ def _relation_expectation(
     left_fixture: str,
     right_fixture: str,
 ) -> dict[str, Any]:
-    """Return the frozen companion status/tuple for a pinned relation row.
+    """Return the ruled companion status/tuple for a pinned relation row.
 
     The registry pins the relation token.  The LCI calculus and Errata E6 pin
     whether that token is returned normally or as a typed F-valued failure.
-    Thirty-eight fixture rows leave only the structural path underdetermined;
-    those rows admit the two witnessed paths and nothing else.
+    The thirty-eight LCI0-AC-002 closure rows now carry a single ruled
+    companion path: cross-calculus scope incompatibility selects the right
+    operand's calculus, and a symbolic right temporal form selects the right
+    operand's expression form.
     """
 
     if table_name == "scope_relation_table_0":
@@ -566,29 +714,25 @@ def _relation_expectation(
                 allowed_paths=(("fixture-field:right",),),
             )
         if relation == "incompatible":
-            _require(
-                request_id in BLOCKED_RELATION_PATH_REQUESTS,
-                "unclassified scope incompatibility path",
-            )
             return _relation_failure_expectation(
                 code="ScopeIncompatible",
                 stage="target-relation",
-                allowed_paths=(
-                    ("fixture-field:right",),
-                    ("fixture-field:right", "calculus"),
-                ),
+                allowed_paths=(("fixture-field:right", "calculus"),),
             )
     elif table_name == "temporal_relation_table_0":
         if relation == "unknown":
-            paths = (
-                (("fixture-field:left",), ("fixture-field:right",))
-                if request_id in BLOCKED_RELATION_PATH_REQUESTS
-                else (("fixture-field:left",),)
-            )
+            if right_fixture == "subject-time.symbolic-unknown":
+                return _relation_failure_expectation(
+                    code="AdmissibilityUndetermined",
+                    stage="subject-time",
+                    allowed_paths=(
+                        ("fixture-field:right", "expression", "form"),
+                    ),
+                )
             return _relation_failure_expectation(
                 code="AdmissibilityUndetermined",
                 stage="subject-time",
-                allowed_paths=paths,
+                allowed_paths=(("fixture-field:left",),),
             )
         if relation == "incompatible" and "subject-time.second.alpha" in {
             left_fixture,
@@ -602,10 +746,6 @@ def _relation_expectation(
     else:
         raise HarnessFailure(f"unknown relation table: {table_name}")
 
-    _require(
-        request_id not in BLOCKED_RELATION_PATH_REQUESTS,
-        "blocked relation path unexpectedly classified as success",
-    )
     return {
         "expected_semantic_status": "success",
         "expected_failure": None,
@@ -633,6 +773,9 @@ def _relation_response_matches(
 
 
 def build_requests() -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, Any]]:
+    overlay = _overlay_index()
+    superseded_expected_hex = _superseded_vector_expected_hexes(overlay)
+    at_limit_conformance_hex = _at_inclusive_limit_conformance_expected_hex(overlay)
     package_registry = registry()
     vectors = list(iter_vectors())
     _require(len(vectors) == 215, "vector count is not 215")
@@ -671,7 +814,12 @@ def build_requests() -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], d
         expected_hex = _verify_document_row(row["expected"], f"vector-expected:{vector_id}")
         add(f"doc:vector-input:{vector_id}", "document-roundtrip", input_hex, {"kind": "document", "expected_hex": input_hex, "class": "official-vector-input"})
         add(f"doc:vector-expected:{vector_id}", "document-roundtrip", expected_hex, {"kind": "document", "expected_hex": expected_hex, "class": "official-vector-expected"})
-        add(f"vector:{vector_id}", row["operation"], input_hex, {"kind": "vector", "vector_id": vector_id, "expected_hex": expected_hex, "operation": row["operation"]})
+        # The four superseded official vectors (N012, E5-COVERAGE-INSUFFICIENT,
+        # P024, P029) are ruled by overlay 0.2; their semantic expectation is the
+        # overlay result, not the frozen 0.1 expected document (which still
+        # round-trips as the doc:vector-expected request above).
+        vector_expected_hex = superseded_expected_hex.get(vector_id, expected_hex)
+        add(f"vector:{vector_id}", row["operation"], input_hex, {"kind": "vector", "vector_id": vector_id, "expected_hex": vector_expected_hex, "operation": row["operation"]})
         operation_counts[row["operation"]] += 1
         document_count += 2
     _require(document_count == 1105, "official document count is not 1,105")
@@ -741,7 +889,11 @@ def build_requests() -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]], d
 
     hostile = _hostile_cases()
     for row in hostile:
-        add(f"hostile:{row['name']}", row["operation"], row["canonical_hex"], {"kind": "hostile", **row})
+        oracle = {"kind": "hostile", **row}
+        if row["name"] == "resource-maximum-nesting-at-limit-64":
+            # LCI0-AC-007: pin the exact ruled within-budget value document.
+            oracle["expected_result_hex"] = at_limit_conformance_hex
+        add(f"hostile:{row['name']}", row["operation"], row["canonical_hex"], oracle)
 
     counts = {
         "official_documents": 1105,
@@ -878,29 +1030,17 @@ def _compare(
                     == FIXTURE_PROFILE_VERSION
                 )
             )
-            if kind == "hostile" and request_id in BLOCKED_HOSTILE_REQUESTS:
-                if input_passed and _valid_blocked_hostile_response(
-                    request_id, response, oracle
-                ):
-                    counts["hostile_blocked"] += 1
+            # Policy-C fail-closed is a ruled non-LCI fixture authority gap: a
+            # legitimate passing outcome, no longer an authorial blocker.
+            if kind == "hostile" and shape == "fixture-authority-gap":
+                passed = input_passed and _valid_authority_gap_response(response, oracle)
+                counts[f"hostile_{'passed' if passed else 'failed'}"] += 1
+                if not passed:
                     mismatches.append(
                         {
                             "request_id": request_id,
                             "kind": "hostile",
-                            "disposition": "authorial-blocked",
-                            "bounded_expectation": _blocked_hostile_expectation(
-                                request_id, oracle
-                            ),
-                            "response": response,
-                        }
-                    )
-                else:
-                    counts["hostile_failed"] += 1
-                    mismatches.append(
-                        {
-                            "request_id": request_id,
-                            "kind": "hostile",
-                            "reason": "blocked-hostile-response-outside-bounds",
+                            "reason": "authority-gap-out-of-bounds",
                             "response": response,
                         }
                     )
@@ -925,34 +1065,22 @@ def _compare(
                     and response.get("relation") == oracle["expected_relation"]
                     and _relation_response_matches(response, oracle)
                 )
-            else:
+            else:  # hostile (hostile-validation or fixture-operation shape)
                 passed = input_passed and response.get("semantic_status") == oracle["expected_semantic_status"]
                 expected_failure = oracle.get("expected_failure")
                 if passed and expected_failure is not None:
                     passed = response.get("failure") == expected_failure
                 if passed and shape == "fixture-operation":
                     passed = canonical_report_matches(response)
-            relation_path_blocked = bool(
-                passed
-                and kind == "relation"
-                and request_id in BLOCKED_RELATION_PATH_REQUESTS
-            )
-            if relation_path_blocked:
-                passed = False
-            blocked = relation_path_blocked or (
-                not passed
-                and input_passed
-                and vector_metadata_passed
-                and kind == "vector"
-                and request_id in BLOCKED_VECTOR_REQUESTS
-                and _valid_authorial_blocked_response(request_id, response, oracle)
-            )
-            disposition = "blocked" if blocked else "passed" if passed else "failed"
+                    if passed and oracle.get("expected_result_hex") is not None:
+                        passed = (
+                            response.get("actual_canonical_cd0_hex")
+                            == oracle["expected_result_hex"]
+                        )
+            disposition = "passed" if passed else "failed"
             counts[f"{kind}_{disposition}"] += 1
             if not passed:
                 mismatch = {"request_id": request_id, "kind": kind, "response": response}
-                if blocked:
-                    mismatch["disposition"] = "authorial-blocked"
                 for field in (
                     "vector_id", "operation", "expected_relation", "table",
                     "left_fixture", "right_fixture", "canonical_sha256",
@@ -1008,33 +1136,6 @@ def _compare(
     return summary
 
 
-_BLOCKED_VECTOR_FAILURE_SHAPES = {
-    "vector:LCI0-N012": {
-        "category": "target-mismatch",
-        "code": "ScopeNarrowingNotDeclared",
-        "stage": "target-relation",
-        "path": ["claim", "location", "scope"],
-    },
-    "vector:LCI0-E5-COVERAGE-INSUFFICIENT": {
-        "category": "target-mismatch",
-        "code": "ScopeNarrowingCoverageInsufficient",
-        "stage": "target-relation",
-        "path": ["boundaries", "fixture-field:coverage-scope"],
-    },
-}
-
-_BLOCKED_VECTOR_SUCCESS_SHAPES = {
-    "vector:LCI0-P024": {
-        "operation": "revive-inert-occurrence",
-        "vector_id": "LCI0-P024",
-    },
-    "vector:LCI0-P029": {
-        "operation": "migrate-v1-collision-pair",
-        "vector_id": "LCI0-P029",
-    },
-}
-
-
 def _valid_authority_gap_response(
     response: Mapping[str, Any], oracle: Mapping[str, Any]
 ) -> bool:
@@ -1045,145 +1146,6 @@ def _valid_authority_gap_response(
         and "failure" not in response
         and "semantic_status" not in response
         and "actual_canonical_cd0_hex" not in response
-    )
-
-
-def _blocked_hostile_expectation(
-    request_id: str, oracle: Mapping[str, Any]
-) -> dict[str, Any]:
-    if request_id in BLOCKED_HOSTILE_AUTHORITY_GAP_REQUESTS:
-        return {
-            "kind": "fixture-authority-gap",
-            "authority_gap": oracle.get("expected_authority_gap"),
-        }
-    if request_id in BLOCKED_HOSTILE_FAILURE_CANDIDATES:
-        return {
-            "kind": "bounded-failure-candidates",
-            "semantic_status": "failure",
-            "failure_candidates": list(
-                BLOCKED_HOSTILE_FAILURE_CANDIDATES[request_id]
-            ),
-        }
-    if request_id in BLOCKED_HOSTILE_SUCCESS_REQUESTS:
-        return {
-            "kind": "bounded-success",
-            "semantic_status": "success",
-            "required_output": {"within-budget": True},
-        }
-    raise HarnessFailure(f"unknown hostile blocker: {request_id}")
-
-
-def _valid_blocked_hostile_response(
-    request_id: str,
-    response: Mapping[str, Any],
-    oracle: Mapping[str, Any],
-) -> bool:
-    """Validate only the frozen subset of one authorially blocked result."""
-
-    if request_id in BLOCKED_HOSTILE_AUTHORITY_GAP_REQUESTS:
-        return _valid_authority_gap_response(response, oracle)
-    if request_id in BLOCKED_HOSTILE_FAILURE_CANDIDATES:
-        if not (
-            response.get("protocol_status") == "success"
-            and response.get("semantic_status") == "failure"
-            and response.get("failure")
-            in BLOCKED_HOSTILE_FAILURE_CANDIDATES[request_id]
-        ):
-            return False
-        return (
-            canonical_report_matches(response)
-            if "actual_canonical_cd0_hex" in response
-            else True
-        )
-    if request_id in BLOCKED_HOSTILE_SUCCESS_REQUESTS:
-        if not (
-            response.get("protocol_status") == "success"
-            and response.get("semantic_status") == "success"
-            and canonical_report_matches(response)
-        ):
-            return False
-        try:
-            decoded = cd0.decode_exact(
-                bytes.fromhex(response["actual_canonical_cd0_hex"]), CD0_BUDGET
-            )
-        except (KeyError, TypeError, ValueError, cd0.CD0Failure):
-            return False
-        fields = _closed_record_fields(decoded, FIXTURE_FIELD)
-        outputs = (
-            _closed_record_fields(fields["outputs"], FIXTURE_FIELD)
-            if fields is not None and "outputs" in fields
-            else None
-        )
-        within_budget = (
-            outputs.get("within-budget") if outputs is not None else None
-        )
-        return type(within_budget) is cd0.Boolean and within_budget.value is True
-    return False
-
-
-def _closed_record_fields(
-    value: cd0.Datum, namespace: tuple[str, ...]
-) -> dict[str, cd0.Datum] | None:
-    if type(value) is not cd0.Record:
-        return None
-    result: dict[str, cd0.Datum] = {}
-    for key, item in value.fields:
-        if key.namespace != namespace or len(key.path) != 1 or key.path[0] in result:
-            return None
-        result[key.path[0]] = item
-    return result
-
-
-def _identifier_is(
-    value: cd0.Datum, namespace: tuple[str, ...], path: tuple[str, ...]
-) -> bool:
-    return (
-        type(value) is cd0.Identifier
-        and value.namespace == namespace
-        and value.path == path
-    )
-
-
-def _decoded_failure_matches(
-    decoded: cd0.Datum, expected: Mapping[str, Any]
-) -> bool:
-    fields = _closed_record_fields(decoded, LCI)
-    if fields is None or set(fields) != {
-        "kind", "schema-version", "category", "code", "stage", "path", "context"
-    }:
-        return False
-    if not (
-        _identifier_is(fields["kind"], TAG, ("failure",))
-        and type(fields["schema-version"]) is cd0.Integer
-        and fields["schema-version"].value == 0
-        and _identifier_is(fields["category"], FAILURE, (expected["category"],))
-        and _identifier_is(fields["code"], FAILURE, (expected["code"],))
-        and _identifier_is(fields["stage"], FAILURE, (expected["stage"],))
-        and type(fields["path"]) is cd0.Sequence
-        and type(fields["context"]) is cd0.Record
-    ):
-        return False
-    observed_path: list[str] = []
-    for item in fields["path"].items:
-        if (
-            type(item) is not cd0.Identifier
-            or item.namespace not in {
-                LCI,
-                FIXTURE_FIELD,
-                FIXTURE + ("mneme-proposition", "argument"),
-                FIXTURE + ("mneme-proposition", "field"),
-            }
-            or len(item.path) != 1
-        ):
-            return False
-        observed_path.append(
-            f"fixture-field:{item.path[-1]}"
-            if item.namespace == FIXTURE_FIELD
-            else item.path[-1]
-        )
-    return (
-        observed_path == expected["path"]
-        and failure_path_matches(fields["path"].items, observed_path)
     )
 
 
@@ -1214,109 +1176,14 @@ def _replace_named(
     return cd0.record(fields)
 
 
-def _blocked_success_candidate(
-    request_id: str, input_datum: cd0.Datum, expected: cd0.Datum
-) -> cd0.Datum:
-    """Construct the sole input-derived candidate tolerated under each blocker.
+def _fully_converged(comparison: Mapping[str, Any]) -> bool:
+    """Accept only full byte-exact convergence of both authorial-closure forges.
 
-    This is not an alternate fixture oracle.  It narrowly proves that a blocked
-    implementation response differs from the frozen expected result only where
-    the package contradicts its own explicit input, and that no ambient lookup
-    or arbitrary value was substituted.
-    """
-
-    input_payload = _field_named(input_datum, "payload")
-    expected_outputs = _field_named(expected, "outputs")
-    if request_id == "vector:LCI0-P024":
-        predecessor = _field_named(input_payload, "predecessor")
-        revival = _field_named(expected_outputs, "revival")
-        candidate_revival = _replace_named(revival, "new-occurrence", predecessor)
-        candidate_outputs = _replace_named(
-            expected_outputs, "revival", candidate_revival
-        )
-        return _replace_named(expected, "outputs", candidate_outputs)
-    if request_id == "vector:LCI0-P029":
-        right_source = _field_named(input_payload, "right-source")
-        source_artifact = _field_named(right_source, "source-artifact")
-        right_result = _field_named(expected_outputs, "right-result")
-        lineage = _field_named(right_result, "lineage")
-        if type(lineage) is not cd0.Sequence or len(lineage.items) != 1:
-            raise ValueError("P029: expected one right-result lineage edge")
-        candidate_edge = _replace_named(lineage.items[0], "source", source_artifact)
-        candidate_lineage = cd0.sequence((candidate_edge,))
-        candidate_right = _replace_named(right_result, "source", source_artifact)
-        candidate_right = _replace_named(
-            candidate_right, "lineage", candidate_lineage
-        )
-        candidate_outputs = _replace_named(
-            expected_outputs, "right-result", candidate_right
-        )
-        return _replace_named(expected, "outputs", candidate_outputs)
-    raise ValueError(f"no blocked-success candidate for {request_id}")
-
-
-def _decoded_success_matches(
-    request_id: str,
-    decoded: cd0.Datum,
-    input_datum: cd0.Datum,
-    expected: cd0.Datum,
-) -> bool:
-    try:
-        return decoded == _blocked_success_candidate(
-            request_id, input_datum, expected
-        )
-    except ValueError:
-        return False
-
-
-def _valid_authorial_blocked_response(
-    request_id: str,
-    response: Mapping[str, Any],
-    oracle: Mapping[str, Any],
-) -> bool:
-    actual_hex = response.get("actual_canonical_cd0_hex")
-    if (
-        type(actual_hex) is not str
-        or not actual_hex
-        or len(actual_hex) % 2
-        or actual_hex != actual_hex.lower()
-    ):
-        return False
-    try:
-        decoded = cd0.decode_exact(bytes.fromhex(actual_hex), CD0_BUDGET)
-    except (ValueError, cd0.CD0Failure):
-        return False
-    if canonical_bytes(decoded).hex() != actual_hex:
-        return False
-    if request_id in _BLOCKED_VECTOR_FAILURE_SHAPES:
-        expected = _BLOCKED_VECTOR_FAILURE_SHAPES[request_id]
-        return (
-            response.get("semantic_status") == "failure"
-            and response.get("failure") == expected
-            and _decoded_failure_matches(decoded, expected)
-        )
-    shape = _BLOCKED_VECTOR_SUCCESS_SHAPES.get(request_id)
-    try:
-        input_datum = cd0.decode_exact(
-            bytes.fromhex(oracle["expected_input_hex"]), CD0_BUDGET
-        )
-        expected = cd0.decode_exact(bytes.fromhex(oracle["expected_hex"]), CD0_BUDGET)
-    except (KeyError, TypeError, ValueError, cd0.CD0Failure):
-        return False
-    return bool(
-        shape is not None
-        and response.get("semantic_status") == "success"
-        and response.get("failure") is None
-        and response.get("vector_id") == shape["vector_id"]
-        and response.get("operation") == shape["operation"]
-        and _decoded_success_matches(
-            request_id, decoded, input_datum, expected
-        )
-    )
-
-
-def _only_authorial_blockers(comparison: Mapping[str, Any]) -> bool:
-    """Accept only the closed authorial-return census, never nearby failures."""
+    Every one of the 2,295 requests per implementation must pass: zero
+    mismatches, the closed execution census on both implementations, and an
+    empty cross-implementation difference set.  This is the closed successor to
+    the old authorial-blocker gate; with LCI0-AC-001..010 resolved, no blocked
+    observation is tolerated."""
 
     implementations = comparison.get("implementations")
     if type(implementations) is not dict or set(implementations) != {
@@ -1327,80 +1194,14 @@ def _only_authorial_blockers(comparison: Mapping[str, Any]) -> bool:
         if type(result) is not dict:
             return False
         mismatches = result.get("mismatches")
-        if type(mismatches) is not list:
-            return False
-        expected_blockers = (
-            BLOCKED_VECTOR_REQUESTS
-            | BLOCKED_HOSTILE_REQUESTS
-            | BLOCKED_RELATION_PATH_REQUESTS
-        )
-        if {item.get("request_id") for item in mismatches} != expected_blockers:
-            return False
-        if any(
-            item.get("disposition") != "authorial-blocked"
-            or (
-                item.get("request_id") in BLOCKED_VECTOR_REQUESTS
-                and item.get("kind") != "vector"
-            )
-            or (
-                item.get("request_id") in BLOCKED_HOSTILE_REQUESTS
-                and item.get("kind") != "hostile"
-            )
-            or (
-                item.get("request_id") in BLOCKED_RELATION_PATH_REQUESTS
-                and item.get("kind") != "relation"
-            )
-            for item in mismatches
-        ):
+        if type(mismatches) is not list or mismatches:
             return False
         counts = result.get("counts")
         if counts != EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS:
             return False
 
     cross = comparison.get("cross_implementation_mismatches")
-    if type(cross) is not list:
-        return False
-    cross_ids = [item.get("request_id") for item in cross]
-    if (
-        any(type(request_id) is not str for request_id in cross_ids)
-        or len(cross_ids) != len(set(cross_ids))
-        or not set(cross_ids)
-        <= (BLOCKED_RELATION_PATH_REQUESTS | BLOCKED_HOSTILE_REQUESTS)
-    ):
-        return False
-    for item in cross:
-        request_id = item.get("request_id")
-        differences = item.get("differences")
-        if type(differences) is not dict or not differences:
-            return False
-        if request_id in BLOCKED_HOSTILE_REQUESTS:
-            allowed = BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS[request_id]
-            if item.get("kind") != "hostile" or not set(differences) <= allowed:
-                return False
-            if any(
-                type(pair) is not dict
-                or set(pair) != {"common-lisp", "python"}
-                or pair["common-lisp"] == pair["python"]
-                for pair in differences.values()
-            ):
-                return False
-            continue
-        if item.get("kind") != "relation" or set(differences) != {"failure"}:
-            return False
-        pair = differences["failure"]
-        if type(pair) is not dict or set(pair) != {"common-lisp", "python"}:
-            return False
-        left, right = pair["common-lisp"], pair["python"]
-        if type(left) is not dict or type(right) is not dict:
-            return False
-        if left.get("path") == right.get("path"):
-            return False
-        if (
-            {name: value for name, value in left.items() if name != "path"}
-            != {name: value for name, value in right.items() if name != "path"}
-        ):
-            return False
-    return True
+    return type(cross) is list and not cross
 
 
 def main() -> int:
@@ -1433,17 +1234,17 @@ def main() -> int:
     common_lisp, common_lisp_metadata = _run_adapter("common-lisp", common_lisp_command, environment, requests, output_directory)
     python_responses, python_metadata = _run_adapter("python", python_command, environment, requests, output_directory)
     comparison = _compare(oracles, common_lisp, python_responses)
-    only_authorial_blockers = _only_authorial_blockers(comparison)
+    converged = _fully_converged(comparison)
 
     summary = {
         "protocol": PROTOCOL,
         "fixture_profile_version": FIXTURE_PROFILE_VERSION,
         "status": (
-            "converged-unaffected-with-authorial-blockers"
-            if only_authorial_blockers
+            "converged-authorial-closures-complete"
+            if converged
             else "not-converged"
         ),
-        "authorial_return_required": True,
+        "authorial_return_required": False,
         "authorial_blocked_vectors": sorted(BLOCKED_VECTOR_REQUESTS),
         "authorial_blocked_hostile_requests": sorted(BLOCKED_HOSTILE_REQUESTS),
         "authorial_blocked_relation_paths": sorted(
@@ -1463,14 +1264,14 @@ def main() -> int:
         "comparison": comparison,
         "post_convergence_phases": {
             "host_perturbations": (
-                "eligible-not-run"
-                if only_authorial_blockers
-                else "not-run: non-authorial differential mismatch"
+                "eligible"
+                if converged
+                else "not-run: unresolved differential mismatch"
             ),
             "randomized_properties": (
-                "eligible-not-run"
-                if only_authorial_blockers
-                else "not-run: non-authorial differential mismatch"
+                "eligible"
+                if converged
+                else "not-run: unresolved differential mismatch"
             ),
         },
     }
@@ -1484,7 +1285,7 @@ def main() -> int:
     (output_directory / "sha256-manifest.json").write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n", encoding="utf-8")
 
     print(json.dumps({"status": summary["status"], "counts": counts, "cross_mismatches": len(comparison["cross_implementation_mismatches"]), "summary": str(summary_path)}, sort_keys=True))
-    return 0 if only_authorial_blockers else 1
+    return 0 if converged else 1
 
 
 if __name__ == "__main__":

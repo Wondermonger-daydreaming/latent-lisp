@@ -9,38 +9,12 @@ import unittest
 import run_differential as subject
 
 
-def _blocked_mismatches() -> list[dict[str, str]]:
-    vectors = [
-        {
-            "request_id": request_id,
-            "kind": "vector",
-            "disposition": "authorial-blocked",
-        }
-        for request_id in sorted(subject.BLOCKED_VECTOR_REQUESTS)
-    ]
-    hostile = [
-        {
-            "request_id": request_id,
-            "kind": "hostile",
-            "disposition": "authorial-blocked",
-        }
-        for request_id in sorted(subject.BLOCKED_HOSTILE_REQUESTS)
-    ]
-    relations = [
-        {
-            "request_id": request_id,
-            "kind": "relation",
-            "disposition": "authorial-blocked",
-        }
-        for request_id in sorted(subject.BLOCKED_RELATION_PATH_REQUESTS)
-    ]
-    return vectors + hostile + relations
-
-
 def _comparison() -> dict:
+    # A fully converged comparison after LCI0-AC-001..010: both implementations
+    # pass every request with zero mismatches and zero cross-difference.
     result = {
         "counts": dict(subject.EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS),
-        "mismatches": _blocked_mismatches(),
+        "mismatches": [],
     }
     return {
         "implementations": {
@@ -118,65 +92,47 @@ def _success_result(operation: str) -> str:
     return subject.canonical_bytes(datum).hex()
 
 
-class AuthorialBlockerGateTests(unittest.TestCase):
-    def test_accepts_exact_closed_vector_census(self):
-        self.assertTrue(subject._only_authorial_blockers(_comparison()))
+class FullConvergenceGateTests(unittest.TestCase):
+    def test_accepts_fully_converged_census(self):
+        self.assertTrue(subject._fully_converged(_comparison()))
 
-    def test_rejects_nearby_vector_failure(self):
+    def test_rejects_any_vector_mismatch(self):
         value = _comparison()
         value["implementations"]["python"]["mismatches"].append(
             {"request_id": "vector:LCI0-P001", "kind": "vector"}
         )
-        self.assertFalse(subject._only_authorial_blockers(value))
-
-    def test_rejects_missing_hostile_authority_gap(self):
-        value = _comparison()
-        for implementation in value["implementations"].values():
-            implementation["mismatches"] = [
-                item
-                for item in implementation["mismatches"]
-                if item["request_id"] not in subject.BLOCKED_HOSTILE_REQUESTS
-            ]
-        self.assertFalse(subject._only_authorial_blockers(value))
+        self.assertFalse(subject._fully_converged(value))
 
     def test_rejects_incomplete_execution_census(self):
         value = _comparison()
         del value["implementations"]["python"]["counts"]["hostile_passed"]
-        self.assertFalse(subject._only_authorial_blockers(value))
+        self.assertFalse(subject._fully_converged(value))
 
-    def test_accepts_only_enumerated_hostile_cross_fields(self):
+    def test_rejects_any_cross_difference(self):
         value = _comparison()
-        request_id = "hostile:resource-stable-ref-material-5000"
         value["cross_implementation_mismatches"] = [
             {
-                "request_id": request_id,
+                "request_id": "hostile:resource-stable-ref-material-5000",
                 "kind": "hostile",
                 "differences": {
-                    "failure": {"common-lisp": {"path": ["material"]}, "python": {"path": []}}
+                    "failure": {
+                        "common-lisp": {"path": ["material"]},
+                        "python": {"path": []},
+                    }
                 },
             }
         ]
-        self.assertTrue(subject._only_authorial_blockers(value))
-        value["cross_implementation_mismatches"][0]["differences"] = {
-            "semantic_status": {"common-lisp": "failure", "python": "success"}
-        }
-        self.assertFalse(subject._only_authorial_blockers(value))
+        self.assertFalse(subject._fully_converged(value))
 
-    def test_blocked_alias_must_still_fail_within_the_pinned_bounds(self):
-        request_id = "hostile:stable-ref-alias-package-symbol-spelling"
-        candidate = subject.BLOCKED_HOSTILE_FAILURE_CANDIDATES[request_id][0]
-        response = {
-            "protocol_status": "success",
-            "semantic_status": "failure",
-            "failure": candidate,
-        }
-        self.assertTrue(
-            subject._valid_blocked_hostile_response(request_id, response, {})
-        )
-        response["semantic_status"] = "success"
-        self.assertFalse(
-            subject._valid_blocked_hostile_response(request_id, response, {})
-        )
+    def test_rejects_wrong_implementation_set(self):
+        value = _comparison()
+        del value["implementations"]["python"]
+        self.assertFalse(subject._fully_converged(value))
+
+    def test_rejects_wrong_execution_counts(self):
+        value = _comparison()
+        value["implementations"]["common-lisp"]["counts"]["vector_passed"] = 214
+        self.assertFalse(subject._fully_converged(value))
 
 
 class CanonicalInputComparisonTests(unittest.TestCase):
@@ -417,193 +373,6 @@ class CanonicalInputComparisonTests(unittest.TestCase):
                     mutated
                 ).hex()
                 self.assertFalse(subject.canonical_report_matches(response))
-
-    def test_blocked_vector_cannot_hide_changed_reencoded_input(self):
-        request_id = "vector:LCI0-N012"
-        expected_input = subject.canonical_bytes(subject.cd0.unit()).hex()
-        changed_input = subject.canonical_bytes(subject.cd0.boolean(True)).hex()
-        expected_result = subject.canonical_bytes(subject.cd0.boolean(False)).hex()
-        actual_result = subject.canonical_bytes(subject.cd0.integer(1)).hex()
-        oracle = {
-            request_id: {
-                "kind": "vector",
-                "expected_input_hex": expected_input,
-                "expected_hex": expected_result,
-                "vector_id": "LCI0-N012",
-                "operation": "match-target",
-                "request_operation": "match-target",
-            }
-        }
-        fields = {
-            "actual_canonical_cd0_hex": actual_result,
-            "semantic_status": "failure",
-            "vector_id": "LCI0-N012",
-            "failure": dict(
-                subject._BLOCKED_VECTOR_FAILURE_SHAPES[request_id]
-            ),
-        }
-        common_lisp, python = _both_responses(
-            request_id, "match-target", changed_input, **fields
-        )
-        comparison = subject._compare(
-            oracle, common_lisp, python
-        )
-        for implementation in ("common-lisp", "python"):
-            counts = comparison["implementations"][implementation]["counts"]
-            self.assertEqual(counts["vector_failed"], 1)
-            self.assertNotIn("vector_blocked", counts)
-
-    def test_blocked_vector_cannot_hide_arbitrary_canonical_result(self):
-        request_id = "vector:LCI0-N012"
-        input_hex = subject.canonical_bytes(subject.cd0.unit()).hex()
-        expected_result = subject.canonical_bytes(subject.cd0.boolean(False)).hex()
-        arbitrary_result = subject.canonical_bytes(subject.cd0.integer(1)).hex()
-        oracle = {
-            request_id: {
-                "kind": "vector",
-                "expected_input_hex": input_hex,
-                "expected_hex": expected_result,
-                "vector_id": "LCI0-N012",
-                "operation": "match-target",
-                "request_operation": "match-target",
-            }
-        }
-        fields = {
-            "actual_canonical_cd0_hex": arbitrary_result,
-            "semantic_status": "failure",
-            "vector_id": "LCI0-N012",
-            "failure": dict(
-                subject._BLOCKED_VECTOR_FAILURE_SHAPES[request_id]
-            ),
-        }
-        common_lisp, python = _both_responses(
-            request_id, "match-target", input_hex, **fields
-        )
-        comparison = subject._compare(
-            oracle, common_lisp, python
-        )
-        for implementation in ("common-lisp", "python"):
-            counts = comparison["implementations"][implementation]["counts"]
-            self.assertEqual(counts["vector_failed"], 1)
-            self.assertNotIn("vector_blocked", counts)
-
-    def test_blocked_successes_accept_only_exact_input_derived_candidates(self):
-        rows = {row["vector_id"]: row for row in subject.iter_vectors()}
-        for vector_id in ("LCI0-P024", "LCI0-P029"):
-            with self.subTest(vector_id=vector_id):
-                request_id = f"vector:{vector_id}"
-                row = rows[vector_id]
-                input_hex = row["inputs"]["canonical_cd0_hex"]
-                expected_hex = row["expected"]["canonical_cd0_hex"]
-                input_datum = subject.cd0.decode_exact(
-                    bytes.fromhex(input_hex), subject.CD0_BUDGET
-                )
-                expected = subject.cd0.decode_exact(
-                    bytes.fromhex(expected_hex), subject.CD0_BUDGET
-                )
-                candidate = subject._blocked_success_candidate(
-                    request_id, input_datum, expected
-                )
-                oracle = {
-                    "kind": "vector",
-                    "expected_input_hex": input_hex,
-                    "expected_hex": expected_hex,
-                    "vector_id": vector_id,
-                    "operation": row["operation"],
-                }
-                response = {
-                    "protocol_status": "success",
-                    "input_reencoded_canonical_hex": input_hex,
-                    "actual_canonical_cd0_hex": subject.canonical_bytes(candidate).hex(),
-                    "semantic_status": "success",
-                    "failure": None,
-                    "vector_id": vector_id,
-                    "operation": row["operation"],
-                    "fixture_profile_version": subject.FIXTURE_PROFILE_VERSION,
-                }
-                self.assertTrue(
-                    subject._valid_authorial_blocked_response(
-                        request_id, response, oracle
-                    )
-                )
-
-                outputs = subject._field_named(candidate, "outputs")
-                extra_outputs = subject.cd0.record(
-                    (
-                        *outputs.fields,
-                        (
-                            subject.cd0.identifier(
-                                subject.FIXTURE_FIELD, ("arbitrary-extra",)
-                            ),
-                            subject.cd0.unit(),
-                        ),
-                    )
-                )
-                malformed = subject._replace_named(
-                    candidate, "outputs", extra_outputs
-                )
-                response["actual_canonical_cd0_hex"] = subject.canonical_bytes(
-                    malformed
-                ).hex()
-                self.assertFalse(
-                    subject._valid_authorial_blocked_response(
-                        request_id, response, oracle
-                    )
-                )
-
-    def test_accepts_enumerated_path_only_cross_difference(self):
-        value = _comparison()
-        request_id = sorted(subject.BLOCKED_RELATION_PATH_REQUESTS)[0]
-        value["cross_implementation_mismatches"] = [
-            {
-                "request_id": request_id,
-                "kind": "relation",
-                "differences": {
-                    "failure": {
-                        "common-lisp": {
-                            "category": "relation-undetermined",
-                            "code": "ScopeIncompatible",
-                            "stage": "scope-relation",
-                            "path": ["right"],
-                        },
-                        "python": {
-                            "category": "relation-undetermined",
-                            "code": "ScopeIncompatible",
-                            "stage": "scope-relation",
-                            "path": ["right", "calculus"],
-                        },
-                    }
-                },
-            }
-        ]
-        self.assertTrue(subject._only_authorial_blockers(value))
-
-    def test_rejects_non_path_cross_difference(self):
-        value = _comparison()
-        request_id = sorted(subject.BLOCKED_RELATION_PATH_REQUESTS)[0]
-        value["cross_implementation_mismatches"] = [
-            {
-                "request_id": request_id,
-                "kind": "relation",
-                "differences": {
-                    "failure": {
-                        "common-lisp": {
-                            "category": "relation-undetermined",
-                            "code": "ScopeIncompatible",
-                            "stage": "scope-relation",
-                            "path": ["right"],
-                        },
-                        "python": {
-                            "category": "relation-undetermined",
-                            "code": "ScopeRelationUnknown",
-                            "stage": "scope-relation",
-                            "path": ["right", "calculus"],
-                        },
-                    }
-                },
-            }
-        ]
-        self.assertFalse(subject._only_authorial_blockers(value))
 
 
 class HostileConstructionTests(unittest.TestCase):

@@ -36,7 +36,6 @@ from lci0.package import definitions, fixture_datum, iter_vectors
 import run_differential as exact_harness
 
 from authorial_blockers import (
-    BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS,
     BLOCKED_HOSTILE_REQUESTS,
     BLOCKED_RELATION_PATH_REQUESTS,
     BLOCKED_VECTOR_REQUESTS,
@@ -179,8 +178,8 @@ def replay_successor_artifacts(directory: Path) -> tuple[dict[str, Any], dict[st
     )
     comparison = exact_harness._compare(oracles, common_lisp, python)
     _require(
-        exact_harness._only_authorial_blockers(comparison),
-        "raw successor responses do not reproduce the closed authorial-blocker census",
+        exact_harness._fully_converged(comparison),
+        "raw successor responses do not reproduce the fully converged closure census",
     )
 
     try:
@@ -406,12 +405,12 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         "successor summary profile drift",
     )
     _require(
-        summary.get("status") == "converged-unaffected-with-authorial-blockers",
-        "successor summary has not converged on every unaffected path",
+        summary.get("status") == "converged-authorial-closures-complete",
+        "successor summary has not fully converged on every closure surface",
     )
     _require(
-        summary.get("authorial_return_required") is True,
-        "successor summary lost the authorial-return boundary",
+        summary.get("authorial_return_required") is False,
+        "successor summary still declares an open authorial-return boundary",
     )
     _require(
         set(summary.get("authorial_blocked_vectors", ()))
@@ -458,7 +457,6 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         and set(implementations) == {"common-lisp", "python"},
         "successor implementation set drift",
     )
-    blocked_vectors: dict[str, list[str]] = {}
     for implementation, result in implementations.items():
         implementation_counts = result.get("counts")
         _require(
@@ -467,50 +465,20 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         )
         mismatches = result.get("mismatches")
         _require(type(mismatches) is list, f"{implementation}: mismatches missing")
-        ids = [item.get("request_id") for item in mismatches]
-        _require(all(type(item) is str for item in ids), f"{implementation}: malformed mismatch")
-        _require(len(ids) == len(set(ids)), f"{implementation}: duplicate mismatch")
-        expected_blockers = (
-            BLOCKED_VECTOR_REQUESTS
-            | BLOCKED_HOSTILE_REQUESTS
-            | BLOCKED_RELATION_PATH_REQUESTS
-        )
-        unexpected = set(ids) - expected_blockers
-        missing = expected_blockers - set(ids)
-        _require(not unexpected, f"{implementation}: non-authorial mismatches {sorted(unexpected)}")
-        _require(not missing, f"{implementation}: authorial blockers silently absent {sorted(missing)}")
         _require(
-            all(
-                item.get("disposition") == "authorial-blocked"
-                and (
-                    (
-                        item.get("request_id") in BLOCKED_VECTOR_REQUESTS
-                        and item.get("kind") == "vector"
-                    )
-                    or (
-                        item.get("request_id") in BLOCKED_HOSTILE_REQUESTS
-                        and item.get("kind") == "hostile"
-                    )
-                    or (
-                        item.get("request_id") in BLOCKED_RELATION_PATH_REQUESTS
-                        and item.get("kind") == "relation"
-                    )
-                )
-                for item in mismatches
-            ),
-            f"{implementation}: blocker kind drift",
+            not mismatches,
+            f"{implementation}: unresolved differential mismatches "
+            f"{sorted(item.get('request_id') for item in mismatches)}",
         )
-        blocked_vectors[implementation] = sorted(ids)
 
     cross = comparison.get("cross_implementation_mismatches")
     _require(type(cross) is list, "successor cross comparison missing")
-    cross_ids = [item.get("request_id") for item in cross]
-    _require(all(type(item) is str for item in cross_ids), "malformed cross mismatch")
-    _require(len(cross_ids) == len(set(cross_ids)), "duplicate cross mismatch")
-    unexpected = set(cross_ids) - (
-        BLOCKED_RELATION_PATH_REQUESTS | BLOCKED_HOSTILE_REQUESTS
+    _require(
+        not cross,
+        f"unresolved cross-implementation mismatches "
+        f"{sorted(item.get('request_id') for item in cross)}",
     )
-    _require(not unexpected, f"non-authorial cross mismatches {sorted(unexpected)}")
+    # The authorial-blocker census is closed: every declaration must now be empty.
     declared_blocked_paths = summary.get("authorial_blocked_relation_paths")
     _require(
         type(declared_blocked_paths) is list
@@ -518,66 +486,20 @@ def verify_successor_gate(summary: Mapping[str, Any]) -> dict[str, Any]:
         "successor summary lacks explicit authorial_blocked_relation_paths",
     )
     _require(
-        len(declared_blocked_paths) == len(set(declared_blocked_paths))
-        and set(declared_blocked_paths) == BLOCKED_RELATION_PATH_REQUESTS,
-        "successor relation-path blocker declaration is not the exact 38-row census",
+        set(declared_blocked_paths) == BLOCKED_RELATION_PATH_REQUESTS,
+        "successor relation-path blocker declaration is not the closed (empty) census",
     )
-    for item in cross:
-        request_id = item.get("request_id")
-        differences = item.get("differences")
-        if request_id in BLOCKED_HOSTILE_REQUESTS:
-            allowed = BLOCKED_HOSTILE_CROSS_DIFFERENCE_FIELDS[request_id]
-            _require(
-                item.get("kind") == "hostile"
-                and type(differences) is dict
-                and bool(differences)
-                and set(differences) <= allowed,
-                f"{request_id}: hostile blocker difference drift",
-            )
-            _require(
-                all(
-                    type(pair) is dict
-                    and set(pair) == {"common-lisp", "python"}
-                    and pair["common-lisp"] != pair["python"]
-                    for pair in differences.values()
-                ),
-                f"{request_id}: malformed hostile difference pair",
-            )
-            continue
-        _require(item.get("kind") == "relation", f"{request_id}: kind drift")
-        _require(
-            type(differences) is dict and set(differences) == {"failure"},
-            f"{item.get('request_id')}: more than companion failure differs",
-        )
-        pair = differences["failure"]
-        _require(
-            type(pair) is dict and set(pair) == {"common-lisp", "python"},
-            f"{item.get('request_id')}: malformed failure pair",
-        )
-        left, right = pair["common-lisp"], pair["python"]
-        _require(type(left) is dict and type(right) is dict, "failure comparison is not closed")
-        _require(
-            {key: value for key, value in left.items() if key != "path"}
-            == {key: value for key, value in right.items() if key != "path"},
-            f"{item.get('request_id')}: category/code/stage disagreement",
-        )
-        _require(left.get("path") != right.get("path"), f"{item.get('request_id')}: no path disagreement")
 
     return {
-        "blocked_not_passed_or_na": {
+        "converged": True,
+        "authorial_blockers_remaining": {
             "exact_vector_results": sorted(BLOCKED_VECTOR_REQUESTS),
             "hostile_result_gaps": sorted(BLOCKED_HOSTILE_REQUESTS),
             "relation_companion_failure_paths": sorted(BLOCKED_RELATION_PATH_REQUESTS),
         },
-        "common_lisp_unaffected_mismatches": 0,
-        "python_unaffected_mismatches": 0,
-        "observed_cross_relation_path_disagreements": sum(
-            request_id in BLOCKED_RELATION_PATH_REQUESTS
-            for request_id in cross_ids
-        ),
-        "observed_cross_hostile_blocker_disagreements": sum(
-            request_id in BLOCKED_HOSTILE_REQUESTS for request_id in cross_ids
-        ),
+        "common_lisp_mismatches": 0,
+        "python_mismatches": 0,
+        "cross_implementation_mismatches": 0,
         "relation_path_blocker_count": len(BLOCKED_RELATION_PATH_REQUESTS),
         "vector_blocker_count": len(BLOCKED_VECTOR_REQUESTS),
         "hostile_blocker_count": len(BLOCKED_HOSTILE_REQUESTS),

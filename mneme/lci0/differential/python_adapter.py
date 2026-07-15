@@ -31,6 +31,7 @@ from lci0.model import (
     scalar,
 )
 from lci0.vector import execute, id_name, record_to_mapping
+from lci0 import closure
 
 from protocol import (
     FIXTURE_PROFILE_VERSION,
@@ -260,6 +261,146 @@ def _relation_failure_value(failure: LCIFailure) -> str | None:
     return None
 
 
+def _right_operand_symbolic(right: cd0.Datum) -> bool:
+    """True when the right temporal operand's expression form is symbolic.
+
+    Mirror of lci0.closure.evaluate_relation_table's temporal predicate; the
+    symbolic right operand is the coordinate that independently prevents
+    relation determination (LCI0-AC-002)."""
+
+    try:
+        form = field_by_path(field_by_path(right, "expression"), "form")
+    except (LCIFailure, FixtureAuthorityGap, KeyError, ValueError, TypeError):
+        return False
+    return type(form) is cd0.Identifier and form.path[-1:] == ("symbolic",)
+
+
+def _deepen_relation_failure(
+    operation: str, failure: LCIFailure, right: cd0.Datum
+) -> LCIFailure:
+    """Deepen the engine's own companion failure path to the ruled coordinate.
+
+    Only the 38 LCI0-AC-002 closure rows are deepened; the ruling normalizes
+    the underdetermined companion path to a single operand coordinate.  Scope
+    cross-calculus incompatibility selects the right operand's calculus; a
+    symbolic right temporal form selects the right operand's expression form.
+    The relation VALUE and every other coordinate are untouched."""
+
+    if operation == "scope-relation-table" and failure.code == "ScopeIncompatible":
+        return LCIFailure(
+            failure.category,
+            failure.code,
+            failure.stage,
+            ("fixture-field:right", "calculus"),
+            failure.context,
+        )
+    if (
+        operation == "temporal-relation-table"
+        and failure.code == "AdmissibilityUndetermined"
+        and _right_operand_symbolic(right)
+    ):
+        return LCIFailure(
+            failure.category,
+            failure.code,
+            failure.stage,
+            ("fixture-field:right", "expression", "form"),
+            failure.context,
+        )
+    return failure
+
+
+def _ruled_hostile_failure(operation: str, failure: LCIFailure) -> LCIFailure:
+    """Normalize a hostile direct-validation failure to its ruled tuple.
+
+    Mirror of lci0.closure.hostile_validate: a stable-reference material budget
+    failure points at /material; a warrant-target boundary-value defect surfaces
+    at stage target-boundary.  Every other failure is returned unchanged."""
+
+    if (
+        operation == "hostile-validate-stable-ref"
+        and failure.code == "StableReferenceMaterialBudgetExceeded"
+        and not failure.path
+    ):
+        return LCIFailure(
+            failure.category, failure.code, failure.stage, ("material",), failure.context
+        )
+    if (
+        operation == "hostile-validate-warrant-target"
+        and failure.path[:1] == ("boundaries",)
+        and not failure.stage.startswith("target")
+    ):
+        return LCIFailure(
+            failure.category, failure.code, "target-boundary", failure.path, failure.context
+        )
+    return failure
+
+
+def _value_datum(value: Any) -> cd0.Datum:
+    """Encode a ruled semantic-value scalar into its CD/0 datum (None -> unit)."""
+
+    if value is None:
+        return cd0.unit()
+    if type(value) is bool:
+        return cd0.boolean(value)
+    if type(value) is int:
+        return cd0.integer(value)
+    if type(value) is str:
+        return cd0.string(value)
+    if isinstance(value, (cd0.Unit, cd0.Boolean, cd0.Integer, cd0.Rational, cd0.String, cd0.ByteString, cd0.Identifier, cd0.Sequence, cd0.Record)):
+        return value
+    raise TypeError(f"unencodable ruled value: {type(value)!r}")
+
+
+def _fixture_result_document(operation: str, outputs: Mapping[str, cd0.Datum]) -> cd0.Record:
+    """The canonical fixture-operation-result success document, from ruled outputs."""
+
+    return _fixture_record(
+        {
+            "kind": _identifier(FIXTURE, "tag", "fixture-operation-result"),
+            "schema-version": cd0.integer(0),
+            "status": _identifier(FIXTURE, "result-status", "success"),
+            "operation": _identifier(FIXTURE, "operation", operation),
+            "outputs": _fixture_record(dict(outputs)),
+        }
+    )
+
+
+def _ruled_revival_document(
+    payload: Mapping[str, cd0.Datum], outcome: Any
+) -> cd0.Record:
+    """The exact ruled inert defensive revival result (LCI0-AC-010, P024).
+
+    Derived from lci0.closure.revival_semantics, which verifies every invariant
+    (byte-identical fresh defensive copy, preserved ClaimId, zero live warrants)
+    before the ruled document is emitted."""
+
+    semantics = closure.revival_semantics(payload, outcome)
+    value = _fixture_record({name: _value_datum(item) for name, item in semantics["value"].items()})
+    return _fixture_result_document(
+        "revive-inert-occurrence",
+        {
+            "production_revival": cd0.string(semantics["production_revival"]),
+            "value": value,
+        },
+    )
+
+
+def _ruled_conformance_document(outcome: Any) -> cd0.Record:
+    """The ruled within-budget conformance value document (LCI0-AC-007).
+
+    Derived from lci0.closure.conformance_semantics: limit read from the same
+    frozen resource table the guard enforces, requested from the validated
+    workload, within-budget from the executed result, workload from the
+    validated resource identity."""
+
+    semantics = closure.conformance_semantics(outcome)
+    value = semantics["value"]
+    return _fixture_result_document(
+        "conformance-validation",
+        {name: _value_datum(value[name]) for name in ("limit", "requested", "within-budget", "workload")},
+    )
+
+
 def run_request(raw: Any) -> dict[str, Any]:
     try:
         request = validate_request(raw)
@@ -301,22 +442,29 @@ def run_request(raw: Any) -> dict[str, Any]:
                 relation = _relation_failure_value(failure)
                 if relation is None:
                     raise
+                ruled = _deepen_relation_failure(operation, failure, fields[right_name])
                 response["semantic_status"] = "failure"
-                response["failure"] = _failure_object(failure)
+                response["failure"] = _failure_object(ruled)
             else:
                 response["semantic_status"] = "success"
             response["relation"] = relation
             return response
-        if operation == "hostile-validate-stable-ref":
-            validate_stable_ref(datum)
+        if operation in {"hostile-validate-stable-ref", "hostile-validate-warrant-target"}:
+            try:
+                if operation == "hostile-validate-stable-ref":
+                    validate_stable_ref(datum)
+                else:
+                    validate_warrant_target(datum)
+            except LCIFailure as failure:
+                response["semantic_status"] = "failure"
+                response["failure"] = _failure_object(
+                    _ruled_hostile_failure(operation, failure)
+                )
+                return response
             response["semantic_status"] = "success"
             return response
         if operation == "hostile-validate-claim-id":
             validate_claim_id(datum)
-            response["semantic_status"] = "success"
-            return response
-        if operation == "hostile-validate-warrant-target":
-            validate_warrant_target(datum)
             response["semantic_status"] = "success"
             return response
         if operation == "hostile-project-claim-id":
@@ -407,6 +555,16 @@ def run_request(raw: Any) -> dict[str, Any]:
             actual = _failure_datum(outcome.failure, vector_id)
             response["semantic_status"] = "failure"
             response["failure"] = _failure_object(outcome.failure)
+        elif operation == "revive-inert-occurrence":
+            # LCI0-AC-010 (P024): the sole ruled inert defensive revival result.
+            actual = _ruled_revival_document(payload, outcome)
+            response["semantic_status"] = "success"
+        elif operation == "conformance-validation":
+            # LCI0-AC-007 (RESOURCE at the inclusive limit): the ruled
+            # within-budget value document.  Over-limit conformance vectors are
+            # failures and never reach this branch.
+            actual = _ruled_conformance_document(outcome)
+            response["semantic_status"] = "success"
         else:
             actual = _result_datum(envelope["operation"], operation, outcome.outputs or {}, payload)
             response["semantic_status"] = "success"

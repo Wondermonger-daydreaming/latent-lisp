@@ -82,22 +82,74 @@
    (cons "implementation_seed_commit" +integration-seed-commit+)
    (cons "implementation_seed_tree" +integration-seed-tree+)))
 
+(defun integration-render-path (path-strings)
+  (let ((previous nil))
+    (loop for part in path-strings
+          for identifier = (%path-part-id part previous)
+          collect (prog1
+                      (if (equal (identifier-namespace-strings identifier)
+                                 +fixture-field-namespace+)
+                          (concatenate 'string "fixture-field:"
+                                       (identifier-last identifier))
+                          (identifier-last identifier))
+                    (setf previous part)))))
+
 (defun integration-failure-json (condition)
   (list
    (cons "category" (lci-failure-category condition))
    (cons "code" (lci-failure-code condition))
    (cons "stage" (lci-failure-stage condition))
-   (cons "path"
-         (let ((previous nil))
-           (loop for part in (lci-failure-path condition)
-                 for identifier = (%path-part-id part previous)
-                 collect (prog1
-                             (if (equal (identifier-namespace-strings identifier)
-                                        +fixture-field-namespace+)
-                                 (concatenate 'string "fixture-field:"
-                                              (identifier-last identifier))
-                                 (identifier-last identifier))
-                           (setf previous part)))))))
+   (cons "path" (integration-render-path (lci-failure-path condition)))))
+
+(defun integration-right-operand-symbolic-p (right)
+  "Mirror of lci0.closure temporal predicate: the right operand's expression
+form is symbolic (LCI0-AC-002)."
+  (handler-case
+      (string= (or (exact-form-name (record-field-named right "expression")) "")
+               "symbolic")
+    (error () nil)))
+
+(defun integration-relation-companion-failure (operation right condition)
+  "Companion failure JSON with the ruled deepened path for the 38 LCI0-AC-002
+closure rows; every other row keeps the engine's own rendered path.  Scope
+cross-calculus incompatibility selects the right operand's calculus; a symbolic
+right temporal form selects the right operand's expression form."
+  (let ((code (lci-failure-code condition)))
+    (cond
+      ((and (string= operation "scope-relation-table")
+            (string= code "ScopeIncompatible"))
+       (list (cons "category" (lci-failure-category condition))
+             (cons "code" code)
+             (cons "stage" (lci-failure-stage condition))
+             (cons "path"
+                   (integration-render-path '("fixture-field:right" "calculus")))))
+      ((and (string= operation "temporal-relation-table")
+            (string= code "AdmissibilityUndetermined")
+            (integration-right-operand-symbolic-p right))
+       (list (cons "category" (lci-failure-category condition))
+             (cons "code" code)
+             (cons "stage" (lci-failure-stage condition))
+             (cons "path"
+                   (integration-render-path
+                    '("fixture-field:right" "expression" "form")))))
+      (t (integration-failure-json condition)))))
+
+(defun integration-conformance-value-doc (payload actual)
+  "The ruled within-budget conformance value document (LCI0-AC-007): limit read
+from the frozen resource table the guard enforces, requested from the validated
+workload, within-budget from the executed result, workload from the validated
+resource identity.  Reached only for the inclusive-limit success."
+  (multiple-value-bind (definition requested)
+      (%validate-resource-workload (record-field-named payload "workload"))
+    (let ((within (record-field-named (record-field-named actual "outputs")
+                                      "within-budget")))
+      (result-record
+       (record-field-named actual "operation")
+       (list
+        (list "limit" (make-integer-datum (second definition)))
+        (list "requested" (make-integer-datum requested))
+        (list "within-budget" within)
+        (list "workload" (make-string-datum (first definition))))))))
 
 (defun integration-relation-failure-value (condition)
   (cond
@@ -131,7 +183,10 @@
           (unless relation (error condition))
           (append response
                   (list (cons "semantic_status" "failure")
-                        (cons "failure" (integration-failure-json condition))
+                        (cons "failure"
+                              (integration-relation-companion-failure
+                               operation (record-field-named datum right-name)
+                               condition))
                         (cons "relation" relation))))))))
 
 (defun integration-vector-components (datum)
@@ -157,14 +212,20 @@
       (integration-protocol-fail "EmbeddedFixtureProfileMismatch"
                                  '("input_canonical_hex")))
     (handler-case
-        (let ((actual (execute-fixture-operation operation-id payload
-                                                 :vector-id vector-id)))
+        (let* ((actual (execute-fixture-operation operation-id payload
+                                                  :vector-id vector-id))
+               ;; LCI0-AC-007: the inclusive-limit conformance success projects
+               ;; to the ruled within-budget value document.  Over-limit
+               ;; conformance vectors raise lci-failure and never reach here.
+               (result (if (string= operation "conformance-validation")
+                           (integration-conformance-value-doc payload actual)
+                           actual)))
           (append response
                   (list
                    (cons "vector_id" vector-id)
                    (cons "semantic_status" "success")
                    (cons "actual_canonical_cd0_hex"
-                         (octets-to-hex (canonical-octets actual))))))
+                         (octets-to-hex (canonical-octets result))))))
       (lci-failure (condition)
         (let ((actual (failure-datum condition vector-id)))
           (append response

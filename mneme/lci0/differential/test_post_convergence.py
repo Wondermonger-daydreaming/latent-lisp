@@ -12,58 +12,14 @@ import post_convergence as subject
 import response_validation
 
 
-def _failure(path: list[str]) -> dict:
-    return {
-        "category": "relation-undetermined",
-        "code": "ScopeIncompatible",
-        "stage": "target-relation",
-        "path": path,
-    }
-
-
-def _successor_summary(cross_ids=()) -> dict:
-    mismatches = [
-        {
-            "request_id": request_id,
-            "kind": "vector",
-            "disposition": "authorial-blocked",
-        }
-        for request_id in sorted(subject.BLOCKED_VECTOR_REQUESTS)
-    ]
-    mismatches.extend(
-        {
-            "request_id": request_id,
-            "kind": "hostile",
-            "disposition": "authorial-blocked",
-        }
-        for request_id in sorted(subject.BLOCKED_HOSTILE_REQUESTS)
-    )
-    mismatches.extend(
-        {
-            "request_id": request_id,
-            "kind": "relation",
-            "disposition": "authorial-blocked",
-        }
-        for request_id in sorted(subject.BLOCKED_RELATION_PATH_REQUESTS)
-    )
-    cross = [
-        {
-            "request_id": request_id,
-            "kind": "relation",
-            "differences": {
-                "failure": {
-                    "common-lisp": _failure(["right"]),
-                    "python": _failure(["right", "calculus"]),
-                }
-            },
-        }
-        for request_id in cross_ids
-    ]
+def _successor_summary() -> dict:
+    # A fully converged successor summary after LCI0-AC-001..010: every closure
+    # surface passes byte-for-byte, no authorial-return declaration remains.
     return {
         "protocol": subject.PROTOCOL,
         "fixture_profile_version": subject.FIXTURE_PROFILE_VERSION,
-        "status": "converged-unaffected-with-authorial-blockers",
-        "authorial_return_required": True,
+        "status": "converged-authorial-closures-complete",
+        "authorial_return_required": False,
         "authorial_blocked_vectors": sorted(subject.BLOCKED_VECTOR_REQUESTS),
         "authorial_blocked_hostile_requests": sorted(
             subject.BLOCKED_HOSTILE_REQUESTS
@@ -106,38 +62,34 @@ def _successor_summary(cross_ids=()) -> dict:
             "implementations": {
                 "common-lisp": {
                     "counts": dict(subject.EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS),
-                    "mismatches": list(mismatches),
+                    "mismatches": [],
                 },
                 "python": {
                     "counts": dict(subject.EXPECTED_SUCCESSOR_IMPLEMENTATION_COUNTS),
-                    "mismatches": list(mismatches),
+                    "mismatches": [],
                 },
             },
-            "cross_implementation_mismatches": cross,
+            "cross_implementation_mismatches": [],
         },
     }
 
 
 class SuccessorGateTests(unittest.TestCase):
-    def test_gate_allows_converged_implementation_paths_but_keeps_blocked_census(self):
+    def test_gate_accepts_fully_converged_summary(self):
         result = subject.verify_successor_gate(_successor_summary())
-        self.assertEqual(result["observed_cross_relation_path_disagreements"], 0)
-        self.assertEqual(result["relation_path_blocker_count"], 38)
-        self.assertEqual(result["vector_blocker_count"], 4)
-        self.assertEqual(result["hostile_blocker_count"], 8)
-        self.assertEqual(result["observed_cross_hostile_blocker_disagreements"], 0)
+        self.assertTrue(result["converged"])
+        self.assertEqual(result["common_lisp_mismatches"], 0)
+        self.assertEqual(result["python_mismatches"], 0)
+        self.assertEqual(result["cross_implementation_mismatches"], 0)
+        self.assertEqual(result["relation_path_blocker_count"], 0)
+        self.assertEqual(result["vector_blocker_count"], 0)
+        self.assertEqual(result["hostile_blocker_count"], 0)
 
-    def test_gate_allows_only_enumerated_cross_path_differences(self):
-        request_id = sorted(subject.BLOCKED_RELATION_PATH_REQUESTS)[0]
-        result = subject.verify_successor_gate(_successor_summary([request_id]))
-        self.assertEqual(result["observed_cross_relation_path_disagreements"], 1)
-
-    def test_gate_allows_only_enumerated_hostile_result_differences(self):
+    def test_gate_rejects_any_cross_difference(self):
         value = _successor_summary()
-        request_id = "hostile:resource-maximum-nesting-at-limit-64"
         value["comparison"]["cross_implementation_mismatches"] = [
             {
-                "request_id": request_id,
+                "request_id": "hostile:resource-maximum-nesting-at-limit-64",
                 "kind": "hostile",
                 "differences": {
                     "actual_canonical_cd0_hex": {
@@ -147,15 +99,22 @@ class SuccessorGateTests(unittest.TestCase):
                 },
             }
         ]
-        result = subject.verify_successor_gate(value)
-        self.assertEqual(result["observed_cross_hostile_blocker_disagreements"], 1)
-        value["comparison"]["cross_implementation_mismatches"][0][
-            "differences"
-        ] = {"semantic_status": {"common-lisp": "success", "python": "failure"}}
         with self.assertRaises(subject.EvidenceFailure):
             subject.verify_successor_gate(value)
 
-    def test_gate_rejects_non_authorial_vector_mismatch(self):
+    def test_gate_rejects_status_not_converged(self):
+        value = _successor_summary()
+        value["status"] = "not-converged"
+        with self.assertRaises(subject.EvidenceFailure):
+            subject.verify_successor_gate(value)
+
+    def test_gate_rejects_open_authorial_return(self):
+        value = _successor_summary()
+        value["authorial_return_required"] = True
+        with self.assertRaises(subject.EvidenceFailure):
+            subject.verify_successor_gate(value)
+
+    def test_gate_rejects_any_vector_mismatch(self):
         value = _successor_summary()
         value["comparison"]["implementations"]["python"]["mismatches"].append(
             {"request_id": "vector:LCI0-P001", "kind": "vector"}
@@ -163,17 +122,17 @@ class SuccessorGateTests(unittest.TestCase):
         with self.assertRaises(subject.EvidenceFailure):
             subject.verify_successor_gate(value)
 
-    def test_gate_rejects_silently_missing_blocker_declaration(self):
+    def test_gate_rejects_nonempty_blocker_declaration(self):
         value = _successor_summary()
-        value["authorial_blocked_relation_paths"].pop()
+        value["authorial_blocked_relation_paths"] = ["relation:something"]
         with self.assertRaises(subject.EvidenceFailure):
             subject.verify_successor_gate(value)
 
     def test_gate_rejects_missing_corpus_relation_hostile_execution(self):
         value = _successor_summary()
         value["comparison"]["implementations"]["python"]["counts"] = {
-            "vector_passed": 211,
-            "vector_blocked": 4,
+            "vector_passed": 215,
+            "vector_requests": 215,
         }
         with self.assertRaises(subject.EvidenceFailure):
             subject.verify_successor_gate(value)
