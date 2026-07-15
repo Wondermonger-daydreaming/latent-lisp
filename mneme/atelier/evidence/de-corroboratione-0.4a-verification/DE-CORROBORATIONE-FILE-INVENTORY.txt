@@ -1,0 +1,17 @@
+DE-CORROBORATIONE evidence inventory (deterministic lexical order)
+
+DE-CORROBORATIONE-CONDITION-COVERAGE.md                 Codex verification evidence
+DE-CORROBORATIONE-CONFORMANCE-ADJUDICATION.md           Codex authority adjudication
+DE-CORROBORATIONE-FABLE-DELIVERY-IDENTITY.md            exact delivered custody notice
+DE-CORROBORATIONE-FILE-INVENTORY.txt                    this inventory
+DE-CORROBORATIONE-FINAL-VERIFICATION-TRANSCRIPT.txt     generated successor execution evidence
+DE-CORROBORATIONE-IMPLEMENTATION-LEDGER.md               Codex deviation ledger
+DE-CORROBORATIONE-PRE-REPAIR-REPRODUCTION.md            exact pre-repair reproduction receipt
+DE-CORROBORATIONE-REPLAY-VERIFICATION.md                replay and non-regression receipt
+SHA256SUMS.txt                                           digest manifest; excludes itself
+de-corroboratione.FABLE-DELIVERED.lisp.txt              exact delivered source bytes, non-executable suffix
+de-corroboratione.FABLE-DELIVERED.transcript.txt        exact delivered transcript bytes
+
+Authority artifacts are referenced by their frozen identities and are not
+duplicated or modified here. Fable source/transcript are implementation
+evidence, not authority artifacts.
