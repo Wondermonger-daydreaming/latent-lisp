@@ -5,6 +5,7 @@
 (load "mneme/lci0/common-lisp/values.lisp")
 (load "mneme/lci0/common-lisp/fixture-adapter.lisp")
 (load "mneme/lci0/common-lisp/registry.lisp")
+(load "mneme/lci0/common-lisp/overlay.lisp")
 (load "mneme/lci0/common-lisp/validation.lisp")
 (load "mneme/lci0/common-lisp/calculi.lisp")
 (load "mneme/lci0/common-lisp/matching.lisp")
@@ -12,3 +13,4 @@
 (load "mneme/lci0/common-lisp/migration.lisp")
 (load "mneme/lci0/common-lisp/operations.lisp")
 (load "mneme/lci0/common-lisp/harness.lisp")
+(load "mneme/lci0/common-lisp/closure-surface.lisp")

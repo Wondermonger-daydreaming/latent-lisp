@@ -200,13 +200,6 @@
                        "external-principal")
    "principal" '("external-trusted") 0))
 
-(defun %policy-undetermined (path)
-  ;; The frozen prose and policy records disagree on combined-predicate order,
-  ;; and prose/registry also disagree on the untrusted-external decision name.
-  ;; The registry/prose conflict has no frozen category/code/stage/path tuple.
-  ;; Do not reuse AdmissibilityUndetermined merely because it is fail-closed.
-  (%fixture-operation-authorial-gap "evaluate-fixture-policy" path))
-
 (defun evaluate-fixture-policy (policy relation
                                 &key target query-time represented-loss)
   (let ((letter (%fixture-policy-letter policy)))
@@ -254,24 +247,26 @@
                        (- query-tick event-tick))
                      0))
                (stale (and (string= freshness-mode "maximum-age")
-                           (> age threshold)))
-               (failed-count (count-if #'identity
-                                       (list loss-rejected trust-rejected stale))))
-          ;; Package prose and the canonical policy records order these three
-          ;; checks differently.  Only a combined failing witness is affected.
-          (when (> failed-count 1)
-            (%policy-undetermined '("policy" "evaluation-order")))
+                           (> age threshold))))
+          ;; LCI0-AC-005: input-sensitive combined evaluation in the ruled
+          ;; order — target-relation floor, target kind, boundary coherence,
+          ;; represented loss, inherited/external treatment, freshness, scope
+          ;; narrowing, final disposition.  An all-at-once failing witness is
+          ;; therefore rejected on its represented loss first.
           (when loss-rejected
             (return-from evaluate-fixture-policy
               (%policy-decision
                policy relation kind-id query nil "reject-represented-loss"
                '("target-relation-success" "kind-permitted") "rejected"
                (%freshness-record "not-evaluated" 0 0 nil))))
-          ;; The prose and registry give different decision identifiers for an
-          ;; untrusted external principal.  No vector resolves the conflict.
+          ;; LCI0-AC-005: the one authorized external-principal rejection is
+          ;; the registered decision spelling reject-external-principal.
           (when trust-rejected
-            (%policy-undetermined '("target" "boundaries"
-                                    "external-principal")))
+            (return-from evaluate-fixture-policy
+              (%policy-decision
+               policy relation kind-id query nil "reject-external-principal"
+               '("target-relation-success" "kind-permitted") "rejected"
+               (%freshness-record "not-evaluated" 0 0 nil))))
           (when stale
             (return-from evaluate-fixture-policy
               (%policy-decision

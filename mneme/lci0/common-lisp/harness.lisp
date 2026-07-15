@@ -3,6 +3,10 @@
 (defstruct vector-result
   id operation passed actual expected detail)
 
+;; Defined in closure-surface.lisp (loaded after this file); called only at
+;; run time when a fixture root carries the 0.2 fixture-authority overlay.
+(declaim (ftype function execute-overlay-superseded-vector))
+
 (defun first-datum-difference (left right &optional (path nil))
   (when (equal-datum left right)
     (return-from first-datum-difference (values nil nil nil)))
@@ -75,6 +79,10 @@
 (defun run-vector-selection (ids &optional (root *fixture-root*))
   (let ((wanted (make-hash-table :test #'equal))
         (seen (make-hash-table :test #'equal))
+        ;; Fixture-authority overlay 0.2: consulted first for exactly the four
+        ;; supersession keys, else resolution falls through to 0.1.  A root
+        ;; without the overlay subdirectory behaves exactly as before.
+        (overlay (load-fixture-overlay root))
         (all-pass t))
     (dolist (id ids) (setf (gethash id wanted) t))
     (map-vector-rows
@@ -83,7 +91,10 @@
        (let ((id (jget row "vector_id")))
          (when (gethash id wanted)
            (setf (gethash id seen) t)
-           (let ((result (execute-fixture-vector row)))
+           (let* ((override (overlay-supersession overlay id))
+                  (result (if override
+                              (execute-overlay-superseded-vector row override)
+                              (execute-fixture-vector row))))
              (unless (vector-result-passed result)
                (setf all-pass nil)
                (format *error-output* "VECTOR FAIL ~A (~A)~%"
@@ -163,6 +174,10 @@ checks all 458 recorded semantic results, not merely their CD/0 round trips."
          (verify-documents
            (if (member :verify-documents arguments)
                (getf arguments :verify-documents) t))
+         ;; Fixture-authority overlay 0.2: consulted first for exactly the
+         ;; four supersession keys, else resolution falls through to 0.1.  A
+         ;; root without the overlay subdirectory behaves exactly as before.
+         (overlay (load-fixture-overlay root))
          (total 0) (passed 0) (ids (make-hash-table :test #'equal))
         (failures (make-hash-table :test #'equal)))
     (map-vector-rows
@@ -174,8 +189,13 @@ checks all 458 recorded semantic results, not merely their CD/0 round trips."
          (when (gethash id ids) (error "duplicate vector ID ~A" id))
          (setf (gethash id ids) t)
          (handler-case
-             (let ((result (execute-fixture-vector row
-                                                   :verify-documents verify-documents)))
+             (let* ((override (overlay-supersession overlay id))
+                    (result
+                      (if override
+                          (execute-overlay-superseded-vector
+                           row override :verify-documents verify-documents)
+                          (execute-fixture-vector
+                           row :verify-documents verify-documents))))
                (if (vector-result-passed result)
                    (incf passed)
                    (progn

@@ -286,24 +286,37 @@
                          (record-field-named predecessor "cached-claim-id"))
       (lci-fail "projection-refusal" "ClaimIdCacheMismatch" "claim-id-cache"
                 :path '("requested-claim")))
-    ;; I12(e) forbids inventing a revival.  The package gives no operation rule
-    ;; that could source the beta claimant/time/provenance/presentation found in
-    ;; P024's expected result.  Preserve only the input-derived predecessor
-    ;; occurrence, defensively copied through CD/0, and create no live warrant.
-    (let ((new-occurrence (copy-datum-through-cd0 predecessor)))
-      (validate-claim-occurrence new-occurrence)
+    ;; LCI0-AC-010: a /0 revival emits only the exact inert defensive result,
+    ;; from supplied fields only and without any registry lookup.  I12(e)
+    ;; forbids inventing a revival: no claimant, assertion time, provenance
+    ;; edge, standing effect, warrant effect, authority, custody, or verified
+    ;; lineage is synthesized, and zero live warrants are created.  The
+    ;; supplied predecessor is defensively copied through CD/0 (new
+    ;; allocation; source-buffer mutation cannot reach the result) and
+    ;; re-validated; production revival remains deferred pending a future
+    ;; schema binding claimant/time/provenance.
+    (let ((defensive-copy (copy-datum-through-cd0 predecessor)))
+      (validate-claim-occurrence defensive-copy)
       (list
+       (%output "production_revival" (make-string-datum "deferred"))
        (%output
-        "revival"
+        "value"
         (make-fixture-record
-         (list "kind" (fixture-id "tag" "revival-fixture-result"))
-         (list "schema-version" (make-integer-datum 0))
-         (list "claim-id" claim)
-         (list "new-occurrence" new-occurrence)
-         (list "live-warrants" (make-sequence-datum nil))
-         (list "standing-status"
-               (fixture-id "standing-status"
-                           "unsupported-until-authorized-replay"))))))))
+         (list "assertion_time" (make-unit-datum))
+         (list "authority" (make-unit-datum))
+         (list "claimant" (make-unit-datum))
+         (list "custody" (make-unit-datum))
+         (list "live_warrants_created" (make-integer-datum 0))
+         (list "mode" (make-string-datum "inert-defensive-reconstruction"))
+         (list "predecessor"
+               (make-string-datum
+                "defensive copy of supplied predecessor only"))
+         (list "provenance_edge" (make-unit-datum))
+         (list "requested_claim"
+               (make-string-datum "preserve supplied ClaimId exactly"))
+         (list "standing_effect" (datum-boolean nil))
+         (list "verified_lineage" (datum-boolean nil))
+         (list "warrant_effect" (datum-boolean nil))))))))
 
 (defun %execute-translate-exactly (payload)
   (let* ((source (record-field-named payload "source-receipt"))

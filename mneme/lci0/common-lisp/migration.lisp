@@ -428,9 +428,16 @@
                                "artifact" '("fixture-field:source-artifact"))
   (let ((source-bytes (record-field-named source "source-bytes")))
     (unless (bytes-datum-p source-bytes) (%legacy-source-fail)))
-  (%validate-exact-fixture-reference
-   (record-field-named source "grammar") "artifact"
-   '("legacy-grammar" "v1-fixture" "0") 0 '("fixture-field:grammar"))
+  ;; LCI0-AC-007 (LCI0-ACV-HOSTILE-007): a structurally valid grammar
+  ;; reference that is not the pinned v1 fixture grammar is an unsupported
+  ;; legacy form of the migration source, not a stable-reference defect.
+  ;; The exact ruled tuple is migration-refusal / UnsupportedLegacyForm /
+  ;; migration-source at /grammar.
+  (let ((grammar (record-field-named source "grammar")))
+    (%validate-stable-ref-domain grammar "artifact" '("fixture-field:grammar"))
+    (unless (%stable-ref-material-exact-p
+             grammar "artifact" '("legacy-grammar" "v1-fixture" "0") 0)
+      (%legacy-source-fail '("fixture-field:grammar"))))
   (let ((parse-expected (record-field-named source "parse-expected")))
     (unless (boolean-datum-p parse-expected)
       (%legacy-source-fail '("fixture-field:parse-expected")))

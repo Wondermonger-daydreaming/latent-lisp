@@ -63,4 +63,17 @@
    #:run-all-vectors
    #:verify-fixture-relation-tables
    #:run-mutation-snapshot-test
-   #:write-json-line-result))
+   #:write-json-line-result
+
+   ;; Fixture-authority overlay 0.2 and the authorial-closure surface
+   ;; (LCI0-AC-001 .. LCI0-AC-010).
+   #:load-fixture-overlay
+   #:overlay-supersession
+   #:overlay-member-document
+   #:execute-overlay-superseded-vector
+   #:evaluate-relation-table-companion
+   #:execute-hostile-case
+   #:semantic-json-of-operation-result
+   #:semantic-json-of-lci-failure
+   #:json-equal
+   #:run-closure-vectors))

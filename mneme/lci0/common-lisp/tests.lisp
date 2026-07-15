@@ -184,8 +184,13 @@
     (lci0-check "failure-code-registry-census-is-exactly-84"
       (and (= (length registry-codes) 84)
            (= (length (remove-duplicates registry-codes :test #'string=)) 84)))
-    (lci0-check "failure-code-allowlist-equals-frozen-registry"
-      (equal implementation-codes registry-codes))
+    ;; LCI0-AC-008 authorizes exactly one failure code beyond the frozen 0.1
+    ;; registry census: InvalidMigrationResult, the ruled tuple's code for the
+    ;; classification/content coupling rejection.
+    (lci0-check "failure-code-allowlist-equals-frozen-registry-plus-closure"
+      (equal implementation-codes
+             (sort (cons "InvalidMigrationResult" (copy-list registry-codes))
+                   #'string<)))
     (lci0-check "every-literal-lci-fail-code-is-frozen-authoritative"
       (every #'lisp-plus-lci0::frozen-lci-failure-code-p literal-codes))
     (lci0-check "dynamic-unfrozen-lci-code-cannot-escape-as-lci-failure"
@@ -542,6 +547,9 @@
                (lci0-refusal-code
                 (lambda ()
                   (lisp-plus-lci0:validate-warrant-target open-target)))))
+    ;; LCI0-AC-007 (LCI0-ACV-HOSTILE-004): the depth-first coordinate is
+    ;; retained, and the boundary-value defect now carries the ruled stage
+    ;; target-boundary instead of the inner validator's stage.
     (lci0-check "nested-scope-unknown-field-retains-depth-first-failure"
       (let ((condition
               (lci0-capture-refusal
@@ -553,7 +561,8 @@
                       "invalid-input")
              (string= (lisp-plus-lci0:lci-failure-code condition)
                       "UnknownField")
-             (string= (lisp-plus-lci0:lci-failure-stage condition) "scope")
+             (string= (lisp-plus-lci0:lci-failure-stage condition)
+                      "target-boundary")
              (equal (lisp-plus-lci0:lci-failure-path condition)
                     '("boundaries" "coverage-scope" "expression"
                       "future-selector")))))
@@ -645,13 +654,32 @@
                (lci0-refusal-code
                 (lambda ()
                   (lisp-plus-lci0:validate-corpus-basis beta-revision)))))
-    (lci0-blocked-check
-        "corpus-boundary-cross-coherence-tuple-is-authorially-unpinned"
-      (string= "InvalidBasis"
-               (lci0-refusal-code
-                (lambda ()
-                  (lisp-plus-lci0:validate-corpus-basis
-                   cross-revision-boundary))))))
+    ;; LCI0-AC-006: the retained r3/r4 mixed witness is rejected with the
+    ;; exact ruled tuple after the declared cross-field checks: invalid-input
+    ;; / BasisMismatch / corpus-basis at /semantic-boundary/manifest/revision
+    ;; with both offending revisions in closed context.
+    (lci0-check "corpus-boundary-cross-coherence-exact-tuple-LCI0-AC-006"
+      (let ((condition
+              (lci0-capture-refusal
+               (lambda ()
+                 (lisp-plus-lci0:validate-corpus-basis
+                  cross-revision-boundary)))))
+        (and condition
+             (string= (lisp-plus-lci0:lci-failure-category condition)
+                      "invalid-input")
+             (string= (lisp-plus-lci0:lci-failure-code condition)
+                      "BasisMismatch")
+             (string= (lisp-plus-lci0:lci-failure-stage condition)
+                      "corpus-basis")
+             (equal (lisp-plus-lci0:lci-failure-path condition)
+                    '("semantic-boundary" "manifest" "revision"))
+             (let ((context (lisp-plus-lci0:lci-failure-context condition)))
+               (and (= 3 (lisp-plus-cd0:integer-datum-value
+                          (lisp-plus-lci0::record-field-named
+                           context "basis_revision")))
+                    (= 4 (lisp-plus-cd0:integer-datum-value
+                          (lisp-plus-lci0::record-field-named
+                           context "semantic_boundary_manifest_revision")))))))))
   (let* ((occurrence (lisp-plus-lci0::registry-datum "claim-occurrence.alpha"))
          (metadata
            (lisp-plus-lci0::record-field-named occurrence
@@ -1018,42 +1046,70 @@
            (lisp-plus-lci0::make-fixture-record
             (list "profile-location" open)))))
        'lisp-plus-lci0:lci-failure)))
+  ;; LCI0-AC-010 (LCI0-ACV-ORIG-004): P024 emits the exact inert defensive
+  ;; result from supplied fields only.  The former blocked witness ("the
+  ;; expected beta occurrence has no input source") is closed: no claimant,
+  ;; assertion time, provenance edge, standing effect, warrant effect,
+  ;; authority, custody, or verified lineage is synthesized; zero live
+  ;; warrants are created; production revival remains deferred.  The
+  ;; whole-registry poison proves no ambient registry lookup sources any
+  ;; output field.
   (let* ((payload (lci0-vector-payload "LCI0-P024"))
-         (predecessor
-           (lisp-plus-lci0::record-field-named payload "predecessor"))
-         (result (lci0-execute-operation "revive-inert-occurrence" payload))
-         (revival (lci0-result-output result "revival"))
-         (actual
-           (lisp-plus-lci0::record-field-named revival "new-occurrence"))
-         (live (lisp-plus-lci0::record-field-named revival "live-warrants"))
-         (beta
-           (lisp-plus-lci0::registry-datum
-            "claim-occurrence.beta-metadata-different")))
-    (lci0-blocked-check
-        "p024-expected-beta-metadata-has-no-input-source"
-      (and (lisp-plus-cd0:equal-datum actual predecessor)
-           (not (lisp-plus-cd0:equal-datum actual beta))
-           (lisp-plus-cd0:sequence-datum-p live)
-           (zerop (lisp-plus-cd0:sequence-datum-length live))
-           (string=
-            (lisp-plus-lci0::identifier-last
-             (lisp-plus-lci0::record-field-named revival "standing-status"))
-            "unsupported-until-authorized-replay"))))
-  ;; Preserve the exact frozen-package disagreements as executable red
-  ;; witnesses.  These are BLOCKED, never pass/skip/N/A, and the standalone
-  ;; vector runner intentionally exits nonzero with the same four IDs.
+         (original-registry
+           (symbol-function 'lisp-plus-lci0::registry-datum))
+         (result
+           (unwind-protect
+                (progn
+                  (setf (symbol-function 'lisp-plus-lci0::registry-datum)
+                        (lambda (&rest arguments)
+                          (declare (ignore arguments))
+                          (error "revival attempted a registry lookup")))
+                  (lci0-execute-operation "revive-inert-occurrence" payload))
+             (setf (symbol-function 'lisp-plus-lci0::registry-datum)
+                   original-registry)))
+         (production (lci0-result-output result "production_revival"))
+         (value (lci0-result-output result "value")))
+    (flet ((value-field (name) (lisp-plus-lci0::record-field-named value name)))
+      (lci0-check "p024-inert-defensive-revival-without-registry-lookup"
+        (and (string= (lisp-plus-cd0:string-datum-value production) "deferred")
+             (string= (lisp-plus-cd0:string-datum-value (value-field "mode"))
+                      "inert-defensive-reconstruction")
+             (string= (lisp-plus-cd0:string-datum-value
+                       (value-field "predecessor"))
+                      "defensive copy of supplied predecessor only")
+             (string= (lisp-plus-cd0:string-datum-value
+                       (value-field "requested_claim"))
+                      "preserve supplied ClaimId exactly")
+             (lisp-plus-cd0:unit-datum-p (value-field "claimant"))
+             (lisp-plus-cd0:unit-datum-p (value-field "assertion_time"))
+             (lisp-plus-cd0:unit-datum-p (value-field "provenance_edge"))
+             (lisp-plus-cd0:unit-datum-p (value-field "authority"))
+             (lisp-plus-cd0:unit-datum-p (value-field "custody"))
+             (zerop (lisp-plus-cd0:integer-datum-value
+                     (value-field "live_warrants_created")))
+             (not (lci0-true-p (value-field "standing_effect")))
+             (not (lci0-true-p (value-field "warrant_effect")))
+             (not (lci0-true-p (value-field "verified_lineage")))))))
+  ;; The four formerly-blocked official vectors are closed by the 0.2
+  ;; fixture-authority overlay: LCI0-AC-001 (N012 matcher symbolic guard),
+  ;; LCI0-AC-003 (E5 input-derived coverage context), LCI0-AC-010 (P024
+  ;; inert defensive revival), LCI0-AC-004 (P029 source preservation,
+  ;; already conforming).  With the overlay installed the selection passes
+  ;; against the superseding expectations; the historical red-witness
+  ;; transcripts under evidence/ remain unchanged records of the pre-closure
+  ;; state.
   (dolist
       (case
-       '(("official-red-N012-relation-unknown-versus-nonmonotone"
+       '(("official-green-N012-closed-by-LCI0-AC-001"
           "LCI0-N012")
-         ("official-red-E5-coverage-context-input-mismatch"
+         ("official-green-E5-closed-by-LCI0-AC-003"
           "LCI0-E5-COVERAGE-INSUFFICIENT")
-         ("official-red-P024-unsourced-beta-occurrence"
+         ("official-green-P024-closed-by-LCI0-AC-010"
           "LCI0-P024")
-         ("official-red-P029-unsourced-right-migration-artifact"
+         ("official-green-P029-closed-by-LCI0-AC-004"
           "LCI0-P029")))
-    (lci0-blocked-check (first case)
-      (not (lisp-plus-lci0:run-vector-selection (list (second case))))))
+    (lci0-check (first case)
+      (lisp-plus-lci0:run-vector-selection (list (second case)))))
   (let* ((policy-a
            (lisp-plus-lci0::registry-datum "admissibility-policy.a.0"))
          (policy-b
@@ -1186,31 +1242,32 @@
           (lisp-plus-lci0::identifier-last
            (lisp-plus-lci0::record-field-named loss-decision "decision"))
           "reject-represented-loss"))))
-    (lci0-blocked-check
-        "policy-b-untrusted-external-decision-id-conflict"
-      (let ((condition
-              (lci0-capture-authorial-gap
-               (lambda ()
-                 (lisp-plus-lci0:evaluate-fixture-policy
-                  policy-b untrusted-relation :target untrusted)))))
-        (and condition
+    ;; LCI0-AC-005: the one authorized external-principal rejection carries
+    ;; the registered decision spelling reject-external-principal.
+    (lci0-check "policy-b-untrusted-external-rejects-external-principal"
+      (let ((decision
+              (lisp-plus-lci0:evaluate-fixture-policy
+               policy-b untrusted-relation :target untrusted)))
+        (and (not (lci0-true-p
+                   (lisp-plus-lci0::record-field-named decision "admitted")))
              (string=
-              (lisp-plus-lci0::fixture-operation-authorial-gap-operation
-               condition)
-              "evaluate-fixture-policy"))))
-    (lci0-blocked-check
-        "policy-combined-failure-precedence-conflict"
-      (let ((condition
-              (lci0-capture-authorial-gap
-               (lambda ()
-                 (lisp-plus-lci0:evaluate-fixture-policy
-                  policy-b untrusted-relation :target untrusted
-                  :query-time query-300 :represented-loss loss)))))
-        (and condition
+              (lisp-plus-lci0::identifier-last
+               (lisp-plus-lci0::record-field-named decision "decision"))
+              "reject-external-principal"))))
+    ;; LCI0-AC-005: input-sensitive combined evaluation in the ruled order —
+    ;; the all-at-once stale + represented-loss + untrusted-principal witness
+    ;; is rejected on its represented loss first.
+    (lci0-check "policy-combined-witness-rejects-represented-loss-first"
+      (let ((decision
+              (lisp-plus-lci0:evaluate-fixture-policy
+               policy-b untrusted-relation :target untrusted
+               :query-time query-300 :represented-loss loss)))
+        (and (not (lci0-true-p
+                   (lisp-plus-lci0::record-field-named decision "admitted")))
              (string=
-              (lisp-plus-lci0::fixture-operation-authorial-gap-operation
-               condition)
-              "evaluate-fixture-policy"))))
+              (lisp-plus-lci0::identifier-last
+               (lisp-plus-lci0::record-field-named decision "decision"))
+              "reject-represented-loss"))))
     (let* ((meta
              (lisp-plus-lci0::registry-datum
               "warrant-target.policy-evaluation.file-alpha.meta"))
