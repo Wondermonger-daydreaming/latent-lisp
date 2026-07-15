@@ -32,6 +32,17 @@ BLOCKED_VECTOR_IDS = {
     "LCI0-P029",
 }
 
+# Codes instantiated by the LCI/0 authorial-closure fixture overlay 0.2
+# (LCI0-IMPLEMENTATION-CLOSURE-RULING.md) on top of the 84 frozen 0.1
+# registry codes.  Fixture 0.1 is byte-unchanged; these are the only two
+# additions the closure register authorizes.
+OVERLAY_RULED_CODES = {
+    # LCI0-AC-008-MIGRATION-CLASSIFICATION
+    "InvalidMigrationResult",
+    # LCI0-AC-009-TARGET-BOUNDARY-COHERENCE
+    "LCI0-UNSUPPORTED-FIXTURE-BEHAVIOR",
+}
+
 
 def _replace_field(value: cd0.Record, name: str, replacement: cd0.Datum) -> cd0.Record:
     return cd0.record(
@@ -52,7 +63,11 @@ class FailureVocabularyTests(unittest.TestCase):
 
     def test_runtime_vocabulary_is_exactly_the_84_frozen_registry_codes(self):
         self.assertEqual(len(self.registry_codes), 84)
-        self.assertEqual(AUTHORIZED_LCI_FAILURE_CODES, self.registry_codes)
+        self.assertFalse(OVERLAY_RULED_CODES & self.registry_codes)
+        self.assertEqual(
+            AUTHORIZED_LCI_FAILURE_CODES,
+            self.registry_codes | OVERLAY_RULED_CODES,
+        )
 
     def test_unauthorized_code_cannot_construct_or_escape_as_lci_failure(self):
         with self.assertRaises(FixtureIntegrityError) as caught:
@@ -81,7 +96,8 @@ class FailureVocabularyTests(unittest.TestCase):
                 value = node.args[position]
                 if isinstance(value, ast.Constant) and type(value.value) is str:
                     literal_sites.append((source.name, node.lineno, value.value))
-        unauthorized = [site for site in literal_sites if site[2] not in self.registry_codes]
+        authorized = self.registry_codes | OVERLAY_RULED_CODES
+        unauthorized = [site for site in literal_sites if site[2] not in authorized]
         self.assertGreater(len(literal_sites), 100)
         self.assertEqual(unauthorized, [])
 

@@ -13,6 +13,7 @@ from typing import Any, TextIO
 
 import cd0
 
+from . import closure
 from .core import CD0_BUDGET, evaluate_policy
 from .model import FixtureAuthorityGap, LCIFailure, RelationResult, field_by_path, scalar
 from .protocol import (
@@ -101,6 +102,24 @@ def run_request(raw: Any) -> dict[str, Any]:
             return response
         response["status"] = "success"
         return response
+
+    if operation in closure.DIRECT_DOCUMENT_OPERATIONS:
+        # Authorial-closure direct-document surfaces (LCI0-AC-002 relation
+        # tables; LCI0-AC-007 hostile validations).  Structural failures
+        # only; a fixture authority gap stays a closed protocol failure.
+        try:
+            semantic = closure.execute_direct(operation, document)
+        except LCIFailure as exc:
+            return {
+                **response,
+                "status": "failure",
+                "failure": datum_native(exc),
+            }
+        except FixtureAuthorityGap:
+            response["protocol_status"] = "failure"
+            response["protocol_failure"] = {"code": "FixtureAuthorityGap", "path": []}
+            return response
+        return {**response, "status": semantic["status"], "closure_result": semantic}
 
     try:
         envelope = record_to_mapping(document)

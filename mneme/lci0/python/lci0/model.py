@@ -26,11 +26,17 @@ AUTHORIZED_LCI_FAILURE_CODES = frozenset(
         "InvalidClaimLocation",
         "InvalidClaimRecord",
         "InvalidInterpretationFrame",
+        # LCI0-AC-008-MIGRATION-CLASSIFICATION: the ruled classification/
+        # content coupling failure for MigrationResult documents.
+        "InvalidMigrationResult",
         "InvalidProposition",
         "InvalidScope",
         "InvalidStableReference",
         "InvalidSubjectTime",
         "InvalidWarrantTarget",
+        # LCI0-AC-009-TARGET-BOUNDARY-COHERENCE: the ruled explicit /0
+        # deferral code for the retained derived premise mutation.
+        "LCI0-UNSUPPORTED-FIXTURE-BEHAVIOR",
         "LCIAggregatePayloadBudgetExceeded",
         "LCIIdentifierSegmentBudgetExceeded",
         "LCIMaxNestingExceeded",

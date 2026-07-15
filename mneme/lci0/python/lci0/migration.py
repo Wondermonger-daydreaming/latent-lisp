@@ -927,14 +927,43 @@ def validate_migration_result(value: cd0.Datum) -> cd0.Datum:
     testimony = field_by_path(value, "legacy-testimony")
     if type(testimony) is not cd0.Sequence:
         raise FixtureAuthorityGap("unsupported migration-result testimony")
+    content_markers: set[str] = set()
     for index, item in enumerate(testimony.items):
         item_path = ("legacy-testimony", str(index))
         item_fields = _field_map(item, ("kind", "artifact"), "migration-result", item_path)
         kind = item_fields["kind"]
         if type(kind) is not cd0.Identifier or kind.namespace != FIXTURE or kind.path != ("legacy-testimony", "predecessor-warrant"):
             raise FixtureAuthorityGap("unsupported migration-result testimony kind")
-        _stable_object_id(item_fields["artifact"], "artifact", item_path + ("artifact",))
+        artifact_id = _stable_object_id(item_fields["artifact"], "artifact", item_path + ("artifact",))
+        content_markers.add(artifact_id[-1])
         _reject_unknown(item, ("kind", "artifact"), stage="migration-result", prefix=item_path, namespace=FIXTURE_FIELD)
+    # LCI0-AC-008-MIGRATION-CLASSIFICATION: classification/content coupling
+    # for the retained mutation.  An exact-after-explicit-tagging
+    # classification is incompatible with content carrying the
+    # inert-predecessor marker (predecessor-warrant testimony held inert);
+    # the ruled exact tuple rejects at /classification with both coordinates
+    # in context.  No total inverse classification/content matrix is
+    # inferred beyond this declared check.
+    if (
+        classification.path == ("migration-classification", "exact-after-explicit-tagging")
+        and "inert-predecessor" in content_markers
+    ):
+        raise LCIFailure(
+            "invalid-input",
+            "InvalidMigrationResult",
+            "migration-result",
+            ("classification",),
+            (
+                (
+                    "fixture-field:classification",
+                    cd0.string("exact-after-explicit-tagging"),
+                ),
+                (
+                    "fixture-field:incompatible-content-marker",
+                    cd0.string("inert-predecessor"),
+                ),
+            ),
+        )
     live = field_by_path(value, "live-warrants-created")
     if type(live) is not cd0.Boolean or live.value:
         raise LCIFailure("privilege-refusal", "PrivilegedRestorationAttempt", "privilege-boundary", ("live-warrants-created",))
