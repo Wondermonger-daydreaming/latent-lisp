@@ -1133,3 +1133,119 @@ unaffected path is resolved. Four vector results, 38 relation companion paths,
 and eight hostile result tuples remain covered by the same ten authorial-return
 packets. No blocked item is counted as pass, failure, skip, or N/A, and no
 eleventh packet was created for an implementation defect.
+
+## 2026-07-15 authorial-closure addendum — the ten questions are closed
+
+This addendum is appended under the ledger's append-only rule: no historical
+entry above is modified, deleted, or re-adjudicated. Every blocked coordinate
+recorded above that named one of the ten authorial questions is now closed by
+the LCI/0 authorial-closure packet (`LCI0-IMPLEMENTATION-CLOSURE-RULING.md`,
+`LCI0-AUTHORIAL-CLOSURE-REGISTER.json`, `LCI0-AUTHORIAL-CLOSURE-VECTORS.jsonl`,
+fixture overlay `0.2` zip SHA-256
+`5e03c2f5a17cf69f9b562dcfc5b7dfde85563fc7f88d52fcb01ffe858c1a10eb`); the ten
+authorial-return packets are answered, not withdrawn. The historical blocks
+remain above as the record of what was blocked and why.
+
+Implementing branches (merged here without rewriting):
+- Common Lisp: `codex/lci0-common-lisp-closure` @
+  `a6605403904406d3176f39433416d5a93e6427ee` (5 commits atop `2513c354`:
+  `76cc4e7` overlay install, `030a5a6` overlay loader + closure surface,
+  `c7160d3` semantic closures, `0a439d2` tests, `a660540` style).
+- Python: `codex/lci0-python-closure` @
+  `dda8195a1e9dec25e870763eeaf78222c962e412` (5 commits atop `db627cb6`:
+  `5317b40` overlay install, `3ab251a` overlay loader, `b32cd6c` core closures,
+  `370e2d4` closure surfaces + runner dispatch, `dda8195` closure-vector
+  regressions).
+- Differential harness census flip and adapter repair: commit on
+  `codex/lci0-integration-closure` titled "lci0: flip differential census to
+  zero-blocked; converge all 50 closure surfaces".
+
+Per-question closure record (closure ID; prior ledger rows; per-implementation
+status):
+
+- `LCI0-AC-001-N012-MATCHER` (rows: LCI0-DIV-006, LCI0-DIV-004 family) —
+  Common Lisp: implemented (`matching.lisp` symbolic matcher guard before
+  frozen-relation consumption and any policy consultation). Python:
+  implemented (`lci0/core.py` `match_target` symbolic guard). Both emit the
+  frozen 502-octet `relation-undetermined/ScopeRelationUnknown` document
+  byte-exactly (`LCI0-ACV-ORIG-001`). Both frozen table rows retained.
+- `LCI0-AC-002-RELATION-FAILURE-PATHS` (rows: LCI0-DIV-014, LCI0-DIV-001,
+  LCI0-DIV-005) — Common Lisp: implemented
+  (`closure-surface.lisp` `evaluate-relation-table-companion`). Python:
+  implemented (`lci0/closure.py` `evaluate_relation_table` + runner dispatch).
+  Differential harness: adapter repair (both differential adapters deepen the
+  38 closure rows' companion paths to the ruled coordinates
+  `/right-scope/calculus` and `/right-subject-time/expression/form` in their
+  own operand naming). All 38 `LCI0-ACV-REL-*` vectors exact; the 420
+  determinate relation rows and all pinned engine paths unchanged.
+- `LCI0-AC-003-E5-COVERAGE-CONTEXT` (row: LCI0-DIV-015) — Common Lisp:
+  implemented (`matching.lisp` context reduced to input-derived fields).
+  Python: implemented (`lci0/core.py` `_require_target_coverage`). Both emit
+  the ruled 1747-octet document byte-exactly (`LCI0-ACV-ORIG-002`).
+- `LCI0-AC-004-P029-SOURCE-PRESERVATION` (row: LCI0-DIV-016) — Common Lisp:
+  already conforming (test/fixture change only; pre-change actual octets
+  SHA-256 `9da0098f…` equal the overlay expectation). Python: already
+  conforming (zero code change; byte-identical rendered document). The
+  register obligation "no change if final successor preserves source exactly"
+  is satisfied on both sides (`LCI0-ACV-ORIG-003`).
+- `LCI0-AC-005-POLICY-EVALUATION-ORDER` (rows: LCI0-DIV-013, LCI0-DIV-017) —
+  Common Lisp: implemented (`policy.lisp` ruled total order;
+  `reject-represented-loss` first on the combined witness; registered
+  `reject-external-principal`; Policy-C stays a non-LCI fixture-authority
+  gap). Python: implemented (`lci0/core.py` `evaluate_policy`,
+  `lci0/vector.py`, `lci0/closure.py` `evaluate_policy_c`).
+  `LCI0-ACV-HOSTILE-008` exact in both.
+- `LCI0-AC-006-CORPUS-BASIS-COHERENCE` (row: LCI0-DIV-018) — Common Lisp:
+  implemented (`validation.lisp` exact tuple
+  `invalid-input/BasisMismatch/corpus-basis` at
+  `/semantic-boundary/manifest/revision`). Python: implemented
+  (`lci0/core.py` `validate_basis`). Reverse orientation stays fail-closed
+  `InvalidBasis` in both; no inverse matrix inferred.
+- `LCI0-AC-007-OPERATION-PAYLOAD-FAILURES` (rows: LCI0-DIV-008, LCI0-DIV-009,
+  LCI0-DIV-010, LCI0-DIV-011, LCI0-DIV-019) — Common Lisp: implemented
+  (`validation.lisp` target-boundary staging, `migration.lisp`
+  `UnsupportedLegacyForm` at `/grammar`, `closure-surface.lisp` hostile
+  surface + within-budget projection). Python: implemented
+  (`lci0/closure.py` `hostile_validate`, `conformance_semantics`,
+  `migration_failure_semantics` + runner dispatch). Differential harness:
+  adapter repair (ruled hostile normalizations; the at-limit-64 within-budget
+  value document emitted from each implementation's own frozen resource
+  table). `LCI0-ACV-HOSTILE-001..007` exact in both; the 52-schema wholesale
+  expansion remains deferred as ruled.
+- `LCI0-AC-008-MIGRATION-CLASSIFICATION` (rows: LCI0-DIV-020, LCI0-DIV-012) —
+  Common Lisp: implemented (`validation.lisp` + `values.lisp`;
+  `InvalidMigrationResult` is the single closure-authorized failure-code
+  extension). Python: implemented (`lci0/migration.py` + `lci0/model.py`).
+  The retained classification-only mutation is rejected with the ruled tuple
+  in both; no total inverse matrix inferred; the `rejected`-classification
+  mutation remains a documented blocked witness.
+- `LCI0-AC-009-TARGET-BOUNDARY-COHERENCE` (rows: LCI0-DIV-021, LCI0-DIV-010) —
+  Common Lisp: implemented (`validation.lisp` + `values.lisp`; explicit /0
+  deferral `unsupported-fixture-behavior/LCI0-UNSUPPORTED-FIXTURE-BEHAVIOR`
+  at `/boundaries/premise-claim-ids/0` via a non-LCI host condition). Python:
+  implemented (`lci0/core.py` `_target_kind_coherence` + `lci0/model.py`).
+  Pinned positive targets still validate in both; the eleven-kind coherence
+  algorithms stay deferred as ruled.
+- `LCI0-AC-010-P024-INERT-REVIVAL` (rows: LCI0-DIV-023, LCI0-DIV-012) —
+  Common Lisp: implemented (`operations.lisp` exact inert defensive result;
+  zero registry lookups proven by whole-registry poisoning). Python:
+  implemented (`lci0/closure.py` `revival_semantics`, emitting the ruled
+  document only after verifying the defensive-copy invariants). Differential
+  harness: adapter repair (both differential adapters emit the ruled inert
+  defensive document, byte-identical across languages;
+  `live_warrants_created` 0). `LCI0-ACV-ORIG-004` exact in both.
+
+Differential census after closure: 0 blocked / 0 mismatched / 0
+cross-implementation mismatches; per-implementation counts
+`{document 1593/1593, vector 215/215, relation 458/458, hostile 29/29}`;
+2295 requests per implementation; status
+`converged-authorial-closures-complete`.
+
+New disagreements encountered during integration: none. The two byte-level
+engine differences surfaced while wiring the differential adapters (P024
+revive document shape; at-limit-64 conformance success shape) are coordinates
+of `LCI0-AC-010` and `LCI0-AC-007` respectively — the overlay pins both as
+semantic documents precisely because byte-form there carried implementation
+freedom — and both now converge byte-identically through each
+implementation's ruled closure surface. No eleventh question was created; no
+historical entry above was re-adjudicated.
