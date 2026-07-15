@@ -1,0 +1,107 @@
+# LCI/0 closure — complete changed-file inventory across the three closure branches
+# Generated 2026-07-15 by INTEGRATOR (Claude Fable 5).
+# Bases: CL 2513c354721bac6120b8c0a5eef1ed13252cf75b · Py db627cb6ca23abc0626aebc6f9982ab9b4406dbf · integration 3693799fcd03b860dad85561382113593fcfe18b
+#
+## [1] codex/lci0-common-lisp-closure (a6605403904406d3176f39433416d5a93e6427ee) vs its base 2513c354
+A	mneme/lci0/common-lisp/closure-surface.lisp
+A	mneme/lci0/common-lisp/closure-tests.lisp
+M	mneme/lci0/common-lisp/harness.lisp
+M	mneme/lci0/common-lisp/lisp-plus-lci0.asd
+M	mneme/lci0/common-lisp/load.lisp
+M	mneme/lci0/common-lisp/matching.lisp
+M	mneme/lci0/common-lisp/migration.lisp
+M	mneme/lci0/common-lisp/operations.lisp
+A	mneme/lci0/common-lisp/overlay.lisp
+M	mneme/lci0/common-lisp/package.lisp
+M	mneme/lci0/common-lisp/policy.lisp
+M	mneme/lci0/common-lisp/registry.lisp
+A	mneme/lci0/common-lisp/run-closure-vectors.lisp
+M	mneme/lci0/common-lisp/run-tests.lisp
+M	mneme/lci0/common-lisp/tests.lisp
+M	mneme/lci0/common-lisp/validation.lisp
+M	mneme/lci0/common-lisp/values.lisp
+A	mneme/lci0/fixtures/LCI0-FIXTURE-OVERLAY-0.2-MANIFEST.md
+A	mneme/lci0/fixtures/archives/lci0-fixture-overlay-0.2-2026-07-14.zip
+#
+## [2] codex/lci0-python-closure (dda8195a1e9dec25e870763eeaf78222c962e412) vs its base db627cb6
+A	mneme/lci0/fixtures/archives/lci0-fixture-overlay-0.2-2026-07-14.zip
+A	mneme/lci0/python/lci0/closure.py
+M	mneme/lci0/python/lci0/core.py
+M	mneme/lci0/python/lci0/migration.py
+M	mneme/lci0/python/lci0/model.py
+A	mneme/lci0/python/lci0/overlay.py
+M	mneme/lci0/python/lci0/runner.py
+M	mneme/lci0/python/lci0/vector.py
+M	mneme/lci0/python/tests/blocked_scope_authority_conflict.py
+A	mneme/lci0/python/tests/test_closure_vectors.py
+M	mneme/lci0/python/tests/test_failure_vocabulary.py
+M	mneme/lci0/python/tests/test_successor_hostile.py
+M	mneme/lci0/python/tests/test_vectors.py
+M	mneme/lci0/shared/fixture_package.py
+#
+## [3] codex/lci0-integration-closure (working tree at receipt time) vs its base 3693799f
+##     (includes the union of [1]+[2] via the merges; integration-only additions marked below)
+A	mneme/lci0/common-lisp/closure-surface.lisp
+A	mneme/lci0/common-lisp/closure-tests.lisp
+M	mneme/lci0/common-lisp/harness.lisp
+M	mneme/lci0/common-lisp/lisp-plus-lci0.asd
+M	mneme/lci0/common-lisp/load.lisp
+M	mneme/lci0/common-lisp/matching.lisp
+M	mneme/lci0/common-lisp/migration.lisp
+M	mneme/lci0/common-lisp/operations.lisp
+A	mneme/lci0/common-lisp/overlay.lisp
+M	mneme/lci0/common-lisp/package.lisp
+M	mneme/lci0/common-lisp/policy.lisp
+M	mneme/lci0/common-lisp/registry.lisp
+A	mneme/lci0/common-lisp/run-closure-vectors.lisp
+M	mneme/lci0/common-lisp/run-tests.lisp
+M	mneme/lci0/common-lisp/tests.lisp
+M	mneme/lci0/common-lisp/validation.lisp
+M	mneme/lci0/common-lisp/values.lisp
+M	mneme/lci0/differential/authorial_blockers.py
+M	mneme/lci0/differential/common_lisp_adapter.lisp
+M	mneme/lci0/differential/post_convergence.py
+M	mneme/lci0/differential/python_adapter.py
+M	mneme/lci0/differential/run_differential.py
+M	mneme/lci0/differential/test_post_convergence.py
+M	mneme/lci0/differential/test_run_differential.py
+M	mneme/lci0/evidence/LCI0-IMPLEMENTATION-DIVERGENCES.md
+A	mneme/lci0/fixtures/LCI0-FIXTURE-OVERLAY-0.2-MANIFEST.md
+A	mneme/lci0/fixtures/archives/lci0-fixture-overlay-0.2-2026-07-14.zip
+A	mneme/lci0/python/lci0/closure.py
+M	mneme/lci0/python/lci0/core.py
+M	mneme/lci0/python/lci0/migration.py
+M	mneme/lci0/python/lci0/model.py
+A	mneme/lci0/python/lci0/overlay.py
+M	mneme/lci0/python/lci0/runner.py
+M	mneme/lci0/python/lci0/vector.py
+M	mneme/lci0/python/tests/blocked_scope_authority_conflict.py
+A	mneme/lci0/python/tests/test_closure_vectors.py
+M	mneme/lci0/python/tests/test_failure_vocabulary.py
+M	mneme/lci0/python/tests/test_successor_hostile.py
+M	mneme/lci0/python/tests/test_vectors.py
+M	mneme/lci0/shared/fixture_package.py
+M	mneme/lci0/differential/post_convergence.py
+A?	mneme/lci0/differential/artifacts/closure-converged-2026-07-15/
+A?	mneme/lci0/evidence/LCI0-CLOSURE-CHANGED-FILES.txt
+A?	mneme/lci0/evidence/LCI0-CLOSURE-DIFFERENTIAL-RECEIPT.md
+A?	mneme/lci0/evidence/LCI0-CLOSURE-FINAL-REVIEW-RELAY.md
+A?	mneme/lci0/evidence/LCI0-CLOSURE-FIXTURE-OVERLAY-RECEIPT.md
+A?	mneme/lci0/evidence/LCI0-CLOSURE-HOSTILE-RESULT-RECEIPT.md
+A?	mneme/lci0/evidence/LCI0-CLOSURE-IMPLEMENTATION-LEDGER.md
+A?	mneme/lci0/evidence/LCI0-CLOSURE-NONREGRESSION-RECEIPT.md
+A?	mneme/lci0/evidence/LCI0-CLOSURE-P024-RECEIPT.md
+A?	mneme/lci0/evidence/LCI0-CLOSURE-P029-RECEIPT.md
+A?	mneme/lci0/evidence/LCI0-CLOSURE-RELATION-PATH-RECEIPT.md
+#
+## [3a] integration-only changes (not part of either forge diff):
+M	mneme/lci0/differential/authorial_blockers.py       (census flip)
+M	mneme/lci0/differential/run_differential.py          (oracle + full-convergence gate)
+M	mneme/lci0/differential/python_adapter.py            (ruled adapter outputs)
+M	mneme/lci0/differential/common_lisp_adapter.lisp     (ruled adapter outputs)
+M	mneme/lci0/differential/post_convergence.py          (converged successor gate + closed status labels)
+M	mneme/lci0/differential/test_run_differential.py     (closed-state tests)
+M	mneme/lci0/differential/test_post_convergence.py     (closed-state tests)
+M	mneme/lci0/evidence/LCI0-IMPLEMENTATION-DIVERGENCES.md (append-only closure addendum)
+A	mneme/lci0/differential/artifacts/closure-converged-2026-07-15/{summary.json,sha256-manifest.json}
+A	mneme/lci0/evidence/LCI0-CLOSURE-*.md / .txt          (this receipt set)
