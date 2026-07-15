@@ -1412,7 +1412,7 @@ def compare_property_results(
         "metamorphic_equal_groups": {name: len(values) for name, values in sorted(equal_groups.items())},
         "metamorphic_distinct_groups": {name: len(values) for name, values in sorted(distinct_groups.items())},
         "status": (
-            "converged-unaffected-with-authorial-blockers"
+            "converged-authorial-closures-complete"
             if not failures
             else "fail"
         ),
@@ -1748,7 +1748,7 @@ def main() -> int:
             )
 
     comparison["status"] = (
-        "converged-unaffected-with-authorial-blockers"
+        "converged-authorial-closures-complete"
         if not comparison["failures"]
         else "fail"
     )
@@ -1758,7 +1758,12 @@ def main() -> int:
     )
     family_counts = Counter(case.family for case in cases)
     summary = {
-        "authorial_return_required": True,
+        # The ten authorial questions are closed (LCI0-AC-001..010).  The
+        # blocked-coordinate observations below track the coordinates the
+        # ruling explicitly KEEPS deferred (52-schema expansion, eleven-kind
+        # algorithms, inverse matrices); they are never counted as pass or
+        # fail and do not require a further authorial return.
+        "authorial_return_required": False,
         "authorial_blocked": comparison[
             "authorial_blocked_failure_coordinates"
         ],
@@ -1828,7 +1833,7 @@ def main() -> int:
     )
     return (
         0
-        if summary["status"] == "converged-unaffected-with-authorial-blockers"
+        if summary["status"] == "converged-authorial-closures-complete"
         else 1
     )
 
