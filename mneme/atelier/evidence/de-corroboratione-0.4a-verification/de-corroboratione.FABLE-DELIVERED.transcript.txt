@@ -1,0 +1,107 @@
+
+── DE CORROBORATIONE — an interbench hinge ─────────────────────────────
+
+ The corridor between the benches.  Ten exhibits.  The graph below
+ is declared testimony (standing :asserted); the search field is
+ the toy's own tables, complete by construction and by confession.
+
+I. a bag of agreeing witnesses
+   two procedures answer :forty-two; the :merchant offers to 
+   notarize their agreement as confirmation.
+ ✓ AGREEMENT-IS-NOT-CORROBORATION fired: two matching outputs are a bag, not a warrant
+
+II. the shared well
+   (ASH-CHAIR BEECH-CHAIR) on SEMANTIC-INTERPRETATION -> DISQUALIFIED  (governing: COMMON-WELL)
+ ✓ SHARED-ROOT-IS-NOT-INDEPENDENCE fired: both chairs drink from :common-well on :semantic-interpretation; treating the well as separation is the primal laundering
+   and the self-issued exoneration is refused at the door:
+ ✓ SELF-ATTESTED-SEPARATION fired: ASH-CHAIR declared its own separation from COMMON-WELL; self-report may incriminate, not exonerate
+
+III. a harmless shared root
+   (ASH-CHAIR BEECH-CHAIR) on IMPLEMENTATION-DEFECT -> NECESSARY-SHARED  (governing: CD0-SPEC)
+   shared target ruled :necessary-shared for :implementation-defect✓
+   the ascetic error — rejecting all common objects — is unlawful:
+ ✓ TARGET-ROOT-IS-NOT-CONTAMINATION fired: without :cd0-spec the chairs address different objects; a constitutive root is the condition of comparison, not its wound
+
+IV. the dimensional pair (the Inkling adapters)
+   (INKLING-A INKLING-B) on SAMPLING-ACCIDENT -> UNKNOWN  (governing: BASE-CHECKPOINT RUBRIC-GRADER)
+   (INKLING-A INKLING-B) on REPRESENTATIONAL-OMISSION -> DISQUALIFIED  (governing: BASE-CHECKPOINT)
+   (INKLING-A INKLING-B) on RUBRIC-PREFERENCE -> UNKNOWN  (governing: BASE-CHECKPOINT RUBRIC-GRADER)
+   the receipt names WHICH independence the pair possesses✓
+   'independent runs' chanted over two directories is the third
+   line above: an unfiled profile, lawfully :unknown, minting nothing.
+
+V. manufactured separation
+   (ASH-CHAIR BEECH-CHAIR) on SEMANTIC-INTERPRETATION -> CONTROLLED-SHARED  (governing: COMMON-WELL CD0-SPEC)
+   control interrupts the named dimension only✓
+   training-history was not addressed and remains what the graph
+   says: freshness is an intervention, not immaculate conception.
+
+VI. the severe probe
+   probe WRONG-CONVERSE-MAP receipted severe on (SEMANTIC-INTERPRETATION IMPLEMENTATION-DEFECT)✓
+   a probe whose oracle IS the shared well is refused outright:
+ ✓ ORACLE-SHARED-WITH-WITNESS fired: probe TAINTED-PROBE's oracle COMMON-WELL lies on a live SEMANTIC-INTERPRETATION path to witness ASH-CHAIR; a grader who authored the corpses knows where they are buried
+
+VII. the surviving mutant
+   scar archived: mutant survived; FIXTURE-COUPLING weakened (only)
+   probe FIXTURE-BATTERY receipted severe on (METHOD-SHAPE)✓
+   the downgrade is located; the overbroad claim is not:
+ ✓ SEVERITY-NOT-DEMONSTRATED fired: no receipted probe could wound FIXTURE-COUPLING; a probe that cannot wound cannot corroborate
+   surviving mutant weakened one dimension; :method-shape stands✓
+
+VIII. the corridor (three witnesses, ancestry changes coats twice)
+   the note never quotes the ruling; the serial numbers are gone.
+   a naive fold that ignores the declared hallway is a defect:
+ ✓ EXPOSURE-LAUNDERED fired: declared corridor reaches LECTOR on SEMANTIC-INTERPRETATION (lawful DISQUALIFIED) but the naive fold reported BOUNDED-SEPARATE; the graph already contains the hallway
+   (SCRIVENER LECTOR) on SEMANTIC-INTERPRETATION -> DISQUALIFIED  (governing: CLOSURE-RULING-N012)
+   (SCRIVENER LECTOR) on METHOD-SHAPE -> UNKNOWN  (governing: CLOSURE-RULING-N012)
+   one corridor live (laundering caught); one lawfully :unknown✓
+   the glossator offers an alibi against the admitted log:
+ ✓ SELF-ATTESTED-PATH-INTERRUPTION fired: GLOSSATOR offered (:MY-READ-OF-GLOSS :BEFORE :THE-EXPOSURE) to close a corridor against the admitted log; a clock that closes a corridor must show its papers
+   order is not conjured from its own absence, nor from a cycle:
+ ✓ ORDER-ABSENCE-IS-NOT-REVERSE-ORDER fired: no admitted edge orders these events; absence of order is not reverse order, concurrency, or incomparability
+ ✓ CAUSAL-ORDER-CYCLE fired: admitted ordering assertions form a cycle through E1 -> E2; a malformed order may not open and close corridors opportunistically
+
+IX. the bounded corroboration
+   probe PANEL-BATTERY receipted severe on (IMPLEMENTATION-DEFECT)✓
+   first, the exact confession of the all-unknown panel:
+   (:guaranteed-lineages 1 :possible-lineages 3 :corroboration :not-minted)
+   selection census complete under pre-registered rule✓
+ ✓ PANEL-INDEPENDENCE-NOT-ESTABLISHED fired: dimension IMPLEMENTATION-DEFECT: guaranteed lineages 1 < 2 (possible 3); the confession is exact and mints nothing
+   a survivor panel is refused before counting begins:
+ ✓ SURVIVOR-PANEL fired: 1 disagreement attempt(s) excluded with no pre-registered rule; a panel of survivors corroborates by funeral
+   now the lawful panel — one pair :unknown, two certified lineages:
+   selection census complete under pre-registered rule✓
+   guaranteed 2 (witnesses: (NORTH-CHAIR SOUTH-CHAIR)), possible 3
+   lawful receipt minted and revalidated✓
+   verdict: CORROBORATED-UNDER  standing: BOUNDED  totality: NOT-CLAIMED
+   graph: standing ASSERTED, veracity NOT-ESTABLISHED — the bracket, not a witness
+   residual unknowns carried on the face: 1 pair-dimension(s)
+
+X. the harpoon ceiling
+   the :merchant, holding the receipt, attempts three promotions:
+ ✓ CORROBORATION-IS-NOT-TOTALITY fired: many corroborated surfaces remain many surfaces; the whale keeps the rest of its body
+ ✓ CORROBORATION-IS-NOT-TRUTH fired: bounded survival under a declared manifold is testimony, not semantic truth
+ ✓ MANIFOLD-EXPANSION-REQUIRES-NEW-WARRANT fired: SEMANTIC-INTERPRETATION was not in the frozen manifold; the next surface buys its own warrant
+   and the cosmetic rewrite is refused by recomputation:
+ ✓ ALTERED-CORROBORATION-RECEIPT fired: receipt digest does not recompute; the verdict field has no authority over the ledger it summarizes
+
+   census of the unreached, carried on the maximal receipt:
+   (UNDECLARED-HISTORY OCCLUDED-ARCHIVES UNQUERIED-CHANNELS SEMANTIC-INTERIOR)
+   the beast ends :UNSUBDUED.
+
+what this hinge does NOT establish
+ The graph is declared testimony; its veracity is :not-established.
+ Exit 0 proves conformant execution over the supplied data and
+ nothing about history: EXECUTION-SUCCESS-IS-NOT-PROVENANCE-TRUTH.
+ No real pair is proven independent, no real probe severe, no real
+ claim true.  The regress is not solved; it is bounded, named, and
+ prevented from laundering itself into truth.
+
+── agreement is not a well shared ──
+── a well shared is not every well ──
+── the court keeps both testimonies, and the order they claim to have arrived ──
+── the lower bound brings witnesses; the upper bound is allowed to dream ──
+── a clock that closes a corridor must show its papers ──
+── the receipt remembers when the water was still separate ──
+
+   DE CORROBORATIONE complete✓
