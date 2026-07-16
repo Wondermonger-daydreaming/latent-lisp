@@ -9,7 +9,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "harness"))
 
 import preauthorship as pre
-from conditions import DraftItemUsedAsFrozen, MutationNotExercised, OwnerDecisionUnresolved
+from conditions import (DraftItemUsedAsFrozen, FreezerDossierReferenceInvalid,
+                        MutationNotExercised, ODR43ExposureClassSetInvalid,
+                        OwnerDecisionUnresolved, PreauthorshipSchemaViolation)
 
 
 class PreauthorshipRepairTests(unittest.TestCase):
@@ -77,8 +79,42 @@ class PreauthorshipRepairTests(unittest.TestCase):
 
     def test_commission_golden_vector_and_escaped_fixture_custody(self):
         self.assertEqual(2, len(pre.verify_commission_inputs()))
-        self.assertEqual(5, len(pre.validate_escaped_defect_registry()["fixtures"]))
+        self.assertEqual(7, len(pre.validate_escaped_defect_registry()["fixtures"]))
+        self.assertEqual(16003, pre.verify_owner_reverification()["byte_length"])
         self.assertEqual(259, pre.validate_canonical_golden_vector()["canonical_byte_length"])
+
+    def test_complete_synthetic_owner_adoption_closes_but_real_records_stay_unresolved(self):
+        records, lineage = pre.synthetic_owner_adoption_graph()
+        self.assertTrue(pre.validate_lineage(lineage))
+        selected = pre.validate_owner_records(records, require_adopted=True, lineage_events=lineage)
+        self.assertEqual({"ODR-43", "ODR-60"}, set(selected))
+        self.assertTrue(pre.drafting_gate(records, lineage))
+        self.assertTrue(all(record["status"] == "unresolved" for record in pre.load_owner_records()))
+
+    def test_odr43_exposure_classes_are_exact_not_just_three_rows(self):
+        records, _ = pre.synthetic_owner_adoption_graph()
+        successor = next(
+            record for record in records
+            if record["decision_id"] == "ODR-43" and record["status"] == "adopted"
+        )
+        decision = successor["exact_decision"]
+        decision["exposure_declarations"] = [copy.deepcopy(decision["exposure_declarations"][0]) for _ in range(3)]
+        with self.assertRaises(ODR43ExposureClassSetInvalid):
+            pre.validate_odr43_exposure_class_set(decision)
+        with self.assertRaises(PreauthorshipSchemaViolation):
+            pre.validate_record(pre._reseal(successor), "owner-decision-record", verify_bound_bytes=False)
+
+    def test_missing_freezer_dossier_rejected_before_key_handoff(self):
+        records = pre.synthetic_frozen_bank_records()
+        key_manifest = pre.synthetic_key_manifest(records)
+        without_dossier = [
+            record for record in records
+            if record["schema_version"] != "lae-item-freezer-dossier/1.0.0"
+        ]
+        with self.assertRaises(FreezerDossierReferenceInvalid):
+            pre.validate_record_graph(without_dossier, allow_synthetic=True)
+        self.assertTrue(pre.validate_key_author_input(key_manifest, records, allow_synthetic=True))
+        self.assertFalse(any(entry["artifact_kind"] == "item-freezer-dossier" for entry in key_manifest["entries"]))
 
     def test_every_frozen_consumer_uses_state_not_filename_or_boolean(self):
         item = pre.synthetic_record_graph()[-1]

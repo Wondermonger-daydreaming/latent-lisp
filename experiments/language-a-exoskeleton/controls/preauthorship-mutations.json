@@ -1,8 +1,10 @@
 {
-  "schema_version": "lae-preauthorship-mutation-registry/1.0.0",
+  "schema_version": "lae-preauthorship-mutation-registry/1.1.0",
   "fixture_taint_id": "taint:preauthorship-mutation-fixtures-v1",
-  "predecessor_registry_sha256": "a9c0e2e3dab5caa324272b2bf9201933537f075d68a77d248f45f9e510f2cd91",
+  "predecessor_registry_sha256": "df60bd4e9598d3b54d408cba7940573c92373bf583bde9c1ba677700f621afc4",
   "execution_rule": "verification fails unless the declared mutation IDs and executable handler IDs are identical and every mutation is killed by its declared typed condition",
+  "declared_unexecuted": [],
+  "undeclared_executed": [],
   "mutations": [
     {"mutation_id": "malformed-item-record", "expected_condition": "PreauthorshipSchemaViolation"},
     {"mutation_id": "malformed-source-manifest", "expected_condition": "PreauthorshipSchemaViolation"},
@@ -102,6 +104,18 @@
     {"mutation_id": "mutation:pv-02-witness", "expected_condition": "OwnerDecisionForgery"},
     {"mutation_id": "mutation:pv-03-witness", "expected_condition": "PreauthorshipStateViolation"},
     {"mutation_id": "mutation:pv-04-witness", "expected_condition": "KeyAuthorBoundaryViolation"},
-    {"mutation_id": "mutation:pv-05-witness", "expected_condition": "PreauthorshipSchemaViolation"}
+    {"mutation_id": "mutation:pv-05-witness", "expected_condition": "PreauthorshipSchemaViolation"},
+    {"mutation_id": "mutation:r2-pv-02a-duplicate-exposure-class", "expected_condition": "ODR43ExposureClassSetInvalid"},
+    {"mutation_id": "mutation:r2-pv-02a-missing-item-specific-answer", "expected_condition": "ODR43ExposureClassSetInvalid"},
+    {"mutation_id": "mutation:r2-pv-02a-missing-private-key", "expected_condition": "ODR43ExposureClassSetInvalid"},
+    {"mutation_id": "mutation:r2-pv-02a-missing-target-output", "expected_condition": "ODR43ExposureClassSetInvalid"},
+    {"mutation_id": "mutation:r2-pv-03a-missing-freezer-dossier", "expected_condition": "FreezerDossierReferenceInvalid"},
+    {"mutation_id": "mutation:r2-pv-03a-dangling-freezer-dossier-reference", "expected_condition": "FreezerDossierReferenceInvalid"},
+    {"mutation_id": "mutation:r2-pv-03a-wrong-freezer-dossier-digest", "expected_condition": "FreezerDossierReferenceInvalid"},
+    {"mutation_id": "mutation:r2-pv-03a-dossier-for-different-item", "expected_condition": "FreezerDossierReferenceInvalid"},
+    {"mutation_id": "mutation:r2-pv-03a-dossier-version-mismatch", "expected_condition": "FreezerDossierReferenceInvalid"},
+    {"mutation_id": "mutation:r2-pv-03a-wrong-record-kind", "expected_condition": "FreezerDossierReferenceInvalid"},
+    {"mutation_id": "mutation:r2-pv-03a-inconsistent-source-parent", "expected_condition": "FreezerDossierReferenceInvalid"},
+    {"mutation_id": "mutation:r2-pv-03a-inconsistent-rendering-parent", "expected_condition": "FreezerDossierReferenceInvalid"}
   ]
 }

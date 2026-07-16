@@ -22,6 +22,7 @@ from conditions import (
     DuplicateDraftId,
     ExcludedFixtureDerivative,
     ExpectedAnswerLeak,
+    FreezerDossierReferenceInvalid,
     ImmutableSuccessorViolation,
     KeyAuthorBoundaryViolation,
     LineageChronologyViolation,
@@ -29,6 +30,7 @@ from conditions import (
     MovingBankHandoff,
     MutableFilenameIdentity,
     MutationNotExercised,
+    ODR43ExposureClassSetInvalid,
     OwnerDecisionForgery,
     OwnerDecisionUnresolved,
     ParentDigestMismatch,
@@ -61,7 +63,9 @@ CONSTRUCT_SPECIMEN_TAINT_ID = "taint:anti-taxidermy-construct-specimens-v1"
 CURRENT_TRANCHE_MAX_STATE = "candidate"
 GOLDEN_VECTOR_PATH = PACKET_ROOT / "controls/canonicalization-golden/GOLDEN-VECTOR.json"
 COMMISSION_BASIS_DIGEST = "sha256:ef5366139065c741d9ee4d7bcc02fd426a1cdae7abb7d2fd61b4d27abc0981fa"
-PREDECESSOR_MUTATION_REGISTRY_SHA256 = "a9c0e2e3dab5caa324272b2bf9201933537f075d68a77d248f45f9e510f2cd91"
+PREDECESSOR_MUTATION_REGISTRY_SHA256 = "df60bd4e9598d3b54d408cba7940573c92373bf583bde9c1ba677700f621afc4"
+OWNER_REVERIFICATION_SHA256 = "4bff9ee0e00908e6e93694751256480ed6db09975431fd66053afa2c70d1211c"
+OWNER_REVERIFICATION_BYTES = 16003
 OWNER_PREDECESSOR_DIGESTS = {
     "ODR-43": "sha256:e7e41314f5e05e67bf80477c6e37e5a7d4844c865ceed5c0b5cea7a0fb8edce9",
     "ODR-60": "sha256:6b6d4747339682257923b03898b4bbea24d6d9368869d45a7010cdceeacbce33",
@@ -366,7 +370,37 @@ def _rendering_set_digest(renderings):
     return "sha256:" + sha256_bytes(canonical_json_bytes(sorted(record["record_digest"] for record in renderings)))
 
 
+def validate_freezer_dossier_reference(decision, index):
+    try:
+        item = resolve_ref(decision["item"], index, "lae-item-record/1.0.0")
+        dossier = resolve_ref(decision["dossier"], index, "lae-item-freezer-dossier/1.0.0")
+        source = resolve_ref(dossier["source_manifest"], index, "lae-source-packet-manifest/1.0.0")
+        renderings = [resolve_ref(reference, index, "lae-arm-rendering/1.0.0") for reference in item["renderings"]]
+    except (KeyError, PilotError) as exc:
+        detail = exc.detail if isinstance(exc, PilotError) else str(exc)
+        raise FreezerDossierReferenceInvalid(detail) from exc
+    expected_item = _ref(item)
+    if dossier["item"] != expected_item:
+        raise FreezerDossierReferenceInvalid(f"item record: {dossier['record_id']}")
+    if dossier["item_id"] != item["item_id"] or dossier["item_task_sha256"] != item["task_bytes"]["sha256"]:
+        raise FreezerDossierReferenceInvalid(f"item identity: {dossier['record_id']}")
+    if dossier["item_state_version"] != item["state_version"] or dossier["item_state"] != _state_of(item):
+        raise FreezerDossierReferenceInvalid(f"item version: {dossier['record_id']}")
+    if dossier["source_manifest"] != item["source_packet"] or source["record_digest"] != item["source_packet"]["record_digest"]:
+        raise FreezerDossierReferenceInvalid(f"source parent: {dossier['record_id']}")
+    if dossier["rendering_set_digest"] != _rendering_set_digest(renderings):
+        raise FreezerDossierReferenceInvalid(f"rendering parent: {dossier['record_id']}")
+    if dossier["visibility"] != "freezer-only":
+        raise FreezerDossierReferenceInvalid(f"visibility: {dossier['record_id']}")
+    return {"item": item, "dossier": dossier, "source": source, "renderings": renderings}
+
+
 def validate_state_transition_graph(records, index):
+    decision_contexts = {
+        decision["record_digest"]: validate_freezer_dossier_reference(decision, index)
+        for decision in records
+        if decision["schema_version"] == "lae-freezer-decision-record/1.0.0"
+    }
     transitions = [record for record in records if record["schema_version"] == "lae-state-transition-record/1.0.0"]
     for transition in transitions:
         predecessor_item = resolve_ref(transition["predecessor_item"], index, "lae-item-record/1.0.0")
@@ -374,6 +408,7 @@ def validate_state_transition_graph(records, index):
         predecessor_renderings = [resolve_ref(ref, index, "lae-arm-rendering/1.0.0") for ref in transition["predecessor_renderings"]]
         predecessor_components = [resolve_ref(ref, index, "lae-source-component/1.0.0") for ref in transition["predecessor_source_components"]]
         decision = resolve_ref(transition["freezer_decision"], index, "lae-freezer-decision-record/1.0.0")
+        decision_context = decision_contexts[decision["record_digest"]]
         authority = resolve_ref(transition["freezer_authority"], index, "lae-handoff-public-artifact/1.0.0")
         expected_phase = "candidate-acceptance" if transition["resulting_state"] == "freezer-accepted" else "final-freeze"
         if transition["transition_kind"] != f"{transition['predecessor_state']}-to-{transition['resulting_state']}":
@@ -382,8 +417,12 @@ def validate_state_transition_graph(records, index):
             raise PreauthorshipStateViolation(f"decision phase: {transition['transition_id']}")
         if decision["decision"] != "accepted" or decision["resulting_state"] != transition["resulting_state"]:
             raise PreauthorshipStateViolation(f"decision result: {transition['transition_id']}")
-        if resolve_ref(decision["item"], index)["record_digest"] != predecessor_item["record_digest"]:
+        if decision_context["item"]["record_digest"] != predecessor_item["record_digest"]:
             raise ParentDigestMismatch(f"decision item: {transition['transition_id']}")
+        if decision_context["source"]["record_digest"] != predecessor_source["record_digest"]:
+            raise FreezerDossierReferenceInvalid(f"transition source: {transition['transition_id']}")
+        if {record["record_digest"] for record in decision_context["renderings"]} != {record["record_digest"] for record in predecessor_renderings}:
+            raise FreezerDossierReferenceInvalid(f"transition renderings: {transition['transition_id']}")
         if resolve_ref(decision["reviewer_authority"], index)["record_digest"] != authority["record_digest"]:
             raise PreauthorshipStateViolation(f"decision authority: {transition['transition_id']}")
         if authority["handoff_artifact_kind"] != "authority-identity" or authority.get("represented_actor_id") != transition["freezer_actor_id"]:
@@ -771,7 +810,17 @@ def validate_odr60_allocation(decision):
     return {"total_item_slots": len(rows), "family_counts": family_counts, "role_counts": role_counts, "tag_counts": tag_counts}
 
 
+def validate_odr43_exposure_class_set(decision):
+    expected = {"item-specific-answer", "private-key", "target-output"}
+    declarations = decision.get("exposure_declarations", [])
+    observed = [declaration.get("exposure_class") for declaration in declarations]
+    if len(observed) != 3 or len(set(observed)) != 3 or set(observed) != expected:
+        raise ODR43ExposureClassSetInvalid(f"observed={observed}")
+    return expected
+
+
 def validate_odr43_graph(decision, lineage_events):
+    validate_odr43_exposure_class_set(decision)
     by_digest = {event["record_digest"]: event for event in lineage_events}
     actors = {event["subject_id"] for event in lineage_events if event["event_type"] == "actor"}
     referenced_actors = {decision["owner_actor_id"], decision["freezer_overlap_auditor_actor_id"], *decision["item_author_actor_ids"]}
@@ -785,6 +834,12 @@ def validate_odr43_graph(decision, lineage_events):
         event = by_digest.get(exposure["exposure_event_digest"])
         if event is None or event["event_type"] != "prior-exposure" or event["actor_id"] != exposure["actor_id"]:
             raise OwnerDecisionForgery("ODR-43 exposure reference closure")
+        exposure_claims = [
+            claim for claim in event["claims"]
+            if claim["dimension"] == "exposure-class" and claim["value"] == exposure["exposure_class"]
+        ]
+        if event["action"] != "exposure-declared" or event["standing"] not in {"observed", "declared", "self-report", "imported-reviewed-evidence"} or not exposure_claims:
+            raise OwnerDecisionForgery("ODR-43 exposure event semantic closure")
     for restriction in decision["role_specific_restrictions"]:
         referenced_actors.add(restriction["actor_id"])
     if not referenced_actors.issubset(actors):
@@ -808,6 +863,8 @@ def validate_owner_records(records, require_adopted=False, lineage_events=None):
             raise OwnerDecisionForgery(record.get("decision_id", "missing"))
         if record.get("complete") is True or record.get("resolved") is True:
             raise OwnerDecisionForgery(record.get("decision_id", "missing"))
+        if record.get("status") == "adopted" and record.get("decision_id") == "ODR-43" and isinstance(record.get("exact_decision"), dict):
+            validate_odr43_exposure_class_set(record["exact_decision"])
         validate_record(record, "owner-decision-record", verify_bound_bytes=False)
         if record["decision_id"] not in grouped:
             raise OwnerDecisionForgery(record["decision_id"])
@@ -1092,6 +1149,29 @@ def _find_state(records, version, state):
     return next(record for record in records if record["schema_version"] == version and _state_of(record) == state)
 
 
+def _synthetic_freezer_dossier(item, source, renderings, record_id):
+    return _base(
+        "lae-item-freezer-dossier/1.0.0", record_id,
+        visibility="freezer-only", item=_ref(item), item_id=item["item_id"],
+        item_task_sha256=item["task_bytes"]["sha256"], item_state_version=item["state_version"],
+        source_manifest=_ref(source), rendering_set_digest=_rendering_set_digest(renderings),
+        dossier_bytes=_binding("dossier.txt", "artifact:synthetic-dossier", "dossier"),
+        proposed_role_memberships=["positive-conclusion", "closed-class-trap"],
+        expected_answer_artifacts=[_binding("witness.txt", "artifact:synthetic-expected-answer", "witness")],
+        proposed_opportunity_ids=["opportunity:synthetic-one"], proposed_trap_classes=["unsupported-assertion"],
+        catchability_witness_ids=["witness:synthetic-one"],
+        lawful_and_failing_examples=[
+            _binding("witness.txt", "artifact:synthetic-lawful-example", "lawful-example"),
+            _binding("witness.txt", "artifact:synthetic-failing-example", "failing-example"),
+        ],
+        ancestry_deliberation=item["ancestry"], prior_exposure_deliberation=item["prior_exposure"],
+        exclusion_and_overlap_deliberations=[
+            item["exclusion_receipt"], item["lexical_collision_receipt"], item["semantic_overlap_receipt"],
+        ],
+        item_state=_state_of(item),
+    )
+
+
 def _append_synthetic_transition(records, resulting_state):
     predecessor_state = "candidate" if resulting_state == "freezer-accepted" else "freezer-accepted"
     predecessor_item = _find_state(records, "lae-item-record/1.0.0", predecessor_state)
@@ -1099,9 +1179,15 @@ def _append_synthetic_transition(records, resulting_state):
     predecessor_rendering = _find_state(records, "lae-arm-rendering/1.0.0", predecessor_state)
     predecessor_component = _find_state(records, "lae-source-component/1.0.0", predecessor_state)
     authority = _find(records, "lae-handoff-public-artifact/1.0.0")
-    dossier = next((record for record in records if record["schema_version"] == "lae-item-freezer-dossier/1.0.0"), None)
+    dossier = next((
+        record for record in records
+        if record["schema_version"] == "lae-item-freezer-dossier/1.0.0" and record.get("item") == _ref(predecessor_item)
+    ), None)
     if dossier is None:
-        dossier = synthetic_private_records()[0]
+        dossier = _synthetic_freezer_dossier(
+            predecessor_item, predecessor_source, [predecessor_rendering],
+            f"dossier:synthetic-one-state-v{predecessor_item['state_version']}",
+        )
         records.append(dossier)
     phase = "candidate-acceptance" if resulting_state == "freezer-accepted" else "final-freeze"
     next_version = predecessor_item["state_version"] + 1
@@ -1168,25 +1254,9 @@ def synthetic_private_records():
     records = synthetic_record_graph()
     item = records[-1]
     component = _find(records, "lae-source-component/1.0.0")
-    ancestry = _find(records, "lae-ancestry-declaration/1.0.0")
-    exposure = _find(records, "lae-prior-exposure-declaration/1.0.0")
-    lexical = _find(records, "lae-lexical-collision-receipt/1.0.0")
-    semantic = _find(records, "lae-semantic-overlap-receipt/1.0.0")
-    dossier = _base(
-        "lae-item-freezer-dossier/1.0.0", "dossier:synthetic-one",
-        visibility="freezer-only", item_id=item["item_id"], item_task_sha256=item["task_bytes"]["sha256"],
-        dossier_bytes=_binding("dossier.txt", "artifact:synthetic-dossier", "dossier"),
-        proposed_role_memberships=["positive-conclusion", "closed-class-trap"],
-        expected_answer_artifacts=[_binding("witness.txt", "artifact:synthetic-expected-answer", "witness")],
-        proposed_opportunity_ids=["opportunity:synthetic-one"], proposed_trap_classes=["unsupported-assertion"],
-        catchability_witness_ids=["witness:synthetic-one"],
-        lawful_and_failing_examples=[
-            _binding("witness.txt", "artifact:synthetic-lawful-example", "lawful-example"),
-            _binding("witness.txt", "artifact:synthetic-failing-example", "failing-example"),
-        ],
-        ancestry_deliberation=_ref(ancestry), prior_exposure_deliberation=_ref(exposure),
-        exclusion_and_overlap_deliberations=[_ref(lexical), _ref(semantic)], draft_state="candidate",
-    )
+    source = _find(records, "lae-source-packet-manifest/1.0.0")
+    rendering = _find(records, "lae-arm-rendering/1.0.0")
+    dossier = _synthetic_freezer_dossier(item, source, [rendering], "dossier:synthetic-one")
     witness = _base(
         "lae-catchability-witness/1.0.0", "witness:synthetic-one",
         visibility="freezer-only", item_id=item["item_id"], item_task_sha256=item["task_bytes"]["sha256"],
@@ -1723,13 +1793,76 @@ def _mutation_handlers():
         records, events, successor = owner_successor("ODR-43")
         mutator(successor["exact_decision"])
         event_index = next(index for index, event in enumerate(events) if event["record_digest"] == successor["adoption_event_digest"])
-        event = events[event_index]
+        event = copy.deepcopy(events[event_index])
         event["decision_payload_digest"] = "sha256:" + sha256_bytes(canonical_json_bytes(successor["exact_decision"]))
-        events[event_index] = _reseal(event)
-        successor["adoption_event_digest"] = events[event_index]["record_digest"]
-        successor = _reseal(successor)
-        records = [successor if record["decision_id"] == "ODR-43" and record["status"] == "adopted" else record for record in records]
-        validate_owner_records(records, lineage_events=events)
+        for index in range(event_index, len(events)):
+            current = event if index == event_index else copy.deepcopy(events[index])
+            current["predecessor_digest"] = events[index - 1]["record_digest"]
+            events[index] = _reseal(current)
+        successors = {
+            record["decision_id"]: record
+            for record in records
+            if record["status"] == "adopted"
+        }
+        successors["ODR-43"] = successor
+        for decision_id, adopted in successors.items():
+            adopted["adoption_event_digest"] = next(
+                candidate["record_digest"]
+                for candidate in events
+                if candidate["event_id"] == f"event:owner-adoption-{decision_id.lower()}"
+            )
+            successors[decision_id] = _reseal(adopted)
+        records = [
+            successors[record["decision_id"]]
+            if record["status"] == "adopted" else record
+            for record in records
+        ]
+        drafting_gate(records, events)
+
+    def duplicate_exposure_class():
+        mutate_odr43_payload(lambda decision: decision.update(
+            exposure_declarations=[copy.deepcopy(decision["exposure_declarations"][0]) for _ in range(3)]
+        ))
+
+    def missing_exposure_class(exposure_class):
+        def mutate(decision):
+            remaining = [copy.deepcopy(row) for row in decision["exposure_declarations"] if row["exposure_class"] != exposure_class]
+            decision["exposure_declarations"] = [*remaining, copy.deepcopy(remaining[0])]
+        mutate_odr43_payload(mutate)
+
+    def dossier_graph():
+        records = synthetic_record_graph(state="freezer-accepted")
+        decision = next(
+            record for record in records
+            if record["schema_version"] == "lae-freezer-decision-record/1.0.0" and record["decision"] == "accepted"
+        )
+        index = _reference_index(records)
+        dossier = resolve_ref(decision["dossier"], index, "lae-item-freezer-dossier/1.0.0")
+        return records, decision, dossier, index
+
+    def missing_freezer_dossier():
+        records, _, _, _ = dossier_graph()
+        validate_record_graph(
+            [record for record in records if record["schema_version"] != "lae-item-freezer-dossier/1.0.0"],
+            allow_synthetic=True,
+        )
+
+    def invalid_dossier_reference(mutator):
+        _, decision, _, index = dossier_graph()
+        decision = copy.deepcopy(decision)
+        mutator(decision, index)
+        validate_freezer_dossier_reference(decision, index)
+
+    def mutated_dossier(mutator):
+        records, decision, dossier, _ = dossier_graph()
+        dossier = copy.deepcopy(dossier)
+        mutator(dossier, records)
+        dossier = _reseal(dossier)
+        validate_record(dossier)
+        records = [dossier if record["record_id"] == dossier["record_id"] else record for record in records]
+        decision = copy.deepcopy(decision)
+        decision["dossier"] = _ref(dossier)
+        validate_freezer_dossier_reference(decision, _reference_index(records))
 
     def terminal_item(state):
         records = synthetic_record_graph(state=state)
@@ -1899,6 +2032,43 @@ def _mutation_handlers():
         "mutation:pv-03-witness": illicit_state_promotion,
         "mutation:pv-04-witness": lambda: key_omit("frozen-rendering"),
         "mutation:pv-05-witness": lambda: mutate_transmission(lambda value: value.update(artifact_refs=[], basis_event_digests=[], claims=[], input_artifact_digests=[], parent_artifact_digests=[])),
+        "mutation:r2-pv-02a-duplicate-exposure-class": duplicate_exposure_class,
+        "mutation:r2-pv-02a-missing-item-specific-answer": lambda: missing_exposure_class("item-specific-answer"),
+        "mutation:r2-pv-02a-missing-private-key": lambda: missing_exposure_class("private-key"),
+        "mutation:r2-pv-02a-missing-target-output": lambda: missing_exposure_class("target-output"),
+        "mutation:r2-pv-03a-missing-freezer-dossier": missing_freezer_dossier,
+        "mutation:r2-pv-03a-dangling-freezer-dossier-reference": lambda: invalid_dossier_reference(
+            lambda decision, _index: decision.update(dossier={
+                "schema_version": "lae-item-freezer-dossier/1.0.0",
+                "record_id": "dossier:missing",
+                "record_digest": "sha256:" + "0" * 64,
+            })
+        ),
+        "mutation:r2-pv-03a-wrong-freezer-dossier-digest": lambda: invalid_dossier_reference(
+            lambda decision, _index: decision["dossier"].update(record_digest="sha256:" + "0" * 64)
+        ),
+        "mutation:r2-pv-03a-dossier-for-different-item": lambda: mutated_dossier(
+            lambda dossier, _records: dossier.update(item_id="item:synthetic-different")
+        ),
+        "mutation:r2-pv-03a-dossier-version-mismatch": lambda: mutated_dossier(
+            lambda dossier, _records: dossier.update(item_state_version=dossier["item_state_version"] + 1)
+        ),
+        "mutation:r2-pv-03a-wrong-record-kind": lambda: invalid_dossier_reference(
+            lambda decision, index: decision.update(dossier=_ref(next(
+                record for record in index.values()
+                if record["schema_version"] == "lae-handoff-public-artifact/1.0.0"
+            )))
+        ),
+        "mutation:r2-pv-03a-inconsistent-source-parent": lambda: mutated_dossier(
+            lambda dossier, records: dossier.update(source_manifest=_ref(next(
+                record for record in records
+                if record["schema_version"] == "lae-source-packet-manifest/1.0.0"
+                and record["record_digest"] != dossier["source_manifest"]["record_digest"]
+            )))
+        ),
+        "mutation:r2-pv-03a-inconsistent-rendering-parent": lambda: mutated_dossier(
+            lambda dossier, _records: dossier.update(rendering_set_digest="sha256:" + "0" * 64)
+        ),
     }
 
 
@@ -1980,11 +2150,21 @@ def execute_mutations(registry=None):
     registry = registry if registry is not None else strict_json_load(MUTATION_REGISTRY_PATH)
     if registry.get("predecessor_registry_sha256") != PREDECESSOR_MUTATION_REGISTRY_SHA256:
         raise MutationNotExercised("predecessor mutation registry identity differs")
+    if registry.get("declared_unexecuted") != [] or registry.get("undeclared_executed") != []:
+        raise MutationNotExercised("registry execution-difference fields must exist and be empty")
     declarations = registry.get("mutations", [])
     handlers = _mutation_handlers()
     declared_ids = [entry["mutation_id"] for entry in declarations]
     if len(declared_ids) != len(set(declared_ids)):
         raise MutationNotExercised("duplicate mutation declaration")
+    fixture_paths = sorted((PACKET_ROOT / "controls/preauthorship-regression-fixtures").glob("*.json"))
+    fixture_ids = {strict_json_load(path)["witness_id"] for path in fixture_paths}
+    fixture_registry_ids = {
+        row["witness_id"]
+        for row in strict_json_load(PACKET_ROOT / "preauthorship/registries/escaped-defect-fixtures.json")["fixtures"]
+    }
+    if fixture_ids != fixture_registry_ids or not fixture_ids.issubset(set(declared_ids)):
+        raise MutationNotExercised("mutation fixture declaration/registry closure differs")
     if set(declared_ids) != set(handlers):
         missing = sorted(set(declared_ids) - set(handlers))
         undeclared = sorted(set(handlers) - set(declared_ids))
@@ -2032,13 +2212,36 @@ def verify_commission_inputs():
     return expected
 
 
+def verify_owner_reverification():
+    path = PACKET_ROOT / (
+        "evidence/preauthorship-repair-0.2.1/owner-review/"
+        "LANGUAGE-A-PREAUTHORSHIP-REPAIR-0.2-OWNER-REVERIFICATION.md"
+    )
+    if not path.is_file() or path.stat().st_size != OWNER_REVERIFICATION_BYTES or sha256_file(path) != OWNER_REVERIFICATION_SHA256:
+        raise RecordDigestMismatch("Repair 0.2 owner re-verification identity")
+    return {
+        "path": path.relative_to(PACKET_ROOT).as_posix(),
+        "byte_length": OWNER_REVERIFICATION_BYTES,
+        "sha256": OWNER_REVERIFICATION_SHA256,
+    }
+
+
 def validate_escaped_defect_registry():
     registry = strict_json_load(PACKET_ROOT / "preauthorship/registries/escaped-defect-fixtures.json")
     if registry["commission_basis_sha256"] != COMMISSION_BASIS_DIGEST or registry["standing"] != "permanently-tainted-regression-law":
         raise TaintedAncestry("escaped-defect registry standing")
-    expected_ids = {f"mutation:pv-0{number}-witness" for number in range(1, 6)}
+    expected_ids = {
+        *(f"mutation:pv-0{number}-witness" for number in range(1, 6)),
+        "mutation:r2-pv-02a-duplicate-exposure-class",
+        "mutation:r2-pv-03a-missing-freezer-dossier",
+    }
     if {record["witness_id"] for record in registry["fixtures"]} != expected_ids:
         raise TaintedAncestry("escaped-defect witness IDs")
+    declared_mutations = {
+        record["mutation_id"] for record in strict_json_load(MUTATION_REGISTRY_PATH)["mutations"]
+    }
+    if not expected_ids.issubset(declared_mutations):
+        raise MutationNotExercised("escaped-defect fixture absent from mutation registry")
     for record in registry["fixtures"]:
         path = PACKET_ROOT / record["path"]
         if not path.is_file() or path.stat().st_size != record["byte_length"] or "sha256:" + sha256_file(path) != record["sha256"]:
@@ -2093,6 +2296,7 @@ def verify_all():
 
 def validate_repository_records():
     verify_commission_inputs()
+    verify_owner_reverification()
     validate_canonical_golden_vector()
     validate_escaped_defect_registry()
     verify_authorial_inputs()

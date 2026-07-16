@@ -144,6 +144,35 @@
         "apparatus_read_event_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}, "minItems": 1, "uniqueItems": true},
         "exposure_declarations": {
           "type": "array", "minItems": 3, "maxItems": 3,
+          "allOf": [
+            {
+              "contains": {
+                "type": "object",
+                "properties": {"exposure_class": {"const": "item-specific-answer"}},
+                "required": ["exposure_class"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {"exposure_class": {"const": "private-key"}},
+                "required": ["exposure_class"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {"exposure_class": {"const": "target-output"}},
+                "required": ["exposure_class"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            }
+          ],
           "items": {
             "type": "object",
             "properties": {
@@ -583,8 +612,12 @@
           "properties": {
             "schema_version": {"const": "lae-item-freezer-dossier/1.0.0"},
             "visibility": {"const": "freezer-only"},
+            "item": {"$ref": "#/$defs/version-ref"},
             "item_id": {"$ref": "#/$defs/stable-id"},
             "item_task_sha256": {"$ref": "#/$defs/digest"},
+            "item_state_version": {"type": "integer", "minimum": 1},
+            "source_manifest": {"$ref": "#/$defs/version-ref"},
+            "rendering_set_digest": {"$ref": "#/$defs/digest"},
             "dossier_bytes": {"$ref": "#/$defs/byte-binding"},
             "proposed_role_memberships": {"type": "array", "items": {"enum": ["positive-conclusion", "deliberate-insufficiency", "closed-class-trap"]}, "uniqueItems": true},
             "expected_answer_artifacts": {"type": "array", "items": {"$ref": "#/$defs/byte-binding"}},
@@ -595,13 +628,14 @@
             "ancestry_deliberation": {"$ref": "#/$defs/version-ref"},
             "prior_exposure_deliberation": {"$ref": "#/$defs/version-ref"},
             "exclusion_and_overlap_deliberations": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}},
-            "draft_state": {"enum": ["draft", "candidate"]}
+            "item_state": {"enum": ["draft", "candidate", "freezer-accepted"]}
           },
           "required": [
-            "visibility", "item_id", "item_task_sha256", "dossier_bytes", "proposed_role_memberships",
+            "visibility", "item", "item_id", "item_task_sha256", "item_state_version",
+            "source_manifest", "rendering_set_digest", "dossier_bytes", "proposed_role_memberships",
             "expected_answer_artifacts", "proposed_opportunity_ids", "proposed_trap_classes",
             "catchability_witness_ids", "lawful_and_failing_examples", "ancestry_deliberation",
-            "prior_exposure_deliberation", "exclusion_and_overlap_deliberations", "draft_state"
+            "prior_exposure_deliberation", "exclusion_and_overlap_deliberations", "item_state"
           ]
         }
       ],

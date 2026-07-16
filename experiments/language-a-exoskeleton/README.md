@@ -4,6 +4,8 @@ Summary: This frozen pilot-scale construction packet concerns first-pass emissio
 
 This directory is a network-off-by-default framework, not a frozen real experiment and not authorization to fire. It contains no real item, score key, provider route, model release, price table, person assignment, credential, target output, empirical score, or pilot verdict. The only provider implementation is deterministic and synthetic-only.
 
+Repair 0.2.1 keeps both owner decisions unresolved. A future ODR-43 successor must declare exactly one exposure row for each of `item-specific-answer`, `private-key`, and `target-output`; three duplicate rows do not close the gate. Every freezer decision's dossier reference must resolve to an exact, freezer-only `lae-item-freezer-dossier/1.0.0` record bound to the same item version, source manifest, and rendering set. The dossier remains excluded from `KEY-AUTHOR-INPUT`.
+
 The proposed design is declarative in `items/design/design.json`. Running `python3 harness/design.py` regenerates the schedule and count census. A permitted pre-exposure design change under Errata 0.1 must change that one record and regenerate all dependent artifacts before a new manifest is built.
 
 Local construction verification:
