@@ -83,3 +83,28 @@ RendererContractViolation = _condition("RendererContractViolation")
 RequestCustodyViolation = _condition("RequestCustodyViolation")
 AuthorityBoundaryViolation = _condition("AuthorityBoundaryViolation")
 TrancheBMutationNotExercised = _condition("TrancheBMutationNotExercised")
+
+# TB-R1 request-path and replay-custody conditions.  These refine the existing
+# RequestCustodyViolation contract so inherited callers that catch the broader
+# condition remain compatible while successor evidence can name the exact
+# failed binding.
+ScheduleRowDigestMismatch = type(
+    "ScheduleRowDigestMismatch", (RequestCustodyViolation,),
+    {"condition": "ScheduleRowDigestMismatch"},
+)
+SchedulePopulationMismatch = type(
+    "SchedulePopulationMismatch", (RequestCustodyViolation,),
+    {"condition": "SchedulePopulationMismatch"},
+)
+ScheduleParentBindingMismatch = type(
+    "ScheduleParentBindingMismatch", (RequestCustodyViolation,),
+    {"condition": "ScheduleParentBindingMismatch"},
+)
+RequestParentBindingMismatch = type(
+    "RequestParentBindingMismatch", (RequestCustodyViolation,),
+    {"condition": "RequestParentBindingMismatch"},
+)
+RunParentBindingMismatch = type(
+    "RunParentBindingMismatch", (RequestCustodyViolation,),
+    {"condition": "RunParentBindingMismatch"},
+)

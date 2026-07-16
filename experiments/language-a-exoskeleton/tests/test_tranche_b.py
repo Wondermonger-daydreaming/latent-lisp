@@ -1,8 +1,10 @@
+import copy
 import inspect
 import json
 import sys
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,7 +12,10 @@ HARNESS = ROOT / "harness"
 sys.path.insert(0, str(HARNESS))
 
 import tranche_b
-from conditions import AuthorityBoundaryViolation, TargetVisibilityViolation
+from conditions import (
+    AuthorityBoundaryViolation, RequestParentBindingMismatch,
+    ScheduleRowDigestMismatch, TargetVisibilityViolation,
+)
 
 
 class TrancheBTests(unittest.TestCase):
@@ -98,9 +103,58 @@ class TrancheBTests(unittest.TestCase):
     def test_declared_mutations_are_complete_and_killed(self):
         results = tranche_b.execute_mutations()
         registry = tranche_b.strict_json_load(tranche_b.MUTATION_REGISTRY_PATH)
-        self.assertEqual(38, len(results))
+        self.assertEqual(56, len(results))
         self.assertEqual(len(registry["mutations"]), len(results))
         self.assertTrue(all(row["executed"] and row["killed"] for row in results))
+        self.assertEqual([], registry["declared_unexecuted"])
+        self.assertEqual([], registry["undeclared_executed"])
+
+    def test_runtime_rejects_stale_and_swapped_rows_before_first_emission(self):
+        stale = copy.deepcopy(self.schedule)
+        stale[0]["schedule_row_sha256"] = "0" * 64
+        swapped = copy.deepcopy(self.schedule)
+        identity_fields = ("call_id", "schedule_index", "schedule_row_sha256")
+        first_identity = {field: swapped[0][field] for field in identity_fields}
+        second_identity = {field: swapped[1][field] for field in identity_fields}
+        swapped[0], swapped[1] = copy.deepcopy(swapped[1]), copy.deepcopy(swapped[0])
+        swapped[0].update(first_identity)
+        swapped[1].update(second_identity)
+        original_runtime_jsonl = tranche_b.runtime_jsonl
+        for label, mutated in (("stale", stale), ("swapped", swapped)):
+            with self.subTest(label=label):
+                def runtime_jsonl(boundary, path):
+                    if path == tranche_b.SCHEDULE_PATH:
+                        return mutated
+                    return original_runtime_jsonl(boundary, path)
+
+                provider = tranche_b.NetworkOffProvider()
+                provider.emissions = 0
+                original_emit = provider.emit
+
+                def emit(*args, **kwargs):
+                    provider.emissions += 1
+                    return original_emit(*args, **kwargs)
+
+                provider.emit = emit
+                with tempfile.TemporaryDirectory(prefix="lae-tb-r1-pre-emission-") as temporary:
+                    output = Path(temporary) / "run"
+                    with mock.patch.object(tranche_b, "runtime_jsonl", side_effect=runtime_jsonl):
+                        with self.assertRaises(ScheduleRowDigestMismatch):
+                            tranche_b.execute_network_off(output, provider=provider)
+                    self.assertEqual([], list(output.rglob("*")))
+                self.assertEqual(0, provider.emissions)
+
+    def test_replay_rejects_internally_valid_payload_record_with_stale_parent(self):
+        with tempfile.TemporaryDirectory(prefix="lae-tb-r1-replay-parent-") as temporary:
+            run = Path(temporary) / "run"
+            census, _ = tranche_b.execute_network_off(run)
+            call_id = census["records"][0]["call_id"]
+            path = run / f"rendered/{call_id}.json"
+            record = tranche_b.strict_json_load(path)
+            record["item_version"] = "stale-authoritative-parent-version"
+            tranche_b.write_bytes(path, tranche_b.canonical_json_bytes(record))
+            with self.assertRaises(RequestParentBindingMismatch):
+                tranche_b.validate_run_output(run)
 
     def test_two_clean_network_off_runs_are_byte_identical(self):
         result = tranche_b.run_two_clean_replays()

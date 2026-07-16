@@ -15,8 +15,9 @@ from tranche_b import (
     EXPECTED_BASE_TREE, FREEZER_ROOT, HIDDEN_PATH, ITEM_RECORDS_PATH,
     OBLIGATIONS_PATH, OWNER_ACCEPTANCE_PATH, PACKET_ROOT, SCHEDULE_PATH,
     SOURCE_MANIFESTS_PATH, TARGET_PATH, TEMPLATE_MANIFEST_PATH, TEMPLATE_ROOT,
-    byte_object, line_sha256, odr60_rows, schedule_material, source_packet_bytes,
-    target_surface_bytes, validate_byte_object, validate_schema,
+    authoritative_schedule_rows, byte_object, line_sha256, load_public_bank,
+    odr60_rows, source_packet_bytes, target_surface_bytes, validate_byte_object,
+    validate_schema,
 )
 from util import REPO_ROOT, canonical_json_bytes, jsonl_bytes, sha256_bytes, sha256_file, write_bytes
 
@@ -423,38 +424,6 @@ def template_manifest():
     return record
 
 
-def build_schedule(targets, hidden, obligations, templates):
-    target_map = {row["item_id"]: row for row in targets}
-    metadata_map = {row["item_id"]: row for row in hidden}
-    obligation_map = {row["item_id"]: row for row in obligations}
-    template_map = {row["arm"]: row for row in templates["templates"]}
-    rows = []
-    for item_id in target_map:
-        for subject in ("SYNTHETIC-SUBJECT-1", "SYNTHETIC-SUBJECT-2", "SYNTHETIC-SUBJECT-3"):
-            for arm in ("NL", "PERSONA", "SCAFFOLD", "LANG-A"):
-                rows.append((item_id, subject, arm))
-            if "SHAM-DESIGNATED" in metadata_map[item_id]["tags"]:
-                rows.append((item_id, subject, "SHAM"))
-    seed = hashlib.sha256(b"LAE-TRANCHE-B-CANDIDATE-SCHEDULE-v1").hexdigest()
-    import random
-    random.Random(int(seed, 16)).shuffle(rows)
-    schedule = []
-    for index, (item_id, subject, arm) in enumerate(rows, 1):
-        row = {
-            "schema_version": "lae-tranche-b-schedule-row/1.0.0", "schedule_index": index,
-            "call_id": f"TRANCHE-B-CALL-{index:06d}", "item_id": item_id, "subject_slot": subject,
-            "arm": arm, "schedule_state": "fixed-candidate-network-off-only",
-            "target_surface_sha256": target_map[item_id]["target_surface_sha256"],
-            "source_packet_sha256": target_map[item_id]["source_packet_sha256"],
-            "template_sha256": template_map[arm]["sha256"], "wrapper_sha256": templates["wrapper"]["sha256"],
-            "rendering_obligation_sha256": line_sha256(obligation_map[item_id]),
-        }
-        row["schedule_row_sha256"] = sha256_bytes(canonical_json_bytes(schedule_material(row)))
-        validate_schema("schedule-row", row)
-        schedule.append(row)
-    return schedule
-
-
 def build(input_dir, owner_private_output_dir, archive=None, sidecar=None):
     input_dir = Path(input_dir)
     manifest = verify_inputs(input_dir, archive, sidecar)
@@ -556,25 +525,29 @@ def build(input_dir, owner_private_output_dir, archive=None, sidecar=None):
     derived_totals = {key: dict(sorted(value.items())) for key, value in derived_totals.items()}
 
     template_record = template_manifest()
-    schedule = build_schedule(targets, hidden, obligations, template_record)
     outputs = {
         TARGET_PATH: jsonl_bytes(targets), HIDDEN_PATH: jsonl_bytes(hidden), OBLIGATIONS_PATH: jsonl_bytes(obligations),
         SOURCE_MANIFESTS_PATH: jsonl_bytes(source_manifests), ANCESTRY_PATH: jsonl_bytes(ancestry), ITEM_RECORDS_PATH: jsonl_bytes(items),
         OWNER_ACCEPTANCE_PATH: canonical_json_bytes(owner), DOSSIER_IDENTITIES_PATH: identities_bytes,
         DOSSIER_MANIFEST_PATH: canonical_json_bytes(dossier_manifest),
-        TEMPLATE_MANIFEST_PATH: canonical_json_bytes(template_record), SCHEDULE_PATH: jsonl_bytes(schedule),
+        TEMPLATE_MANIFEST_PATH: canonical_json_bytes(template_record),
     }
     assert_no_private_content_in_repository_outputs(outputs, [dossier_sources[item_id][0] for item_id in ordered_ids])
-    for path, data in outputs.items(): write_bytes(path, data)
     bank = {
         "schema_version": "lae-candidate-bank-manifest/1.0.0", "state": "candidate-not-frozen",
         "base_commit": EXPECTED_BASE_COMMIT, "base_tree": EXPECTED_BASE_TREE,
         "odr60_record_digest": "sha256:303ec27e744521e6b25ce4c8a671139e21c7a7cd9dbaa902966519af65f279f9",
         "item_count": 24, "item_ids": ordered_ids, "derived_totals": derived_totals,
-        "record_sets": {path.relative_to(PACKET_ROOT).as_posix(): {"bytes": len(data), "sha256": sha256_bytes(data)} for path, data in outputs.items() if path not in {TEMPLATE_MANIFEST_PATH, SCHEDULE_PATH}},
+        "record_sets": {path.relative_to(PACKET_ROOT).as_posix(): {"bytes": len(data), "sha256": sha256_bytes(data)} for path, data in outputs.items() if path != TEMPLATE_MANIFEST_PATH},
         "retired_items_excluded": True, "freeze_authorized": False,
     }
-    validate_schema("bank-manifest", bank); write_bytes(BANK_MANIFEST_PATH, canonical_json_bytes(bank))
+    validate_schema("bank-manifest", bank)
+    for path, data in outputs.items(): write_bytes(path, data)
+    write_bytes(BANK_MANIFEST_PATH, canonical_json_bytes(bank))
+    public_bank = load_public_bank()
+    schedule = authoritative_schedule_rows(public_bank, template_record)
+    for row in schedule: validate_schema("schedule-row", row)
+    write_bytes(SCHEDULE_PATH, jsonl_bytes(schedule))
 
     evidence_root = PACKET_ROOT / "evidence/tranche-b-canonicalization"
     custody = {

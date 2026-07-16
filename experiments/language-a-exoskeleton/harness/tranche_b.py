@@ -29,10 +29,15 @@ from conditions import (
     CanonicalPopulationMismatch,
     RendererContractViolation,
     RequestCustodyViolation,
+    RequestParentBindingMismatch,
+    RunParentBindingMismatch,
+    ScheduleParentBindingMismatch,
+    SchedulePopulationMismatch,
+    ScheduleRowDigestMismatch,
     TargetVisibilityViolation,
     TrancheBMutationNotExercised,
 )
-from util import PACKET_ROOT, canonical_json_bytes, jsonl_bytes, sha256_bytes, sha256_file, write_new_bytes
+from util import PACKET_ROOT, canonical_json_bytes, jsonl_bytes, sha256_bytes, sha256_file, write_bytes, write_new_bytes
 
 
 SCHEMA_PATH = PACKET_ROOT / "schemas/tranche-b.schema.json"
@@ -60,14 +65,21 @@ ODR60_PATH = PACKET_ROOT / "operator/owner-decisions/ODR-60-ADOPTED-v2.json"
 
 EXPECTED_BASE_COMMIT = "b0ba1e99a99ec61e78f49a2f3c8b125adf837205"
 EXPECTED_BASE_TREE = "5c71143f329d76c4ed02fba27cbbb481cc317b62"
+AUTHORITATIVE_BANK_MANIFEST_SHA256 = "f972626419e3a89c2c4aeb76d2b0a2886aa72242dd4d9b7559b2315d119b7483"
+AUTHORITATIVE_TEMPLATE_MANIFEST_SHA256 = "5a8b82e2605979a1bbe0f2f5cdeaad36fa02c577519f63b8118bd8c378a65d8c"
 CORE_ARMS = ("NL", "PERSONA", "SCAFFOLD", "LANG-A")
 ALL_ARMS = CORE_ARMS + ("SHAM",)
 SUBJECT_SLOTS = ("SYNTHETIC-SUBJECT-1", "SYNTHETIC-SUBJECT-2", "SYNTHETIC-SUBJECT-3")
 SOURCE_SEPARATOR = b"\n"
 RENDERER_VERSION = "lae-immutable-renderer/1.0.0"
 FIXED_TIMESTAMP = "2000-01-01T00:00:00+00:00"
-RUNTIME_ALLOWED_READ_ROOTS = (TARGET_PATH.parent.resolve(), TEMPLATE_ROOT.resolve())
-RUNTIME_ALLOWED_READ_FILES = (SCHEMA_PATH.resolve(), TEMPLATE_MANIFEST_PATH.resolve(), SCHEDULE_PATH.resolve())
+RUNTIME_ALLOWED_READ_ROOTS = (
+    TARGET_PATH.parent.resolve(), CONTROL_ROOT.resolve(), TEMPLATE_ROOT.resolve(),
+)
+RUNTIME_ALLOWED_READ_FILES = (
+    SCHEMA_PATH.resolve(), ODR60_PATH.resolve(), TEMPLATE_MANIFEST_PATH.resolve(),
+    SCHEDULE_PATH.resolve(),
+)
 FORBIDDEN_DESTINATIONS = {
     "target-payload", "author-to-author-package", "grader-calibration",
     "runner-visible-record", "KEY-AUTHOR-INPUT",
@@ -101,13 +113,15 @@ def strict_json_bytes(data: bytes, label: str):
         raise CanonicalizationIdentityMismatch(f"{label}: invalid UTF-8 JSON: {exc}") from exc
 
 
-def strict_json_load(path):
-    return strict_json_bytes(Path(path).read_bytes(), str(path))
+def strict_json_load(path, read_bytes=None):
+    reader = read_bytes or (lambda candidate: Path(candidate).read_bytes())
+    return strict_json_bytes(reader(path), str(path))
 
 
-def strict_jsonl_load(path):
+def strict_jsonl_load(path, read_bytes=None):
+    reader = read_bytes or (lambda candidate: Path(candidate).read_bytes())
     rows = []
-    for number, line in enumerate(Path(path).read_bytes().splitlines(keepends=True), 1):
+    for number, line in enumerate(reader(path).splitlines(keepends=True), 1):
         if line.strip():
             rows.append(strict_json_bytes(line, f"{path}:{number}"))
     return rows
@@ -154,8 +168,9 @@ def validate_byte_object(record, label):
     return data
 
 
-def odr60_rows():
-    record = strict_json_load(ODR60_PATH)
+def odr60_rows(root=PACKET_ROOT, read_bytes=None):
+    path = Path(root) / ODR60_PATH.relative_to(PACKET_ROOT)
+    record = strict_json_load(path, read_bytes=read_bytes)
     if record.get("record_digest") != "sha256:303ec27e744521e6b25ce4c8a671139e21c7a7cd9dbaa902966519af65f279f9":
         raise CanonicalizationIdentityMismatch("ODR-60 adopted record identity differs")
     return record["exact_decision"]["item_rows"]
@@ -178,8 +193,8 @@ def _unique_map(rows, key, label):
     return {row[key]: row for row in rows}
 
 
-def validate_population(targets, hidden, obligations, source_manifests, ancestry, items):
-    expected_rows = odr60_rows()
+def validate_population(targets, hidden, obligations, source_manifests, ancestry, items, expected_rows=None):
+    expected_rows = expected_rows or odr60_rows()
     expected_ids = [row["slot_id"] for row in expected_rows]
     collections = {
         "target-visible item": targets, "hidden metadata": hidden,
@@ -324,24 +339,47 @@ def _derived_totals(hidden):
     return {key: dict(sorted(value.items())) for key, value in totals.items()}
 
 
-def load_bank(root=PACKET_ROOT):
+def load_public_bank(root=PACKET_ROOT, read_bytes=None):
+    """Load every public bank parent needed by the request path.
+
+    Freezer-only external identity records are deliberately excluded so a
+    runtime or future live adapter never acquires a freezer-path capability.
+    """
+    root = Path(root)
+    reader = read_bytes or (lambda candidate: Path(candidate).read_bytes())
     paths = {
-        "targets": Path(root) / TARGET_PATH.relative_to(PACKET_ROOT),
-        "hidden": Path(root) / HIDDEN_PATH.relative_to(PACKET_ROOT),
-        "obligations": Path(root) / OBLIGATIONS_PATH.relative_to(PACKET_ROOT),
-        "source_manifests": Path(root) / SOURCE_MANIFESTS_PATH.relative_to(PACKET_ROOT),
-        "ancestry": Path(root) / ANCESTRY_PATH.relative_to(PACKET_ROOT),
-        "items": Path(root) / ITEM_RECORDS_PATH.relative_to(PACKET_ROOT),
+        "targets": root / TARGET_PATH.relative_to(PACKET_ROOT),
+        "hidden": root / HIDDEN_PATH.relative_to(PACKET_ROOT),
+        "obligations": root / OBLIGATIONS_PATH.relative_to(PACKET_ROOT),
+        "source_manifests": root / SOURCE_MANIFESTS_PATH.relative_to(PACKET_ROOT),
+        "ancestry": root / ANCESTRY_PATH.relative_to(PACKET_ROOT),
+        "items": root / ITEM_RECORDS_PATH.relative_to(PACKET_ROOT),
     }
-    data = {name: strict_jsonl_load(path) for name, path in paths.items()}
-    maps = validate_population(**data)
-    owner = strict_json_load(Path(root) / OWNER_ACCEPTANCE_PATH.relative_to(PACKET_ROOT))
-    manifest = strict_json_load(Path(root) / BANK_MANIFEST_PATH.relative_to(PACKET_ROOT))
-    dossier_identities = strict_jsonl_load(Path(root) / DOSSIER_IDENTITIES_PATH.relative_to(PACKET_ROOT))
-    dossier_manifest = strict_json_load(Path(root) / DOSSIER_MANIFEST_PATH.relative_to(PACKET_ROOT))
+    raw_sets = {name: reader(path) for name, path in paths.items()}
+    data = {
+        name: [
+            strict_json_bytes(line, f"{paths[name]}:{number}")
+            for number, line in enumerate(raw.splitlines(keepends=True), 1)
+            if line.strip()
+        ]
+        for name, raw in raw_sets.items()
+    }
+    expected_rows = odr60_rows(root=root, read_bytes=reader)
+    maps = validate_population(**data, expected_rows=expected_rows)
+    owner_path = root / OWNER_ACCEPTANCE_PATH.relative_to(PACKET_ROOT)
+    manifest_path = root / BANK_MANIFEST_PATH.relative_to(PACKET_ROOT)
+    owner_raw = reader(owner_path)
+    manifest_raw = reader(manifest_path)
+    owner = strict_json_bytes(owner_raw, str(owner_path))
+    manifest = strict_json_bytes(manifest_raw, str(manifest_path))
     validate_schema("owner-acceptance", owner)
     validate_schema("bank-manifest", manifest)
-    expected_ids = [row["slot_id"] for row in odr60_rows()]
+    manifest_sha256 = sha256_bytes(manifest_raw)
+    if manifest_sha256 != AUTHORITATIVE_BANK_MANIFEST_SHA256:
+        raise ScheduleParentBindingMismatch(
+            f"candidate bank manifest {manifest_sha256} is not authoritative"
+        )
+    expected_ids = [row["slot_id"] for row in expected_rows]
     if owner["accepted_item_ids"] != expected_ids or manifest["item_ids"] != expected_ids:
         raise CanonicalPopulationMismatch("owner acceptance or bank manifest population differs")
     if manifest["derived_totals"] != _derived_totals(data["hidden"]):
@@ -353,7 +391,18 @@ def load_bank(root=PACKET_ROOT):
     }
     if manifest["derived_totals"] != expected_totals:
         raise CanonicalPopulationMismatch("owner-disposition totals differ")
-    validate_external_dossier_identities(dossier_identities, dossier_manifest, expected_ids)
+    public_record_bytes = {
+        path.relative_to(root).as_posix(): raw_sets[name]
+        for name, path in paths.items()
+    }
+    public_record_bytes[owner_path.relative_to(root).as_posix()] = owner_raw
+    for relative, raw in public_record_bytes.items():
+        declared = manifest["record_sets"].get(relative)
+        observed = {"bytes": len(raw), "sha256": sha256_bytes(raw)}
+        if declared != observed:
+            raise ScheduleParentBindingMismatch(
+                f"candidate bank record-set binding differs: {relative}"
+            )
     for target in data["targets"]:
         item_id = target["item_id"]
         target_bytes = target["task"]["utf8"].encode("utf-8") + source_packet_bytes(target)
@@ -365,15 +414,35 @@ def load_bank(root=PACKET_ROOT):
             raise TargetVisibilityViolation(f"{item_id}: exact hidden byte span leaked")
     return {
         **data, "maps": maps, "owner": owner, "manifest": manifest,
-        "dossier_identities": dossier_identities, "dossier_manifest": dossier_manifest,
+        "manifest_sha256": manifest_sha256,
     }
 
 
-def validate_template_files(root=PACKET_ROOT):
+def load_bank(root=PACKET_ROOT):
     root = Path(root)
+    bank = load_public_bank(root)
+    dossier_identities = strict_jsonl_load(root / DOSSIER_IDENTITIES_PATH.relative_to(PACKET_ROOT))
+    dossier_manifest = strict_json_load(root / DOSSIER_MANIFEST_PATH.relative_to(PACKET_ROOT))
+    expected_ids = [row["slot_id"] for row in odr60_rows(root=root)]
+    validate_external_dossier_identities(dossier_identities, dossier_manifest, expected_ids)
+    return {
+        **bank, "dossier_identities": dossier_identities,
+        "dossier_manifest": dossier_manifest,
+    }
+
+
+def validate_template_files(root=PACKET_ROOT, read_bytes=None):
+    root = Path(root)
+    reader = read_bytes or (lambda candidate: Path(candidate).read_bytes())
     manifest_path = root / TEMPLATE_MANIFEST_PATH.relative_to(PACKET_ROOT)
-    manifest = strict_json_load(manifest_path)
+    manifest_raw = reader(manifest_path)
+    manifest = strict_json_bytes(manifest_raw, str(manifest_path))
     validate_schema("template-manifest", manifest)
+    manifest_sha256 = sha256_bytes(manifest_raw)
+    if manifest_sha256 != AUTHORITATIVE_TEMPLATE_MANIFEST_SHA256:
+        raise ScheduleParentBindingMismatch(
+            f"template manifest {manifest_sha256} is not authoritative"
+        )
     entries = {entry["arm"]: entry for entry in manifest["templates"]}
     if tuple(entries) != ALL_ARMS:
         raise RendererContractViolation("template arm set/order differs")
@@ -382,7 +451,7 @@ def validate_template_files(root=PACKET_ROOT):
     wrapper_entry = manifest["wrapper"]
     for label, entry in [("system", system_entry), ("wrapper", wrapper_entry), *entries.items()]:
         path = root / entry["path"]
-        data = path.read_bytes()
+        data = reader(path)
         if b"\r" in data or not data.endswith(b"\n") or entry.get("bytes") != len(data) or entry.get("sha256") != sha256_bytes(data):
             raise RendererContractViolation(f"{label}: stale template identity")
         files[label] = data
@@ -448,40 +517,112 @@ def schedule_material(row):
     return {key: value for key, value in row.items() if key != "schedule_row_sha256"}
 
 
-def validate_schedule(rows, bank, template_manifest):
-    if len(rows) != 312:
-        raise RequestCustodyViolation(f"schedule count {len(rows)} != 312")
+def schedule_row_sha256(row):
+    """The single canonical schedule-row digest contract used everywhere."""
+    return sha256_bytes(canonical_json_bytes(schedule_material(row)))
+
+
+def ordered_source_component_identities(target):
+    identities = []
+    for source in target["sources"]:
+        identities.append({
+            "kind": "source-component", "component_id": source["component_id"],
+            "ordinal": len(identities) + 1, "sha256": source["content"]["sha256"],
+            "parent_component_id": None,
+        })
+    for view in target["derived_views"]:
+        identities.append({
+            "kind": "derived-view", "component_id": view["view_id"],
+            "ordinal": len(identities) + 1, "sha256": view["content"]["sha256"],
+            "parent_component_id": view["parent_component_id"],
+        })
+    return identities
+
+
+def authoritative_parent_binding(item_id, arm, bank, template_manifest):
+    target = bank["maps"]["target-visible item"][item_id]
+    metadata = bank["maps"]["hidden metadata"][item_id]
+    source_manifest = bank["maps"]["source manifest"][item_id]
+    obligation = bank["maps"]["rendering obligation"][item_id]
+    template = _template_entry_map(template_manifest)[arm]
+    return {
+        "bank_manifest_sha256": bank["manifest_sha256"],
+        "item_version": metadata["source_input"]["accepted_version"],
+        "target_visible_item_sha256": line_sha256(target),
+        "task_sha256": target["task"]["sha256"],
+        "source_packet_manifest_sha256": line_sha256(source_manifest),
+        "source_packet_sha256": target["source_packet_sha256"],
+        "ordered_source_components": ordered_source_component_identities(target),
+        "template_manifest_sha256": AUTHORITATIVE_TEMPLATE_MANIFEST_SHA256,
+        "template_sha256": template["sha256"],
+        "system_sha256": template_manifest["system"]["sha256"],
+        "wrapper_sha256": template_manifest["wrapper"]["sha256"],
+        "rendering_obligation_sha256": line_sha256(obligation),
+        "renderer_version": RENDERER_VERSION,
+    }
+
+
+def authoritative_schedule_rows(bank, template_manifest):
+    """Construct the adopted 312-cell schedule using the sole shared algorithm."""
     target_map = bank["maps"]["target-visible item"]
     metadata_map = bank["maps"]["hidden metadata"]
-    obligation_map = bank["maps"]["rendering obligation"]
-    templates = {entry["arm"]: entry for entry in template_manifest["templates"]}
     cells = []
-    expected_sham = {item_id for item_id, record in metadata_map.items() if "SHAM-DESIGNATED" in record["tags"]}
+    for item_id in target_map:
+        for subject in SUBJECT_SLOTS:
+            for arm in CORE_ARMS:
+                cells.append((item_id, subject, arm))
+            if "SHAM-DESIGNATED" in metadata_map[item_id]["tags"]:
+                cells.append((item_id, subject, "SHAM"))
+    seed = hashlib.sha256(b"LAE-TRANCHE-B-CANDIDATE-SCHEDULE-v1").hexdigest()
+    random.Random(int(seed, 16)).shuffle(cells)
+    rows = []
+    for index, (item_id, subject, arm) in enumerate(cells, 1):
+        target = target_map[item_id]
+        row = {
+            "schema_version": "lae-tranche-b-schedule-row/1.1.0",
+            "schedule_index": index, "call_id": f"TRANCHE-B-CALL-{index:06d}",
+            "item_id": item_id, "subject_slot": subject, "arm": arm,
+            "schedule_state": "fixed-candidate-network-off-only",
+            "target_surface_sha256": target["target_surface_sha256"],
+            **authoritative_parent_binding(item_id, arm, bank, template_manifest),
+        }
+        row["schedule_row_sha256"] = schedule_row_sha256(row)
+        rows.append(row)
+    return rows
+
+
+def validate_schedule(rows, bank, template_manifest):
+    if len(rows) != 312:
+        raise SchedulePopulationMismatch(f"schedule count {len(rows)} != 312")
+    expected_rows = authoritative_schedule_rows(bank, template_manifest)
     for index, row in enumerate(rows, 1):
         try:
             validate_schema("schedule-row", row)
         except CanonicalizationIdentityMismatch as exc:
             raise RequestCustodyViolation(str(exc)) from exc
-        if row["schedule_index"] != index or row["call_id"] != f"TRANCHE-B-CALL-{index:06d}":
-            raise RequestCustodyViolation("schedule index/call identity differs")
-        if row["schedule_row_sha256"] != sha256_bytes(canonical_json_bytes(schedule_material(row))):
-            raise CanonicalizationIdentityMismatch(f"{row['call_id']}: schedule binding digest differs")
-        item_id, arm = row["item_id"], row["arm"]
-        if item_id not in target_map or arm not in ALL_ARMS:
-            raise RequestCustodyViolation(f"{row['call_id']}: unauthorized item or arm")
-        if arm == "SHAM" and item_id not in expected_sham:
-            raise RequestCustodyViolation(f"{row['call_id']}: non-designated decorative cell")
-        target = target_map[item_id]
-        if row["target_surface_sha256"] != target["target_surface_sha256"] or row["source_packet_sha256"] != target["source_packet_sha256"] or row["template_sha256"] != templates[arm]["sha256"] or row["wrapper_sha256"] != template_manifest["wrapper"]["sha256"] or row["rendering_obligation_sha256"] != line_sha256(obligation_map[item_id]):
-            raise RequestCustodyViolation(f"{row['call_id']}: parent rendering identity differs")
-        cells.append((item_id, arm, row["subject_slot"]))
-    if len(cells) != len(set(cells)):
-        raise RequestCustodyViolation("duplicate request cell")
-    expected_cells = {(item_id, arm, subject) for item_id in target_map for subject in SUBJECT_SLOTS for arm in CORE_ARMS}
-    expected_cells |= {(item_id, "SHAM", subject) for item_id in expected_sham for subject in SUBJECT_SLOTS}
-    if set(cells) != expected_cells:
-        missing = len(expected_cells - set(cells)); extra = len(set(cells) - expected_cells)
-        raise RequestCustodyViolation(f"schedule population differs: missing={missing} extra={extra}")
+        recomputed = schedule_row_sha256(row)
+        if row["schedule_row_sha256"] != recomputed:
+            raise ScheduleRowDigestMismatch(
+                f"{row['call_id']}: stored={row['schedule_row_sha256']} recomputed={recomputed}"
+            )
+        expected = expected_rows[index - 1]
+        observed_cell = (
+            row["schedule_index"], row["call_id"], row["item_id"],
+            row["arm"], row["subject_slot"],
+        )
+        expected_cell = (
+            expected["schedule_index"], expected["call_id"], expected["item_id"],
+            expected["arm"], expected["subject_slot"],
+        )
+        if observed_cell != expected_cell:
+            raise SchedulePopulationMismatch(
+                f"schedule cell {index} differs: expected={expected_cell} observed={observed_cell}"
+            )
+        if row != expected:
+            differing = sorted(key for key in expected if row.get(key) != expected[key])
+            raise ScheduleParentBindingMismatch(
+                f"{row['call_id']}: authoritative parents differ: {differing}"
+            )
     return rows
 
 
@@ -536,36 +677,81 @@ def _template_entry_map(manifest):
 
 
 def rendered_payload_record(row, item, payload, manifest, output_relative):
-    template_entry = _template_entry_map(manifest)[row["arm"]]
     return {
-        "schema_version": "lae-rendered-request-payload/1.0.0",
-        "call_id": row["call_id"], "item_id": row["item_id"],
+        "schema_version": "lae-rendered-request-payload/1.1.0",
+        "call_id": row["call_id"], "schedule_index": row["schedule_index"],
+        "schedule_row_sha256": row["schedule_row_sha256"],
+        "item_id": row["item_id"], "item_version": row["item_version"],
+        "subject_slot": row["subject_slot"], "arm": row["arm"],
+        "bank_manifest_sha256": row["bank_manifest_sha256"],
+        "target_visible_item_sha256": row["target_visible_item_sha256"],
         "encoding": "utf-8", "newline": "LF", "payload_path": output_relative,
         "payload_bytes": len(payload), "payload_sha256": sha256_bytes(payload),
-        "task_sha256": item.task_sha256, "source_packet_sha256": item.source_packet_sha256,
-        "template_sha256": template_entry["sha256"], "wrapper_sha256": manifest["wrapper"]["sha256"],
-        "system_sha256": manifest["system"]["sha256"],
+        "task_sha256": row["task_sha256"],
+        "source_packet_manifest_sha256": row["source_packet_manifest_sha256"],
+        "source_packet_sha256": row["source_packet_sha256"],
+        "ordered_source_components": row["ordered_source_components"],
+        "template_manifest_sha256": row["template_manifest_sha256"],
+        "template_sha256": row["template_sha256"],
+        "wrapper_sha256": row["wrapper_sha256"], "system_sha256": row["system_sha256"],
+        "rendering_obligation_sha256": row["rendering_obligation_sha256"],
+        "renderer_version": row["renderer_version"],
         "segment_origins": ["common-system", "selected-template", "common-wrapper", "target-visible-task", "target-visible-source-packet"],
     }
 
 
 def make_envelope(row, payload_record):
     return {
-        "schema_version": "lae-request-metadata-envelope/1.0.0",
+        "schema_version": "lae-request-metadata-envelope/1.1.0",
         "run_id": "LAE-TRANCHE-B-NETWORK-OFF-001", "call_id": row["call_id"],
         "schedule_index": row["schedule_index"], "schedule_row_sha256": row["schedule_row_sha256"],
-        "item_id": row["item_id"], "arm": row["arm"], "subject_slot": row["subject_slot"],
+        "item_id": row["item_id"], "item_version": row["item_version"],
+        "arm": row["arm"], "subject_slot": row["subject_slot"],
+        "bank_manifest_sha256": row["bank_manifest_sha256"],
+        "target_visible_item_sha256": row["target_visible_item_sha256"],
+        "template_manifest_sha256": row["template_manifest_sha256"],
         "provider_id": NetworkOffProvider.provider_id, "model_id_requested": NetworkOffProvider.model_id,
         "parameters": {"network": False, "tools": False, "temperature": 0, "seed": 0},
         "rendering": {
             "version": RENDERER_VERSION, "payload_sha256": payload_record["payload_sha256"],
             "payload_bytes": payload_record["payload_bytes"], "template_sha256": payload_record["template_sha256"],
-            "wrapper_sha256": payload_record["wrapper_sha256"], "task_sha256": payload_record["task_sha256"],
+            "wrapper_sha256": payload_record["wrapper_sha256"], "system_sha256": payload_record["system_sha256"],
+            "task_sha256": payload_record["task_sha256"],
+            "source_packet_manifest_sha256": payload_record["source_packet_manifest_sha256"],
             "source_packet_sha256": payload_record["source_packet_sha256"],
+            "ordered_source_components": payload_record["ordered_source_components"],
             "rendering_obligation_sha256": row["rendering_obligation_sha256"],
         },
         "attempt": 1, "retry_parent": None, "timestamp": FIXED_TIMESTAMP,
     }
+
+
+def validate_request_parents(row, payload, payload_record, envelope):
+    payload_fields = (
+        "call_id", "schedule_index", "schedule_row_sha256", "item_id", "item_version",
+        "subject_slot", "arm", "bank_manifest_sha256", "target_visible_item_sha256",
+        "task_sha256", "source_packet_manifest_sha256", "source_packet_sha256",
+        "ordered_source_components", "template_manifest_sha256", "template_sha256",
+        "wrapper_sha256", "system_sha256", "rendering_obligation_sha256",
+        "renderer_version",
+    )
+    differing = [field for field in payload_fields if payload_record.get(field) != row.get(field)]
+    if payload_record.get("payload_sha256") != sha256_bytes(payload) or payload_record.get("payload_bytes") != len(payload):
+        differing.append("payload_bytes_or_sha256")
+    if differing:
+        raise RequestParentBindingMismatch(
+            f"{row['call_id']}: rendered payload parents differ: {sorted(set(differing))}"
+        )
+    expected_envelope = make_envelope(row, payload_record)
+    if envelope != expected_envelope:
+        differing = sorted(
+            key for key in set(envelope) | set(expected_envelope)
+            if envelope.get(key) != expected_envelope.get(key)
+        )
+        raise RequestParentBindingMismatch(
+            f"{row['call_id']}: request envelope parents differ: {differing}"
+        )
+    return payload_record, envelope
 
 
 def normalize_response(raw_bytes, raw_response_record):
@@ -595,29 +781,23 @@ def execute_network_off(output_dir, provider=None):
         raise AuthorityBoundaryViolation("network-capable provider path denied")
 
     boundary = RuntimeReadBoundary()
-    # The runtime deliberately does not call load_bank(): that control-plane
-    # validator reads hidden records and external dossier identities.
-    target_rows = runtime_jsonl(boundary, TARGET_PATH)
-    target_map = _unique_map(target_rows, "item_id", "runtime target item")
-    for record in target_rows:
-        validate_schema("target-visible-item", record)
+    # Record the schema read in the runtime custody set; schema validation uses
+    # the same immutable repository bytes through the shared cached validator.
+    boundary.read_bytes(SCHEMA_PATH)
+    bank = load_public_bank(read_bytes=boundary.read_bytes)
+    target_map = bank["maps"]["target-visible item"]
     schedule = runtime_jsonl(boundary, SCHEDULE_PATH)
-    manifest = strict_json_bytes(boundary.read_bytes(TEMPLATE_MANIFEST_PATH), str(TEMPLATE_MANIFEST_PATH))
-    validate_schema("template-manifest", manifest)
-    system = boundary.read_bytes(PACKET_ROOT / manifest["system"]["path"])
-    wrapper = boundary.read_bytes(PACKET_ROOT / manifest["wrapper"]["path"])
-    template_entries = _template_entry_map(manifest)
-    templates = {arm: boundary.read_bytes(PACKET_ROOT / entry["path"]) for arm, entry in template_entries.items()}
-
-    if len(schedule) != 312:
-        raise RequestCustodyViolation("runtime schedule is not 312 rows")
+    manifest, template_files = validate_template_files(read_bytes=boundary.read_bytes)
+    system = template_files["system"]
+    wrapper = template_files["wrapper"]
+    templates = {arm: template_files[arm] for arm in ALL_ARMS}
+    # This is the mandatory pre-emission gate.  No payload or envelope exists
+    # before the complete authoritative schedule has passed it.
+    validate_schedule(schedule, bank, manifest)
     records = []
     for row in schedule:
-        validate_schema("schedule-row", row)
         item = TargetVisibleItem.from_record(target_map[row["item_id"]])
         template = templates[row["arm"]]
-        if sha256_bytes(template) != row["template_sha256"] or sha256_bytes(wrapper) != row["wrapper_sha256"]:
-            raise RendererContractViolation(f"{row['call_id']}: runtime template identity differs")
         payload = compose_payload(item, system, template, wrapper)
         payload_rel = f"payloads/{row['call_id']}.bin"
         payload_record_rel = f"rendered/{row['call_id']}.json"
@@ -631,6 +811,7 @@ def execute_network_off(output_dir, provider=None):
         validate_schema("rendered-payload", payload_record)
         envelope = make_envelope(row, payload_record)
         validate_schema("request-envelope", envelope)
+        validate_request_parents(row, payload, payload_record, envelope)
         envelope_bytes = canonical_json_bytes(envelope)
         if sha256_bytes(envelope_bytes) == payload_record["payload_sha256"]:
             raise RequestCustodyViolation("payload digest confused with envelope digest")
@@ -667,12 +848,16 @@ def execute_network_off(output_dir, provider=None):
         _write_record(output / attempt_rel, "attempt", attempt)
         records.append({
             "call_id": row["call_id"], "schedule_index": row["schedule_index"], "item_id": row["item_id"],
-            "arm": row["arm"], "subject_slot": row["subject_slot"], "payload_sha256": sha256_bytes(payload),
+            "schedule_row_sha256": row["schedule_row_sha256"], "item_version": row["item_version"],
+            "arm": row["arm"], "subject_slot": row["subject_slot"],
+            "bank_manifest_sha256": row["bank_manifest_sha256"],
+            "template_manifest_sha256": row["template_manifest_sha256"],
+            "renderer_version": row["renderer_version"], "payload_sha256": sha256_bytes(payload),
             "request_envelope_sha256": sha256_bytes(envelope_bytes), "raw_response_record_sha256": line_sha256(raw_record),
             "normalized_response_record_sha256": line_sha256(normalized), "attempt_record_sha256": line_sha256(attempt),
         })
     census = {
-        "schema_version": "lae-tranche-b-run-census/1.0.0", "complete": True,
+        "schema_version": "lae-tranche-b-run-census/1.1.0", "complete": True,
         "expected": 312, "observed": len(records), "network_calls": 0,
         "network_off_emissions": len(records), "provider_calls": 0, "target_outputs": 0,
         "scoring_runs": 0, "records": records,
@@ -687,24 +872,54 @@ def validate_census(census, schedule):
         validate_schema("census", census)
     except CanonicalizationIdentityMismatch as exc:
         raise RequestCustodyViolation(str(exc)) from exc
-    cells = [(row["item_id"], row["arm"], row["subject_slot"]) for row in census["records"]]
-    if len(cells) != len(set(cells)):
-        raise RequestCustodyViolation("census contains duplicate request cell")
-    expected = [(row["item_id"], row["arm"], row["subject_slot"]) for row in schedule]
-    if cells != expected:
-        raise RequestCustodyViolation("census does not equal fixed schedule")
+    binding_fields = (
+        "call_id", "schedule_index", "schedule_row_sha256", "item_id",
+        "item_version", "arm", "subject_slot", "bank_manifest_sha256",
+        "template_manifest_sha256", "renderer_version",
+    )
+    observed = [tuple(row[field] for field in binding_fields) for row in census["records"]]
+    expected = [tuple(row[field] for field in binding_fields) for row in schedule]
+    call_ids = [row["call_id"] for row in census["records"]]
+    if len(call_ids) != len(set(call_ids)):
+        raise RunParentBindingMismatch("census contains duplicate call ID")
+    if observed != expected:
+        raise RunParentBindingMismatch("census does not equal the authoritative fixed schedule")
     if census["expected"] != census["observed"] or census["observed"] != len(census["records"]):
-        raise RequestCustodyViolation("census false completion")
+        raise RunParentBindingMismatch("census false completion")
     return census
 
 
 def validate_run_output(output_dir):
     output = Path(output_dir)
-    census = strict_json_load(output / "census.json")
+    bank = load_public_bank()
+    manifest, template_files = validate_template_files()
     schedule = strict_jsonl_load(SCHEDULE_PATH)
+    validate_schedule(schedule, bank, manifest)
+    schedule_by_call = {row["call_id"]: row for row in schedule}
+    census = strict_json_load(output / "census.json")
     validate_census(census, schedule)
+    expected_files = {"census.json"}
+    for row in schedule:
+        call_id = row["call_id"]
+        expected_files.update({
+            f"payloads/{call_id}.bin", f"rendered/{call_id}.json",
+            f"requests/{call_id}.json", f"raw-responses/{call_id}.bin",
+            f"responses/{call_id}.json", f"normalized/{call_id}.json",
+            f"attempts/{call_id}.json",
+        })
+    observed_files = {
+        path.relative_to(output).as_posix() for path in output.rglob("*") if path.is_file()
+    }
+    if observed_files != expected_files:
+        raise RunParentBindingMismatch(
+            f"run artifact population differs: missing={sorted(expected_files - observed_files)} "
+            f"extra={sorted(observed_files - expected_files)}"
+        )
     for summary in census["records"]:
         call_id = summary["call_id"]
+        row = schedule_by_call.get(call_id)
+        if row is None:
+            raise RunParentBindingMismatch(f"{call_id}: no authoritative schedule row")
         payload = (output / f"payloads/{call_id}.bin").read_bytes()
         payload_record = strict_json_load(output / f"rendered/{call_id}.json")
         envelope_path = output / f"requests/{call_id}.json"
@@ -715,21 +930,71 @@ def validate_run_output(output_dir):
         attempt = strict_json_load(output / f"attempts/{call_id}.json")
         for name, record in (("rendered-payload", payload_record), ("request-envelope", envelope), ("raw-response", raw_record), ("normalized-response", normalized), ("attempt", attempt)):
             validate_schema(name, record)
-        if sha256_bytes(payload) != payload_record["payload_sha256"] or sha256_bytes(payload) != envelope["rendering"]["payload_sha256"]:
-            raise RequestCustodyViolation(f"{call_id}: payload parent closure differs")
-        if sha256_file(envelope_path) != raw_record["request_envelope_sha256"] or sha256_bytes(payload) != raw_record["request_payload_sha256"]:
-            raise RequestCustodyViolation(f"{call_id}: raw request parent closure differs")
-        if sha256_bytes(raw) != raw_record["raw_response_sha256"] or normalized["raw_response_sha256"] != raw_record["raw_response_sha256"] or normalized["raw_response_record_sha256"] != line_sha256(raw_record):
-            raise RequestCustodyViolation(f"{call_id}: normalization raw parent closure differs")
-        if attempt["raw_response_record_sha256"] != line_sha256(raw_record) or attempt["normalized_response_record_sha256"] != line_sha256(normalized):
-            raise RequestCustodyViolation(f"{call_id}: attempt closure differs")
+        target = bank["maps"]["target-visible item"][row["item_id"]]
+        item = TargetVisibleItem.from_record(target)
+        expected_payload = compose_payload(
+            item, template_files["system"], template_files[row["arm"]],
+            template_files["wrapper"],
+        )
+        if payload != expected_payload:
+            raise RequestParentBindingMismatch(
+                f"{call_id}: payload bytes are detached from authoritative parents"
+            )
+        validate_request_parents(row, payload, payload_record, envelope)
+        if payload_record["payload_path"] != f"payloads/{call_id}.bin":
+            raise RequestParentBindingMismatch(f"{call_id}: payload path parent differs")
+        envelope_sha256 = sha256_file(envelope_path)
+        if envelope_sha256 == sha256_bytes(payload):
+            raise RequestParentBindingMismatch(f"{call_id}: payload and envelope digests collapsed")
+        expected_paths = {
+            "request_envelope_path": f"requests/{call_id}.json",
+            "request_payload_path": f"payloads/{call_id}.bin",
+            "raw_response_path": f"raw-responses/{call_id}.bin",
+        }
+        if raw_record["call_id"] != call_id or any(raw_record[key] != value for key, value in expected_paths.items()):
+            raise RunParentBindingMismatch(f"{call_id}: raw-response path/call parent differs")
+        if envelope_sha256 != raw_record["request_envelope_sha256"] or sha256_bytes(payload) != raw_record["request_payload_sha256"]:
+            raise RunParentBindingMismatch(f"{call_id}: raw request parent closure differs")
+        expected_provider_request_id = "network-off-" + sha256_bytes(
+            call_id.encode("utf-8") + b"\0" + canonical_json_bytes(envelope) + b"\0" + payload
+        )[:24]
+        if raw_record["provider_request_id"] != expected_provider_request_id:
+            raise RunParentBindingMismatch(f"{call_id}: provider request identity differs")
+        raw_native = strict_json_bytes(raw, f"{call_id} raw response")
+        expected_raw_native = {
+            "call_id": call_id,
+            "content": "NETWORK OFF — no target response produced",
+            "kind": "network-off-custody-sentinel",
+            "payload_sha256": sha256_bytes(payload),
+            "request_envelope_sha256": envelope_sha256,
+            "target_evidence": False,
+        }
+        if raw_native != expected_raw_native:
+            raise RunParentBindingMismatch(f"{call_id}: raw response is detached from request parents")
+        if raw_record["raw_response_bytes"] != len(raw) or sha256_bytes(raw) != raw_record["raw_response_sha256"]:
+            raise RunParentBindingMismatch(f"{call_id}: raw response byte identity differs")
+        if normalized["call_id"] != call_id or normalized["raw_response_sha256"] != raw_record["raw_response_sha256"] or normalized["raw_response_record_sha256"] != line_sha256(raw_record):
+            raise RunParentBindingMismatch(f"{call_id}: normalization raw parent closure differs")
+        if normalized["native_artifact_view"]["content"] != raw_native:
+            raise RunParentBindingMismatch(f"{call_id}: normalized native artifact differs from raw response")
+        if normalized["condition_neutral_scoring_view"]["content"] != raw_native["content"]:
+            raise RunParentBindingMismatch(f"{call_id}: normalized successor content differs from raw response")
+        if attempt["call_id"] != call_id or attempt["request_envelope_sha256"] != envelope_sha256 or attempt["raw_response_record_sha256"] != line_sha256(raw_record) or attempt["normalized_response_record_sha256"] != line_sha256(normalized):
+            raise RunParentBindingMismatch(f"{call_id}: attempt closure differs")
         expected_summary = {
+            "call_id": row["call_id"], "schedule_index": row["schedule_index"],
+            "schedule_row_sha256": row["schedule_row_sha256"], "item_id": row["item_id"],
+            "item_version": row["item_version"], "arm": row["arm"],
+            "subject_slot": row["subject_slot"],
+            "bank_manifest_sha256": row["bank_manifest_sha256"],
+            "template_manifest_sha256": row["template_manifest_sha256"],
+            "renderer_version": row["renderer_version"],
             "payload_sha256": sha256_bytes(payload), "request_envelope_sha256": sha256_file(envelope_path),
             "raw_response_record_sha256": line_sha256(raw_record), "normalized_response_record_sha256": line_sha256(normalized),
             "attempt_record_sha256": line_sha256(attempt),
         }
-        if any(summary[key] != value for key, value in expected_summary.items()):
-            raise RequestCustodyViolation(f"{call_id}: census digest differs")
+        if summary != expected_summary:
+            raise RunParentBindingMismatch(f"{call_id}: census record differs from authoritative chain")
     forbidden_paths = [path for path in output.rglob("*") if path.is_file() and ("score" in path.name.casefold() or "private-key" in path.name.casefold() or "key-author-input" in path.name.casefold())]
     if forbidden_paths:
         raise AuthorityBoundaryViolation("forbidden run artifact created")
@@ -927,6 +1192,146 @@ def _mutation_handlers(bank, template_manifest, template_files, schedule):
     def registry_undeclared():
         registry = strict_json_load(MUTATION_REGISTRY_PATH); handlers = {row["mutation_id"] for row in registry["mutations"]}; handlers.add("mutation:tranche-b-undeclared-sentinel"); validate_mutation_registry_contract(registry, handlers)
 
+    def schedule_parent_mutation(field, value):
+        def run():
+            mutated = copy.deepcopy(schedule)
+            mutated[0][field] = value
+            mutated[0]["schedule_row_sha256"] = schedule_row_sha256(mutated[0])
+            validate_schedule(mutated, bank, template_manifest)
+        return run
+
+    def stale_schedule_row_digest():
+        mutated = copy.deepcopy(schedule)
+        mutated[0]["schedule_row_sha256"] = "0" * 64
+        validate_schedule(mutated, bank, template_manifest)
+
+    def swapped_schedule_rows_stale_digests():
+        mutated = copy.deepcopy(schedule)
+        identity_fields = ("call_id", "schedule_index", "schedule_row_sha256")
+        first_identity = {field: mutated[0][field] for field in identity_fields}
+        second_identity = {field: mutated[1][field] for field in identity_fields}
+        mutated[0], mutated[1] = copy.deepcopy(mutated[1]), copy.deepcopy(mutated[0])
+        mutated[0].update(first_identity)
+        mutated[1].update(second_identity)
+        validate_schedule(mutated, bank, template_manifest)
+
+    def overwrite_record(path, record):
+        write_bytes(path, canonical_json_bytes(record))
+
+    def rebind_envelope_successors(run, census, call_id, envelope):
+        payload = (run / f"payloads/{call_id}.bin").read_bytes()
+        envelope_path = run / f"requests/{call_id}.json"
+        overwrite_record(envelope_path, envelope)
+        envelope_bytes = canonical_json_bytes(envelope)
+        raw, provider_request_id = NetworkOffProvider().emit(envelope_bytes, payload, call_id)
+        write_bytes(run / f"raw-responses/{call_id}.bin", raw)
+        raw_record_path = run / f"responses/{call_id}.json"
+        raw_record = strict_json_load(raw_record_path)
+        raw_record.update({
+            "request_envelope_sha256": sha256_bytes(envelope_bytes),
+            "request_payload_sha256": sha256_bytes(payload),
+            "raw_response_bytes": len(raw), "raw_response_sha256": sha256_bytes(raw),
+            "provider_request_id": provider_request_id,
+        })
+        overwrite_record(raw_record_path, raw_record)
+        normalized = normalize_response(raw, raw_record)
+        overwrite_record(run / f"normalized/{call_id}.json", normalized)
+        attempt_path = run / f"attempts/{call_id}.json"
+        attempt = strict_json_load(attempt_path)
+        attempt.update({
+            "request_envelope_sha256": sha256_bytes(envelope_bytes),
+            "raw_response_record_sha256": line_sha256(raw_record),
+            "normalized_response_record_sha256": line_sha256(normalized),
+        })
+        overwrite_record(attempt_path, attempt)
+        summary = next(record for record in census["records"] if record["call_id"] == call_id)
+        summary.update({
+            "request_envelope_sha256": sha256_bytes(envelope_bytes),
+            "raw_response_record_sha256": line_sha256(raw_record),
+            "normalized_response_record_sha256": line_sha256(normalized),
+            "attempt_record_sha256": line_sha256(attempt),
+        })
+
+    def with_complete_run(mutator):
+        def run_mutation():
+            with tempfile.TemporaryDirectory(prefix="lae-tb-r1-run-") as temporary:
+                run = Path(temporary) / "run"
+                census, _ = execute_network_off(run)
+                mutator(run, census)
+                overwrite_record(run / "census.json", census)
+                validate_run_output(run)
+        return run_mutation
+
+    def payload_stale_parent(run, census):
+        call_id = census["records"][0]["call_id"]
+        path = run / f"rendered/{call_id}.json"
+        record = strict_json_load(path)
+        record["item_version"] = "stale-authoritative-parent-version"
+        overwrite_record(path, record)
+
+    def envelope_stale_schedule_digest(run, census):
+        call_id = census["records"][0]["call_id"]
+        envelope = strict_json_load(run / f"requests/{call_id}.json")
+        envelope["schedule_row_sha256"] = "0" * 64
+        rebind_envelope_successors(run, census, call_id, envelope)
+
+    def normalized_wrong_raw_parent(run, census):
+        call_id = census["records"][0]["call_id"]
+        other_call_id = census["records"][1]["call_id"]
+        normalized_path = run / f"normalized/{call_id}.json"
+        normalized = strict_json_load(normalized_path)
+        other_raw_record = strict_json_load(run / f"responses/{other_call_id}.json")
+        normalized["raw_response_record_sha256"] = line_sha256(other_raw_record)
+        overwrite_record(normalized_path, normalized)
+        attempt_path = run / f"attempts/{call_id}.json"
+        attempt = strict_json_load(attempt_path)
+        attempt["normalized_response_record_sha256"] = line_sha256(normalized)
+        overwrite_record(attempt_path, attempt)
+        summary = census["records"][0]
+        summary["normalized_response_record_sha256"] = line_sha256(normalized)
+        summary["attempt_record_sha256"] = line_sha256(attempt)
+
+    def complete_run_rebound(parent_field, stale_digest):
+        def mutate(run, census):
+            for summary in census["records"]:
+                call_id = summary["call_id"]
+                payload_path = run / f"rendered/{call_id}.json"
+                payload_record = strict_json_load(payload_path)
+                payload_record[parent_field] = stale_digest
+                overwrite_record(payload_path, payload_record)
+                envelope = strict_json_load(run / f"requests/{call_id}.json")
+                envelope[parent_field] = stale_digest
+                rebind_envelope_successors(run, census, call_id, envelope)
+                summary[parent_field] = stale_digest
+        return mutate
+
+    def detached_schedule_run(run, census):
+        for summary in census["records"]:
+            call_id = summary["call_id"]
+            payload_path = run / f"rendered/{call_id}.json"
+            payload_record = strict_json_load(payload_path)
+            detached_digest = sha256_bytes(("detached:" + call_id).encode("utf-8"))
+            payload_record["schedule_row_sha256"] = detached_digest
+            overwrite_record(payload_path, payload_record)
+            envelope = strict_json_load(run / f"requests/{call_id}.json")
+            envelope["schedule_row_sha256"] = detached_digest
+            rebind_envelope_successors(run, census, call_id, envelope)
+            summary["schedule_row_sha256"] = detached_digest
+
+    def duplicate_call_replaces_cell(run, census):
+        census["records"][1] = copy.deepcopy(census["records"][0])
+
+    def registry_declared_r1():
+        registry = strict_json_load(MUTATION_REGISTRY_PATH)
+        registry["declared_unexecuted"] = ["mutation:tb-r1-stale-schedule-row-digest"]
+        validate_mutation_registry_contract(registry, {row["mutation_id"] for row in registry["mutations"]})
+
+    def registry_undeclared_r1():
+        registry = strict_json_load(MUTATION_REGISTRY_PATH)
+        handlers = {row["mutation_id"] for row in registry["mutations"]}
+        handlers.add("mutation:tb-r1-undeclared-execution-sentinel")
+        validate_mutation_registry_contract(registry, handlers)
+
     return {
         "mutation:tranche-b-missing-item": population_mutation("targets", lambda rows: rows.pop()),
         "mutation:tranche-b-duplicate-item": population_mutation("targets", lambda rows: rows.append(copy.deepcopy(rows[0]))),
@@ -966,6 +1371,24 @@ def _mutation_handlers(bank, template_manifest, template_files, schedule):
         "mutation:tranche-b-network-capable-provider": network_provider,
         "mutation:tranche-b-declared-unexecuted": registry_declared,
         "mutation:tranche-b-undeclared-executed": registry_undeclared,
+        "mutation:tb-r1-stale-schedule-row-digest": stale_schedule_row_digest,
+        "mutation:tb-r1-swapped-schedule-rows-stale-digests": swapped_schedule_rows_stale_digests,
+        "mutation:tb-r1-schedule-wrong-item-version": schedule_parent_mutation("item_version", "stale-item-version"),
+        "mutation:tb-r1-schedule-wrong-task-digest": schedule_parent_mutation("task_sha256", "0" * 64),
+        "mutation:tb-r1-schedule-wrong-source-packet-digest": schedule_parent_mutation("source_packet_sha256", "0" * 64),
+        "mutation:tb-r1-schedule-wrong-template-digest": schedule_parent_mutation("template_sha256", "0" * 64),
+        "mutation:tb-r1-schedule-wrong-common-system-digest": schedule_parent_mutation("system_sha256", "0" * 64),
+        "mutation:tb-r1-schedule-wrong-wrapper-digest": schedule_parent_mutation("wrapper_sha256", "0" * 64),
+        "mutation:tb-r1-schedule-wrong-rendering-obligation-digest": schedule_parent_mutation("rendering_obligation_sha256", "0" * 64),
+        "mutation:tb-r1-payload-stale-authoritative-parent": with_complete_run(payload_stale_parent),
+        "mutation:tb-r1-envelope-stale-schedule-row-digest": with_complete_run(envelope_stale_schedule_digest),
+        "mutation:tb-r1-normalized-wrong-raw-parent": with_complete_run(normalized_wrong_raw_parent),
+        "mutation:tb-r1-complete-run-stale-bank-manifest": with_complete_run(complete_run_rebound("bank_manifest_sha256", "1" * 64)),
+        "mutation:tb-r1-complete-run-stale-template-manifest": with_complete_run(complete_run_rebound("template_manifest_sha256", "2" * 64)),
+        "mutation:tb-r1-self-consistent-run-detached-schedule": with_complete_run(detached_schedule_run),
+        "mutation:tb-r1-duplicate-call-replaces-authoritative-cell": with_complete_run(duplicate_call_replaces_cell),
+        "mutation:tb-r1-declared-unexecuted": registry_declared_r1,
+        "mutation:tb-r1-undeclared-executed": registry_undeclared_r1,
     }
 
 
@@ -981,7 +1404,9 @@ def execute_mutations():
         condition.__name__: condition for condition in (
             CanonicalizationIdentityMismatch, CanonicalPopulationMismatch, TargetVisibilityViolation,
             RendererContractViolation, RequestCustodyViolation, AuthorityBoundaryViolation,
-            TrancheBMutationNotExercised,
+            TrancheBMutationNotExercised, ScheduleRowDigestMismatch,
+            SchedulePopulationMismatch, ScheduleParentBindingMismatch,
+            RequestParentBindingMismatch, RunParentBindingMismatch,
         )
     }
     results = []

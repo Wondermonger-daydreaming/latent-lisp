@@ -41,6 +41,24 @@
     {"mutation_id": "mutation:tranche-b-private-key-read", "expected_condition": "AuthorityBoundaryViolation"},
     {"mutation_id": "mutation:tranche-b-network-capable-provider", "expected_condition": "AuthorityBoundaryViolation"},
     {"mutation_id": "mutation:tranche-b-declared-unexecuted", "expected_condition": "TrancheBMutationNotExercised"},
-    {"mutation_id": "mutation:tranche-b-undeclared-executed", "expected_condition": "TrancheBMutationNotExercised"}
+    {"mutation_id": "mutation:tranche-b-undeclared-executed", "expected_condition": "TrancheBMutationNotExercised"},
+    {"mutation_id": "mutation:tb-r1-stale-schedule-row-digest", "expected_condition": "ScheduleRowDigestMismatch"},
+    {"mutation_id": "mutation:tb-r1-swapped-schedule-rows-stale-digests", "expected_condition": "ScheduleRowDigestMismatch"},
+    {"mutation_id": "mutation:tb-r1-schedule-wrong-item-version", "expected_condition": "ScheduleParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-schedule-wrong-task-digest", "expected_condition": "ScheduleParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-schedule-wrong-source-packet-digest", "expected_condition": "ScheduleParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-schedule-wrong-template-digest", "expected_condition": "ScheduleParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-schedule-wrong-common-system-digest", "expected_condition": "ScheduleParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-schedule-wrong-wrapper-digest", "expected_condition": "ScheduleParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-schedule-wrong-rendering-obligation-digest", "expected_condition": "ScheduleParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-payload-stale-authoritative-parent", "expected_condition": "RequestParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-envelope-stale-schedule-row-digest", "expected_condition": "RequestParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-normalized-wrong-raw-parent", "expected_condition": "RunParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-complete-run-stale-bank-manifest", "expected_condition": "RunParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-complete-run-stale-template-manifest", "expected_condition": "RunParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-self-consistent-run-detached-schedule", "expected_condition": "RunParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-duplicate-call-replaces-authoritative-cell", "expected_condition": "RunParentBindingMismatch"},
+    {"mutation_id": "mutation:tb-r1-declared-unexecuted", "expected_condition": "TrancheBMutationNotExercised"},
+    {"mutation_id": "mutation:tb-r1-undeclared-executed", "expected_condition": "TrancheBMutationNotExercised"}
   ]
 }
