@@ -1,0 +1,5 @@
+{"exclusion_id":"public-language-a-fixtures","scope":"all fourteen fixtures and paraphrases","status":"permanently-excluded"}
+{"exclusion_id":"p2a-materials","scope":"all examples, transcripts, mutants, and outputs","status":"permanently-excluded"}
+{"exclusion_id":"cd0-lci0-vectors","scope":"all conformance vectors and mechanical permutations","status":"permanently-excluded"}
+{"exclusion_id":"harness-controls","scope":"all synthetic controls, dry-run artifacts, and calibration examples","status":"permanently-tainted"}
+{"exclusion_id":"grader-calibration","scope":"all examples seen during rubric calibration","status":"permanently-excluded"}
