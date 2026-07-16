@@ -1,0 +1,8 @@
+{"mutant_id":"unmanifested-file","expected_condition":"UnmanifestedFrozenArtifact"}
+{"mutant_id":"stale-hash","expected_condition":"ManifestMismatch"}
+{"mutant_id":"renamed-path","expected_condition":"ManifestMismatch"}
+{"mutant_id":"early-termination-completion","expected_condition":"IncompleteRunCensus"}
+{"mutant_id":"duplicate-call-id","expected_condition":"DuplicateExperimentId"}
+{"mutant_id":"schedule-row","expected_condition":"ScheduleReplayDiverged"}
+{"mutant_id":"dangling-reference","expected_condition":"DanglingArtifactReference"}
+{"mutant_id":"key-access","expected_condition":"KeyExposureBoundaryViolated"}
