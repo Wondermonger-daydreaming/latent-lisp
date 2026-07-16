@@ -238,6 +238,117 @@
       "required": ["decision_kind", "item_rows"],
       "additionalProperties": false
     },
+    "odr-43-adopted-decision": {
+      "type": "object",
+      "properties": {
+        "decision_kind": {"const": "item-author-identities"},
+        "decision_version": {"const": "owner-adopted-v1"},
+        "ruling_id": {"const": "ruling:language-a-odr-43-odr-60-adoption-v1"},
+        "owner_actor_id": {"$ref": "#/$defs/stable-id"},
+        "item_author_actor_ids": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/stable-id"}},
+        "content_family_assignments": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": {
+            "type": "object",
+            "properties": {
+              "actor_id": {"$ref": "#/$defs/stable-id"},
+              "content_families": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"enum": ["BOUNDED-SUPPORT", "SCOPE-AND-VERSION", "CONFLICT-AND-RESIDUE", "NOTATION-NEUTRAL-TRANSFER"]}}
+            },
+            "required": ["actor_id", "content_families"], "additionalProperties": false
+          }
+        },
+        "cross_review_relationships": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": {
+            "type": "object",
+            "properties": {
+              "reviewer_actor_id": {"$ref": "#/$defs/stable-id"},
+              "reviewed_actor_id": {"$ref": "#/$defs/stable-id"},
+              "surface": {"const": "public-and-frozen-surface"},
+              "findings_route": {"const": "through-owner"},
+              "silent_revision_permitted": {"const": false},
+              "sealed_dossier_exchange": {"const": false}
+            },
+            "required": ["reviewer_actor_id", "reviewed_actor_id", "surface", "findings_route", "silent_revision_permitted", "sealed_dossier_exchange"],
+            "additionalProperties": false
+          }
+        },
+        "freezer_overlap_auditor_actor_id": {"$ref": "#/$defs/stable-id"},
+        "mechanical_validation_assistant": {
+          "type": "object",
+          "properties": {
+            "actor_id": {"$ref": "#/$defs/stable-id"},
+            "scope": {"const": "mechanical-schema-lineage-mutation-identity-packaging-assistance"},
+            "substantive_freezer_authority": {"const": false},
+            "may_accept_reject_rewrite_or_freeze_item_without_owner_typed_disposition": {"const": false}
+          },
+          "required": ["actor_id", "scope", "substantive_freezer_authority", "may_accept_reject_rewrite_or_freeze_item_without_owner_typed_disposition"],
+          "additionalProperties": false
+        },
+        "disclosure_artifact_event_digests": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+        "authority_event_digests": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+        "apparatus_read_event_digests": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+        "apparatus_read_declarations": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": {
+            "type": "object",
+            "properties": {
+              "actor_id": {"$ref": "#/$defs/stable-id"},
+              "read_event_digest": {"$ref": "#/$defs/digest"},
+              "disclosure_artifact_event_digest": {"$ref": "#/$defs/digest"},
+              "scope": {"const": "exact-disclosure-controlled-read-inventory-no-added-exact-reads"}
+            },
+            "required": ["actor_id", "read_event_digest", "disclosure_artifact_event_digest", "scope"], "additionalProperties": false
+          }
+        },
+        "exposure_declarations": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "items": {
+            "type": "object",
+            "properties": {
+              "exposure_class": {"enum": ["item-specific-answer", "private-key", "target-output"]},
+              "actor_id": {"$ref": "#/$defs/stable-id"},
+              "standing": {"const": "none-at-adoption"},
+              "bound": {"const": "bounded-disclosure-not-universal-absence"},
+              "exposure_event_digest": {"$ref": "#/$defs/digest"},
+              "disclosure_artifact_event_digest": {"$ref": "#/$defs/digest"}
+            },
+            "required": ["exposure_class", "actor_id", "standing", "bound", "exposure_event_digest", "disclosure_artifact_event_digest"], "additionalProperties": false
+          }
+        },
+        "shared_root_event_digests": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+        "bounded_unknowns_by_actor": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": {
+            "type": "object",
+            "properties": {"actor_id": {"$ref": "#/$defs/stable-id"}, "bounded_unknowns": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}},
+            "required": ["actor_id", "bounded_unknowns"], "additionalProperties": false
+          }
+        },
+        "blindness_and_independence": {
+          "type": "object",
+          "properties": {
+            "blind_item_authorship_claimed": {"const": false},
+            "independent_item_genesis_claimed": {"const": false},
+            "independent_cross_review_claimed": {"const": false},
+            "global_independence_claimed": {"const": false}
+          },
+          "required": ["blind_item_authorship_claimed", "independent_item_genesis_claimed", "independent_cross_review_claimed", "global_independence_claimed"],
+          "additionalProperties": false
+        },
+        "claims_explicitly_not_made": {"type": "array", "minItems": 9, "maxItems": 9, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "role_specific_restrictions": {
+          "type": "array", "minItems": 4,
+          "items": {
+            "type": "object",
+            "properties": {"actor_id": {"$ref": "#/$defs/stable-id"}, "role": {"type": "string", "minLength": 1}, "restrictions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "restriction_event_digest": {"$ref": "#/$defs/digest"}},
+            "required": ["actor_id", "role", "restrictions", "restriction_event_digest"], "additionalProperties": false
+          }
+        }
+      },
+      "required": ["decision_kind", "decision_version", "ruling_id", "owner_actor_id", "item_author_actor_ids", "content_family_assignments", "cross_review_relationships", "freezer_overlap_auditor_actor_id", "mechanical_validation_assistant", "disclosure_artifact_event_digests", "authority_event_digests", "apparatus_read_event_digests", "apparatus_read_declarations", "exposure_declarations", "shared_root_event_digests", "bounded_unknowns_by_actor", "blindness_and_independence", "claims_explicitly_not_made", "role_specific_restrictions"],
+      "additionalProperties": false
+    },
     "odr-60-allocation-candidate": {
       "allOf": [
         {"$ref": "#/$defs/record-envelope"},
@@ -909,6 +1020,42 @@
           "if": {"properties": {"decision_id": {"const": "ODR-43"}}},
           "then": {"properties": {"exact_decision": {"oneOf": [{"$ref": "#/$defs/odr-43-exact-decision"}, {"type": "null"}]}}},
           "else": {"properties": {"exact_decision": {"oneOf": [{"$ref": "#/$defs/odr-60-exact-decision"}, {"type": "null"}]}}}
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "owner-decision-record-adopted": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-owner-decision-record/1.1.0"},
+            "decision_id": {"enum": ["ODR-43", "ODR-60"]},
+            "status": {"const": "adopted"},
+            "exact_decision": {"oneOf": [{"$ref": "#/$defs/odr-43-adopted-decision"}, {"$ref": "#/$defs/odr-60-exact-decision"}]},
+            "allowed_domain": {"type": "object", "minProperties": 1},
+            "rationale": {"type": "string", "minLength": 1},
+            "controlling_authority": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true},
+            "deciding_actor": {"$ref": "#/$defs/stable-id"},
+            "role_shared_root_disclosure": {"type": "object", "minProperties": 1},
+            "dependencies": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+            "adoption_timestamp": {"$ref": "#/$defs/timestamp"},
+            "exact_executable_gate": {"enum": ["preauthorship.item-author-role-access-manifest", "preauthorship.item-bank-role-allocation-validator"]},
+            "unresolved_predecessor": {"$ref": "#/$defs/version-ref"},
+            "adoption_event_digest": {"$ref": "#/$defs/digest"},
+            "owner_jurisdiction": {"type": "string", "minLength": 1},
+            "exact_gate_closed": {"type": "string", "minLength": 1},
+            "adopted_candidate": {"oneOf": [{"$ref": "#/$defs/version-ref"}, {"type": "null"}]},
+            "operational_effect": {"const": "eligible-for-owner-issuance-of-item-author-commissions-not-issued"},
+            "authority_ceilings": {"type": "array", "minItems": 5, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+          },
+          "required": ["decision_id", "status", "exact_decision", "allowed_domain", "rationale", "controlling_authority", "deciding_actor", "role_shared_root_disclosure", "dependencies", "adoption_timestamp", "exact_executable_gate", "unresolved_predecessor", "adoption_event_digest", "owner_jurisdiction", "exact_gate_closed", "adopted_candidate", "operational_effect", "authority_ceilings"]
+        },
+        {
+          "if": {"properties": {"decision_id": {"const": "ODR-43"}}},
+          "then": {"properties": {"exact_decision": {"$ref": "#/$defs/odr-43-adopted-decision"}, "adopted_candidate": {"type": "null"}}},
+          "else": {"properties": {"exact_decision": {"$ref": "#/$defs/odr-60-exact-decision"}, "adopted_candidate": {"$ref": "#/$defs/version-ref"}}}
         }
       ],
       "unevaluatedProperties": false

@@ -1,0 +1,19 @@
+OWNER AUTHORIZATION — ODR-43 AND ODR-60 RECORD INSTANTIATION
+
+Proceed under the attached:
+
+    CODEX-ODR-43-ODR-60-ADOPTION-COMMISSION.md
+
+The attached owner ruling is my adoption act for ODR-43 and ODR-60.
+
+Verify every supplied identity before modification.
+Base exactly on the accepted Repair 0.2.1 commit and tree named in the
+commission.
+
+Create only the commissioned successor branch and typed adoption records.
+
+Do not issue the Fable or Sol item-author commissions.
+Do not begin substantive drafting.
+Do not begin Tranche B, private-key work, scoring, freeze, or exposure.
+
+Stop on any identity, payload, lineage, or authority mismatch.

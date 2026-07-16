@@ -10,10 +10,10 @@ from util import PACKET_ROOT, REPO_ROOT, canonical_json_bytes, load_json, load_j
 from preauthorship import validate_repository_records
 
 
-BASE_COMMIT = "bcf76e78e597351e088a2fcec646230fa1deca60"
-BASE_TREE = "9fd259ee678f338e4910d1fd68d5c2042c46e992"
-REVIEWED_INPUT_COMMIT = "3e6fb3ef3125eee607f8bcf589f0e95108170f57"
-REVIEWED_INPUT_TREE = "ddff0d4f499cda4904cd8d0624feb3f8a9f9140f"
+BASE_COMMIT = "18189fcde68dfc110c0e95a82d2a9ef220bc98e9"
+BASE_TREE = "645c1b8a778dd30b0a640e88b9fcca2281ec1c06"
+REVIEWED_INPUT_COMMIT = "bcf76e78e597351e088a2fcec646230fa1deca60"
+REVIEWED_INPUT_TREE = "9fd259ee678f338e4910d1fd68d5c2042c46e992"
 PROTECTED = (
     "canonical-datum", "mneme/lci0", "mneme/spec/lci0-review", "mneme/atelier/hinges/de-corroboratione.lisp",
     "mneme/atelier/evidence/de-corroboratione-0.4a-verification", "mneme/latent-mvp", "mneme/language-a/validator.lisp",
@@ -38,7 +38,7 @@ def build_manifest(root=PACKET_ROOT):
         records.append({"path": relative, "bytes": path.stat().st_size, "sha256": sha256_file(path)})
     return {"schema_version": "lae-construction-manifest/1.1.0", "authority_commit": BASE_COMMIT, "authority_tree": BASE_TREE,
             "reviewed_input_commit": REVIEWED_INPUT_COMMIT, "reviewed_input_tree": REVIEWED_INPUT_TREE,
-            "status": "PREAUTHORSHIP-REPAIR-0.2.1-CONSTRUCTION-CANDIDATE-NOT-FROZEN", "hash_semantics": "change detection only; not authenticity",
+            "status": "ODR-43-60-ADOPTION-CONSTRUCTION-CANDIDATE-NOT-FROZEN", "hash_semantics": "change detection only; not authenticity",
             "frozen_scope": ["README.md", "STATE-RECONCILIATION.md", "PREREG-v0.2.md", "FREEZE-RULINGS.md", "FREEZE-STAFFING.md",
                              "BRANCH-BANK.md", "verify-pilot.sh", "prompts", "items", "scoring", "harness", "controls", "lineage", "operator", "evidence"],
             "files": records}
@@ -75,7 +75,7 @@ def check_manifest(root=PACKET_ROOT):
         raise ManifestMismatch("authority identity differs")
     if manifest.get("reviewed_input_commit") != REVIEWED_INPUT_COMMIT or manifest.get("reviewed_input_tree") != REVIEWED_INPUT_TREE:
         raise ManifestMismatch("reviewed input identity differs")
-    if manifest.get("status") != "PREAUTHORSHIP-REPAIR-0.2.1-CONSTRUCTION-CANDIDATE-NOT-FROZEN":
+    if manifest.get("status") != "ODR-43-60-ADOPTION-CONSTRUCTION-CANDIDATE-NOT-FROZEN":
         raise ManifestMismatch("construction state differs")
 
 

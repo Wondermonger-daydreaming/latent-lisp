@@ -17,7 +17,7 @@ from conditions import (DraftItemUsedAsFrozen, FreezerDossierReferenceInvalid,
 class PreauthorshipRepairTests(unittest.TestCase):
     def test_all_strict_schema_surfaces_exist(self):
         inventory = pre.schema_inventory()
-        self.assertEqual(25, len(inventory))
+        self.assertEqual(26, len(inventory))
         self.assertEqual(len(inventory), len({row["schema_version"] for row in inventory}))
         required = {
             "item-record", "source-packet-manifest", "source-component", "arm-rendering",
@@ -26,7 +26,7 @@ class PreauthorshipRepairTests(unittest.TestCase):
             "item-freezer-dossier", "freezer-decision-record", "state-transition-record",
             "frozen-bank-manifest", "key-author-input-manifest",
             "handoff-public-artifact",
-            "owner-decision-record", "odr-60-allocation-candidate", "lineage-event-legacy",
+            "owner-decision-record", "owner-decision-record-adopted", "odr-60-allocation-candidate", "lineage-event-legacy",
             "lineage-event", "opportunity-record", "keyed-unit-record",
             "future-score-profile-record", "construct-validity-specimen-record",
             "future-branch-receipt-riders",
@@ -44,18 +44,20 @@ class PreauthorshipRepairTests(unittest.TestCase):
         frozen = pre.synthetic_frozen_bank_records()
         self.assertTrue(pre.validate_key_author_input(pre.synthetic_key_manifest(frozen), frozen, allow_synthetic=True))
 
-    def test_successor_lineage_and_owner_predecessors_close(self):
+    def test_successor_lineage_and_adopted_owner_heads_close(self):
         lineage = pre.load_successor_lineage()
         self.assertTrue(pre.validate_lineage(lineage))
-        decisions = pre.validate_owner_records(pre.load_owner_records(), lineage_events=lineage)
-        self.assertEqual("unresolved", decisions["ODR-43"]["status"])
-        self.assertEqual("unresolved", decisions["ODR-60"]["status"])
-        with self.assertRaises(OwnerDecisionUnresolved):
-            pre.drafting_gate(list(decisions.values()), lineage)
+        records = pre.load_owner_records()
+        decisions = pre.validate_owner_records(records, require_adopted=True, lineage_events=lineage)
+        self.assertEqual("adopted", decisions["ODR-43"]["status"])
+        self.assertEqual("adopted", decisions["ODR-60"]["status"])
+        self.assertTrue(pre.drafting_gate(records, lineage))
+        self.assertEqual(2, sum(record["status"] == "unresolved" for record in records))
 
     def test_owner_candidate_is_commission_bound_unresolved_and_derived_only(self):
         candidate = pre.load_odr60_candidate()
         totals = pre.validate_odr60_candidate(candidate)
+        self.assertTrue(pre.validate_odr60_ruling_match(candidate["allocation"]))
         self.assertEqual("unresolved-owner-payload", candidate["standing"])
         self.assertEqual(pre.COMMISSION_BASIS_DIGEST, candidate["commission_basis_sha256"])
         self.assertEqual(24, totals["total_item_slots"])
@@ -83,13 +85,13 @@ class PreauthorshipRepairTests(unittest.TestCase):
         self.assertEqual(16003, pre.verify_owner_reverification()["byte_length"])
         self.assertEqual(259, pre.validate_canonical_golden_vector()["canonical_byte_length"])
 
-    def test_complete_synthetic_owner_adoption_closes_but_real_records_stay_unresolved(self):
+    def test_complete_synthetic_owner_adoption_closes_and_real_successors_are_adopted(self):
         records, lineage = pre.synthetic_owner_adoption_graph()
         self.assertTrue(pre.validate_lineage(lineage))
         selected = pre.validate_owner_records(records, require_adopted=True, lineage_events=lineage)
         self.assertEqual({"ODR-43", "ODR-60"}, set(selected))
         self.assertTrue(pre.drafting_gate(records, lineage))
-        self.assertTrue(all(record["status"] == "unresolved" for record in pre.load_owner_records()))
+        self.assertEqual(2, sum(record["status"] == "adopted" for record in pre.load_owner_records()))
 
     def test_odr43_exposure_classes_are_exact_not_just_three_rows(self):
         records, _ = pre.synthetic_owner_adoption_graph()

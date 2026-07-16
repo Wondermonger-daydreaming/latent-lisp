@@ -31,6 +31,10 @@ from conditions import (
     MutableFilenameIdentity,
     MutationNotExercised,
     ODR43ExposureClassSetInvalid,
+    ODR43AdoptionPayloadInvalid,
+    ODR60AdoptionPayloadMismatch,
+    OwnerAdoptionAuthorityMismatch,
+    OwnerAdoptionGraphInvalid,
     OwnerDecisionForgery,
     OwnerDecisionUnresolved,
     ParentDigestMismatch,
@@ -63,7 +67,7 @@ CONSTRUCT_SPECIMEN_TAINT_ID = "taint:anti-taxidermy-construct-specimens-v1"
 CURRENT_TRANCHE_MAX_STATE = "candidate"
 GOLDEN_VECTOR_PATH = PACKET_ROOT / "controls/canonicalization-golden/GOLDEN-VECTOR.json"
 COMMISSION_BASIS_DIGEST = "sha256:ef5366139065c741d9ee4d7bcc02fd426a1cdae7abb7d2fd61b4d27abc0981fa"
-PREDECESSOR_MUTATION_REGISTRY_SHA256 = "df60bd4e9598d3b54d408cba7940573c92373bf583bde9c1ba677700f621afc4"
+PREDECESSOR_MUTATION_REGISTRY_SHA256 = "ffb5428f981ca9bf445f8bcde85f54d8d3dd245ddc5315409cb601fd1edf1c15"
 OWNER_REVERIFICATION_SHA256 = "4bff9ee0e00908e6e93694751256480ed6db09975431fd66053afa2c70d1211c"
 OWNER_REVERIFICATION_BYTES = 16003
 OWNER_PREDECESSOR_DIGESTS = {
@@ -89,6 +93,7 @@ SCHEMA_BY_VERSION = {
     "lae-key-author-input-manifest/1.0.0": "key-author-input-manifest",
     "lae-handoff-public-artifact/1.0.0": "handoff-public-artifact",
     "lae-owner-decision-record/1.0.0": "owner-decision-record",
+    "lae-owner-decision-record/1.1.0": "owner-decision-record-adopted",
     "lae-odr-60-allocation-candidate/1.0.0": "odr-60-allocation-candidate",
     "lae-opportunity-record/1.0.0": "opportunity-record",
     "lae-keyed-unit-record/1.0.0": "keyed-unit-record",
@@ -813,22 +818,103 @@ def validate_odr60_allocation(decision):
 def validate_odr43_exposure_class_set(decision):
     expected = {"item-specific-answer", "private-key", "target-output"}
     declarations = decision.get("exposure_declarations", [])
-    observed = [declaration.get("exposure_class") for declaration in declarations]
-    if len(observed) != 3 or len(set(observed)) != 3 or set(observed) != expected:
-        raise ODR43ExposureClassSetInvalid(f"observed={observed}")
-    return expected
+    authors = decision.get("item_author_actor_ids", [])
+    observed = [(row.get("actor_id"), row.get("exposure_class")) for row in declarations]
+    required = {(actor, exposure_class) for actor in authors for exposure_class in expected}
+    if len(authors) not in {1, 2} or len(observed) != len(required) or len(set(observed)) != len(observed) or set(observed) != required:
+        raise ODR43ExposureClassSetInvalid(f"observed={observed}; required={sorted(required)}")
+    if any(row.get("standing") not in {None, "none-at-adoption"} for row in declarations):
+        raise ODR43ExposureClassSetInvalid("exposure standing must be none-at-adoption")
+    return required
+
+
+ODR43_OWNER = "actor:tomas-pellissari-pavan-owner"
+ODR43_FABLE = "actor:fable-item-author"
+ODR43_SOL = "actor:sol-item-author"
+ODR43_CODEX = "actor:codex-mechanical-validation-assistant"
+ODR43_JURISDICTION = "owner-only staffing and item-bank-allocation authority for the Language-A emission pilot"
+ODR43_REQUIRED_CLAIMS_NOT_MADE = {
+    "blind authorship", "independent genesis", "independent cross-review",
+    "absence of shared doctrinal, owner, repository, rubric, taxonomy, model, or public-corpus roots",
+    "immunity from correlated error", "truth certification through agreement",
+    "source adequacy because two model authors agree",
+    "substantive validity because Codex mechanical validation passes",
+    "item correctness because schema validation passes",
+}
+ODR43_REQUIRED_RESTRICTIONS = {
+    "no private key during item authorship",
+    "no target outputs before item and key freeze",
+    "no scoring or adjudication of an author's own target output",
+    "no target/grader/adjudicator-informed item revision",
+    "ODR-60 slots are constraints, never content",
+    "synthetic and permanently tainted fixtures never become target content",
+    "complete source, ancestry, prior-exposure, overlap, and handoff lineage",
+    "final arm rendering bytes only through the accepted Tranche B immutable renderer",
+    "author resolution/trap/opportunity/catchability knowledge only in sealed freezer dossiers",
+    "no dossier exchange during reciprocal cross-review",
+    "session re-binding to the exact issued item-author commission digest before substantive work",
+}
+
+
+def validate_odr43_adopted_payload(decision):
+    errors = sorted(_validator("odr-43-adopted-decision").iter_errors(decision), key=lambda error: list(error.path))
+    if errors:
+        raise ODR43AdoptionPayloadInvalid(errors[0].message)
+    validate_odr43_exposure_class_set(decision)
+    if decision["owner_actor_id"] != ODR43_OWNER or decision["freezer_overlap_auditor_actor_id"] != ODR43_OWNER:
+        raise ODR43AdoptionPayloadInvalid("owner/freezer/overlap auditor identity")
+    if decision["mechanical_validation_assistant"]["actor_id"] != ODR43_CODEX or decision["mechanical_validation_assistant"]["substantive_freezer_authority"] is not False:
+        raise ODR43AdoptionPayloadInvalid("Codex authority ceiling")
+    if set(decision["item_author_actor_ids"]) != {ODR43_FABLE, ODR43_SOL}:
+        raise ODR43AdoptionPayloadInvalid("exact author set")
+    expected_assignments = {
+        ODR43_FABLE: {"BOUNDED-SUPPORT", "CONFLICT-AND-RESIDUE"},
+        ODR43_SOL: {"SCOPE-AND-VERSION", "NOTATION-NEUTRAL-TRANSFER"},
+    }
+    observed_assignments = {row["actor_id"]: set(row["content_families"]) for row in decision["content_family_assignments"]}
+    if observed_assignments != expected_assignments:
+        raise ODR43AdoptionPayloadInvalid(f"family assignments: {observed_assignments}")
+    expected_reviews = {(ODR43_FABLE, ODR43_SOL), (ODR43_SOL, ODR43_FABLE)}
+    observed_reviews = {(row["reviewer_actor_id"], row["reviewed_actor_id"]) for row in decision["cross_review_relationships"]}
+    if observed_reviews != expected_reviews or any(row["surface"] != "public-and-frozen-surface" or row["sealed_dossier_exchange"] for row in decision["cross_review_relationships"]):
+        raise ODR43AdoptionPayloadInvalid("reciprocal review/dossier separation")
+    if decision["blindness_and_independence"] != {
+        "blind_item_authorship_claimed": False,
+        "independent_item_genesis_claimed": False,
+        "independent_cross_review_claimed": False,
+        "global_independence_claimed": False,
+    }:
+        raise ODR43AdoptionPayloadInvalid("blindness/independence claims")
+    if set(decision["claims_explicitly_not_made"]) != ODR43_REQUIRED_CLAIMS_NOT_MADE:
+        raise ODR43AdoptionPayloadInvalid("claims-not-made exact set")
+    author_restrictions = {
+        row["actor_id"]: set(row["restrictions"])
+        for row in decision["role_specific_restrictions"]
+        if row["actor_id"] in {ODR43_FABLE, ODR43_SOL}
+    }
+    if set(author_restrictions) != {ODR43_FABLE, ODR43_SOL} or any(not ODR43_REQUIRED_RESTRICTIONS.issubset(values) for values in author_restrictions.values()):
+        raise ODR43AdoptionPayloadInvalid("author restriction closure")
+    return True
 
 
 def validate_odr43_graph(decision, lineage_events):
-    validate_odr43_exposure_class_set(decision)
+    if decision.get("decision_version") == "owner-adopted-v1":
+        validate_odr43_adopted_payload(decision)
+    else:
+        validate_odr43_exposure_class_set(decision)
     by_digest = {event["record_digest"]: event for event in lineage_events}
     actors = {event["subject_id"] for event in lineage_events if event["event_type"] == "actor"}
     referenced_actors = {decision["owner_actor_id"], decision["freezer_overlap_auditor_actor_id"], *decision["item_author_actor_ids"]}
+    if "mechanical_validation_assistant" in decision:
+        referenced_actors.add(decision["mechanical_validation_assistant"]["actor_id"])
     for assignment in decision["content_family_assignments"]:
         referenced_actors.add(assignment["actor_id"])
     for relationship in decision["cross_review_relationships"]:
         referenced_actors.add(relationship["reviewer_actor_id"])
-        referenced_actors.update(relationship["reviewed_actor_ids"])
+        if "reviewed_actor_ids" in relationship:
+            referenced_actors.update(relationship["reviewed_actor_ids"])
+        else:
+            referenced_actors.add(relationship["reviewed_actor_id"])
     for exposure in decision["exposure_declarations"]:
         referenced_actors.add(exposure["actor_id"])
         event = by_digest.get(exposure["exposure_event_digest"])
@@ -840,14 +926,45 @@ def validate_odr43_graph(decision, lineage_events):
         ]
         if event["action"] != "exposure-declared" or event["standing"] not in {"observed", "declared", "self-report", "imported-reviewed-evidence"} or not exposure_claims:
             raise OwnerDecisionForgery("ODR-43 exposure event semantic closure")
+        if decision.get("decision_version") == "owner-adopted-v1":
+            disclosure = by_digest.get(exposure["disclosure_artifact_event_digest"])
+            standing = [claim for claim in event["claims"] if claim["dimension"] == "standing" and claim["value"] == "none-at-adoption"]
+            if disclosure is None or disclosure["event_type"] != "artifact" or exposure["disclosure_artifact_event_digest"] not in event["basis_event_digests"] or not standing:
+                raise OwnerAdoptionGraphInvalid("ODR-43 exposure disclosure/standing closure")
     for restriction in decision["role_specific_restrictions"]:
         referenced_actors.add(restriction["actor_id"])
+        if decision.get("decision_version") == "owner-adopted-v1":
+            event = by_digest.get(restriction["restriction_event_digest"])
+            claims = {
+                claim["dimension"]: claim["value"]
+                for claim in event.get("claims", [])
+            } if event else {}
+            expected_digest = "sha256:" + sha256_bytes(canonical_json_bytes(restriction["restrictions"]))
+            if (
+                event is None or event["event_type"] != "authorization"
+                or claims.get("restricted-actor") != restriction["actor_id"]
+                or claims.get("role") != restriction["role"]
+                or claims.get("restriction-set-digest") != expected_digest
+            ):
+                raise OwnerAdoptionGraphInvalid("ODR-43 role-restriction event closure")
     if not referenced_actors.issubset(actors):
         raise OwnerDecisionForgery(f"ODR-43 actor reference closure: {sorted(referenced_actors - actors)}")
     if any(by_digest.get(digest, {}).get("event_type") != "read" for digest in decision["apparatus_read_event_digests"]):
         raise OwnerDecisionForgery("ODR-43 apparatus-read reference closure")
     if any(by_digest.get(digest, {}).get("event_type") != "ancestry" for digest in decision["shared_root_event_digests"]):
         raise OwnerDecisionForgery("ODR-43 shared-root reference closure")
+    if decision.get("decision_version") == "owner-adopted-v1":
+        if any(by_digest.get(digest, {}).get("event_type") != "artifact" for digest in decision["disclosure_artifact_event_digests"]):
+            raise OwnerAdoptionGraphInvalid("ODR-43 disclosure artifact closure")
+        if any(by_digest.get(digest, {}).get("event_type") != "authorization" for digest in decision["authority_event_digests"]):
+            raise OwnerAdoptionGraphInvalid("ODR-43 authority event closure")
+        for row in decision["apparatus_read_declarations"]:
+            event = by_digest.get(row["read_event_digest"])
+            if event is None or event["event_type"] != "read" or event["actor_id"] != row["actor_id"] or row["disclosure_artifact_event_digest"] not in event["basis_event_digests"]:
+                raise OwnerAdoptionGraphInvalid("ODR-43 disclosure/read closure")
+        for row in decision["bounded_unknowns_by_actor"]:
+            if not row["bounded_unknowns"]:
+                raise OwnerAdoptionGraphInvalid("ODR-43 bounded unknown closure")
 
 
 def validate_owner_records(records, require_adopted=False, lineage_events=None):
@@ -865,7 +982,8 @@ def validate_owner_records(records, require_adopted=False, lineage_events=None):
             raise OwnerDecisionForgery(record.get("decision_id", "missing"))
         if record.get("status") == "adopted" and record.get("decision_id") == "ODR-43" and isinstance(record.get("exact_decision"), dict):
             validate_odr43_exposure_class_set(record["exact_decision"])
-        validate_record(record, "owner-decision-record", verify_bound_bytes=False)
+        definition = "owner-decision-record-adopted" if record.get("schema_version") == "lae-owner-decision-record/1.1.0" else "owner-decision-record"
+        validate_record(record, definition, verify_bound_bytes=False)
         if record["decision_id"] not in grouped:
             raise OwnerDecisionForgery(record["decision_id"])
         if record["predecessor_digest"] is None:
@@ -894,7 +1012,7 @@ def validate_owner_records(records, require_adopted=False, lineage_events=None):
             if event is None or event["event_type"] != "owner-adoption":
                 raise OwnerDecisionForgery(f"missing adoption event: {decision_id}")
             if event["actor_id"] != successor["deciding_actor"] or event["owner_jurisdiction"] != successor["owner_jurisdiction"]:
-                raise OwnerDecisionForgery(f"owner actor/jurisdiction: {decision_id}")
+                raise OwnerAdoptionAuthorityMismatch(f"owner actor/jurisdiction: {decision_id}")
             if event["gate_closed"] != successor["exact_gate_closed"] or successor["exact_gate_closed"] != successor["exact_executable_gate"]:
                 raise OwnerDecisionForgery(f"exact gate closure: {decision_id}")
             if event["decision_payload_digest"] != payload_digest or event["unresolved_predecessor_record_digest"] != predecessor["record_digest"]:
@@ -902,7 +1020,10 @@ def validate_owner_records(records, require_adopted=False, lineage_events=None):
             if decision_id == "ODR-43":
                 validate_odr43_graph(successor["exact_decision"], lineage_events or [])
             else:
-                validate_odr60_allocation(successor["exact_decision"])
+                if successor["schema_version"] == "lae-owner-decision-record/1.1.0":
+                    validate_odr60_adopted_payload(successor, load_odr60_candidate())
+                else:
+                    validate_odr60_allocation(successor["exact_decision"])
             selected[decision_id] = successor
         else:
             selected[decision_id] = predecessor
@@ -925,6 +1046,41 @@ def drafting_gate(owner_records, lineage_events=None):
         raise OwnerDecisionUnresolved("validated adoption lineage required")
     validate_lineage(lineage_events)
     validate_owner_records(owner_records, require_adopted=True, lineage_events=lineage_events)
+    return True
+
+
+def validate_odr60_adopted_payload(successor, candidate):
+    validate_odr60_candidate(candidate)
+    validate_odr60_ruling_match(candidate["allocation"])
+    decision = successor["exact_decision"]
+    if decision != candidate["allocation"]:
+        raise ODR60AdoptionPayloadMismatch("adopted rows differ from preserved candidate")
+    if successor.get("adopted_candidate") != _ref(candidate):
+        raise ODR60AdoptionPayloadMismatch("candidate identity closure")
+    validate_odr60_allocation(decision)
+    return True
+
+
+def validate_odr60_ruling_match(decision):
+    families = {
+        "BS": "BOUNDED-SUPPORT", "SV": "SCOPE-AND-VERSION",
+        "CR": "CONFLICT-AND-RESIDUE", "NT": "NOTATION-NEUTRAL-TRANSFER",
+    }
+    pattern = {
+        "01": ("POSITIVE-CONCLUSION", ["TRAP-BEARING", "STRONG-CONCLUSION-CONTROL", "SHAM-DESIGNATED", "DOMAIN-NATIVE-NON-LANG-A-RENDERABLE"]),
+        "02": ("POSITIVE-CONCLUSION", []),
+        "03": ("DELIBERATE-INSUFFICIENCY", ["TRAP-BEARING", "EASY-BOUNDED-CONTROL", "SHAM-DESIGNATED"]),
+        "04": ("DELIBERATE-INSUFFICIENCY", []),
+        "05": ("MIXED-BOUNDED-CONTROL", ["TRAP-BEARING"]),
+        "06": ("MIXED-BOUNDED-CONTROL", ["DOMAIN-NATIVE-NON-LANG-A-RENDERABLE"]),
+    }
+    expected = [
+        {"slot_id": f"{prefix}-{suffix}", "content_family": family, "answerability_role": role, "tags": tags}
+        for prefix, family in families.items()
+        for suffix, (role, tags) in pattern.items()
+    ]
+    if decision != {"decision_kind": "typed-item-allocation", "item_rows": expected}:
+        raise ODR60AdoptionPayloadMismatch("candidate allocation differs from exact owner-ruling pattern")
     return True
 
 
@@ -1500,7 +1656,11 @@ def synthetic_owner_adoption_graph():
             {"actor_id": auditor, "role": "overlap-auditor", "restrictions": ["no substantive authorship"]},
         ],
     }
-    unresolved = {record["decision_id"]: record for record in load_owner_records()}
+    unresolved = {
+        record["decision_id"]: record
+        for record in load_owner_records()
+        if record["status"] == "unresolved"
+    }
     decisions = {"ODR-43": odr43_decision, "ODR-60": odr60_candidate_record()["allocation"]}
     adopted = []
     for decision_id in ("ODR-43", "ODR-60"):
@@ -1594,7 +1754,8 @@ def synthetic_transmission_lineage(pending_receipt=False):
 
 
 def load_owner_records():
-    return [strict_json_load(OWNER_RECORD_DIR / name) for name in ("ODR-43.json", "ODR-60.json")]
+    names = ("ODR-43.json", "ODR-60.json", "ODR-43-ADOPTED-v2.json", "ODR-60-ADOPTED-v2.json")
+    return [strict_json_load(OWNER_RECORD_DIR / name) for name in names if (OWNER_RECORD_DIR / name).is_file()]
 
 
 def load_odr60_candidate():
@@ -1634,6 +1795,21 @@ def _reseal(record):
     record.pop("record_digest", None)
     record.pop("canonical_byte_length", None)
     return seal_record(record)
+
+
+def validate_mutation_registry_contract(registry, handler_ids):
+    if registry.get("predecessor_registry_sha256") != PREDECESSOR_MUTATION_REGISTRY_SHA256:
+        raise MutationNotExercised("predecessor mutation registry identity differs")
+    if registry.get("declared_unexecuted") != [] or registry.get("undeclared_executed") != []:
+        raise MutationNotExercised("registry execution-difference fields must exist and be empty")
+    declared_ids = [entry["mutation_id"] for entry in registry.get("mutations", [])]
+    if len(declared_ids) != len(set(declared_ids)):
+        raise MutationNotExercised("duplicate mutation declaration")
+    if set(declared_ids) != set(handler_ids):
+        missing = sorted(set(declared_ids) - set(handler_ids))
+        undeclared = sorted(set(handler_ids) - set(declared_ids))
+        raise MutationNotExercised(f"missing handlers={missing}; undeclared handlers={undeclared}")
+    return True
 
 
 def _mutation_handlers():
@@ -1932,6 +2108,72 @@ def _mutation_handlers():
         data = (PACKET_ROOT / "controls/canonicalization-golden/minimal-record.material.json").read_bytes()
         validate_canonical_golden_vector(data.replace(b"canonical-golden", b"canonical-goldfn", 1))
 
+    def real_adoption():
+        return copy.deepcopy(load_owner_records()), copy.deepcopy(load_successor_lineage())
+
+    def real_successor(decision_id):
+        records, events = real_adoption()
+        successor = next(record for record in records if record["decision_id"] == decision_id and record["status"] == "adopted")
+        return records, events, successor
+
+    def validate_mutated_successor(decision_id, mutator):
+        records, events, successor = real_successor(decision_id)
+        mutator(successor)
+        successor = _reseal(successor)
+        records = [successor if row["decision_id"] == decision_id and row["status"] == "adopted" else row for row in records]
+        validate_owner_records(records, require_adopted=True, lineage_events=events)
+
+    def mutate_real_odr43(mutator, exposure_only=False):
+        _, events, successor = real_successor("ODR-43")
+        decision = copy.deepcopy(successor["exact_decision"])
+        mutator(decision)
+        if exposure_only:
+            validate_odr43_exposure_class_set(decision)
+        else:
+            validate_odr43_graph(decision, events)
+
+    def missing_author_exposure():
+        mutate_real_odr43(
+            lambda decision: decision["exposure_declarations"].pop(0),
+            exposure_only=True,
+        )
+
+    def duplicate_author_exposure():
+        def mutate(decision):
+            decision["exposure_declarations"][1] = copy.deepcopy(decision["exposure_declarations"][0])
+        mutate_real_odr43(mutate, exposure_only=True)
+
+    def mutate_real_odr60(mutator):
+        _, _, successor = real_successor("ODR-60")
+        successor = copy.deepcopy(successor)
+        mutator(successor["exact_decision"])
+        validate_odr60_adopted_payload(successor, load_odr60_candidate())
+
+    def mutate_odr60_candidate_against_ruling():
+        candidate = copy.deepcopy(load_odr60_candidate())
+        candidate["allocation"]["item_rows"][0]["tags"], candidate["allocation"]["item_rows"][1]["tags"] = (
+            candidate["allocation"]["item_rows"][1]["tags"], candidate["allocation"]["item_rows"][0]["tags"]
+        )
+        validate_odr60_ruling_match(candidate["allocation"])
+
+    def duplicate_current_head():
+        records, events, successor = real_successor("ODR-43")
+        duplicate = copy.deepcopy(successor)
+        duplicate["record_id"] = "owner-decision:ODR-43-adopted-duplicate-v2"
+        records.append(_reseal(duplicate))
+        validate_owner_records(records, require_adopted=True, lineage_events=events)
+
+    def registry_declared_unexecuted():
+        registry = copy.deepcopy(strict_json_load(MUTATION_REGISTRY_PATH))
+        registry["declared_unexecuted"] = [registry["mutations"][-1]["mutation_id"]]
+        validate_mutation_registry_contract(registry, {row["mutation_id"] for row in registry["mutations"]})
+
+    def registry_undeclared_executed():
+        registry = copy.deepcopy(strict_json_load(MUTATION_REGISTRY_PATH))
+        handlers = {row["mutation_id"] for row in registry["mutations"]}
+        handlers.add("mutation:undeclared-execution-sentinel")
+        validate_mutation_registry_contract(registry, handlers)
+
     return {
         "malformed-item-record": malformed_item,
         "malformed-source-manifest": malformed_source,
@@ -1991,7 +2233,7 @@ def _mutation_handlers():
         "owner-adoption-stale-predecessor-digest": owner_stale_predecessor,
         "owner-adoption-missing-preserved-predecessor": owner_missing_predecessor,
         "owner-adoption-without-lineage-event": owner_missing_event,
-        "odr-43-dangling-actor-reference": lambda: mutate_odr43_payload(lambda value: value["item_author_actor_ids"].append("actor:missing")),
+        "odr-43-dangling-actor-reference": lambda: mutate_odr43_payload(lambda value: value["content_family_assignments"][0].update(actor_id="actor:missing")),
         "odr-43-dangling-apparatus-read": lambda: mutate_odr43_payload(lambda value: value["apparatus_read_event_digests"].append("sha256:" + "0" * 64)),
         "odr-43-dangling-exposure-reference": lambda: mutate_odr43_payload(lambda value: value["exposure_declarations"][0].update(exposure_event_digest="sha256:" + "0" * 64)),
         "freezer-accepted-null-freezer-decision": lambda: null_freezer_decision("freezer-accepted"),
@@ -2069,6 +2311,90 @@ def _mutation_handlers():
         "mutation:r2-pv-03a-inconsistent-rendering-parent": lambda: mutated_dossier(
             lambda dossier, _records: dossier.update(rendering_set_digest="sha256:" + "0" * 64)
         ),
+        "mutation:adoption-stale-unresolved-head": lambda: validate_mutated_successor(
+            "ODR-43", lambda successor: successor["unresolved_predecessor"].update(record_digest="sha256:" + "0" * 64)
+        ),
+        "mutation:adoption-reused-unresolved-record-id": lambda: validate_mutated_successor(
+            "ODR-43", lambda successor: successor.update(record_id="owner-decision:ODR-43-unresolved-v1")
+        ),
+        "mutation:adoption-wrong-predecessor-digest": lambda: validate_mutated_successor(
+            "ODR-43", lambda successor: successor.update(predecessor_digest="sha256:" + "0" * 64)
+        ),
+        "mutation:adoption-absent-unresolved-predecessor": lambda: (
+            lambda records, events: validate_owner_records(
+                [row for row in records if not (row["decision_id"] == "ODR-43" and row["status"] == "unresolved")],
+                require_adopted=True, lineage_events=events,
+            )
+        )(*real_adoption()),
+        "mutation:adoption-missing-owner-adoption-event": lambda: (
+            lambda records, events, successor: validate_owner_records(
+                records, require_adopted=True,
+                lineage_events=[event for event in events if event["record_digest"] != successor["adoption_event_digest"]],
+            )
+        )(*real_successor("ODR-43")),
+        "mutation:adoption-wrong-owner-jurisdiction": lambda: validate_mutated_successor(
+            "ODR-43", lambda successor: successor.update(owner_jurisdiction="mechanical assistant jurisdiction")
+        ),
+        "mutation:adoption-wrong-fable-family-assignment": lambda: mutate_real_odr43(
+            lambda decision: decision["content_family_assignments"][0].update(content_families=["BOUNDED-SUPPORT", "SCOPE-AND-VERSION"])
+        ),
+        "mutation:adoption-wrong-sol-family-assignment": lambda: mutate_real_odr43(
+            lambda decision: decision["content_family_assignments"][1].update(content_families=["CONFLICT-AND-RESIDUE", "NOTATION-NEUTRAL-TRANSFER"])
+        ),
+        "mutation:adoption-absent-reciprocal-cross-review": lambda: mutate_real_odr43(
+            lambda decision: decision["cross_review_relationships"].pop()
+        ),
+        "mutation:adoption-sealed-dossier-shared": lambda: mutate_real_odr43(
+            lambda decision: decision["cross_review_relationships"][0].update(sealed_dossier_exchange=True)
+        ),
+        "mutation:adoption-missing-freezer-overlap-auditor": lambda: mutate_real_odr43(
+            lambda decision: decision.pop("freezer_overlap_auditor_actor_id")
+        ),
+        "mutation:adoption-codex-substantive-freezer-authority": lambda: mutate_real_odr43(
+            lambda decision: decision["mechanical_validation_assistant"].update(substantive_freezer_authority=True)
+        ),
+        "mutation:adoption-missing-author-exposure-class": missing_author_exposure,
+        "mutation:adoption-duplicated-author-exposure-class": duplicate_author_exposure,
+        "mutation:adoption-dangling-disclosure-reference": lambda: mutate_real_odr43(
+            lambda decision: decision["disclosure_artifact_event_digests"].__setitem__(0, "sha256:" + "0" * 64)
+        ),
+        "mutation:adoption-dangling-read-reference": lambda: mutate_real_odr43(
+            lambda decision: decision["apparatus_read_event_digests"].__setitem__(0, "sha256:" + "0" * 64)
+        ),
+        "mutation:adoption-dangling-exposure-reference": lambda: mutate_real_odr43(
+            lambda decision: decision["exposure_declarations"][0].update(exposure_event_digest="sha256:" + "0" * 64)
+        ),
+        "mutation:adoption-dangling-shared-root-reference": lambda: mutate_real_odr43(
+            lambda decision: decision["shared_root_event_digests"].__setitem__(0, "sha256:" + "0" * 64)
+        ),
+        "mutation:adoption-blindness-claim-true": lambda: mutate_real_odr43(
+            lambda decision: decision["blindness_and_independence"].update(blind_item_authorship_claimed=True)
+        ),
+        "mutation:adoption-independence-claim-true": lambda: mutate_real_odr43(
+            lambda decision: decision["blindness_and_independence"].update(global_independence_claimed=True)
+        ),
+        "mutation:adoption-missing-claims-not-made": lambda: mutate_real_odr43(
+            lambda decision: decision["claims_explicitly_not_made"].pop()
+        ),
+        "mutation:adoption-missing-role-restriction": lambda: mutate_real_odr43(
+            lambda decision: decision["role_specific_restrictions"][0]["restrictions"].remove("no private key during item authorship")
+        ),
+        "mutation:adoption-odr60-candidate-payload-mismatch": lambda: mutate_real_odr60(
+            lambda decision: decision["item_rows"][0].update(answerability_role="DELIBERATE-INSUFFICIENCY")
+        ),
+        "mutation:adoption-odr60-changed-row": lambda: mutate_real_odr60(
+            lambda decision: decision["item_rows"][1]["tags"].append("TRAP-BEARING")
+        ),
+        "mutation:adoption-odr60-stored-derived-total": lambda: mutate_real_odr60(
+            lambda decision: decision.update(total_item_slots=24)
+        ),
+        "mutation:adoption-odr60-candidate-ruling-mismatch": mutate_odr60_candidate_against_ruling,
+        "mutation:adoption-unresolved-closes-drafting-gate": lambda: (
+            lambda records, events: drafting_gate([row for row in records if row["status"] == "unresolved"], events)
+        )(*real_adoption()),
+        "mutation:adoption-duplicate-current-head": duplicate_current_head,
+        "mutation:adoption-registry-declared-unexecuted": registry_declared_unexecuted,
+        "mutation:adoption-registry-undeclared-executed": registry_undeclared_executed,
     }
 
 
@@ -2148,15 +2474,10 @@ def synthetic_key_manifest(records=None):
 
 def execute_mutations(registry=None):
     registry = registry if registry is not None else strict_json_load(MUTATION_REGISTRY_PATH)
-    if registry.get("predecessor_registry_sha256") != PREDECESSOR_MUTATION_REGISTRY_SHA256:
-        raise MutationNotExercised("predecessor mutation registry identity differs")
-    if registry.get("declared_unexecuted") != [] or registry.get("undeclared_executed") != []:
-        raise MutationNotExercised("registry execution-difference fields must exist and be empty")
     declarations = registry.get("mutations", [])
     handlers = _mutation_handlers()
     declared_ids = [entry["mutation_id"] for entry in declarations]
-    if len(declared_ids) != len(set(declared_ids)):
-        raise MutationNotExercised("duplicate mutation declaration")
+    validate_mutation_registry_contract(registry, handlers)
     fixture_paths = sorted((PACKET_ROOT / "controls/preauthorship-regression-fixtures").glob("*.json"))
     fixture_ids = {strict_json_load(path)["witness_id"] for path in fixture_paths}
     fixture_registry_ids = {
@@ -2165,10 +2486,6 @@ def execute_mutations(registry=None):
     }
     if fixture_ids != fixture_registry_ids or not fixture_ids.issubset(set(declared_ids)):
         raise MutationNotExercised("mutation fixture declaration/registry closure differs")
-    if set(declared_ids) != set(handlers):
-        missing = sorted(set(declared_ids) - set(handlers))
-        undeclared = sorted(set(handlers) - set(declared_ids))
-        raise MutationNotExercised(f"missing handlers={missing}; undeclared handlers={undeclared}")
     results = []
     executed = set()
     for declaration in declarations:
@@ -2286,9 +2603,10 @@ def verify_all():
         "schema_inventory": inventory,
         "mutation_count": len(results),
         "mutations_killed": len(results),
-        "odr_43": "unresolved",
-        "odr_60": "unresolved",
-        "substantive_drafting": "blocked-pending-owner-adoption",
+        "odr_43": "adopted",
+        "odr_60": "adopted",
+        "item_author_commissions": "eligible-for-owner-issuance-not-issued",
+        "substantive_drafting": "not-commissioned",
         "current_tranche_max_state": CURRENT_TRANCHE_MAX_STATE,
         "jsonschema_runtime": package_version("jsonschema"),
     }
@@ -2303,15 +2621,9 @@ def validate_repository_records():
     validate_odr60_candidate(load_odr60_candidate())
     owner_records = load_owner_records()
     successor_lineage = load_successor_lineage()
-    validate_owner_records(owner_records, require_adopted=False, lineage_events=successor_lineage)
-    try:
-        drafting_gate(owner_records, successor_lineage)
-    except OwnerDecisionUnresolved:
-        drafting_blocked = True
-    else:
-        drafting_blocked = False
-    if not drafting_blocked:
-        raise OwnerDecisionForgery("unresolved owner records failed to block drafting")
+    validate_owner_records(owner_records, require_adopted=True, lineage_events=successor_lineage)
+    if not drafting_gate(owner_records, successor_lineage):
+        raise OwnerDecisionUnresolved("adopted owner records failed gate closure")
     validate_lineage(successor_lineage)
     validate_construct_specimen_registry()
     validate_record_graph(synthetic_record_graph(), allow_synthetic=True)
