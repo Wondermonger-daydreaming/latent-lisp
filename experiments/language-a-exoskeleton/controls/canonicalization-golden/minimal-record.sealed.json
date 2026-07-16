@@ -1,0 +1,1 @@
+{"actor_id":"actor:canonical-golden","bounded_unknowns":[],"canonical_byte_length":259,"event_time":"2026-07-16T02:41:20-03:00","parent_versions":[],"predecessor_digest":null,"record_digest":"sha256:d397b45ee9fa807afb6cf6e2a385a3650fcefd4ea73d8449b32a425f6e9afa67","record_id":"golden:canonical-minimal","schema_version":"lae-canonical-golden/1.0.0","synthetic_taint_id":null}

@@ -1,0 +1,68 @@
+{
+  "artifact_type": "preauthorship-repair-0.2-verification-runs",
+  "schema_version": "lae-preauthorship-verification-runs/0.2.0",
+  "basis": {
+    "commission_basis_sha256": "ef5366139065c741d9ee4d7bcc02fd426a1cdae7abb7d2fd61b4d27abc0981fa",
+    "adoption_ruling_sha256": "968c9e0e65fc8fcd5dd76582cf7a0ae063aff96ea219eb724e3d2d6da88d222f"
+  },
+  "environment_scope": {
+    "scope": "single-environment",
+    "portability_claimed": false,
+    "statement": "Both fresh runs used one WSL2 environment; these results do not assert portability to another interpreter, platform, or dependency set.",
+    "python_executable": "/home/gauss/OpenGauss/venv/bin/python3",
+    "python_version": "3.11.14",
+    "python_build": [
+      "main",
+      "Jan 27 2026 23:58:49"
+    ],
+    "jsonschema_version": "4.26.0",
+    "platform_triple": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "system": "Linux"
+  },
+  "command": {
+    "encoding": "UTF-8",
+    "bytes_without_trailing_line_feed": "bash experiments/language-a-exoskeleton/verify-pilot.sh",
+    "byte_length": 55,
+    "sha256": "4e802589c8b61c19785d4c1c072116503c94bda4cec3c3b2f8dd14c2b400bf2a"
+  },
+  "common_stdout": {
+    "encoding": "UTF-8",
+    "trailing_line_feed": true,
+    "byte_length": 440,
+    "sha256": "384256bc266b4770fd2081149216176b2233f748e06bebb6e9e66dda796876c1",
+    "terminal_assertion": "ALL PILOT PACKET FLOORS HOLD — 12/12 network-off checks green."
+  },
+  "runs": [
+    {
+      "run_id": "preauthorship-repair-0.2-fresh-run-01",
+      "started_at": "2026-07-16T03:15:30-03:00",
+      "completed_at": "2026-07-16T03:15:44-03:00",
+      "exit_status": 0,
+      "passed_floors": 12,
+      "total_floors": 12,
+      "fresh_invocation": true,
+      "environment_scope": "single-environment",
+      "python_version": "3.11.14",
+      "jsonschema_version": "4.26.0",
+      "platform_triple": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "command_byte_length": 55,
+      "command_sha256": "4e802589c8b61c19785d4c1c072116503c94bda4cec3c3b2f8dd14c2b400bf2a"
+    },
+    {
+      "run_id": "preauthorship-repair-0.2-fresh-run-02",
+      "started_at": "2026-07-16T03:15:47-03:00",
+      "completed_at": "2026-07-16T03:16:00-03:00",
+      "exit_status": 0,
+      "passed_floors": 12,
+      "total_floors": 12,
+      "fresh_invocation": true,
+      "environment_scope": "single-environment",
+      "python_version": "3.11.14",
+      "jsonschema_version": "4.26.0",
+      "platform_triple": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+      "command_byte_length": 55,
+      "command_sha256": "4e802589c8b61c19785d4c1c072116503c94bda4cec3c3b2f8dd14c2b400bf2a"
+    }
+  ]
+}

@@ -19,16 +19,24 @@ branch receipt.
 Every versioned record carries a stable ID, schema version, actor/declarant,
 offset timestamp, exact parent versions, bounded unknowns, canonical byte
 length, and SHA-256. `record_digest` is computed over UTF-8 canonical JSON with
-sorted keys, minimal separators, and one terminal LF after removing only the
-derived `record_digest` and `canonical_byte_length` members. The validator
+sorted keys, compact separators, `ensure_ascii` disabled, and exactly one
+terminal LF after removing only the two derived members, `record_digest` and
+`canonical_byte_length`. The committed golden vector under
+`controls/canonicalization-golden/` lets an external replayer test those exact
+bytes before validating any other record. The validator
 recomputes both fields. External content bindings separately name stable
 artifact IDs, storage paths, media types, exact byte lengths, and SHA-256s;
 paths are locations, never identities.
 
 Lineage uses the same digest material. Every event after the first names the
 exact predecessor record digest. Artifact parents and reads name exact artifact
-event digests. Corrections and successors preserve their superseded events;
-the reviewed lineage files remain unchanged and are inventoried beside the
+event digests. Strict v2 transmission and handoff events require nonempty
+artifact, basis, input, parent, and claim collections; sender, recipient,
+authorization, byte identity, and acknowledged or explicitly pending receipt
+closure. The legacy empty v1 transmission remains preserved as a failed
+predecessor and is closed only by an appended correction plus a strict v2
+successor. Corrections and successors preserve their superseded events; the
+reviewed lineage files remain unchanged and are inventoried beside the
 successor ledger.
 
 ## Two-artifact authorship boundary
@@ -38,7 +46,9 @@ membership, expected-answer artifacts, proposed opportunities and trap classes,
 catchability witnesses, lawful/failing examples, ancestry and exposure
 deliberation, and overlap review.
 
-`KEY-AUTHOR-INPUT` is the only future key-author input. Its closed entry enum
+`KEY-AUTHOR-INPUT` is the only future key-author input. It must equal—not merely
+be a subset of—the authorized set in a referenced frozen-bank manifest. Its
+closed entry enum
 allows only frozen item/task/rendering bytes, exact source manifests and source
 components, controlling scoring doctrine, authority identities, and neutral
 custody receipts. It rejects dossiers, item-author roles, expected answers,
@@ -46,7 +56,24 @@ opportunities, trap labels, witnesses, examples, synthetic outcomes, schedules,
 and grader material. Each permitted public kind closes to its dedicated record
 schema and exact byte binding, so relabeling private data as doctrine or
 authority metadata also fails. It rejects any moving-bank item or source version.
-The current repository contains no real instance of either artifact.
+The current repository contains no real instance of either artifact. Synthetic
+state-transition and frozen-bank fixtures remain permanently tainted and obey
+the same decision, predecessor, actor/authority, source, rendering, version,
+and receipt rules as a future real record.
+
+## Owner adoption and allocation boundary
+
+The byte-identical unresolved ODR-43 and ODR-60 records remain immutable.
+Future adoption requires separate successor IDs, exact predecessor-record
+digests, preserved predecessors, strict owner-adoption events, owner
+jurisdiction, exact decision-payload and gate closure, and resolved actor,
+read, exposure, and shared-root graphs. Status editing cannot satisfy the
+drafting gate.
+
+`ODR-60-CANDIDATE-ALLOCATION-0.2.json` is an unresolved 24-row candidate bound
+to the adopted Repair 0.2 commission. It stores no totals; family, role, and tag
+cardinalities are derived from the rows on every validation. It adopts no owner
+decision and authorizes no item drafting.
 
 ## Construct-validity capacity and deferral
 

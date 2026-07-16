@@ -1,0 +1,1 @@
+{"decision_kind":"role-allocation-policy","family_allocations":[{"closed_class_trap":2,"family":"bounded-support","insufficiency":2,"positive_conclusion":2}],"role_overlap_policy":"allowed-with-explicit-multi-role-declaration","standing":"permanently-tainted-escaped-defect","witness_id":"mutation:pv-01-witness"}

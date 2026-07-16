@@ -10,8 +10,8 @@ from util import PACKET_ROOT, REPO_ROOT, canonical_json_bytes, load_json, load_j
 from preauthorship import validate_repository_records
 
 
-BASE_COMMIT = "360bb1ff2ec13b039681986d3bcfc2b27e57f53c"
-BASE_TREE = "9d5e2478b4f103b5f1f9d9674a1905c605388d6a"
+BASE_COMMIT = "3e6fb3ef3125eee607f8bcf589f0e95108170f57"
+BASE_TREE = "ddff0d4f499cda4904cd8d0624feb3f8a9f9140f"
 REVIEWED_INPUT_COMMIT = "f5f0e4a6972f9b321167e5aef6c5c47c70d56e3e"
 REVIEWED_INPUT_TREE = "6561d3097c056c517e9f67fad1c168608d60f0db"
 PROTECTED = (
@@ -36,9 +36,9 @@ def build_manifest(root=PACKET_ROOT):
     for path in packet_files(root):
         relative = path.relative_to(root).as_posix()
         records.append({"path": relative, "bytes": path.stat().st_size, "sha256": sha256_file(path)})
-    return {"schema_version": "lae-construction-manifest/1.0.0", "authority_commit": BASE_COMMIT, "authority_tree": BASE_TREE,
+    return {"schema_version": "lae-construction-manifest/1.1.0", "authority_commit": BASE_COMMIT, "authority_tree": BASE_TREE,
             "reviewed_input_commit": REVIEWED_INPUT_COMMIT, "reviewed_input_tree": REVIEWED_INPUT_TREE,
-            "status": "PREAUTHORSHIP-REPAIR-CONSTRUCTION-CANDIDATE-NOT-FROZEN", "hash_semantics": "change detection only; not authenticity",
+            "status": "PREAUTHORSHIP-REPAIR-0.2-CONSTRUCTION-CANDIDATE-NOT-FROZEN", "hash_semantics": "change detection only; not authenticity",
             "frozen_scope": ["README.md", "STATE-RECONCILIATION.md", "PREREG-v0.2.md", "FREEZE-RULINGS.md", "FREEZE-STAFFING.md",
                              "BRANCH-BANK.md", "verify-pilot.sh", "prompts", "items", "scoring", "harness", "controls", "lineage", "operator", "evidence"],
             "files": records}
@@ -75,7 +75,7 @@ def check_manifest(root=PACKET_ROOT):
         raise ManifestMismatch("authority identity differs")
     if manifest.get("reviewed_input_commit") != REVIEWED_INPUT_COMMIT or manifest.get("reviewed_input_tree") != REVIEWED_INPUT_TREE:
         raise ManifestMismatch("reviewed input identity differs")
-    if manifest.get("status") != "PREAUTHORSHIP-REPAIR-CONSTRUCTION-CANDIDATE-NOT-FROZEN":
+    if manifest.get("status") != "PREAUTHORSHIP-REPAIR-0.2-CONSTRUCTION-CANDIDATE-NOT-FROZEN":
         raise ManifestMismatch("construction state differs")
 
 

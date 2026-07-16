@@ -194,6 +194,7 @@ def event_ref(event):
 class Chain:
     def __init__(self):
         self.events = []
+        self.schema_version = "lae-lineage-event/1.0.0"
 
     @property
     def predecessor(self):
@@ -202,7 +203,8 @@ class Chain:
     def add(self, event_id, event_type, actor_id, subject_id, action, **fields):
         event = pre._event(
             event_id, event_type, actor_id, subject_id, action,
-            fields.pop("event_time", EVENT_TIME), self.predecessor, **fields,
+            fields.pop("event_time", EVENT_TIME), self.predecessor,
+            schema_version=fields.pop("schema_version", self.schema_version), **fields,
         )
         self.events.append(event)
         return event
@@ -268,7 +270,7 @@ def build_lineage():
         )
         reads[label] = event
 
-    chain.add(
+    legacy_transmission = chain.add(
         "event:transmission-authorial-inputs", "transmission", EXTERNAL_OWNER,
         "transmission:external-authorial-inputs", "transmitted",
         basis_event_digests=[reads[name]["record_digest"] for name in ("program-ruling", "program-errata", "owner-docket", "construct-validity-note")],
@@ -346,6 +348,50 @@ def build_lineage():
             {"dimension": "original-evidence-rewritten", "value": False, "bound": "exact"},
         ],
     )
+    chain.schema_version = "lae-lineage-event/2.0.0"
+    transmitted_names = ("program-ruling", "program-errata", "owner-docket", "construct-validity-note")
+    sender_reads = []
+    for name in transmitted_names:
+        sender_reads.append(chain.add(
+            f"event:external-owner-read-{name}", "read", EXTERNAL_OWNER,
+            f"read:external-owner-{name}", "read", chronology_basis="declared-causal",
+            artifact_refs=[event_ref(artifacts[name])], basis_event_digests=[artifacts[name]["record_digest"]],
+            standing="external-custody",
+            claims=[{"dimension": "scope", "value": "exact transmitted artifact", "bound": "declared"}],
+        ))
+    authorization = chain.add(
+        "event:authorization-repair-0.2-commission", "authorization", EXTERNAL_OWNER,
+        "authorization:repair-0.2-commission", "authorized", standing="external-custody",
+        basis_event_digests=[event["record_digest"] for event in sender_reads],
+        claims=[{"dimension": "authorization-basis", "value": "owner commission custody", "bound": "declared"}],
+    )
+    acknowledgment = chain.add(
+        "event:acknowledgment-authorial-input-custody", "acknowledgment", REPAIR_ACTOR,
+        "acknowledgment:authorial-input-custody", "acknowledged", standing="observed",
+        basis_event_digests=[authorization["record_digest"]],
+        claims=[{"dimension": "custody-receipt", "value": "AUTHORIAL-INPUT-CUSTODY.json", "bound": "exact"}],
+    )
+    correction = chain.add(
+        "event:correction-empty-transmission", "correction", REPAIR_ACTOR,
+        "correction:empty-transmission-v2", "corrected", standing="observed",
+        supersedes_event_digest=legacy_transmission["record_digest"],
+        causal_predecessor_digests=[legacy_transmission["record_digest"]],
+        claims=[{"dimension": "defect", "value": "legacy transmission lacked byte-bound artifact references", "bound": "exact"}],
+    )
+    artifact_digests = [artifacts[name]["record_digest"] for name in transmitted_names]
+    chain.add(
+        "event:transmission-authorial-inputs-v2", "transmission", EXTERNAL_OWNER,
+        "transmission:external-authorial-inputs-v2", "transmitted", standing="external-custody",
+        artifact_refs=[event_ref(artifacts[name]) for name in transmitted_names],
+        basis_event_digests=[*[event["record_digest"] for event in sender_reads], authorization["record_digest"]],
+        input_artifact_digests=artifact_digests, parent_artifact_digests=artifact_digests,
+        causal_predecessor_digests=[legacy_transmission["record_digest"], correction["record_digest"]],
+        supersedes_event_digest=legacy_transmission["record_digest"],
+        sender_actor_id=EXTERNAL_OWNER, recipient_actor_id=REPAIR_ACTOR,
+        authorization_basis_event_digest=authorization["record_digest"],
+        receipt_state={"status": "acknowledged", "receipt_event_digest": acknowledgment["record_digest"]},
+        claims=[{"dimension": "artifact-count", "value": len(transmitted_names), "bound": "exact"}],
+    )
     return chain.events, derived
 
 
@@ -421,8 +467,13 @@ def generate():
     odr43 = owner_record("ODR-43", derived["legacy-odr-43"]["record_digest"])
     odr60 = owner_record("ODR-60", derived["legacy-odr-60"]["record_digest"])
     pre.validate_owner_records([odr43, odr60], require_adopted=False)
-    write_bytes(PACKET_ROOT / "operator/owner-decisions/ODR-43.json", canonical_json_bytes(odr43))
-    write_bytes(PACKET_ROOT / "operator/owner-decisions/ODR-60.json", canonical_json_bytes(odr60))
+    for name, record in (("ODR-43.json", odr43), ("ODR-60.json", odr60)):
+        path = PACKET_ROOT / "operator/owner-decisions" / name
+        if path.read_bytes() != canonical_json_bytes(record):
+            raise RuntimeError(f"immutable unresolved owner predecessor differs: {name}")
+    candidate = pre.odr60_candidate_record()
+    pre.validate_odr60_candidate(candidate)
+    write_bytes(PACKET_ROOT / "operator/owner-decisions/ODR-60-CANDIDATE-ALLOCATION-0.2.json", canonical_json_bytes(candidate))
 
     original = {
         "schema_version": "lae-original-successor-lineage-inventory/1.0.0",
@@ -457,11 +508,6 @@ def generate():
     })
     pre.validate_record(specimen_taint)
     write_bytes(PACKET_ROOT / "preauthorship/registries/permanent-taint.jsonl", jsonl_bytes([pre.synthetic_record_graph()[0], specimen_taint]))
-    write_bytes(PACKET_ROOT / "evidence/preauthorship-repair/SCHEMA-INVENTORY.json", canonical_json_bytes({
-        "schema_version": "lae-schema-inventory/1.0.0",
-        "bundle": binding("schemas/preauthorship.schema.json"),
-        "schemas": pre.schema_inventory(),
-    }))
     print(f"GENERATED pre-authorship records: lineage={len(events)} schemas={len(pre.schema_inventory())}")
 
 
