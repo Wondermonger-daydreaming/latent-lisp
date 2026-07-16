@@ -1,16 +1,22 @@
-# Language-A first-pass emission pilot packet
+# Language-A emission pilot — Tranche B candidate bank and renderer
 
-Summary: This frozen pilot-scale construction packet concerns first-pass emission only for a sampled item bank, declared subject releases, provider routes, decoding settings, and run window; it permits no inference to hidden reasoning, no inference to enforcement efficacy, no inference to production custody, global independence, or totality.
+Summary: This successor canonicalizes the owner-accepted 24-item public content bank as candidate records and implements the exact 312-request network-off rendering and custody path. It does not freeze the bank, create a private key, score a target response, call a provider, retain target output, or authorize exposure.
 
-This directory is a network-off-by-default framework, not a frozen real experiment and not authorization to fire. It contains no real item, score key, provider route, model release, price table, person assignment, credential, target output, empirical score, or pilot verdict. The only provider implementation is deterministic and synthetic-only.
+The F1 target-visible surface is exactly the arm-neutral task plus finite source packet. Family, role, tags, boundary and rendering metadata, and owner dispositions remain in a separate control plane. Private freezer dossiers are validated into an owner-private local package outside Git; the repository retains only their 24 strict external identity records. The runtime reads only `items/candidate/target-visible/`, `tranche-b/templates/`, the fixed candidate schedule, its template manifest, and the strict schema bundle.
 
-Repair 0.2.1 keeps both owner decisions unresolved. A future ODR-43 successor must declare exactly one exposure row for each of `item-specific-answer`, `private-key`, and `target-output`; three duplicate rows do not close the gate. Every freezer decision's dossier reference must resolve to an exact, freezer-only `lae-item-freezer-dossier/1.0.0` record bound to the same item version, source manifest, and rendering set. The dossier remains excluded from `KEY-AUTHOR-INPUT`.
+The Tranche B path is implemented in `harness/tranche_b.py`. The predecessor scorer-coupled synthetic fixture path remains only to preserve inherited regression tests and is not used for candidate-bank traversal or Tranche B evidence.
+
+Repair 0.2.1 keeps both owner decisions unresolved. A future ODR-43 successor must declare exactly one exposure row for each of `item-specific-answer`, `private-key`, and `target-output`; three duplicate rows do not close the gate. Tranche B records only the byte length, digest, item/version binding, source identity, custody basis, and exclusions of each owner-private external dossier. Dossier content remains outside Git and excluded from `KEY-AUTHOR-INPUT`.
 
 The proposed design is declarative in `items/design/design.json`. Running `python3 harness/design.py` regenerates the schedule and count census. A permitted pre-exposure design change under Errata 0.1 must change that one record and regenerate all dependent artifacts before a new manifest is built.
 
 Local construction verification:
 
     bash verify-pilot.sh
+
+Tranche B targeted verification:
+
+    bash verify-tranche-b.sh
 
 Exposure readiness is deliberately unavailable:
 

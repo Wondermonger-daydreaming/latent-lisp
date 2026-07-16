@@ -1,0 +1,9 @@
+Use the labels. Preserve supported conclusions and unresolved points. Connect claims to packet support, name procedures, and bound corpus, version, and time. A complete-looking form is not evidence.
+
+Answer: State the warranted response.
+Claims: List material statements.
+Support: Connect statements to named packet sources.
+Procedure: Name calculations, comparisons, or transformations.
+Confidence: Describe certainty without claiming calibration.
+Boundaries: State corpus, version, and time limits.
+Unresolved: Preserve material points the packet does not determine.

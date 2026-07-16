@@ -72,3 +72,14 @@ PreauthorshipStateViolation = _condition("PreauthorshipStateViolation")
 FreezerDossierReferenceInvalid = _condition("FreezerDossierReferenceInvalid")
 RejectedDraftPreservationViolation = _condition("RejectedDraftPreservationViolation")
 MutationNotExercised = _condition("MutationNotExercised")
+
+# Tranche B candidate-bank and network-off custody conditions.  These remain
+# experiment-local and do not alter the protected Language-A validator's
+# condition vocabulary.
+CanonicalizationIdentityMismatch = _condition("CanonicalizationIdentityMismatch")
+CanonicalPopulationMismatch = _condition("CanonicalPopulationMismatch")
+TargetVisibilityViolation = _condition("TargetVisibilityViolation")
+RendererContractViolation = _condition("RendererContractViolation")
+RequestCustodyViolation = _condition("RequestCustodyViolation")
+AuthorityBoundaryViolation = _condition("AuthorityBoundaryViolation")
+TrancheBMutationNotExercised = _condition("TrancheBMutationNotExercised")

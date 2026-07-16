@@ -1,0 +1,1 @@
+{"all_required_runs_passed":true,"environment":{"jsonschema":"4.26.0","network":"off","python":"3.11.14","sbcl":"2.4.6"},"runs":[{"command":"bash verify-tranche-b.sh","result":"pass","run_id":"fresh-targeted-1"},{"command":"bash verify-tranche-b.sh","result":"pass","run_id":"fresh-targeted-2"}],"schema_version":"lae-tranche-b-verification-runs/1.0.0"}

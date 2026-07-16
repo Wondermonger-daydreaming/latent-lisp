@@ -1,0 +1,1 @@
+Use only the supplied task and finite source packet. Do not use outside facts. Return one response that preserves every supported conclusion and every material uncertainty.

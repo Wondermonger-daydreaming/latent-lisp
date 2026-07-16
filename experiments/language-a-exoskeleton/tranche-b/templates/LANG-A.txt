@@ -1,0 +1,11 @@
+Return one public JUDGMENT record using the skeleton below. Preserve supported conclusions and unresolved material; connect every claim to packet support; name any procedure used; and bound corpus, version, and time. A valid record is not evidence.
+
+(JUDGMENT
+ (:ID RESPONSE)
+ (:STATUS :ANSWER)
+ (:RECEIPTS (SOURCE-PACKET))
+ (:CLAIMS ((CLAIM (:ID CLAIM-1) (:PROPOSITION (...)) (:STANDING :ASSERTED))))
+ (:SUPPORT ((SUPPORT (:ID SUPPORT-1) (:FACES CLAIM-1) (:ARTIFACT SOURCE-PACKET))))
+ (:UNRESOLVED (...))
+ (:CONFIDENCE 0.5)
+ (:ANSWER ...))
