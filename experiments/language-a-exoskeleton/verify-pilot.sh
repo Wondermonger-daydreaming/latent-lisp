@@ -23,6 +23,8 @@ run_floor() {
 run_floor mneme-existing-floor bash "$REPO/mneme/verify-all.sh"
 run_floor design-reproduction python3 "$ROOT/harness/design.py" --check
 run_floor packet-unit-and-mutation-tests python3 "$ROOT/tests/test_packet.py"
+run_floor preauthorship-unit-tests python3 "$ROOT/tests/test_preauthorship.py"
+run_floor preauthorship-schema-lineage-mutations python3 "$ROOT/harness/preauthorship.py" verify
 run_floor synthetic-precision-replay python3 "$ROOT/harness/precision.py" --check
 run_floor claim-ceiling-lint python3 "$ROOT/harness/claim_lint.py" "$ROOT/README.md" "$ROOT/evidence/README.md" "$ROOT/evidence/analysis/SYNTHETIC-PRECISION-REPORT.json" "$ROOT"/evidence/branch/*.json
 run_floor manifest-lineage-protected python3 "$ROOT/harness/manifest.py" check
@@ -56,4 +58,4 @@ assert record["pilot_verdicts"] == 0
 PY
 printf 'PASS  zero-network-and-exposure-census\n'
 
-printf 'ALL PILOT PACKET FLOORS HOLD — 10/10 network-off checks green.\n'
+printf 'ALL PILOT PACKET FLOORS HOLD — 12/12 network-off checks green.\n'

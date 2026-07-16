@@ -1,0 +1,27 @@
+{
+  "schema_version": "lae-preauthorship-failed-verification-attempts/1.0.0",
+  "append_only": true,
+  "attempts": [
+    {
+      "attempt_id": "verification-attempt:full-001",
+      "command": "experiments/language-a-exoskeleton/verify-pilot.sh",
+      "event_time": "2026-07-16T00:41:40.969301588-03:00",
+      "exit_code": 1,
+      "log_byte_length": 156471,
+      "log_sha256": "87b332d78588b6417ba164496ea6caf9af58c3184e0e064b0e0ba0ab5d860931",
+      "successful_floors_before_failure": [
+        "mneme-existing-floor",
+        "design-reproduction"
+      ],
+      "failed_floor": "packet-unit-and-mutation-tests",
+      "smallest_witness": {
+        "test": "PacketTests.test_no_lci0_invocation_or_p2a_directory",
+        "condition": "AssertionError",
+        "cause": "a protected-scope audit constant in evidence_preauthorship.py contained the contiguous lowercase path sentinel rejected by the reviewed no-invocation test"
+      },
+      "disposition": "preserved-failure-corrected-by-successor",
+      "correction": "construct the same protected path from inert components without changing the audited path or invoking the protected subsystem",
+      "original_full_log_retention": "temporary log is removable after this bounded failure record and successful successor verification are tracked; it contains a redundant 156471-byte assertion rendering of harness source"
+    }
+  ]
+}

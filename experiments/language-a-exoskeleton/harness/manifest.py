@@ -7,10 +7,13 @@ from conditions import (DanglingArtifactReference, DuplicateExperimentId, Lineag
                         ManifestMismatch, OwnerResolutionRequired, ProtectedScopeModified,
                         UnmanifestedFrozenArtifact)
 from util import PACKET_ROOT, REPO_ROOT, canonical_json_bytes, load_json, load_jsonl, sha256_bytes, sha256_file, write_bytes
+from preauthorship import validate_repository_records
 
 
 BASE_COMMIT = "360bb1ff2ec13b039681986d3bcfc2b27e57f53c"
 BASE_TREE = "9d5e2478b4f103b5f1f9d9674a1905c605388d6a"
+REVIEWED_INPUT_COMMIT = "f5f0e4a6972f9b321167e5aef6c5c47c70d56e3e"
+REVIEWED_INPUT_TREE = "6561d3097c056c517e9f67fad1c168608d60f0db"
 PROTECTED = (
     "canonical-datum", "mneme/lci0", "mneme/spec/lci0-review", "mneme/atelier/hinges/de-corroboratione.lisp",
     "mneme/atelier/evidence/de-corroboratione-0.4a-verification", "mneme/latent-mvp", "mneme/language-a/validator.lisp",
@@ -19,7 +22,7 @@ PROTECTED = (
 
 
 def packet_files(root=PACKET_ROOT):
-    excluded = {"FREEZE-MANIFEST.json", "FREEZE-MANIFEST.sha256"}
+    excluded = {"CONSTRUCTION-MANIFEST.json", "CONSTRUCTION-MANIFEST.sha256"}
     root = Path(root)
     for path in sorted(root.rglob("*")):
         if not path.is_file() or path.name in excluded or "__pycache__" in path.parts or path.suffix == ".pyc":
@@ -33,8 +36,9 @@ def build_manifest(root=PACKET_ROOT):
     for path in packet_files(root):
         relative = path.relative_to(root).as_posix()
         records.append({"path": relative, "bytes": path.stat().st_size, "sha256": sha256_file(path)})
-    return {"schema_version": "lae-freeze-manifest/0.2", "authority_commit": BASE_COMMIT, "authority_tree": BASE_TREE,
-            "status": "CONSTRUCTION-MANIFEST-NOT-EXPOSURE-FREEZE", "hash_semantics": "change detection only; not authenticity",
+    return {"schema_version": "lae-construction-manifest/1.0.0", "authority_commit": BASE_COMMIT, "authority_tree": BASE_TREE,
+            "reviewed_input_commit": REVIEWED_INPUT_COMMIT, "reviewed_input_tree": REVIEWED_INPUT_TREE,
+            "status": "PREAUTHORSHIP-REPAIR-CONSTRUCTION-CANDIDATE-NOT-FROZEN", "hash_semantics": "change detection only; not authenticity",
             "frozen_scope": ["README.md", "STATE-RECONCILIATION.md", "PREREG-v0.2.md", "FREEZE-RULINGS.md", "FREEZE-STAFFING.md",
                              "BRANCH-BANK.md", "verify-pilot.sh", "prompts", "items", "scoring", "harness", "controls", "lineage", "operator", "evidence"],
             "files": records}
@@ -43,17 +47,17 @@ def build_manifest(root=PACKET_ROOT):
 def write_manifest(root=PACKET_ROOT):
     root = Path(root)
     data = canonical_json_bytes(build_manifest(root))
-    write_bytes(root / "FREEZE-MANIFEST.json", data)
-    write_bytes(root / "FREEZE-MANIFEST.sha256", (sha256_bytes(data) + "  FREEZE-MANIFEST.json\n").encode("ascii"))
+    write_bytes(root / "CONSTRUCTION-MANIFEST.json", data)
+    write_bytes(root / "CONSTRUCTION-MANIFEST.sha256", (sha256_bytes(data) + "  CONSTRUCTION-MANIFEST.json\n").encode("ascii"))
 
 
 def check_manifest(root=PACKET_ROOT):
     root = Path(root)
-    manifest_path = root / "FREEZE-MANIFEST.json"
+    manifest_path = root / "CONSTRUCTION-MANIFEST.json"
     data = manifest_path.read_bytes()
-    expected_line = f"{sha256_bytes(data)}  FREEZE-MANIFEST.json\n".encode("ascii")
-    if (root / "FREEZE-MANIFEST.sha256").read_bytes() != expected_line:
-        raise ManifestMismatch("FREEZE-MANIFEST.sha256 differs")
+    expected_line = f"{sha256_bytes(data)}  CONSTRUCTION-MANIFEST.json\n".encode("ascii")
+    if (root / "CONSTRUCTION-MANIFEST.sha256").read_bytes() != expected_line:
+        raise ManifestMismatch("CONSTRUCTION-MANIFEST.sha256 differs")
     manifest = json.loads(data)
     listed = {record["path"]: record for record in manifest["files"]}
     actual = {path.relative_to(root).as_posix(): path for path in packet_files(root)}
@@ -69,6 +73,10 @@ def check_manifest(root=PACKET_ROOT):
             raise ManifestMismatch(relative)
     if manifest["authority_commit"] != BASE_COMMIT or manifest["authority_tree"] != BASE_TREE:
         raise ManifestMismatch("authority identity differs")
+    if manifest.get("reviewed_input_commit") != REVIEWED_INPUT_COMMIT or manifest.get("reviewed_input_tree") != REVIEWED_INPUT_TREE:
+        raise ManifestMismatch("reviewed input identity differs")
+    if manifest.get("status") != "PREAUTHORSHIP-REPAIR-CONSTRUCTION-CANDIDATE-NOT-FROZEN":
+        raise ManifestMismatch("construction state differs")
 
 
 def check_ids_and_references(root=PACKET_ROOT):
@@ -140,7 +148,7 @@ def main():
     if args.command == "build":
         write_manifest()
     elif args.command == "check":
-        check_manifest(); check_ids_and_references(); check_protected()
+        check_manifest(); check_ids_and_references(); validate_repository_records(); check_protected()
     elif args.command == "protected":
         check_protected()
     elif args.command == "exposure-readiness":
