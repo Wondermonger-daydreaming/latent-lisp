@@ -1,0 +1,1 @@
+{"command":{"command":["python3","-m","unittest","mneme/lci0/audit/test_law_audit.py","-v"],"exit_code":0,"transcript":"harness-self-test-transcript.txt","transcript_sha256":"054a5bf16a291eb7d34cf0b7a7935e48e3b52b68d74a4cc0d3311ca1eb0ef76d"},"decision":"pass","failures":0,"tests":12}
