@@ -1,0 +1,121 @@
+{
+  "schema_version": "lae-tranche-b-item-bank-freeze-verification/1.0.0",
+  "authority": {
+    "title": "OWNER AUTHORIZATION — LANGUAGE-A TRANCHE B ITEM-BANK FREEZE",
+    "provenance": "direct owner authorization in the current session",
+    "observed_at_utc": "2026-07-16T23:40:33Z",
+    "authorized_commit": "7936095f8ce13174bdbb4e1b043a78f318a6bcf2",
+    "authorized_tree": "b6255fcdfabf518f6b7397a8764bcb93d18e50e0",
+    "controlling_review_disposition": "PASS — TRANCHE B CANDIDATE FREEZE-QUALITY VERIFIED"
+  },
+  "freeze_record": {
+    "path": "experiments/language-a-exoskeleton/evidence/tranche-b-item-bank-freeze/FREEZE-MANIFEST.json",
+    "bytes": 591136,
+    "sha256": "a286b6082e4ac5089ad33e1edd9774d2a46c99207b343f29767eacf57eeb4d90",
+    "sidecar_verified": true,
+    "append_only_relative_to_authorized_candidate": true,
+    "successor_commit_reference": "SELF",
+    "successor_tree_reference": "SELF^{tree}"
+  },
+  "frozen_identity_summary": {
+    "artifact_count": 19,
+    "artifact_inventory_sha256": "14ca3887729fb8c112ffae572f02983f3e8d21448343edcbcaef54c9499972c2",
+    "all_artifacts_byte_identical_to_authorized_candidate": true,
+    "item_count": 24,
+    "item_bank_artifact_set_sha256": "9d8ddad2809939eb20b0d2a98c43584fb618f6650cf085d3664c0c3e275216f6",
+    "template_set_sha256": "c95c1c38220be2dbe5b45ac96e6ca0ba8bf1f3e9b4b57342f15f58595b47342b",
+    "schedule_sha256": "4c34e127da74eafed2e1b1e386695438e7d0ad0acf930118e213dc4d80398849",
+    "schedule_rows": 312,
+    "unique_call_ids": 312,
+    "unique_cells": 312,
+    "schedule_row_digest_list_sha256": "fee2d49c3ea3c8edcfc8081c1030cb5201342c2a540cf3c38320851e1558d665",
+    "request_parent_binding_list_sha256": "a98472c9ae08d1f025b3fcd87b27e5106901e2ea5644e146cc72a2694f8738f4",
+    "renderer_version": "lae-immutable-renderer/1.0.0"
+  },
+  "diff_results": {
+    "candidate_item_changes": [],
+    "template_changes": [],
+    "schedule_changes": [],
+    "request_parent_changes": [],
+    "protected_scope_changes": [],
+    "result": "empty"
+  },
+  "focused_verification": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 LAE_NETWORK_MODE=off python3 experiments/language-a-exoskeleton/harness/freeze_tranche_b.py verify",
+      "result": "pass",
+      "observed": "artifacts=19 rows=312 protected_changes=0"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 LAE_NETWORK_MODE=off python3 experiments/language-a-exoskeleton/harness/freeze_tranche_b.py self-test",
+      "result": "pass",
+      "observed": "6/6 tamper controls killed"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 LAE_NETWORK_MODE=off python3 experiments/language-a-exoskeleton/harness/tranche_b.py verify",
+      "result": "pass",
+      "observed": "items=24 schedule=312 mutations=56"
+    }
+  ],
+  "full_verification": {
+    "command": "bash experiments/language-a-exoskeleton/verify-tranche-b.sh",
+    "expected_floors": 7,
+    "successful_runs": 1,
+    "result": "pass",
+    "observed": [
+      "tranche-b-unit-mutation-replay",
+      "inherited-packet-tests",
+      "inherited-preauthorship-tests",
+      "inherited-preauthorship-mutations",
+      "inherited-design-reproduction",
+      "protected-scope",
+      "construction-manifest"
+    ]
+  },
+  "failed_attempts": [
+    {
+      "command": "bash experiments/language-a-exoskeleton/verify-tranche-b.sh",
+      "result": "failed",
+      "failed_floor": "inherited-packet-tests",
+      "condition": "test_no_lci0_invocation_or_p2a_directory",
+      "cause": "the new freeze verifier contained a contiguous protected-path sentinel in its audit path tuple",
+      "remediation": "split the sentinel in source while retaining the exact runtime path value; no protected or candidate file changed",
+      "freeze_manifest_rebuilt_to_bind_corrected_tool": true
+    }
+  ],
+  "negative_controls": {
+    "authorized_tree_mismatch": "killed",
+    "inventory_omission": "killed",
+    "artifact_digest_change": "killed",
+    "schedule_row_digest_change": "killed",
+    "request_parent_change": "killed",
+    "authorization_boundary_expansion": "killed"
+  },
+  "authorization_boundaries_observed": {
+    "private_key_authorship_or_custody": false,
+    "target_scoring": false,
+    "live_provider_calls_or_exposure": false,
+    "response_collection": false,
+    "item_bank_modification_or_expansion": false,
+    "template_or_schedule_modification": false,
+    "merge_to_main": false,
+    "release_or_production_deployment": false
+  },
+  "runtime_observations": {
+    "network_mode": "off",
+    "network_calls": 0,
+    "provider_calls": 0,
+    "target_outputs": 0,
+    "scoring_runs": 0,
+    "private_dossier_zip_reads": 0,
+    "private_key_reads": 0
+  },
+  "remote_identity": {
+    "pre_commit_authorized_ref": "verified",
+    "post_commit_local_tracking_direct_remote_match": "required post-commit and reported in the final disposition"
+  },
+  "cleanup": {
+    "task_caches_and_temporary_runs": "required after final verification",
+    "temporary_worktree": "required removal after remote verification"
+  }
+}
