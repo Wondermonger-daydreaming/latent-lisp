@@ -1,18 +1,23 @@
 {
   "schema_version": "lae-verification-evidence/0.2",
   "network_mode": "off",
-  "clean_run_command_template": "d=$(mktemp -d /tmp/lae-verification-clean-N-XXXXXX); cp -a COMMISSIONED_WORKTREE/. $d; bash $d/experiments/language-a-exoskeleton/verify-pilot.sh; remove $d",
+  "commit": "fe3f0b2e31d4341658b07e0be003700b52075ccc",
+  "date": "2026-07-17",
+  "run_by": "claude-fable-5-coordinator-session-via-runner-subagent",
+  "clean_run_command_template": "d=$(mktemp -d /tmp/lae-cleanroom-N-XXXXXX); cp -a COMMISSIONED_WORKTREE/. $d; bash $d/experiments/language-a-exoskeleton/verify-pilot.sh; remove $d",
   "component_commands": [
-    "bash mneme/verify-all.sh",
-    "python3 harness/design.py --check",
-    "python3 tests/test_packet.py",
-    "python3 harness/precision.py --check",
-    "python3 harness/claim_lint.py <generated claim surfaces>",
-    "python3 harness/manifest.py check",
-    "python3 harness/run.py --prove-key-denial",
-    "python3 harness/manifest.py exposure-readiness (expected OwnerResolutionRequired)",
-    "P2a absence check",
-    "zero network/exposure census check"
+    "mneme-existing-floor",
+    "design-reproduction",
+    "packet-unit-and-mutation-tests",
+    "preauthorship-unit-tests",
+    "preauthorship-schema-lineage-mutations",
+    "synthetic-precision-replay",
+    "claim-ceiling-lint",
+    "manifest-lineage-protected",
+    "key-open-denial",
+    "unresolved-owner-exposure-refusal",
+    "p2a-absent",
+    "zero-network-and-exposure-census"
   ],
   "preclean_rehearsal": {
     "counted_as_clean_run": false,
@@ -21,13 +26,35 @@
     "repair": "execute tests/test_packet.py directly; no experiment semantic or protected artifact changed"
   },
   "clean_runs": [
-    {"run": 1, "fresh_temporary_directory": true, "temporary_directory_removed": true, "exit_code": 0, "checks_green": 10, "stdout_sha256": "4a85cb695cb7dd79c8338b3941e47b4ddc1401fdd04fe0f068901cd61ef1169e", "stdout_bytes": 364},
-    {"run": 2, "fresh_temporary_directory": true, "temporary_directory_removed": true, "exit_code": 0, "checks_green": 10, "stdout_sha256": "4a85cb695cb7dd79c8338b3941e47b4ddc1401fdd04fe0f068901cd61ef1169e", "stdout_bytes": 364}
+    {"run": 1, "fresh_temporary_directory": true, "temporary_directory_removed": true, "exit_code": 0, "checks_green": 12, "stdout_sha256": "384256bc266b4770fd2081149216176b2233f748e06bebb6e9e66dda796876c1", "stdout_bytes": 440},
+    {"run": 2, "fresh_temporary_directory": true, "temporary_directory_removed": true, "exit_code": 0, "checks_green": 12, "stdout_sha256": "384256bc266b4770fd2081149216176b2233f748e06bebb6e9e66dda796876c1", "stdout_bytes": 440}
   ],
   "byte_identical_clean_run_output": true,
   "mneme_existing_floor": "green in both clean runs",
-  "packet_tests": "17/17 green in both clean runs",
+  "packet_tests": "31/31 green in both clean runs (packet-unit-and-mutation-tests 17 + preauthorship-unit-tests 14)",
   "network_calls": 0,
   "real_item_exposures": 0,
-  "pilot_verdicts": 0
+  "pilot_verdicts": 0,
+  "superseded_records": [
+    {
+      "reason": "stale: recorded 10 checks against a since-updated 12-check verify-pilot.sh, predating the README claim-ceiling-rider fix; re-run per WARDEN finding L11",
+      "component_commands": [
+        "bash mneme/verify-all.sh",
+        "python3 harness/design.py --check",
+        "python3 tests/test_packet.py",
+        "python3 harness/precision.py --check",
+        "python3 harness/claim_lint.py <generated claim surfaces>",
+        "python3 harness/manifest.py check",
+        "python3 harness/run.py --prove-key-denial",
+        "python3 harness/manifest.py exposure-readiness (expected OwnerResolutionRequired)",
+        "P2a absence check",
+        "zero network/exposure census check"
+      ],
+      "clean_runs": [
+        {"run": 1, "fresh_temporary_directory": true, "temporary_directory_removed": true, "exit_code": 0, "checks_green": 10, "stdout_sha256": "4a85cb695cb7dd79c8338b3941e47b4ddc1401fdd04fe0f068901cd61ef1169e", "stdout_bytes": 364},
+        {"run": 2, "fresh_temporary_directory": true, "temporary_directory_removed": true, "exit_code": 0, "checks_green": 10, "stdout_sha256": "4a85cb695cb7dd79c8338b3941e47b4ddc1401fdd04fe0f068901cd61ef1169e", "stdout_bytes": 364}
+      ],
+      "packet_tests": "17/17 green in both clean runs"
+    }
+  ]
 }
