@@ -1,0 +1,136 @@
+{
+ "file_sha256": "edf670c4113e75b149053304b86549ff1d8c6d448dbb9adbfe2819af113e5a6e",
+ "items": 24,
+ "per_item": {
+  "BS-01": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 4,
+   "sha256": "6dd2cf90e594602c5f1ba309e85bbda679ae8fd678ac82b13ab75907641b3441"
+  },
+  "BS-02": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 4,
+   "sha256": "e191a91468b9e8b5d4804e85244fb2b7281b7b5811df709f2e64f73128a9c0d4"
+  },
+  "BS-03": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 4,
+   "sha256": "5dd98c5f6ad182d15722d4974cd8a6863590108033b59b5022760987444fc789"
+  },
+  "BS-04": {
+   "opportunity_count": 4,
+   "scorable_opportunities": 4,
+   "sha256": "47016da8d177df4e5fab22a0c7161ef333b604c6f9d6c9e9c7c4fa13a6897541"
+  },
+  "BS-05": {
+   "opportunity_count": 6,
+   "scorable_opportunities": 4,
+   "sha256": "615012ada5f0e885e9376ee94b4263cdab34e8f165cc8f4588609cd57aac37ae"
+  },
+  "BS-06": {
+   "opportunity_count": 4,
+   "scorable_opportunities": 3,
+   "sha256": "07989b8fd943efc606f25063402da2472b6c49ba1e3f1f3f5b2bbedf0db825dc"
+  },
+  "CR-01": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 5,
+   "sha256": "73b89fa16cd5aab4086ac5c4785345fb7ec67de059c51ff865674745871d96d5"
+  },
+  "CR-02": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 5,
+   "sha256": "4ddfad840c0306f97adc03f8d69386a28719e2f2ea8db67a6f64cd3ba6cbd56a"
+  },
+  "CR-03": {
+   "opportunity_count": 6,
+   "scorable_opportunities": 5,
+   "sha256": "2ccff4f976e1beda326a92bc80d7ba9e53a95aed3da42e1512ddf79e6a24bab4"
+  },
+  "CR-04": {
+   "opportunity_count": 4,
+   "scorable_opportunities": 3,
+   "sha256": "8b45a7c5e45e8f656ba9ddd941d61a7c6518a7e7803e2ce3c935e739109d6e7e"
+  },
+  "CR-05": {
+   "opportunity_count": 6,
+   "scorable_opportunities": 5,
+   "sha256": "bf238a86df909704cda3ce06fd94d31a7e78cba57ceeb32b66a13f5892aedd1d"
+  },
+  "CR-06": {
+   "opportunity_count": 6,
+   "scorable_opportunities": 5,
+   "sha256": "6673f8bd5eab29373ec895d1fa2fef105e392b7f9f39eb0b641105071f2a5ef3"
+  },
+  "NT-01": {
+   "opportunity_count": 4,
+   "scorable_opportunities": 4,
+   "sha256": "71034a637e5b8a7adf8bcb0a52c6aca5fdb4752cef582d743fa3e0f710f68d6d"
+  },
+  "NT-02": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 4,
+   "sha256": "9a32d9f04957349a9eb3433d215c9fcaa647f99bb43e73789d20edcab93a2624"
+  },
+  "NT-03": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 4,
+   "sha256": "e8aaef6fd7bf863c5bb306c6d22bcafba521c5ce1b116b87bbc57351eee552b7"
+  },
+  "NT-04": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 3,
+   "sha256": "2c7108a10e87f158f6e82b085763f3fd355bd2eeffb73359eb1c6e3dedd05ee8"
+  },
+  "NT-05": {
+   "opportunity_count": 4,
+   "scorable_opportunities": 4,
+   "sha256": "f58511a7856da1fe8e3ea520b257aa9893eda0fe774218b1ebe48cc4683f6de8"
+  },
+  "NT-06": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 5,
+   "sha256": "159f13ad6e149d5b079b67c0765bdb57742dd6ade0e67352ad40c566a3d0cd1e"
+  },
+  "SV-01": {
+   "opportunity_count": 6,
+   "scorable_opportunities": 6,
+   "sha256": "833b67d3e58f194662e2f46e23b7d536b572e5189a36272c3afe656e5df7e125"
+  },
+  "SV-02": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 4,
+   "sha256": "685ffe8c78d5c642364c5af3ef13e1a4bbb270e1502b943f7bf965df0e59b649"
+  },
+  "SV-03": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 3,
+   "sha256": "35f82c50edb910c94c8ea4f059768d8d8cdd317a2763666d566edd19721c13e7"
+  },
+  "SV-04": {
+   "opportunity_count": 4,
+   "scorable_opportunities": 3,
+   "sha256": "08892f9209beacb6f5247b69795cf0cd01dbcd2ed282039804b1082cb86a4b6a"
+  },
+  "SV-05": {
+   "opportunity_count": 6,
+   "scorable_opportunities": 5,
+   "sha256": "b02f4bcd9a4253de7d332eb48f1ab1eac2356b30d253bf67d1f25d7c9c5643c4"
+  },
+  "SV-06": {
+   "opportunity_count": 5,
+   "scorable_opportunities": 5,
+   "sha256": "c9db209754f93911d97bcf33ae20cb1a6f76801a420da48b2aacf6c4efa65945"
+  }
+ },
+ "provenance": {
+  "audit_report_sha256": "4de5c9758110223a214c4baf858825bccb7d49833328370c26b7e3724ff86702",
+  "draft_sha256": "4a76d6012d39996fbb6158c156e448f61a6833561742f17e6db88dbcd1ee55ff",
+  "nt04_reaudit_sha256": "ac6c03106ac98b85ca8c7037e22148063eb88616795798770497bef757ab9fb3",
+  "nt04_rewrite_sha256": "2c7108a10e87f158f6e82b085763f3fd355bd2eeffb73359eb1c6e3dedd05ee8",
+  "owner_disposition": "ratified 2026-07-17 (23 ACCEPT + NT-04 rewrite loop)"
+ },
+ "schema_version": "lae-cb-key-final-candidate/0.1",
+ "total_opportunities": 120,
+ "total_scorable": 101
+}

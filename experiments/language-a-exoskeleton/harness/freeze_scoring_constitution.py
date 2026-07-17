@@ -215,7 +215,7 @@ def self_test():
     add("inventory-omission", lambda row: row["scoring_artifact_inventory"].pop())
     add("artifact-digest-change", lambda row: row["scoring_artifact_inventory"][0].__setitem__("sha256", "0" * 64))
     add("bank-binding-change", lambda row: row["frozen_bank_binding"].__setitem__("freeze_manifest_sha256", "0" * 64))
-    add("slot-status-forgery", lambda row: row.__setitem__("unresolved_owner_slot_count", 0))
+    add("slot-status-forgery", lambda row: row.__setitem__("unresolved_owner_slot_count", row["unresolved_owner_slot_count"] + 1))
     add("aggregate-drift", lambda row: row["aggregate_canonical_identities"].__setitem__("fixture_digest_list_sha256", "0" * 64))
     add("boundary-expansion", lambda row: row["authorization"]["boundaries"].__setitem__("live_scoring_authorized", True))
 

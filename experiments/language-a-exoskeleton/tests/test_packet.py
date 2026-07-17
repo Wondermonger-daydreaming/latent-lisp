@@ -218,8 +218,8 @@ class PacketTests(unittest.TestCase):
             firebreak.validate_grader_firebreak(actors, artifacts, [{"read_id":"r1","reader":"g","artifact_id":"cal","purpose":"calibration"}])
         self.assertTrue(firebreak.validate_grader_firebreak(actors, artifacts, [{"read_id":"r2","reader":"g","artifact_id":"src","purpose":"locked-target-scoring","response_lock_id":"lock:1","item_id":"i1"}]))
 
-    def test_owner_fields_block_exposure_and_protected_scope_is_clean(self):
-        with self.assertRaises(OwnerResolutionRequired):
+    def test_post_slot_lineage_gate_blocks_exposure_and_protected_scope_is_clean(self):
+        with self.assertRaises(LineageSearchIncomplete):
             manifest.exposure_readiness()
         manifest.check_protected()
 

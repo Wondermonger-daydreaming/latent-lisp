@@ -121,9 +121,8 @@ class DisagreementLawTest(unittest.TestCase):
 
 
 class SlotGateTest(unittest.TestCase):
-    def test_refuses_now_because_slots_unresolved(self):
-        with self.assertRaises(sc.ScoringEligibilityRefused):
-            sc.scoring_eligibility(sc.REPO_ROOT)
+    def test_passes_now_because_all_slots_are_resolved(self):
+        self.assertEqual(sc.scoring_eligibility(sc.REPO_ROOT), {"eligible": True, "unresolved": []})
 
     def test_passes_on_fully_resolved_register(self):
         with tempfile.TemporaryDirectory() as tmp:
