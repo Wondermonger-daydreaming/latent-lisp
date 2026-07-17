@@ -219,8 +219,12 @@ class PacketTests(unittest.TestCase):
         self.assertTrue(firebreak.validate_grader_firebreak(actors, artifacts, [{"read_id":"r2","reader":"g","artifact_id":"src","purpose":"locked-target-scoring","response_lock_id":"lock:1","item_id":"i1"}]))
 
     def test_post_slot_lineage_gate_blocks_exposure_and_protected_scope_is_clean(self):
-        with self.assertRaises(LineageSearchIncomplete):
+        # After the R10 lineage search terminates "complete", the gate must still
+        # block exposure -- now at the unsigned pre-exposure-signature stage, proving
+        # the completed search did not sign the gate itself.
+        with self.assertRaises(OwnerResolutionRequired) as caught:
             manifest.exposure_readiness()
+        self.assertEqual(caught.exception.detail, "pre-exposure-gate-signature")
         manifest.check_protected()
 
     def test_prompt_parity_and_sham_ceiling(self):

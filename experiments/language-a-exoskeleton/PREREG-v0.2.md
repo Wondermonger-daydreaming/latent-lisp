@@ -1,6 +1,6 @@
 # PREREG v0.2 — Language-A bounded first-pass emission pilot
 
-Status: construction draft; not owner-frozen; no exposure authorized.
+Status: owner-frozen 2026-07-17 (ruling R10, decision record operator/owner-decisions/PREREG-R10-FROZEN-v1.json; pre-freeze identity sha256 9780cbf95df216a48e91fdd0efd1b2336f6319844a4a0ed0a49a184234bf639a); no exposure authorized until the pre-exposure gate is signed.
 
 ## Objective and unit
 
