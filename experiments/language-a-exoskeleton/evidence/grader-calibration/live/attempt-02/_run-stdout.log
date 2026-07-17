@@ -1,0 +1,11 @@
+{
+  "overall_calibration": "ELIGIBLE",
+  "per_family": {
+    "unsupported_assertions": "ELIGIBLE",
+    "scope_errors": "ELIGIBLE",
+    "version_errors": "ELIGIBLE",
+    "residue_erasures": "ELIGIBLE"
+  },
+  "adjudication_count": 0,
+  "firebreak": "PASS"
+}
