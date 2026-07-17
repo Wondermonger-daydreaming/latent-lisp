@@ -1,0 +1,12 @@
+OWNER RATIFICATION RELAY — scoring-slot ruling
+
+The owner (actor:tomas-pellissari-pavan-owner) ratified
+LANGUAGE-A-SCORING-SLOTS-OWNER-RULING-2026-07-16.md by direct instruction ("Do it")
+in the working session of 2026-07-16/17 (America/Sao_Paulo), after an interview in
+which each ruling value was chosen by the owner from explicit alternatives
+(R1 kappa/AC1 rule; R3 uniform 0.10 grid; R4 cast with third-family adjudicator;
+R5 subjects incl. gpt-5.6-luna; sequencing: resolve 12 now, key follows).
+
+Relayed by: Claude Fable 5 (scoring-constitution author; not a deciding actor).
+This relay is testimony of owner direction, not an owner signature; the owner may
+countersign the ruling document at any time to supersede this relay.
