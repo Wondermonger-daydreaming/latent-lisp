@@ -1,0 +1,12 @@
+{
+  "fixture_id": "scorer-packet-clean",
+  "kind": "scorer-packet",
+  "packet": {
+    "item_version": "v1",
+    "locked_response": "text",
+    "source_packet": "pkt",
+    "task_statement": "task"
+  },
+  "purpose": "clean scorer packet exposes only permitted surfaces",
+  "synthetic_only": true
+}

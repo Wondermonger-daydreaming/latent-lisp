@@ -1,0 +1,14 @@
+{
+  "census": {
+    "class_counts": {
+      "analyzable": 300,
+      "quarantined": 3,
+      "unanalyzable": 8
+    },
+    "scheduled_total": 312
+  },
+  "fixture_id": "census-undercount",
+  "kind": "census",
+  "purpose": "denominator corruption: a deleted cell is caught as an undercount",
+  "synthetic_only": true
+}

@@ -1,0 +1,8 @@
+{
+  "a": 2,
+  "b": 4,
+  "fixture_id": "disagreement-two-apart",
+  "kind": "disagreement",
+  "purpose": "|a-b|=2 triggers mandatory adjudication",
+  "synthetic_only": true
+}

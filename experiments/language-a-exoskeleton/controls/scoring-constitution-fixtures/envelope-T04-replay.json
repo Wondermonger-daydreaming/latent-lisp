@@ -1,0 +1,54 @@
+{
+  "fixture_id": "envelope-T04-replay",
+  "kind": "envelope",
+  "purpose": "replayed response: raw_response_sha256 identical to another call",
+  "raw": "replay",
+  "request": {
+    "arm": "NL",
+    "attempt": 1,
+    "call_id": "SYNTH-CALL",
+    "item_id": "SYNTH-ITEM",
+    "item_version": "v1",
+    "model_id_requested": "synthetic-model",
+    "parameters": {
+      "max_output_tokens": 256,
+      "seed": 1,
+      "temperature": 0,
+      "tools": [],
+      "top_p": 1
+    },
+    "prompt_artifact_version": "v1",
+    "provider_id": "synthetic-provider",
+    "randomization_seed_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+    "request_bytes_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "retry_parent": null,
+    "run_id": "SYNTH-RUN",
+    "schedule_index": 0,
+    "subject_slot": "SYNTHETIC-SUBJECT-1",
+    "synthetic_only": true
+  },
+  "response": {
+    "anomalies": [],
+    "billed_cost_usd": 0,
+    "call_id": "SYNTH-CALL",
+    "completed_at": "2026-07-16T00:00:01Z",
+    "finish_reason": "stop",
+    "latency_ms": 1,
+    "model_id_returned": "synthetic-model",
+    "operator_actor_id": "synthetic-operator",
+    "price_table_version": "synthetic",
+    "provider_request_id": "synthetic-req",
+    "raw_response_bytes": 12,
+    "raw_response_path": "synthetic://response",
+    "raw_response_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "replayed_response": true,
+    "started_at": "2026-07-16T00:00:00Z",
+    "status": "completed",
+    "synthetic_only": true,
+    "usage": {
+      "input_tokens": 1,
+      "output_tokens": 1
+    }
+  },
+  "synthetic_only": true
+}

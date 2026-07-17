@@ -1,0 +1,230 @@
+{
+  "fixture_id": "branch-inconclusive-invalid-gate",
+  "gates": {
+    "analysis_admissible": false,
+    "anti_taxidermy_harm": false,
+    "manipulation_checks_pass": true,
+    "owner_anti_taxidermy_thresholds_resolved": false
+  },
+  "kind": "branch",
+  "purpose": "failed admissibility gate voids substantive banking",
+  "rows": [
+    {
+      "arm": "NL",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-1",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "PERSONA",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-1",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "SCAFFOLD",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-1",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "LANG-A",
+      "burden": 0.2,
+      "defect_total": 20,
+      "family": "bounded-support",
+      "item_id": "BR-1-1",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "NL",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-1",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "PERSONA",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-1",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "SCAFFOLD",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-1",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "LANG-A",
+      "burden": 0.2,
+      "defect_total": 20,
+      "family": "bounded-support",
+      "item_id": "BR-1-1",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "NL",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-2",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "PERSONA",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-2",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "SCAFFOLD",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-2",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "LANG-A",
+      "burden": 0.2,
+      "defect_total": 20,
+      "family": "bounded-support",
+      "item_id": "BR-1-2",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "NL",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-2",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "PERSONA",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-2",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "SCAFFOLD",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-2",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "LANG-A",
+      "burden": 0.2,
+      "defect_total": 20,
+      "family": "bounded-support",
+      "item_id": "BR-1-2",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "NL",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-3",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "PERSONA",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-3",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "SCAFFOLD",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-3",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "LANG-A",
+      "burden": 0.2,
+      "defect_total": 20,
+      "family": "bounded-support",
+      "item_id": "BR-1-3",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-1"
+    },
+    {
+      "arm": "NL",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-3",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "PERSONA",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-3",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "SCAFFOLD",
+      "burden": 0.3,
+      "defect_total": 30,
+      "family": "bounded-support",
+      "item_id": "BR-1-3",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    },
+    {
+      "arm": "LANG-A",
+      "burden": 0.2,
+      "defect_total": 20,
+      "family": "bounded-support",
+      "item_id": "BR-1-3",
+      "scorable_opportunities": 100,
+      "subject_slot": "SYNTHETIC-SUBJECT-2"
+    }
+  ],
+  "synthetic_only": true
+}

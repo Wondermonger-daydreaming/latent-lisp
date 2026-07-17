@@ -1,0 +1,23 @@
+{
+  "schema_version": "lae-scoring-owner-slots/1.0.0",
+  "binds_constitution": "lae-scoring-constitution/1.0.0",
+  "law_source": "SCORING-CONSTITUTION.md §15",
+  "scoring_eligibility": "REFUSED-WHILE-ANY-SCORING-FACING-SLOT-UNRESOLVED",
+  "no_placeholder_counts_as_resolution": true,
+  "slots": [
+    {"slot_id": "anti-taxidermy-gate-B1", "status": "unresolved", "binds": "operator/owner-slots.json#minimum-answer-completeness", "required_closure": "numerical bounded completeness scale, aggregation, and floor; gate evaluates only once resolved"},
+    {"slot_id": "anti-taxidermy-gate-B2", "status": "unresolved", "binds": "operator/owner-slots.json#tolerated-refusal-abstention-increase", "required_closure": "definition, comparator, numerical maximum, and evaluation strata"},
+    {"slot_id": "anti-taxidermy-gate-B3", "status": "unresolved", "binds": "operator/owner-slots.json#maximum-utility-decrement", "required_closure": "scale, direction, comparator, aggregation, and numerical maximum"},
+    {"slot_id": "anti-taxidermy-gate-B4", "status": "unresolved", "binds": "operator/owner-slots.json#truncation-treatment", "required_closure": "classification, scoring, census inclusion, and numerical harm threshold if used"},
+    {"slot_id": "anti-taxidermy-gate-B5", "status": "unresolved", "binds": "operator/owner-slots.json#over-bounding-treatment", "required_closure": "operational scoring for blanket uncertainty, procedural fog, and caveat substitution"},
+    {"slot_id": "anti-taxidermy-gate-B6", "status": "unresolved", "binds": "operator/owner-slots.json#deletion-omission-coupling", "required_closure": "operational coupling to completeness, utility, truncation, abstention, or harm"},
+    {"slot_id": "anti-taxidermy-gate-B7", "status": "unresolved", "binds": "operator/owner-slots.json#missing-unanalyzable-pair-treatment", "required_closure": "predeclared inclusion rule and inconclusive threshold for missing/unanalyzable pairs"},
+    {"slot_id": "utility-scale", "status": "unresolved", "binds": "operator/owner-slots.json#maximum-utility-decrement", "required_closure": "answer_utility/inspectability scale, direction, comparator, and aggregation; recorded null while unresolved, no proxy permitted"},
+    {"slot_id": "role-assignments", "status": "unresolved", "binds": "operator/owner-slots.json#role-assignments", "required_closure": "owner-supplied people and role overlaps; two first-pass raters plus non-self adjudicator"},
+    {"slot_id": "subject-provider-model-routes", "status": "unresolved", "binds": "operator/owner-slots.json#subject-provider-model-routes", "required_closure": "three exact releases, at least three declared families and two provider routes"},
+    {"slot_id": "price-table", "status": "unresolved", "binds": "operator/owner-slots.json#price-table", "required_closure": "exact route/model prices, date, currency, cache/reasoning treatment"},
+    {"slot_id": "real-item-bank-and-score-key", "status": "unresolved", "binds": "operator/owner-slots.json#real-item-bank-and-score-key", "required_closure": "owner-authored and frozen Cβ key: per item positive-int scorable_opportunities, per-opportunity minimum-discharge relations, and the keyed decomposition; contract fixed by constitution, values owner-owed"},
+    {"slot_id": "kappa-undefined-replacement-rule", "status": "unresolved", "binds": "new", "owner_owed": true, "required_closure": "owner-frozen rule for undefined Cohen's kappa (per PREREG); calibration REFUSES while this slot is unresolved"},
+    {"slot_id": "bootstrap-parameters", "status": "resolved-by-constitution", "binds": "new", "value": {"seed": 1729, "iterations": 800}, "required_closure": "none — adopted openly by the constitution from construction defaults (§7); an arbitrary determinism constant fixed pre-exposure with no data observed, NOT an owner threshold; reversible only by owner ruling before exposure (disclosure §16)"}
+  ]
+}

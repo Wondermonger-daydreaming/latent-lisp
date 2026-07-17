@@ -1,0 +1,8 @@
+{
+  "a": 3,
+  "b": 3,
+  "fixture_id": "disagreement-equal",
+  "kind": "disagreement",
+  "purpose": "a==b banks the value",
+  "synthetic_only": true
+}

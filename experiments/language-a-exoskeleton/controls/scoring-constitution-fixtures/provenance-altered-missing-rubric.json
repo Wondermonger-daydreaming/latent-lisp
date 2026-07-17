@@ -1,0 +1,15 @@
+{
+  "fixture_id": "provenance-altered-missing-rubric",
+  "kind": "provenance",
+  "purpose": "altered provenance missing rubric hash is rejected",
+  "record": {
+    "adjudication_lineage": [],
+    "constitution_version": "lae-scoring-constitution/1.0.0",
+    "envelope_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "implementation_identity": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "schedule_row_digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "scorer_pseudonym": "RATER-1",
+    "scoring_timestamp": "2026-07-16T00:00:00Z"
+  },
+  "synthetic_only": true
+}

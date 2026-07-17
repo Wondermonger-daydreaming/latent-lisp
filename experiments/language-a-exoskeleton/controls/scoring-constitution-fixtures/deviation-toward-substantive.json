@@ -1,0 +1,15 @@
+{
+  "deviation": {
+    "actor": "analyst",
+    "affected_digests": [
+      "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    ],
+    "cause": "looks noisy",
+    "moves_toward": "B-NOTATION",
+    "phase": "post-unblinding"
+  },
+  "fixture_id": "deviation-toward-substantive",
+  "kind": "deviation",
+  "purpose": "attempted post-hoc exclusion toward a substantive branch is rejected",
+  "synthetic_only": true
+}

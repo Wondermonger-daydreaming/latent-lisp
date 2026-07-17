@@ -1,0 +1,10 @@
+{
+  "fixture_id": "scorer-packet-swapped-label",
+  "kind": "scorer-packet",
+  "packet": {
+    "arm": "NL",
+    "locked_response": "text"
+  },
+  "purpose": "scorer packet leaking a (swapped) arm label is rejected",
+  "synthetic_only": true
+}

@@ -1,0 +1,15 @@
+{
+  "deviation": {
+    "actor": "analyst",
+    "affected_digests": [
+      "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    ],
+    "cause": "quarantine load",
+    "moves_toward": "B-INCONCLUSIVE",
+    "phase": "post-unblinding"
+  },
+  "fixture_id": "deviation-toward-inconclusive",
+  "kind": "deviation",
+  "purpose": "post-unblinding deviation toward B-INCONCLUSIVE is permitted",
+  "synthetic_only": true
+}

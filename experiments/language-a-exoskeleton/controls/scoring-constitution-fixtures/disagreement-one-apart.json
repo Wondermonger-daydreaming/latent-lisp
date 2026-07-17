@@ -1,0 +1,8 @@
+{
+  "a": 2,
+  "b": 3,
+  "fixture_id": "disagreement-one-apart",
+  "kind": "disagreement",
+  "purpose": "|a-b|=1 banks exact mean 5/2",
+  "synthetic_only": true
+}

@@ -1,0 +1,381 @@
+{
+  "fixtures": [
+    {
+      "expected_outcome": {
+        "census_class": "experimenter/integrity",
+        "disposition": "UNANALYZABLE-CENSUS",
+        "state": "T01"
+      },
+      "file": "envelope-T01-malformed.json",
+      "kind": "envelope",
+      "purpose": "malformed envelope: request fails frozen schema (bad arm enum)"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "provider-caused",
+        "disposition": "UNANALYZABLE-CENSUS",
+        "state": "T02"
+      },
+      "file": "envelope-T02-encoding.json",
+      "kind": "envelope",
+      "purpose": "encoding failure: response bytes not valid UTF-8"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "integrity",
+        "disposition": "QUARANTINE-INTEGRITY",
+        "state": "T03"
+      },
+      "file": "envelope-T03-duplicate.json",
+      "kind": "envelope",
+      "purpose": "duplicate response envelope bound to one (call_id, attempt)"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "integrity",
+        "disposition": "QUARANTINE-INTEGRITY",
+        "state": "T04"
+      },
+      "file": "envelope-T04-replay.json",
+      "kind": "envelope",
+      "purpose": "replayed response: raw_response_sha256 identical to another call"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "provider-caused",
+        "disposition": "UNANALYZABLE-CENSUS",
+        "state": "T05"
+      },
+      "file": "envelope-T05-transport.json",
+      "kind": "envelope",
+      "purpose": "transport failure (no timeout anomaly)"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "provider-caused",
+        "disposition": "UNANALYZABLE-CENSUS",
+        "state": "T06"
+      },
+      "file": "envelope-T06-provider-error.json",
+      "kind": "envelope",
+      "purpose": "provider-signalled error envelope with no content"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "provider-caused",
+        "disposition": "UNANALYZABLE-CENSUS",
+        "state": "T07"
+      },
+      "file": "envelope-T07-timeout.json",
+      "kind": "envelope",
+      "purpose": "timeout: transport-failure with timeout anomaly"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "integrity",
+        "disposition": "QUARANTINE-INTEGRITY",
+        "state": "T08"
+      },
+      "file": "envelope-T08-tool-output.json",
+      "kind": "envelope",
+      "purpose": "unexpected tool/structured output (arms authorize no tools)"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "analyzable",
+        "disposition": "SCORE-ZERO-DISCHARGE",
+        "state": "T09"
+      },
+      "file": "envelope-T09-safety-refusal.json",
+      "kind": "envelope",
+      "purpose": "safety refusal matched by the frozen lexicon"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "analyzable",
+        "disposition": "SCORE-ZERO-DISCHARGE",
+        "state": "T10"
+      },
+      "file": "envelope-T10-refusal.json",
+      "kind": "envelope",
+      "purpose": "plain refusal (no safety lexicon match)"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "analyzable",
+        "disposition": "SCORE-ZERO-DISCHARGE",
+        "state": "T11"
+      },
+      "file": "envelope-T11-empty.json",
+      "kind": "envelope",
+      "purpose": "empty response: completed, zero content units"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "analyzable",
+        "disposition": "SCORE",
+        "state": "T12"
+      },
+      "file": "envelope-T12-truncated.json",
+      "kind": "envelope",
+      "purpose": "truncated response scored on emitted content"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "analyzable",
+        "disposition": "SCORE-ZERO-DISCHARGE",
+        "state": "T13"
+      },
+      "file": "envelope-T13-unparseable.json",
+      "kind": "envelope",
+      "purpose": "unparseable under scoring rules (both raters mark)"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "analyzable",
+        "disposition": "SCORE",
+        "state": "T14"
+      },
+      "file": "envelope-T14-partial.json",
+      "kind": "envelope",
+      "purpose": "valid partial: some but not all opportunities discharged"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "analyzable",
+        "disposition": "SCORE",
+        "state": "T15"
+      },
+      "file": "envelope-T15-complete.json",
+      "kind": "envelope",
+      "purpose": "valid complete: all opportunities discharged"
+    },
+    {
+      "expected_outcome": {
+        "census_class": "integrity",
+        "disposition": "QUARANTINE-INTEGRITY",
+        "state": "T99"
+      },
+      "file": "envelope-T99-fallthrough.json",
+      "kind": "envelope",
+      "purpose": "valid envelope with no discharge/rater metadata returns to authority (T99)"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-NOTATION"
+      },
+      "file": "branch-notation-supports.json",
+      "kind": "branch",
+      "purpose": "PASS: D_N one unit past -delta (-0.11) banks support"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-NOTATION"
+      },
+      "file": "branch-notation-strong.json",
+      "kind": "branch",
+      "purpose": "D_N well past the margin (-0.20)"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-INCONCLUSIVE"
+      },
+      "file": "branch-notation-at-margin.json",
+      "kind": "branch",
+      "purpose": "KILL: nominal exact -delta (float lands just above -0.10) does NOT bank support"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-INCONCLUSIVE"
+      },
+      "file": "branch-notation-above.json",
+      "kind": "branch",
+      "purpose": "KILL: D_N one unit above the margin (-0.09), notation fails"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-NULL"
+      },
+      "file": "branch-null-exact.json",
+      "kind": "branch",
+      "purpose": "PASS: all contrasts within +/-epsilon, D_N at -epsilon"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-INCONCLUSIVE"
+      },
+      "file": "branch-null-above.json",
+      "kind": "branch",
+      "purpose": "KILL: D_N one unit beyond epsilon (-0.06), null fails"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-SCAFFOLD"
+      },
+      "file": "branch-scaffold-exact.json",
+      "kind": "branch",
+      "purpose": "PASS: D_S at -delta and D_N within +/-epsilon"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-INCONCLUSIVE"
+      },
+      "file": "branch-scaffold-above.json",
+      "kind": "branch",
+      "purpose": "KILL: D_S one unit above -delta (-0.08), scaffold fails"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-HARM"
+      },
+      "file": "branch-harm-supports.json",
+      "kind": "branch",
+      "purpose": "PASS: D_P interval low past harm (0.11), precedence-first"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-INCONCLUSIVE"
+      },
+      "file": "branch-harm-at-margin.json",
+      "kind": "branch",
+      "purpose": "KILL: nominal exact harm (float lands just below 0.10) does NOT fire harm"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-INCONCLUSIVE"
+      },
+      "file": "branch-harm-below.json",
+      "kind": "branch",
+      "purpose": "KILL: contrast just below harm (0.09), harm does not fire"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-INTERACTION"
+      },
+      "file": "branch-interaction.json",
+      "kind": "branch",
+      "purpose": "PASS: two families with opposite-sign D_N intervals, range > 0.15"
+    },
+    {
+      "expected_outcome": {
+        "banked_branch": "B-INCONCLUSIVE"
+      },
+      "file": "branch-inconclusive-invalid-gate.json",
+      "kind": "branch",
+      "purpose": "failed admissibility gate voids substantive banking"
+    },
+    {
+      "expected_outcome": {
+        "decimal": "3.000000",
+        "den": 1,
+        "num": 3,
+        "result": "banked"
+      },
+      "file": "disagreement-equal.json",
+      "kind": "disagreement",
+      "purpose": "a==b banks the value"
+    },
+    {
+      "expected_outcome": {
+        "decimal": "2.500000",
+        "den": 2,
+        "num": 5,
+        "result": "banked"
+      },
+      "file": "disagreement-one-apart.json",
+      "kind": "disagreement",
+      "purpose": "|a-b|=1 banks exact mean 5/2"
+    },
+    {
+      "expected_outcome": {
+        "result": "adjudication-required"
+      },
+      "file": "disagreement-two-apart.json",
+      "kind": "disagreement",
+      "purpose": "|a-b|=2 triggers mandatory adjudication"
+    },
+    {
+      "expected_outcome": {
+        "blinded": true,
+        "concealed": [
+          "arm",
+          "family",
+          "model_id_returned",
+          "provider_id",
+          "subject_slot"
+        ],
+        "deterministic": true
+      },
+      "file": "projection-conceals-set.json",
+      "kind": "projection",
+      "purpose": "blinded projection conceals exactly the concealment set, deterministically"
+    },
+    {
+      "expected_outcome": {
+        "valid": true
+      },
+      "file": "provenance-complete.json",
+      "kind": "provenance",
+      "purpose": "complete provenance passes (\u00a710)"
+    },
+    {
+      "expected_outcome": {
+        "valid": false
+      },
+      "file": "provenance-altered-missing-rubric.json",
+      "kind": "provenance",
+      "purpose": "altered provenance missing rubric hash is rejected"
+    },
+    {
+      "expected_outcome": {
+        "accepted": true
+      },
+      "file": "scorer-packet-clean.json",
+      "kind": "scorer-packet",
+      "purpose": "clean scorer packet exposes only permitted surfaces"
+    },
+    {
+      "expected_outcome": {
+        "accepted": false
+      },
+      "file": "scorer-packet-swapped-label.json",
+      "kind": "scorer-packet",
+      "purpose": "scorer packet leaking a (swapped) arm label is rejected"
+    },
+    {
+      "expected_outcome": {
+        "rejected": false
+      },
+      "file": "deviation-toward-inconclusive.json",
+      "kind": "deviation",
+      "purpose": "post-unblinding deviation toward B-INCONCLUSIVE is permitted"
+    },
+    {
+      "expected_outcome": {
+        "rejected": true
+      },
+      "file": "deviation-toward-substantive.json",
+      "kind": "deviation",
+      "purpose": "attempted post-hoc exclusion toward a substantive branch is rejected"
+    },
+    {
+      "expected_outcome": {
+        "valid": true
+      },
+      "file": "census-complete.json",
+      "kind": "census",
+      "purpose": "complete census keeps every scheduled cell accounted for"
+    },
+    {
+      "expected_outcome": {
+        "valid": false
+      },
+      "file": "census-undercount.json",
+      "kind": "census",
+      "purpose": "denominator corruption: a deleted cell is caught as an undercount"
+    }
+  ],
+  "law_source": "SCORING-CONSTITUTION.md \u00a712",
+  "schema_version": "lae-scoring-constitution-fixtures/1.0.0",
+  "synthetic_only": true
+}

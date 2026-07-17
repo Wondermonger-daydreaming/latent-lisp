@@ -1,0 +1,21 @@
+{
+  "fixture_id": "projection-conceals-set",
+  "kind": "projection",
+  "purpose": "blinded projection conceals exactly the concealment set, deterministically",
+  "record": {
+    "arm": "LANG-A",
+    "burden": {
+      "decimal": "0.100000",
+      "den": 10,
+      "num": 1
+    },
+    "call_id": "SYNTH",
+    "family": "bounded-support",
+    "level": "L1",
+    "model_id_returned": "m",
+    "provider_id": "p",
+    "subject_slot": "SYNTHETIC-SUBJECT-1"
+  },
+  "salt_hex": "0011223344556677",
+  "synthetic_only": true
+}

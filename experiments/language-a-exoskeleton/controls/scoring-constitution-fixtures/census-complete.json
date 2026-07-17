@@ -1,0 +1,14 @@
+{
+  "census": {
+    "class_counts": {
+      "analyzable": 301,
+      "quarantined": 3,
+      "unanalyzable": 8
+    },
+    "scheduled_total": 312
+  },
+  "fixture_id": "census-complete",
+  "kind": "census",
+  "purpose": "complete census keeps every scheduled cell accounted for",
+  "synthetic_only": true
+}
