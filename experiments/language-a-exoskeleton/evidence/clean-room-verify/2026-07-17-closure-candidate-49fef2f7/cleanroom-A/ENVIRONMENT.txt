@@ -1,0 +1,11 @@
+=== ASSAY-ALPHA cleanroom environment record (captured BEFORE run) ===
+date -u: Fri Jul 17 23:37:42 UTC 2026
+uname -a: Linux DESKTOP-FJCNF05 6.18.33.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+python3 --version: Python 3.11.14
+git --version: git version 2.43.0
+working directory: /home/gauss/.claude/jobs/7d1d2626/tmp/cleanroom-A/repo/experiments/language-a-exoskeleton
+pinned commit HEAD: 49fef2f7949bae5f216b20d5ed06ff2b18736d94
+pinned tree HEAD^{tree}: 5eeaedc690bde21ca013e499545e66dd39af57f4
+exact command line to be run: bash verify-pilot.sh
+invocation citation: experiments/language-a-exoskeleton/README.md line 15 ('Local construction verification')
+network policy: OFF (script self-sets LAE_NETWORK_MODE=off at verify-pilot.sh line 9)
