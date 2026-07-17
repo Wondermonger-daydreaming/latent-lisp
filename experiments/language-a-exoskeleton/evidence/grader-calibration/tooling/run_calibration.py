@@ -87,6 +87,16 @@ RETRY_CEILING = 2  # retries after the first attempt, then UNANALYZABLE-CENSUS
 DEFAULT_MAX_TOKENS = 1024
 BLIND_SALT = "lae-grader-calibration-v1"
 
+# Owner ruling (option a, 2026-07-17): a SUCCESSFUL provider envelope whose assistant content is
+# null or empty is a determinate UNANALYZABLE-CENSUS outcome. It is NOT parsed, NOT retried, NOT
+# silently omitted, and never receives a substantive grader verdict. The census record preserves
+# HTTP + provider completion status, native + normalized finish reasons, returned model identity,
+# prompt/completion/reasoning token counts, cost, the raw response-envelope digest, and this reason
+# code. The retry policy is UNCHANGED: only genuine call EXCEPTIONS retry; a null-content success
+# does not enter the retry loop.
+CENSUS_NULL_CONTENT = "CENSUS::NULL-OR-EMPTY-CONTENT"
+NULL_CONTENT_REASON = "null-or-empty-content"
+
 
 # ---- small helpers ---------------------------------------------------------------------------
 def sha256_hex(data):
@@ -279,6 +289,11 @@ def parse_adjudicator_json(text, disputed_dimensions):
 
 
 def _extract_json(text):
+    if not isinstance(text, str):
+        # Defense-in-depth: null/empty content is intercepted at the provider boundary (do_call)
+        # and never reaches here. This guarantees any stray non-string degrades to the HANDLED
+        # ValueError class rather than raising AttributeError (the attempt-#1 crash class).
+        raise ValueError(f"non-string content: {type(text).__name__}")
     text = text.strip()
     try:
         return json.loads(text)
@@ -313,12 +328,14 @@ class LiveOpenRouterProvider:
         req.add_header("Authorization", f"Bearer {self.api_key}")
         req.add_header("Content-Type", "application/json")
         with urllib.request.urlopen(req, timeout=120) as resp:
+            http_status = resp.status
             raw = resp.read().decode("utf-8")
         response_obj = json.loads(raw)
         content = response_obj["choices"][0]["message"]["content"]
         # Redact the key from the recorded request envelope.
         recorded_request = dict(payload)
-        return content, {"request": recorded_request, "response": response_obj}
+        return content, {"http_status": http_status, "request": recorded_request,
+                         "response": response_obj}
 
 
 class ShamProvider:
@@ -351,23 +368,66 @@ def _assignment_from_prompt(user):
     return first.replace("ASSIGNMENT", "").strip()
 
 
+# ---- null/empty-content census (owner ruling a) ----------------------------------------------
+def _is_null_or_empty(content):
+    return content is None or (isinstance(content, str) and content.strip() == "")
+
+
+def build_null_content_census(envelope, model, raw_digest):
+    """Owner ruling (a): from a SUCCESSFUL provider envelope whose content is null/empty, extract
+    the frozen CENSUS record fields. Every field is read defensively (absent -> None) so a
+    provider that omits a field cannot crash the record."""
+    resp = envelope.get("response", {}) if isinstance(envelope, dict) else {}
+    choice = (resp.get("choices") or [{}])[0]
+    usage = resp.get("usage") or {}
+    ctd = usage.get("completion_tokens_details") or {}
+    return {
+        "reason_code": NULL_CONTENT_REASON,
+        "http_status": envelope.get("http_status") if isinstance(envelope, dict) else None,
+        "provider_completion_object": resp.get("object"),
+        "provider": resp.get("provider"),
+        "service_tier": resp.get("service_tier"),
+        "native_finish_reason": choice.get("native_finish_reason"),
+        "normalized_finish_reason": choice.get("finish_reason"),
+        "returned_model": resp.get("model", model),
+        "prompt_tokens": usage.get("prompt_tokens"),
+        "completion_tokens": usage.get("completion_tokens"),
+        "reasoning_tokens": ctd.get("reasoning_tokens"),
+        "cost": usage.get("cost"),
+        "raw_response_envelope_sha256": raw_digest,
+    }
+
+
 # ---- one guarded call with retry + raw-envelope persistence ----------------------------------
 def do_call(provider, model, system, user, raw_dir, assignment_id, role, attempt_prefix):
-    """Return (parsed_content_text, attempt_used) or ('CENSUS', None) after the retry ceiling.
+    """Return one of:
+      * (parsed_content_text, attempt_used)         -- a scoreable response,
+      * (CENSUS_NULL_CONTENT, census_metadata_dict) -- a successful envelope with null/empty
+        content (owner ruling a: direct CENSUS, no retry, no parse), or
+      * ('CENSUS', None)                            -- transport/exception failure after the
+        retry ceiling (retry policy UNCHANGED).
     Every attempt writes a NEW raw envelope; never overwrites."""
     last_err = None
     for attempt in range(RETRY_CEILING + 1):
         try:
             content, envelope = provider.call(model, system, user, DEFAULT_MAX_TOKENS)
-            raw_path = raw_dir / f"{attempt_prefix}-attempt{attempt}.json"
-            write_new_bytes(raw_path, canonical_bytes({
+            raw_bytes = canonical_bytes({
                 "assignment_id": assignment_id, "role": role, "attempt": attempt,
                 "model": model, "envelope": envelope,
-            }))
+            })
+            raw_path = raw_dir / f"{attempt_prefix}-attempt{attempt}.json"
+            write_new_bytes(raw_path, raw_bytes)
+            # Owner ruling (a): a SUCCESSFUL envelope with null/empty content is a determinate
+            # CENSUS. It is NOT retried, NOT parsed, NOT assigned a verdict; its metadata (HTTP +
+            # provider status, finish reasons, token counts, cost, raw digest, reason code) is
+            # preserved for the record.
+            if _is_null_or_empty(content):
+                census = build_null_content_census(envelope, model, sha256_hex(raw_bytes))
+                return CENSUS_NULL_CONTENT, census
             return content, attempt
         except FileExistsError:
             raise
-        except Exception as exc:  # transport/parse/etc -> new linked attempt
+        except Exception as exc:  # transport/etc EXCEPTION -> new linked attempt (retry unchanged)
             last_err = str(exc)
             # record the failed attempt envelope too (never silently drop)
             raw_path = raw_dir / f"{attempt_prefix}-attempt{attempt}-ERROR.json"
@@ -546,7 +606,11 @@ def run(args):
             content, attempt = do_call(provider, model, system, user, raw_dir, asg, role,
                                        f"{asg}-{role}")
             row = {"example_id": eid, "assignment_id": asg, "role": role, "model": model}
-            if content == "CENSUS":
+            if content == CENSUS_NULL_CONTENT:
+                # `attempt` carries the census metadata dict (owner ruling a); no parse, no verdict.
+                row.update({"disposition": "UNANALYZABLE-CENSUS", "counts": None,
+                            "unparseable_mark": None, "census": attempt})
+            elif content == "CENSUS":
                 row.update({"disposition": "UNANALYZABLE-CENSUS", "counts": None,
                             "unparseable_mark": None})
             else:
@@ -586,10 +650,12 @@ def run(args):
                 system, user = build_adjudication_prompt(asg, material, disputed, values_by_dim)
                 content, attempt = do_call(provider, adj_model, system, user, raw_dir, asg,
                                            "adjudicator", f"{asg}-adjudicator")
-                if content == "CENSUS":
+                if content in ("CENSUS", CENSUS_NULL_CONTENT):
                     census_examples.add(eid)
+                    note = ("adjudication call null/empty content"
+                            if content == CENSUS_NULL_CONTENT else "adjudication call censused")
                     banked_rows.append({"example_id": eid, "disposition": "UNANALYZABLE-CENSUS",
-                                        "note": "adjudication call censused"})
+                                        "note": note})
                     append_jsonl(adjudication_path,
                                  {"example_id": eid, "disposition": "CENSUS", "values": {}})
                     continue
@@ -727,8 +793,79 @@ def build_sham_oracle(example_ids):
     return oracle
 
 
+class _FixtureProvider:
+    """Test-only provider that replays a canned envelope fixture through provider.call's
+    contract. Used solely by the null-content negative control; never live."""
+
+    def __init__(self, envelope):
+        self._envelope = envelope
+
+    def call(self, model, system, user, max_tokens):
+        content = self._envelope["response"]["choices"][0]["message"]["content"]
+        return content, self._envelope
+
+
+def _null_content_negative_control():
+    """Owner-required deterministic negative control (ruling a): HTTP 200, finish_reason=length,
+    content=null, reasoning budget exhausted -> UNANALYZABLE-CENSUS with full metadata; no crash,
+    no parse, no retry, no substantive verdict. Exercises the real do_call boundary."""
+    fixture = json.loads((TOOLING_DIR / "fixtures" / "null-content-length-envelope.json").read_bytes())
+    envelope = fixture["envelope"]
+    tmp = CALIB_ROOT / "dry-run" / "_neg-control-raw"
+    if tmp.exists():
+        for f in tmp.glob("*"):
+            f.unlink()
+    tmp.mkdir(parents=True, exist_ok=True)
+
+    provider = _FixtureProvider(envelope)
+    content, census = do_call(provider, "SYNTH-REASONER", "sys",
+                              "ASSIGNMENT ASG-neg\nbody", tmp, "ASG-neg", "rater-b",
+                              "ASG-neg-rater-b")
+
+    raw_files = sorted(tmp.glob("*.json"))
+    error_files = sorted(tmp.glob("*-ERROR.json"))
+    routed = content == CENSUS_NULL_CONTENT
+    no_retry = len(raw_files) == 1 and len(error_files) == 0
+    fields_ok = isinstance(census, dict) and all([
+        census.get("reason_code") == NULL_CONTENT_REASON,
+        census.get("http_status") == 200,
+        census.get("native_finish_reason") == "length",
+        census.get("normalized_finish_reason") == "length",
+        census.get("returned_model") == "synthetic/reasoner-x",
+        census.get("prompt_tokens") == 853,
+        census.get("completion_tokens") == 1024,
+        census.get("reasoning_tokens") == 1024,
+        census.get("cost") == 0.00146199,
+        isinstance(census.get("raw_response_envelope_sha256"), str)
+        and len(census["raw_response_envelope_sha256"]) == 64,
+    ])
+    digest_ok = bool(raw_files) and sha256_hex(raw_files[0].read_bytes()) == \
+        (census.get("raw_response_envelope_sha256") if isinstance(census, dict) else None)
+    empty_ok = _is_null_or_empty(None) and _is_null_or_empty("") and not _is_null_or_empty("0")
+
+    # end-to-end: the run-loop classification of this outcome is UNANALYZABLE-CENSUS.
+    row = {}
+    if content == CENSUS_NULL_CONTENT:
+        row = {"disposition": "UNANALYZABLE-CENSUS", "census": census}
+    census_row_ok = row.get("disposition") == "UNANALYZABLE-CENSUS" \
+        and row.get("census", {}).get("reason_code") == NULL_CONTENT_REASON
+
+    for f in tmp.glob("*"):
+        f.unlink()
+    tmp.rmdir()
+
+    ok = routed and no_retry and fields_ok and digest_ok and empty_ok and census_row_ok
+    return [("proof_e_null_content_censused_not_crashed", ok, {
+        "routed_to_census": routed, "no_retry_single_envelope": no_retry,
+        "metadata_complete": fields_ok, "digest_matches_raw": digest_ok,
+        "null_and_empty_detected": empty_ok, "row_disposition_census": census_row_ok,
+        "reason_code": census.get("reason_code") if isinstance(census, dict) else None,
+    })]
+
+
 def selftests():
-    """Constructed-table proofs (b),(c),(d) + teeth checks. Each returns (name, ok, detail)."""
+    """Constructed-table proofs (b),(c),(d) + teeth checks + null-content negative control (e).
+    Each returns (name, ok, detail)."""
     results = []
 
     # (b) planted-signal kappa recovery. Hand computation in this comment:
@@ -804,6 +941,9 @@ def selftests():
         tmp_lineage.unlink()
     results.append(("teeth_guarded_read_refuses_ground_truth", teeth2, {}))
 
+    # (e) owner-required null-content negative control.
+    results.extend(_null_content_negative_control())
+
     return results
 
 
@@ -862,6 +1002,8 @@ def run_dry(args):
                 _lookup(all_checks, "proof_c_degenerate_marginal_ac1_path"),
             "d_no_signal_chance_level":
                 _lookup(all_checks, "proof_d_no_signal_chance_kappa_zero"),
+            "e_null_content_censused_not_crashed":
+                _lookup(all_checks, "proof_e_null_content_censused_not_crashed"),
         },
         "checks": [{"name": n, "pass": ok, "detail": d} for n, ok, d in all_checks],
         "calibration_report_verdict": report["overall_calibration"],

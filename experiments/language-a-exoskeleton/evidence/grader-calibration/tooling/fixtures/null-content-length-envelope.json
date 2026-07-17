@@ -1,0 +1,39 @@
+{
+  "fixture_id": "null-content-length-reasoning-exhausted",
+  "synthetic_only": true,
+  "authorization": "owner-decision:calibration-runner-defect-option-a-2026-07-17",
+  "note": "Deterministic negative control (owner ruling a). A reasoning model returns HTTP 200 with finish_reason=length and message.content=null because it spent its entire completion budget on reasoning_tokens (completion_tokens == reasoning_tokens) and emitted zero content tokens. The runner MUST record this as UNANALYZABLE-CENSUS (reason_code null-or-empty-content) with full preserved metadata; it MUST NOT parse it, retry it, silently omit it, or assign a substantive grader verdict. Response fields mirror the shape observed in the attempt-#1 crash envelope (raw/ASG-ff571c5eb6ee-rater-b-attempt0.json) with synthetic identifiers only.",
+  "envelope": {
+    "http_status": 200,
+    "request": {
+      "model": "SYNTH-REASONER",
+      "temperature": 0,
+      "max_tokens": 1024,
+      "messages_sha256": "synthetic-negative-control-fixture"
+    },
+    "response": {
+      "id": "synthetic-null-content-fixture",
+      "object": "chat.completion",
+      "model": "synthetic/reasoner-x",
+      "provider": "synthetic-provider",
+      "service_tier": "default",
+      "created": 0,
+      "choices": [
+        {
+          "index": 0,
+          "finish_reason": "length",
+          "native_finish_reason": "length",
+          "logprobs": null,
+          "message": { "role": "assistant", "content": null }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 853,
+        "completion_tokens": 1024,
+        "completion_tokens_details": { "reasoning_tokens": 1024 },
+        "cost": 0.00146199,
+        "total_tokens": 1877
+      }
+    }
+  }
+}

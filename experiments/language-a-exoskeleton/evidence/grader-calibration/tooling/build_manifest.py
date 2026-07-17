@@ -78,7 +78,8 @@ def collect_packet_files():
 def collect_tooling_and_docs():
     inv = []
     for rel in ("tooling/author_packet.py", "tooling/run_calibration.py",
-                "tooling/build_manifest.py", "RUN-DESIGN.md"):
+                "tooling/build_manifest.py",
+                "tooling/fixtures/null-content-length-envelope.json", "RUN-DESIGN.md"):
         p = CALIB_ROOT / rel
         if p.exists():
             inv.append({
