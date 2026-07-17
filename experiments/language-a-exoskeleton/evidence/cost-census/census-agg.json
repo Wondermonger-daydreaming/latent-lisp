@@ -1,0 +1,50 @@
+{
+  "item_problems": [],
+  "unmatched": [],
+  "n_calls": 312,
+  "grand_total_bytes": 527916,
+  "by_subject_slot": {
+    "SYNTHETIC-SUBJECT-1": {
+      "total_bytes": 175972,
+      "count": 104,
+      "mean_bytes": 1692.0384615384614
+    },
+    "SYNTHETIC-SUBJECT-2": {
+      "total_bytes": 175972,
+      "count": 104,
+      "mean_bytes": 1692.0384615384614
+    },
+    "SYNTHETIC-SUBJECT-3": {
+      "total_bytes": 175972,
+      "count": 104,
+      "mean_bytes": 1692.0384615384614
+    }
+  },
+  "by_arm": {
+    "LANG-A": {
+      "total_bytes": 134424,
+      "count": 72,
+      "mean_bytes": 1867.0
+    },
+    "NL": {
+      "total_bytes": 104616,
+      "count": 72,
+      "mean_bytes": 1453.0
+    },
+    "PERSONA": {
+      "total_bytes": 107424,
+      "count": 72,
+      "mean_bytes": 1492.0
+    },
+    "SCAFFOLD": {
+      "total_bytes": 136440,
+      "count": 72,
+      "mean_bytes": 1895.0
+    },
+    "SHAM": {
+      "total_bytes": 45012,
+      "count": 24,
+      "mean_bytes": 1875.5
+    }
+  }
+}

@@ -1,0 +1,2186 @@
+[
+{
+"call_id": "TRANCHE-B-CALL-000001",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "NT-06",
+"prompt_bytes": 1750
+},
+{
+"call_id": "TRANCHE-B-CALL-000002",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "BS-05",
+"prompt_bytes": 1879
+},
+{
+"call_id": "TRANCHE-B-CALL-000003",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "CR-04",
+"prompt_bytes": 1318
+},
+{
+"call_id": "TRANCHE-B-CALL-000004",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "BS-03",
+"prompt_bytes": 1696
+},
+{
+"call_id": "TRANCHE-B-CALL-000005",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "CR-06",
+"prompt_bytes": 1877
+},
+{
+"call_id": "TRANCHE-B-CALL-000006",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "BS-06",
+"prompt_bytes": 1445
+},
+{
+"call_id": "TRANCHE-B-CALL-000007",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "SV-01",
+"prompt_bytes": 3176
+},
+{
+"call_id": "TRANCHE-B-CALL-000008",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "CR-05",
+"prompt_bytes": 1518
+},
+{
+"call_id": "TRANCHE-B-CALL-000009",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "NT-06",
+"prompt_bytes": 1336
+},
+{
+"call_id": "TRANCHE-B-CALL-000010",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "CR-03",
+"prompt_bytes": 1788
+},
+{
+"call_id": "TRANCHE-B-CALL-000011",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "SV-02",
+"prompt_bytes": 1557
+},
+{
+"call_id": "TRANCHE-B-CALL-000012",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "NT-02",
+"prompt_bytes": 1585
+},
+{
+"call_id": "TRANCHE-B-CALL-000013",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "NT-02",
+"prompt_bytes": 1210
+},
+{
+"call_id": "TRANCHE-B-CALL-000014",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "SV-02",
+"prompt_bytes": 1518
+},
+{
+"call_id": "TRANCHE-B-CALL-000015",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SHAM",
+"item_id": "BS-01",
+"prompt_bytes": 2004
+},
+{
+"call_id": "TRANCHE-B-CALL-000016",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "SV-05",
+"prompt_bytes": 1281
+},
+{
+"call_id": "TRANCHE-B-CALL-000017",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "CR-04",
+"prompt_bytes": 1346
+},
+{
+"call_id": "TRANCHE-B-CALL-000018",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "NT-01",
+"prompt_bytes": 3016
+},
+{
+"call_id": "TRANCHE-B-CALL-000019",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "SV-02",
+"prompt_bytes": 1518
+},
+{
+"call_id": "TRANCHE-B-CALL-000020",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "BS-05",
+"prompt_bytes": 1476
+},
+{
+"call_id": "TRANCHE-B-CALL-000021",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "BS-01",
+"prompt_bytes": 2389
+},
+{
+"call_id": "TRANCHE-B-CALL-000022",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "SV-06",
+"prompt_bytes": 2019
+},
+{
+"call_id": "TRANCHE-B-CALL-000023",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "BS-06",
+"prompt_bytes": 1887
+},
+{
+"call_id": "TRANCHE-B-CALL-000024",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "CR-05",
+"prompt_bytes": 1921
+},
+{
+"call_id": "TRANCHE-B-CALL-000025",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "BS-02",
+"prompt_bytes": 1021
+},
+{
+"call_id": "TRANCHE-B-CALL-000026",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "BS-06",
+"prompt_bytes": 1859
+},
+{
+"call_id": "TRANCHE-B-CALL-000027",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "CR-04",
+"prompt_bytes": 1318
+},
+{
+"call_id": "TRANCHE-B-CALL-000028",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "SV-04",
+"prompt_bytes": 1235
+},
+{
+"call_id": "TRANCHE-B-CALL-000029",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "BS-03",
+"prompt_bytes": 1293
+},
+{
+"call_id": "TRANCHE-B-CALL-000030",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "CR-01",
+"prompt_bytes": 2641
+},
+{
+"call_id": "TRANCHE-B-CALL-000031",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "SV-02",
+"prompt_bytes": 1518
+},
+{
+"call_id": "TRANCHE-B-CALL-000032",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "NT-01",
+"prompt_bytes": 2574
+},
+{
+"call_id": "TRANCHE-B-CALL-000033",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "SV-03",
+"prompt_bytes": 1845
+},
+{
+"call_id": "TRANCHE-B-CALL-000034",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "SV-03",
+"prompt_bytes": 1817
+},
+{
+"call_id": "TRANCHE-B-CALL-000035",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "NT-04",
+"prompt_bytes": 1373
+},
+{
+"call_id": "TRANCHE-B-CALL-000036",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "BS-04",
+"prompt_bytes": 1174
+},
+{
+"call_id": "TRANCHE-B-CALL-000037",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "NT-04",
+"prompt_bytes": 1401
+},
+{
+"call_id": "TRANCHE-B-CALL-000038",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "NT-06",
+"prompt_bytes": 1336
+},
+{
+"call_id": "TRANCHE-B-CALL-000039",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "SV-05",
+"prompt_bytes": 1723
+},
+{
+"call_id": "TRANCHE-B-CALL-000040",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "SV-04",
+"prompt_bytes": 1196
+},
+{
+"call_id": "TRANCHE-B-CALL-000041",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "BS-03",
+"prompt_bytes": 1668
+},
+{
+"call_id": "TRANCHE-B-CALL-000042",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "SV-06",
+"prompt_bytes": 1605
+},
+{
+"call_id": "TRANCHE-B-CALL-000043",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "BS-03",
+"prompt_bytes": 1254
+},
+{
+"call_id": "TRANCHE-B-CALL-000044",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "NT-02",
+"prompt_bytes": 1613
+},
+{
+"call_id": "TRANCHE-B-CALL-000045",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "NT-01",
+"prompt_bytes": 2574
+},
+{
+"call_id": "TRANCHE-B-CALL-000046",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "BS-04",
+"prompt_bytes": 1616
+},
+{
+"call_id": "TRANCHE-B-CALL-000047",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "BS-06",
+"prompt_bytes": 1859
+},
+{
+"call_id": "TRANCHE-B-CALL-000048",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "SV-01",
+"prompt_bytes": 3148
+},
+{
+"call_id": "TRANCHE-B-CALL-000049",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "CR-01",
+"prompt_bytes": 2669
+},
+{
+"call_id": "TRANCHE-B-CALL-000050",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "SV-03",
+"prompt_bytes": 1845
+},
+{
+"call_id": "TRANCHE-B-CALL-000051",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "CR-05",
+"prompt_bytes": 1479
+},
+{
+"call_id": "TRANCHE-B-CALL-000052",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "NT-04",
+"prompt_bytes": 1401
+},
+{
+"call_id": "TRANCHE-B-CALL-000053",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "NT-06",
+"prompt_bytes": 1778
+},
+{
+"call_id": "TRANCHE-B-CALL-000054",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "BS-01",
+"prompt_bytes": 2361
+},
+{
+"call_id": "TRANCHE-B-CALL-000055",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "BS-02",
+"prompt_bytes": 982
+},
+{
+"call_id": "TRANCHE-B-CALL-000056",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "CR-04",
+"prompt_bytes": 904
+},
+{
+"call_id": "TRANCHE-B-CALL-000057",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "CR-04",
+"prompt_bytes": 904
+},
+{
+"call_id": "TRANCHE-B-CALL-000058",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "SV-05",
+"prompt_bytes": 1320
+},
+{
+"call_id": "TRANCHE-B-CALL-000059",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "CR-06",
+"prompt_bytes": 1474
+},
+{
+"call_id": "TRANCHE-B-CALL-000060",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "BS-01",
+"prompt_bytes": 1947
+},
+{
+"call_id": "TRANCHE-B-CALL-000061",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "SV-01",
+"prompt_bytes": 2734
+},
+{
+"call_id": "TRANCHE-B-CALL-000062",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "SV-04",
+"prompt_bytes": 1638
+},
+{
+"call_id": "TRANCHE-B-CALL-000063",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "SV-02",
+"prompt_bytes": 1932
+},
+{
+"call_id": "TRANCHE-B-CALL-000064",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "NT-03",
+"prompt_bytes": 1449
+},
+{
+"call_id": "TRANCHE-B-CALL-000065",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "NT-01",
+"prompt_bytes": 3016
+},
+{
+"call_id": "TRANCHE-B-CALL-000066",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "SV-04",
+"prompt_bytes": 1638
+},
+{
+"call_id": "TRANCHE-B-CALL-000067",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "CR-06",
+"prompt_bytes": 1435
+},
+{
+"call_id": "TRANCHE-B-CALL-000068",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "NT-01",
+"prompt_bytes": 2988
+},
+{
+"call_id": "TRANCHE-B-CALL-000069",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "BS-02",
+"prompt_bytes": 1021
+},
+{
+"call_id": "TRANCHE-B-CALL-000070",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "BS-04",
+"prompt_bytes": 1174
+},
+{
+"call_id": "TRANCHE-B-CALL-000071",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "BS-05",
+"prompt_bytes": 1851
+},
+{
+"call_id": "TRANCHE-B-CALL-000072",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "CR-02",
+"prompt_bytes": 1662
+},
+{
+"call_id": "TRANCHE-B-CALL-000073",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "BS-06",
+"prompt_bytes": 1484
+},
+{
+"call_id": "TRANCHE-B-CALL-000074",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "NT-05",
+"prompt_bytes": 1154
+},
+{
+"call_id": "TRANCHE-B-CALL-000075",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "SV-01",
+"prompt_bytes": 2734
+},
+{
+"call_id": "TRANCHE-B-CALL-000076",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "BS-04",
+"prompt_bytes": 1213
+},
+{
+"call_id": "TRANCHE-B-CALL-000077",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "BS-01",
+"prompt_bytes": 2361
+},
+{
+"call_id": "TRANCHE-B-CALL-000078",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "NT-05",
+"prompt_bytes": 1154
+},
+{
+"call_id": "TRANCHE-B-CALL-000079",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "CR-05",
+"prompt_bytes": 1893
+},
+{
+"call_id": "TRANCHE-B-CALL-000080",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "BS-05",
+"prompt_bytes": 1437
+},
+{
+"call_id": "TRANCHE-B-CALL-000081",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "BS-06",
+"prompt_bytes": 1887
+},
+{
+"call_id": "TRANCHE-B-CALL-000082",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "BS-03",
+"prompt_bytes": 1293
+},
+{
+"call_id": "TRANCHE-B-CALL-000083",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "NT-05",
+"prompt_bytes": 1596
+},
+{
+"call_id": "TRANCHE-B-CALL-000084",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SHAM",
+"item_id": "SV-01",
+"prompt_bytes": 2791
+},
+{
+"call_id": "TRANCHE-B-CALL-000085",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "CR-06",
+"prompt_bytes": 1877
+},
+{
+"call_id": "TRANCHE-B-CALL-000086",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "NT-05",
+"prompt_bytes": 1193
+},
+{
+"call_id": "TRANCHE-B-CALL-000087",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "NT-01",
+"prompt_bytes": 3016
+},
+{
+"call_id": "TRANCHE-B-CALL-000088",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "NT-06",
+"prompt_bytes": 1375
+},
+{
+"call_id": "TRANCHE-B-CALL-000089",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "SV-05",
+"prompt_bytes": 1695
+},
+{
+"call_id": "TRANCHE-B-CALL-000090",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "CR-01",
+"prompt_bytes": 2641
+},
+{
+"call_id": "TRANCHE-B-CALL-000091",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "SV-01",
+"prompt_bytes": 2773
+},
+{
+"call_id": "TRANCHE-B-CALL-000092",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "BS-01",
+"prompt_bytes": 1947
+},
+{
+"call_id": "TRANCHE-B-CALL-000093",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "BS-05",
+"prompt_bytes": 1851
+},
+{
+"call_id": "TRANCHE-B-CALL-000094",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "CR-02",
+"prompt_bytes": 1662
+},
+{
+"call_id": "TRANCHE-B-CALL-000095",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "CR-03",
+"prompt_bytes": 1816
+},
+{
+"call_id": "TRANCHE-B-CALL-000096",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "NT-05",
+"prompt_bytes": 1154
+},
+{
+"call_id": "TRANCHE-B-CALL-000097",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "SV-05",
+"prompt_bytes": 1281
+},
+{
+"call_id": "TRANCHE-B-CALL-000098",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SHAM",
+"item_id": "BS-03",
+"prompt_bytes": 1311
+},
+{
+"call_id": "TRANCHE-B-CALL-000099",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "SV-04",
+"prompt_bytes": 1196
+},
+{
+"call_id": "TRANCHE-B-CALL-000100",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "CR-02",
+"prompt_bytes": 1248
+},
+{
+"call_id": "TRANCHE-B-CALL-000101",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "BS-03",
+"prompt_bytes": 1696
+},
+{
+"call_id": "TRANCHE-B-CALL-000102",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "SV-04",
+"prompt_bytes": 1235
+},
+{
+"call_id": "TRANCHE-B-CALL-000103",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "SV-01",
+"prompt_bytes": 2734
+},
+{
+"call_id": "TRANCHE-B-CALL-000104",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "CR-04",
+"prompt_bytes": 943
+},
+{
+"call_id": "TRANCHE-B-CALL-000105",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "NT-04",
+"prompt_bytes": 1373
+},
+{
+"call_id": "TRANCHE-B-CALL-000106",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "BS-05",
+"prompt_bytes": 1879
+},
+{
+"call_id": "TRANCHE-B-CALL-000107",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "BS-03",
+"prompt_bytes": 1668
+},
+{
+"call_id": "TRANCHE-B-CALL-000108",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "SV-02",
+"prompt_bytes": 1960
+},
+{
+"call_id": "TRANCHE-B-CALL-000109",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "NT-02",
+"prompt_bytes": 1585
+},
+{
+"call_id": "TRANCHE-B-CALL-000110",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "BS-05",
+"prompt_bytes": 1437
+},
+{
+"call_id": "TRANCHE-B-CALL-000111",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SHAM",
+"item_id": "BS-01",
+"prompt_bytes": 2004
+},
+{
+"call_id": "TRANCHE-B-CALL-000112",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SHAM",
+"item_id": "CR-03",
+"prompt_bytes": 1431
+},
+{
+"call_id": "TRANCHE-B-CALL-000113",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "CR-01",
+"prompt_bytes": 2669
+},
+{
+"call_id": "TRANCHE-B-CALL-000114",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SHAM",
+"item_id": "NT-03",
+"prompt_bytes": 1092
+},
+{
+"call_id": "TRANCHE-B-CALL-000115",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "SV-05",
+"prompt_bytes": 1281
+},
+{
+"call_id": "TRANCHE-B-CALL-000116",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "CR-04",
+"prompt_bytes": 943
+},
+{
+"call_id": "TRANCHE-B-CALL-000117",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "BS-02",
+"prompt_bytes": 982
+},
+{
+"call_id": "TRANCHE-B-CALL-000118",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "BS-01",
+"prompt_bytes": 2389
+},
+{
+"call_id": "TRANCHE-B-CALL-000119",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "BS-02",
+"prompt_bytes": 1396
+},
+{
+"call_id": "TRANCHE-B-CALL-000120",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "NT-02",
+"prompt_bytes": 1613
+},
+{
+"call_id": "TRANCHE-B-CALL-000121",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "CR-03",
+"prompt_bytes": 1413
+},
+{
+"call_id": "TRANCHE-B-CALL-000122",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "SV-05",
+"prompt_bytes": 1695
+},
+{
+"call_id": "TRANCHE-B-CALL-000123",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "CR-03",
+"prompt_bytes": 1816
+},
+{
+"call_id": "TRANCHE-B-CALL-000124",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "NT-03",
+"prompt_bytes": 1449
+},
+{
+"call_id": "TRANCHE-B-CALL-000125",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "NT-06",
+"prompt_bytes": 1375
+},
+{
+"call_id": "TRANCHE-B-CALL-000126",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "NT-04",
+"prompt_bytes": 998
+},
+{
+"call_id": "TRANCHE-B-CALL-000127",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "CR-03",
+"prompt_bytes": 1816
+},
+{
+"call_id": "TRANCHE-B-CALL-000128",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SHAM",
+"item_id": "NT-01",
+"prompt_bytes": 2631
+},
+{
+"call_id": "TRANCHE-B-CALL-000129",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SHAM",
+"item_id": "NT-03",
+"prompt_bytes": 1092
+},
+{
+"call_id": "TRANCHE-B-CALL-000130",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "SV-03",
+"prompt_bytes": 1403
+},
+{
+"call_id": "TRANCHE-B-CALL-000131",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "CR-05",
+"prompt_bytes": 1921
+},
+{
+"call_id": "TRANCHE-B-CALL-000132",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "NT-05",
+"prompt_bytes": 1596
+},
+{
+"call_id": "TRANCHE-B-CALL-000133",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "SV-04",
+"prompt_bytes": 1196
+},
+{
+"call_id": "TRANCHE-B-CALL-000134",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "NT-03",
+"prompt_bytes": 1035
+},
+{
+"call_id": "TRANCHE-B-CALL-000135",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "SV-05",
+"prompt_bytes": 1320
+},
+{
+"call_id": "TRANCHE-B-CALL-000136",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "BS-06",
+"prompt_bytes": 1445
+},
+{
+"call_id": "TRANCHE-B-CALL-000137",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "BS-05",
+"prompt_bytes": 1879
+},
+{
+"call_id": "TRANCHE-B-CALL-000138",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "CR-06",
+"prompt_bytes": 1849
+},
+{
+"call_id": "TRANCHE-B-CALL-000139",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "BS-01",
+"prompt_bytes": 2389
+},
+{
+"call_id": "TRANCHE-B-CALL-000140",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "BS-04",
+"prompt_bytes": 1213
+},
+{
+"call_id": "TRANCHE-B-CALL-000141",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "BS-02",
+"prompt_bytes": 1396
+},
+{
+"call_id": "TRANCHE-B-CALL-000142",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "CR-06",
+"prompt_bytes": 1474
+},
+{
+"call_id": "TRANCHE-B-CALL-000143",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "BS-05",
+"prompt_bytes": 1437
+},
+{
+"call_id": "TRANCHE-B-CALL-000144",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "BS-01",
+"prompt_bytes": 1986
+},
+{
+"call_id": "TRANCHE-B-CALL-000145",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "NT-06",
+"prompt_bytes": 1750
+},
+{
+"call_id": "TRANCHE-B-CALL-000146",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "NT-02",
+"prompt_bytes": 1210
+},
+{
+"call_id": "TRANCHE-B-CALL-000147",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "SV-04",
+"prompt_bytes": 1610
+},
+{
+"call_id": "TRANCHE-B-CALL-000148",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SHAM",
+"item_id": "CR-03",
+"prompt_bytes": 1431
+},
+{
+"call_id": "TRANCHE-B-CALL-000149",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "BS-04",
+"prompt_bytes": 1588
+},
+{
+"call_id": "TRANCHE-B-CALL-000150",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "BS-03",
+"prompt_bytes": 1293
+},
+{
+"call_id": "TRANCHE-B-CALL-000151",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "BS-04",
+"prompt_bytes": 1588
+},
+{
+"call_id": "TRANCHE-B-CALL-000152",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "NT-02",
+"prompt_bytes": 1210
+},
+{
+"call_id": "TRANCHE-B-CALL-000153",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "CR-06",
+"prompt_bytes": 1877
+},
+{
+"call_id": "TRANCHE-B-CALL-000154",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "NT-04",
+"prompt_bytes": 959
+},
+{
+"call_id": "TRANCHE-B-CALL-000155",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "SV-03",
+"prompt_bytes": 1403
+},
+{
+"call_id": "TRANCHE-B-CALL-000156",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "BS-04",
+"prompt_bytes": 1213
+},
+{
+"call_id": "TRANCHE-B-CALL-000157",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "BS-02",
+"prompt_bytes": 1424
+},
+{
+"call_id": "TRANCHE-B-CALL-000158",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "SV-05",
+"prompt_bytes": 1695
+},
+{
+"call_id": "TRANCHE-B-CALL-000159",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "SV-06",
+"prompt_bytes": 2047
+},
+{
+"call_id": "TRANCHE-B-CALL-000160",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "NT-05",
+"prompt_bytes": 1193
+},
+{
+"call_id": "TRANCHE-B-CALL-000161",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "NT-02",
+"prompt_bytes": 1613
+},
+{
+"call_id": "TRANCHE-B-CALL-000162",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "CR-01",
+"prompt_bytes": 2669
+},
+{
+"call_id": "TRANCHE-B-CALL-000163",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "SV-04",
+"prompt_bytes": 1235
+},
+{
+"call_id": "TRANCHE-B-CALL-000164",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "NT-05",
+"prompt_bytes": 1568
+},
+{
+"call_id": "TRANCHE-B-CALL-000165",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "NT-03",
+"prompt_bytes": 1477
+},
+{
+"call_id": "TRANCHE-B-CALL-000166",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "NT-05",
+"prompt_bytes": 1596
+},
+{
+"call_id": "TRANCHE-B-CALL-000167",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "SV-02",
+"prompt_bytes": 1960
+},
+{
+"call_id": "TRANCHE-B-CALL-000168",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "BS-04",
+"prompt_bytes": 1174
+},
+{
+"call_id": "TRANCHE-B-CALL-000169",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "NT-06",
+"prompt_bytes": 1750
+},
+{
+"call_id": "TRANCHE-B-CALL-000170",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "NT-04",
+"prompt_bytes": 1373
+},
+{
+"call_id": "TRANCHE-B-CALL-000171",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "SV-06",
+"prompt_bytes": 1605
+},
+{
+"call_id": "TRANCHE-B-CALL-000172",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SHAM",
+"item_id": "NT-01",
+"prompt_bytes": 2631
+},
+{
+"call_id": "TRANCHE-B-CALL-000173",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "BS-01",
+"prompt_bytes": 1986
+},
+{
+"call_id": "TRANCHE-B-CALL-000174",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "CR-05",
+"prompt_bytes": 1921
+},
+{
+"call_id": "TRANCHE-B-CALL-000175",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "NT-01",
+"prompt_bytes": 2613
+},
+{
+"call_id": "TRANCHE-B-CALL-000176",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "SV-01",
+"prompt_bytes": 3148
+},
+{
+"call_id": "TRANCHE-B-CALL-000177",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "NT-02",
+"prompt_bytes": 1171
+},
+{
+"call_id": "TRANCHE-B-CALL-000178",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "NT-02",
+"prompt_bytes": 1171
+},
+{
+"call_id": "TRANCHE-B-CALL-000179",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "CR-01",
+"prompt_bytes": 2266
+},
+{
+"call_id": "TRANCHE-B-CALL-000180",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "BS-04",
+"prompt_bytes": 1616
+},
+{
+"call_id": "TRANCHE-B-CALL-000181",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "CR-02",
+"prompt_bytes": 1287
+},
+{
+"call_id": "TRANCHE-B-CALL-000182",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "BS-01",
+"prompt_bytes": 1986
+},
+{
+"call_id": "TRANCHE-B-CALL-000183",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "BS-06",
+"prompt_bytes": 1887
+},
+{
+"call_id": "TRANCHE-B-CALL-000184",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "CR-02",
+"prompt_bytes": 1690
+},
+{
+"call_id": "TRANCHE-B-CALL-000185",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "NT-03",
+"prompt_bytes": 1477
+},
+{
+"call_id": "TRANCHE-B-CALL-000186",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "SV-01",
+"prompt_bytes": 3148
+},
+{
+"call_id": "TRANCHE-B-CALL-000187",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "SV-03",
+"prompt_bytes": 1442
+},
+{
+"call_id": "TRANCHE-B-CALL-000188",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "NT-03",
+"prompt_bytes": 1074
+},
+{
+"call_id": "TRANCHE-B-CALL-000189",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "BS-05",
+"prompt_bytes": 1476
+},
+{
+"call_id": "TRANCHE-B-CALL-000190",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SHAM",
+"item_id": "BS-03",
+"prompt_bytes": 1311
+},
+{
+"call_id": "TRANCHE-B-CALL-000191",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "NT-03",
+"prompt_bytes": 1449
+},
+{
+"call_id": "TRANCHE-B-CALL-000192",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "CR-04",
+"prompt_bytes": 1318
+},
+{
+"call_id": "TRANCHE-B-CALL-000193",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "CR-05",
+"prompt_bytes": 1518
+},
+{
+"call_id": "TRANCHE-B-CALL-000194",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "CR-02",
+"prompt_bytes": 1248
+},
+{
+"call_id": "TRANCHE-B-CALL-000195",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "NT-03",
+"prompt_bytes": 1035
+},
+{
+"call_id": "TRANCHE-B-CALL-000196",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "CR-02",
+"prompt_bytes": 1662
+},
+{
+"call_id": "TRANCHE-B-CALL-000197",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "CR-05",
+"prompt_bytes": 1893
+},
+{
+"call_id": "TRANCHE-B-CALL-000198",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "BS-06",
+"prompt_bytes": 1484
+},
+{
+"call_id": "TRANCHE-B-CALL-000199",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "SV-06",
+"prompt_bytes": 2047
+},
+{
+"call_id": "TRANCHE-B-CALL-000200",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "SV-06",
+"prompt_bytes": 1644
+},
+{
+"call_id": "TRANCHE-B-CALL-000201",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "CR-03",
+"prompt_bytes": 1413
+},
+{
+"call_id": "TRANCHE-B-CALL-000202",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "CR-02",
+"prompt_bytes": 1287
+},
+{
+"call_id": "TRANCHE-B-CALL-000203",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "NT-03",
+"prompt_bytes": 1035
+},
+{
+"call_id": "TRANCHE-B-CALL-000204",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "BS-04",
+"prompt_bytes": 1616
+},
+{
+"call_id": "TRANCHE-B-CALL-000205",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "CR-04",
+"prompt_bytes": 1346
+},
+{
+"call_id": "TRANCHE-B-CALL-000206",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "CR-05",
+"prompt_bytes": 1479
+},
+{
+"call_id": "TRANCHE-B-CALL-000207",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "NT-04",
+"prompt_bytes": 959
+},
+{
+"call_id": "TRANCHE-B-CALL-000208",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SHAM",
+"item_id": "CR-01",
+"prompt_bytes": 2284
+},
+{
+"call_id": "TRANCHE-B-CALL-000209",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "CR-02",
+"prompt_bytes": 1287
+},
+{
+"call_id": "TRANCHE-B-CALL-000210",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "NT-03",
+"prompt_bytes": 1074
+},
+{
+"call_id": "TRANCHE-B-CALL-000211",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "NT-05",
+"prompt_bytes": 1568
+},
+{
+"call_id": "TRANCHE-B-CALL-000212",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "NT-05",
+"prompt_bytes": 1193
+},
+{
+"call_id": "TRANCHE-B-CALL-000213",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "NT-01",
+"prompt_bytes": 2613
+},
+{
+"call_id": "TRANCHE-B-CALL-000214",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "BS-03",
+"prompt_bytes": 1254
+},
+{
+"call_id": "TRANCHE-B-CALL-000215",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "SV-01",
+"prompt_bytes": 3176
+},
+{
+"call_id": "TRANCHE-B-CALL-000216",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "CR-01",
+"prompt_bytes": 2227
+},
+{
+"call_id": "TRANCHE-B-CALL-000217",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "CR-01",
+"prompt_bytes": 2266
+},
+{
+"call_id": "TRANCHE-B-CALL-000218",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "SV-01",
+"prompt_bytes": 2773
+},
+{
+"call_id": "TRANCHE-B-CALL-000219",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "CR-03",
+"prompt_bytes": 1374
+},
+{
+"call_id": "TRANCHE-B-CALL-000220",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "CR-02",
+"prompt_bytes": 1248
+},
+{
+"call_id": "TRANCHE-B-CALL-000221",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "BS-02",
+"prompt_bytes": 982
+},
+{
+"call_id": "TRANCHE-B-CALL-000222",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "BS-05",
+"prompt_bytes": 1476
+},
+{
+"call_id": "TRANCHE-B-CALL-000223",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "SV-05",
+"prompt_bytes": 1320
+},
+{
+"call_id": "TRANCHE-B-CALL-000224",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "BS-03",
+"prompt_bytes": 1696
+},
+{
+"call_id": "TRANCHE-B-CALL-000225",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SHAM",
+"item_id": "BS-01",
+"prompt_bytes": 2004
+},
+{
+"call_id": "TRANCHE-B-CALL-000226",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "CR-06",
+"prompt_bytes": 1435
+},
+{
+"call_id": "TRANCHE-B-CALL-000227",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "NT-04",
+"prompt_bytes": 1401
+},
+{
+"call_id": "TRANCHE-B-CALL-000228",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "BS-01",
+"prompt_bytes": 1947
+},
+{
+"call_id": "TRANCHE-B-CALL-000229",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "SV-03",
+"prompt_bytes": 1817
+},
+{
+"call_id": "TRANCHE-B-CALL-000230",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "SV-03",
+"prompt_bytes": 1845
+},
+{
+"call_id": "TRANCHE-B-CALL-000231",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "BS-03",
+"prompt_bytes": 1254
+},
+{
+"call_id": "TRANCHE-B-CALL-000232",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "BS-03",
+"prompt_bytes": 1668
+},
+{
+"call_id": "TRANCHE-B-CALL-000233",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "CR-05",
+"prompt_bytes": 1893
+},
+{
+"call_id": "TRANCHE-B-CALL-000234",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "BS-02",
+"prompt_bytes": 1396
+},
+{
+"call_id": "TRANCHE-B-CALL-000235",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "NT-04",
+"prompt_bytes": 998
+},
+{
+"call_id": "TRANCHE-B-CALL-000236",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "NT-06",
+"prompt_bytes": 1778
+},
+{
+"call_id": "TRANCHE-B-CALL-000237",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "SV-06",
+"prompt_bytes": 1644
+},
+{
+"call_id": "TRANCHE-B-CALL-000238",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SHAM",
+"item_id": "BS-03",
+"prompt_bytes": 1311
+},
+{
+"call_id": "TRANCHE-B-CALL-000239",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "SV-06",
+"prompt_bytes": 2047
+},
+{
+"call_id": "TRANCHE-B-CALL-000240",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "SV-04",
+"prompt_bytes": 1610
+},
+{
+"call_id": "TRANCHE-B-CALL-000241",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "SV-03",
+"prompt_bytes": 1817
+},
+{
+"call_id": "TRANCHE-B-CALL-000242",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "BS-02",
+"prompt_bytes": 1424
+},
+{
+"call_id": "TRANCHE-B-CALL-000243",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "NT-04",
+"prompt_bytes": 998
+},
+{
+"call_id": "TRANCHE-B-CALL-000244",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "SV-03",
+"prompt_bytes": 1442
+},
+{
+"call_id": "TRANCHE-B-CALL-000245",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "NT-06",
+"prompt_bytes": 1336
+},
+{
+"call_id": "TRANCHE-B-CALL-000246",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SHAM",
+"item_id": "SV-03",
+"prompt_bytes": 1460
+},
+{
+"call_id": "TRANCHE-B-CALL-000247",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "CR-01",
+"prompt_bytes": 2227
+},
+{
+"call_id": "TRANCHE-B-CALL-000248",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "CR-05",
+"prompt_bytes": 1518
+},
+{
+"call_id": "TRANCHE-B-CALL-000249",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "SV-06",
+"prompt_bytes": 2019
+},
+{
+"call_id": "TRANCHE-B-CALL-000250",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SHAM",
+"item_id": "NT-01",
+"prompt_bytes": 2631
+},
+{
+"call_id": "TRANCHE-B-CALL-000251",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "SV-02",
+"prompt_bytes": 1557
+},
+{
+"call_id": "TRANCHE-B-CALL-000252",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "NT-03",
+"prompt_bytes": 1074
+},
+{
+"call_id": "TRANCHE-B-CALL-000253",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "NT-01",
+"prompt_bytes": 2988
+},
+{
+"call_id": "TRANCHE-B-CALL-000254",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SHAM",
+"item_id": "CR-01",
+"prompt_bytes": 2284
+},
+{
+"call_id": "TRANCHE-B-CALL-000255",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "CR-03",
+"prompt_bytes": 1788
+},
+{
+"call_id": "TRANCHE-B-CALL-000256",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "SV-04",
+"prompt_bytes": 1638
+},
+{
+"call_id": "TRANCHE-B-CALL-000257",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "BS-06",
+"prompt_bytes": 1445
+},
+{
+"call_id": "TRANCHE-B-CALL-000258",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "CR-01",
+"prompt_bytes": 2227
+},
+{
+"call_id": "TRANCHE-B-CALL-000259",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "CR-03",
+"prompt_bytes": 1413
+},
+{
+"call_id": "TRANCHE-B-CALL-000260",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "SV-05",
+"prompt_bytes": 1723
+},
+{
+"call_id": "TRANCHE-B-CALL-000261",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "NT-06",
+"prompt_bytes": 1778
+},
+{
+"call_id": "TRANCHE-B-CALL-000262",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "SV-03",
+"prompt_bytes": 1403
+},
+{
+"call_id": "TRANCHE-B-CALL-000263",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "NT-05",
+"prompt_bytes": 1568
+},
+{
+"call_id": "TRANCHE-B-CALL-000264",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "BS-04",
+"prompt_bytes": 1588
+},
+{
+"call_id": "TRANCHE-B-CALL-000265",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "SV-06",
+"prompt_bytes": 2019
+},
+{
+"call_id": "TRANCHE-B-CALL-000266",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "CR-02",
+"prompt_bytes": 1690
+},
+{
+"call_id": "TRANCHE-B-CALL-000267",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "SV-05",
+"prompt_bytes": 1723
+},
+{
+"call_id": "TRANCHE-B-CALL-000268",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "SV-02",
+"prompt_bytes": 1932
+},
+{
+"call_id": "TRANCHE-B-CALL-000269",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "SV-01",
+"prompt_bytes": 3176
+},
+{
+"call_id": "TRANCHE-B-CALL-000270",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "CR-03",
+"prompt_bytes": 1788
+},
+{
+"call_id": "TRANCHE-B-CALL-000271",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "SV-02",
+"prompt_bytes": 1932
+},
+{
+"call_id": "TRANCHE-B-CALL-000272",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "LANG-A",
+"item_id": "CR-06",
+"prompt_bytes": 1849
+},
+{
+"call_id": "TRANCHE-B-CALL-000273",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SHAM",
+"item_id": "CR-01",
+"prompt_bytes": 2284
+},
+{
+"call_id": "TRANCHE-B-CALL-000274",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "CR-06",
+"prompt_bytes": 1474
+},
+{
+"call_id": "TRANCHE-B-CALL-000275",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "BS-02",
+"prompt_bytes": 1021
+},
+{
+"call_id": "TRANCHE-B-CALL-000276",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "NT-02",
+"prompt_bytes": 1585
+},
+{
+"call_id": "TRANCHE-B-CALL-000277",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SHAM",
+"item_id": "NT-03",
+"prompt_bytes": 1092
+},
+{
+"call_id": "TRANCHE-B-CALL-000278",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "SV-06",
+"prompt_bytes": 1644
+},
+{
+"call_id": "TRANCHE-B-CALL-000279",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SCAFFOLD",
+"item_id": "CR-02",
+"prompt_bytes": 1690
+},
+{
+"call_id": "TRANCHE-B-CALL-000280",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SHAM",
+"item_id": "SV-01",
+"prompt_bytes": 2791
+},
+{
+"call_id": "TRANCHE-B-CALL-000281",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "CR-05",
+"prompt_bytes": 1479
+},
+{
+"call_id": "TRANCHE-B-CALL-000282",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "NT-01",
+"prompt_bytes": 2613
+},
+{
+"call_id": "TRANCHE-B-CALL-000283",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "SV-02",
+"prompt_bytes": 1557
+},
+{
+"call_id": "TRANCHE-B-CALL-000284",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "NT-01",
+"prompt_bytes": 2988
+},
+{
+"call_id": "TRANCHE-B-CALL-000285",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "CR-04",
+"prompt_bytes": 943
+},
+{
+"call_id": "TRANCHE-B-CALL-000286",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "CR-01",
+"prompt_bytes": 2266
+},
+{
+"call_id": "TRANCHE-B-CALL-000287",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "SV-04",
+"prompt_bytes": 1610
+},
+{
+"call_id": "TRANCHE-B-CALL-000288",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "NT-04",
+"prompt_bytes": 959
+},
+{
+"call_id": "TRANCHE-B-CALL-000289",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "CR-06",
+"prompt_bytes": 1849
+},
+{
+"call_id": "TRANCHE-B-CALL-000290",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SHAM",
+"item_id": "SV-03",
+"prompt_bytes": 1460
+},
+{
+"call_id": "TRANCHE-B-CALL-000291",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "CR-03",
+"prompt_bytes": 1374
+},
+{
+"call_id": "TRANCHE-B-CALL-000292",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "BS-06",
+"prompt_bytes": 1859
+},
+{
+"call_id": "TRANCHE-B-CALL-000293",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "SHAM",
+"item_id": "SV-01",
+"prompt_bytes": 2791
+},
+{
+"call_id": "TRANCHE-B-CALL-000294",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SHAM",
+"item_id": "CR-03",
+"prompt_bytes": 1431
+},
+{
+"call_id": "TRANCHE-B-CALL-000295",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "LANG-A",
+"item_id": "CR-01",
+"prompt_bytes": 2641
+},
+{
+"call_id": "TRANCHE-B-CALL-000296",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "BS-05",
+"prompt_bytes": 1851
+},
+{
+"call_id": "TRANCHE-B-CALL-000297",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "PERSONA",
+"item_id": "SV-01",
+"prompt_bytes": 2773
+},
+{
+"call_id": "TRANCHE-B-CALL-000298",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "CR-04",
+"prompt_bytes": 1346
+},
+{
+"call_id": "TRANCHE-B-CALL-000299",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SCAFFOLD",
+"item_id": "SV-02",
+"prompt_bytes": 1960
+},
+{
+"call_id": "TRANCHE-B-CALL-000300",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "NT-06",
+"prompt_bytes": 1375
+},
+{
+"call_id": "TRANCHE-B-CALL-000301",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "PERSONA",
+"item_id": "BS-06",
+"prompt_bytes": 1484
+},
+{
+"call_id": "TRANCHE-B-CALL-000302",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "NT-02",
+"prompt_bytes": 1171
+},
+{
+"call_id": "TRANCHE-B-CALL-000303",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "SHAM",
+"item_id": "SV-03",
+"prompt_bytes": 1460
+},
+{
+"call_id": "TRANCHE-B-CALL-000304",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "CR-03",
+"prompt_bytes": 1374
+},
+{
+"call_id": "TRANCHE-B-CALL-000305",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "CR-06",
+"prompt_bytes": 1435
+},
+{
+"call_id": "TRANCHE-B-CALL-000306",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "NL",
+"item_id": "NT-01",
+"prompt_bytes": 2574
+},
+{
+"call_id": "TRANCHE-B-CALL-000307",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "BS-02",
+"prompt_bytes": 1424
+},
+{
+"call_id": "TRANCHE-B-CALL-000308",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "PERSONA",
+"item_id": "SV-03",
+"prompt_bytes": 1442
+},
+{
+"call_id": "TRANCHE-B-CALL-000309",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "NL",
+"item_id": "CR-04",
+"prompt_bytes": 904
+},
+{
+"call_id": "TRANCHE-B-CALL-000310",
+"subject_slot": "SYNTHETIC-SUBJECT-1",
+"arm": "NL",
+"item_id": "SV-06",
+"prompt_bytes": 1605
+},
+{
+"call_id": "TRANCHE-B-CALL-000311",
+"subject_slot": "SYNTHETIC-SUBJECT-2",
+"arm": "SCAFFOLD",
+"item_id": "NT-03",
+"prompt_bytes": 1477
+},
+{
+"call_id": "TRANCHE-B-CALL-000312",
+"subject_slot": "SYNTHETIC-SUBJECT-3",
+"arm": "LANG-A",
+"item_id": "BS-01",
+"prompt_bytes": 2361
+}
+]

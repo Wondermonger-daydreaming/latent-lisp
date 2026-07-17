@@ -1,0 +1,58 @@
+{
+  "grand_total_input_bytes": 527916,
+  "n_calls": 312,
+  "max_prompt_bytes": 3176,
+  "min_prompt_bytes": 904,
+  "retries": 32,
+  "attempt_ceiling": 344,
+  "output_tokens_per_call": 768,
+  "output_token_ceiling": 264192,
+  "input_allowance_multiplier": 1.05,
+  "spend_ceiling_usd": 8.0,
+  "max_input_rate_per_M": 1.0,
+  "max_output_rate_per_M": 6.0,
+  "bounds": [
+    {
+      "bound": "conservative",
+      "tokens_per_byte": 0.5,
+      "scheduled_input_tokens": 263958.0,
+      "retry_input_tokens_raw": 50816.0,
+      "total_input_tokens_with_1.05": 330512.7,
+      "nominal_mapping_usd": {
+        "input_scheduled": 0.184771,
+        "input_retries_luna": 0.053357,
+        "output_scheduled": 0.878592,
+        "output_retries_luna": 0.147456,
+        "TOTAL": 1.264175,
+        "under_ceiling": true
+      },
+      "adversarial_mapping_usd": {
+        "input_all_maxrate": 0.330513,
+        "output_all_344_maxrate": 1.585152,
+        "TOTAL": 1.915665,
+        "under_ceiling": true
+      }
+    },
+    {
+      "bound": "paranoid_upper",
+      "tokens_per_byte": 1.0,
+      "scheduled_input_tokens": 527916.0,
+      "retry_input_tokens_raw": 101632.0,
+      "total_input_tokens_with_1.05": 661025.4,
+      "nominal_mapping_usd": {
+        "input_scheduled": 0.369541,
+        "input_retries_luna": 0.106714,
+        "output_scheduled": 0.878592,
+        "output_retries_luna": 0.147456,
+        "TOTAL": 1.502303,
+        "under_ceiling": true
+      },
+      "adversarial_mapping_usd": {
+        "input_all_maxrate": 0.661025,
+        "output_all_344_maxrate": 1.585152,
+        "TOTAL": 2.246177,
+        "under_ceiling": true
+      }
+    }
+  ]
+}

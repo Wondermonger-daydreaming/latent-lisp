@@ -1,0 +1,60 @@
+{
+  "census_id": "LAE-TRANCHE-B-CENSOR-2026-07-17",
+  "date": "2026-07-17",
+  "discipline": "offline-byte-census + disclosed bytes->tokens bound; NO provider/tokenizer contact",
+  "n_calls": 312,
+  "n_items": 24,
+  "component_hash_match": {"all_312_rows_matched": true, "item_bank_internal_hashes_verified": true, "unmatched": 0, "item_problems": 0},
+  "render_path": {
+    "assembler": "harness/tranche_b.py:compose_payload (L502-513)",
+    "formula": "payload = system_bytes + '\\n' + template_bytes + '\\n' + rendered_wrapper",
+    "rendered_wrapper": "wrapper_bytes with {{TASK}}(8B) -> task, {{SOURCE_PACKET}}(16B) -> source_packet",
+    "source_packet": "SOURCE_SEPARATOR('\\n').join(sources + derived_views)  (tranche_b.py:499,182)",
+    "segment_origins": ["common-system","selected-template","common-wrapper","target-visible-task","target-visible-source-packet"],
+    "envelope_is_not_prompt": true
+  },
+  "fixed_component_bytes": {"system": 173, "wrapper": 46, "wrapper_literal_remainder": 22,
+    "template": {"NL": 127, "PERSONA": 166, "SCAFFOLD": 569, "LANG-A": 541, "SHAM": 184}},
+  "per_call_envelope_overhead_counted_from_code": {"system_newline": 1, "template_newline": 1, "placeholder_delta": -24},
+  "grand_total_input_bytes": 527916,
+  "prompt_bytes": {"min": 904, "max": 3176, "mean": 1692.038},
+  "by_subject_slot": {
+    "SYNTHETIC-SUBJECT-1": {"total_bytes": 175972, "count": 104, "mean_bytes": 1692.038},
+    "SYNTHETIC-SUBJECT-2": {"total_bytes": 175972, "count": 104, "mean_bytes": 1692.038},
+    "SYNTHETIC-SUBJECT-3": {"total_bytes": 175972, "count": 104, "mean_bytes": 1692.038}
+  },
+  "by_arm": {
+    "LANG-A":  {"total_bytes": 134424, "count": 72, "mean_bytes": 1867.0, "min": 1318, "max": 3148},
+    "SCAFFOLD":{"total_bytes": 136440, "count": 72, "mean_bytes": 1895.0, "min": 1346, "max": 3176},
+    "NL":      {"total_bytes": 104616, "count": 72, "mean_bytes": 1453.0, "min": 904,  "max": 2734},
+    "PERSONA": {"total_bytes": 107424, "count": 72, "mean_bytes": 1492.0, "min": 943,  "max": 2773},
+    "SHAM":    {"total_bytes": 45012,  "count": 24, "mean_bytes": 1875.5, "min": 1092, "max": 2791}
+  },
+  "cost_inputs": {
+    "attempt_ceiling": 344, "scheduled_calls": 312, "retries": 32,
+    "output_tokens_per_call": 768, "output_token_ceiling": 264192,
+    "input_allowance_multiplier": 1.05, "spend_ceiling_usd": 8.00,
+    "rates_usd_per_million": {
+      "gpt-5.6-luna": {"input": 1.00, "output": 6.00},
+      "claude-haiku-4.5": {"input": 1.00, "output": 5.00, "cache_write_5m": 1.25, "cache_hit": 0.10, "caching_assumed": "none (worst case)"},
+      "kimi-k3": {"input": 0.00, "output": 0.00, "note": "coding-subscription route, $0 marginal metered"}
+    },
+    "slot_route_mapping_assumed": {"SYNTHETIC-SUBJECT-1": "claude-haiku-4.5", "SYNTHETIC-SUBJECT-2": "gpt-5.6-luna", "SYNTHETIC-SUBJECT-3": "kimi-k3", "confirm_at": "preflight"}
+  },
+  "ceiling_verdict": {
+    "conservative_0.5tpb": {"nominal_mapping_usd": 1.264175, "adversarial_mapping_usd": 1.915665},
+    "paranoid_1.0tpb": {"nominal_mapping_usd": 1.502303, "adversarial_mapping_usd": 2.246177},
+    "global_worst_case_usd": 2.246177,
+    "spend_ceiling_usd": 8.00,
+    "UNDER_CEILING": true,
+    "worst_case_headroom_usd": 5.753823,
+    "worst_case_fraction_of_ceiling": 0.2808
+  },
+  "named_unknowns": [
+    "reasoning/thinking tokens on gpt-5.6-luna and kimi-k3 not bounded by the 768 max_output cap (billing/emission treatment unknown); haiku thinking bills as output and IS bounded by 768.",
+    "cached-input treatment: worst case assumes NO caching benefit (no discount applied).",
+    "provider-side chat-envelope / role / BOS / special-token overhead beyond the counted payload bytes is NOT in the byte census; partially absorbed by the 1.0 tpb paranoid bound + 1.05 allowance but not guaranteed.",
+    "slot->route mapping (1=haiku,2=luna,3=kimi) is an assumption; adversarial-mapping arm bounds the ceiling under ANY permutation.",
+    "item bank is state=candidate (item_bank_freeze_authorized=false); census is valid for the fixed-candidate schedule as committed and MUST be recomputed if the freeze mutates any component."
+  ]
+}
