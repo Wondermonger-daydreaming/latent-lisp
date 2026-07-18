@@ -22,7 +22,14 @@ Item-content discipline: the runner's CODE reads item task text and source
 packets to render; it NEVER prints them.  Content-bearing evidence (payloads,
 raw provider bodies) is written OUTSIDE the repo to owner-custody local storage.
 Only content-free artifacts (census, run-record, actuals) are ever written into
-the repo, and only by the ``--live`` run, never by ``--dry-run``.
+the repo, and only into the per-attempt SCOPED subdir
+``<--in-repo-census-dir>/<basename of --evidence-dir>`` when that flag is given.
+A ``--dry-run`` with no ``--in-repo-census-dir`` writes nothing into the repo, as
+before; a ``--dry-run`` *with* the flag writes the (content-free) mirror to a
+scoped subdir so the mirror path is offline-provable (the gap EMITTER-III found:
+the mirror had never run offline, so a post-spend ``FileExistsError`` there was
+invisible to every receipt).  A pre-spend gate refuses if the scoped subdir is
+already occupied, before any provider contact.
 """
 
 import argparse
@@ -61,6 +68,7 @@ SpendReservationRefused = _condition("SpendReservationRefused")
 R15RecordRefused = _condition("R15RecordRefused")
 TransportBudgetExhausted = _condition("TransportBudgetExhausted")
 SubjectBindingRefused = _condition("SubjectBindingRefused")
+InRepoCensusTargetOccupied = _condition("InRepoCensusTargetOccupied")
 
 
 # --------------------------------------------------------------------------- #
@@ -70,6 +78,11 @@ BANK_IDENTITY = "84cb8673626d8b5502f87d83aa3e851b1ca032a2299548ac7e9307ba249d3c4
 R15_PATH = PACKET_ROOT / "operator/owner-decisions/OWNER-ROUTE-SUBSTITUTION-AND-REEMISSION-v1.json"
 R15_RECORD_DIGEST = "sha256:fb40c815b0eede11c60765973cdac72c196196bf71d6bedf272da003a3beb2d0"
 OWNER_SLOTS_PATH = PACKET_ROOT / "operator/owner-slots.json"
+
+# The three content-free artifacts the in-repo mirror writes.  These filenames
+# are also the pre-spend gate's targets (per-attempt scoped, see
+# gate_in_repo_census_target / _write_census).
+MIRROR_FILENAMES = ("EMISSION-CENSUS.json", "EMISSION-ACTUALS.json", "RUN-RECORD.md")
 
 SCHEDULED_CALLS = 312
 CORE_ARM_COUNT = 72          # per core arm (NL/PERSONA/SCAFFOLD/LANG-A)
@@ -246,6 +259,32 @@ def gate_run_window(now, window_open, window_close):
     return now
 
 
+def gate_in_repo_census_target(scoped_dir):
+    """PRE-SPEND refusal for the in-repo content-free mirror.
+
+    EMITTER-III walked the recipe forward and found the mirror write
+    (``_write_census`` -> ``write_new_bytes`` with ``O_CREAT|O_EXCL``) crashed
+    with ``FileExistsError`` AFTER the emission loop -- post-spend -- when the
+    target dir already held a prior attempt's frozen census.  No receipt could
+    see it because the mirror never ran offline, and the ``O_CREAT|O_EXCL``
+    never-overwrite instinct fired too late to protect the spend.
+
+    This gate moves that verdict to PREFLIGHT, before any provider contact: if
+    any of the three scoped mirror targets already exists, refuse with the
+    occupying path as the witness.  ``scoped_dir`` is the per-attempt subdir
+    ``<in-repo-census-dir>/<basename-of-outside-evidence-dir>``, so a prior
+    attempt's root-level record is never a target -- only a *re-run into the same
+    attempt dir* is refused, turning a post-spend crash into a named,
+    before-the-money refusal."""
+    scoped = Path(scoped_dir)
+    for name in MIRROR_FILENAMES:
+        target = scoped / name
+        if target.exists():
+            raise InRepoCensusTargetOccupied(
+                f"in-repo census target already occupied: {target}")
+    return scoped
+
+
 def gate_r15_record(record):
     """Validate the R15 route-substitution record's own digest, pin it to the
     authorized digest, and confirm the OpenRouter route, window, boundary set,
@@ -317,7 +356,7 @@ class EmissionRunner:
         self.root = Path(root)
         self.now_fn = now_fn or (lambda: datetime.now(timezone.utc))
 
-    def preflight(self):
+    def preflight(self, scoped_census_dir=None):
         r15 = load_json(R15_PATH)
         window = gate_r15_record(r15)
         bank_identity = gate_bank_identity(self.root)
@@ -328,6 +367,11 @@ class EmissionRunner:
         arm_counts = gate_schedule(schedule, bank, template_manifest)
         subject_binding = load_subject_binding(self.root)
         now = gate_run_window(self.now_fn(), window["window_open"], window["window_close"])
+        # PRE-SPEND: refuse before any provider contact if the per-attempt in-repo
+        # mirror target is already occupied (only checked when a mirror dir is in
+        # play; exercised in BOTH dry-run and live for testability).
+        if scoped_census_dir is not None:
+            gate_in_repo_census_target(scoped_census_dir)
         return {
             "r15": r15, "window": window, "now": now,
             "subject_model_ids": window["subject_model_ids"],
@@ -335,6 +379,7 @@ class EmissionRunner:
             "schedule": schedule, "template_manifest": template_manifest,
             "template_files": template_files, "arm_counts": arm_counts,
             "subject_binding": subject_binding,
+            "scoped_census_dir": Path(scoped_census_dir) if scoped_census_dir is not None else None,
         }
 
     def prerender(self, ctx):
@@ -364,7 +409,14 @@ class EmissionRunner:
             keys=None, in_repo_census_dir=None):
         if mode not in ("dry-run", "live"):
             raise ValueError("mode must be 'dry-run' or 'live'")
-        ctx = self.preflight()
+        # Per-attempt scoping: the in-repo content-free mirror lands in a subdir
+        # named for the outside evidence dir, so a prior attempt's root-level
+        # frozen record is never a write target.  Resolved BEFORE preflight so the
+        # pre-spend occupancy gate can check it.
+        scoped_census_dir = None
+        if in_repo_census_dir is not None:
+            scoped_census_dir = Path(in_repo_census_dir) / Path(evidence_dir).name
+        ctx = self.preflight(scoped_census_dir=scoped_census_dir)
         payloads, render_census = self.prerender(ctx)
         rendered = len(render_census)
         max_bytes = max(entry["payload_bytes"] for entry in render_census)
@@ -451,8 +503,7 @@ class EmissionRunner:
                                         "r5_ordinal": b["r5_ordinal"]}
                                  for slot, b in ctx["subject_binding"].items()},
         }
-        self._write_census(evidence_dir, summary, call_census, ctx,
-                           in_repo_census_dir if mode == "live" else None)
+        self._write_census(evidence_dir, summary, call_census, ctx, scoped_census_dir)
         return summary, call_census
 
     # -- emission helpers --------------------------------------------------- #
@@ -535,7 +586,7 @@ class EmissionRunner:
             write_new_bytes(evidence_dir / "raw-responses" / f"{call_id}.meta.json",
                             canonical_json_bytes(meta))
 
-    def _write_census(self, evidence_dir, summary, call_census, ctx, in_repo_census_dir):
+    def _write_census(self, evidence_dir, summary, call_census, ctx, scoped_census_dir):
         # Content-free census always lands beside the (outside) evidence.
         census = {"schema_version": "lae-emission-census/1.0.0",
                   "summary": summary, "records": call_census}
@@ -544,9 +595,13 @@ class EmissionRunner:
         write_new_bytes(evidence_dir / "EMISSION-ACTUALS.json", canonical_json_bytes(actuals))
         write_new_bytes(evidence_dir / "RUN-RECORD.md",
                         self._run_record_md(summary).encode("utf-8"))
-        # In-repo content-free mirror is written ONLY by the live run.
-        if in_repo_census_dir is not None:
-            repo_dir = Path(in_repo_census_dir)
+        # In-repo content-free mirror -> the per-attempt SCOPED subdir (occupancy
+        # already refused pre-spend by gate_in_repo_census_target).  Written
+        # whenever a mirror dir was supplied, in BOTH modes: --live for the real
+        # record, --dry-run so the mirror path is offline-provable (the very gap
+        # EMITTER-III found -- the mirror had never run offline).  Content-free only.
+        if scoped_census_dir is not None:
+            repo_dir = Path(scoped_census_dir)
             write_new_bytes(repo_dir / "EMISSION-CENSUS.json", canonical_json_bytes(census))
             write_new_bytes(repo_dir / "EMISSION-ACTUALS.json", canonical_json_bytes(actuals))
             write_new_bytes(repo_dir / "RUN-RECORD.md",
@@ -620,7 +675,10 @@ def main(argv=None):
     parser.add_argument("--evidence-dir", required=True,
                         help="OUTSIDE-repo owner-custody evidence directory")
     parser.add_argument("--in-repo-census-dir", default=None,
-                        help="live only: repo dir for content-free census mirror (evidence/emission-312)")
+                        help="repo dir for the content-free census mirror (e.g. evidence/emission-312); "
+                             "the mirror lands in a per-attempt subdir <dir>/<basename of --evidence-dir>. "
+                             "Honoured in --live and --dry-run (dry-run makes the mirror offline-provable). "
+                             "Refuses pre-spend if that scoped subdir is already occupied.")
     args = parser.parse_args(argv)
 
     if args.dry_run == args.live:
@@ -632,7 +690,8 @@ def main(argv=None):
         r15 = load_json(R15_PATH)
         open_utc = parse_iso_utc(r15["exact_decision"]["run_window"]["opens_utc"])
         runner = EmissionRunner(now_fn=lambda: open_utc + timedelta(seconds=1))
-        summary, _ = runner.run(args.evidence_dir, mode="dry-run")
+        summary, _ = runner.run(args.evidence_dir, mode="dry-run",
+                                in_repo_census_dir=args.in_repo_census_dir)
     else:
         runner = EmissionRunner()
         summary, _ = runner.run(args.evidence_dir, mode="live",

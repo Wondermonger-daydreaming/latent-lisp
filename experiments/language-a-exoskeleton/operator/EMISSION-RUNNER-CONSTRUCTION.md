@@ -12,8 +12,9 @@ This document is content-free (no item task text, no source text, no rendered
 request bodies). It cites digests, byte counts, and gate names only.
 
 > **The sections below describe the ORIGINAL R14 construction. The R15 route
-> repair (2026-07-18) is recorded in §0 and updates the tables in §1, §3, §4,
-> §8. Where §0 and a later section disagree, §0 governs.**
+> repair (2026-07-18) is recorded in §0; the FARRIER-II pre-spend census-mirror
+> repair (2026-07-18) is recorded in §0b. Together they update the tables in §1,
+> §2, §3, §4, §6, §8. Where §0/§0b and a later section disagree, §0/§0b govern.**
 
 ---
 
@@ -101,11 +102,76 @@ Byte-exact recomputation (frozen byte census: total 527604, max 3175):
 > under 8.00. (Recorded here per the ruling's instruction.)
 
 ### R15 teeth + dry-run (offline, `MockProvider`, no network, no keys)
-`python3 harness/test_emission_gates.py` → **15/15 PASS**, exit 0.
+`python3 harness/test_emission_gates.py` → **15/15 PASS**, exit 0 *(FARRIER's R15
+pass; FARRIER-II §0b later raised this to **17/17** — the current figure)*.
 `python3 harness/run_emission.py --dry-run --evidence-dir <OUTSIDE-repo dir>`
 → 312/312 rendered & emitted, worst-case **USD 5.944873**, attempts 312/344,
 0 retries; every census row carries `serving_provider`, `openrouter_model_id`,
-and the OpenRouter route. The dry-run writes NOTHING into the repo.
+and the OpenRouter route. A plain dry-run (no `--in-repo-census-dir`) writes
+NOTHING into the repo. *(FARRIER-II, §0b, later made the in-repo mirror
+writable in dry-run when `--in-repo-census-dir` is explicitly given, so the
+mirror path is offline-provable — content-free, per-attempt scoped.)*
+
+---
+
+## 0b. FARRIER-II pre-spend census-mirror repair (2026-07-18)
+
+**Repair hand:** FARRIER-II.
+**Authority:** ruling R15 (same record as §0; construction-repair license R15,
+`record_digest sha256:fb40c815b0eede11c60765973cdac72c196196bf71d6bedf272da003a3beb2d0`,
+re-validated in-session via `harness/preauthorship.py:validate_record_digest`).
+**Scope:** `harness/run_emission.py`, `harness/test_emission_gates.py`, this notes
+file, plus the rebuilt manifest pair. NO provider contact; offline proof only.
+`evidence/emission-312/` (attempt-01's frozen record) stays **byte-untouched** —
+verified `git status` clean after the proof runs.
+
+### The defect (EMITTER-III's walk-forward, quoted)
+EMITTER-III walked the re-emission recipe forward as a fresh hand and found the
+runner's **LIVE-only in-repo census mirror** (`run_emission.py` `_write_census`
+→ `util.write_new_bytes` with `O_CREAT|O_EXCL`) crashes with `FileExistsError`
+**AFTER the emission loop** — *post-spend* — because attempt-01's frozen census
+already occupies `evidence/emission-312/{EMISSION-CENSUS.json,EMISSION-ACTUALS.json,RUN-RECORD.md}`.
+No receipt could see it: **the mirror never runs offline**, so the failure class
+was invisible to every dry-run and every clean-room receipt. The
+never-overwrite `O_CREAT|O_EXCL` instinct was *correct* — it just fired too late
+to protect the spend.
+
+### The repair (three moves)
+1. **PRE-SPEND GATE `InRepoCensusTargetOccupied`** — a new named refusal run in
+   the **PREFLIGHT** phase (`preflight` → `gate_in_repo_census_target`),
+   alongside the bank/schedule/window/spend/R15-record gates, **before any
+   provider contact**, in **both** `--dry-run` and `--live` (so it is testable
+   offline). If any of the three scoped mirror targets already exists, it refuses
+   with the occupying path as the witness.
+2. **PER-ATTEMPT SCOPING** — the in-repo mirror now lands in a subdir
+   `<--in-repo-census-dir>/<basename of --evidence-dir>` (e.g.
+   `evidence/emission-312/live-attempt-02/`). Attempt-01's **root-level** files
+   are therefore never write targets — only a *re-run into the same attempt dir*
+   is refused. `write_new_bytes O_CREAT|O_EXCL` is retained (the instinct was
+   right); the gate simply moves the verdict before the spend.
+3. **OFFLINE-PROVABLE MIRROR** — the mirror write now fires in dry-run too when
+   `--in-repo-census-dir` is supplied (content-free only), closing the gap that
+   made the failure class unobservable.
+
+### Teeth (planted → fires → clean)
+`python3 harness/test_emission_gates.py` → **17/17 PASS** (was 15/15). Two added:
+- **#16 occupied scoped target → `InRepoCensusTargetOccupied` PRE-SPEND** — a
+  counting provider factory proves the refusal precedes the spend: its emit
+  counter is **0** at the refusal (the runner never reached the emission loop).
+- **#17 clean scoped path** — a dry-run completes 312/312 and all three
+  content-free mirror files land in the per-attempt scoped subdir.
+
+Every prior check (1–15) still green.
+
+### Dry-run proof (offline, `MockProvider`, no network, no keys)
+`--dry-run --evidence-dir …/live-attempt-02 --in-repo-census-dir evidence/emission-312`
+→ 312/312 rendered & emitted, worst-case **USD 5.944873**, attempts 312/344,
+0 retries; the content-free mirror landed at
+`evidence/emission-312/live-attempt-02/` (three files: EMISSION-CENSUS.json,
+EMISSION-ACTUALS.json, RUN-RECORD.md). A re-run into that now-occupied subdir was
+**refused in preflight** with `InRepoCensusTargetOccupied` (exit 1), no spend.
+All proof artifacts were removed afterward; `evidence/emission-312/` root
+byte-untouched.
 
 ---
 
@@ -114,7 +180,7 @@ and the OpenRouter route. The dry-run writes NOTHING into the repo.
 | File | Lines | Role |
 |------|-------|------|
 | `harness/provider_live_emission.py` | 375 (R15) | ~~Three live provider adapters~~ **one `OpenRouterAdapter` (R15, §0)** + offline `MockProvider` + global transport-retry contract. The ONLY network-capable code in the packet. |
-| `harness/run_emission.py` | 652 (R15) | Single live entrypoint: preflight refusal gates, subject binding, byte-exact rendering (delegated to the frozen renderer), worst-case reservation ledger, evidence custody, `--dry-run` / `--live` modes. |
+| `harness/run_emission.py` | 711 (R15 + FARRIER-II §0b) | Single live entrypoint: preflight refusal gates (incl. the pre-spend in-repo census-mirror gate), subject binding, byte-exact rendering (delegated to the frozen renderer), worst-case reservation ledger, evidence custody + per-attempt scoped in-repo mirror, `--dry-run` / `--live` modes. |
 | `harness/test_emission_gates.py` | 290 (R15) | Teeth checks: each gate planted-to-fire then clean-to-pass; runs fully offline. |
 
 The runner is the live-capable successor the pre-registration contemplates
@@ -161,6 +227,7 @@ owner-custody evidence.
 | Transport budget | `TransportBudgetExhausted` | **≤32** transport retries total; exhaustion stops the run honestly with a partial census. |
 | R15 record (was R14) | `R15RecordRefused` | `validate_record_digest(R15)` + pinned digest `fb40c815…` + `ruling==R15` + OpenRouter route + `hold:no-scoring-no-key-exposure-no-merge` + exactly 3 amended subject routes; window enforced per call (§0). |
 | Subject binding | `SubjectBindingRefused` | r5 slot resolved and lists exactly 3 subjects. |
+| In-repo census target (FARRIER-II, §0b) | `InRepoCensusTargetOccupied` | when a mirror dir is in play (both modes): refuse if any of the 3 scoped targets `<--in-repo-census-dir>/<basename of --evidence-dir>/{EMISSION-CENSUS.json,EMISSION-ACTUALS.json,RUN-RECORD.md}` already exists — **pre-spend**, witness = occupying path. |
 
 **Subject binding rule (recorded as emission-actual):** `SYNTHETIC-SUBJECT-N` →
 r5 record's own value-array `value[N-1]` (ordinal `N` parsed from the slot name).
@@ -180,8 +247,9 @@ Yields `SUBJECT-1→claude-haiku-4.5 (Anthropic direct)`,
 
 ## 3. Teeth-check results (planted fault → shown to fire, then clean pass)
 
-Run: `python3 harness/test_emission_gates.py` → **15/15 PASS** under R15 (§0),
-exit 0. (Was 13/13 under R14; two checks added for the R15 shape.)
+Run: `python3 harness/test_emission_gates.py` → **17/17 PASS** under R15 (§0) +
+FARRIER-II (§0b), exit 0. (Was 13/13 under R14; +2 for the R15 shape → 15/15;
++2 for the FARRIER-II pre-spend census-mirror gate → 17/17.)
 
 | # | Check | Planted fault | Fired | Clean |
 |---|-------|---------------|-------|-------|
@@ -200,6 +268,8 @@ exit 0. (Was 13/13 under R14; two checks added for the R15 shape.)
 | 13 | clean full dry-run | — | 312/312, worst-case **USD 5.944873** `< 8.00` | ✓ |
 | 14 | **serving-provider capture** (R15) | — | `serving_provider` + `openrouter_model_id` + OpenRouter route land in all mock census rows | ✓ |
 | 15 | **price-table worst-case** (R15) | — | `MAX_IN/OUT_RATE = 3.00/15.00`, byte-exact recompute **5.944873 < 8.00** | ✓ |
+| 16 | **in-repo census gate: occupied scoped target** (FARRIER-II) | one of 3 scoped mirror files pre-created | `InRepoCensusTargetOccupied` **pre-spend** (counting factory: emit-counter **0** at refusal) | ✓ |
+| 17 | **in-repo census scoping: clean path** (FARRIER-II) | — | dry-run 312/312 + all 3 content-free mirror files land in the per-attempt scoped subdir | ✓ |
 
 ---
 
@@ -266,11 +336,16 @@ honored through each row's `rendering_obligation_sha256` (validated inside
 | Location | Kind | Written by |
 |----------|------|-----------|
 | `/home/gauss/Codex-Lab/emission-312-evidence/` (**OUTSIDE the repo**) | content-bearing: `payloads/*.bin` (rendered prompts), `raw-responses/*.bin` + `*.meta.json` (full provider envelopes), `requests/*.json`, plus census/actuals/run-record copies | the runner (dry-run writes here only) |
-| `experiments/language-a-exoskeleton/evidence/emission-312/` (**in repo**) | content-free ONLY: `EMISSION-CENSUS.json` (call id, arm, item id, subject, timestamps, http status, finish reason, token counts, cost, envelope sha256 — no text), `RUN-RECORD.md`, `EMISSION-ACTUALS.json` (settings, per-provider tokenizer census, retention/cache disclosures) | the **live** run only (`--live --in-repo-census-dir …`), NOT the dry-run, NOT this construction |
+| `experiments/language-a-exoskeleton/evidence/emission-312/<attempt>/` (**in repo**, per-attempt scoped — FARRIER-II §0b) | content-free ONLY: `EMISSION-CENSUS.json` (call id, arm, item id, subject, timestamps, http status, finish reason, token counts, cost, envelope sha256 — no text), `RUN-RECORD.md`, `EMISSION-ACTUALS.json` (settings, per-provider tokenizer census, retention/cache disclosures) | the run given `--in-repo-census-dir`, into subdir `<basename of --evidence-dir>` (e.g. `live-attempt-02/`) — `--live` for the real record; `--dry-run` too, for offline proof (content-free) |
 
 The public tree may carry no item content or target outputs, so all
 content-bearing artifacts stay in owner-custody local storage and are never
-committed. The dry-run of this construction wrote **nothing** into the repo.
+committed. A plain dry-run (no `--in-repo-census-dir`) writes **nothing** into
+the repo; a dry-run *with* the flag writes only the content-free mirror into a
+per-attempt scoped subdir. The FARRIER-II proof runs wrote a scoped mirror and
+then removed it — `evidence/emission-312/` root stayed byte-untouched (attempt-01's
+frozen record). **Attempt dirs must be fresh:** a re-run into an occupied scoped
+subdir is refused pre-spend (`InRepoCensusTargetOccupied`, §0b).
 
 ---
 
@@ -301,11 +376,18 @@ committed. The dry-run of this construction wrote **nothing** into the repo.
    clean-room receipts** at that exact candidate **before any provider contact**
    (R15 carries R14's receipts-before-contact requirement forward unchanged).
 3. Inside the **R15** run window (`2026-07-18T04:59:07Z .. 16:59:07Z`), run
-   `--live --evidence-dir <outside> --in-repo-census-dir
+   `--live --evidence-dir <outside>/<attempt> --in-repo-census-dir
    experiments/language-a-exoskeleton/evidence/emission-312` to emit and record.
-   **The live-invocation flags are UNCHANGED by the R15 repair** — `--live`,
-   `--evidence-dir`, `--in-repo-census-dir` all still hold (confirmed against the
-   repaired `run_emission.py` CLI). Provider-actual confirmations still owed at
+   **The live-invocation flags are UNCHANGED** — `--live`, `--evidence-dir`,
+   `--in-repo-census-dir` all still hold (same flags, confirmed against the
+   repaired `run_emission.py` CLI). **FARRIER-II (§0b) changed only where the
+   in-repo mirror LANDS:** it is written to the per-attempt scoped subdir
+   `evidence/emission-312/<basename of --evidence-dir>/` (e.g. an `--evidence-dir`
+   ending in `live-attempt-02` → mirror at `evidence/emission-312/live-attempt-02/`),
+   so attempt-01's root-level frozen record is never a write target. **The attempt
+   dir must be FRESH** — a re-run into an occupied scoped subdir is refused
+   PRE-SPEND with `InRepoCensusTargetOccupied` (no provider contact), instead of
+   the old post-spend `FileExistsError`. Provider-actual confirmations still owed at
    emission: exact per-provider tokenizer census, the **serving provider per call**
    (R15 `serving_provider_rule` — now captured into the census automatically), and
    retention/cache disclosures (recorded-as-deferred per Erratum-01 / GATE-WALK-R12).

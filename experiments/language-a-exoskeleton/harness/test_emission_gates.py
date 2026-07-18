@@ -26,6 +26,7 @@ from run_emission import (
     BankIdentityRefused, ItemConsistencyRefused, ScheduleGateRefused,
     RunWindowRefused, AttemptCeilingRefused, SpendReservationRefused,
     R15RecordRefused, TransportBudgetExhausted, SubjectBindingRefused,
+    InRepoCensusTargetOccupied, gate_in_repo_census_target, MIRROR_FILENAMES,
     parse_iso_utc,
 )
 from provider_live_emission import MockProvider
@@ -266,6 +267,58 @@ def run():
         assert wc < re.SPEND_CEILING, (wc, re.SPEND_CEILING)
     _assert_check("price-table worst-case: byte-exact 5.944873 under 8.00 ceiling",
                   price_table_probe)
+
+    # 16. in-repo census PRE-SPEND gate: an occupied SCOPED target refuses in
+    #     preflight BEFORE any provider contact.  Proof the refusal precedes the
+    #     spend: a counting provider factory whose emit-counter is still ZERO at
+    #     the refusal (the runner never reached the emission loop).
+    def occupied_scoped_target_probe():
+        evd = _fresh_evidence("occupied")            # basename -> scope subdir
+        census_root = Path(tempfile.mkdtemp(dir=str(OUTSIDE_ROOT)))
+        scoped = census_root / Path(evd).name
+        scoped.mkdir(parents=True)
+        # Occupy exactly one of the three scoped mirror targets.
+        (scoped / MIRROR_FILENAMES[0]).write_bytes(b"{}\n")
+        calls = {"n": 0}
+        def counting_factory(subject):
+            prov = MockProvider(mode="normal")
+            original_emit = prov.emit
+            def emit(*a, **k):
+                calls["n"] += 1
+                return original_emit(*a, **k)
+            prov.emit = emit
+            return prov
+        fired = False
+        try:
+            runner = EmissionRunner(now_fn=lambda: inside)
+            runner.run(evd, mode="dry-run", provider_factory=counting_factory,
+                       in_repo_census_dir=str(census_root))
+        except InRepoCensusTargetOccupied:
+            fired = True
+        finally:
+            shutil.rmtree(census_root, ignore_errors=True)
+            shutil.rmtree(evd, ignore_errors=True)
+        assert fired, "InRepoCensusTargetOccupied did not fire on an occupied scoped target"
+        assert calls["n"] == 0, f"provider emit called {calls['n']} times before the pre-spend refusal"
+    _assert_check("in-repo-census gate: occupied scoped target refuses PRE-SPEND "
+                  "(provider emit-counter == 0)", occupied_scoped_target_probe)
+
+    # 17. clean scoped path -> dry-run completes 312/312 AND the content-free
+    #     mirror lands in the per-attempt scoped subdir (all three files).
+    def clean_scoped_mirror_probe():
+        evd = _fresh_evidence("scoped")
+        census_root = Path(tempfile.mkdtemp(dir=str(OUTSIDE_ROOT)))
+        runner = EmissionRunner(now_fn=lambda: inside)
+        summary, _ = runner.run(evd, mode="dry-run", in_repo_census_dir=str(census_root))
+        scoped = census_root / Path(evd).name
+        landed = {name: (scoped / name).exists() for name in MIRROR_FILENAMES}
+        shutil.rmtree(census_root, ignore_errors=True)
+        shutil.rmtree(evd, ignore_errors=True)
+        assert summary["run_state"] == "complete", summary["run_state"]
+        assert summary["emitted"] == 312, summary["emitted"]
+        assert all(landed.values()), f"scoped mirror missing files: {landed}"
+    _assert_check("in-repo-census scoping: clean dry-run lands mirror in scoped subdir",
+                  clean_scoped_mirror_probe)
 
     # -- summary ---------------------------------------------------------- #
     total = len(RESULTS)
