@@ -38,8 +38,28 @@ pre-seal read (ACCEPT + R-SYN-1..3, applied with Sol's exact text) + owner's sea
 act: successor specs (Process-Journal-/0, Adapter-Protocol-/0) AUTHORIZED for parallel-blind
 drafting, and the STANDING IMPLEMENTATION AUTHORIZATION granted ("green word", owner) — pure
 core may be implemented in parallel with the successor specs; journal/adapter implementations
-await their specs; NO further owner gate before Codex.** The build lane is open. Chain detail
-below (kept for provenance):** two blind parents (DRAFT-F `bd311f17` frozen 17:27:47Z · DRAFT-S sha
+await their specs; NO further owner gate before Codex.** The build lane is open.**
+
+**Step 4 (pure core) — BUILT AND PUBLISHED (2026-07-18 evening, `664a0a67`):**
+`experiments/latent-lisp/mneme/kernel0/` — 14 files, 6,610 lines, Codex fleet
+(KERAMOS/AXIS/SELLA/PROBA) under a conductor; **selftest chair-verified: 29 passed / 27
+excluded-with-printed-reasons / 0 failed, exit 0**; negative controls 8 fired + 5
+chair-planted faults fired with spec-citing conditions; call-296 constructs lawfully
+(projection + bound uncertain-effect record, R-SYN-1's law enforced from birth); L17's
+bare-value accessor rejected by structural detector (test 55). **Six authorial gaps recorded,
+none improvised — OPEN CHAIR-REVIEW ITEMS for the successor-spec round:** (1) §22 bounded
+manifestation determinacy projects no alternatives §7.3 requires (fixture uses singleton,
+flagged); (2) §13.6 terminal `:indeterminate` has no §13.3 `:attempt-indeterminate` event;
+(3) §20 lacks conditions for malformed-constructor-shape / determinacy-mode violations /
+global-scalar rejection — fleet borrowed `standing-inflation` as generic constructor refusal
+(declared stretch, every use carries the real section in `failed-invariant`; needs a chair
+disposition: bless the borrow or mint condition types in a K/0 erratum); (4) §8.1 vs A.2
+field mismatch (adapter-identity/stream-chunk not added); (5) no canonical resolved-flag on
+uncertain-effect (resolution fold-derived per UNC-2 — likely correct, confirm); (6)
+multiple-unresolved-effects occupancy stops with `unsupported-reconstruction` rather than a
+lossy summary (conservative, confirm). **NEXT: Process-Journal-/0 + Adapter-Protocol-/0
+parallel-blind drafts (authorized) · arc 2 = capability live-authority · then the specimen ·
+then the stranger.** Chain detail below (kept for provenance):** two blind parents (DRAFT-F `bd311f17` frozen 17:27:47Z · DRAFT-S sha
 `e3f6e054…c9b41`, adopted bit-exact under `kernel-0-drafts/sol/`) → WEAVER dual trace (0 true
 conflicts, 37/16/1/22) → Fable review **FAITHFUL WITH REPAIR** (8 adjudications; F conceded
 ID-1 + the 20→37 miscount) → SUTOR-III surgery → `LISP-PLUS-KERNEL-0-SPEC.md` (2,357 lines,
