@@ -10,12 +10,21 @@
 | 2 | `LISP-PLUS-ARCHITECTURE-0-FABLE-REVIEW.md` | Fable 5 | **VIABLE WITH REPAIR** — 9 repairs, 1 missing primitive (attempt/seat + supersession), 4-fork owner docket DK-1..4 |
 | 3 | `SOL-DISPOSITION-ON-ARCHITECTURE-0-REVIEW.md` | Sol | Verdict accepted; all repairs adopted in principle; *proposed* DK dispositions; **Sol recused from the independent minimization audit** (its own correction) |
 
-## Where the ball is: **THE OWNER**
+## Where the ball is: **SOL** (Architecture 0.1)
 
-Per Sol's clean sequence (§IV of its disposition), which both sides now share:
+**Step 1 is DONE (2026-07-18, same day):** the owner sealed
+`LISP-PLUS-ARCHITECTURE-DECISIONS-0.1.md` via live interview, after two mutually-blind position
+papers (`FABLE-POSITIONS-PRE-SYNTHESIS.md`, `SOL-POSITIONS-ON-THE-DECISION-DOCKET.md`) and a
+synthesis (`SYNTHESIS-PRE-INTERVIEW.md`). Headlines: DK-1 Model A + channel-policy page ·
+DK-2 two-level projection rule sealed, facts deferred to the locked lane · DK-3
+minter-or-mint-time-delegate, equal-or-narrower · DK-4 four axes × per-axis determinacy ·
+D1–D10 adopted with refinements · **new laws L15 (self-report) / L16 (exposed principals) /
+L17 (ergonomics-as-conformance)** admitted · **the name deliberately left open.**
 
-1. **Tomás** settles DK-1–DK-4 and disposes D1–D10 (recommendations already recorded in the review §5) → `LISP-PLUS-ARCHITECTURE-DECISIONS-0.1.md`. DK-2 may be sealed with the queued Language-A null-semantics ruling **as two independent operative clauses, never one implying the other** (both sides agree).
-2. **Sol** then writes Architecture 0.1 as a traced repair against Draft 0 + the review.
+Remaining sequence:
+
+2. **Sol** writes Architecture 0.1 as a traced repair against Draft 0 + the review, under the
+   decisions record.
 3. Vertical specimen (implementability + semantic cost).
 4. **A stranger to the Language-A arc** runs the independent primitive-minimization audit — not Sol (recused), not Fable (scars in the laws). Candidate pool: a context-bounded fresh chair with no emission-arc exposure.
 5. First freeze candidate.
