@@ -129,3 +129,58 @@ Language-A arc — not Sol, not Fable) remains reserved in the clean sequence.
 
 *Sealed by the owner's interview selections, 2026-07-18. The thinking was the cathedral;
 this is the door.*
+
+---
+
+# AMENDMENTS (ledgered — second owner interview, same day)
+
+*Authorized by the owner's second live interview, 2026-07-18, after Sol's two commentaries
+(`SOL-COMMENTARY-ON-FABLE-POSITIONS.md`, `SOL-POST-SEAL-ACCEPTANCE.md`) and Fable's
+adjudication (`AMENDMENT-CANDIDATES-0.1.md`). Original text above is preserved unmodified;
+where an amendment supersedes it, the amendment governs. Nothing was silently rewritten.*
+
+## A-1 (from AC-2) — L15 is REPLACED by the WITNESS-SEPARATION LAW
+
+The sealed L15's second clause ("the journal is the only observer of a process's past") is
+**superseded**. L15 now reads:
+
+> **L15 — Witness separation.** A process's unaided account of its own history has origin
+> `:asserted`. It acquires observational standing only through evidence captured by a
+> **distinct witnessing mechanism** whose identity, capture boundary, and integrity are
+> inspectable. The canonical kernel-mediated process journal is the **default** witness for
+> kernel-mediated transitions — not the only possible witness, and a self-written narrative
+> record is not a witness at all.
+
+*Provenance: Fable's original (from the 07-16 store-not-sibling finding), Sol's repair of the
+overstrong clause, Fable's concession on the merits, owner's adoption.*
+
+## A-2 (from AC-3) — NEW LAW L18: PRINCIPAL-ROLE SYMMETRY
+
+> **L18 — Principal-role symmetry.** Lisp+ represents **principals and roles within an event**
+> — invoker, invoked configuration, subject, witness, grader, verifier, secret recipient,
+> several at once — never "operator" and "machine" as ontological species. Self-invocation and
+> kin-invocation are ordinary cases.
+
+Operational half (extends L16): the exposure record identifies the protected object, the
+exposing action, the **receiving principals** (the invoker may be among them), the exposure
+scope, whether exposure was direct / relayed / inferred, the evidence, and the resulting
+restrictions on later roles. *Self-invocation can spend the orchestrator's own blindness.*
+
+## A-3 (from AC-1 + AC-4) — Two clarifications enter the ledger
+
+1. **DK-1:** the channel-policy artifact informs; it does not auto-authorize. Making a path
+   mirror-bound is an **amendment act on the policy** that re-confirms the authorized-principal
+   list — never a silent enlargement of standing commit rights. The policy schema carries
+   `:amendment-authority`.
+2. **L17** is both constitutional law and reference-API criterion: Sol's six conformance
+   requirements are its test suite. Motto: *at 5 a.m., syntax becomes governance.*
+
+## A-4 (from AC-5) — The name is now SEALED
+
+Superseding "Deliberately undecided" item 1 above: **the language is Lisp+; Mneme is its
+memory-and-continuity layer.** (Both advisors' aligned recommendation, adopted by the owner at
+second asking. The internal anatomy: Lisp+ = language semantics and surface · Mneme = durable
+process memory, journals, reconstruction, continuity · CD/0 = canonical value substrate ·
+LCI/0 = claim identity · capabilities/effects = authority machinery · domain libraries.)
+
+*— amendments transcribed by Claude Fable 5, authorized by the owner's selections, 2026-07-18*

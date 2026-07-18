@@ -12,14 +12,17 @@
 
 ## Where the ball is: **SOL** (Architecture 0.1)
 
-**Step 1 is DONE (2026-07-18, same day):** the owner sealed
-`LISP-PLUS-ARCHITECTURE-DECISIONS-0.1.md` via live interview, after two mutually-blind position
-papers (`FABLE-POSITIONS-PRE-SYNTHESIS.md`, `SOL-POSITIONS-ON-THE-DECISION-DOCKET.md`) and a
-synthesis (`SYNTHESIS-PRE-INTERVIEW.md`). Headlines: DK-1 Model A + channel-policy page ·
+**Step 1 is DONE AND AMENDED (2026-07-18, one day):** the owner sealed
+`LISP-PLUS-ARCHITECTURE-DECISIONS-0.1.md` via live interview (two mutually-blind position
+papers → synthesis → interview), then adopted **all four amendment candidates** in a second
+interview after Sol's two commentaries. Final state: DK-1 Model A + channel-policy page ·
 DK-2 two-level projection rule sealed, facts deferred to the locked lane · DK-3
 minter-or-mint-time-delegate, equal-or-narrower · DK-4 four axes × per-axis determinacy ·
-D1–D10 adopted with refinements · **new laws L15 (self-report) / L16 (exposed principals) /
-L17 (ergonomics-as-conformance)** admitted · **the name deliberately left open.**
+D1–D10 adopted with refinements · laws **L15 (witness-separation, as amended) / L16 (exposed
+principals) / L17 (ergonomics-as-conformance, testable) / L18 (principal-role symmetry)** ·
+**the name SEALED: the language is Lisp+; Mneme is its memory-and-continuity layer.**
+Amendment ledger A-1..A-4 at the foot of the decisions record; Sol's authoring charge
+(`SOL-POST-SEAL-ACCEPTANCE.md`) and the seal now coincide exactly.
 
 Remaining sequence:
 
