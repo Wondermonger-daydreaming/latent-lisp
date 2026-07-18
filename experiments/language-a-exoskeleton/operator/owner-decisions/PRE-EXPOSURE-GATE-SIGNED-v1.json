@@ -1,0 +1,79 @@
+{
+ "actor_id": "actor:tomas-pellissari-pavan-owner",
+ "authority_ceilings": [
+  "signature opens the pre-exposure gate only",
+  "no real-item provider contact authorized by this record",
+  "no live target scoring or response collection authorized by this record",
+  "no key-content exposure authorized by this record",
+  "no merge authorized by this record",
+  "the combined preflight and the 312 each require their own future sealed owner authorization"
+ ],
+ "bounded_unknowns": [
+  "This signature attests the gate conditions as verified at the tested commit; the signature commit itself is a successor whose tree was not replayed -- any later byte change re-stales the attestation and no verification claim attaches to successors without a fresh replay.",
+  "This record cannot prove the future combined preflight or the 312 emission will pass; it opens the gate to their separate authorization, nothing more.",
+  "The post-signature manifest rebuild is verified by the in-repo check, not by a fresh clean-room replay, unless one is separately performed."
+ ],
+ "canonical_byte_length": 4511,
+ "controlling_authority": [
+  "sha256:55f0c6d93cfab0a026861f266aa258fa0a7c27f6df2dd4afeb4817f062032379"
+ ],
+ "deciding_actor": "actor:tomas-pellissari-pavan-owner",
+ "decision_id": "PRE-EXPOSURE-GATE-SIGNED",
+ "event_time": "2026-07-17T21:01:28-03:00",
+ "exact_decision": {
+  "authorization_boundaries": {
+   "key_content_exposure_authorized": false,
+   "live_target_scoring_authorized": false,
+   "merge_authorized": false,
+   "pre_exposure_gate_signed": true,
+   "real_item_provider_contact_authorized": false
+  },
+  "interview_answers": {
+   "A_sign_pre_exposure_gate": "sign-now",
+   "B_authorization_boundaries": "confirm-all-remain-false"
+  },
+  "ruling": "R13",
+  "signature_basis": {
+   "calibration": {
+    "artifact": "evidence/grader-calibration/live/attempt-02/RUN-RECORD.md",
+    "sha256": "sha256:fd0c9844b90fe81d43bf9e9a262523ae0fbb4c576657decb71e37628805ca271",
+    "verdict": "attempt-02 ELIGIBLE; all four primary defect families agreement >= 0.80 and kappa >= 0.60; 4 CENSUS_NULL_CONTENT exclusions per option-a"
+   },
+   "checklist_walk": {
+    "artifact": "evidence/gate-walk/RE-WALK-2026-07-17-closure-candidate-49fef2f7.md",
+    "sha256": "sha256:26103ec7b6ad63c472b54cfa97a4b3589be46b5d4ddefb61162d59ca69275ff6",
+    "verdict": "L4 TRUE, L8 TRUE, L11 TRUE, L12 TRUE; all 13 FREEZE-CHECKLIST lines TRUE at signing"
+   },
+   "clean_room_evidence": {
+    "artifact": "evidence/clean-room-verify/2026-07-17-closure-candidate-49fef2f7/SHA256SUMS.txt",
+    "sha256": "sha256:6c36e51f341e0a2ffd972962f6c165f29a446048c53d48b6431fcc2caa94061f",
+    "verdict": "two independent fresh-clone verify-pilot.sh runs at the tested commit, both exit 0, 12/12 network-off checks green"
+   },
+   "publication_commit": "eb09fc9bb8c6eb9a244b3740d187dea756c214fa",
+   "successor_caveat": "the publication commit and this signature commit are successors of the tested commit; their trees were not replayed and carry no verification claim",
+   "tested_commit": "49fef2f7949bae5f216b20d5ed06ff2b18736d94",
+   "tested_tree": "5eeaedc690bde21ca013e499545e66dd39af57f4"
+  },
+  "slot_id": "pre-exposure-gate-signature"
+ },
+ "operational_effect": [
+  "sign:pre-exposure-gate",
+  "hold:no-provider-contact-no-scoring-no-key-exposure-no-merge",
+  "require:separate-sealed-owner-authorization-for-combined-preflight-and-312"
+ ],
+ "parent_versions": [
+  {
+   "record_digest": "sha256:fe03e898144ddc57721edc51ac074413dec27131840ec6af0ad0bc1c62035f3f",
+   "record_id": "owner-decision:gate-walk-r12-adopted-v1",
+   "schema_version": "lae-owner-decision-record/1.1.0"
+  }
+ ],
+ "predecessor_digest": "sha256:fe03e898144ddc57721edc51ac074413dec27131840ec6af0ad0bc1c62035f3f",
+ "ratification_date": "2026-07-17",
+ "rationale": "Owner pre-exposure gate signature (AskUserQuestion interview, Claude Code Fable 5 chair session, 2026-07-17, America/Sao_Paulo), given after the mechanical closure completed: grader calibration attempt-02 ELIGIBLE under the frozen floors with independent recomputation from raw envelopes; CONSTRUCTION-MANIFEST rebuilt at the tested commit via the documented builder with a purely additive, fully attributed diff; two independent clean-room verify-pilot.sh runs green (12/12) against the exact tested commit with identities triple-verified in each room; FREEZE-CHECKLIST lines L4, L8, L11, L12 re-walked TRUE with cited evidence, completing all 13 lines per line 13's own rule. The owner confirms the signature authorizes nothing beyond opening the gate: provider contact, scoring, key exposure, and merge remain unauthorized pending future sealed records.",
+ "record_digest": "sha256:81e61c7da546baf8b198b39f1edc490b792ac511309b76ccabc21d24bb15fc4e",
+ "record_id": "owner-decision:pre-exposure-gate-signed-v1",
+ "schema_version": "lae-owner-decision-record/1.1.0",
+ "status": "adopted",
+ "synthetic_taint_id": null
+}

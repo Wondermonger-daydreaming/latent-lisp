@@ -1,6 +1,6 @@
 {
   "schema_version": "lae-owner-slots/0.2",
-  "pre_exposure_gate_signed": false,
+  "pre_exposure_gate_signed": true,
   "slots": [
     {"slot_id": "minimum-answer-completeness", "status": "resolved", "required": "numerical bounded scale, aggregation, and floor", "value": {"scale": "constitution-completeness-exact-rational-[0,1]", "aggregation": "paired-mean", "fires_when_decrement": "> 0.10"}, "decision_record": {"record_id": "owner-decision:scoring-r3-adopted-v1", "schema_version": "lae-owner-decision-record/1.1.0", "record_digest": "sha256:140d616073fa57707f4139c4a0c702b509f3792ff3129c5f444cf092e0d0fb52"}},
     {"slot_id": "tolerated-refusal-abstention-increase", "status": "resolved", "required": "definition, comparator, numerical maximum, and evaluation strata", "value": {"metric": "refusal-or-abstention-cell-rate", "comparator": "paired-increase-per-contrast-against-credited-arm", "fires_when_increase": "> 0.10"}, "decision_record": {"record_id": "owner-decision:scoring-r3-adopted-v1", "schema_version": "lae-owner-decision-record/1.1.0", "record_digest": "sha256:140d616073fa57707f4139c4a0c702b509f3792ff3129c5f444cf092e0d0fb52"}},
