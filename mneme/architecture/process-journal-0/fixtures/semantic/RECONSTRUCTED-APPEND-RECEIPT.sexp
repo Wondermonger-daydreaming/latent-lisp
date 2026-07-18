@@ -1,0 +1,1 @@
+(rec ((id "receipt" "append-disposition") (id "pj0" "already-committed-identical")) ((id "receipt" "event-id") (id "event" "e000007")) ((id "receipt" "origin") (id "origin" "reconstructed")) ((id "receipt" "source-prefix-digest") #x"d372cf5221016a4d11a968fcd35d890d35e758a0f0e467e68d4f73cf2915e311"))

@@ -1,0 +1,1 @@
+(rec ((id "merge" "ordering-rule") (id "merge-rule" "explicit-source-precedence" "0")) ((id "merge" "origin") (id "origin" "reconstructed")) ((id "merge" "sources") (seq (id "pj0-store" "source-a") (id "pj0-store" "source-b"))) ((id "merge" "timestamp-ordering") #f))

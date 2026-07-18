@@ -1,0 +1,1 @@
+(rec ((id "case" "asserted-self-report") (rec ((id "origin" "value") (id "origin" "asserted")) ((id "witness" "mechanism") (id "witness" "process-self-report")))) ((id "case" "observed-transition") (rec ((id "origin" "value") (id "origin" "observed")) ((id "witness" "mechanism") (id "witness" "kernel-transition-boundary")))))

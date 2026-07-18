@@ -1,0 +1,1 @@
+(rec ((id "snapshot" "fold-id") (id "fold" "demo" "0")) ((id "snapshot" "source-store") (id "pj0-store" "12b099a4b4fa66b1c4e07a1e076228d4a214588f558a35edf07523782fd1573c")) ((id "snapshot" "terminal-frame-digest") #x"d372cf5221016a4d11a968fcd35d890d35e758a0f0e467e68d4f73cf2915e311") ((id "snapshot" "terminal-ordinal") 7))

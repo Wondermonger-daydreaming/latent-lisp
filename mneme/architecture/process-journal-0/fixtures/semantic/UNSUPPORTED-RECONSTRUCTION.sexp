@@ -1,0 +1,1 @@
+(rec ((id "condition" "name") (id "condition" "unsupported-reconstruction")) ((id "condition" "reason") (id "reason" "multiple-unresolved-non-superseded-attempts")) ((id "condition" "resolved-flag-present") #f) ((id "condition" "seat-id") (id "seat" "demo" "001")))

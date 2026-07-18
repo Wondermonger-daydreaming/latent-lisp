@@ -1,0 +1,1 @@
+(rec ((id "design" "current-state-source") (id "fold" "longest-prefix-valid")) ((id "design" "mutable-resolved-flag") #f) ((id "design" "resolution-events") (seq (id "event-kind" "reconciliation") (id "event-kind" "supersession"))))
