@@ -22,10 +22,10 @@ import tranche_b as tb
 import run_emission as re
 from run_emission import (
     ReservationLedger, EmissionRunner, gate_bank_identity, gate_item_consistency,
-    gate_run_window, gate_schedule, gate_r14_record, load_subject_binding,
+    gate_run_window, gate_schedule, gate_r15_record, load_subject_binding,
     BankIdentityRefused, ItemConsistencyRefused, ScheduleGateRefused,
     RunWindowRefused, AttemptCeilingRefused, SpendReservationRefused,
-    R14RecordRefused, TransportBudgetExhausted, SubjectBindingRefused,
+    R15RecordRefused, TransportBudgetExhausted, SubjectBindingRefused,
     parse_iso_utc,
 )
 from provider_live_emission import MockProvider
@@ -76,9 +76,19 @@ def _fresh_evidence(subdir):
 # --------------------------------------------------------------------------- #
 def run():
     bank, schedule, manifest = _real_context()
-    window_open = parse_iso_utc("2026-07-18T02:43:55Z")
-    window_close = parse_iso_utc("2026-07-18T14:43:55Z")
+    # Window bounds come from the R15 record itself so the probes' clock always
+    # sits inside the authorized window (R15: 04:59:07Z .. 16:59:07Z).
+    r15_window = load_json(re.R15_PATH)["exact_decision"]["run_window"]
+    window_open = parse_iso_utc(r15_window["opens_utc"])
+    window_close = parse_iso_utc(r15_window["closes_utc"])
     inside = window_open + timedelta(hours=1)
+
+    def _payload_byte_census():
+        """Per-call payload byte lengths from the frozen renderer (no content)."""
+        runner = EmissionRunner(now_fn=lambda: inside)
+        ctx = runner.preflight()
+        _, render_census = runner.prerender(ctx)
+        return [entry["payload_bytes"] for entry in render_census]
 
     # 1. tampered bank digest
     def plant_bank():
@@ -138,14 +148,14 @@ def run():
         ledger.reserve_scheduled_call(3175)  # attempt 343, fine
     check("attempt-ceiling gate: 345", plant_attempt, AttemptCeilingRefused, clean_attempt)
 
-    # 8. R14 record tampered (in-memory copy)
-    real_r14 = load_json(re.R14_PATH)
-    def plant_r14():
-        tampered = json.loads(json.dumps(real_r14))
+    # 8. R15 record tampered (in-memory copy) -> digest mismatch refuses
+    real_r15 = load_json(re.R15_PATH)
+    def plant_r15():
+        tampered = json.loads(json.dumps(real_r15))
         tampered["exact_decision"]["run_window"]["closes_utc"] = "2099-01-01T00:00:00Z"
-        gate_r14_record(tampered)
-    check("R14-record gate: tampered", plant_r14, R14RecordRefused,
-          lambda: gate_r14_record(json.loads(json.dumps(real_r14))))
+        gate_r15_record(tampered)
+    check("R15-record gate: tampered", plant_r15, R15RecordRefused,
+          lambda: gate_r15_record(json.loads(json.dumps(real_r15))))
 
     # 9. item internal-consistency (tampered task digest)
     def plant_item():
@@ -207,7 +217,8 @@ def run():
         assert summary["emitted"] < 312, summary["emitted"]  # partial census
     _assert_check("transport-exhaustion: honest partial stop", transport_exhaustion_probe)
 
-    # 13. CLEAN full pipeline -> 312/312, worst-case byte-exact, attempts 312
+    # 13. CLEAN full pipeline -> 312/312, worst-case byte-exact, attempts 312,
+    #     R15-repriced worst-case in band AND strictly under the 8.00 ceiling.
     def clean_full_probe():
         evd = _fresh_evidence("clean")
         runner = EmissionRunner(now_fn=lambda: inside)
@@ -217,8 +228,44 @@ def run():
         assert summary["rendered"] == 312 and summary["emitted"] == 312
         assert summary["attempts"] == 312 and summary["transport_retries"] == 0
         wc = Decimal(summary["worst_case_reservation_usd"])
-        assert Decimal("2.24") <= wc <= Decimal("2.25"), wc  # ~2.246 band
-    _assert_check("clean full dry-run: 312/312 under ceiling", clean_full_probe)
+        assert wc == Decimal("5.944873"), wc  # R15-repriced byte-exact worst case
+        assert wc < Decimal("8.00"), wc        # spend ceiling UNCHANGED
+    _assert_check("clean full dry-run: 312/312, worst-case USD 5.944873 < 8.00",
+                  clean_full_probe)
+
+    # 14. serving-provider + openrouter model id captured in mock census rows
+    #     (R15 serving_provider_rule proven on the offline path).
+    def serving_provider_probe():
+        evd = _fresh_evidence("serving")
+        runner = EmissionRunner(now_fn=lambda: inside)
+        summary, census = runner.run(evd, mode="dry-run")
+        shutil.rmtree(evd, ignore_errors=True)
+        expected_ids = {"claude-haiku-4.5": "anthropic/claude-haiku-4.5",
+                        "gpt-5.6-luna": "openai/gpt-5.6-luna",
+                        "kimi-k3": "moonshotai/kimi-k3"}
+        assert all(r.get("serving_provider") == "MockRouter (offline, no network)"
+                   for r in census), "serving_provider missing from a census row"
+        assert all(r.get("openrouter_model_id") == expected_ids[r["subject"]]
+                   for r in census), "openrouter_model_id mismatch in a census row"
+        assert all("openrouter.ai" in (r.get("route") or "") for r in census), "route not OpenRouter"
+    _assert_check("serving-provider capture: lands in mock census rows",
+                  serving_provider_probe)
+
+    # 15. price-table worst-case assertion: repriced constants recompute byte-exact
+    def price_table_probe():
+        # Independent recomputation of the worst case from the frozen byte census,
+        # asserting the R15 max-rate constants (kimi 3.00/15.00) are in force.
+        assert re.MAX_IN_RATE == Decimal("3.00"), re.MAX_IN_RATE
+        assert re.MAX_OUT_RATE == Decimal("15.00"), re.MAX_OUT_RATE
+        assert re.PRICE_TABLE["kimi-k3"] == {"in": Decimal("3.00"), "out": Decimal("15.00")}
+        ledger = ReservationLedger(max_payload_bytes=3175)
+        for entry_bytes in _payload_byte_census():
+            ledger.reserve_scheduled_call(entry_bytes)
+        wc = re.usd(ledger.worst_case_total())
+        assert wc == Decimal("5.944873"), wc
+        assert wc < re.SPEND_CEILING, (wc, re.SPEND_CEILING)
+    _assert_check("price-table worst-case: byte-exact 5.944873 under 8.00 ceiling",
+                  price_table_probe)
 
     # -- summary ---------------------------------------------------------- #
     total = len(RESULTS)

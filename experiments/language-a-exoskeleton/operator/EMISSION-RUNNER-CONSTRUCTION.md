@@ -11,33 +11,140 @@ firing all belong to later hands, per R14's ordering.
 This document is content-free (no item task text, no source text, no rendered
 request bodies). It cites digests, byte counts, and gate names only.
 
+> **The sections below describe the ORIGINAL R14 construction. The R15 route
+> repair (2026-07-18) is recorded in §0 and updates the tables in §1, §3, §4,
+> §8. Where §0 and a later section disagree, §0 governs.**
+
+---
+
+## 0. R15 route repair (2026-07-18)
+
+**Repair hand:** FARRIER.
+**Authority:** ruling R15, `operator/owner-decisions/OWNER-ROUTE-SUBSTITUTION-AND-REEMISSION-v1.json`
+(`record_digest sha256:fb40c815b0eede11c60765973cdac72c196196bf71d6bedf272da003a3beb2d0`,
+`canonical_byte_length 6241`; digest re-validated in-session via
+`harness/preauthorship.py:validate_record_digest`).
+**Scope:** confined to THIS ARC'S OWN R14-construction files — `provider_live_emission.py`,
+`run_emission.py`, `test_emission_gates.py`, this notes file — plus the rebuilt
+manifest pair. Every pre-R14 frozen artifact stays byte-untouched. NO provider
+contact: the entire proof is offline (`MockProvider`); the real firing and its
+fresh receipts belong to a later hand.
+
+### Why (three verified direct-route failures, quoted from R15 `attempt_01_record`)
+> *"honest stop, 2 calls, $0.000000 billed, census committed at e8d694b; root
+> causes verified by owner-authorized probes: Anthropic-direct 404 =
+> API-id/label mismatch; OpenAI-direct 429 insufficient_quota; Moonshot-direct
+> 401 authentication_error"*
+
+R15 replaces the three direct routes with the lab's funded, sandbox-verified
+**single OpenRouter route** for all three subjects.
+
+### What changed
+- **Adapters:** the three direct adapters (`AnthropicDirectAdapter`,
+  `OpenAIAdapter`, `MoonshotKimiAdapter`) are replaced by ONE
+  `OpenRouterAdapter` → `POST https://openrouter.ai/api/v1/chat/completions`,
+  `Authorization: Bearer OPENROUTER_API_KEY` (read from
+  `/home/gauss/Claude-Code-Lab/.env`, never printed), parameterized by the three
+  R15 `amended_subject_routes` model ids:
+  `claude-haiku-4.5 → anthropic/claude-haiku-4.5`,
+  `gpt-5.6-luna → openai/gpt-5.6-luna`,
+  `kimi-k3 → moonshotai/kimi-k3`. The runner reads the subject → model-id map
+  **from the R15 record itself** (single source of truth); the module constant is
+  a drift guard (`build_adapter` refuses a disagreeing id).
+- **Output cap:** `max_tokens = 768` hard cap retained. **OpenRouter accepts
+  `max_tokens` for all three routes, so the OpenAI-direct `max_completion_tokens`
+  concern is OBSOLETE on this route** — one output-cap field for every subject.
+- **Preserved unchanged:** `temperature 0`; full envelope capture; the
+  `TransportError` classification (retryable = connect/timeout/5xx/429); the
+  determinate null-content handling (a null/empty 200 is a `NULL_CONTENT` census
+  entry, never retried — the kimi-k3 reasoning-exhaustion idiom lands here).
+- **NEW — serving-provider capture (R15 `serving_provider_rule`):** every call's
+  serving provider (OpenRouter's top-level `provider` field) is recorded into the
+  census (`serving_provider`) beside `model_id_returned`. Serving-provider
+  identity on OpenRouter is dynamic (the haiku probe was served by Bedrock);
+  family identity is declared at the MODEL level, the serving level is recorded
+  as an actual, not resolved.
+- **Price basis (R15 `amended_price_basis`):** haiku `1.00/5.00`, luna
+  `1.00/6.00`, **kimi-k3 repriced free → `3.00/15.00` USD/MTok** (the Moonshot
+  coding plan seat became a paid OpenRouter seat). kimi-k3 is now the most
+  expensive on BOTH axes, so the worst-case model's two max-rate constants move
+  to `MAX_IN_RATE = 3.00`, `MAX_OUT_RATE = 15.00` — **method unchanged** (same
+  r6 "paranoid_upper": measured input bytes/call from the frozen renderer + 768
+  output cap, every call reserved at the single most-expensive rate).
+- **Authorization gate:** `gate_r14_record` → `gate_r15_record` — validates the
+  R15 record digest, pins it, checks `ruling == "R15"`, the OpenRouter route, the
+  `hold:no-scoring-no-key-exposure-no-merge` boundary, and exactly three amended
+  subject routes; enforces R15's window **per call**. The old R14 gate is
+  SUPERSEDED (R14's emission clause expired by its own route-change condition).
+
+### R15 run window (enforced per call)
+`2026-07-18T04:59:07Z` (open) .. `2026-07-18T16:59:07Z` (close); ODR-41 carried
+(any subject release / serving-route withdrawal / price change inside the window
+⇒ stop + successor freeze).
+
+### New worst-case reservation (recomputed BYTE-EXACT by this repair hand)
+**USD 5.944873** vs the unchanged **USD 8.00** ceiling (well under). Delta vs the
+pre-R15 r6 basis (2.246177): **+3.698696** — entirely the kimi-k3 repricing.
+Byte-exact recomputation (frozen byte census: total 527604, max 3175):
+
+| Term | Formula | USD |
+|------|---------|-----|
+| scheduled input | `527604 × 1.05 × 3.00 / 1e6` | 1.661953 |
+| scheduled output | `312 × 768 × 15.00 / 1e6` | 3.594240 |
+| retry-reserve input | `32 × 3175 × 1.05 × 3.00 / 1e6` | 0.320040 |
+| retry-reserve output | `32 × 768 × 15.00 / 1e6` | 0.368640 |
+| **worst-case total** | sum (ROUND_HALF_EVEN, 6dp) | **5.944873** |
+
+> R15's parenthetical estimate was `~2.4`; that figure did not carry the kimi
+> repricing through the max-rate model. R15 explicitly delegates the byte-exact
+> recompute to the repair hand — **5.944873** is the honest figure, still far
+> under 8.00. (Recorded here per the ruling's instruction.)
+
+### R15 teeth + dry-run (offline, `MockProvider`, no network, no keys)
+`python3 harness/test_emission_gates.py` → **15/15 PASS**, exit 0.
+`python3 harness/run_emission.py --dry-run --evidence-dir <OUTSIDE-repo dir>`
+→ 312/312 rendered & emitted, worst-case **USD 5.944873**, attempts 312/344,
+0 retries; every census row carries `serving_provider`, `openrouter_model_id`,
+and the OpenRouter route. The dry-run writes NOTHING into the repo.
+
 ---
 
 ## 1. What was built
 
 | File | Lines | Role |
 |------|-------|------|
-| `harness/provider_live_emission.py` | 365 | Three live provider adapters + offline `MockProvider` + global transport-retry contract. The ONLY network-capable code in the packet. |
-| `harness/run_emission.py` | 613 | Single live entrypoint: preflight refusal gates, subject binding, byte-exact rendering (delegated to the frozen renderer), worst-case reservation ledger, evidence custody, `--dry-run` / `--live` modes. |
-| `harness/test_emission_gates.py` | 243 | Teeth checks: each gate planted-to-fire then clean-to-pass; runs fully offline. |
+| `harness/provider_live_emission.py` | 375 (R15) | ~~Three live provider adapters~~ **one `OpenRouterAdapter` (R15, §0)** + offline `MockProvider` + global transport-retry contract. The ONLY network-capable code in the packet. |
+| `harness/run_emission.py` | 652 (R15) | Single live entrypoint: preflight refusal gates, subject binding, byte-exact rendering (delegated to the frozen renderer), worst-case reservation ledger, evidence custody, `--dry-run` / `--live` modes. |
+| `harness/test_emission_gates.py` | 290 (R15) | Teeth checks: each gate planted-to-fire then clean-to-pass; runs fully offline. |
 
 The runner is the live-capable successor the pre-registration contemplates
 (`PREREG-v0.2.md:75` — "The live-capable successor runner ... must refuse before
 a worst-case reservation exceeds a ceiling").
 
-### Adapters (r5 slot `subject-provider-model-routes`, `operator/owner-slots.json`)
+### Adapters — SUPERSEDED by R15 (see §0)
+
+The original R14 construction had three direct adapters (Anthropic-direct,
+OpenAI-direct, Moonshot-direct). **R15 replaced all three with a single
+`OpenRouterAdapter`** after all three direct routes failed at attempt-01 (§0).
+The current adapter table:
 
 | Subject | Route | Endpoint | Key env | Output-cap field (value 768) |
 |---------|-------|----------|---------|------------------------------|
-| `claude-haiku-4.5` | Anthropic direct | `POST https://api.anthropic.com/v1/messages` | `ANTHROPIC_API_KEY` | `max_tokens` |
-| `gpt-5.6-luna` | OpenAI API | `POST https://api.openai.com/v1/chat/completions` | `OPENAI_API_KEY` | `max_completion_tokens` |
-| `kimi-k3` | Moonshot coding (Anthropic-compatible) | `POST https://api.kimi.com/coding/v1/messages` | `KIMI_API_KEY` | `max_tokens` |
+| `claude-haiku-4.5` (`anthropic/claude-haiku-4.5`) | OpenRouter | `POST https://openrouter.ai/api/v1/chat/completions` | `OPENROUTER_API_KEY` | `max_tokens` |
+| `gpt-5.6-luna` (`openai/gpt-5.6-luna`) | OpenRouter | (same) | `OPENROUTER_API_KEY` | `max_tokens` |
+| `kimi-k3` (`moonshotai/kimi-k3`) | OpenRouter | (same) | `OPENROUTER_API_KEY` | `max_tokens` |
+
+The subject binding (`SYNTHETIC-SUBJECT-N → subject`) still reads the frozen r5
+slot `subject-provider-model-routes` (`operator/owner-slots.json`, byte-untouched);
+only the ROUTE the subjects go out on changed, per R15. The subject → OpenRouter
+model-id map is read from the R15 record itself.
 
 Keys are read from `/home/gauss/Claude-Code-Lab/.env` at call time (split on the
 FIRST `=` only — the `KIMI_API_KEY==` double-equals scar), never printed or
 written to any artifact. `max_tokens`/output cap is hard-coded to **768** per
-attempt. The full HTTP response envelope (status, headers, raw body bytes) is
-captured verbatim into owner-custody evidence.
+attempt (one field for all three subjects on OpenRouter). The full HTTP response
+envelope (status, headers, raw body bytes) is captured verbatim into
+owner-custody evidence.
 
 ---
 
@@ -48,11 +155,11 @@ captured verbatim into owner-custody evidence.
 | Bank identity | `BankIdentityRefused` | `sha256(items/candidate/target-visible/items.jsonl) == 84cb8673…d3c41` (key-author-input identity, owner-confirmed). |
 | Item consistency | `ItemConsistencyRefused` | per item: `task.sha256 == sha256(task.utf8)`; `source_packet_sha256`; `target_surface_sha256 == sha256(task ‖ \0 ‖ packet)`. |
 | Schedule | `ScheduleGateRefused` | exactly 312 rows; arm counts `{NL,PERSONA,SCAFFOLD,LANG-A}=72, SHAM=24` (design.json); then the frozen `tranche_b.validate_schedule` binding check. |
-| Run window | `RunWindowRefused` | clock read per call; refuse `< 2026-07-18T02:43:55Z` or `>= 2026-07-18T14:43:55Z` (window read from R14). |
-| Spend reservation | `SpendReservationRefused` | refuse the call whose worst-case cumulative reservation would exceed **USD 8.00** (model in §4). |
+| Run window | `RunWindowRefused` | clock read per call; refuse `< 2026-07-18T04:59:07Z` or `>= 2026-07-18T16:59:07Z` (**R15 window**, §0). |
+| Spend reservation | `SpendReservationRefused` | refuse the call whose worst-case cumulative reservation would exceed **USD 8.00** (model in §4, R15-repriced in §0). |
 | Attempt ceiling | `AttemptCeilingRefused` | absolute **344** attempts (initial + transport retries). |
 | Transport budget | `TransportBudgetExhausted` | **≤32** transport retries total; exhaustion stops the run honestly with a partial census. |
-| R14 record | `R14RecordRefused` | `validate_record_digest(R14)` + pinned digest + `ruling==R14` + boundary set + window match. |
+| R15 record (was R14) | `R15RecordRefused` | `validate_record_digest(R15)` + pinned digest `fb40c815…` + `ruling==R15` + OpenRouter route + `hold:no-scoring-no-key-exposure-no-merge` + exactly 3 amended subject routes; window enforced per call (§0). |
 | Subject binding | `SubjectBindingRefused` | r5 slot resolved and lists exactly 3 subjects. |
 
 **Subject binding rule (recorded as emission-actual):** `SYNTHETIC-SUBJECT-N` →
@@ -73,7 +180,8 @@ Yields `SUBJECT-1→claude-haiku-4.5 (Anthropic direct)`,
 
 ## 3. Teeth-check results (planted fault → shown to fire, then clean pass)
 
-Run: `python3 harness/test_emission_gates.py` → **13/13 PASS**, exit 0.
+Run: `python3 harness/test_emission_gates.py` → **15/15 PASS** under R15 (§0),
+exit 0. (Was 13/13 under R14; two checks added for the R15 shape.)
 
 | # | Check | Planted fault | Fired | Clean |
 |---|-------|---------------|-------|-------|
@@ -84,12 +192,14 @@ Run: `python3 harness/test_emission_gates.py` → **13/13 PASS**, exit 0.
 | 5 | run-window before open | clock = open − 1s | `RunWindowRefused` | ✓ |
 | 6 | spend overflow | worst-case call >> 8.00 | `SpendReservationRefused` (pre-contact) | ✓ |
 | 7 | attempt ceiling | attempt 345 | `AttemptCeilingRefused` | ✓ |
-| 8 | R14 record tampered | mutated in-memory copy | `R14RecordRefused` | ✓ |
+| 8 | **R15** record tampered | mutated in-memory copy | `R15RecordRefused` | ✓ |
 | 9 | item consistency | bad task digest | `ItemConsistencyRefused` | ✓ |
 | 10 | subject binding | r5 with 2 subjects | `SubjectBindingRefused` | ✓ |
-| 11 | null-content | MockProvider null envelope | determinate entry, **0 retries**, run continues 312/312 | ✓ |
+| 11 | null-content | MockProvider null envelope (finish_reason `length`, reasoning-exhaustion idiom) | determinate entry, **0 retries**, run continues 312/312 | ✓ |
 | 12 | transport exhaustion | MockProvider always-fail | honest stop, **32 retries**, partial census | ✓ |
-| 13 | clean full dry-run | — | 312/312, worst-case in the ~2.246 band | ✓ |
+| 13 | clean full dry-run | — | 312/312, worst-case **USD 5.944873** `< 8.00` | ✓ |
+| 14 | **serving-provider capture** (R15) | — | `serving_provider` + `openrouter_model_id` + OpenRouter route land in all mock census rows | ✓ |
+| 15 | **price-table worst-case** (R15) | — | `MAX_IN/OUT_RATE = 3.00/15.00`, byte-exact recompute **5.944873 < 8.00** | ✓ |
 
 ---
 
@@ -101,15 +211,17 @@ Run: `python3 harness/run_emission.py --dry-run --evidence-dir <OUTSIDE-repo dir
   per-call payload digests.
 - **Byte census (byte-exact, from the frozen `compose_payload`):**
   total payload bytes **527604**, max **3175**.
-- **Worst-case reservation:** **USD 2.245816** vs r6-recorded **USD 2.246177**,
-  delta **−0.000361** — root-caused below. Both far under the USD 8.00 ceiling.
+- **Worst-case reservation (R15-repriced, §0):** **USD 5.944873** vs the unchanged
+  **USD 8.00** ceiling; delta vs the pre-R15 r6 basis (2.246177) is **+3.698696**
+  (all from the kimi-k3 repricing). *(The original R14 figure below — USD 2.245816
+  at the old rates — is retained for the byte-provenance note only.)*
 - **Attempts** 312/344, **transport retries** 0.
 
-### Reservation model (byte-for-byte the r6 offline census, `evidence/cost-census/cost.py` "paranoid_upper")
-- input reservation/call = `payload_bytes × 1.0 tok/byte × 1.05 × MAX_IN_RATE(1.00/MTok)`
-- output reservation/call = `768 × MAX_OUT_RATE(6.00/MTok)`
+### Reservation model (same r6 "paranoid_upper" method; R15 max-rate constants, §0)
+- input reservation/call = `payload_bytes × 1.0 tok/byte × 1.05 × MAX_IN_RATE(3.00/MTok, R15)`
+- output reservation/call = `768 × MAX_OUT_RATE(15.00/MTok, R15)`
 - retry reserve (constant, worst case all 32 retries resend the largest prompt) =
-  `32×max_bytes×1.0×1.05×1.00/MTok + 32×768×6.00/MTok`
+  `32×max_bytes×1.0×1.05×3.00/MTok + 32×768×15.00/MTok`
 - gate: refuse a scheduled call if `retry_reserve + cumulative_scheduled + this_call > 8.00`.
   Actual transport retries draw down the pre-reserved retry budget (already
   worst-cased) — they consume the attempt/retry ceilings, never new spend.
@@ -164,24 +276,38 @@ committed. The dry-run of this construction wrote **nothing** into the repo.
 
 ## 7. One-renderer / one-emitter exclusivity
 
-- `git diff --stat` over the packet is **empty** — no existing file modified;
-  `run.py`, `provider_dry_run.py`, `manifest.py`, `tranche_b.py` byte-untouched.
+- **R14:** `git diff --stat` over the packet was empty — a purely additive
+  construction. **R15 (§0):** the diff touches exactly the four THIS-ARC
+  construction files (`provider_live_emission.py`, `run_emission.py`,
+  `test_emission_gates.py`, this notes file) plus the rebuilt manifest pair.
+  Every FROZEN pre-R14 artifact — `run.py`, `provider_dry_run.py`, `manifest.py`,
+  `tranche_b.py`, `tests/`, `prompts/`, `items/`, `tranche-b/`, `evidence/**`,
+  and `operator/owner-slots.json` (the r5 slot) — stays **byte-untouched**.
 - `provider_live_emission` (the only network-capable module) is imported **only**
   by `run_emission.py` (the sole live entrypoint) and by `test_emission_gates.py`
   (which uses `MockProvider` alone — no network). **No frozen file imports it.**
 - `run_emission` is imported only by its own teeth-check.
 - Rendering has one authority: the frozen `tranche_b.compose_payload`; the runner
-  adds no second renderer.
+  adds no second renderer (the R15 repair changed only the ROUTE, never the
+  rendering contract).
 
 ---
 
-## 8. Handoff (later hands, per R14 ordering)
+## 8. Handoff (later hands, per R15 ordering — carried forward from R14 unchanged)
 
-1. Rebuild `CONSTRUCTION-MANIFEST` after these bytes are final.
-2. Commit the emission candidate; obtain **two fresh independent clean-room
-   receipts** at that exact candidate **before any provider contact**.
-3. Inside the run window, run `--live --evidence-dir <outside> --in-repo-census-dir
+1. Rebuild `CONSTRUCTION-MANIFEST` after these bytes are final. *(Done by FARRIER
+   for the R15 repair; a later edit re-does it.)*
+2. Commit the REPAIRED emission candidate; obtain **two fresh independent
+   clean-room receipts** at that exact candidate **before any provider contact**
+   (R15 carries R14's receipts-before-contact requirement forward unchanged).
+3. Inside the **R15** run window (`2026-07-18T04:59:07Z .. 16:59:07Z`), run
+   `--live --evidence-dir <outside> --in-repo-census-dir
    experiments/language-a-exoskeleton/evidence/emission-312` to emit and record.
-   Provider-actual confirmations still owed at emission: exact per-provider
-   tokenizer census, the OpenAI output-cap field name for `gpt-5.6-luna`, and
+   **The live-invocation flags are UNCHANGED by the R15 repair** — `--live`,
+   `--evidence-dir`, `--in-repo-census-dir` all still hold (confirmed against the
+   repaired `run_emission.py` CLI). Provider-actual confirmations still owed at
+   emission: exact per-provider tokenizer census, the **serving provider per call**
+   (R15 `serving_provider_rule` — now captured into the census automatically), and
    retention/cache disclosures (recorded-as-deferred per Erratum-01 / GATE-WALK-R12).
+   The OpenAI output-cap field concern is retired: OpenRouter takes `max_tokens`
+   for all three (§0).

@@ -1,29 +1,46 @@
 """Live provider adapters for the Language-A 312-emission run.
 
-ADDITIVE SUCCESSOR construction (ruling R14, OWNER-312-EMISSION-AUTHORIZED-v1).
+ADDITIVE SUCCESSOR construction, REPAIRED to the single OpenRouter route under
+owner ruling R15 (OWNER-ROUTE-SUBSTITUTION-AND-REEMISSION-v1,
+record_digest sha256:fb40c815b0eede11c60765973cdac72c196196bf71d6bedf272da003a3beb2d0).
 This module is the ONLY place in the packet that is capable of contacting a
 provider.  It is imported exclusively by ``run_emission.py``; no frozen file
 imports it (one-renderer / one-emitter exclusivity, proven in the construction
 notes).  It performs NO provider contact at import time and none at all unless
 ``run_emission.py`` is invoked in its explicit ``--live`` mode.
 
-Three adapters, one per r5 subject-provider-model route
-(operator/owner-slots.json slot ``subject-provider-model-routes``):
+R15 repair (2026-07-18): the three direct adapters (Anthropic-direct 404,
+OpenAI-direct 429 insufficient_quota, Moonshot-direct 401 authentication_error;
+all three verified failures quoted from R15 ``attempt_01_record``) are replaced
+by ONE ``OpenRouterAdapter`` on the lab's funded, sandbox-verified OpenRouter
+route, parameterized by the three R15 ``amended_subject_routes`` model ids:
 
-  (a) claude-haiku-4.5  -> Anthropic direct   POST https://api.anthropic.com/v1/messages   (ANTHROPIC_API_KEY)
-  (b) gpt-5.6-luna      -> OpenAI API         POST https://api.openai.com/v1/chat/completions (OPENAI_API_KEY)
-  (c) kimi-k3           -> Moonshot coding     POST https://api.kimi.com/coding/v1/messages   (KIMI_API_KEY, Anthropic-compatible)
+  (a) claude-haiku-4.5  -> anthropic/claude-haiku-4.5   (Claude-family)
+  (b) gpt-5.6-luna      -> openai/gpt-5.6-luna          (GPT-family)
+  (c) kimi-k3           -> moonshotai/kimi-k3           (Kimi-family, reasoning-class)
+
+All three go to POST https://openrouter.ai/api/v1/chat/completions with
+``Authorization: Bearer OPENROUTER_API_KEY``.
 
 Hard invariants enforced here:
-  * ``max_tokens`` / output cap is HARD-CODED to 768 per attempt.
+  * ``max_tokens`` / output cap is HARD-CODED to 768 per attempt.  OpenRouter
+    accepts ``max_tokens`` for all three routes, so the earlier OpenAI-direct
+    ``max_completion_tokens`` concern is OBSOLETE on this route (one output-cap
+    field for every subject).
   * The full HTTP response envelope (status, headers, raw body bytes) is
     captured for owner-custody evidence; nothing is discarded.
   * An HTTP 200 whose body parses to a determinate envelope is FINAL for the
     call.  A null/empty content 200 is a determinate ``NULL_CONTENT`` outcome,
     never retried (the option-(a) idiom; aligns with SCORING-CONSTITUTION T11).
+    kimi-k3 reasoning exhaustion under the 768 cap lands here as a determinate
+    census entry (R15 bounded-unknown), not a rerun license.
   * Transport errors (connect / read timeout / HTTP 5xx / HTTP 429) are the
     only retryable class; the retry budget is a GLOBAL ceiling owned by the
     caller (<=32 across the whole run).
+  * The serving provider OpenRouter used for each call (its top-level
+    ``provider`` field) is captured into the census as an emission actual
+    (R15 ``serving_provider_rule``): family identity is declared at the model
+    level, not the serving level; the serving provider is dynamic and recorded.
 
 Keys are read from /home/gauss/Claude-Code-Lab/.env at call time and are never
 printed, logged, or written to any evidence artifact.
@@ -107,6 +124,7 @@ class LiveResponse:
         fields = {
             "http_status": self.http_status,
             "model_id_returned": None,
+            "serving_provider": None,  # OpenRouter top-level 'provider' (R15 serving_provider_rule)
             "finish_reason": None,
             "provider_request_id": self.headers.get("x-request-id")
             or self.headers.get("request-id"),
@@ -122,6 +140,10 @@ class LiveResponse:
         if body is None:
             fields["finish_reason"] = "unparseable-body"
             return fields
+        # OpenRouter records the upstream that served the call at the top level;
+        # capture it regardless of the response envelope shape.
+        if isinstance(body, dict):
+            fields["serving_provider"] = body.get("provider")
         # Anthropic / Kimi (Anthropic-compatible) shape
         if isinstance(body, dict) and body.get("type") == "message":
             fields["model_id_returned"] = body.get("model")
@@ -236,89 +258,67 @@ class BaseLiveAdapter:
         )
 
 
-class AnthropicDirectAdapter(BaseLiveAdapter):
-    route = "Anthropic direct route"
-    subject = "claude-haiku-4.5"
-    key_env = "ANTHROPIC_API_KEY"
-    _url = "https://api.anthropic.com/v1/messages"
-    output_cap_field = "max_tokens"
-
-    def _headers(self):
-        return {
-            "x-api-key": self._api_key,
-            "anthropic-version": "2023-06-01",
-            "content-type": "application/json",
-        }
-
-    def _body(self, payload_text, model):
-        return {
-            "model": model,
-            "max_tokens": OUTPUT_TOKEN_CAP,
-            "temperature": 0,
-            "messages": [{"role": "user", "content": payload_text}],
-        }
-
-
-class OpenAIAdapter(BaseLiveAdapter):
-    route = "OpenAI API route"
-    subject = "gpt-5.6-luna"
-    key_env = "OPENAI_API_KEY"
-    _url = "https://api.openai.com/v1/chat/completions"
-    # gpt-5.6 is a reasoning-era model: the output cap field is
-    # ``max_completion_tokens`` (VALUE stays 768).  Confirmed-at-emission actual.
-    output_cap_field = "max_completion_tokens"
-
-    def _headers(self):
-        return {
-            "Authorization": f"Bearer {self._api_key}",
-            "content-type": "application/json",
-        }
-
-    def _body(self, payload_text, model):
-        return {
-            "model": model,
-            "max_completion_tokens": OUTPUT_TOKEN_CAP,
-            "messages": [{"role": "user", "content": payload_text}],
-        }
-
-
-class MoonshotKimiAdapter(BaseLiveAdapter):
-    route = "Moonshot kimi.com coding route (Anthropic-compatible, api.kimi.com/coding/)"
-    subject = "kimi-k3"
-    key_env = "KIMI_API_KEY"
-    _url = "https://api.kimi.com/coding/v1/messages"
-    output_cap_field = "max_tokens"
-
-    def _headers(self):
-        # Anthropic-compatible surface: x-api-key + anthropic-version.
-        return {
-            "x-api-key": self._api_key,
-            "Authorization": f"Bearer {self._api_key}",
-            "anthropic-version": "2023-06-01",
-            "content-type": "application/json",
-        }
-
-    def _body(self, payload_text, model):
-        return {
-            "model": model,
-            "max_tokens": OUTPUT_TOKEN_CAP,
-            "temperature": 0,
-            "messages": [{"role": "user", "content": payload_text}],
-        }
-
-
-SUBJECT_ADAPTERS = {
-    "claude-haiku-4.5": AnthropicDirectAdapter,
-    "gpt-5.6-luna": OpenAIAdapter,
-    "kimi-k3": MoonshotKimiAdapter,
+# R15 amended_subject_routes: one funded OpenRouter route, three model ids.  The
+# runner passes the model id it read from the R15 record itself; this constant is
+# the documented default and a drift guard (build_adapter refuses a mismatch).
+OPENROUTER_ROUTE = "OpenRouter route (openrouter.ai/api/v1/chat/completions)"
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+OPENROUTER_KEY_ENV = "OPENROUTER_API_KEY"
+OPENROUTER_MODEL_IDS = {
+    "claude-haiku-4.5": "anthropic/claude-haiku-4.5",
+    "gpt-5.6-luna": "openai/gpt-5.6-luna",
+    "kimi-k3": "moonshotai/kimi-k3",
 }
 
 
-def build_adapter(subject, keys, **kwargs):
-    cls = SUBJECT_ADAPTERS.get(subject)
-    if cls is None:
-        raise ValueError(f"no live adapter for subject {subject!r}")
-    return cls(keys.get(cls.key_env), **kwargs)
+class OpenRouterAdapter(BaseLiveAdapter):
+    """Single funded route for all three subjects (R15).  Parameterized by the
+    subject and its OpenRouter model id; the OpenAI-compatible chat/completions
+    surface accepts ``max_tokens`` (value 768) for every model on this route, so
+    there is one output-cap field (the OpenAI-direct ``max_completion_tokens``
+    concern is obsolete here)."""
+
+    route = OPENROUTER_ROUTE
+    key_env = OPENROUTER_KEY_ENV
+    _url = OPENROUTER_URL
+    output_cap_field = "max_tokens"
+
+    def __init__(self, api_key, *, subject, model_id, **kwargs):
+        super().__init__(api_key, **kwargs)
+        self.subject = subject
+        self.model_id = model_id
+
+    def _headers(self):
+        return {
+            "Authorization": f"Bearer {self._api_key}",
+            "content-type": "application/json",
+        }
+
+    def _body(self, payload_text, model):
+        # The wire model is always the OpenRouter model id (``model`` from the
+        # caller is the subject label, kept only for census/request_meta).
+        return {
+            "model": self.model_id,
+            "max_tokens": OUTPUT_TOKEN_CAP,
+            "temperature": 0,
+            "messages": [{"role": "user", "content": payload_text}],
+        }
+
+
+def build_adapter(subject, keys, *, model_id=None, **kwargs):
+    """Construct the single OpenRouter adapter for ``subject``.  ``model_id`` is
+    the R15 amended route id (the runner supplies it from the R15 record); if
+    omitted it defaults to the documented constant, and a supplied id that
+    disagrees with the constant is refused as a route-drift error."""
+    default_id = OPENROUTER_MODEL_IDS.get(subject)
+    if default_id is None:
+        raise ValueError(f"no OpenRouter route for subject {subject!r}")
+    if model_id is None:
+        model_id = default_id
+    elif model_id != default_id:
+        raise ValueError(
+            f"R15 model id {model_id!r} for {subject!r} disagrees with adapter default {default_id!r}")
+    return OpenRouterAdapter(keys.get(OPENROUTER_KEY_ENV), subject=subject, model_id=model_id, **kwargs)
 
 
 # --------------------------------------------------------------------------- #
@@ -341,22 +341,32 @@ class MockProvider:
             raise TransportError("connect-or-timeout", "mock permanent transport failure")
         subject = request_meta.get("subject")
         digest = _hexdigest(request_meta.get("call_id", "") + model)
+        # Mirror the OpenRouter chat/completions envelope (the ONLY live shape on
+        # this route), including the top-level serving ``provider`` field so the
+        # dry-run exercises the real census-extraction path (R15 serving_provider).
         if self.mode == "null-content":
-            body = {"type": "message", "model": model + "-actual",
-                    "stop_reason": "end_turn",
-                    "usage": {"input_tokens": 10, "output_tokens": 0},
-                    "content": []}
+            # Simulate reasoning exhaustion under the 768 cap (kimi-k3 idiom):
+            # a determinate empty-content 200, never retried.
+            body = {"id": f"mock-{digest[:16]}",
+                    "provider": "MockRouter (offline, no network)",
+                    "model": model + "-actual",
+                    "choices": [{"index": 0, "finish_reason": "length",
+                                 "message": {"role": "assistant", "content": ""}}],
+                    "usage": {"prompt_tokens": 10, "completion_tokens": 0,
+                              "completion_tokens_details": {"reasoning_tokens": 768}}}
         else:
-            body = {"type": "message", "model": model + "-actual",
-                    "stop_reason": "end_turn",
-                    "usage": {"input_tokens": 10, "output_tokens": 5},
-                    "content": [{"type": "text",
-                                 "text": f"MOCK OFFLINE ARTIFACT {digest[:12]} (no target contact)"}]}
+            body = {"id": f"mock-{digest[:16]}",
+                    "provider": "MockRouter (offline, no network)",
+                    "model": model + "-actual",
+                    "choices": [{"index": 0, "finish_reason": "stop",
+                                 "message": {"role": "assistant",
+                                             "content": f"MOCK OFFLINE ARTIFACT {digest[:12]} (no target contact)"}}],
+                    "usage": {"prompt_tokens": 10, "completion_tokens": 5}}
         raw = json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")
         return LiveResponse(
             http_status=200, headers={"x-request-id": f"mock-{digest[:16]}"},
             raw_body=raw, subject=subject, model_requested=model,
-            route="mock:no-network", request_meta=request_meta,
+            route=OPENROUTER_ROUTE + " [mock:no-network]", request_meta=request_meta,
         )
 
 

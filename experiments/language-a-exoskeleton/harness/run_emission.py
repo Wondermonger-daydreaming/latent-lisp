@@ -1,14 +1,16 @@
 """Live-capable successor emission runner for the Language-A 312-emission run.
 
-ADDITIVE SUCCESSOR construction under ruling R14
-(operator/owner-decisions/OWNER-312-EMISSION-AUTHORIZED-v1.json).  This is the
+ADDITIVE SUCCESSOR construction, REPAIRED to the single OpenRouter route under
+ruling R15 (operator/owner-decisions/OWNER-ROUTE-SUBSTITUTION-AND-REEMISSION-v1.json;
+R14's emission clause expired by its own route-change condition, its construction
+and receipts-before-contact requirements carried forward unchanged).  This is the
 single live entrypoint the pre-registration contemplates
 (PREREG-v0.2.md :75 "The live-capable successor runner ... must refuse before a
 worst-case reservation exceeds a ceiling").
 
 It is REFUSAL-FIRST: every preflight gate refuses with a named condition before
 any provider contact.  It touches the network only in ``--live`` mode, and only
-after all gates pass, inside the R14 run window, under the R14 ceilings.
+after all gates pass, inside the R15 run window, under the R15 ceilings.
 
 Byte-exact rendering is delegated to the FROZEN immutable renderer
 (``tranche_b.compose_payload`` + ``validate_schedule``); the runner adds nothing
@@ -56,17 +58,17 @@ ScheduleGateRefused = _condition("ScheduleGateRefused")
 RunWindowRefused = _condition("RunWindowRefused")
 AttemptCeilingRefused = _condition("AttemptCeilingRefused")
 SpendReservationRefused = _condition("SpendReservationRefused")
-R14RecordRefused = _condition("R14RecordRefused")
+R15RecordRefused = _condition("R15RecordRefused")
 TransportBudgetExhausted = _condition("TransportBudgetExhausted")
 SubjectBindingRefused = _condition("SubjectBindingRefused")
 
 
 # --------------------------------------------------------------------------- #
-# Frozen constants (owner-sealed; cross-checked against R14 at gate time).
+# Frozen constants (owner-sealed; cross-checked against R15 at gate time).
 # --------------------------------------------------------------------------- #
 BANK_IDENTITY = "84cb8673626d8b5502f87d83aa3e851b1ca032a2299548ac7e9307ba249d3c41"
-R14_PATH = PACKET_ROOT / "operator/owner-decisions/OWNER-312-EMISSION-AUTHORIZED-v1.json"
-R14_RECORD_DIGEST = "sha256:11df083cfc5dd5dad89230f00c25c5ff3f84e93b1843b8750b3e164bd00c527c"
+R15_PATH = PACKET_ROOT / "operator/owner-decisions/OWNER-ROUTE-SUBSTITUTION-AND-REEMISSION-v1.json"
+R15_RECORD_DIGEST = "sha256:fb40c815b0eede11c60765973cdac72c196196bf71d6bedf272da003a3beb2d0"
 OWNER_SLOTS_PATH = PACKET_ROOT / "operator/owner-slots.json"
 
 SCHEDULED_CALLS = 312
@@ -77,20 +79,26 @@ TRANSPORT_RETRY_CEILING = 32
 OUTPUT_TOKEN_CAP = 768
 SPEND_CEILING = Decimal("8.00")
 
-# Worst-case reservation model, byte-for-byte the r6 offline census
-# (SCORING-R6-CLOSED-v2; evidence/cost-census/cost.py "paranoid_upper" bound).
+# Worst-case reservation model: the SAME r6 "paranoid_upper" method (measured
+# input bytes per call from the frozen renderer + 768 output cap, every call
+# reserved at the single most-expensive input/output rate across the seats).
+# R15 REPRICED the seats: kimi-k3 moved from free (Moonshot coding plan) to a
+# paid OpenRouter seat at 3.00/15.00 USD/MTok, so kimi is now the most expensive
+# on BOTH axes; the two max-rate constants move accordingly (method unchanged).
 TOK_PER_BYTE = Decimal("1.0")        # 1 token/byte upper bound on input tokens
 INPUT_ALLOWANCE = Decimal("1.05")
-MAX_IN_RATE = Decimal("1.00")        # USD / MTok, most expensive input route
-MAX_OUT_RATE = Decimal("6.00")       # USD / MTok, most expensive output route (luna)
+MAX_IN_RATE = Decimal("3.00")        # USD / MTok, most expensive input route (kimi-k3, R15)
+MAX_OUT_RATE = Decimal("15.00")      # USD / MTok, most expensive output route (kimi-k3, R15)
 MILLION = Decimal(1_000_000)
+# Pre-R15 (r6 basis) worst-case, kept as a provenance anchor for the delta only.
 R6_WORST_CASE_RESERVATION = Decimal("2.246177")
 
-# Per-subject billed price table (r6-closed-v2), for post-hoc billed accounting.
+# Per-subject billed price table (R15 amended_price_basis), for post-hoc billed
+# accounting.  haiku/luna == r6 basis; kimi-k3 repriced free -> 3.00/15.00.
 PRICE_TABLE = {
     "claude-haiku-4.5": {"in": Decimal("1.00"), "out": Decimal("5.00")},
     "gpt-5.6-luna": {"in": Decimal("1.00"), "out": Decimal("6.00")},
-    "kimi-k3": {"in": Decimal("0.00"), "out": Decimal("0.00")},
+    "kimi-k3": {"in": Decimal("3.00"), "out": Decimal("15.00")},
 }
 
 
@@ -238,29 +246,47 @@ def gate_run_window(now, window_open, window_close):
     return now
 
 
-def gate_r14_record(record):
-    """Validate the R14 record's own digest, pin it to the authorized digest,
-    and confirm the window + ceilings it carries match this runner's constants."""
+def gate_r15_record(record):
+    """Validate the R15 route-substitution record's own digest, pin it to the
+    authorized digest, and confirm the OpenRouter route, window, boundary set,
+    and amended subject routes it carries.  Supersedes the R14 gate: the runner
+    refuses if R15 is missing/tampered or the clock is outside R15's window.
+    Returns the window bounds and the subject -> OpenRouter model-id map read
+    from the record itself (the ruling is the single source of truth for
+    routing; the provider module's constant is only a drift guard)."""
     try:
         validate_record_digest(record)
     except PilotError as exc:
-        raise R14RecordRefused(f"R14 record digest invalid: {exc}") from exc
-    if record.get("record_digest") != R14_RECORD_DIGEST:
-        raise R14RecordRefused(
-            f"R14 record_digest {record.get('record_digest')} != authorized {R14_RECORD_DIGEST}")
+        raise R15RecordRefused(f"R15 record digest invalid: {exc}") from exc
+    if record.get("record_digest") != R15_RECORD_DIGEST:
+        raise R15RecordRefused(
+            f"R15 record_digest {record.get('record_digest')} != authorized {R15_RECORD_DIGEST}")
     decision = record["exact_decision"]
-    if decision.get("ruling") != "R14":
-        raise R14RecordRefused(f"ruling {decision.get('ruling')!r} != R14")
-    boundaries = decision["authorization_boundaries"]
-    if not boundaries.get("real_item_provider_contact_authorized"):
-        raise R14RecordRefused("R14 does not authorize provider contact")
-    if boundaries.get("live_target_scoring_authorized") or boundaries.get("key_content_exposure_authorized"):
-        raise R14RecordRefused("R14 boundary set inconsistent with construction scope")
+    if decision.get("ruling") != "R15":
+        raise R15RecordRefused(f"ruling {decision.get('ruling')!r} != R15")
+    route = str(decision.get("route", ""))
+    if "openrouter.ai" not in route.lower():
+        raise R15RecordRefused("R15 route is not the OpenRouter route")
+    effects = record.get("operational_effect", [])
+    if "hold:no-scoring-no-key-exposure-no-merge" not in effects:
+        raise R15RecordRefused("R15 boundary hold (no-scoring/no-key-exposure/no-merge) absent")
+    routes = decision.get("amended_subject_routes") or []
+    if len(routes) != len(tb.SUBJECT_SLOTS):
+        raise R15RecordRefused(
+            f"R15 amended_subject_routes lists {len(routes)} routes; expected {len(tb.SUBJECT_SLOTS)}")
+    subject_model_ids = {}
+    for entry in routes:
+        subject = entry.get("subject")
+        model_id = entry.get("openrouter_model_id")
+        if not subject or not model_id:
+            raise R15RecordRefused("R15 amended route missing subject/openrouter_model_id")
+        subject_model_ids[subject] = model_id
     window = decision["run_window"]
     return {
         "window_open": parse_iso_utc(window["opens_utc"]),
         "window_close": parse_iso_utc(window["closes_utc"]),
         "odr41_rule": window["rule"],
+        "subject_model_ids": subject_model_ids,
     }
 
 
@@ -292,8 +318,8 @@ class EmissionRunner:
         self.now_fn = now_fn or (lambda: datetime.now(timezone.utc))
 
     def preflight(self):
-        r14 = load_json(R14_PATH)
-        window = gate_r14_record(r14)
+        r15 = load_json(R15_PATH)
+        window = gate_r15_record(r15)
         bank_identity = gate_bank_identity(self.root)
         bank = tb.load_public_bank(root=self.root)
         item_count = gate_item_consistency(bank)
@@ -303,7 +329,8 @@ class EmissionRunner:
         subject_binding = load_subject_binding(self.root)
         now = gate_run_window(self.now_fn(), window["window_open"], window["window_close"])
         return {
-            "r14": r14, "window": window, "now": now,
+            "r15": r15, "window": window, "now": now,
+            "subject_model_ids": window["subject_model_ids"],
             "bank": bank, "bank_identity": bank_identity, "item_count": item_count,
             "schedule": schedule, "template_manifest": template_manifest,
             "template_files": template_files, "arm_counts": arm_counts,
@@ -349,7 +376,9 @@ class EmissionRunner:
         (evidence_dir / "requests").mkdir(parents=True, exist_ok=True)
         (evidence_dir / "raw-responses").mkdir(parents=True, exist_ok=True)
 
-        provider_factory = provider_factory or self._default_provider_factory(mode, keys)
+        subject_model_ids = ctx["subject_model_ids"]
+        provider_factory = provider_factory or self._default_provider_factory(
+            mode, keys, subject_model_ids)
         providers = {}
         call_census = []
         run_state = "complete"
@@ -360,6 +389,7 @@ class EmissionRunner:
             payload = payloads[call_id]
             binding = ctx["subject_binding"][row["subject_slot"]]
             subject = binding["subject"]
+            model_id = subject_model_ids.get(subject)
             # ---- refuse-before-reservation gate (per scheduled call) ------- #
             try:
                 ledger.reserve_scheduled_call(len(payload))
@@ -373,7 +403,9 @@ class EmissionRunner:
                 providers[subject] = provider
 
             request_meta = {
-                "call_id": call_id, "subject": subject, "route": binding["route"],
+                "call_id": call_id, "subject": subject,
+                "route": "OpenRouter route (openrouter.ai/api/v1/chat/completions)",
+                "openrouter_model_id": model_id,
                 "model_requested": subject, "arm": row["arm"], "item_id": row["item_id"],
                 "schedule_index": row["schedule_index"],
                 "payload_sha256": sha256_bytes(payload),
@@ -385,7 +417,7 @@ class EmissionRunner:
             outcome = self._emit_with_retries(provider, payload, subject, request_meta, ledger)
             if outcome["state"] == "transport-exhausted":
                 self._write_call_evidence(evidence_dir, call_id, payload, request_meta, outcome)
-                call_census.append(self._census_row(row, binding, outcome, ledger))
+                call_census.append(self._census_row(row, binding, outcome, ledger, model_id=model_id))
                 run_state, stop_reason = "stopped", "TransportBudgetExhausted: partial census"
                 break
 
@@ -393,7 +425,7 @@ class EmissionRunner:
             billed = self._billed_cost(subject, outcome)
             if billed is not None:
                 ledger.record_billed(billed)
-            call_census.append(self._census_row(row, binding, outcome, ledger, billed))
+            call_census.append(self._census_row(row, binding, outcome, ledger, billed, model_id=model_id))
 
         worst_case_total = usd(ledger.worst_case_total())
         summary = {
@@ -413,7 +445,9 @@ class EmissionRunner:
             "window_open_utc": ctx["window"]["window_open"].isoformat(),
             "window_close_utc": ctx["window"]["window_close"].isoformat(),
             "clock_utc": ctx["now"].isoformat(),
-            "subject_binding": {slot: {"subject": b["subject"], "route": b["route"],
+            "subject_binding": {slot: {"subject": b["subject"],
+                                        "route": "OpenRouter route (openrouter.ai/api/v1/chat/completions)",
+                                        "openrouter_model_id": ctx["subject_model_ids"].get(b["subject"]),
                                         "r5_ordinal": b["r5_ordinal"]}
                                  for slot, b in ctx["subject_binding"].items()},
         }
@@ -462,16 +496,18 @@ class EmissionRunner:
         out_tok = Decimal(fields.get("output_tokens") or 0)
         return (in_tok * price["in"] + out_tok * price["out"]) / MILLION
 
-    def _census_row(self, row, binding, outcome, ledger, billed=None):
+    def _census_row(self, row, binding, outcome, ledger, billed=None, *, model_id=None):
         fields = outcome.get("census_fields") or {}
         return {
             "call_id": row["call_id"], "schedule_index": row["schedule_index"],
             "arm": row["arm"], "item_id": row["item_id"],
             "subject_slot": row["subject_slot"], "subject": binding["subject"],
-            "route": binding["route"], "state": outcome["state"],
+            "route": outcome.get("route") or "OpenRouter route (openrouter.ai/api/v1/chat/completions)",
+            "openrouter_model_id": model_id, "state": outcome["state"],
             "http_status": fields.get("http_status"),
             "finish_reason": fields.get("finish_reason"),
             "model_id_returned": fields.get("model_id_returned"),
+            "serving_provider": fields.get("serving_provider"),
             "provider_request_id": fields.get("provider_request_id"),
             "input_tokens": fields.get("input_tokens"),
             "output_tokens": fields.get("output_tokens"),
@@ -528,6 +564,8 @@ class EmissionRunner:
                                  "exact per-provider actuals close at emission"},
             "tokenizer_census": [
                 {"call_id": r["call_id"], "subject": r["subject"],
+                 "openrouter_model_id": r.get("openrouter_model_id"),
+                 "serving_provider": r.get("serving_provider"),
                  "input_tokens": r["input_tokens"], "output_tokens": r["output_tokens"],
                  "provider_reported_usage": r["provider_reported_usage"]}
                 for r in call_census
@@ -560,13 +598,14 @@ class EmissionRunner:
             "storage OUTSIDE the repository. This record is content-free.\n"
         )
 
-    def _default_provider_factory(self, mode, keys):
+    def _default_provider_factory(self, mode, keys, subject_model_ids):
         if mode == "dry-run":
             from provider_live_emission import MockProvider
             return lambda subject: MockProvider(mode="normal")
         from provider_live_emission import build_adapter, load_env_keys
         resolved_keys = keys or load_env_keys()
-        return lambda subject: build_adapter(subject, resolved_keys)
+        return lambda subject: build_adapter(
+            subject, resolved_keys, model_id=subject_model_ids.get(subject))
 
 
 # --------------------------------------------------------------------------- #
@@ -588,10 +627,10 @@ def main(argv=None):
         parser.error("exactly one of --dry-run / --live is required")
 
     if args.dry_run:
-        # Freeze the clock inside the R14 window so the gate is exercised (not
+        # Freeze the clock inside the R15 window so the gate is exercised (not
         # bypassed) without depending on wall-clock timing of the build.
-        r14 = load_json(R14_PATH)
-        open_utc = parse_iso_utc(r14["exact_decision"]["run_window"]["opens_utc"])
+        r15 = load_json(R15_PATH)
+        open_utc = parse_iso_utc(r15["exact_decision"]["run_window"]["opens_utc"])
         runner = EmissionRunner(now_fn=lambda: open_utc + timedelta(seconds=1))
         summary, _ = runner.run(args.evidence_dir, mode="dry-run")
     else:
