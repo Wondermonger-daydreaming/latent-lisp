@@ -1,0 +1,3 @@
+=== a) manifest.py check ===
+MANIFEST-CHECK: PASS
+EXIT_CODE=0

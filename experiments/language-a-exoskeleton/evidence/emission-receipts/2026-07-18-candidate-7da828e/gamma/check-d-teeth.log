@@ -1,0 +1,15 @@
+[PASS] bank-identity gate: planted-fired=True(BankIdentityRefused) clean-passed=True
+[PASS] schedule gate: oversized: planted-fired=True(ScheduleGateRefused) clean-passed=True
+[PASS] schedule gate: mutated binding: planted-fired=True(ScheduleGateRefused) clean-passed=True
+[PASS] run-window gate: past close: planted-fired=True(RunWindowRefused) clean-passed=True
+[PASS] run-window gate: before open: planted-fired=True(RunWindowRefused) clean-passed=True
+[PASS] spend gate: worst-case overflow: planted-fired=True(SpendReservationRefused) clean-passed=True
+[PASS] attempt-ceiling gate: 345: planted-fired=True(AttemptCeilingRefused) clean-passed=True
+[PASS] R14-record gate: tampered: planted-fired=True(R14RecordRefused) clean-passed=True
+[PASS] item-consistency gate: bad task digest: planted-fired=True(ItemConsistencyRefused) clean-passed=True
+[PASS] subject-binding gate: wrong count: planted-fired=True(SubjectBindingRefused) clean-passed=True
+[PASS] null-content: determinate, no retry, continues
+[PASS] transport-exhaustion: honest partial stop
+[PASS] clean full dry-run: 312/312 under ceiling
+
+TEETH CHECKS: 13/13 PASS

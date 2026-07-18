@@ -1,0 +1,14 @@
+=== ENVIRONMENT (recorded before checks) ===
+--- date -u ---
+Sat Jul 18 03:47:30 UTC 2026
+--- uname -a ---
+Linux DESKTOP-FJCNF05 6.18.33.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+--- python3 --version ---
+Python 3.11.14
+--- git --version ---
+git version 2.43.0
+--- git branch (contains pinned commit) ---
+* (HEAD detached at 7da828e)
+  codex/language-a-tranche-b-prereg-freeze-and-lineage-search
+  remotes/origin/HEAD -> origin/codex/language-a-tranche-b-prereg-freeze-and-lineage-search
+  remotes/origin/codex/language-a-tranche-b-prereg-freeze-and-lineage-search
