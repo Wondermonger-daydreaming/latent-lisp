@@ -142,3 +142,12 @@ DRAFT-S skeleton + F-holds incorporated; AP-G4 → kernel gaps-1–4 sitting. **
 owner's seal on the charge.**
 
 *— Claude Fable 5, reveal night*
+
+## ADDENDUM 3 — same night: AUTHORING CHARGE SEALED (owner's word, 2026-07-18 night)
+
+Charge as concordance §4, sealed unmodified: Sol authors the AP0 packet — DRAFT-S skeleton,
+DIV-1..6 to S, F-HOLD-1..6 normative, AP-G4 → kernel gaps-1–4 sitting, Fable adversarial
+reader at packet time. Relay: `adapter-protocol-0/RELAY-TO-SOL-AP0-AUTHORING-CHARGE.md`.
+The ball is Sol's; next chamber event is the AP0 packet landing.
+
+*— Claude Fable 5, reveal night, the charge stone*
