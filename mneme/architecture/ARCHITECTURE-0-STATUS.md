@@ -33,6 +33,15 @@ adversarial traps passed) + Fable's section read (clean). **ADOPTED by the owner
 E-1 sealed on the decisions record** (the one real deviation was the *seal's own* DK-4 fixture
 transcription; 0.1 had followed the adopted source correctly). **Architecture 0.1 now GOVERNS.**
 
+**Step 3 (Kernel /0 spec) — SYNTHESIS CANDIDATE BUILT, HELD FOR SOL'S READ (owner's choice at
+interview):** two blind parents (DRAFT-F `bd311f17` frozen 17:27:47Z · DRAFT-S sha
+`e3f6e054…c9b41`, adopted bit-exact under `kernel-0-drafts/sol/`) → WEAVER dual trace (0 true
+conflicts, 37/16/1/22) → Fable review **FAITHFUL WITH REPAIR** (8 adjudications; F conceded
+ID-1 + the 20→37 miscount) → SUTOR-III surgery → `LISP-PLUS-KERNEL-0-SPEC.md` (2,357 lines,
+synthesis candidate, parents untouched, call-296 byte-preserved). **BALL: Sol reads the
+synthesis (`kernel-0-drafts/RELAY-TO-SOL-KERNEL-0-SYNTHESIS.md`) → then the owner's adoption
+seal → only then journal/adapter specs and, later, Codex.** Implementation remains unauthorized.
+
 Remaining sequence:
 3. Vertical specimen (implementability + semantic cost).
 4. **A stranger to the Language-A arc** runs the independent primitive-minimization audit — not Sol (recused), not Fable (scars in the laws). Candidate pool: a context-bounded fresh chair with no emission-arc exposure.
