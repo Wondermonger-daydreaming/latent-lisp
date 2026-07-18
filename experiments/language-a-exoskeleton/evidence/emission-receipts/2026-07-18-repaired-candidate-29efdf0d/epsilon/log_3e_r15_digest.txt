@@ -1,0 +1,4 @@
+R15 validate_record_digest: PASS (no exception)
+record_id: owner-decision:owner-route-substitution-and-reemission-v1
+record_digest: sha256:fb40c815b0eede11c60765973cdac72c196196bf71d6bedf272da003a3beb2d0
+canonical_byte_length: 6241
