@@ -1,0 +1,79 @@
+{
+ "actor_id": "actor:tomas-pellissari-pavan-owner",
+ "authority_ceilings": [
+  "provider contact is authorized for subject emission only \u2014 the three r5-slot routes, frozen schedule, frozen prompts, inside the run window",
+  "no live target scoring or grader contact authorized",
+  "no key-content exposure authorized; the C-beta key remains closed in owner-private custody",
+  "no merge authorized",
+  "spend ceiling USD 8.00 enforced by refuse-before-reservation in the runner; absolute attempt ceiling 344; output cap 768 tokens per attempt",
+  "any change to a controlling frozen artifact beyond the authorized additive construction voids this authorization"
+ ],
+ "bounded_unknowns": [
+  "The live runner does not exist at sealing time; this record authorizes its construction and requires two fresh clean-room receipts at the emission candidate BEFORE any provider contact \u2014 the receipts, not this record, attest the construction.",
+  "This record cannot prove the 312 emissions will complete inside the window or ceilings; the runner must stop honestly at any ceiling, window close, or ODR-41 trigger, and a partial census is a determinate, reportable outcome.",
+  "Provider-side properties (model releases, routes, prices, retention actuals) are outside the repo; the runner records actuals and the ODR-41 stop-rule governs mid-window changes."
+ ],
+ "canonical_byte_length": 5178,
+ "controlling_authority": [
+  "sha256:55f0c6d93cfab0a026861f266aa258fa0a7c27f6df2dd4afeb4817f062032379"
+ ],
+ "deciding_actor": "actor:tomas-pellissari-pavan-owner",
+ "decision_id": "OWNER-312-EMISSION-AUTHORIZED",
+ "event_time": "2026-07-17T23:43:55-03:00",
+ "exact_decision": {
+  "authorization_basis": {
+   "combined_preflight_record": {
+    "candidate_commit": "a3e4a10a29e162df680e84d0053ac1a1afe087a9",
+    "evidence_publication_commit": "6fdae3c66aea5fbbfb546a1e70e1eae3f2ec9f1f",
+    "record_digest": "sha256:2e13253ed78f1a019ce747d21e56ad1e0e5f7031f4e6214dc9bfd00e6475ec43",
+    "verdict": "READY FOR OWNER 312-EMISSION AUTHORIZATION"
+   }
+  },
+  "authorization_boundaries": {
+   "key_content_exposure_authorized": false,
+   "live_target_scoring_authorized": false,
+   "merge_authorized": false,
+   "pre_exposure_gate_signed": true,
+   "real_item_provider_contact_authorized": true,
+   "real_item_provider_contact_scope": "subject-emission-only: the three r5-slot subject routes, within the frozen schedule, ceilings, and the declared run window; no grader contact"
+  },
+  "authorized_acts": [
+   "construct the live-capable successor emission runner as ADDITIVE successor construction (new files only; the frozen dry-run path and all frozen artifacts byte-unchanged), enforcing in code: 312 scheduled calls, <=32 transport retries, 344 absolute attempt ceiling, 768 output-token cap per attempt, refuse-before-reservation-exceeds USD 8.00",
+   "resolve the owner-sealed emission-actuals deferrals by RECORDING actuals at emission: real subject binding per slot subject-provider-model-routes, provider settings, per-provider tokenizer census, retention/cache disclosures",
+   "rebuild CONSTRUCTION-MANIFEST after construction bytes are final; commit the emission candidate; obtain two fresh independent clean-room receipts at that exact candidate before any provider contact",
+   "emit the 312 real-item calls to the three frozen subject routes within the run window and ceilings; record the complete call census and evidence; commit"
+  ],
+  "interview_answers": {
+   "A_run_window": "12-hours",
+   "B_r14_scope": "confirm-construction-plus-reverification-plus-emission"
+  },
+  "ruling": "R14",
+  "run_window": {
+   "closes_utc": "2026-07-18T14:43:55Z",
+   "opens_utc": "2026-07-18T02:43:55Z",
+   "rule": "ODR-41: any subject release, route, wrapper, or price change inside the window => stop + successor freeze"
+  },
+  "slot_id": "312-emission-authorization"
+ },
+ "operational_effect": [
+  "authorize:live-runner-construction-as-additive-successor",
+  "authorize:emission-candidate-refreeze-and-two-fresh-receipts",
+  "authorize:312-real-item-subject-emissions-within-window-and-ceilings",
+  "hold:no-scoring-no-key-exposure-no-merge"
+ ],
+ "parent_versions": [
+  {
+   "record_digest": "sha256:81e61c7da546baf8b198b39f1edc490b792ac511309b76ccabc21d24bb15fc4e",
+   "record_id": "owner-decision:pre-exposure-gate-signed-v1",
+   "schema_version": "lae-owner-decision-record/1.1.0"
+  }
+ ],
+ "predecessor_digest": "sha256:81e61c7da546baf8b198b39f1edc490b792ac511309b76ccabc21d24bb15fc4e",
+ "ratification_date": "2026-07-17",
+ "rationale": "Owner 312-emission authorization (explicit owner instruction plus AskUserQuestion interview, Claude Code Fable 5 chair session, 2026-07-17, America/Sao_Paulo), issued after the combined preflight returned READY FOR OWNER 312-EMISSION AUTHORIZATION (sealed record validated, candidate a3e4a10, two independent clean receipts, the signed-tip inversion exhibited as the finding of record). The owner sets a 12-hour run window and confirms the sealed scope: additive construction of the live-capable successor runner the prereg contemplates, re-verification at the emission candidate, then the 312 real-item emissions to the three frozen subject routes under the frozen ceilings \u2014 with scoring, key exposure, and merge each remaining locked behind their own future sealed acts.",
+ "record_digest": "sha256:11df083cfc5dd5dad89230f00c25c5ff3f84e93b1843b8750b3e164bd00c527c",
+ "record_id": "owner-decision:owner-312-emission-authorized-v1",
+ "schema_version": "lae-owner-decision-record/1.1.0",
+ "status": "adopted",
+ "synthetic_taint_id": null
+}
