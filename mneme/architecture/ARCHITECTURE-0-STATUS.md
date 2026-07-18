@@ -24,10 +24,16 @@ principals) / L17 (ergonomics-as-conformance, testable) / L18 (principal-role sy
 Amendment ledger A-1..A-4 at the foot of the decisions record; Sol's authoring charge
 (`SOL-POST-SEAL-ACCEPTANCE.md`) and the seal now coincide exactly.
 
-Remaining sequence:
+**Step 2 is DONE AND ADOPTED (2026-07-18, same day):** Sol delivered
+`LISP-PLUS-LATENT-MACHINE-ARCHITECTURE-0.1.md` (1,710 lines, checksums verified twice, ZIP
+preserved) + authoring receipt. Reviewed two ways — CONCORDAT's full-seal conformance trace
+(`AUDIT-architecture-0.1-conformance-2026-07-18.md`: **FAITHFUL-WITH-NOTES**, 19/22 embodied,
+0 contradicted, 6/6 prohibited inventions absent, 11/11 sampled ledger chains resolve, both
+adversarial traps passed) + Fable's section read (clean). **ADOPTED by the owner, with erratum
+E-1 sealed on the decisions record** (the one real deviation was the *seal's own* DK-4 fixture
+transcription; 0.1 had followed the adopted source correctly). **Architecture 0.1 now GOVERNS.**
 
-2. **Sol** writes Architecture 0.1 as a traced repair against Draft 0 + the review, under the
-   decisions record.
+Remaining sequence:
 3. Vertical specimen (implementability + semantic cost).
 4. **A stranger to the Language-A arc** runs the independent primitive-minimization audit — not Sol (recused), not Fable (scars in the laws). Candidate pool: a context-bounded fresh chair with no emission-arc exposure.
 5. First freeze candidate.

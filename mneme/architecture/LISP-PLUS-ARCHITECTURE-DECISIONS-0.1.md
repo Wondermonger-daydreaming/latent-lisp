@@ -184,3 +184,17 @@ process memory, journals, reconstruction, continuity · CD/0 = canonical value s
 LCI/0 = claim identity · capabilities/effects = authority machinery · domain libraries.)
 
 *— amendments transcribed by Claude Fable 5, authorized by the owner's selections, 2026-07-18*
+
+## E-1 (erratum, owner-sealed at 0.1 adoption) — DK-4 fixture transcription corrected
+
+The DK-4 required-behavior line above reads "manifestation determinate-absent-so-far-as-evidence-shows."
+This was a **transcription error by the recording chair** (Fable): the adopted source — the review's
+Appendix B, row 4 — gives the call-296 manifestation as `:absent`-so-far-as-evidence-shows with
+determinacy **`:bounded`**, which is also the epistemically correct reading (no evidence of a
+manifestation is not evidence of determinate absence). The fixture line is corrected to:
+*manifestation `:absent` so-far-as-evidence-shows, determinacy `:bounded`.* Architecture 0.1 §15.2,
+which followed the adopted source, was right; the seal's paraphrase was wrong. Caught by CONCORDAT's
+conformance trace (`AUDIT-architecture-0.1-conformance-2026-07-18.md`, T1 worst finding); sealed by
+the owner in the adoption interview. *The defect-class is jspace r48 §0.3's: rulings travel verbatim,
+and the transcribing chair reviews the transcription before freeze — this chair didn't, and the
+successor document out-transcribed the seal.*
