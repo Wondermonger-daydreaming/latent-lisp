@@ -40,6 +40,18 @@ drafting, and the STANDING IMPLEMENTATION AUTHORIZATION granted ("green word", o
 core may be implemented in parallel with the successor specs; journal/adapter implementations
 await their specs; NO further owner gate before Codex.** The build lane is open.**
 
+**Step 5 (Process Journal /0) — ADOPTED, SAME NIGHT (`f44436f5`):** blind plans (F hash-commitment
+`8d02872f…` provable) → concordance (chair conceded framing/salvage/segments to Sol; spine/harness/
+gap-closures/WSL-honesty folded in) → owner charge `d1b48040` → Sol's packet (1,320 files, 1,235
+truncation vectors, sums 1,319/1,319 ×2) → SCAR-TRACER 8/8 + MALLET hostile attack (byte-SURVIVED;
+**the shared-brain catch**: validator = generator's own code, so green = self-consistency only) →
+chair review FAITHFUL WITH REPAIR → **sealed jointly with `PJ0-PRESEAL-REPAIRS.md` (R-PJ-1..3)**.
+**BINDING GATE: no conformance claim beyond self-consistency, and no specimen reliance on PJ0,
+until an independently-seeded CL implementation passes the full vector set** (divergences
+adjudicate to spec text). **NEXT: Adapter-Protocol-/0 (last spec before the specimen) ·
+implementation arc 3 (journal store, green word standing, independence gate wired in) · kernel0
+gaps 1–4 erratum lane (5–6 now CLOSED by PJ0 §16/§17.3).**
+
 **Step 4 (pure core) — BUILT AND PUBLISHED (2026-07-18 evening, `664a0a67`):**
 `experiments/latent-lisp/mneme/kernel0/` — 14 files, 6,610 lines, Codex fleet
 (KERAMOS/AXIS/SELLA/PROBA) under a conductor; **selftest chair-verified: 29 passed / 27
