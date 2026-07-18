@@ -1,0 +1,107 @@
+{
+ "actor_id": "actor:tomas-pellissari-pavan-owner",
+ "authority_ceilings": [
+  "provider contact authorized for subject emission via the OpenRouter route only, plus the already-exercised owner-authorized diagnostic probes",
+  "no live target scoring or grader contact authorized",
+  "no key-content exposure authorized; the C-beta key remains closed in owner-private custody",
+  "no merge authorized",
+  "spend ceiling USD 8.00; absolute attempt ceiling 344; output cap 768 tokens per attempt; <=32 transport retries",
+  "any change to a pre-R14 controlling frozen artifact voids this authorization; repairs are confined to the R14-arc construction files"
+ ],
+ "bounded_unknowns": [
+  "Serving-provider identity on OpenRouter is dynamic (the haiku probe was served by Bedrock); the census records actuals, and family identity is declared at the model level, not the serving level \u2014 this residue is named, not resolved.",
+  "kimi-k3's reasoning behavior under the 768-token cap is unknown at scale; reasoning exhaustion lands as determinate null-content census entries, and a stratum degraded by them is a reportable outcome, not a rerun license.",
+  "This record cannot prove the rerun will complete inside the window or ceilings; an honest partial stop with a written census remains a determinate outcome."
+ ],
+ "canonical_byte_length": 6241,
+ "controlling_authority": [
+  "sha256:55f0c6d93cfab0a026861f266aa258fa0a7c27f6df2dd4afeb4817f062032379"
+ ],
+ "deciding_actor": "actor:tomas-pellissari-pavan-owner",
+ "decision_id": "OWNER-ROUTE-SUBSTITUTION-AND-REEMISSION",
+ "event_time": "2026-07-18T01:59:07-03:00",
+ "exact_decision": {
+  "amended_price_basis_usd_per_mtok": {
+   "anthropic/claude-haiku-4.5": {
+    "completion": "5.00",
+    "prompt": "1.00",
+    "same_as_r6": true
+   },
+   "moonshotai/kimi-k3": {
+    "completion": "15.00",
+    "prompt": "3.00",
+    "r6_direct_price_was": "0.00/0.00 (Moonshot coding plan); via OpenRouter the seat is paid",
+    "same_as_r6": false
+   },
+   "openai/gpt-5.6-luna": {
+    "completion": "6.00",
+    "prompt": "1.00",
+    "same_as_r6": true
+   },
+   "source": "OpenRouter /api/v1/models, fetched 2026-07-18 ~04:55Z",
+   "spend_ceiling_usd": "8.00 UNCHANGED; refuse-before-reservation UNCHANGED; worst-case to be recomputed byte-exact by the repair hand and recorded in the runner and construction notes (estimate ~2.4)"
+  },
+  "amended_subject_routes": [
+   {
+    "declared_family": "Claude-family",
+    "openrouter_model_id": "anthropic/claude-haiku-4.5",
+    "probe": "HTTP 200 2026-07-18 ~04:45Z, served by Amazon Bedrock",
+    "serving_provider_rule": "record the serving provider of every call in the census as an emission actual",
+    "subject": "claude-haiku-4.5"
+   },
+   {
+    "declared_family": "GPT-family",
+    "openrouter_model_id": "openai/gpt-5.6-luna",
+    "probe": "HTTP 200 2026-07-18 ~04:45Z, served by OpenAI",
+    "subject": "gpt-5.6-luna"
+   },
+   {
+    "declared_family": "Kimi-family",
+    "openrouter_model_id": "moonshotai/kimi-k3",
+    "probe": "HTTP 200 2026-07-18 ~04:45Z, served by Moonshot AI; reasoning-class model \u2014 null-content on reasoning exhaustion is a determinate census outcome per the option-(a) idiom",
+    "subject": "kimi-k3"
+   }
+  ],
+  "attempt_01_record": "honest stop, 2 calls, $0.000000 billed, census committed at e8d694b; root causes verified by owner-authorized probes: Anthropic-direct 404 = API-id/label mismatch; OpenAI-direct 429 insufficient_quota; Moonshot-direct 401 authentication_error",
+  "authorized_acts": [
+   "repair the emission runner's adapters to the single OpenRouter route with the three amended model ids (modification of THIS ARC'S OWN R14 construction files only; every frozen pre-R14 artifact stays byte-untouched)",
+   "update the runner's reservation price table to the amended basis and its authorization gate to validate this R15 record and window",
+   "re-run the teeth suite; rebuild the manifest; commit the repaired emission candidate; obtain two fresh independent clean-room receipts at that exact candidate before any provider contact",
+   "emit the 312 real-item calls via the OpenRouter route within the window and ceilings; record the complete census incl. serving provider per call; commit content-free evidence"
+  ],
+  "interview_answers": {
+   "A_route_substitution": "seal-r15-and-fire"
+  },
+  "r14_disposition": "R14's emission clause EXPIRED by its own route-change condition upon this substitution; its construction and receipts-before-contact requirements are carried forward unchanged into this ruling.",
+  "route": "OpenRouter (https://openrouter.ai/api/v1/chat/completions, OPENROUTER_API_KEY), single funded route for all three subjects",
+  "ruling": "R15",
+  "run_window": {
+   "closes_utc": "2026-07-18T16:59:07Z",
+   "opens_utc": "2026-07-18T04:59:07Z",
+   "rule": "ODR-41 carried: any subject release, serving-route withdrawal, or price change inside the window => stop + successor freeze"
+  },
+  "slot_id": "subject-provider-model-routes-and-price-basis-amendment"
+ },
+ "operational_effect": [
+  "expire:r14-emission-clause-by-route-change",
+  "amend:subject-routes-to-openrouter",
+  "amend:price-basis-kimi-paid",
+  "authorize:runner-repair-refreeze-receipts-and-312-emission-within-new-window",
+  "hold:no-scoring-no-key-exposure-no-merge"
+ ],
+ "parent_versions": [
+  {
+   "record_digest": "sha256:11df083cfc5dd5dad89230f00c25c5ff3f84e93b1843b8750b3e164bd00c527c",
+   "record_id": "owner-decision:owner-312-emission-authorized-v1",
+   "schema_version": "lae-owner-decision-record/1.1.0"
+  }
+ ],
+ "predecessor_digest": "sha256:11df083cfc5dd5dad89230f00c25c5ff3f84e93b1843b8750b3e164bd00c527c",
+ "ratification_date": "2026-07-18",
+ "rationale": "Owner route-substitution ruling (AskUserQuestion interview, Claude Code Fable 5 chair session, 2026-07-18, America/Sao_Paulo), after emission attempt-01 honest-stopped at $0.00 on three independently verified direct-route failures (API-id mismatch, insufficient_quota, authentication_error) and owner-authorized probes verified all three subjects live via OpenRouter with haiku/luna prices identical to the frozen r6 basis and kimi-k3 repriced from free to 3.00/15.00 USD/MTok, worst-case still far under the unchanged 8.00 ceiling. The owner's standing intent \u2014 the lab's funded, sandbox-verified OpenRouter route \u2014 replaces the three direct routes in a single sealed amendment, with a fresh 12-hour window and every custody, firewall, and receipts-before-contact requirement carried forward unchanged.",
+ "record_digest": "sha256:fb40c815b0eede11c60765973cdac72c196196bf71d6bedf272da003a3beb2d0",
+ "record_id": "owner-decision:owner-route-substitution-and-reemission-v1",
+ "schema_version": "lae-owner-decision-record/1.1.0",
+ "status": "adopted",
+ "synthetic_taint_id": null
+}
