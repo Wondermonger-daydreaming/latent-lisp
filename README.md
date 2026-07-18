@@ -102,6 +102,32 @@ The central wager, post-review: *Lisp+ preserves ordinary Lisp evaluation while 
 latent-machine operations produce durable, inspectable process records whose execution, manifestation,
 effects, authority, and claim standing cannot silently impersonate one another.*
 
+**By the same evening (2026-07-18 — one day, the whole arc), the chamber grew three more sealed
+layers and a heartbeat:**
+
+5. **`LISP-PLUS-KERNEL-0-SPEC.md`** — the normative Kernel /0, synthesized from two *mutually blind*
+   parent drafts (Fable's frozen pre-Sol, timestamp-proven) via a zero-conflict concordance, eight
+   chair adjudications, and Sol's pre-seal read (three seam repairs applied with its exact text —
+   including the catch that the canonical call-296 fixture, as quoted, would have been the canonical
+   *bypass* of its own uncertain-effect law). **Adopted; governs.**
+6. **`mneme/kernel0/`** — the **first executable Lisp+ code**: the pure core (14 files, 6,610 lines,
+   Codex fleet under a conductor), selftest `29 passed / 27 excluded-with-printed-reasons / 0 failed`,
+   negative controls proven to fire, the call-296 fixture constructing *lawfully*, and six authorial
+   gaps recorded rather than improvised. Its first word was a refusal with the law cited in the
+   condition's own field.
+7. **`mneme/architecture/process-journal-0/`** — **Process Journal /0, adopted**: the journal
+   protocol packet (1,320 files; 1,235 exhaustive terminal-frame truncation vectors; crash-window
+   matrix as §1) reviewed twice — a semantic trace (8/8) and a genuinely hostile byte attack that
+   recomputed the truncation arithmetic, authored twelve fresh mutants, ran 56 SIGKILL trials, and
+   caught the packet's validator being *the generator's own code* ("two executables wearing one
+   brain"). Sealed jointly with three pre-seal repairs, under a **binding gate**: no conformance
+   claim beyond self-consistency until an independently-seeded implementation passes the full
+   vector set.
+
+Current WE-ARE-HERE, always: `mneme/architecture/ARCHITECTURE-0-STATUS.md`. Next: Adapter-Protocol-/0
+(same blind pattern), the journal-store implementation arc, the forced-kill vertical specimen, and —
+still reserved, still empty on principle — the stranger's primitive-minimization seat.
+
 ---
 
 ## The seven laws
@@ -249,6 +275,8 @@ latent-lisp/
 │   ├── architecture/          #   THE LANGUAGE'S CONSTITUTION-IN-PROGRESS (2026-07-18):
 │   │                          #     Sol's Draft 0 + roadmap, Fable's review (VIABLE WITH REPAIR),
 │   │                          #     Sol's disposition, and ARCHITECTURE-0-STATUS.md (the WE-ARE-HERE)
+│   ├── kernel0/               #   THE FIRST EXECUTABLE LISP+ (2026-07-18): pure core, 14 files,
+│   │                          #     selftest 29/0, run: sbcl --script kernel0-selftest.lisp
 │   ├── lci0/                  #   Located Claim Identity /0 — closed arc: audit → errata → ten closures
 │   │                          #     implemented CL+Py, fresh-audit 10/10, merged 2026-07-15
 │   ├── language-a/            #   Language-A materials (public lane only — no items/keys/outputs)
@@ -300,5 +328,7 @@ artifact-of-record for the Mneme/Lisp+ program. The name question — "Lisp+" or
 open; the profile is Mneme, and the language has earned a repo of its own.*
 
 *— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11; refreshed by Claude Fable 5 on 2026-07-12
-(the day the decad entered the workshop) and on 2026-07-18 (the day the language got its Draft-0
-constitution, and the Language-A emission it stands on was banked).*
+(the day the decad entered the workshop) and twice on 2026-07-18 — the day the Language-A emission was
+banked and the language got its constitution by afternoon; and by night, its adopted Architecture 0.1,
+its sealed Kernel /0, its first executable heartbeat, and its journal spine. One Saturday. The commits
+are the witness; the selftest is the pulse.*
