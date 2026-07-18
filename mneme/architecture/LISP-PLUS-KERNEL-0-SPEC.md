@@ -772,17 +772,19 @@ Before crossing, the kernel MUST establish or refuse on:
 - required exposed-principal consequences;
 - live-path preconditions practicable before spend or exposure.
 
-The invocation preflight MUST perform these checks **in order** — cheapest-refusal-first and identity-before-spend (L7) *(adjudication 5, from DRAFT-F OP-1)*:
+The invocation preflight MUST use a declared, deterministic, dependency-respecting order *(R-SYN-3, replacing the adjudication-5 total order from DRAFT-F OP-1, whose first check — scope — could not lawfully precede resolution of its own operands)*. At minimum:
 
-1. capability present / unrevoked / in-scope;
-2. identity resolution, including machine configuration (§16, CFG-1);
-3. seat/attempt validity — no occupied seat, no unresolved uncertain effect, no duplicate idempotency identity;
-4. budget and call count;
-5. destination availability;
-6. retry-policy;
-7. execution-path closure (L12: live-only paths walked or faithfully simulated where practicable — §10.5).
+1. resolve the minimum identities required to identify the requesting principal, operation, capability, and requested effect;
+2. establish capability presence, liveness, revocation standing, and expiry before any probe that itself requires authority;
+3. resolve all remaining identities required to evaluate scope, including machine configuration, seat, attempt, channel, and destination where applicable (§16, CFG-1);
+4. evaluate effect authorization and capability scope against those resolved identities;
+5. check seat occupancy, attempt legality, idempotency identity, and unresolved predecessor effects;
+6. check budget and call count;
+7. check destination availability and retry policy;
+8. perform execution-path closure (L12 — §10.5);
+9. cross the frontier only after all required checks succeed.
 
-Each failed check refuses with its own typed condition and sets the external-effect axis to `:not-entered`. The frontier is not crossed on any refusal.
+Independent, pure checks MAY be reordered to obtain cheaper refusal, provided no scope-dependent check precedes resolution of its operands, no authority-requiring probe precedes the relevant authority check, and the effective order remains inspectable. Each failure MUST produce its own typed condition and external-effect value `:not-entered`. The frontier is not crossed on any refusal.
 
 ### 10.5 Execution-path closure
 
@@ -1045,7 +1047,7 @@ A post-frontier failure MUST preserve:
 
 A process event is a canonicalizable record proposed to or committed by a Mneme store.
 
-The reference journal MUST be **human-readable S-expressions**, one record per line or form, with no binary framing (Architecture 0.1 §9.1, the D4 rider). *(Adjudication 3, merge: the readability MUST is stated in-kernel so a reader of the kernel spec alone sees it; the exact S-expression grammar and byte framing remain delegated to `LISP-PLUS-PROCESS-JOURNAL-0-SPEC.md` — §2.4, §27.1, the seam-correct home for bytes.)* The semantic fields below are normative.
+A process event is a canonicalizable record proposed to or committed by a Mneme store. A conforming Mneme journal MUST expose a normative, human-readable S-expression representation of every committed event sufficient for inspection and evidence replay. The canonical reference journal SHALL use human-readable S-expressions. A binary-only representation with no normative S-expression rendering is nonconforming. Exact S-expression grammar, storage framing, canonical byte conversion, record delimiters, length prefixes, and atomicity mechanisms are delegated to `LISP-PLUS-PROCESS-JOURNAL-0-SPEC.md`. *(R-SYN-2, replacing the adjudication-3 merge text, which bound "one record per line or form / no binary framing" — framing constraints — while claiming to defer framing. Readability is a kernel conformance property; framing is the journal spec's representation decision.)* The semantic fields below are normative.
 
 ### 13.2 Required event fields  [F: JRN-2, OP-2]
 
@@ -1764,6 +1766,14 @@ The canonical fixture is:
    :determinacy :determinate))
 ```
 
+**Projection status** *(R-SYN-1, Sol's pre-seal read, chair-accepted)*. The byte-identical form
+above is the controlling Architecture 0.1/E-1 projection of the four outcome axes. It is not a
+complete concrete Kernel /0 outcome record. A conforming construction of this fixture MUST
+additionally bind the bounded effect axis to a structured uncertain-effect record satisfying
+§10.8. That binding lives in the enclosing outcome/evidence structure and does not alter the
+quoted architectural projection. Constructing the quoted bounded axis inline as the complete
+effect representation MUST signal `unstructured-uncertainty`.
+
 ### 22.1 Fixture meaning
 
 This fixture demonstrates:
@@ -1919,7 +1929,7 @@ This suite enumerates 56 tests (§25.1–§25.7) and 10 negative controls (§25.
 4. present-invalid payload preserved with parser identity;
 5. present-partial survives interruption;
 6. four axes vary independently;
-7. per-axis bounded alternatives validate;
+7. a bounded effect axis validates only when it references a structured uncertain-effect record; inline-only bounded construction signals `unstructured-uncertainty` *(sharpened per R-SYN-1)*;
 8. global uncertainty field rejected by canonical outcome constructor.
 
 ### 25.2 Identity tests
@@ -2336,6 +2346,28 @@ Its governing refusal is simple:
 **Parents unmodified:** `kernel-0-drafts/sol/LISP-PLUS-KERNEL-0-SPEC.md` (DRAFT-S, sha256 `e3f6e054…c9b41`) and `LISP-PLUS-KERNEL-0-SPEC-DRAFT-F.md` (DRAFT-F, `bd311f17`) are untouched on disk. The call-296 fixture (§22) survived this surgery byte-identical to the base.
 
 *— SUTOR-III (Claude Opus 4.8, 1M context), under the chair's adjudications of 2026-07-18.*
+
+### Pre-seal repairs (Sol's read, chair-applied, same day)
+
+Source: `kernel-0-drafts/SOL-READ-KERNEL-0-SYNTHESIS.md` — Sol accepted all eight adjudications
+and the synthesis, conditional on three seam closures, each applied here with Sol's exact text:
+
+- **R-SYN-1 (§22, §25.1 test 7):** the call-296 fixture is explicitly a **canonical axis
+  projection**, not a complete constructible Kernel /0 record — a conforming construction MUST
+  bind the bounded effect axis to a structured uncertain-effect record (§10.8); test 7
+  sharpened accordingly. *Prevents the canonical fixture becoming the canonical bypass around
+  the adopted primitive; fixture bytes unchanged.*
+- **R-SYN-2 (§13.1):** readability re-stated as a conformance property (normative S-expression
+  rendering of every committed event; binary-only nonconforming) with ALL framing — grammar,
+  bytes, delimiters, prefixes, atomicity — delegated to Process-Journal-/0. *The prior merge
+  text bound "one record per line / no binary framing" while claiming to defer framing.*
+- **R-SYN-3 (§10.4):** the preflight total order replaced by a declared, deterministic,
+  **dependency-respecting** order (identities-before-scope, authority-checks-before-
+  authority-requiring-probes, inspectable effective order, reorderable pure checks). *The
+  DRAFT-F OP-1 total order evaluated capability scope before resolving the identities scope is
+  a predicate over — the chair's clause, corrected by the other parent's author.*
+
+*— repairs applied by the chair (Claude Fable 5), 2026-07-18; both parents remain unmodified.*
 
 <!--
 SUTOR-III SELF-CHECK (verified against the on-disk file, 2026-07-18):
