@@ -1,0 +1,272 @@
+{
+  "schema_version": "lae-combined-preflight-record/1.0.0",
+  "record_id": "combined-preflight:2026-07-17-candidate-a3e4a10",
+  "verdict": "READY FOR OWNER 312-EMISSION AUTHORIZATION",
+  "preflight_candidate": {
+    "commit": "a3e4a10a29e162df680e84d0053ac1a1afe087a9",
+    "tree": "10e9c1a9f97f8ec3ba85eca5bc66010211529302",
+    "branch": "codex/language-a-tranche-b-prereg-freeze-and-lineage-search",
+    "commit_subject": "Owner pre-exposure gate SIGNED: sealed decision record R13 (chained to R12), flag flipped, exposure-readiness PASS, manifest rebuilt",
+    "construction_manifest_sha256": "fba6a3030a45c069682bf42d900e779c05f3054264c59c36d25b93d50bbeb505",
+    "construction_manifest_sidecar_name": "CONSTRUCTION-MANIFEST.sha256",
+    "construction_manifest_sidecar_sha256": "2da453e5ae6a483f1ab8942238f105f11a25f5bb0251d4442669b5510158fa23",
+    "read_from_disk": true
+  },
+  "tested_ancestor": {
+    "commit": "49fef2f7949bae5f216b20d5ed06ff2b18736d94",
+    "tree": "5eeaedc690bde21ca013e499545e66dd39af57f4",
+    "construction_manifest_sha256": "3f9b9e6fb51702ffaa9111ec93a9add41a0bbfc1dea28e0e87457b3d0c3a7223",
+    "verified_via": "git show 49fef2f7:experiments/language-a-exoskeleton/CONSTRUCTION-MANIFEST.json | sha256sum",
+    "is_ancestor_of_candidate": true
+  },
+  "evidence_publication_commit": {
+    "identity": "SELF -- the commit carrying this record; a SUCCESSOR of the candidate; its tree was NOT itself checked and no verification claim attaches to it without a fresh replay",
+    "parent_is_candidate": "a3e4a10a29e162df680e84d0053ac1a1afe087a9",
+    "self_sha_note": "the publication commit sha cannot be known before committing; the successor caveat is stated structurally and the candidate is recorded as parent; parent linkage is verified post-commit and the sha reported in the SEALER return"
+  },
+  "requirement_bindings": [
+    {
+      "requirement_index": 1,
+      "requirement": "candidate identity: HEAD tip, tree, worktree clean, origin match",
+      "status": "VERIFIED",
+      "evidence": "HEAD==a3e4a10 / tree==10e9c1a9 / git status --porcelain empty / origin==Wondermonger-daydreaming/latent-lisp; both clean rooms re-verified HEAD+tree (RECEIPT-ALPHA/BETA checkout-identity)"
+    },
+    {
+      "requirement_index": 2,
+      "requirement": "signature commit shape: 4-file R13 signature",
+      "status": "VERIFIED",
+      "evidence": "git show a3e4a10 vs parent eb09fc9b = 4 files (CONSTRUCTION-MANIFEST.json, .sha256, PRE-EXPOSURE-GATE-SIGNED-v1.json, owner-slots.json)"
+    },
+    {
+      "requirement_index": 3,
+      "requirement": "lab-note recorded in the separate lab repo with explicit successor caveat",
+      "status": "BOUND",
+      "evidence": "lab-repo commit 1fad2cb4c492bd9109061c5618991c26b88c3858 (note 2026-07-17-language-a-mechanical-closure-complete.md): 'its tree was NOT replayed and carries no verification claim'; 'Still unauthorized ... provider'"
+    },
+    {
+      "requirement_index": 4,
+      "requirement": "R13 seal valid and chained to R12",
+      "status": "VERIFIED",
+      "evidence": "preauthorship.validate_record_digest(R13)=VALID digest sha256:81e61c7d...; R13.predecessor_digest == R12(GATE-WALK-R12-ADOPTED-v1).record_digest sha256:fe03e898... (both seals VALID)"
+    },
+    {
+      "requirement_index": 5,
+      "requirement": "identity bindings: item bank, Cbeta key digest, scoring constitution, renderer, schedule (312), subject routes",
+      "status": "BOUND",
+      "evidence": "MUSTER-BINDINGS.md Section B: 12 owner-slots all status resolved; every cited decision record record_digest VALID via preauthorship.validate_record_digest; key file NOT opened (digest only)"
+    },
+    {
+      "requirement_index": 6,
+      "requirement": "separation of duties (grader firebreak, barred item-authors)",
+      "status": "BOUND",
+      "evidence": "MUSTER-BINDINGS.md C.6: FREEZE-STAFFING.md roles + slot role-assignments (fable/sol item-authors barred); harness/firebreak.py FORBIDDEN_BEFORE_SCORING code-enforced; firebreak test passes"
+    },
+    {
+      "requirement_index": 7,
+      "requirement": "key invalidation on controlling change",
+      "status": "BOUND",
+      "evidence": "MUSTER-BINDINGS.md C.7: mechanism = digest chain + successor re-walk (manifest.py check byte-identity); no separate dedicated gate; stated plainly, reported as-is"
+    },
+    {
+      "requirement_index": 8,
+      "requirement": "one-renderer exclusivity (DryRunProvider sole path)",
+      "status": "BOUND-AS-DEFERRAL",
+      "evidence": "MUSTER-BINDINGS.md C.8: no live renderer exists in the packet; DryRunProvider sole import + NetworkAccessForbidden + key-open denial; live-path exclusivity structurally unverifiable today, belongs to the emission runner's own verification"
+    },
+    {
+      "requirement_index": 9,
+      "requirement": "312 emission geometry",
+      "status": "VERIFIED",
+      "evidence": "MUSTER-BINDINGS.md C.9 recomputed: schedule.jsonl 312 rows (288 core + 24 sham), generated-counts.json + design.json ceilings consistent, design.py --check PASS"
+    },
+    {
+      "requirement_index": 10,
+      "requirement": "grader calibration of record",
+      "status": "VERIFIED",
+      "evidence": "MUSTER-BINDINGS.md D: RUN-RECORD.md OUTCOME ELIGIBLE (four families agreement >=0.80, kappa >=0.60); on-disk sha256 fd0c9844... == R13 signature_basis.calibration.sha256"
+    },
+    {
+      "requirement_index": 11,
+      "requirement": "exposure-readiness gate",
+      "status": "VERIFIED",
+      "evidence": "MANIFEST-EXPOSURE-READINESS: PASS exit 0 in-worktree (MUSTER A.3) and in both clean rooms (RECEIPT-ALPHA c / RECEIPT-BETA 2c)"
+    },
+    {
+      "requirement_index": 12,
+      "requirement": "run window",
+      "status": "NOT-A-SLOT",
+      "evidence": "MUSTER-BINDINGS.md row 12: run-window is not among the 12 owner-slots; ODR-41 recommendation only (referenced in PREREG-v0.2.md, evidence README, work-docket); the exposure gate does not require it"
+    }
+  ],
+  "finding_of_record": {
+    "title": "signed-tip inversion of the inherited post-slot lineage-gate assertion",
+    "failing_test": "tests/test_packet.py:225 test_post_slot_lineage_gate_blocks_exposure_and_protected_scope_is_clean",
+    "test_comment_verbatim": "After the R10 lineage search terminates \"complete\", the gate must still block exposure -- now at the unsigned pre-exposure-signature stage, proving the completed search did not sign the gate itself.",
+    "assertion": "assertRaises(OwnerResolutionRequired) with detail == 'pre-exposure-gate-signature'; asserts manifest.exposure_readiness() must RAISE (encodes the UNSIGNED pre-exposure state)",
+    "behavior_at_tested_ancestor": "PASSES at 49fef2f7 (gate unsigned there); mirror pilot floor #3/#10 unresolved-owner-exposure-refusal holds; verify-pilot.sh 12/12 green in both clean rooms",
+    "behavior_at_candidate": "FAILS at a3e4a10 by construction: owner-slots.json pre_exposure_gate_signed=true so exposure_readiness() no longer raises; fails at every possible signed tree by construction",
+    "downstream_at_candidate": "verify-tranche-b.sh = 6/7 (exit 1), sole failing floor inherited-packet-tests; verify-scoring-constitution.sh own 3 floors PASS + inherited floor #4 FAIL (exit 1); 16/17 packet tests green; the single failing assertion is the only failure in both scripts",
+    "tree_delta_tested_to_candidate": {
+      "file_count": 12,
+      "files": [
+        "experiments/language-a-exoskeleton/CONSTRUCTION-MANIFEST.json",
+        "experiments/language-a-exoskeleton/CONSTRUCTION-MANIFEST.sha256",
+        "experiments/language-a-exoskeleton/evidence/clean-room-verify/2026-07-17-closure-candidate-49fef2f7/SHA256SUMS.txt",
+        "experiments/language-a-exoskeleton/evidence/clean-room-verify/2026-07-17-closure-candidate-49fef2f7/cleanroom-A/ENVIRONMENT.txt",
+        "experiments/language-a-exoskeleton/evidence/clean-room-verify/2026-07-17-closure-candidate-49fef2f7/cleanroom-A/REPORT.md",
+        "experiments/language-a-exoskeleton/evidence/clean-room-verify/2026-07-17-closure-candidate-49fef2f7/cleanroom-A/verify-pilot-output.log",
+        "experiments/language-a-exoskeleton/evidence/clean-room-verify/2026-07-17-closure-candidate-49fef2f7/cleanroom-B/ENVIRONMENT.txt",
+        "experiments/language-a-exoskeleton/evidence/clean-room-verify/2026-07-17-closure-candidate-49fef2f7/cleanroom-B/REPORT.md",
+        "experiments/language-a-exoskeleton/evidence/clean-room-verify/2026-07-17-closure-candidate-49fef2f7/cleanroom-B/verify-pilot-output.log",
+        "experiments/language-a-exoskeleton/evidence/gate-walk/RE-WALK-2026-07-17-closure-candidate-49fef2f7.md",
+        "experiments/language-a-exoskeleton/operator/owner-decisions/PRE-EXPOSURE-GATE-SIGNED-v1.json",
+        "experiments/language-a-exoskeleton/operator/owner-slots.json"
+      ],
+      "none_touch": "no harness code, tests, prompts, or items are in the delta (verified via git diff --name-only 49fef2f7 a3e4a10)"
+    },
+    "frozen_test_status": "UNMODIFIED and unlicensed for modification; SEALER made no change to it",
+    "ruling": "results attach per stage under the signed record's own successor-caveat doctrine (PRE-EXPOSURE-GATE-SIGNED-v1.json bounded_unknowns[0]); verification attaches to tested_commit 49fef2f7 / tested_tree 5eeaedc6; the signed candidate and this publication commit are successors whose trees were not replayed and carry no verification claim without a fresh replay"
+  },
+  "receipts": {
+    "rooms_independent_fresh_local_clones": true,
+    "clone_source_both": "/home/gauss/Codex-Lab/wt-language-a (local path only; no network remote; git clone exit 0)",
+    "receipt_A": {
+      "identity": "RECEIPT-ALPHA (Claude Opus 4.8, 1M context), clean verification room A",
+      "path": "evidence/combined-preflight/2026-07-17-candidate-a3e4a10/receipt-A/",
+      "receipt_md_sha256": "b0eafbbffd61dca1819e49bfede29f2f854c62dea484dfe4abb35b09e0a910db",
+      "environment": {
+        "date_u": "Sat Jul 18 00:32:23 UTC 2026",
+        "python": "Python 3.11.14",
+        "git": "git version 2.43.0"
+      },
+      "checks": [
+        {
+          "check": "a",
+          "command": "python3 harness/manifest.py check",
+          "verdict_line": "MANIFEST-CHECK: PASS",
+          "exit": 0,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "b",
+          "command": "python3 harness/manifest.py protected",
+          "verdict_line": "MANIFEST-PROTECTED: PASS",
+          "exit": 0,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "c",
+          "command": "python3 harness/manifest.py exposure-readiness",
+          "verdict_line": "MANIFEST-EXPOSURE-READINESS: PASS",
+          "exit": 0,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "d",
+          "command": "bash verify-tranche-b.sh",
+          "verdict_line": "FAILED (failures=1)",
+          "exit": 1,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "e",
+          "command": "bash verify-scoring-constitution.sh",
+          "verdict_line": "FAILED (failures=1)",
+          "exit": 1,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "f",
+          "command": "bash verify-pilot.sh",
+          "verdict_line": "ALL PILOT PACKET FLOORS HOLD -- 12/12 network-off checks green.",
+          "exit": 0,
+          "attaches_to": "tested 49fef2f7 / tree 5eeaedc6"
+        }
+      ]
+    },
+    "receipt_B": {
+      "identity": "RECEIPT-BETA (Claude Opus 4.8, 1M context), clean room B",
+      "path": "evidence/combined-preflight/2026-07-17-candidate-a3e4a10/receipt-B/",
+      "receipt_md_sha256": "605ef636239a52ae73326424ce2a3b554a322d2937dbe61150c9eabcbf58e339",
+      "environment": {
+        "date_u": "Sat Jul 18 00:32:39 UTC 2026",
+        "python": "Python 3.11.14",
+        "git": "git version 2.43.0"
+      },
+      "checks": [
+        {
+          "check": "2a",
+          "command": "python3 harness/manifest.py check",
+          "verdict_line": "MANIFEST-CHECK: PASS",
+          "exit": 0,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "2b",
+          "command": "python3 harness/manifest.py protected",
+          "verdict_line": "MANIFEST-PROTECTED: PASS",
+          "exit": 0,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "2c",
+          "command": "python3 harness/manifest.py exposure-readiness",
+          "verdict_line": "MANIFEST-EXPOSURE-READINESS: PASS",
+          "exit": 0,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "2d",
+          "command": "bash verify-tranche-b.sh",
+          "verdict_line": "FAIL  inherited-packet-tests ... FAILED (failures=1)",
+          "exit": 1,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "2e",
+          "command": "bash verify-scoring-constitution.sh",
+          "verdict_line": "own floors PASS; FAIL  inherited-tranche-b-floors ... FAILED (failures=1)",
+          "exit": 1,
+          "attaches_to": "candidate a3e4a10 / tree 10e9c1a9"
+        },
+        {
+          "check": "3f",
+          "command": "bash verify-pilot.sh",
+          "verdict_line": "ALL PILOT PACKET FLOORS HOLD -- 12/12 network-off checks green.",
+          "exit": 0,
+          "attaches_to": "tested 49fef2f7 / tree 5eeaedc6"
+        }
+      ]
+    }
+  },
+  "governing_artifact_digests": {
+    "R13_pre_exposure_gate_signed_v1_record_digest": "sha256:81e61c7da546baf8b198b39f1edc490b792ac511309b76ccabc21d24bb15fc4e",
+    "R12_gate_walk_r12_adopted_v1_record_digest": "sha256:fe03e898144ddc57721edc51ac074413dec27131840ec6af0ad0bc1c62035f3f",
+    "scoring_r4_adopted_v1_record_digest": "sha256:fde4435e84d3e62d133a081a126992f230e4d38965b5dcb5946187e9fc198e31",
+    "scoring_r5_adopted_v1_record_digest": "sha256:c1639913f6ee792a67a294de9899736387425adfd6d046074365c102730ce368",
+    "scoring_r6_closed_v2_record_digest": "sha256:eae4cd90a22041bc61ca07bc82bfb9f37d83e85663d396d4062cd397feeec6f5",
+    "scoring_r7_key_frozen_v1_record_digest": "sha256:ea8b12963a3f4771bcf29efecddd72728830561dbedbc2f5182e6affe32ced6c",
+    "prereg_v0_2_md_sha256": "5bc87c537d137ba5c1c0d4f8caaf8534dfb07cfbf226ebf98785017f2aacfc7f",
+    "cbeta_key_sha256_digest_only": "edf670c4113e75b149053304b86549ff1d8c6d448dbb9adbfe2819af113e5a6e",
+    "cbeta_key_digest_source": "operator/owner-decisions/SCORING-R7-KEY-FROZEN-v1.json (slot record); key file NEVER opened",
+    "calibration_run_record_md_sha256": "fd0c9844b90fe81d43bf9e9a262523ae0fbb4c576657decb71e37628805ca271",
+    "scoring_freeze_manifest_v3_json_sha256": "e741ca50cb120b74d5a5cb0ed41d310b109339a34911fd95fa2b4f4b15e5cf31",
+    "scoring_freeze_manifest_v3_sidecar_name": "SCORING-FREEZE-MANIFEST-v3.sha256",
+    "scoring_freeze_manifest_v3_sidecar_matches_bytes": true,
+    "network_call_census_json_sha256": "61290e79c09318790425c7198a74aca731fb0d5e777a14865fdb2e3b5a7e290f",
+    "read_from_disk": true
+  },
+  "attestation": "No provider or network contact occurred during this preflight (all checks network-off, clean rooms cloned from the local path); no real target item was transmitted; no live target output was produced; no key plaintext or key-content derivative was opened or disclosed; no frozen artifact was modified; the census zero-fields remain zero.",
+  "deferrals_and_limits": [
+    "subject binding in schedule uses SYNTHETIC-SUBJECT placeholders (per-row real subject binding deferred to emission) -- owner-sealed deferral to emission actuals (PREREG-v0.2-ERRATUM-01 section 2, GATE-WALK-R12)",
+    "provider settings + per-provider tokenizer census + retention/caching disclosures = owner-authorized deferrals to emission actuals (pending-exact-confirmation; SCORING-R6-CLOSED-v2 + GATE-WALK-R12-ADOPTED-v1)",
+    "run-window = NOT-A-SLOT (ODR-41 recommendation only; not an owner-slot; the exposure gate does not require it)",
+    "live-renderer exclusivity is structurally unverifiable today (no live renderer exists in the packet); it belongs to the emission runner's own verification",
+    "key custody is owner-private outside git; the repository holds hash-identities only; only the Cbeta key digest presence was checked (file never opened)"
+  ],
+  "expiry": "This preflight's validity expires upon any change to a controlling frozen artifact, renderer, schedule, request path, provider/configuration identity, scoring key, item content, or authority record.",
+  "next_act": "The 312 emissions remain unauthorized until a separate sealed owner act.",
+  "produced_by": "Claude Fable 5 (chair) with Opus agents PATHFINDER, MUSTER, RECEIPT-ALPHA, RECEIPT-BETA, SEALER",
+  "canonical_byte_length": 14718,
+  "record_digest": "sha256:2e13253ed78f1a019ce747d21e56ad1e0e5f7031f4e6214dc9bfd00e6475ec43"
+}

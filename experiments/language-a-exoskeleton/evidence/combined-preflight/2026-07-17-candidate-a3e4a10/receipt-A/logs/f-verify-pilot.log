@@ -1,0 +1,13 @@
+PASS  mneme-existing-floor
+PASS  design-reproduction
+PASS  packet-unit-and-mutation-tests
+PASS  preauthorship-unit-tests
+PASS  preauthorship-schema-lineage-mutations
+PASS  synthetic-precision-replay
+PASS  claim-ceiling-lint
+PASS  manifest-lineage-protected
+PASS  key-open-denial
+PASS  unresolved-owner-exposure-refusal
+PASS  p2a-absent
+PASS  zero-network-and-exposure-census
+ALL PILOT PACKET FLOORS HOLD — 12/12 network-off checks green.

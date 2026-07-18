@@ -1,0 +1,32 @@
+PASS  tranche-b-unit-mutation-replay
+FAIL  inherited-packet-tests
+test_all_six_branch_fixtures_and_precedence (__main__.PacketTests.test_all_six_branch_fixtures_and_precedence) ... ok
+test_claim_linter_mutations_and_bounded_surface (__main__.PacketTests.test_claim_linter_mutations_and_bounded_surface) ... ok
+test_design_and_schedule_reproduce (__main__.PacketTests.test_design_and_schedule_reproduce) ... ok
+test_duplicate_and_dangling_failures (__main__.PacketTests.test_duplicate_and_dangling_failures) ... ok
+test_false_completion_and_silent_retry (__main__.PacketTests.test_false_completion_and_silent_retry) ... ok
+test_fixture_driver_all_fourteen_and_first_condition (__main__.PacketTests.test_fixture_driver_all_fourteen_and_first_condition) ... ok
+test_full_synthetic_run_replays_byte_identically (__main__.PacketTests.test_full_synthetic_run_replays_byte_identically) ... ok
+test_grader_calibration_and_source_packet_firebreak (__main__.PacketTests.test_grader_calibration_and_source_packet_firebreak) ... ok
+test_key_boundary_is_denial_and_runner_has_no_network_surface (__main__.PacketTests.test_key_boundary_is_denial_and_runner_has_no_network_surface) ... ok
+test_manifest_mutants (__main__.PacketTests.test_manifest_mutants) ... ok
+test_no_lci0_invocation_or_p2a_directory (__main__.PacketTests.test_no_lci0_invocation_or_p2a_directory) ... ok
+test_post_slot_lineage_gate_blocks_exposure_and_protected_scope_is_clean (__main__.PacketTests.test_post_slot_lineage_gate_blocks_exposure_and_protected_scope_is_clean) ... FAIL
+test_primary_is_cell_weighted_secondary_is_labeled (__main__.PacketTests.test_primary_is_cell_weighted_secondary_is_labeled) ... ok
+test_prompt_parity_and_sham_ceiling (__main__.PacketTests.test_prompt_parity_and_sham_ceiling) ... ok
+test_schedule_mutation_refused (__main__.PacketTests.test_schedule_mutation_refused) ... ok
+test_scorer_mutants_and_anti_taxidermy (__main__.PacketTests.test_scorer_mutants_and_anti_taxidermy) ... ok
+test_validator_mutants_first_condition (__main__.PacketTests.test_validator_mutants_first_condition) ... ok
+
+======================================================================
+FAIL: test_post_slot_lineage_gate_blocks_exposure_and_protected_scope_is_clean (__main__.PacketTests.test_post_slot_lineage_gate_blocks_exposure_and_protected_scope_is_clean)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/gauss/.claude/jobs/7d1d2626/tmp/preflight/receipt-A/repo/experiments/language-a-exoskeleton/tests/test_packet.py", line 225, in test_post_slot_lineage_gate_blocks_exposure_and_protected_scope_is_clean
+    with self.assertRaises(OwnerResolutionRequired) as caught:
+AssertionError: OwnerResolutionRequired not raised
+
+----------------------------------------------------------------------
+Ran 17 tests in 3.598s
+
+FAILED (failures=1)
