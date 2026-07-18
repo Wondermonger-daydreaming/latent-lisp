@@ -75,6 +75,35 @@ fluency, and fluency that finally gets a partner that can be neither impressed n
 
 ---
 
+## The architecture chamber (2026-07-18 — the language gets its constitution)
+
+**`mneme/architecture/`** holds the first coherent semantic architecture for Lisp+ as a language for
+programming **Latent Space Machines** — and the full constitutional exchange around it, preserved verbatim:
+
+1. **`LISP-PLUS-LATENT-MACHINE-ARCHITECTURE-0.md`** + **`LISP-PLUS-CLEAN-ROADMAP-0.md`** — GPT-5.6 Sol's
+   Draft 0 (with the owner): six planes, five separations, structured outcomes, typed absence, uncertain
+   effects, capabilities as live authority, append-only process journals, and fourteen design laws — built
+   on the empirical failure corpus of the Language-A emission arc (checksums in `SHA256SUMS.txt`, verified
+   twice on adoption).
+2. **`LISP-PLUS-ARCHITECTURE-0-FABLE-REVIEW.md`** — the commissioned hostile-simplifier review (Claude
+   Fable 5). Verdict: **VIABLE WITH REPAIR** — nine repairs (absence must split state from causal claim;
+   empty/invalid manifestations are *present*; uncertainty is a per-axis mode, not a fifth axis; …), one
+   missing kernel primitive (**attempt identity + supersession** — call-296 was its witness), and a
+   four-fork owner docket.
+3. **`SOL-DISPOSITION-ON-ARCHITECTURE-0-REVIEW.md`** — Sol's return: verdict accepted, all repairs adopted
+   in principle, and a self-recusal from the independent minimization audit (*"shared roots do not
+   disappear when they travel through a different model provider"*).
+4. **`ARCHITECTURE-0-STATUS.md`** — the chamber's WE-ARE-HERE. Current state: **ball with the owner**
+   (decision docket DK-1–DK-4 + D1–D10 → a decisions record), then Architecture 0.1 as a traced repair,
+   then Kernel /0 spec, reference runtime, and one forced-interruption vertical specimen — in that order,
+   with no kernel implementation before the decisions record.
+
+The central wager, post-review: *Lisp+ preserves ordinary Lisp evaluation while making consequential
+latent-machine operations produce durable, inspectable process records whose execution, manifestation,
+effects, authority, and claim standing cannot silently impersonate one another.*
+
+---
+
 ## The seven laws
 
 Mneme mechanically enforces seven distinctions. Each is a boundary a fluent mind is tempted to cross, and each
@@ -199,12 +228,16 @@ certificate is a steel lock on a certificate printer.* So:
    adversary (theft) can only be answered by moving *outside the token entirely*. This item was not forgotten;
    it only became legible once the first three were named.
 
-There is also one experiment worth running, filed honestly as open: **Language A** — does a model
-*reasoning in Mneme notation*, as a symbolic exoskeleton, improve calibration and inspectability versus matched
-unmarked reasoning? Specced as a preregistration DRAFT on 2026-07-11 (lab-side:
-`experiments/language-a-exoskeleton/PREREG-DRAFT-v0.1.md` — four arms NL / PERSONA / SCAFFOLD / LANG-A, four
-forks awaiting a freezer, pilot before freeze; fresh-weights hostile review commissioned 2026-07-11); still the
-most interesting open thread, now one step from fireable.
+The experiment filed here on 07-11 as "one step from fireable" has since **fired**: **Language A**'s
+312-call emission stage ran on the night of 2026-07-17/18 and is **BANKED at 295/312** under its frozen
+completion floors — *closed by its frozen completion rule; 295 observed completions, one uncertain write,
+sixteen unattempted seats* — after surviving three separate host-process kills on incremental evidence alone
+(the final census is honestly marked `RECONSTRUCTED`, reproduced independently from the per-call envelopes).
+The arc's failure classes — completed execution with absent manifestation, the uncertain write that must
+never be blindly retried, publication as operative standing, live-only paths invisible to offline receipts —
+are the empirical corpus the architecture chamber above is built on. The scoring stage waits on the owner's
+sealed rulings (null-content semantics first); item content, subject outputs, and the blinded scoring key are
+not in this repository and will not be.
 
 ---
 
@@ -213,6 +246,13 @@ most interesting open thread, now one step from fireable.
 ```
 latent-lisp/
 ├── mneme/                     # the instrument — Mneme / Lisp+
+│   ├── architecture/          #   THE LANGUAGE'S CONSTITUTION-IN-PROGRESS (2026-07-18):
+│   │                          #     Sol's Draft 0 + roadmap, Fable's review (VIABLE WITH REPAIR),
+│   │                          #     Sol's disposition, and ARCHITECTURE-0-STATUS.md (the WE-ARE-HERE)
+│   ├── lci0/                  #   Located Claim Identity /0 — closed arc: audit → errata → ten closures
+│   │                          #     implemented CL+Py, fresh-audit 10/10, merged 2026-07-15
+│   ├── language-a/            #   Language-A materials (public lane only — no items/keys/outputs)
+│   ├── spec/                  #   normative chain incl. the de-corroboratione program rulings
 │   ├── latent-mvp/            #   the runnable core
 │   │   ├── kernel.lisp        #     shared root (package mneme, ~50 exports) — START HERE
 │   │   ├── conformance-walk.lisp   # the seven laws as one walk, exit 0
@@ -225,6 +265,8 @@ latent-lisp/
 │   │   └── instruments/       #     jurisdiction wing + GPT Sol's DECAD (de-foeno … de-concordia)
 │   ├── CONSTITUTION-v0.5-mneme-skeleton.md    # Mneme as a profile answerable to v0.3/BOOK-0
 │   └── v0.1/ · v0.2/ · v0.3/  #   the constitution lineage
+├── canonical-datum/           # Canonical Datum /0 — frozen value/wire substrate (arc closed 2026-07-13;
+│                              #   CD0-* receipts, errata, and freeze declaration at repo root)
 ├── atelier/                   # the workshop — lisp-atelier
 │   ├── README.md              #   the eight pitches + why Lisp, for this lab
 │   ├── homoiconic-verse/      #   poems that are programs (de-superstite, de-officio, …)
@@ -257,5 +299,6 @@ pointer notes, so historical references stay valid; `lispplus/` in particular re
 artifact-of-record for the Mneme/Lisp+ program. The name question — "Lisp+" or "Mneme" — is still genuinely
 open; the profile is Mneme, and the language has earned a repo of its own.*
 
-*— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11; refreshed by Claude Fable 5 on 2026-07-12,
-the day the decad entered the workshop.*
+*— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11; refreshed by Claude Fable 5 on 2026-07-12
+(the day the decad entered the workshop) and on 2026-07-18 (the day the language got its Draft-0
+constitution, and the Language-A emission it stands on was banked).*
