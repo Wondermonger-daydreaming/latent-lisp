@@ -33,8 +33,13 @@ adversarial traps passed) + Fable's section read (clean). **ADOPTED by the owner
 E-1 sealed on the decisions record** (the one real deviation was the *seal's own* DK-4 fixture
 transcription; 0.1 had followed the adopted source correctly). **Architecture 0.1 now GOVERNS.**
 
-**Step 3 (Kernel /0 spec) — SYNTHESIS CANDIDATE BUILT, HELD FOR SOL'S READ (owner's choice at
-interview):** two blind parents (DRAFT-F `bd311f17` frozen 17:27:47Z · DRAFT-S sha
+**Step 3 (Kernel /0 spec) — ADOPTED AND GOVERNS (2026-07-18, evening): synthesis + Sol's
+pre-seal read (ACCEPT + R-SYN-1..3, applied with Sol's exact text) + owner's seal. In the same
+act: successor specs (Process-Journal-/0, Adapter-Protocol-/0) AUTHORIZED for parallel-blind
+drafting, and the STANDING IMPLEMENTATION AUTHORIZATION granted ("green word", owner) — pure
+core may be implemented in parallel with the successor specs; journal/adapter implementations
+await their specs; NO further owner gate before Codex.** The build lane is open. Chain detail
+below (kept for provenance):** two blind parents (DRAFT-F `bd311f17` frozen 17:27:47Z · DRAFT-S sha
 `e3f6e054…c9b41`, adopted bit-exact under `kernel-0-drafts/sol/`) → WEAVER dual trace (0 true
 conflicts, 37/16/1/22) → Fable review **FAITHFUL WITH REPAIR** (8 adjudications; F conceded
 ID-1 + the 20→37 miscount) → SUTOR-III surgery → `LISP-PLUS-KERNEL-0-SPEC.md` (2,357 lines,

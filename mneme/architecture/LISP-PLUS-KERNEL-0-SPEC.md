@@ -17,7 +17,14 @@
 
 Both parent drafts remain on disk **unmodified**; this synthesis is a third document, not an edit to either. Because both parents are Opus-lineage minds writing blind off the same adopted A0.1, their agreement is expected and carries no corroborative weight (shared-root discipline); the information lived in the asymmetries, which the adjudications below resolve.
 
-**Standing:** This is a **synthesis candidate**. It specifies Kernel /0 semantics, primitives, judgments, operations, refusal conditions, and conformance obligations. Adoption by the owner authorizes the Kernel /0 spec; **implementation remains unauthorized until adoption plus the roadmap's next artifacts** (Process Journal /0, Adapter Protocol /0, Vertical Specimen /0, and an explicit implementation authorization — §30). This document is not implementation authorization.
+**Standing:** **ADOPTED AND GOVERNING** — sealed by the owner 2026-07-18 (live interview), with
+R-SYN-1..3 applied pre-seal per Sol's read and Sol's adoption recommendation on record. In the
+same act the owner **authorized the successor specs** (Process Journal /0, Adapter Protocol /0 —
+parallel-blind pattern) and gave the **standing implementation authorization** §30 awaited
+("green word for implementation", owner, same sitting). Sequencing interpretation, recorded for
+correction if misread: the pure core (values, identities, outcomes, folds — nothing
+journal-byte-dependent) may be implemented in parallel with the successor specs; journal-store
+and adapter implementations await their specs; no further owner gate stands before Codex fires.
 
 ---
 
