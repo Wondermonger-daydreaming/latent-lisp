@@ -1,0 +1,9 @@
+=== STEP F: evidence/emission-312/ inspection ===
+MIRROR_FILENAMES (the three census files): EMISSION-CENSUS.json, EMISSION-ACTUALS.json, RUN-RECORD.md
+--- git ls-files evidence/emission-312/ ---
+experiments/language-a-exoskeleton/evidence/emission-312/EMISSION-ACTUALS.json
+experiments/language-a-exoskeleton/evidence/emission-312/EMISSION-CENSUS.json
+experiments/language-a-exoskeleton/evidence/emission-312/RUN-RECORD-EMITTER-II.md
+experiments/language-a-exoskeleton/evidence/emission-312/RUN-RECORD.md
+--- live-attempt-02 search ---
+NO live-attempt-02 subdir present

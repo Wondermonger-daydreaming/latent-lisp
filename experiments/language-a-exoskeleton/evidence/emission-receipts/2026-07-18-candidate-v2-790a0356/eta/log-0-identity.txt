@@ -1,0 +1,9 @@
+=== IDENTITY VERIFICATION ===
+HEAD commit:  790a035615b20c423cae04e9a918827f166a3a4a
+  pinned:     790a035615b20c423cae04e9a918827f166a3a4a
+HEAD tree:    28f7830c2b322b8edd572a03a0b393c943545185
+  pinned:     28f7830c2b322b8edd572a03a0b393c943545185
+manifest sha: b9f10c8926af9f9e1446d9ec28b34980328139f7555146ea880a233376b349df
+  pinned:     b9f10c8926af9f9e1446d9ec28b34980328139f7555146ea880a233376b349df
+branch:       HEAD
+  codex/language-a-tranche-b-prereg-freeze-and-lineage-search

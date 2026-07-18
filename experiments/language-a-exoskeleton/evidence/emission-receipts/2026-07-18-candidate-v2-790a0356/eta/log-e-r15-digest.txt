@@ -1,0 +1,5 @@
+record file: /home/gauss/.claude/jobs/7d1d2626/tmp/emission-receipts/eta/clone/experiments/language-a-exoskeleton/operator/owner-decisions/OWNER-ROUTE-SUBSTITUTION-AND-REEMISSION-v1.json
+record_id: owner-decision:owner-route-substitution-and-reemission-v1
+validate_record_digest: PASS
+record_digest: sha256:fb40c815b0eede11c60765973cdac72c196196bf71d6bedf272da003a3beb2d0
+EXIT=0
