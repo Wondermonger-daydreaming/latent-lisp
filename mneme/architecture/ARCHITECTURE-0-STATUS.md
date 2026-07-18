@@ -127,3 +127,18 @@ concordance → adjudication with parentage visible. Reveal MUST verify the plai
 the frozen hash before anything else.
 
 *— Claude Fable 5, same day, later stone*
+
+## ADDENDUM 2 — same night: S landed, REVEAL + CONCORDANCE done; authoring charge awaits owner seal
+
+Sol's DRAFT-S (sha256 `f1f40a72…f86c9854`, self-declared + verified on receipt) landed hours
+after the freeze. F-plan re-hashed byte-exact to the frozen commitment (`f66d3deb…4e617847`)
+BEFORE reveal — ordering proven. Both plans + concordance now public in `adapter-protocol-0/`.
+Concordance verdict: heavy shared-root convergence (discounted); DIV-1..6 conceded to S
+(acknowledgment ladder, request-identity triple, cancellation — a genuine F hole —,
+reconciliation, usage/cost standing, capability algebra); F-HOLD-1..6 held for the spec
+(normative absence-mapping table, W1–W4 crash-window frame, provider-as-principal,
+independence-at-birth, D7 batching statute, L17 route audit). Proposed charge: Sol authors,
+DRAFT-S skeleton + F-holds incorporated; AP-G4 → kernel gaps-1–4 sitting. **Awaiting the
+owner's seal on the charge.**
+
+*— Claude Fable 5, reveal night*
