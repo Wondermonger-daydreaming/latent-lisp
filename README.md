@@ -123,10 +123,33 @@ layers and a heartbeat:**
    brain"). Sealed jointly with three pre-seal repairs, under a **binding gate**: no conformance
    claim beyond self-consistency until an independently-seeded implementation passes the full
    vector set.
+8. **`mneme/architecture/adapter-protocol-0/`** — **Adapter Protocol /0, adopted — the trilogy's
+   third seal (still the same night):** blind plans (the chair's frozen hash-first, ordering
+   proven) → Sol's candidate packet → a two-hand hostile pass whose worst findings were one law
+   twice — settling force minted from *self-declared* fields while L15's guard conditions sat
+   defined-but-wired-to-nothing, and a validator emitted verbatim by its own generator (one
+   brain, two filenames) → chair adjudication confirming all 16 findings against the spec text →
+   Sol's repaired reissue → chair verification against the exact bytes: **all ten filed hostile
+   attack records now REJECT on correct named conditions**, the validator provably outside the
+   generator, five suites re-executed (executed rule-omission mutation kills, two-pass replay
+   with digest equality, a joint AP0/Kernel algebra run). **Adopted with binding riders:**
+   co-authored self-consistency only, until an independently-seeded Common Lisp implementation
+   passes the vector set; and no "independently verified" language before the stranger audit.
+   The original candidate stays frozen in-tree as the subject of review — the provenance of the
+   corrections is preserved, rather than the final text appearing to have contained them from
+   the beginning.
 
-Current WE-ARE-HERE, always: `mneme/architecture/ARCHITECTURE-0-STATUS.md`. Next: Adapter-Protocol-/0
-(same blind pattern), the journal-store implementation arc, the forced-kill vertical specimen, and —
-still reserved, still empty on principle — the stranger's primitive-minimization seat.
+**The specification trilogy now governs as one coherent system** — Kernel /0 (the semantic core)
++ Process Journal /0 (the durable memory layer) + Adapter Protocol /0 (the boundary with external
+model and provider systems) — under Architecture 0.1. With it, the project has moved **from
+specification into implementation**: the phase board is
+`mneme/architecture/IMPLEMENTATION-PHASE-BOARD-2026-07-18.md` — three coordinated lanes (the
+Mneme journal store; capability/live-authority machinery, whose central rule is *a durable record
+that authority existed is evidence about the past, not live authority in the present*; and the
+deterministic fake adapter before any live-provider client), then the kernel gaps-1–4 erratum,
+the independent Common Lisp PJ0/AP0 gate, a vertical specimen deliberately killed at four defined
+points, and — still reserved, still empty on principle — the stranger's primitive-minimization
+seat. Current WE-ARE-HERE, always: `mneme/architecture/ARCHITECTURE-0-STATUS.md`.
 
 ---
 
@@ -328,7 +351,9 @@ artifact-of-record for the Mneme/Lisp+ program. The name question — "Lisp+" or
 open; the profile is Mneme, and the language has earned a repo of its own.*
 
 *— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11; refreshed by Claude Fable 5 on 2026-07-12
-(the day the decad entered the workshop) and twice on 2026-07-18 — the day the Language-A emission was
-banked and the language got its constitution by afternoon; and by night, its adopted Architecture 0.1,
-its sealed Kernel /0, its first executable heartbeat, and its journal spine. One Saturday. The commits
-are the witness; the selftest is the pulse.*
+(the day the decad entered the workshop) and three times on 2026-07-18 — the day the Language-A emission
+was banked and the language got its constitution by afternoon; by evening, its adopted Architecture 0.1,
+its sealed Kernel /0, its first executable heartbeat, and its journal spine; and by night, its adapter
+boundary — the trilogy complete, hostile-passed, adjudicated, repaired, verified, and sealed, and the
+phase turned from specification to implementation. One Saturday. The commits are the witness; the
+selftest is the pulse.*
