@@ -1,0 +1,65 @@
+== environment ==
+SBCL 2.2.9.debian
+Python 3.12.3
+Linux gauss-VJFE69F11X-B0221H 7.0.0-28-generic #28~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jul  1 15:50:57 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+/dev/nvme0n1p2 / ext4 rw,relatime 0 0
+== step 0/5: clean slate (specimen output only; the shipped reference
+   generation at ../evidence is NOT touched) ==
+== step 1/5: deaths ==
+=== S1-clean: scenario=effect killpoint=None ===
+  [S1-clean] no kill exit=1 journal=442d9ee2ba4843bd65b65ffd85206f65
+    bytes: 296 bytes total; tail(64): 65200d736561742d7265736572766564ac9584e8494098c7ef434a71af32ee587aa01250868a89a2685
+=== S2-cw0: scenario=effect killpoint=cw0 ===
+  [S2-cw0] SIGKILL delivered at READY window exit=1 journal=442d9ee2ba4843bd65b65ffd85206f65
+    bytes: 296 bytes total; tail(64): 65200d736561742d7265736572766564ac9584e8494098c7ef434a71af32ee587aa01250868a89a2685
+=== S3-cw1: scenario=effect killpoint=cw1 ===
+  [S3-cw1] SIGKILL delivered at READY window exit=1 journal=442d9ee2ba4843bd65b65ffd85206f65
+    bytes: 296 bytes total; tail(64): 65200d736561742d7265736572766564ac9584e8494098c7ef434a71af32ee587aa01250868a89a2685
+=== S4-uncertain: scenario=effect killpoint=uncertain ===
+  [S4-uncertain] SIGKILL delivered at READY window exit=1 journal=442d9ee2ba4843bd65b65ffd85206f65
+    bytes: 296 bytes total; tail(64): 65200d736561742d7265736572766564ac9584e8494098c7ef434a71af32ee587aa01250868a89a2685
+=== S5-cw2cw3: scenario=effect killpoint=cw2cw3 ===
+  [S5-cw2cw3] SIGKILL delivered at READY window exit=1 journal=442d9ee2ba4843bd65b65ffd85206f65
+    bytes: 296 bytes total; tail(64): 65200d736561742d7265736572766564ac9584e8494098c7ef434a71af32ee587aa01250868a89a2685
+=== S6-midstream: scenario=stream killpoint=midstream ===
+  [S6-midstream] SIGKILL delivered at READY window exit=1 journal=19b85794df301af487cab4bd3563d54c
+    bytes: 296 bytes total; tail(64): 65200d736561742d7265736572766564381dd6b75ca518a0d254e347561fa5587aa01250868a89a2685
+=== S7-nonexec: scenario=nonexec killpoint=nonexec ===
+  [S7-nonexec] SIGKILL delivered at READY window exit=1 journal=1afe5253fb81a9554de9b82a301c4a15
+    bytes: 297 bytes total; tail(64): 65200d736561742d72657365727665643008809fb3ab9730bc42c6c550f1a32d7aa01250868a89a2685
+
+evidence in /home/gauss/Desktop/latent-lisp/_intake/delivery-2/gen1/kw-0-specimen/src/evidence
+== step 2/5: cold reconstruction + classifications ==
+== step 3/5: retry law (blind / reconciled-executed / supersede / nonexecution) ==
+== step 4/5: differential + F6-v3 ==
+S1-clean: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S2-cw0: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S3-cw1: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S4-uncertain: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S5-cw2cw3: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S6-midstream: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S7-nonexec: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S4-resolve: MISMATCH cl= py=4B3753F2FEE3B2A8029E29C656D2C8AA
+S4-supersede: MISMATCH cl= py=4B3753F2FEE3B2A8029E29C656D2C8AA
+S7-retry: MISMATCH cl= py=4B3753F2FEE3B2A8029E29C656D2C8AA
+F6-v3 (mechanical AFEL)
+  KW column (kw-runner.lisp): 62 AFEL (58 lines excluded as @harness)
+  baseline column (kw-baseline.lisp): 52 AFEL (11 lines excluded as @harness)
+  ratio: 1.192x  (pre-registered ceiling: 1.5x)
+  verdict: PASS
+  excluded-lines-audit: KW=[23, 24, 25, 26, 27, 28, 29, 30, 31, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 111, 112, 113, 114, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139]
+                        BASE=[25, 26, 27, 28, 29, 30, 31, 46, 47, 59, 60]
+== baselines (control group, same deaths) ==
+B1: provider executions before/after recovery = 1 / 2  (LIE 2: double-spend; LIE 3: 'state: OK (verified)' laundering)
+B2: baseline log exists after death = NO; provider executions = 1  (LIE 4: finalizer-only loss)
+B3: empty-vs-absent collapse recorded in evidence/B3-empty/recover-stdout.txt  (LIE 1)
+== step 5/5: reference comparison (regenerated vs shipped reference) ==
+S1-clean: JOURNAL DIVERGES new=442d9ee2ba4843bd65b65ffd85206f65 ref=8ad833d8c51af40c0061039250b61d3d
+S2-cw0: journal byte-identical (442d9ee2ba4843bd65b65ffd85206f65)
+S3-cw1: JOURNAL DIVERGES new=442d9ee2ba4843bd65b65ffd85206f65 ref=36173af21cb9cce1ce5767899158f6cf
+S4-uncertain: JOURNAL DIVERGES new=442d9ee2ba4843bd65b65ffd85206f65 ref=ef02d3df64a184a504ca3cc854e90f3b
+S5-cw2cw3: JOURNAL DIVERGES new=442d9ee2ba4843bd65b65ffd85206f65 ref=4d189815f67331fcda46c2e50b028297
+S6-midstream: JOURNAL DIVERGES new=19b85794df301af487cab4bd3563d54c ref=db85897011badd5ce49b920be1692ceb
+S7-nonexec: JOURNAL DIVERGES new=1afe5253fb81a9554de9b82a301c4a15 ref=ad7d6b7662ffd5470775ae02a0f6d9db
+
+REPRODUCTION: FAILURE (differential fail=1, reference mismatch=1)

@@ -1,0 +1,23 @@
+RECOVERY-CLASSIFICATION:
+  prefix-status: clean
+  prefix-detail: complete prefix
+  valid-frames: 6
+  uncertain-effects: NIL
+  classification: complete durable prefix
+state-digest: 57B202D66DB55314B888F28D2179C851
+frame-count: 6 status: CLEAN
+CENSUS:
+  census-origin: reconstructed
+  attempts: a1
+  uncertain-effects: 
+  settled-effects: a1
+  receipt-frames: 1
+  manifestation-frames: 0
+verification: refold-digest=57B202D66DB55314B888F28D2179C851 (match)
+CENSUS-AFTER-VERIFICATION:
+  census-origin: reconstructed
+  attempts: a1
+  uncertain-effects: 
+  settled-effects: a1
+  receipt-frames: 1
+  manifestation-frames: 0

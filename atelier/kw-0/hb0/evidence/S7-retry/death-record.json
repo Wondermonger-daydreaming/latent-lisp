@@ -1,0 +1,12 @@
+{
+  "scenario": "nonexec",
+  "killpoint": "nonexec",
+  "death": "SIGKILL delivered at READY window",
+  "exit": -9,
+  "runner-output-tail": [],
+  "journal-md5": "d21b9d34def823838364b1b10a25a151",
+  "journal-bytes": "116 bytes total; tail(64): 4556203a415454454d5054203a49442022613122203a4f50202262616e6b2d777269746522290a283a4556203a4449535041544348203a49442022613122290a",
+  "provider-log": [
+    "RECEIVED-NOT-EXECUTED effect=bank-write attempt=a1"
+  ]
+}

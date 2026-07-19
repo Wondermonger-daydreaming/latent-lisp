@@ -1,0 +1,15 @@
+{
+  "scenario": "effect",
+  "killpoint": null,
+  "exit": 0,
+  "runner-output-tail": [
+    ";   caught 2 WARNING conditions",
+    "runner: scenario=effect killpoint=",
+    "runner: completed lawfully"
+  ],
+  "journal-md5": "8ad833d8c51af40c0061039250b61d3d",
+  "journal-bytes": "867 bytes total; tail(64): 7474656d70742d636f6d706c65746564cc05dfa87c68000e23a3923ba91c0bce47417fbedb87af7f301c97d8d88e1d9a54751ae7974a6fcdb733869e176bfb08",
+  "provider-log": [
+    "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+  ]
+}

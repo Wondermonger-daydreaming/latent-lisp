@@ -1,0 +1,8 @@
+BASELINE RECOVERY:
+  log contents:
+event=process-started
+event=attempt-begun,attempt=a1
+  state: OK (verified)
+  empty-result vs no-result: indistinguishable (both null)
+  no completion record: retrying effect...
+  retry dispatched.

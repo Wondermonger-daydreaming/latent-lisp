@@ -1,0 +1,15 @@
+RECOVERY-BEFORE:
+  classification: attempt a1 dispatched, outcome unrecorded — UNCERTAIN
+  origin: reconstructed
+  state: (:ATTEMPTS ("a1") :UNCERTAIN ("a1") :SETTLED NIL :RECEIPTS 0 :CHUNKS 0
+          :SUPERSEDED NIL)
+  state-digest: A1A813F018B202D0C387E09241CC21A1
+  verify: refold-digest=A1A813F018B202D0C387E09241CC21A1 origin-after-verify: reconstructed
+SUPERSEDED: a2 is a fresh attempt with fresh exposure over unresolved a1. predecessor-still-unresolved: T — no event asserts a1's settlement.
+RECOVERY-AFTER:
+  classification: complete
+  origin: reconstructed
+  state: (:ATTEMPTS ("a1" "a2") :UNCERTAIN NIL :SETTLED ("a2") :RECEIPTS 1
+          :CHUNKS 0 :SUPERSEDED ("a1"))
+  state-digest: 933589EDEB60880A33DDC4D625E92C37
+  verify: refold-digest=933589EDEB60880A33DDC4D625E92C37 origin-after-verify: reconstructed

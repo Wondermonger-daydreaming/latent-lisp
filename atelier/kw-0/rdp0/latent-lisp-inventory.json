@@ -1,0 +1,1538 @@
+{
+  "inventory-version": 1,
+  "analysis-kind": "lexical-static-inventory",
+  "limitations": [
+    "Lexical static inventory: no reachability proof, no call-graph analysis.",
+    "signal-kernel0 search may miss indirect, macro-generated, dynamically selected, or differently expressed signaling (e.g. (error 'name), make-condition, handler-established types).",
+    "Event usage counts may include comments, fixtures, or non-consuming references; zero occurrences is a strong declared-only finding, but a nonzero count does not prove executable consumption.",
+    "Test-reference counts are raw textual occurrences in the selftest, including comments and expected-condition lists.",
+    "Selftest-only mutants killed by representation (read-only surfaces) are not distinguishable here from unwired conditions; see the disposition artifact for per-item classification."
+  ],
+  "patterns": {
+    "identity-domains": {
+      "file": "mneme/kernel0/identity.lisp",
+      "pattern": "\\(defun %identity-domain-p ... (member domain '(:keyword*) :test ...)"
+    },
+    "conditions": {
+      "file": "mneme/kernel0/conditions.lisp",
+      "pattern": "bare-name lines inside (%define-kernel0-condition-family ...) blocks, family = preceding ';; Section ...' comment"
+    },
+    "signal-sites": {
+      "pattern": "signal-kernel0\\s+'<name> (multiline-aware), all mneme/kernel0/*.lisp",
+      "excluded-files": [
+        "mneme/kernel0/conditions.lisp (definitions, not sites)"
+      ],
+      "test-reference-file": "mneme/kernel0/kernel0-selftest.lisp (raw \\b<name>\\b counts)"
+    },
+    "event-types": {
+      "declaration-file": "mneme/kernel0/folds.lisp",
+      "declaration-pattern": "+kernel0-event-types+ '(:keyword*)",
+      "usage-pattern": "raw ':<name>' occurrences across mneme/kernel0/*.lisp minus 1 for the declaration occurrence"
+    },
+    "roles": {
+      "file": "mneme/architecture/LISP-PLUS-KERNEL-0-SPEC.md",
+      "pattern": "§5.2 'Initial role vocabulary' ```lisp block keywords"
+    },
+    "laws": {
+      "file": "mneme/architecture/LISP-PLUS-LATENT-MACHINE-ARCHITECTURE-0.1.md",
+      "pattern": "'### L<n> — <title>' headings"
+    },
+    "requirement-ids": {
+      "F-tags": {
+        "file": "mneme/architecture/LISP-PLUS-KERNEL-0-SPEC.md",
+        "pattern": "[F: <TAG>-<n>]"
+      },
+      "K0E": {
+        "files": [
+          "mneme/architecture/kernel-0-errata/**/*.md",
+          "mneme/kernel0/README.md"
+        ],
+        "base-pattern": "K0E-<n>[letter]?",
+        "qualified-pattern": "K0E-<n>[letter]?/<alpha-suffix> (clause identity; numeric slash ranges recorded separately)"
+      }
+    }
+  },
+  "source": {
+    "repo": "Wondermonger-daydreaming/latent-lisp",
+    "commit": "f8842f8c37ed80c5d0bd89cbec40f2c203058c10"
+  },
+  "identity-domains": {
+    "count": 19,
+    "domains": [
+      "process",
+      "logical-operation",
+      "seat",
+      "attempt",
+      "external-request",
+      "exposure",
+      "machine-configuration",
+      "channel-policy",
+      "capability",
+      "claim",
+      "receipt",
+      "manifestation",
+      "effect",
+      "store",
+      "journal",
+      "parser",
+      "procedure",
+      "principal",
+      "reconciliation"
+    ]
+  },
+  "conditions": {
+    "count": 61,
+    "base": "kernel0-condition",
+    "textually-signaled": 33,
+    "textually-test-only": 1,
+    "textually-dormant": 27,
+    "types": [
+      {
+        "name": "unresolved-identity",
+        "family": "Section 20.2 -- identity conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/boundary.lisp",
+            "line": 38
+          },
+          {
+            "file": "mneme/kernel0/determinacy.lisp",
+            "line": 33
+          },
+          {
+            "file": "mneme/kernel0/identity.lisp",
+            "line": 77
+          },
+          {
+            "file": "mneme/kernel0/uncertain-effect.lisp",
+            "line": 92
+          },
+          {
+            "file": "mneme/kernel0/uncertain-effect.lisp",
+            "line": 101
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "duplicate-process-identity",
+        "family": "Section 20.2 -- identity conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 542
+          }
+        ],
+        "selftest-refs": 1
+      },
+      {
+        "name": "duplicate-seat-identity",
+        "family": "Section 20.2 -- identity conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "duplicate-attempt-identity",
+        "family": "Section 20.2 -- identity conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 559
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 195
+          }
+        ],
+        "selftest-refs": 2
+      },
+      {
+        "name": "duplicate-external-request-identity",
+        "family": "Section 20.2 -- identity conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 626
+          }
+        ],
+        "selftest-refs": 1
+      },
+      {
+        "name": "seat-occupied",
+        "family": "Section 20.2 -- identity conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 573
+          }
+        ],
+        "selftest-refs": 1
+      },
+      {
+        "name": "attempt-terminal",
+        "family": "Section 20.2 -- identity conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "identity-drift",
+        "family": "Section 20.2 -- identity conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/identity.lisp",
+            "line": 126
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 363
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 373
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 389
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 403
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 345
+          }
+        ],
+        "selftest-refs": 1
+      },
+      {
+        "name": "malformed-constructor-shape",
+        "family": "Section 20.2a (Errata 0.2 §6, K0E-33) -- schema and constructor conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 171
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 189
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 197
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 235
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 265
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 275
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 288
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 306
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 315
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 496
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 170
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 207
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 271
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 316
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 396
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 415
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 451
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 459
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 469
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 697
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 711
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 718
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 725
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 732
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 744
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 81
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 91
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 99
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 108
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 165
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 173
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 181
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 189
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 197
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 214
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 222
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 230
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 312
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 320
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 416
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 516
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 528
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 538
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 546
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 559
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 623
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 631
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 885
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 891
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1009
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1155
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1197
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1293
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1329
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1341
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1349
+          }
+        ],
+        "selftest-refs": 32
+      },
+      {
+        "name": "determinacy-mode-invalid",
+        "family": "Section 20.2a (Errata 0.2 §6, K0E-33) -- schema and constructor conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/determinacy.lisp",
+            "line": 133
+          },
+          {
+            "file": "mneme/kernel0/determinacy.lisp",
+            "line": 152
+          },
+          {
+            "file": "mneme/kernel0/determinacy.lisp",
+            "line": 170
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "determinacy-alternatives-invalid",
+        "family": "Section 20.2a (Errata 0.2 §6, K0E-33) -- schema and constructor conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/determinacy.lisp",
+            "line": 161
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 132
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 140
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 345
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 355
+          }
+        ],
+        "selftest-refs": 10
+      },
+      {
+        "name": "global-uncertainty-scalar-rejected",
+        "family": "Section 20.2a (Errata 0.2 §6, K0E-33) -- schema and constructor conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/determinacy.lisp",
+            "line": 71
+          }
+        ],
+        "selftest-refs": 4
+      },
+      {
+        "name": "capability-missing",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "capability-revoked",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "capability-expired",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "capability-scope-mismatch",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "capability-budget-exceeded",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "capability-count-exceeded",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "capability-restoration-denied",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 842
+          }
+        ],
+        "selftest-refs": 1
+      },
+      {
+        "name": "capability-self-restoration-forbidden",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "capability-restoration-scope-enlarged",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "minting-authority-invalid",
+        "family": "Section 20.3 -- authority conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "frontier-precondition-failed",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 227
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 580
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 590
+          }
+        ],
+        "selftest-refs": 1
+      },
+      {
+        "name": "frontier-already-crossed",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 216
+          }
+        ],
+        "selftest-refs": 2
+      },
+      {
+        "name": "unresolved-irreversible-effect",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "unsafe-retry",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 474
+          },
+          {
+            "file": "mneme/kernel0/uncertain-effect.lisp",
+            "line": 136
+          }
+        ],
+        "selftest-refs": 2
+      },
+      {
+        "name": "unstructured-uncertainty",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 326
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 332
+          },
+          {
+            "file": "mneme/kernel0/uncertain-effect.lisp",
+            "line": 86
+          },
+          {
+            "file": "mneme/kernel0/uncertain-effect.lisp",
+            "line": 110
+          },
+          {
+            "file": "mneme/kernel0/uncertain-effect.lisp",
+            "line": 116
+          }
+        ],
+        "selftest-refs": 2
+      },
+      {
+        "name": "implicit-fallback-forbidden",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "supersession-required",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 212
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 219
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 226
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "supersession-unauthorized",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 205
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "reconciliation-unsupported",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/uncertain-effect.lisp",
+            "line": 126
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "reconciliation-insufficient",
+        "family": "Section 20.4 -- effect and retry conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 481
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 493
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "manifestation-payload-missing",
+        "family": "Section 20.5 -- manifestation and interpretation conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 529
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 603
+          }
+        ],
+        "selftest-refs": 1
+      },
+      {
+        "name": "present-payload-erasure",
+        "family": "Section 20.5 -- manifestation and interpretation conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "invalidity-parser-missing",
+        "family": "Section 20.5 -- manifestation and interpretation conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 586
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "partial-manifestation-settlement-inflation",
+        "family": "Section 20.5 -- manifestation and interpretation conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "interpretation-procedure-missing",
+        "family": "Section 20.5 -- manifestation and interpretation conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 593
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 407
+          }
+        ],
+        "selftest-refs": 2
+      },
+      {
+        "name": "interpretation-class-violation",
+        "family": "Section 20.5 -- manifestation and interpretation conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 428
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 443
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 773
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 789
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 355
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 366
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 375
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 385
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 395
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 408
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 429
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 438
+          },
+          {
+            "file": "mneme/kernel0/procedure.lisp",
+            "line": 450
+          }
+        ],
+        "selftest-refs": 17
+      },
+      {
+        "name": "store-unavailable",
+        "family": "Section 20.6 -- store and journal conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "store-append-failed",
+        "family": "Section 20.6 -- store and journal conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "store-durability-unknown",
+        "family": "Section 20.6 -- store and journal conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "journal-prefix-invalid",
+        "family": "Section 20.6 -- store and journal conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 286
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "journal-torn-tail",
+        "family": "Section 20.6 -- store and journal conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "journal-illegal-transition",
+        "family": "Section 20.6 -- store and journal conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 184
+          },
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 189
+          },
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 194
+          },
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 273
+          },
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 874
+          }
+        ],
+        "selftest-refs": 3
+      },
+      {
+        "name": "journal-merge-receipt-required",
+        "family": "Section 20.6 -- store and journal conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 960
+          }
+        ],
+        "selftest-refs": 2
+      },
+      {
+        "name": "fold-nondeterministic",
+        "family": "Section 20.6 -- store and journal conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "standing-inflation",
+        "family": "Section 20.7 -- standing conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/determinacy.lisp",
+            "line": 41
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 413
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 505
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 512
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 518
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 538
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 546
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 563
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 570
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 577
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 600
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 653
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 718
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 622
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 364
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 557
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 660
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 906
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 928
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1458
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1541
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1600
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1624
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1665
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1672
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1685
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1717
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1765
+          }
+        ],
+        "selftest-refs": 11
+      },
+      {
+        "name": "witness-separation-violation",
+        "family": "Section 20.7 -- standing conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "reconstruction-origin-erasure",
+        "family": "Section 20.7 -- standing conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 665
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "bare-visibility-scope",
+        "family": "Section 20.7 -- standing conditions.",
+        "status": "textually-test-only",
+        "signal-sites": [],
+        "selftest-refs": 1
+      },
+      {
+        "name": "bare-validation-scope",
+        "family": "Section 20.7 -- standing conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 670
+          },
+          {
+            "file": "mneme/kernel0/manifestation.lisp",
+            "line": 676
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1044
+          },
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 1605
+          }
+        ],
+        "selftest-refs": 2
+      },
+      {
+        "name": "exposed-principal-missing",
+        "family": "Section 20.7 -- standing conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/records.lisp",
+            "line": 651
+          }
+        ],
+        "selftest-refs": 2
+      },
+      {
+        "name": "noncanonical-durable-value",
+        "family": "Section 20.8 -- boundary conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/boundary.lisp",
+            "line": 49
+          }
+        ],
+        "selftest-refs": 1
+      },
+      {
+        "name": "machine-configuration-drift",
+        "family": "Section 20.8 -- boundary conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "adapter-version-drift",
+        "family": "Section 20.8 -- boundary conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "channel-policy-missing",
+        "family": "Section 20.8 -- boundary conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "channel-policy-amendment-unauthorized",
+        "family": "Section 20.8 -- boundary conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "publication-authority-missing",
+        "family": "Section 20.8 -- boundary conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "outcome-context-discard",
+        "family": "Section 20.8 -- boundary conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 818
+          },
+          {
+            "file": "mneme/kernel0/outcome.lisp",
+            "line": 828
+          }
+        ],
+        "selftest-refs": 0
+      },
+      {
+        "name": "unsafe-host-escape",
+        "family": "Section 20.8 -- boundary conditions.",
+        "status": "textually-dormant",
+        "signal-sites": [],
+        "selftest-refs": 0
+      },
+      {
+        "name": "unsupported-reconstruction",
+        "family": "Section 20.8 -- boundary conditions.",
+        "status": "textually-signaled",
+        "signal-sites": [
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 716
+          },
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 739
+          },
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 904
+          },
+          {
+            "file": "mneme/kernel0/folds.lisp",
+            "line": 964
+          }
+        ],
+        "selftest-refs": 0
+      }
+    ]
+  },
+  "event-types": {
+    "count": 22,
+    "declared-only": [
+      "artifact-committed",
+      "capability-restored",
+      "derived-view-recorded",
+      "process-authorized",
+      "process-suspended",
+      "request-acknowledged"
+    ],
+    "types": [
+      {
+        "name": "artifact-committed",
+        "usage-count": 0,
+        "status": "declared-only"
+      },
+      {
+        "name": "attempt-begun",
+        "usage-count": 17,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "attempt-cancelled",
+        "usage-count": 1,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "attempt-completed",
+        "usage-count": 2,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "attempt-failed",
+        "usage-count": 3,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "attempt-indeterminate",
+        "usage-count": 9,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "attempt-reconciled",
+        "usage-count": 6,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "attempt-refused",
+        "usage-count": 2,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "attempt-superseded",
+        "usage-count": 7,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "capability-restored",
+        "usage-count": 0,
+        "status": "declared-only"
+      },
+      {
+        "name": "derived-view-recorded",
+        "usage-count": 0,
+        "status": "declared-only"
+      },
+      {
+        "name": "effect-bounded",
+        "usage-count": 7,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "effect-indeterminate",
+        "usage-count": 5,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "effect-prepared",
+        "usage-count": 4,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "effect-settled",
+        "usage-count": 1,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "frontier-crossed",
+        "usage-count": 10,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "manifestation-recorded",
+        "usage-count": 1,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "process-authorized",
+        "usage-count": 0,
+        "status": "declared-only"
+      },
+      {
+        "name": "process-created",
+        "usage-count": 4,
+        "status": "textually-referenced"
+      },
+      {
+        "name": "process-suspended",
+        "usage-count": 0,
+        "status": "declared-only"
+      },
+      {
+        "name": "request-acknowledged",
+        "usage-count": 0,
+        "status": "declared-only"
+      },
+      {
+        "name": "seat-reserved",
+        "usage-count": 12,
+        "status": "textually-referenced"
+      }
+    ]
+  },
+  "roles": {
+    "count": 14,
+    "roles": [
+      "invoker",
+      "invoked-configuration",
+      "process-subject",
+      "witness",
+      "grader",
+      "verifier",
+      "capability-minter",
+      "restoration-delegate",
+      "secret-recipient",
+      "publisher",
+      "owner",
+      "owner-delegate",
+      "adapter",
+      "store"
+    ]
+  },
+  "laws": {
+    "count": 19,
+    "laws": [
+      {
+        "id": "L0",
+        "title": "Datum/claim separation"
+      },
+      {
+        "id": "L1",
+        "title": "Execution/manifestation separation"
+      },
+      {
+        "id": "L2",
+        "title": "Manifestation/interpretation separation"
+      },
+      {
+        "id": "L3",
+        "title": "Standing orthogonality"
+      },
+      {
+        "id": "L4",
+        "title": "No standing inflation"
+      },
+      {
+        "id": "L5",
+        "title": "Authority explicitness"
+      },
+      {
+        "id": "L6",
+        "title": "No innocent retry assumption"
+      },
+      {
+        "id": "L7",
+        "title": "Identity before effect"
+      },
+      {
+        "id": "L8",
+        "title": "Incremental durability"
+      },
+      {
+        "id": "L9",
+        "title": "Reconstructable finalization"
+      },
+      {
+        "id": "L10",
+        "title": "Reconstruction remains reconstruction"
+      },
+      {
+        "id": "L11",
+        "title": "Explicit fallback"
+      },
+      {
+        "id": "L12",
+        "title": "Live-path closure"
+      },
+      {
+        "id": "L13",
+        "title": "Bounded claims"
+      },
+      {
+        "id": "L14",
+        "title": "Secrets do not leak through evidence"
+      },
+      {
+        "id": "L15",
+        "title": "Witness separation"
+      },
+      {
+        "id": "L16",
+        "title": "Exposed principals"
+      },
+      {
+        "id": "L17",
+        "title": "Ergonomics as conformance"
+      },
+      {
+        "id": "L18",
+        "title": "Principal-role symmetry"
+      }
+    ]
+  },
+  "requirement-ids": {
+    "F-tags": [
+      "ADP-1",
+      "ATT-1",
+      "ATT-2",
+      "ATT-3",
+      "ATT-4",
+      "CAP-1",
+      "CAP-2",
+      "CAP-3",
+      "CAP-4",
+      "CFG-1",
+      "CHN-1",
+      "CND-1",
+      "CND-2",
+      "FIX-1",
+      "FIX-2",
+      "FIX-3",
+      "FIX-4",
+      "HOST-1",
+      "HOST-2",
+      "HOST-3",
+      "ID-1",
+      "ID-2",
+      "ID-3",
+      "JRN-1",
+      "JRN-3",
+      "JRN-4",
+      "JRN-5",
+      "JRN-6",
+      "JRN-7",
+      "K-1",
+      "K-2",
+      "MAN-1",
+      "MAN-2",
+      "MAN-3",
+      "OP-1",
+      "OP-3",
+      "OUT-2",
+      "OUT-3",
+      "OUT-4",
+      "OUT-5",
+      "PRN-1",
+      "PRN-2",
+      "PRN-3",
+      "RCP-1",
+      "UNC-1",
+      "UNC-2"
+    ],
+    "K0E-base": [
+      "K0E-1",
+      "K0E-2",
+      "K0E-3",
+      "K0E-4",
+      "K0E-5",
+      "K0E-5a",
+      "K0E-6",
+      "K0E-7",
+      "K0E-8",
+      "K0E-9",
+      "K0E-10",
+      "K0E-11",
+      "K0E-12",
+      "K0E-13",
+      "K0E-14",
+      "K0E-15",
+      "K0E-16",
+      "K0E-17",
+      "K0E-18",
+      "K0E-19",
+      "K0E-20",
+      "K0E-21",
+      "K0E-22",
+      "K0E-23",
+      "K0E-24",
+      "K0E-25",
+      "K0E-26",
+      "K0E-27",
+      "K0E-28",
+      "K0E-28a",
+      "K0E-29",
+      "K0E-30",
+      "K0E-31",
+      "K0E-32",
+      "K0E-33"
+    ],
+    "K0E-qualified": [
+      "K0E-21/validation-transfer",
+      "K0E-23/global-descriptor-resolution"
+    ],
+    "K0E-range-notations": [
+      "K0E-1/K0E-2",
+      "K0E-5/K0E-5a",
+      "K0E-8/K0E-26",
+      "K0E-18/19/20",
+      "K0E-24/K0E-32",
+      "K0E-28/29"
+    ]
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "S1-clean": {
+    "scenario": "effect",
+    "killpoint": null,
+    "exit": 0,
+    "runner-output-tail": [
+      ";   caught 2 WARNING conditions",
+      "runner: scenario=effect killpoint=",
+      "runner: completed lawfully"
+    ],
+    "journal-md5": "8ad833d8c51af40c0061039250b61d3d",
+    "journal-bytes": "867 bytes total; tail(64): 7474656d70742d636f6d706c65746564cc05dfa87c68000e23a3923ba91c0bce47417fbedb87af7f301c97d8d88e1d9a54751ae7974a6fcdb733869e176bfb08",
+    "provider-log": [
+      "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+    ]
+  },
+  "S2-cw0": {
+    "scenario": "effect",
+    "killpoint": "cw0",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [
+      ";     -BEGIN -END",
+      ";   caught 2 WARNING conditions",
+      "runner: scenario=effect killpoint=cw0"
+    ],
+    "journal-md5": "442d9ee2ba4843bd65b65ffd85206f65",
+    "journal-bytes": "296 bytes total; tail(64): 65200d736561742d7265736572766564ac9584e8494098c7ef434a71af32ee587aa01250868a89a2685f70c2a3e2b1a9ff385646d9d9e11eaa163ece144b919f",
+    "provider-log": []
+  },
+  "S3-cw1": {
+    "scenario": "effect",
+    "killpoint": "cw1",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [
+      ";     -BEGIN -END",
+      ";   caught 2 WARNING conditions",
+      "runner: scenario=effect killpoint=cw1"
+    ],
+    "journal-md5": "36173af21cb9cce1ce5767899158f6cf",
+    "journal-bytes": "320 bytes total; tail(64): ef434a71af32ee587aa01250868a89a2685f70c2a3e2b1a9ff385646d9d9e11eaa163ece144b919f4b574a30000000824c5043440031042201026b7701037061",
+    "provider-log": []
+  },
+  "S4-uncertain": {
+    "scenario": "effect",
+    "killpoint": "uncertain",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [
+      ";     -BEGIN -END",
+      ";   caught 2 WARNING conditions",
+      "runner: scenario=effect killpoint=uncertain"
+    ],
+    "journal-md5": "ef02d3df64a184a504ca3cc854e90f3b",
+    "journal-bytes": "578 bytes total; tail(64): 66726f6e746965722d63726f73736564ceacebbb8e6802e58eeb7e41abe25ecff45495e7031d40f66e2f29a91252371e2d2100940f5f5a94074bc8786267eae1",
+    "provider-log": [
+      "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+    ]
+  },
+  "S5-cw2cw3": {
+    "scenario": "effect",
+    "killpoint": "cw2cw3",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [
+      ";     -BEGIN -END",
+      ";   caught 2 WARNING conditions",
+      "runner: scenario=effect killpoint=cw2cw3"
+    ],
+    "journal-md5": "4d189815f67331fcda46c2e50b028297",
+    "journal-bytes": "722 bytes total; tail(64): 6c656d656e74200865786563757465645ffc507e8c1261e28be1df780947e9ed2d2100940f5f5a94074bc8786267eae147417fbedb87af7f301c97d8d88e1d9a",
+    "provider-log": [
+      "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+    ]
+  },
+  "S6-midstream": {
+    "scenario": "stream",
+    "killpoint": "midstream",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [
+      ";     -BEGIN -END",
+      ";   caught 2 WARNING conditions",
+      "runner: scenario=stream killpoint=midstream"
+    ],
+    "journal-md5": "db85897011badd5ce49b920be1692ceb",
+    "journal-bytes": "770 bytes total; tail(64): 5f7a530a5b1daded6898c8cde227a0eaafff72413cf6e22c122768703d8ede6211194b574a30000000964c5043440031052201026b7701037061642020666564",
+    "provider-log": []
+  },
+  "S7-nonexec": {
+    "scenario": "nonexec",
+    "killpoint": "nonexec",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [
+      ";     -BEGIN -END",
+      ";   caught 2 WARNING conditions",
+      "runner: scenario=nonexec killpoint=nonexec"
+    ],
+    "journal-md5": "ad7d6b7662ffd5470775ae02a0f6d9db",
+    "journal-bytes": "579 bytes total; tail(64): 66726f6e746965722d63726f73736564ceacebbb8e6802e58eeb7e41abe25ecfc4e63dc5b841bb56b4e773c32db89effb2ff22accf3d534a0fa9ff48e0084790",
+    "provider-log": [
+      "RECEIVED-NOT-EXECUTED effect=bank-write attempt=a1"
+    ]
+  }
+}

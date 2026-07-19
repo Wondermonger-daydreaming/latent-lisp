@@ -1,0 +1,6 @@
+commit: f8842f8c37ed80c5d0bd89cbec40f2c203058c10
+url: https://github.com/Wondermonger-daydreaming/latent-lisp
+b52b60bd3f065e7f6dc21e8f33cafeb61a3c075ac99ecb6ad69a8b8d32a815cf  canonical-datum/common-lisp/package.lisp
+ab9ec04db911222192ed99c413b580179f2cd0539c240f96f3ded933bfb921b7  canonical-datum/common-lisp/cd0.lisp
+4d251590e4957187552ee0a2c6dc4131348fec54be2bb424839ef8e61f880dbe  canonical-datum/python/cd0/__init__.py
+ac0e8c60ca8ca50ef42d334b987226cea5f85e3ca4d4c27d4be6f259075c5c98  canonical-datum/vectors/cd0-budgets.json

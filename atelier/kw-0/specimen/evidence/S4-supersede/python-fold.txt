@@ -1,0 +1,4 @@
+python-folder: status=clean detail=complete prefix
+python-folder: valid-frames=9
+python-folder: uncertain=[]
+python-folder: state-digest=30A03F3EC87C8230FDF586651CDE3CA3

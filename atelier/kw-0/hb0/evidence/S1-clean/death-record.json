@@ -1,0 +1,11 @@
+{
+  "scenario": "effect",
+  "killpoint": null,
+  "exit": 0,
+  "runner-output-tail": [],
+  "journal-md5": "638fd5d1731e5a6e162f8e41c58a92c5",
+  "journal-bytes": "198 bytes total; tail(64): 613122203a535441545553203a4558454355544544203a5041594c4f4144203a414253454e54290a283a4556203a52454345495054203a49442022613122290a",
+  "provider-log": [
+    "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+  ]
+}

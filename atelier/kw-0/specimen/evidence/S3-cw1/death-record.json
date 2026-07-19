@@ -1,0 +1,14 @@
+{
+  "scenario": "effect",
+  "killpoint": "cw1",
+  "death": "SIGKILL delivered at READY window",
+  "exit": -9,
+  "runner-output-tail": [
+    ";     -BEGIN -END",
+    ";   caught 2 WARNING conditions",
+    "runner: scenario=effect killpoint=cw1"
+  ],
+  "journal-md5": "36173af21cb9cce1ce5767899158f6cf",
+  "journal-bytes": "320 bytes total; tail(64): ef434a71af32ee587aa01250868a89a2685f70c2a3e2b1a9ff385646d9d9e11eaa163ece144b919f4b574a30000000824c5043440031042201026b7701037061",
+  "provider-log": []
+}

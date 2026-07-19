@@ -1,0 +1,4 @@
+BASELINE RECOVERY:
+  log contents: <none>
+  state: OK (verified)
+  empty-result vs no-result: indistinguishable (both null)

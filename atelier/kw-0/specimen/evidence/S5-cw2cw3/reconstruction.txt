@@ -1,0 +1,23 @@
+RECOVERY-CLASSIFICATION:
+  prefix-status: clean
+  prefix-detail: complete prefix
+  valid-frames: 5
+  uncertain-effects: NIL
+  classification: complete frame present; durable-receipt standing absent
+state-digest: 95524BB2E645AB49C3F79C48A25339AA
+frame-count: 5 status: CLEAN
+CENSUS:
+  census-origin: reconstructed
+  attempts: a1
+  uncertain-effects: 
+  settled-effects: a1
+  receipt-frames: 0
+  manifestation-frames: 0
+verification: refold-digest=95524BB2E645AB49C3F79C48A25339AA (match)
+CENSUS-AFTER-VERIFICATION:
+  census-origin: reconstructed
+  attempts: a1
+  uncertain-effects: 
+  settled-effects: a1
+  receipt-frames: 0
+  manifestation-frames: 0
