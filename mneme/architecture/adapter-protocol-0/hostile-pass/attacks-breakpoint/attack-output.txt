@@ -1,0 +1,9 @@
+BREAKPOINT attack harness — verdicts from the PACKET's own check_case
+
+[ACCEPT] ATK-REC-LAUNDER            A1  reconciliation: self-declared complete domain launders no-effect (L15)  <== ACCEPTED (hole)
+[ACCEPT] ATK-RID-COUNTER            A2  request-identity: provider id invented from a COUNTER at 'acknowledgment' timing (AP-ID-3 blocklist gap)  <== ACCEPTED (hole)
+[ACCEPT] ATK-CAN-RELABEL            A3  cancellation: a bare socket closure RELABELLED as provider-settled (AP-CAN-1 walk-around)  <== ACCEPTED (hole)
+[ACCEPT] ATK-STR-DBJ                A4  stream: delivery-before-journal (journal-before-delivery #f) on an otherwise-clean stream (§10.5 undistinguished)  <== ACCEPTED (hole)
+[ACCEPT] ATK-ABS-STATE-AS-STATUS    A5  projection: missing subject field mapped to Kernel-illegal STATUS :absent-after-completion (Kernel §8.2 closed algebra)  <== ACCEPTED (hole)
+
+[ACCEPT] BAD-CAN-01-RELABELLED      companion: BAD-CAN-01 with class relabelled socket-closed->provider-settled  <== ACCEPTED

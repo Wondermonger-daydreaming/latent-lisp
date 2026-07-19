@@ -1,0 +1,11 @@
+=== PROBE A: metadata-only shape (in spec §14 minimum list, ABSENT from generated table) ===
+A_metadata_only_present            verdict=accept  errors=[]
+
+=== PROBE B: arbitrary UNMAPPED shape (should trigger absence-mapping-table-miss per AP-ABS-1) ===
+B_unknown_shape_not_sentinel       verdict=accept  errors=[]
+
+=== PROBE C: projection with envelope-captured field ABSENT entirely (AP-ENV-4) ===
+C_envelope_field_absent            verdict=accept  errors=[]
+
+=== PROBE D: control — the packet's own BAD-PRJ-01 sentinel (should reject) ===
+D_sentinel_control                 verdict=reject  errors=['table miss improvised']

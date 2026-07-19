@@ -1,0 +1,1 @@
+(rec ((id "ap0" "case-id") "B1") ((id "ap0" "family") (id "family" "projection")) ((id "ap0" "expected-verdict") (id "verdict" "accept")) ((id "ap0" "shape") "provider-invented-shape-xyz") ((id "ap0" "manifestation-status") "absent-after-completion") ((id "ap0" "envelope-captured") #t))
