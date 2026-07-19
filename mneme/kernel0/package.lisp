@@ -12,6 +12,14 @@
    #:kernel0-condition-evidence-ids
    #:kernel0-condition-frontier-crossed-p
    #:kernel0-condition-permitted-restarts
+   #:kernel0-condition-requirement-id
+   #:kernel0-condition-offending-field
+   #:kernel0-condition-offending-value
+   #:malformed-constructor-shape
+   #:determinacy-mode-invalid
+   #:determinacy-alternatives-invalid
+   #:global-uncertainty-scalar-rejected
+   #:interpretation-class-violation
    #:unresolved-identity
    #:duplicate-process-identity
    #:duplicate-seat-identity
@@ -129,6 +137,20 @@
    #:manifestation-source-boundary
    #:manifestation-visibility
    #:manifestation-emptiness-rule-id
+   ;; Errata 0.2 §5 (K0E-27..32): producer identity + stream lineage
+   ;; (consolidated from W2b-FLUMEN).
+   #:manifestation-adapter-identity
+   #:manifestation-producer-identity
+   #:manifestation-stream-relation
+   #:manifestation-chunk-record-ids
+   #:manifestation-projection-receipt-id
+   #:stream-relation
+   #:stream-relation-p
+   #:stream-relation-stream-id
+   #:stream-relation-relation-kind
+   #:stream-relation-chunk-record-ids
+   #:stream-relation-projection-receipt-id
+   #:validate-stream-relation-coherence
    #:causal-claim
    #:causal-claim-p
    #:make-causal-claim
@@ -150,6 +172,8 @@
    #:axis-frontier-qualifier
    #:axis-uncertain-effect-ref
    #:axis-effect-group
+   #:axis-judgment-class
+   #:axis-procedure-version
    #:make-execution-axis
    #:make-manifestation-axis
    #:make-effect-axis
@@ -163,9 +187,38 @@
    #:outcome-seat-id
    #:outcome-attempt-id
    #:outcome-machine-configuration-id
+   #:outcome-interpretation-descriptor
    #:outcome-receipts
    #:outcome-bounded-unknowns
    #:outcome-axis)
+
+  ;; PROCEDURE -- K0E-23/K0E-25 procedure descriptors + judgment-class law,
+  ;; K0E-26 joint verdicts (structural vs. semantic).
+  (:export
+   #:procedure-descriptor
+   #:procedure-descriptor-p
+   #:make-procedure-descriptor
+   #:procedure-descriptor-procedure-id
+   #:procedure-descriptor-version
+   #:procedure-descriptor-judgment-class
+   #:procedure-descriptor-input-domain
+   #:procedure-descriptor-result-vocabulary
+   #:procedure-descriptor-evidence-requirements
+   #:procedure-descriptor-bounded-unknowns
+   #:validate-interpretation-against-descriptor
+   #:verdict
+   #:verdict-p
+   #:make-verdict
+   #:verdict-value
+   #:verdict-procedure-id
+   #:verdict-condition-ids
+   #:verdict-requirement-ids
+   #:joint-verdict
+   #:joint-verdict-p
+   #:make-joint-verdict
+   #:joint-verdict-structural
+   #:joint-verdict-semantic
+   #:joint-verdict-divergent-p)
 
   ;; UNCERTAIN-EFFECT -- later worker export section; append symbols here.
   (:export
@@ -278,7 +331,45 @@
    #:claim-determinacy
    #:claim-bounded-unknowns
    #:revalidate-claim
-   #:promote-origin)
+   #:promote-origin
+   ;; Errata 0.2 §3 (K0E-18..22): claim-standing records + scoped queries
+   ;; (consolidated from W2a-LIMES).
+   #:validation-record
+   #:validation-record-p
+   #:make-validation-record
+   #:validation-record-status
+   #:validation-record-subject-id
+   #:validation-record-validator-principal-id
+   #:validation-record-procedure-id
+   #:validation-record-procedure-version
+   #:validation-record-scope
+   #:validation-record-evidence
+   #:validation-record-bounded-unknowns
+   #:integrity-record
+   #:integrity-record-p
+   #:make-integrity-record
+   #:integrity-record-status
+   #:integrity-record-subject-id
+   #:integrity-record-representation-id
+   #:integrity-record-method-id
+   #:integrity-record-method-version
+   #:integrity-record-sealing-principal-id
+   #:integrity-record-evidence
+   #:integrity-record-bounded-unknowns
+   #:visibility-record
+   #:visibility-record-p
+   #:make-visibility-record
+   #:visibility-record-status
+   #:visibility-record-subject-id
+   #:visibility-record-representation-id
+   #:visibility-record-scope-id
+   #:visibility-record-authorizing-basis
+   #:visibility-record-redaction-receipt-id
+   #:visibility-record-evidence
+   #:visibility-record-bounded-unknowns
+   #:derive-claim
+   #:claim-validated-under-p
+   #:claim-published-to-p)
 
   ;; FOLDS -- later worker export section; append symbols here.
   (:export

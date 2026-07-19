@@ -1,12 +1,7 @@
 (in-package #:lisp-plus-kernel0)
 
-(defun %snapshot-tree (value)
-  "Copy the mutable tree and string parts of a constructor argument."
-  (cond ((consp value)
-         (cons (%snapshot-tree (car value))
-               (%snapshot-tree (cdr value))))
-        ((stringp value) (copy-seq value))
-        (t value)))
+;; %SNAPSHOT-TREE now lives in conditions.lisp (loaded first) so the condition
+;; layer can copy an offending value; every caller below still resolves it.
 
 (defun %strict-constructor-arguments
     (arguments allowed-keys condition-type failed-invariant)
@@ -60,6 +55,37 @@ specified more narrowly call REQUIRE-IDENTITY directly instead."
   (loop for tail on values
         never (member (car tail) (cdr tail) :test #'%kernel-name=)))
 
+(defun %global-uncertainty-scalar-key-p (key)
+  "True for the outcome-/determinacy-level scalar keys §7.5 forbids as a
+substitute for per-axis determinacy."
+  (member key '(:confidence :uncertainty :probability) :test #'eq))
+
+(defun %reject-global-uncertainty-scalar (arguments requirement-id failed-invariant)
+  "Refuse any §7.5 global uncertainty scalar smuggled into a raw constructor
+plist, before the strict-shape parse re-reads the same keys as merely unknown.
+This keeps the scalar's typed refusal (GLOBAL-UNCERTAINTY-SCALAR-REJECTED)
+distinct from a plain malformed-shape refusal (K0E-33)."
+  (when (%proper-list-p arguments)
+    (loop for (key value) on arguments by #'cddr
+          when (and (keywordp key) (%global-uncertainty-scalar-key-p key))
+            do (signal-kernel0 'global-uncertainty-scalar-rejected
+                               :failed-invariant failed-invariant
+                               :requirement-id requirement-id
+                               :offending-field key
+                               :offending-value value))))
+
+(defun %set-identical= (left right)
+  "True when LEFT and RIGHT are duplicate-free sets equal under the named
+Kernel equality, order-insensitively (K0E-4)."
+  (and (%proper-list-p left)
+       (%proper-list-p right)
+       (%duplicate-free-p left)
+       (%duplicate-free-p right)
+       (= (length left) (length right))
+       (every (lambda (element)
+                (member element right :test #'%kernel-name=))
+              left)))
+
 (defstruct (determinacy
             (:constructor %make-determinacy (mode alternatives evidence))
             (:copier nil)
@@ -82,12 +108,16 @@ specified more narrowly call REQUIRE-IDENTITY directly instead."
 
 No outcome-level or determinacy-level probability/confidence scalar is an
 accepted field."
+  (%reject-global-uncertainty-scalar
+   arguments
+   "K0E-33"
+   "§7.5 and Errata 0.2 §6: determinacy MUST NOT carry a global confidence, uncertainty, or probability scalar in place of the closed mode algebra")
   (let* ((parsed
            (%strict-constructor-arguments
             arguments
             '(:mode :alternatives :evidence)
-            'standing-inflation
-            "§7, §7.3, and §7.5: determinacy MUST use the closed mode algebra, bounded alternatives law, and no global uncertainty scalar")))
+            'malformed-constructor-shape
+            "§7, §7.3 [K0E-33]: a determinacy record MUST use exactly the closed :MODE/:ALTERNATIVES/:EVIDENCE schema without unknown or duplicate fields")))
     (multiple-value-bind (mode mode-supplied-p)
         (%constructor-argument parsed :mode)
       (multiple-value-bind (alternatives alternatives-supplied-p)
@@ -101,28 +131,49 @@ accepted field."
                                '(:determinate :bounded :indeterminate)
                                :test #'eq))
             (signal-kernel0
-             'standing-inflation
+             'determinacy-mode-invalid
+             :requirement-id "K0E-2"
+             :offending-field :mode
+             :offending-value mode
              :failed-invariant
-             "§7.1 and Appendix A.1: every determinacy record MUST carry exactly one closed determinacy mode"))
+             "§7.1, Appendix A.1 [K0E-2]: every determinacy record MUST carry exactly one mode from the closed algebra {:determinate :bounded :indeterminate}"))
           (let ((evidence-copy
                   (%reference-list
                    evidence
                    "§7.1 and Appendix A.1: determinacy evidence MUST be a list of durable evidence references")))
             (case mode
               (:bounded
-               (unless (and (%proper-list-p alternatives)
-                            alternatives
+               ;; K0E-1/K0E-2 generic (axis-agnostic) cardinality law: an empty
+               ;; set is a mode error; a singleton or a duplicate-bearing set is
+               ;; an alternatives error.  Axis-domain form/membership (K0E-1
+               ;; complete-value, K0E-3, K0E-4) is checked by the axis
+               ;; constructors, which alone know the domain.
+               (unless (and (%proper-list-p alternatives) alternatives)
+                 (signal-kernel0
+                  'determinacy-mode-invalid
+                  :requirement-id "K0E-2"
+                  :offending-field :alternatives
+                  :offending-value alternatives
+                  :failed-invariant
+                  "§7.3, K0E-2, K0E-33: :bounded determinacy MUST carry a finite, non-empty alternatives set; an empty or improper set is a mode error"))
+               (unless (and (cdr alternatives)
                             (%duplicate-free-p alternatives))
                  (signal-kernel0
-                  'standing-inflation
+                  'determinacy-alternatives-invalid
+                  :requirement-id "K0E-2"
+                  :offending-field :alternatives
+                  :offending-value alternatives
                   :failed-invariant
-                  "§7.3: :bounded determinacy MUST carry a finite, non-empty, duplicate-free alternatives list")))
+                  "§7.3, K0E-1, K0E-2: :bounded determinacy MUST carry at least two distinct alternatives; a singleton or duplicate-bearing set is refused")))
               ((:determinate :indeterminate)
                (when alternatives
                  (signal-kernel0
-                  'standing-inflation
+                  'determinacy-mode-invalid
+                  :requirement-id "K0E-2"
+                  :offending-field :alternatives
+                  :offending-value alternatives
                   :failed-invariant
-                  "§7.3 and Appendix A.1: only :bounded determinacy may carry alternatives"))))
+                  "§7.3, Appendix A.1, K0E-33: only :bounded determinacy may carry alternatives"))))
             (%make-determinacy mode
                                (%snapshot-tree alternatives)
                                evidence-copy)))))))

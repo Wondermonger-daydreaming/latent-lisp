@@ -39,7 +39,14 @@
                  parser-id
                  source-boundary
                  visibility
-                 emptiness-rule-id))
+                 emptiness-rule-id
+                 ;; Errata 0.2 §5 producer/stream lineage (K0E-27..32): every
+                 ;; slot below is :READ-ONLY, so a constructed manifestation can
+                 ;; never have its producer identity or captured chunk lineage
+                 ;; removed or overwritten (K0E-31 partial preservation).
+                 adapter-identity
+                 producer-identity
+                 stream-relation))
             (:copier nil)
             (:conc-name %manifestation-))
   (manifestation-id nil :read-only t)
@@ -51,7 +58,10 @@
   (parser-id nil :read-only t)
   (source-boundary nil :read-only t)
   (visibility nil :read-only t)
-  (emptiness-rule-id nil :read-only t))
+  (emptiness-rule-id nil :read-only t)
+  (adapter-identity nil :read-only t)
+  (producer-identity nil :read-only t)
+  (stream-relation nil :read-only t))
 
 (defun manifestation-manifestation-id (manifestation)
   (%manifestation-manifestation-id manifestation))
@@ -83,6 +93,321 @@
 (defun manifestation-emptiness-rule-id (manifestation)
   (%manifestation-emptiness-rule-id manifestation))
 
+;;; Errata 0.2 §5 (K0E-27..32): producer identity and stream lineage.
+;;;
+;;; K0E-31 PARTIAL-PRESERVATION ASSERTION.  The manifestation record surface is
+;;; wholly read-only: every slot carries :READ-ONLY T, the (:COPIER NIL) option
+;;; suppresses COPY-MANIFESTATION, and no function in this file defines a SETF
+;;; accessor or a SET-* mutator for a payload identity, a producer identity, or
+;;; a captured chunk lineage.  There is therefore NO code path here that can
+;;; erase or overwrite a payload or chunk lineage once a manifestation is
+;;; constructed; a captured partial survives absence, cancellation, parser
+;;; failure, or missing finality by construction.  Wave 4's partial-erasure
+;;; MUTANT (a deliberate eraser) must be killed by exactly this fact — see the
+;;; PRESENT-PAYLOAD-ERASURE guard note in W2b-FLUMEN-notes.md.
+
+;; The stream relation is itself an immutable sub-record.  It carries ONLY the
+;; kernel-side lineage fields (K0E-28/29): stream identity, relation kind, an
+;; ordered list of AP0 chunk-record identities reached BY REFERENCE, and an
+;; optional projection receipt.  It does NOT restate the AP0 chunk schema
+;; (sequence, predecessor, payload count, finality, persistence order) — those
+;; remain owned and rendered by AP0.
+(defstruct (stream-relation
+            (:constructor %make-stream-relation
+                (stream-id relation-kind chunk-record-ids projection-receipt-id))
+            (:copier nil)
+            (:conc-name %stream-relation-))
+  (stream-id nil :read-only t)
+  (relation-kind nil :read-only t)
+  (chunk-record-ids nil :read-only t)
+  (projection-receipt-id nil :read-only t))
+
+(defun stream-relation-stream-id (relation)
+  (%stream-relation-stream-id relation))
+
+(defun stream-relation-relation-kind (relation)
+  (%stream-relation-relation-kind relation))
+
+(defun stream-relation-chunk-record-ids (relation)
+  "Return a defensive copy of the ordered chunk-record identity list."
+  (%snapshot-tree (%stream-relation-chunk-record-ids relation)))
+
+(defun stream-relation-projection-receipt-id (relation)
+  (%stream-relation-projection-receipt-id relation))
+
+(defun manifestation-adapter-identity (manifestation)
+  "Return the AP0 adapter identity for an AP0-produced manifestation, else NIL."
+  (%manifestation-adapter-identity manifestation))
+
+(defun manifestation-producer-identity (manifestation)
+  "Return the producer identity for a non-AP0-produced manifestation, else NIL."
+  (%manifestation-producer-identity manifestation))
+
+(defun manifestation-stream-relation (manifestation)
+  "Return the immutable STREAM-RELATION sub-record, or NIL for a non-streamed
+manifestation.  Nil-safe entry point for the §21 inspection surface (K0E-28a)."
+  (%manifestation-stream-relation manifestation))
+
+(defun manifestation-chunk-record-ids (manifestation)
+  "Return the ordered AP0 chunk-record identities of a streamed manifestation,
+or NIL when the manifestation is not streamed (K0E-28a inspection surface)."
+  (let ((relation (%manifestation-stream-relation manifestation)))
+    (when relation
+      (stream-relation-chunk-record-ids relation))))
+
+(defun manifestation-projection-receipt-id (manifestation)
+  "Return the projection receipt identity of a streamed manifestation, or NIL
+when the manifestation is not streamed or carries no receipt (K0E-28a)."
+  (let ((relation (%manifestation-stream-relation manifestation)))
+    (when relation
+      (stream-relation-projection-receipt-id relation))))
+
+(defun %require-durable-identity
+    (value failed-invariant requirement-id offending-field &optional attempt-id)
+  "Refuse VALUE unless it is a durable identity, WITHOUT constraining its domain.
+K0E-27/K0E-28/K0E-30: the kernel checks identity-ness only; AP0 owns the value
+spaces of adapter, chunk, stream, and receipt identities (AP-G4-3)."
+  (unless (durable-identity-p value)
+    (signal-kernel0 'malformed-constructor-shape
+                    :attempt-id attempt-id
+                    :requirement-id requirement-id
+                    :offending-field offending-field
+                    :offending-value value
+                    :failed-invariant failed-invariant))
+  value)
+
+(defun %check-manifestation-producer-branch (parsed attempt-id)
+  "K0E-27: exactly one producer branch MUST be present and be a durable identity.
+AP0-produced binds :ADAPTER-IDENTITY; non-AP0-produced binds :PRODUCER-IDENTITY.
+Neither, or both, signals MALFORMED-CONSTRUCTOR-SHAPE.  Validation only; the
+constructor snapshots the value it keeps via %MANIFESTATION-PRODUCER-VALUE."
+  (let ((adapter (%constructor-argument parsed :adapter-identity))
+        (producer (%constructor-argument parsed :producer-identity)))
+    (let ((adapter-present (and adapter t))
+          (producer-present (and producer t)))
+      (when (and adapter-present producer-present)
+        (signal-kernel0 'malformed-constructor-shape
+                        :attempt-id attempt-id
+                        :requirement-id "K0E-27"
+                        :offending-field :adapter-identity
+                        :offending-value adapter
+                        :failed-invariant
+                        "§8.1 and Appendix A.2 [K0E-27]: exactly one producer branch is lawful; :adapter-identity (AP0-produced) and :producer-identity (non-AP0) are mutually exclusive"))
+      (unless (or adapter-present producer-present)
+        (signal-kernel0 'malformed-constructor-shape
+                        :attempt-id attempt-id
+                        :requirement-id "K0E-27"
+                        :offending-field :producer-identity
+                        :offending-value nil
+                        :failed-invariant
+                        "§8.1 and Appendix A.2 [K0E-27]: a manifestation MUST bind exactly one producer branch — :adapter-identity when AP0-produced, else :producer-identity"))
+      (when adapter-present
+        (%require-durable-identity
+         adapter
+         "§8.1 and Appendix A.2 [K0E-27]: :adapter-identity MUST be a durable identity; the kernel checks identity-ness only and AP0 owns its value space (AP-G4-3)"
+         "K0E-27" :adapter-identity attempt-id))
+      (when producer-present
+        (%require-durable-identity
+         producer
+         "§8.1 and Appendix A.2 [K0E-27]: :producer-identity MUST be a durable identity"
+         "K0E-27" :producer-identity attempt-id))))
+  (values))
+
+(defun %manifestation-producer-value (parsed key)
+  "Return the already-validated producer-branch value under KEY, snapshotted, or
+NIL when that branch is absent.  Presence, exclusivity, and identity-ness were
+enforced by %CHECK-MANIFESTATION-PRODUCER-BRANCH."
+  (let ((value (%constructor-argument parsed key)))
+    (and value (%snapshot-tree value))))
+
+(defun %parse-manifestation-stream-relation (parsed attempt-id)
+  "K0E-28/K0E-30/K0E-32: parse the optional :STREAM-RELATION sub-record.
+Return a STREAM-RELATION struct when the manifestation is streamed, or NIL for a
+non-stream manifestation (relation omitted).  A supplied husk (NIL/empty list)
+is refused as an insufficient marker (K0E-32); a bare :STREAMED-P or any unknown
+key was already refused by the outer strict-constructor parse.  The kernel
+carries only the reference fields; AP0 owns the exact chunk value spaces."
+  (multiple-value-bind (raw supplied-p)
+      (%constructor-argument parsed :stream-relation)
+    (cond
+      ((not supplied-p) nil)
+      ((null raw)
+       (signal-kernel0 'malformed-constructor-shape
+                       :attempt-id attempt-id
+                       :requirement-id "K0E-32"
+                       :offending-field :stream-relation
+                       :offending-value raw
+                       :failed-invariant
+                       "§8.1 and Appendix A.2 [K0E-32]: a non-stream manifestation MUST omit :stream-relation entirely; an empty husk relation is an insufficient stream marker"))
+      (t
+       (let ((relation-args
+               (%strict-constructor-arguments
+                raw
+                '(:stream-id
+                  :relation-kind
+                  :chunk-record-ids
+                  :projection-receipt-id)
+                'malformed-constructor-shape
+                "§8.1 and Appendix A.2 [K0E-32]: a :stream-relation MUST be a proper plist over exactly :stream-id, :relation-kind, :chunk-record-ids, and :projection-receipt-id")))
+         (let ((stream-id (%constructor-argument relation-args :stream-id))
+               (relation-kind (%constructor-argument relation-args :relation-kind)))
+           (multiple-value-bind (chunk-ids chunk-supplied-p)
+               (%constructor-argument relation-args :chunk-record-ids)
+             (multiple-value-bind (receipt receipt-supplied-p)
+                 (%constructor-argument relation-args :projection-receipt-id)
+               (%require-durable-identity
+                stream-id
+                "§8.1 and Appendix A.2 [K0E-32]: a :stream-relation MUST name a durable stream identity"
+                "K0E-32" :stream-id attempt-id)
+               (unless (member relation-kind
+                               '(:direct-chunk :aggregate :projection)
+                               :test #'eq)
+                 (signal-kernel0 'malformed-constructor-shape
+                                 :attempt-id attempt-id
+                                 :requirement-id "K0E-32"
+                                 :offending-field :relation-kind
+                                 :offending-value relation-kind
+                                 :failed-invariant
+                                 "§8.1 and Appendix A.2 [K0E-32]: :relation-kind MUST be :direct-chunk, :aggregate, or :projection"))
+               ;; K0E-28: non-empty proper ordered list of durable chunk-record
+               ;; identities, reached by reference and duplicate-free.
+               (unless (and chunk-supplied-p (%proper-list-p chunk-ids) chunk-ids)
+                 (signal-kernel0 'malformed-constructor-shape
+                                 :attempt-id attempt-id
+                                 :requirement-id "K0E-28"
+                                 :offending-field :chunk-record-ids
+                                 :offending-value chunk-ids
+                                 :failed-invariant
+                                 "§8.1 and Appendix A.2 [K0E-28]: a streamed manifestation MUST carry a non-empty ordered list of AP0 chunk-record identities"))
+               (dolist (id chunk-ids)
+                 (%require-durable-identity
+                  id
+                  "§8.1 and Appendix A.2 [K0E-28]: each chunk-record reference MUST be a durable identity; a sequence count or host-only label is insufficient"
+                  "K0E-28" :chunk-record-ids attempt-id))
+               (unless (%duplicate-free-p chunk-ids)
+                 (signal-kernel0 'malformed-constructor-shape
+                                 :attempt-id attempt-id
+                                 :requirement-id "K0E-28"
+                                 :offending-field :chunk-record-ids
+                                 :offending-value chunk-ids
+                                 :failed-invariant
+                                 "§8.1 and Appendix A.2 [K0E-28]: the chunk-record identity list MUST be duplicate-free"))
+               (when (and receipt-supplied-p receipt)
+                 (%require-durable-identity
+                  receipt
+                  "§8.1 and Appendix A.2 [K0E-30]: a :projection-receipt-id, when present, MUST be a durable identity"
+                  "K0E-30" :projection-receipt-id attempt-id))
+               ;; K0E-30: receipt required for any derived multi-chunk output;
+               ;; omittable ONLY for :direct-chunk, which must then reference
+               ;; exactly one captured chunk.
+               (case relation-kind
+                 (:direct-chunk
+                  (unless (= 1 (length chunk-ids))
+                    (signal-kernel0 'malformed-constructor-shape
+                                    :attempt-id attempt-id
+                                    :requirement-id "K0E-30"
+                                    :offending-field :chunk-record-ids
+                                    :offending-value chunk-ids
+                                    :failed-invariant
+                                    "§8.1 and Appendix A.2 [K0E-30]: :direct-chunk is direct identity with exactly ONE captured chunk-record")))
+                 ((:aggregate :projection)
+                  (unless (and receipt-supplied-p receipt)
+                    (signal-kernel0 'malformed-constructor-shape
+                                    :attempt-id attempt-id
+                                    :requirement-id "K0E-30"
+                                    :offending-field :projection-receipt-id
+                                    :offending-value nil
+                                    :failed-invariant
+                                    "§8.1 and Appendix A.2 [K0E-30]: an :aggregate or :projection relation is derived multi-chunk output and MUST bind a projection-receipt-id"))))
+               (%make-stream-relation
+                (%snapshot-tree stream-id)
+                relation-kind
+                (%snapshot-tree chunk-ids)
+                (and receipt-supplied-p receipt (%snapshot-tree receipt)))))))))))
+
+(defun %chunk-record-field (record key)
+  "Read KEY from a minimal AP0 chunk RECORD.
+The documented minimal shape is a plist carrying :STREAM-ID, :ATTEMPT-ID,
+:ADAPTER-IDENTITY, and :CHUNK-ID.  When a future AP0 layer ships a chunk struct,
+a thin adapter converts it to this plist (or this accessor gains a struct
+branch); the kernel-side coherence check depends only on these four fields,
+never on AP0's internal chunk representation."
+  (when (%proper-list-p record)
+    (getf record key)))
+
+(defun validate-stream-relation-coherence (manifestation chunk-records)
+  "K0E-29 kernel-side coherence check, GIVEN chunk records as data.
+
+Verify that every chunk id the streamed MANIFESTATION references resolves to a
+record in CHUNK-RECORDS, and that every referenced chunk shares the
+manifestation's stream-id, attempt-id, and adapter-identity.  Signal
+IDENTITY-DRIFT (requirement K0E-29) on any missing reference or identity
+mismatch; return the MANIFESTATION on success.
+
+BOUNDARY (K0E-28/28a/29): this check does NOT duplicate the AP0 chunk schema.
+It reaches the AP0-owned chunk records BY REFERENCE and reads only the four-field
+minimal plist shape documented in %CHUNK-RECORD-FIELD; sequence number,
+predecessor, finality evidence, persistence order, and every other chunk fact
+remain owned and rendered by AP0 — this is the K0E-29 obligation discharged
+kernel-side without smuggling an AP0 runtime.  Streaming is AP0 territory, so the
+lawful streamed manifestation is AP0-produced and carries an :adapter-identity; a
+manifestation without one is compared against NIL and will correctly drift,
+because a chunk lineage that cannot be tied to an adapter is not coherent.
+
+The adapter assumption is now CONSTRUCTOR-GUARANTEED (N2 chair disposition,
+hostile review §10): MAKE-MANIFESTATION refuses a streamed manifestation on the
+non-AP0 :producer-identity branch, so any manifestation that reaches this check
+carrying a stream relation necessarily has an :adapter-identity.  The NIL-drift
+fallback above is therefore defense in depth, not the primary guarantee."
+  (unless (manifestation-p manifestation)
+    (signal-kernel0 'identity-drift
+                    :requirement-id "K0E-29"
+                    :offending-field :manifestation
+                    :offending-value manifestation
+                    :failed-invariant
+                    "§8.1 and Appendix A.2 [K0E-29]: stream coherence requires a manifestation record"))
+  (let ((relation (manifestation-stream-relation manifestation))
+        (attempt-id (manifestation-attempt-id manifestation))
+        (adapter-identity (manifestation-adapter-identity manifestation)))
+    (unless relation
+      (signal-kernel0 'identity-drift
+                      :attempt-id attempt-id
+                      :requirement-id "K0E-29"
+                      :offending-field :stream-relation
+                      :offending-value nil
+                      :failed-invariant
+                      "§8.1 and Appendix A.2 [K0E-29]: a non-stream manifestation has no chunk lineage to validate"))
+    (let ((stream-id (stream-relation-stream-id relation)))
+      (dolist (chunk-id (stream-relation-chunk-record-ids relation) manifestation)
+        (let ((record
+                (find-if
+                 (lambda (candidate)
+                   (%kernel-name=
+                    (%chunk-record-field candidate :chunk-id) chunk-id))
+                 chunk-records)))
+          (unless record
+            (signal-kernel0 'identity-drift
+                            :attempt-id attempt-id
+                            :requirement-id "K0E-29"
+                            :offending-field :chunk-record-ids
+                            :offending-value chunk-id
+                            :failed-invariant
+                            "§8.1 and Appendix A.2 [K0E-28a/K0E-29]: every referenced chunk id MUST resolve to a supplied chunk record"))
+          (unless (and (identity=
+                        (%chunk-record-field record :stream-id) stream-id)
+                       (identity=
+                        (%chunk-record-field record :attempt-id) attempt-id)
+                       (identity=
+                        (%chunk-record-field record :adapter-identity)
+                        adapter-identity))
+            (signal-kernel0 'identity-drift
+                            :attempt-id attempt-id
+                            :requirement-id "K0E-29"
+                            :offending-field :chunk-record-ids
+                            :offending-value chunk-id
+                            :failed-invariant
+                            "§8.1 and Appendix A.2 [K0E-29]: every referenced chunk record MUST share the manifestation's stream-id, attempt-id, and adapter-identity")))))))
+
 (defun %require-manifestation-list-field (value failed-invariant)
   (unless (%proper-list-p value)
     (signal-kernel0 'standing-inflation
@@ -103,9 +428,12 @@
              :parser-id
              :source-boundary
              :visibility
-             :emptiness-rule-id)
-           'standing-inflation
-           "§8, §8.7, §8.9.1, and Appendix A.2: a manifestation constructor MUST use only the closed state schema and MUST NOT attach cause to absence state")))
+             :emptiness-rule-id
+             :adapter-identity
+             :producer-identity
+             :stream-relation)
+           'malformed-constructor-shape
+           "§8, §8.7, §8.9.1, and Appendix A.2 [K0E-33]: a manifestation constructor MUST use only the closed state schema (including exactly one producer branch and an optional stream relation) and MUST NOT attach cause to absence state; unknown or duplicate fields, and a bare :streamed-p, are refused")))
     (multiple-value-bind (manifestation-id manifestation-id-supplied-p)
         (%constructor-argument parsed :manifestation-id)
       (declare (ignore manifestation-id-supplied-p))
@@ -137,6 +465,42 @@
                         (declare (ignore emptiness-rule-id-supplied-p))
                         (require-identity manifestation-id :manifestation)
                         (require-identity attempt-id :attempt)
+                        ;; K0E-27 producer branch is a fundamental constructor
+                        ;; shape gate: enforce exactly-one-present BEFORE the §8
+                        ;; content laws, so a producerless manifestation is
+                        ;; refused as malformed rather than reaching a payload
+                        ;; or absence check.
+                        (%check-manifestation-producer-branch parsed attempt-id)
+                        ;; N2 (CHAIR DISPOSITION — hostile review §10): a
+                        ;; streamed manifestation is AP0-produced BY LAW.  Its
+                        ;; :stream-relation references AP0 chunk records
+                        ;; (K0E-28), which presuppose an AP0 adapter boundary, so
+                        ;; a stream is lawful ONLY on the :adapter-identity
+                        ;; branch.  A streamed manifestation on the non-AP0
+                        ;; :producer-identity branch is outside Kernel /0 scope
+                        ;; and is refused here, BEFORE the stream relation is
+                        ;; parsed, as a producer/stream shape fault.  This makes
+                        ;; VALIDATE-STREAM-RELATION-COHERENCE's adapter
+                        ;; assumption constructor-guaranteed rather than merely
+                        ;; assumed.  (A husk :stream-relation NIL is not a stream
+                        ;; and is refused separately as K0E-32 during parse.)
+                        (multiple-value-bind (stream-relation-arg
+                                              stream-relation-supplied-p)
+                            (%constructor-argument parsed :stream-relation)
+                          (when (and stream-relation-supplied-p
+                                     stream-relation-arg)
+                            (multiple-value-bind (producer producer-supplied-p)
+                                (%constructor-argument
+                                 parsed :producer-identity)
+                              (when (and producer-supplied-p producer)
+                                (signal-kernel0
+                                 'malformed-constructor-shape
+                                 :attempt-id attempt-id
+                                 :requirement-id "K0E-28"
+                                 :offending-field :producer-identity
+                                 :offending-value producer
+                                 :failed-invariant
+                                 "§8.1 and Appendix A.2 [K0E-28]: a streamed manifestation is AP0-produced by law (K0E-28 chunk references are AP0 records); non-AP0 streaming is outside /0 scope")))))
                         (unless (and kind-supplied-p kind)
                           (signal-kernel0
                            'standing-inflation
@@ -248,7 +612,13 @@
                            parser-id
                            (%snapshot-tree source-boundary)
                            visibility-copy
-                           emptiness-rule-id))))))))))))))
+                           emptiness-rule-id
+                           (%manifestation-producer-value
+                            parsed :adapter-identity)
+                           (%manifestation-producer-value
+                            parsed :producer-identity)
+                           (%parse-manifestation-stream-relation
+                            parsed attempt-id)))))))))))))))
 
 (defstruct (causal-claim
             (:constructor %make-causal-claim

@@ -12,6 +12,13 @@
 ;;;   :EFFECT-BOUNDED and :EFFECT-INDETERMINATE carry :UNCERTAIN-EFFECT.
 ;;;   :ATTEMPT-SUPERSEDED carries :SUPERSESSION.
 ;;;   :ATTEMPT-RECONCILED carries :RECONCILIATION-RECEIPT.
+;;;   :ATTEMPT-INDETERMINATE carries :INDETERMINACY-EVIDENCE, a non-empty proper
+;;;     list of durable identities referencing the evidence that prevents a
+;;;     determinate terminal classification (commonly an :EFFECT-BOUNDED or
+;;;     :EFFECT-INDETERMINATE event, an uncertain-effect record, or a torn-tail
+;;;     report).  It is terminal (§13.6 class :INDETERMINATE) yet resolves no
+;;;     referenced uncertainty: an unresolved bounded/indeterminate predecessor
+;;;     effect still blocks a fresh seat attempt (§14.1, K0E-17).
 ;;;   Any event may carry one :EXPOSURE-RECORD.
 ;;;   An attempt event may carry :AXIS-VALUES+DETERMINACY, a non-empty plist
 ;;;     whose keys are the four axis names and whose values are complete AXIS
@@ -44,6 +51,7 @@
     :attempt-failed
     :attempt-completed
     :attempt-cancelled
+    :attempt-indeterminate
     :process-suspended
     :capability-restored
     :attempt-reconciled
@@ -256,10 +264,12 @@
     (:attempt-failed :failed)
     (:attempt-completed :completed)
     (:attempt-cancelled :cancelled)
+    (:attempt-indeterminate :indeterminate)
     (:attempt-superseded :superseded)
     (otherwise nil)))
 
-(defun %signal-illegal-event (event failed-invariant &key frontier-crossed-p)
+(defun %signal-illegal-event (event failed-invariant
+                              &key frontier-crossed-p requirement-id)
   (signal-kernel0
    'journal-illegal-transition
    :process-id (%kernel0-event-process-id event)
@@ -267,6 +277,7 @@
    :seat-id (%event-effective-seat-id event)
    :operation-id (%kernel0-event-logical-operation-id event)
    :frontier-crossed-p frontier-crossed-p
+   :requirement-id requirement-id
    :failed-invariant failed-invariant))
 
 (defun %require-event-list (events)
@@ -292,6 +303,8 @@
            (reconciliation
              (%event-payload-value event :reconciliation-receipt))
            (exposure (%event-payload-value event :exposure-record))
+           (indeterminacy-evidence
+             (%event-payload-value event :indeterminacy-evidence))
            (axis-values
              (%event-payload-value event :axis-values+determinacy)))
       (when attempt-record
@@ -380,6 +393,14 @@
           (%signal-illegal-event
            event
            "§14.2: a reconciliation event's attempt identity MUST agree with its receipt")))
+      (when (eq type :attempt-indeterminate)
+        (unless (and (%proper-list-p indeterminacy-evidence)
+                     indeterminacy-evidence
+                     (every #'durable-identity-p indeterminacy-evidence))
+          (%signal-illegal-event
+           event
+           "K0E-17 and the in-memory payload convention: :ATTEMPT-INDETERMINATE MUST reference a non-empty :INDETERMINACY-EVIDENCE set of durable identities (commonly an :EFFECT-BOUNDED/:EFFECT-INDETERMINATE event, uncertain-effect record, or torn-tail report) preventing determinate terminal classification"
+           :requirement-id "K0E-17")))
       (when exposure
         (unless (exposure-record-p exposure)
           (%signal-illegal-event
@@ -578,6 +599,15 @@
               event
               "§13.5 [F: JRN-7] and §25.4 tests 26–27: refusal cannot follow frontier crossing for the same attempt"
               :frontier-crossed-p t)))
+          (:attempt-indeterminate
+           ;; K0E-17: the indeterminate terminal is lawful ONLY after the
+           ;; attempt has begun.  No :ATTEMPT-BEGUN in the prefix for this
+           ;; attempt is a transition-order violation (§13.5).
+           (unless (%identity-member-p attempt-id begun-attempts)
+             (%signal-illegal-event
+              event
+              "§13.5 [F: JRN-7] and K0E-17: :ATTEMPT-INDETERMINATE may occur only after :ATTEMPT-BEGUN for that attempt"
+              :requirement-id "K0E-17")))
           (:attempt-superseded
            (let* ((record (%event-payload-value event :supersession))
                   (predecessor

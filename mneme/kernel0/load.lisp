@@ -13,6 +13,7 @@
            "manifestation.lisp"
            "uncertain-effect.lisp"
            "outcome.lisp"
+           "procedure.lisp"
            "records.lisp"
            "folds.lisp")))
   (dolist (source ordered-sources)
@@ -98,6 +99,12 @@
        :effect-group effect-group)
     (lisp-plus-kernel0:unstructured-uncertainty ()
       (setf unstructured-signaled-p t)))
+  ;; K0E-27 (Errata 0.2 §5): every manifestation binds exactly one producer
+  ;; branch.  This smoke probes the payload-missing law, so it supplies a lawful
+  ;; :producer-identity (a non-AP0 producer branch) and STILL omits the payload
+  ;; identity — the payload-missing refusal is what it must reach.  Without a
+  ;; producer branch the K0E-27 shape gate would fire first and escape the
+  ;; handler; the branch preserves exactly what this smoke check proves.
   (handler-case
       (lisp-plus-kernel0:make-manifestation
        :manifestation-id
@@ -107,6 +114,8 @@
        :attempt-id attempt-id
        :kind :subject-answer
        :status :present
+       :producer-identity
+       (lisp-plus-kernel0:make-identity :principal "smoke-producer")
        :source-boundary :smoke-adapter-boundary)
     (lisp-plus-kernel0:manifestation-payload-missing ()
       (setf payload-missing-signaled-p t)))

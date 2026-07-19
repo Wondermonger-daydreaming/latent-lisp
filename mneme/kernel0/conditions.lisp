@@ -12,6 +12,18 @@
                  slow (cdr slow))
            (when (eq fast slow) (return nil))))
 
+(defun %snapshot-tree (value)
+  "Copy the mutable tree and string parts of a constructor argument.
+
+Defined here, in the earliest-loaded substantive file, so the condition layer
+can defensively copy an OFFENDING-VALUE it captures without a forward reference.
+Later modules reuse the same primitive."
+  (cond ((consp value)
+         (cons (%snapshot-tree (car value))
+               (%snapshot-tree (cdr value))))
+        ((stringp value) (copy-seq value))
+        (t value)))
+
 (defun %permitted-restart-name-p (name)
   (member name
           '(supply-resolved-identity
@@ -54,7 +66,23 @@
    (permitted-restarts
     :initarg :permitted-restarts
     :initform nil
-    :reader kernel0-condition-permitted-restarts))
+    :reader kernel0-condition-permitted-restarts)
+   ;; Errata 0.2 typed diagnostic context (§7 implementation charge): every
+   ;; new schema/determinacy refusal names the requirement it enforces, the
+   ;; offending field or coordinate, and a defensive snapshot of the offending
+   ;; value.  All default NIL so every pre-erratum construction stays valid.
+   (requirement-id
+    :initarg :requirement-id
+    :initform nil
+    :reader kernel0-condition-requirement-id)
+   (offending-field
+    :initarg :offending-field
+    :initform nil
+    :reader kernel0-condition-offending-field)
+   (offending-value
+    :initarg :offending-value
+    :initform nil
+    :reader kernel0-condition-offending-value))
   (:report
    (lambda (condition stream)
      (format stream "~A: ~A"
@@ -80,6 +108,15 @@ diagnostic context is carried by the slots exposed through the readers."))
  seat-occupied
  attempt-terminal
  identity-drift)
+
+;; Section 20.2a (Errata 0.2 §6, K0E-33) -- schema and constructor conditions.
+;; Malformed constructor shape, the closed determinacy mode algebra, the
+;; bounded-alternatives law, and the refusal of any global uncertainty scalar.
+(%define-kernel0-condition-family
+ malformed-constructor-shape
+ determinacy-mode-invalid
+ determinacy-alternatives-invalid
+ global-uncertainty-scalar-rejected)
 
 ;; Section 20.3 -- authority conditions.
 (%define-kernel0-condition-family
@@ -108,12 +145,16 @@ diagnostic context is carried by the slots exposed through the readers."))
  reconciliation-insufficient)
 
 ;; Section 20.5 -- manifestation and interpretation conditions.
+;; INTERPRETATION-CLASS-VIOLATION (Errata 0.2 §6, K0E-33) is defined here as a
+;; type only; Wave 3 (K0E-23..26) wires its signaling for a structural
+;; procedure that purports to license :accepted/:rejected.
 (%define-kernel0-condition-family
  manifestation-payload-missing
  present-payload-erasure
  invalidity-parser-missing
  partial-manifestation-settlement-inflation
- interpretation-procedure-missing)
+ interpretation-procedure-missing
+ interpretation-class-violation)
 
 ;; Section 20.6 -- store and journal conditions.
 (%define-kernel0-condition-family
@@ -172,7 +213,12 @@ diagnostic context is carried by the slots exposed through the readers."))
                (every #'%permitted-restart-name-p
                       (kernel0-condition-permitted-restarts condition)))
     (%signal-condition-contract
-     "PERMITTED-RESTARTS must contain only section 20.9 lawful names")))
+     "PERMITTED-RESTARTS must contain only section 20.9 lawful names"))
+  ;; Defensively snapshot the captured offending value on every construction
+  ;; path (including a direct MAKE-CONDITION), so the reader never returns a
+  ;; caller-shared mutable structure.
+  (setf (slot-value condition 'offending-value)
+        (%snapshot-tree (slot-value condition 'offending-value))))
 
 (defun signal-kernel0
     (condition-type
@@ -184,11 +230,16 @@ diagnostic context is carried by the slots exposed through the readers."))
        (failed-invariant nil failed-invariant-supplied-p)
        (evidence-ids nil)
        (frontier-crossed-p nil)
-       (permitted-restarts nil))
+       (permitted-restarts nil)
+       (requirement-id nil)
+       (offending-field nil)
+       (offending-value nil))
   "Signal CONDITION-TYPE as a Kernel /0 error with section 20.1 context.
 FAILED-INVARIANT is a required keyword argument.  CONDITION-TYPE must name a
 subtype of KERNEL0-CONDITION, and every listed restart must be one of the
-lawful section 20.9 restart names."
+lawful section 20.9 restart names.  REQUIREMENT-ID, OFFENDING-FIELD, and
+OFFENDING-VALUE carry the Errata 0.2 typed diagnostic context; OFFENDING-VALUE
+is defensively snapshotted by the condition's initializer."
   (unless failed-invariant-supplied-p
     (%signal-condition-contract "FAILED-INVARIANT is required"))
   (multiple-value-bind (kernel-subtype-p known-p)
@@ -212,7 +263,10 @@ lawful section 20.9 restart names."
                    :permitted-restarts
                    (if (%proper-list-p permitted-restarts)
                        (copy-list permitted-restarts)
-                       permitted-restarts))))
+                       permitted-restarts)
+                   :requirement-id requirement-id
+                   :offending-field offending-field
+                   :offending-value offending-value)))
 
 (defmacro with-kernel0-restarts (clauses &body body)
   "Evaluate BODY with explicit lawful Kernel /0 restart CLAUSES.
