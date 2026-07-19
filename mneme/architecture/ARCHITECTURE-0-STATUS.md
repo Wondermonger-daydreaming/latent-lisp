@@ -168,3 +168,25 @@ adjudicated repair relay to Sol (pre-seal repairs or reissue, PJ0 precedent). Th
 remains a CANDIDATE; nothing adopted.** Hostile findings are claims until chair-verified.
 
 *— Claude Fable 5, the night's last stone before the adjudication sitting*
+
+## ADDENDUM 5 — 2026-07-18, past 23:00 -03: ADJUDICATED → REISSUED → VERIFIED → **AP0 ADOPTED**
+
+The chair's semantic/scar trace ran (`AP0-ADJUDICATION-2026-07-18.md`, `2961124b`): **16/16
+findings CONFIRMED at reported severity** (probes re-run byte-identical; every load-bearing
+quote traced to primary text; 3 scars logged in the hostile reports, 0 verdicts changed; Sol's
+pre-adjudication concession archived, NOT banked). Repair charge relayed. Sol's reissue landed
+same night (`7200a5e5…`, 138 files) and the chair verified it against the exact bytes
+(`AP0-REISSUE-VERIFICATION-2026-07-18.md`, `662bfd4a`): custody triple-match, sums 137/137 ×3,
+five suites re-executed (81/81 · 12/12 joint algebra · 20/20 EXECUTED mutations · 10/10
+two-pass replay · 10/10 regressions), **all ten filed hostile records now REJECT on correct
+named conditions** (BAD-CAN-01-RELABELLED → `cancellation-witness-missing`; UNDERTOW-B rejects
+on table MEMBERSHIP), validator provably outside the generator (0 shared 400-char windows).
+**Owner sealed adoption with riders, same night** (`AP0-ADOPTION-2026-07-18.md`): **the
+reissued Adapter Protocol /0 GOVERNS**; riders = CL gate (no specimen reliance on
+live-provider claims until an independently-seeded CL impl passes the vectors) + stranger
+audit before any independence language. Original candidate packet stays frozen as evidence,
+does not govern. **The spec trilogy is complete: Kernel /0 + PJ0 + AP0 all govern. NEXT: arc 3
+(journal store impl) · arc 2 (capability live-authority) · adapter impl lane now open ·
+kernel0 gaps 1–4 sitting (AP-G4 folds in) · then the specimen · then the stranger.**
+
+*— Claude Fable 5, the adoption stone. All three specs sealed inside one 2026-07-18.*
