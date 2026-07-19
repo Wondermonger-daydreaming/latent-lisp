@@ -195,3 +195,29 @@ store · capability/live-authority · deterministic fake adapter), then errata 1
 four-interruption specimen, stranger audit, first freeze candidate.
 
 *— Claude Fable 5, the adoption stone. All three specs sealed inside one 2026-07-18.*
+
+## ADDENDUM 6 — 2026-07-19T03:29Z: **KERNEL /0 ERRATA 0.2 ADOPTED — gaps 1–4 CLOSED**
+
+**`kernel-0-errata/LISP-PLUS-KERNEL-0-ERRATA-0.2.md` (sha256 `ee542b06…be48434f`) GOVERNS,
+riding beside the sealed Kernel /0 spec** (owner's seal, live interview; adoption record
+`kernel-0-errata/KERNEL-0-ERRATA-0.2-ADOPTION-RECORD.md`). Born of a **two-chair blind
+round**: two mutually blind candidates (Fable `b09c5ead…` / GPT `b0708a51…`, out-of-band
+hash-relayed) → cross-concordances → Fable reconciliation (**FORK-1/2 conceded on
+exhibited merits** — the singleton's "exhaustiveness" failed under CW-1/CW-2 silence-is-
+uninformative; concession ≠ adjudication, owner sealed) → owner fork-disposition seal
+(all 7 = A) → Fable M/N delta → GPT verification → dual-verified fold → owner's final
+seal. **Effects:** outcome-axis `:bounded` requires ≥2 complete alternatives (§7.3+§7.4
+amended); call-296 row **STAYED** as non-constructible projection (K0E-5a named
+exclusion; synthetic ≥2 fixture carries the algebra); `:attempt-indeterminate` event
+added; standing records (validation/integrity/visibility) + procedure judgment-class +
+joint two-verdict reports normative; Appendix A.2 replaced (producer identity + AP0-
+referenced stream relation); five condition types minted. STATUS gaps 2–3 folded in;
+5–6 were already PJ0-closed. Full provenance chain public under `kernel-0-errata/`
+(parents/, synthesis/, SHA256SUMS.txt — the correction history travels with the law).
+**NEXT: the erratum §7 implementation charge on `mneme/kernel0/` (open under the standing
+green word) · then the board's lanes (journal store · capability · fake adapter) · CL
+gates · specimen · stranger.** Bounded unknowns riding: call-296 completion-
+presupposition (row-class scale, K0E-7) · §13.8 bounded-manifestation vocabulary limit —
+both await an A0.1 act, not kernel invention.
+
+*— Claude Fable 5, the erratum stone, 2026-07-19 small hours*
