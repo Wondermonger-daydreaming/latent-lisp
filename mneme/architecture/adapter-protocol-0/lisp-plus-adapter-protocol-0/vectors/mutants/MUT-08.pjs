@@ -1,0 +1,1 @@
+(rec ((id "ap0" "case-id") "MUT-08") ((id "ap0" "expected-verdict") (id "verdict" "validator-must-kill")) ((id "ap0" "family") (id "family" "mutant")) ((id "ap0" "mutation") (id "mutation" "cancel-socket-means-settled")) ((id "ap0" "target-case") "BAD-CAN-01"))

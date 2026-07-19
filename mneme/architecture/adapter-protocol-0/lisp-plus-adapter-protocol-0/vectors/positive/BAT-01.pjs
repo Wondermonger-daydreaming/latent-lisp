@@ -1,0 +1,1 @@
+(rec ((id "ap0" "batching-declared") #t) ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "BAT-01") ((id "ap0" "expected-verdict") "accept") ((id "ap0" "family") "batching") ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "max-unjournaled-events") 0) ((id "ap0" "ordering-preserved") #t))

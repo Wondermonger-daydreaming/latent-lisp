@@ -1,0 +1,1 @@
+(rec ((id "ap0" "amount") "249/100") ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "CST-02") ((id "ap0" "currency") "USD") ((id "ap0" "expected-verdict") "accept") ((id "ap0" "family") "cost") ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "standing") "dashboard-confirmed"))

@@ -1,0 +1,1 @@
+(rec ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "BAD-WIT-01") ((id "ap0" "condition") "adapter-witness-boundary-missing") ((id "ap0" "expected-verdict") "reject") ((id "ap0" "family") "witnessing") ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "self-report-origin") "observed"))

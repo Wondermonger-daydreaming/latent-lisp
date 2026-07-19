@@ -1,0 +1,1 @@
+(rec ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "cancel-class") "socket-closed") ((id "ap0" "case-id") "BAD-CAN-01") ((id "ap0" "claimed") "provider-settled") ((id "ap0" "condition") "cancellation-unconfirmed") ((id "ap0" "expected-verdict") "reject") ((id "ap0" "family") "cancellation") ((id "ap0" "lawful-route-steps") 4))

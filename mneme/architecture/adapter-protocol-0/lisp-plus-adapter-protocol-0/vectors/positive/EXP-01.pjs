@@ -1,0 +1,1 @@
+(rec ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "EXP-01") ((id "ap0" "expected-verdict") "accept") ((id "ap0" "family") "exposure") ((id "ap0" "invoker-exposed") #t) ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "provider-principal") #t) ((id "ap0" "undeclared-intermediary") #f))

@@ -1,0 +1,1 @@
+(rec ((id "ap0" "bypass-route-steps") 1) ((id "ap0" "case-id") "BAD-ERG-01") ((id "ap0" "condition") "adapter-truth-minting") ((id "ap0" "expected-verdict") "reject") ((id "ap0" "family") "ergonomics") ((id "ap0" "lawful-route-steps") 8))

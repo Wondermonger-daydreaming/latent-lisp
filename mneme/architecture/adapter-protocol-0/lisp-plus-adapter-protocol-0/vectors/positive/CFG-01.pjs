@@ -1,0 +1,1 @@
+(rec ((id "ap0" "alias") "model-latest") ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "CFG-01") ((id "ap0" "expected-verdict") "accept") ((id "ap0" "fallback") #f) ((id "ap0" "family") "configuration") ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "resolved") "model-2026-07-18"))

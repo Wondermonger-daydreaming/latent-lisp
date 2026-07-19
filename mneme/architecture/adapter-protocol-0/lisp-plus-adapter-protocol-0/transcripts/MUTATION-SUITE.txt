@@ -1,0 +1,13 @@
+AP0 MUTATION SCORE: 12/12 KILLED
+KILLED	MUT-01	BAD-CAP-01	boolean capability
+KILLED	MUT-02	BAD-ACK-01	ack promotion
+KILLED	MUT-03	BAD-RID-01	invented provider id
+KILLED	MUT-04	BAD-PART-01	partial erased
+KILLED	MUT-05	BAD-ENV-01	projection before capture
+KILLED	MUT-06	BAD-PRJ-01	table miss improvised
+KILLED	MUT-07	BAD-CST-01	float money
+KILLED	MUT-08	BAD-CAN-01	socket cancellation promotion
+KILLED	MUT-09	BAD-REC-01	incomplete not-found
+KILLED	MUT-10	BAD-EXP-01	provider omitted
+KILLED	MUT-11	BAD-CFG-01	implicit fallback
+KILLED	MUT-12	BAD-ERG-01	shorter bypass

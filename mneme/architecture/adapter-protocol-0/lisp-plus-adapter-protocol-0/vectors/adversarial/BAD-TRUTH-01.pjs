@@ -1,0 +1,1 @@
+(rec ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "BAD-TRUTH-01") ((id "ap0" "condition") "adapter-truth-minting") ((id "ap0" "expected-verdict") "reject") ((id "ap0" "family") "projection") ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "manifestation-status") "present") ((id "ap0" "semantic-truth") "verified") ((id "ap0" "shape") "nonempty"))

@@ -1,0 +1,1 @@
+(rec ((id "ap0" "case-id") "MUT-11") ((id "ap0" "expected-verdict") (id "verdict" "validator-must-kill")) ((id "ap0" "family") (id "family" "mutant")) ((id "ap0" "mutation") (id "mutation" "allow-implicit-fallback")) ((id "ap0" "target-case") "BAD-CFG-01"))

@@ -1,0 +1,1 @@
+(rec ((id "ap0" "adapter-identity") "fake-reference-0") ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "BAD-STR-02") ((id "ap0" "chunks") (seq 1 2)) ((id "ap0" "condition") "stream-sequence-conflict") ((id "ap0" "expected-verdict") "reject") ((id "ap0" "family") "stream") ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "stream-relation") #f))

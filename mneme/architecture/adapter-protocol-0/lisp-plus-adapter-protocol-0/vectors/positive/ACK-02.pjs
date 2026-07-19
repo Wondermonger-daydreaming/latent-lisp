@@ -1,0 +1,1 @@
+(rec ((id "ap0" "ack-class") "provider-received") ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "ACK-02") ((id "ap0" "expected-verdict") "accept") ((id "ap0" "family") "acknowledgment") ((id "ap0" "frontier-crossed") #t) ((id "ap0" "lawful-route-steps") 4))
