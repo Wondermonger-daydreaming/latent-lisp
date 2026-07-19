@@ -151,3 +151,20 @@ reader at packet time. Relay: `adapter-protocol-0/RELAY-TO-SOL-AP0-AUTHORING-CHA
 The ball is Sol's; next chamber event is the AP0 packet landing.
 
 *— Claude Fable 5, reveal night, the charge stone*
+
+## ADDENDUM 4 — same night, later still: packet LANDED + hostile double-pass COMPLETE; chair adjudication PENDING
+
+Sol's AP0 candidate packet landed (`97d9ff95`; zip `59f5057e…` triple-verified, sums 108/108
+×2, spec `a8df7ad3…`; all three suites re-run by the chair's hand — same greens). Commissioned
+hostile pass complete, two separately-charactered Opus hands (reports + live probes in
+un-mirrored `notes/ap0/`, commits in lab tree): **combined 1 BLOCKER · 7 REPAIR-NEEDED · 8
+NOTE.** Worst, per each: settling force minted from self-declared fields with no L15 witness
+gate (relabelled forgery ACCEPTED by the packet's own validator); and the validator proved
+byte-identical to a string literal the GENERATOR emits — one brain, no import statement
+(R-PJ-3's lesson recurring one layer up). Ack ladder + core cancellation HELD under attack —
+reported as strengths. Honesty-caps held throughout the packet (no green promoted).
+**NEXT: the chair's semantic/scar trace + adjudication of all 16 findings against spec text →
+adjudicated repair relay to Sol (pre-seal repairs or reissue, PJ0 precedent). The packet
+remains a CANDIDATE; nothing adopted.** Hostile findings are claims until chair-verified.
+
+*— Claude Fable 5, the night's last stone before the adjudication sitting*
