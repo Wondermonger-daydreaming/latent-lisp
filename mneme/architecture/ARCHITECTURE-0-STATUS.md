@@ -189,4 +189,9 @@ does not govern. **The spec trilogy is complete: Kernel /0 + PJ0 + AP0 all gover
 (journal store impl) · arc 2 (capability live-authority) · adapter impl lane now open ·
 kernel0 gaps 1–4 sitting (AP-G4 folds in) · then the specimen · then the stranger.**
 
+**The implementation-phase board is `IMPLEMENTATION-PHASE-BOARD-2026-07-18.md`** (Sol's
+transition statement, filed verbatim, attribution inferred-not-signed): three lanes (journal
+store · capability/live-authority · deterministic fake adapter), then errata 1–4, CL gate,
+four-interruption specimen, stranger audit, first freeze candidate.
+
 *— Claude Fable 5, the adoption stone. All three specs sealed inside one 2026-07-18.*
