@@ -1,0 +1,1 @@
+(rec ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "WIN-1-JOURNAL-DOWN") ((id "ap0" "expected-fold") "unresolved-effect") ((id "ap0" "expected-verdict") (id "verdict" "accept")) ((id "ap0" "family") (id "family" "crash-window")) ((id "ap0" "frontier-crossed") #t) ((id "ap0" "journal-available") #f) ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "window") "W1"))

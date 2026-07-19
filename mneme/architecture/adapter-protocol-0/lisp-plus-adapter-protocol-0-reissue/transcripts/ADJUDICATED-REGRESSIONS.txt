@@ -1,0 +1,11 @@
+ATK-REC-LAUNDER reject reconciliation-identity-missing,reconciliation-witness-missing
+ATK-RID-COUNTER reject provider-id-invented
+ATK-CAN-RELABEL reject cancellation-witness-missing
+ATK-STR-DBJ reject stream-persistence-invalid
+ATK-ABS-STATE-AS-STATUS reject absence-mapping-mismatch
+BAD-CAN-01-RELABELLED reject cancellation-witness-missing
+A-METADATA-ONLY accept 
+B-UNMAPPED reject absence-table-miss
+C-NO-CAPTURE-FIELD reject projection-before-capture
+D-SENTINEL-CONTROL reject absence-table-miss
+AP0 ADJUDICATED REGRESSIONS: 10/10 PASS

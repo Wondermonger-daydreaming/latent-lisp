@@ -1,0 +1,1 @@
+(rec ((id "ap0" "ack-class") "no-acknowledgment") ((id "ap0" "adapter-descriptor-id") (id "adapter" "fake-reference-0")) ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "ACK-08") ((id "ap0" "expected-verdict") (id "verdict" "accept")) ((id "ap0" "family") (id "family" "acknowledgment")) ((id "ap0" "frontier-crossed") #f) ((id "ap0" "lawful-route-steps") 4))

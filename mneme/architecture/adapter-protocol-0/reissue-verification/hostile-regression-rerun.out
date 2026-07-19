@@ -1,0 +1,15 @@
+== BREAKPOINT filed attacks vs REISSUED validator ==
+[REJECT] A1  reconciliation: self-declared complete domain launders no-effect (  errors=['reconciliation-identity-missing', 'reconciliation-witness-missing']
+[REJECT] A2  request-identity: provider id invented from a COUNTER at 'acknowle  errors=['provider-id-invented']
+[REJECT] A3  cancellation: a bare socket closure RELABELLED as provider-settled  errors=['cancellation-witness-missing']
+[REJECT] A4  stream: delivery-before-journal (journal-before-delivery #f) on an  errors=['stream-persistence-invalid']
+[REJECT] A5  projection: missing subject field mapped to Kernel-illegal STATUS   errors=['absence-table-miss', 'projection-origin-invalid']
+
+== UNDERTOW filed probe fixtures vs REISSUED validator ==
+[REJECT] A_metadata_only_present.pjs  errors=['absence-mapping-mismatch', 'projection-origin-invalid']
+[REJECT] B_unknown_shape_not_sentinel.pjs  errors=['absence-table-miss', 'projection-origin-invalid']
+[REJECT] C_envelope_field_absent.pjs  errors=['projection-before-capture', 'absence-mapping-mismatch', 'projection-origin-invalid']
+[REJECT] D_sentinel_control.pjs  errors=['absence-table-miss', 'projection-origin-invalid']
+
+== BAD-CAN-01-RELABELLED (filed companion) vs REISSUED validator ==
+[REJECT] BAD-CAN-01-RELABELLED  errors=['cancellation-witness-missing']

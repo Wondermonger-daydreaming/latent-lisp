@@ -1,0 +1,1 @@
+(rec ((id "ap0" "disabled-rule") "partial-erased") ((id "ap0" "expected-verdict") (id "verdict" "mutant-must-accept")) ((id "ap0" "mutant-id") "MUT-07") ((id "ap0" "target-case") "BAD-PART-01"))

@@ -1,0 +1,1 @@
+(rec ((id "ap0" "disabled-rule") "absence-table-miss") ((id "ap0" "expected-verdict") (id "verdict" "mutant-must-accept")) ((id "ap0" "mutant-id") "MUT-10") ((id "ap0" "target-case") "BAD-PRJ-01"))

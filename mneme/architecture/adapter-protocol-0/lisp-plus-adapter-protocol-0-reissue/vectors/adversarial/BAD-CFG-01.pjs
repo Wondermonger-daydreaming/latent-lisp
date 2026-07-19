@@ -1,0 +1,1 @@
+(rec ((id "ap0" "alias") "model-latest") ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "BAD-CFG-01") ((id "ap0" "condition") "implicit-provider-fallback") ((id "ap0" "expected-verdict") (id "verdict" "reject")) ((id "ap0" "fallback") #t) ((id "ap0" "family") (id "family" "configuration")) ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "resolved") #u))

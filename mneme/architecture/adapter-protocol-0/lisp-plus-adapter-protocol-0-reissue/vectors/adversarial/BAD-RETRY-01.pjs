@@ -1,0 +1,1 @@
+(rec ((id "ap0" "automatic-retry") #t) ((id "ap0" "bypass-route-steps") #u) ((id "ap0" "case-id") "BAD-RETRY-01") ((id "ap0" "condition") "reconciliation-insufficient") ((id "ap0" "expected-verdict") (id "verdict" "reject")) ((id "ap0" "family") (id "family" "retry")) ((id "ap0" "lawful-route-steps") 4) ((id "ap0" "predecessor-unresolved") #t))

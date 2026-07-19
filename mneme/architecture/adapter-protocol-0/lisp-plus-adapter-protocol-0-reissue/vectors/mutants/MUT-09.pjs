@@ -1,0 +1,1 @@
+(rec ((id "ap0" "disabled-rule") "projection-before-capture") ((id "ap0" "expected-verdict") (id "verdict" "mutant-must-accept")) ((id "ap0" "mutant-id") "MUT-09") ((id "ap0" "target-case") "BAD-ENV-MISSING-CAPTURE"))
