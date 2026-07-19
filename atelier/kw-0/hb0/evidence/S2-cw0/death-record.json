@@ -1,0 +1,10 @@
+{
+  "scenario": "effect",
+  "killpoint": "cw0",
+  "death": "SIGKILL delivered at READY window",
+  "exit": -9,
+  "runner-output-tail": [],
+  "journal-md5": "46eaf8b009d30e312925bd31deebe9da",
+  "journal-bytes": "50 bytes total; tail(50): 283a4556203a5354415254203a50524f432022703122290a283a4556203a53454154203a534541542022616c70686122290a",
+  "provider-log": []
+}

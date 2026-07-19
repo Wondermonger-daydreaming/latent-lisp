@@ -1,0 +1,4 @@
+(:EV :START :PROC "p1")
+(:EV :SEAT :SEAT "alpha")
+(:EV :ATTEMPT :ID "a1" :OP "bank-write")
+(:EV :DISPATCH :ID "a1")

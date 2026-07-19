@@ -1,0 +1,12 @@
+{
+  "scenario": "effect",
+  "killpoint": "cw2cw3",
+  "death": "SIGKILL delivered at READY window",
+  "exit": -9,
+  "runner-output-tail": [],
+  "journal-md5": "d63363641c92e3387bc6c6ec68d9234a",
+  "journal-bytes": "174 bytes total; tail(64): 22613122290a283a4556203a524553554c54203a49442022613122203a535441545553203a4558454355544544203a5041594c4f4144203a414253454e54290a",
+  "provider-log": [
+    "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+  ]
+}

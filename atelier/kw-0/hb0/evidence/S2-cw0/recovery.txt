@@ -1,0 +1,7 @@
+RECOVERY:
+  classification: no attempt recorded (2 valid events kept)
+  origin: reconstructed
+  state: (:ATTEMPTS NIL :UNCERTAIN NIL :SETTLED NIL :RECEIPTS 0 :CHUNKS 0
+          :SUPERSEDED NIL)
+  state-digest: D0D81913EBA43556D50F530F536623D6
+  verify: refold-digest=D0D81913EBA43556D50F530F536623D6 origin-after-verify: reconstructed

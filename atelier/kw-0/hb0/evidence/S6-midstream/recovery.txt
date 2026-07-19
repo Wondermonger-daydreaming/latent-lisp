@@ -1,0 +1,7 @@
+RECOVERY:
+  classification: torn tail discarded (5 valid events kept)
+  origin: reconstructed
+  state: (:ATTEMPTS ("a1") :UNCERTAIN ("a1") :SETTLED NIL :RECEIPTS 0 :CHUNKS 1
+          :SUPERSEDED NIL)
+  state-digest: 7AD0662268A5BB57A7C9AB812186214E
+  verify: refold-digest=7AD0662268A5BB57A7C9AB812186214E origin-after-verify: reconstructed

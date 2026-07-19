@@ -1,0 +1,7 @@
+RECOVERY:
+  classification: attempt a1 dispatched, outcome unrecorded — UNCERTAIN
+  origin: reconstructed
+  state: (:ATTEMPTS ("a1") :UNCERTAIN ("a1") :SETTLED NIL :RECEIPTS 0 :CHUNKS 0
+          :SUPERSEDED NIL)
+  state-digest: A1A813F018B202D0C387E09241CC21A1
+  verify: refold-digest=A1A813F018B202D0C387E09241CC21A1 origin-after-verify: reconstructed

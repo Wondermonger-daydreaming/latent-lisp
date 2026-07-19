@@ -1,0 +1,8 @@
+938b58b0991faa2bf8ce5d126a1d886eb16d911fda73098b0ddf6d508604330f  hb0-control.lisp
+c7f9d203da388df3d761ccb9ade81e7fae0c63bd255eee1ac10efc02cf83f006  hb0-reader2.py
+3492b4a15a214bc1a923f65131fada94929ecb4bd171b63800342842e2355709  hb0-harness.py
+26060842e5648e16dabe7508b206ca9a63c7fef6c9704e1b3aba6fceab6f4d26  kw-oracle.lisp
+frozen: 2026-07-19T23:06:48Z
+--- post-freeze amendment 1 (2026-07-19): fold dedupe to set semantics; found by the CL/Python differential on S4-resolve BEFORE baseline unsealing; kw-baseline.lisp still unread ---
+2cadfff6c8065e4e7c9469ad2c077355066d79d777b485a4c4f18339e0662a93  hb0-control.lisp
+--- baseline unsealed AFTER control freeze+eval: 23:08:08Z ---

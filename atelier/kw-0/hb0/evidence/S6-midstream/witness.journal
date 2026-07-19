@@ -1,0 +1,6 @@
+(:EV :START :PROC "p1")
+(:EV :SEAT :SEAT "alpha")
+(:EV :ATTEMPT :ID "a1" :OP "stream")
+(:EV :DISPATCH :ID "a1")
+(:EV :CHUNK :ID "a1" :N 1 :DATA "chunk-1-payload")
+(:EV :CHUNK :ID "a1" :N 2

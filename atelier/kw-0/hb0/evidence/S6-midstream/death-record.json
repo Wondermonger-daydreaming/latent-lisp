@@ -1,0 +1,10 @@
+{
+  "scenario": "stream",
+  "killpoint": "midstream",
+  "death": "SIGKILL delivered at READY window",
+  "exit": -9,
+  "runner-output-tail": [],
+  "journal-md5": "8cd667454efd5ff9f166010267fd546a",
+  "journal-bytes": "188 bytes total; tail(64): 3a49442022613122203a4e2031203a4441544120226368756e6b2d312d7061796c6f616422290a283a4556203a4348554e4b203a49442022613122203a4e2032",
+  "provider-log": []
+}

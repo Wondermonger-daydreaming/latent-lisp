@@ -1,0 +1,7 @@
+RECOVERY:
+  classification: result recorded; durable receipt absent (durability not claimable)
+  origin: reconstructed
+  state: (:ATTEMPTS ("a1") :UNCERTAIN NIL :SETTLED ("a1") :RECEIPTS 0 :CHUNKS 0
+          :SUPERSEDED NIL)
+  state-digest: EC9273059AA4428E3CCCB4766667EB2A
+  verify: refold-digest=EC9273059AA4428E3CCCB4766667EB2A origin-after-verify: reconstructed

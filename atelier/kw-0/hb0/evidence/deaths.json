@@ -1,0 +1,79 @@
+{
+  "S1-clean": {
+    "scenario": "effect",
+    "killpoint": null,
+    "exit": 0,
+    "runner-output-tail": [],
+    "journal-md5": "638fd5d1731e5a6e162f8e41c58a92c5",
+    "journal-bytes": "198 bytes total; tail(64): 613122203a535441545553203a4558454355544544203a5041594c4f4144203a414253454e54290a283a4556203a52454345495054203a49442022613122290a",
+    "provider-log": [
+      "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+    ]
+  },
+  "S2-cw0": {
+    "scenario": "effect",
+    "killpoint": "cw0",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [],
+    "journal-md5": "46eaf8b009d30e312925bd31deebe9da",
+    "journal-bytes": "50 bytes total; tail(50): 283a4556203a5354415254203a50524f432022703122290a283a4556203a53454154203a534541542022616c70686122290a",
+    "provider-log": []
+  },
+  "S3-cw1": {
+    "scenario": "effect",
+    "killpoint": "cw1",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [],
+    "journal-md5": "ee6f13efe87dc4cc18bfe1a36d7f363e",
+    "journal-bytes": "70 bytes total; tail(64): 5354415254203a50524f432022703122290a283a4556203a53454154203a534541542022616c70686122290a283a4556203a415454454d5054203a4944202261",
+    "provider-log": []
+  },
+  "S4-uncertain": {
+    "scenario": "effect",
+    "killpoint": "uncertain",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [],
+    "journal-md5": "d21b9d34def823838364b1b10a25a151",
+    "journal-bytes": "116 bytes total; tail(64): 4556203a415454454d5054203a49442022613122203a4f50202262616e6b2d777269746522290a283a4556203a4449535041544348203a49442022613122290a",
+    "provider-log": [
+      "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+    ]
+  },
+  "S5-cw2cw3": {
+    "scenario": "effect",
+    "killpoint": "cw2cw3",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [],
+    "journal-md5": "d63363641c92e3387bc6c6ec68d9234a",
+    "journal-bytes": "174 bytes total; tail(64): 22613122290a283a4556203a524553554c54203a49442022613122203a535441545553203a4558454355544544203a5041594c4f4144203a414253454e54290a",
+    "provider-log": [
+      "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+    ]
+  },
+  "S6-midstream": {
+    "scenario": "stream",
+    "killpoint": "midstream",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [],
+    "journal-md5": "8cd667454efd5ff9f166010267fd546a",
+    "journal-bytes": "188 bytes total; tail(64): 3a49442022613122203a4e2031203a4441544120226368756e6b2d312d7061796c6f616422290a283a4556203a4348554e4b203a49442022613122203a4e2032",
+    "provider-log": []
+  },
+  "S7-nonexec": {
+    "scenario": "nonexec",
+    "killpoint": "nonexec",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "runner-output-tail": [],
+    "journal-md5": "d21b9d34def823838364b1b10a25a151",
+    "journal-bytes": "116 bytes total; tail(64): 4556203a415454454d5054203a49442022613122203a4f50202262616e6b2d777269746522290a283a4556203a4449535041544348203a49442022613122290a",
+    "provider-log": [
+      "RECEIVED-NOT-EXECUTED effect=bank-write attempt=a1"
+    ]
+  }
+}

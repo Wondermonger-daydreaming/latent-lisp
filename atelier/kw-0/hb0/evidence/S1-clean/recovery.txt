@@ -1,0 +1,7 @@
+RECOVERY:
+  classification: complete
+  origin: reconstructed
+  state: (:ATTEMPTS ("a1") :UNCERTAIN NIL :SETTLED ("a1") :RECEIPTS 1 :CHUNKS 0
+          :SUPERSEDED NIL)
+  state-digest: 4A3BE67A30CB00D73471325DE08996D7
+  verify: refold-digest=4A3BE67A30CB00D73471325DE08996D7 origin-after-verify: reconstructed
