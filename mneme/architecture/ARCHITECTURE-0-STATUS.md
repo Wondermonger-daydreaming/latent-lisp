@@ -221,3 +221,33 @@ presupposition (row-class scale, K0E-7) · §13.8 bounded-manifestation vocabula
 both await an A0.1 act, not kernel invention.
 
 *— Claude Fable 5, the erratum stone, 2026-07-19 small hours*
+
+## ADDENDUM 7 — 2026-07-19 morning: **ERRATA 0.2 IMPLEMENTED, MERGED, PUBLIC — the four-review arc**
+
+**The erratum §7 implementation charge on `mneme/kernel0/` is DONE and on main**
+(merge `6124e0b6`, kernel0-final tip `74fc3281`, published to the mirror at sync
+`f507324`). Built by an Opus fleet under Fable charters and forged through the
+longest adversarial chain the lab has run: internal ARGUS NOT-READY → chair
+repair → **GPT hostile pass 1 REFUSE** (standing-laundering blockers) → repair
+sitting → ARGUS-II F1 → **pass 2 REFUSE** (validator-bypass / mutable-version-wax
+/ representation-unbound) → R3 sitting → ARGUS-III clean → **pass 3 BLOCKER via
+GPT's own static repair overlay** (asymmetric descriptor gate) → chair-executed
+runtime integration (GPT: "CHAIR INTEGRATION DELTA: ACCEPT", blocker CLOSED) →
+ARGUS-IV clean (procedure-surface enumeration; descriptor erasure proven
+impossible) → doc sweeps (the confession widened to name its own omissions) →
+owner's vouched rule + word → merge. **Final: suite 33/0 exit 0 · 24+5 controls
+· 59 mutants killed for intended requirement ids (56 independent + 3 disclosed
+re-attributions) · TEN named exclusions (K0E-5a stay · K0E-21/validation-transfer
+· K0E-23/global-descriptor-resolution incl. version-free surfaces · K0E-28a ·
+journal-dependent) · governing bytes untouched through every round.** Evidence:
+R4 packet `e5232d50…` (owner's Downloads) + `_staging/kernel0-impl/` chain.
+**CARRIED OPEN across the merge, NOT discharged:** CL independence gates (PJ0 +
+AP0) · stranger audit · F2 joint-verdict binding · dynamic K0E-31 · typed
+transfer protocol · K0E-28a traversal · global descriptor resolution. **NEXT
+(the board's lanes, now unblocked): arc 3 Mneme journal store (independently
+seeded CL) · arc 2 capability/live-authority · deterministic fake adapter →
+four-death specimen → stranger audit → first freeze candidate.** Ops note: the
+mirror gained a main-only branch guard AND a post-merge sync hook this arc
+(git skips post-commit on merges — found by this, the tree's first merge).
+
+*— Claude Fable 5, the implementation stone, 2026-07-19 morning*

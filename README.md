@@ -110,11 +110,11 @@ layers and a heartbeat:**
    chair adjudications, and Sol's pre-seal read (three seam repairs applied with its exact text —
    including the catch that the canonical call-296 fixture, as quoted, would have been the canonical
    *bypass* of its own uncertain-effect law). **Adopted; governs.**
-6. **`mneme/kernel0/`** — the **first executable Lisp+ code**: the pure core (14 files, 6,610 lines,
-   Codex fleet under a conductor), selftest `29 passed / 27 excluded-with-printed-reasons / 0 failed`,
-   negative controls proven to fire, the call-296 fixture constructing *lawfully*, and six authorial
-   gaps recorded rather than improvised. Its first word was a refusal with the law cited in the
-   condition's own field.
+6. **`mneme/kernel0/`** — the **first executable Lisp+ code**: the pure core (born 14 files / 6,610
+   lines, Codex fleet under a conductor; now 15 files after the erratum arc below), whose first word
+   was a refusal with the law cited in the condition's own field. Born with selftest
+   `29 passed / 27 excluded-with-printed-reasons / 0 failed` and six authorial gaps recorded rather
+   than improvised — gaps that became the erratum arc of layer 9.
 7. **`mneme/architecture/process-journal-0/`** — **Process Journal /0, adopted**: the journal
    protocol packet (1,320 files; 1,235 exhaustive terminal-frame truncation vectors; crash-window
    matrix as §1) reviewed twice — a semantic trace (8/8) and a genuinely hostile byte attack that
@@ -139,17 +139,42 @@ layers and a heartbeat:**
    corrections is preserved, rather than the final text appearing to have contained them from
    the beginning.
 
-**The specification trilogy now governs as one coherent system** — Kernel /0 (the semantic core)
-+ Process Journal /0 (the durable memory layer) + Adapter Protocol /0 (the boundary with external
-model and provider systems) — under Architecture 0.1. With it, the project has moved **from
-specification into implementation**: the phase board is
-`mneme/architecture/IMPLEMENTATION-PHASE-BOARD-2026-07-18.md` — three coordinated lanes (the
-Mneme journal store; capability/live-authority machinery, whose central rule is *a durable record
-that authority existed is evidence about the past, not live authority in the present*; and the
-deterministic fake adapter before any live-provider client), then the kernel gaps-1–4 erratum,
-the independent Common Lisp PJ0/AP0 gate, a vertical specimen deliberately killed at four defined
-points, and — still reserved, still empty on principle — the stranger's primitive-minimization
-seat. Current WE-ARE-HERE, always: `mneme/architecture/ARCHITECTURE-0-STATUS.md`.
+**And the next day (2026-07-19), the erratum and its implementation — the four-review arc:**
+
+9. **`mneme/architecture/kernel-0-errata/`** — **Kernel /0 Errata 0.2, adopted and governing**,
+   born of a *two-chair blind round*: Fable and GPT-5.6 each drafted an erratum candidate without
+   seeing the other's (out-of-band hash relays through the owner's hands), cross-concordances
+   found exactly one constitutional fork — singleton bounded determinacy and call-296's
+   constructibility — and **Fable conceded it on the merits** (its own crash-window law, walked
+   honestly, refuted its own fixture's claimed exhaustiveness). Owner-sealed fork docket, a
+   verified delta, and a dual-verified fold; the full correction chain is public beside the law.
+   Effects: outcome-axis `:bounded` requires ≥2 complete alternatives; the call-296 row is
+   **stayed** as a named exclusion (a synthetic fixture carries the algebra); standing records
+   (validation/integrity/visibility), procedure judgment classes, two-verdict joint reports, and
+   the repaired Appendix A.2 all became mechanical law.
+10. **`mneme/kernel0/` under Errata 0.2** — the erratum's §7 implementation charge, forged
+   through the longest adversarial chain here yet: an Opus fleet build, three internal ARGUS
+   NOT-READY verdicts each repaired, **two external GPT hostile REFUSE verdicts** answered
+   finding-by-finding (standing-laundering; validator-bypass, mutable-version-wax,
+   representation-unbound visibility), a third external pass whose blocker arrived as **GPT's
+   own static repair overlay** (the asymmetric descriptor gate) executed here with runtime
+   evidence GPT accepted as hash-bound, and a fourth internal hunt that proved descriptor
+   erasure *impossible by representation*. **Final: selftest `33 passed / 23 excluded / 0
+   failed`, 24 controls fired + 5 named-excluded, TEN named exclusions, 59 planted mutants
+   killed for their intended requirement ids (56 independent + 3 disclosed re-attributions),
+   0 survived, exit 0.** Merged to main 2026-07-19 under the owner's word. The tenth
+   exclusion's confession was itself widened mid-arc to name its own omissions — the project's
+   thesis, applied to its own honesty ledger.
+
+**The trilogy governs; the erratum governs beside it; the kernel0 pure core now implements the
+whole charge.** Remaining, carried openly (not discharged by any of the above): the independent
+Common Lisp PJ0/AP0 gates, the stranger's primitive-minimization seat (still reserved, still
+empty on principle), the successor lanes on the phase board
+(`mneme/architecture/IMPLEMENTATION-PHASE-BOARD-2026-07-18.md`) — the Mneme journal store,
+capability/live-authority machinery (*a durable record that authority existed is evidence about
+the past, not live authority in the present*), the deterministic fake adapter — and then a
+vertical specimen deliberately killed at four defined points. Current WE-ARE-HERE, always:
+`mneme/architecture/ARCHITECTURE-0-STATUS.md`.
 
 ---
 
