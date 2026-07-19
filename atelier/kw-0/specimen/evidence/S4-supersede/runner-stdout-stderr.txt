@@ -1,0 +1,69 @@
+
+; file: /tmp/kw/kw-runner.lisp
+; in:
+;      LET* ((ARGS (ARGV)) (RUN-DIR (FIRST ARGS)) (SCENARIO (SECOND ARGS))
+;        (KILLPOINT (THIRD ARGS))
+;        (JOURNAL-PATH (MERGE-PATHNAMES "witness.journal" RUN-DIR)))
+;     (LET ((KW::J (KW:OPEN-JOURNAL KW::JOURNAL-PATH)))
+;       (KW:APPEND-EVENT KW::J
+;                        `(("event-type" . "process-created")
+;                          ("process-id" . "kw-process-1")
+;                          ("origin" . "observed")))
+;       (KW:APPEND-EVENT KW::J
+;                        `(("event-type" . "seat-reserved")
+;                          ("seat-id" . "seat-alpha")
+;                          ("operation" . ,KW::SCENARIO)))
+;       KW::-BEGIN
+;       (WHEN (STRING= KW::KILLPOINT "cw0")
+;         (KW::MARK-READY KW::RUN-DIR "cw0")
+;         (KW::DIE-WAIT))
+;       KW::-END
+;       (IF (STRING= KW::KILLPOINT "cw1")
+;           (PROGN
+;            (KW:APPEND-EVENT KW::J `(# # # #) :SYNC NIL :TRUNCATE-AT 24)
+;            (FINISH-OUTPUT (KW::JOURNAL-STREAM KW::J))
+;            (KW::MARK-READY KW::RUN-DIR "cw1")
+;            (KW::DIE-WAIT))
+;           (KW:APPEND-EVENT KW::J
+;                            `(("event-type" . "attempt-begun")
+;                              ("attempt-id" . "a1") ("seat-id" . "seat-alpha"))))
+;       (KW:APPEND-EVENT KW::J
+;                        `(("event-type" . "frontier-crossed")
+;                          ("attempt-id" . "a1") ("budget" . "frozen")))
+;       (COND
+;        ((STRING= KW::SCENARIO "effect")
+;         (KW:ORACLE-DISPATCH KW::RUN-DIR "effect:bank-write" "a1")
+;         (WHEN (STRING= KW::KILLPOINT "uncertain")
+;           (KW::MARK-READY KW::RUN-DIR "uncertain")
+;           (KW::DIE-WAIT))
+;         (IF (STRING= KW::KILLPOINT "cw2cw3")
+;             (PROGN # # # #)
+;             (PROGN # #)))
+;        ((STRING= KW::SCENARIO "nonexec")
+;         (KW:ORACLE-DISPATCH KW::RUN-DIR "effect-ne:bank-write" "a1")
+;         (WHEN (STRING= KW::KILLPOINT "nonexec")
+;           (KW::MARK-READY KW::RUN-DIR "nonexec")
+;           (KW::DIE-WAIT))
+;         (KW:APPEND-EVENT KW::J `(# # #)) (KW:APPEND-EVENT KW::J `(# # #)))
+;        ((STRING= KW::SCENARIO "stream") (KW:APPEND-EVENT KW::J `(# # # #))
+;         (WHEN (STRING= KW::KILLPOINT "midstream")
+;           (SLEEP 1)
+;           (KW:APPEND-EVENT KW::J `# :SYNC NIL :TRUNCATE-AT 30)
+;           (FINISH-OUTPUT #)
+;           (KW::MARK-READY KW::RUN-DIR "midstream")
+;           (KW::DIE-WAIT))
+;         (KW:APPEND-EVENT KW::J `(# # # #)) (KW:APPEND-EVENT KW::J `(# # #))))
+;       (KW:CLOSE-JOURNAL KW::J)
+;       (FORMAT T "runner: completed lawfully~%"))
+; 
+; caught WARNING:
+;   undefined variable: KW::-BEGIN
+; 
+; caught WARNING:
+;   undefined variable: KW::-END
+; 
+; compilation unit finished
+;   Undefined variables:
+;     -BEGIN -END
+;   caught 2 WARNING conditions
+runner: scenario=effect killpoint=uncertain

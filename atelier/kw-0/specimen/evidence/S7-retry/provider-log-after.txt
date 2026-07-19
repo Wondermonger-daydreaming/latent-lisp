@@ -1,0 +1,2 @@
+RECEIVED-NOT-EXECUTED effect=bank-write attempt=a1
+EXECUTED effect=bank-write attempt=a2 seed-digest=E08CAB631DDB1F094440A453877CC300

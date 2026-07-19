@@ -1,0 +1,4 @@
+PROVIDER RECEIPT
+effect: bank-write
+attempt: a1
+settlement: executed

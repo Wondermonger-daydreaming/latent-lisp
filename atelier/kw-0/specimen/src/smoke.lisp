@@ -1,0 +1,23 @@
+;;;; smoke.lisp — substrate smoke test before any death is scheduled.
+(defvar *kw-repo-root* (pathname (or (sb-ext:posix-getenv "KW_REPO") "/tmp/latent-lisp/")))
+(load "/tmp/kw/kw-common.lisp")
+
+(let* ((dir (ensure-directories-exist "/tmp/kw/run/"))
+       (path "/tmp/kw/run/smoke.journal"))
+  (when (probe-file path) (delete-file path))
+  (let ((j (kw:open-journal path)))
+    (kw:append-event j '(("event-type" . "process-created") ("process-id" . "p1")))
+    (kw:append-event j '(("event-type" . "attempt-begun") ("attempt-id" . "a1")
+                         ("seat-id" . "s1")))
+    (kw:append-event j '(("event-type" . "effect-indeterminate") ("attempt-id" . "a1")))
+    (kw:close-journal j))
+  (format t "~&journal md5: ~A~%" (kw:sha-file-hex path))
+  (multiple-value-bind (frames status detail) (kw:validate-prefix path)
+    (format t "validate: ~A ~A frames=~D~%" status detail (length frames)))
+  (format t "classify: ~S~%" (kw:classify-recovery path))
+  ;; torn-tail probe: append garbage half-frame
+  (with-open-file (s path :direction :output :element-type '(unsigned-byte 8)
+                          :if-exists :append)
+    (write-sequence #(75 87 74 48 0 0 1) s))
+  (format t "classify-after-tear: ~S~%" (kw:classify-recovery path)))
+(sb-ext:exit :code 0)

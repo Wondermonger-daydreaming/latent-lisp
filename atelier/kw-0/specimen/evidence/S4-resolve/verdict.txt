@@ -1,0 +1,17 @@
+RECOVERY-CLASSIFICATION:
+  prefix-status: clean
+  prefix-detail: complete prefix
+  valid-frames: 4
+  uncertain-effects: (a1)
+  classification: effect settlement unresolved
+state-digest: 26C56A2754BAAD4344F9C86F9B8D05EB
+frame-count: 4 status: CLEAN
+F3a-reconciled-executed: provider receipt appended as provenance-bearing evidence (digest E83041C7E38675ED821EC60EF59BFAA5). Settlement: executed.
+CENSUS:
+  census-origin: reconstructed
+  attempts: a1
+  uncertain-effects: 
+  settled-effects: a1
+  receipt-frames: 1
+  manifestation-frames: 0
+post-state-digest: 57B202D66DB55314B888F28D2179C851

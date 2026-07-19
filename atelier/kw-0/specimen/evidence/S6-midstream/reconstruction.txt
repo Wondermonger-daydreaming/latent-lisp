@@ -1,0 +1,23 @@
+RECOVERY-CLASSIFICATION:
+  prefix-status: torn-tail
+  prefix-detail: partial frame at offset 740 (need 946, have 770)
+  valid-frames: 5
+  uncertain-effects: (a1)
+  classification: torn tail
+state-digest: 2DEFCA348D6910B39E69842588B4963F
+frame-count: 5 status: TORN-TAIL
+CENSUS:
+  census-origin: reconstructed
+  attempts: a1
+  uncertain-effects: a1
+  settled-effects: 
+  receipt-frames: 0
+  manifestation-frames: 1
+verification: refold-digest=2DEFCA348D6910B39E69842588B4963F (match)
+CENSUS-AFTER-VERIFICATION:
+  census-origin: reconstructed
+  attempts: a1
+  uncertain-effects: a1
+  settled-effects: 
+  receipt-frames: 0
+  manifestation-frames: 1

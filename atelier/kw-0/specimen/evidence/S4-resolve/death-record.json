@@ -1,0 +1,16 @@
+{
+  "scenario": "effect",
+  "killpoint": "uncertain",
+  "death": "SIGKILL delivered at READY window",
+  "exit": -9,
+  "runner-output-tail": [
+    ";     -BEGIN -END",
+    ";   caught 2 WARNING conditions",
+    "runner: scenario=effect killpoint=uncertain"
+  ],
+  "journal-md5": "ef02d3df64a184a504ca3cc854e90f3b",
+  "journal-bytes": "578 bytes total; tail(64): 66726f6e746965722d63726f73736564ceacebbb8e6802e58eeb7e41abe25ecff45495e7031d40f66e2f29a91252371e2d2100940f5f5a94074bc8786267eae1",
+  "provider-log": [
+    "EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD"
+  ]
+}

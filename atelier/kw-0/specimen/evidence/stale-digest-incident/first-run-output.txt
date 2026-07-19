@@ -1,0 +1,12 @@
+=== DIFFERENTIAL (stale-file run — vacuous rows marked) ===
+S1-clean: MATCH 57B202D66DB55314B888F28D2179C851
+S2-cw0: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S3-cw1: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S4-uncertain: MATCH 26C56A2754BAAD4344F9C86F9B8D05EB
+S5-cw2cw3: MATCH 95524BB2E645AB49C3F79C48A25339AA
+S6-midstream: MATCH 2DEFCA348D6910B39E69842588B4963F
+S4-resolve: MATCH 26C56A2754BAAD4344F9C86F9B8D05EB   <-- VACUOUS: both sides read stale copies
+S4-supersede: MATCH 26C56A2754BAAD4344F9C86F9B8D05EB <-- VACUOUS: digest predates supersession
+(second occurrence, same bug class: branch rows compared pre-state CL digest
+ against post-state Python digest — reported as MISMATCH, root-caused to the
+ comparison script, not the folds)

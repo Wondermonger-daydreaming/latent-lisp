@@ -1,0 +1,6 @@
+=== CORRECTED (live files; post-state-digest added to reconstructor branches) ===
+S4-resolve: MATCH 57B202D66DB55314B888F28D2179C851     (equals S1-clean: resolution converges)
+S4-supersede: MATCH 30A03F3EC87C8230FDF586651CDE3CA3
+S7-retry: MATCH ED37B99EE1D62FCFCA76C0A30E351246
+plus the seven corpse classifications, all MATCH, all live:
+S1 57B202D6 S2 4B3753F2 S3 4B3753F2 S4 26C56A27 S5 95524BB2 S6 2DEFCA34 S7 26C56A27

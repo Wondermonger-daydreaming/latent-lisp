@@ -1,0 +1,9 @@
+RECOVERY-CLASSIFICATION:
+  prefix-status: clean
+  prefix-detail: complete prefix
+  valid-frames: 4
+  uncertain-effects: (a1)
+  classification: effect settlement unresolved
+state-digest: 26C56A2754BAAD4344F9C86F9B8D05EB
+frame-count: 4 status: CLEAN
+REFUSAL unsafe-retry: seat-alpha is occupied by uncertain effect(s) a1. Evidence: journal prefix (4 valid frames) shows frontier-crossed without settlement or finalizer.

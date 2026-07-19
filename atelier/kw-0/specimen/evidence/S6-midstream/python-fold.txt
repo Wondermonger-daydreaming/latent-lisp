@@ -1,0 +1,4 @@
+python-folder: status=torn-tail detail=partial frame at offset 740
+python-folder: valid-frames=5
+python-folder: uncertain=['a1']
+python-folder: state-digest=2DEFCA348D6910B39E69842588B4963F

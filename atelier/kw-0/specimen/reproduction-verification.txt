@@ -1,0 +1,77 @@
+== environment ==
+SBCL 2.4.6
+Python 3.12.12
+Linux k2078959573252558850 5.10.134-18.0.11.lifsea8.x86_64 #1 SMP Tue May 19 22:03:35 CST 2026 x86_64 GNU/Linux
+overlay / overlay rw,relatime,lowerdir=432/fs:431/fs:430/fs:429/fs:428/fs:427/fs:426/fs:425/fs:424/fs:423/fs:422/fs:421/fs:420/fs:419/fs:418/fs:417/fs:416/fs:415/fs:414/fs:413/fs:412/fs:411/fs:410/fs:409/fs:408/fs:407/fs:406/fs:405/fs:404/fs:403/fs:402/fs:401/fs:400/fs:399/fs:398/fs:397/fs:396/fs:395/fs:394/fs:393/fs:392/fs:391/fs:390/fs:389/fs:388/fs:387/fs:386/fs:385/fs:384/fs:383/fs:382/fs:381/fs:380/fs:379/fs:378/fs:377/fs:376/fs:375/fs:374/fs:373/fs:372/fs:371/fs:370/fs:369/fs:368/fs:367/fs:366/fs:365/fs:364/fs:363/fs:362/fs:361/fs:360/fs:359/fs:358/fs:357/fs:356/fs:355/fs:354/fs:353/fs:352/fs:351/fs:350/fs:349/fs:348/fs:347/fs:346/fs:345/fs:344/fs:343/fs:342/fs:341/fs:340/fs:339/fs:338/fs:337/fs:336/fs:335/fs:334/fs:333/fs:332/fs:331/fs:330/fs:329/fs:328/fs:327/fs:326/fs:325/fs:324/fs:323/fs:322/fs:321/fs:320/fs:319/fs:318/fs:317/fs:316/fs:315/fs:314/fs:313/fs:312/fs:311/fs:310/fs:309/fs:308/fs:307/fs:306/fs:305/fs:304/fs:303/fs:302/fs:301/fs:300/fs:299/fs:298/fs:297/fs:296/fs:295/fs:294/fs:293/fs:292/fs:291/fs:290/fs:289/fs:288/fs:287/fs:286/fs:285/fs:284/fs:283/fs:282/fs:281/fs:280/fs:279/fs:278/fs:277/fs:276/fs:275/fs:274/fs:273/fs:272/fs:271/fs:270/fs:269/fs:268/fs:267/fs:266/fs:265/fs:264/fs:263/fs:262/fs:261/fs:260/fs:259/fs:258/fs:257/fs:256/fs:255/fs:254/fs:253/fs:252/fs:251/fs:250/fs:249/fs:248/fs:247/fs:246/fs:245/fs:244/fs:243/fs:242/fs:241/fs:240/fs:239/fs:238/fs:237/fs:236/fs:235/fs:234/fs:233/fs:232/fs:231/fs:230/fs:229/fs:228/fs:227/fs:226/fs:225/fs:224/fs:223/fs:222/fs:221/fs:220/fs:219/fs:218/fs:217/fs:216/fs:215/fs:214/fs:213/fs:212/fs:211/fs:210/fs:209/fs:208/fs:207/fs:206/fs:205/fs:204/fs:203/fs:202/fs:201/fs:200/fs:199/fs:198/fs:197/fs:196/fs:195/fs:194/fs:193/fs:192/fs:191/fs:190/fs:189/fs:188/fs:187/fs:186/fs:185/fs:184/fs:183/fs:182/fs:181/fs:180/fs:179/fs:178/fs:177/fs:176/fs:175/fs:174/fs:173/fs:172/fs:171/fs:170/fs:169/fs:168/fs:167/fs:166/fs:165/fs:164/fs:163/fs:162/fs:161/fs:160/fs:159/fs:158/fs:157/fs:156/fs:155/fs:154/fs:153/fs:152/fs:151/fs:150/fs:149/fs:148/fs:147/fs:146/fs:145/fs:144/fs:143/fs:142/fs:141/fs:140/fs:139/fs:138/fs:137/fs:136/fs:135/fs:134/fs:133/fs:132/fs:131/fs:130/fs:129/fs:128/fs:127/fs:126/fs:125/fs:124/fs:123/fs:122/fs:121/fs:120/fs:119/fs:118/fs:117/fs:116/fs:115/fs:114/fs:113/fs,upperdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/433/fs,workdir=/var/lib/containerd/io.containerd.snapshotter.v1.overlayfs/snapshots/433/work,index=off 0 0
+== step 0/5: clean slate (specimen output only; the shipped reference
+   generation at ../evidence is NOT touched) ==
+== step 1/5: deaths ==
+=== S1-clean: scenario=effect killpoint=None ===
+  [S1-clean] no kill exit=0 journal=8ad833d8c51af40c0061039250b61d3d
+    bytes: 867 bytes total; tail(64): 7474656d70742d636f6d706c65746564cc05dfa87c68000e23a3923ba91c0bce47417fbedb87af7f301
+    provider: EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD
+=== S2-cw0: scenario=effect killpoint=cw0 ===
+  [S2-cw0] SIGKILL delivered at READY window exit=-9 journal=442d9ee2ba4843bd65b65ffd85206f65
+    bytes: 296 bytes total; tail(64): 65200d736561742d7265736572766564ac9584e8494098c7ef434a71af32ee587aa01250868a89a2685
+=== S3-cw1: scenario=effect killpoint=cw1 ===
+  [S3-cw1] SIGKILL delivered at READY window exit=-9 journal=36173af21cb9cce1ce5767899158f6cf
+    bytes: 320 bytes total; tail(64): ef434a71af32ee587aa01250868a89a2685f70c2a3e2b1a9ff385646d9d9e11eaa163ece144b919f4b5
+=== S4-uncertain: scenario=effect killpoint=uncertain ===
+  [S4-uncertain] SIGKILL delivered at READY window exit=-9 journal=ef02d3df64a184a504ca3cc854e90f3b
+    bytes: 578 bytes total; tail(64): 66726f6e746965722d63726f73736564ceacebbb8e6802e58eeb7e41abe25ecff45495e7031d40f66e2
+    provider: EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD
+=== S5-cw2cw3: scenario=effect killpoint=cw2cw3 ===
+  [S5-cw2cw3] SIGKILL delivered at READY window exit=-9 journal=4d189815f67331fcda46c2e50b028297
+    bytes: 722 bytes total; tail(64): 6c656d656e74200865786563757465645ffc507e8c1261e28be1df780947e9ed2d2100940f5f5a94074
+    provider: EXECUTED effect=bank-write attempt=a1 seed-digest=63E6217607D5032C32E0A1F506552ABD
+=== S6-midstream: scenario=stream killpoint=midstream ===
+  [S6-midstream] SIGKILL delivered at READY window exit=-9 journal=db85897011badd5ce49b920be1692ceb
+    bytes: 770 bytes total; tail(64): 5f7a530a5b1daded6898c8cde227a0eaafff72413cf6e22c122768703d8ede6211194b574a300000009
+=== S7-nonexec: scenario=nonexec killpoint=nonexec ===
+  [S7-nonexec] SIGKILL delivered at READY window exit=-9 journal=ad7d6b7662ffd5470775ae02a0f6d9db
+    bytes: 579 bytes total; tail(64): 66726f6e746965722d63726f73736564ceacebbb8e6802e58eeb7e41abe25ecfc4e63dc5b841bb56b4e
+    provider: RECEIVED-NOT-EXECUTED effect=bank-write attempt=a1
+
+evidence in /tmp/cleanroom/kw-0-specimen/src/evidence
+== step 2/5: cold reconstruction + classifications ==
+== step 3/5: retry law (blind / reconciled-executed / supersede / nonexecution) ==
+== step 4/5: differential + F6-v3 ==
+S1-clean: MATCH 57B202D66DB55314B888F28D2179C851
+S2-cw0: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S3-cw1: MATCH 4B3753F2FEE3B2A8029E29C656D2C8AA
+S4-uncertain: MATCH 26C56A2754BAAD4344F9C86F9B8D05EB
+S5-cw2cw3: MATCH 95524BB2E645AB49C3F79C48A25339AA
+S6-midstream: MATCH 2DEFCA348D6910B39E69842588B4963F
+S7-nonexec: MATCH 26C56A2754BAAD4344F9C86F9B8D05EB
+S4-resolve: MATCH 57B202D66DB55314B888F28D2179C851
+S4-supersede: MATCH 30A03F3EC87C8230FDF586651CDE3CA3
+S7-retry: MATCH ED37B99EE1D62FCFCA76C0A30E351246
+F6-v3 (mechanical AFEL)
+  KW column (kw-runner.lisp): 62 AFEL (58 lines excluded as @harness)
+  baseline column (kw-baseline.lisp): 52 AFEL (11 lines excluded as @harness)
+  ratio: 1.192x  (pre-registered ceiling: 1.5x)
+  verdict: PASS
+  excluded-lines-audit: KW=[23, 24, 25, 26, 27, 28, 29, 30, 31, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 111, 112, 113, 114, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139]
+                        BASE=[25, 26, 27, 28, 29, 30, 31, 46, 47, 59, 60]
+== baselines (control group, same deaths) ==
+B1: provider executions before/after recovery = 1 / 2  (LIE 2: double-spend; LIE 3: 'state: OK (verified)' laundering)
+B2: baseline log exists after death = NO; provider executions = 1  (LIE 4: finalizer-only loss)
+B3: empty-vs-absent collapse recorded in evidence/B3-empty/recover-stdout.txt  (LIE 1)
+== step 5/5: reference comparison (regenerated vs shipped reference) ==
+S1-clean: journal byte-identical (8ad833d8c51af40c0061039250b61d3d)
+S2-cw0: journal byte-identical (442d9ee2ba4843bd65b65ffd85206f65)
+S3-cw1: journal byte-identical (36173af21cb9cce1ce5767899158f6cf)
+S4-uncertain: journal byte-identical (ef02d3df64a184a504ca3cc854e90f3b)
+S5-cw2cw3: journal byte-identical (4d189815f67331fcda46c2e50b028297)
+S6-midstream: journal byte-identical (db85897011badd5ce49b920be1692ceb)
+S7-nonexec: journal byte-identical (ad7d6b7662ffd5470775ae02a0f6d9db)
+
+REPRODUCTION: all differentials MATCH; all journals byte-identical to reference
+
+---
+[packager's note] The above is the complete stdout/stderr of the packager's
+clean-room verification run (2026-07-20): extraction of this bundle to a
+fresh directory, `SBCL_HOME=... bash reproduce.sh /tmp/latent-lisp /tmp/sbcl-bin`,
+final exit status 0. Two earlier attempts failed on symlink-resolution bugs
+in reproduce.sh itself (self-loop after rm-ordering); the fixes are the
+PACKAGING-EDITs recorded in PACKAGING-NOTE.md. No specimen bytes were touched.

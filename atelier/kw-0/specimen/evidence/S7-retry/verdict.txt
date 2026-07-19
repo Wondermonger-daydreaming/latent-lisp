@@ -1,0 +1,18 @@
+RECOVERY-CLASSIFICATION:
+  prefix-status: clean
+  prefix-detail: complete prefix
+  valid-frames: 4
+  uncertain-effects: (a1)
+  classification: effect settlement unresolved
+state-digest: 26C56A2754BAAD4344F9C86F9B8D05EB
+frame-count: 4 status: CLEAN
+F3a-nonexecution: receipt (digest 9D2598E9E05CE9C9A062F4D17070B606) attests not-executed. Appended as evidence; a1's path preserved; retry proceeded as a2 (retry-of a1, no supersession — settlement was KNOWN).
+CENSUS:
+  census-origin: reconstructed
+  attempts: a1,a2
+  uncertain-effects: 
+  settled-effects: a2,a1
+  receipt-frames: 1
+  manifestation-frames: 0
+post-state-digest: ED37B99EE1D62FCFCA76C0A30E351246
+a1-history-preserved: (a1 a2)

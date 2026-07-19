@@ -1,0 +1,23 @@
+RECOVERY-CLASSIFICATION:
+  prefix-status: clean
+  prefix-detail: complete prefix
+  valid-frames: 2
+  uncertain-effects: NIL
+  classification: no attempt append
+state-digest: 4B3753F2FEE3B2A8029E29C656D2C8AA
+frame-count: 2 status: CLEAN
+CENSUS:
+  census-origin: reconstructed
+  attempts: 
+  uncertain-effects: 
+  settled-effects: 
+  receipt-frames: 0
+  manifestation-frames: 0
+verification: refold-digest=4B3753F2FEE3B2A8029E29C656D2C8AA (match)
+CENSUS-AFTER-VERIFICATION:
+  census-origin: reconstructed
+  attempts: 
+  uncertain-effects: 
+  settled-effects: 
+  receipt-frames: 0
+  manifestation-frames: 0

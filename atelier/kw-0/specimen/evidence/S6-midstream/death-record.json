@@ -1,0 +1,14 @@
+{
+  "scenario": "stream",
+  "killpoint": "midstream",
+  "death": "SIGKILL delivered at READY window",
+  "exit": -9,
+  "runner-output-tail": [
+    ";     -BEGIN -END",
+    ";   caught 2 WARNING conditions",
+    "runner: scenario=stream killpoint=midstream"
+  ],
+  "journal-md5": "db85897011badd5ce49b920be1692ceb",
+  "journal-bytes": "770 bytes total; tail(64): 5f7a530a5b1daded6898c8cde227a0eaafff72413cf6e22c122768703d8ede6211194b574a30000000964c5043440031052201026b7701037061642020666564",
+  "provider-log": []
+}
