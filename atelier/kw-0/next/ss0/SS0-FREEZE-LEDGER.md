@@ -115,3 +115,39 @@ Seat A's second live re-execution on the frozen bytes (11/11 selftest; AFEL 361/
 ## Step 6 READY — extension reveal package staged (2026-07-20)
 
 Seal re-verified intact (`7bf5abad…` = step-2 commitment) before packaging. Reveal package at `~/Downloads/ss0-seats/reveal/`: the sealed extension plaintext; `EXTENSION-SCENARIOS.md` (E1/E2/E3, per-leg obligations, both runner-contract forms honored per SUBSTRATE-DOC-DEFECT-1's accommodation); substrate v1.1 delta (provider `batch:<label>:<n>` metadata tag — tested in both languages; harness + 3 E-scenarios; no other substrate byte changed); frozen `REVEAL-MESSAGE.txt`. Hashes in `REVEAL-SHA256SUMS.txt`. **Delivery rule: both seats receive identical bytes SIMULTANEOUSLY, by the owner's hand; neither seat's frozen implementation may be edited except as the extension delta.**
+
+## AMENDMENT-3 — extension-reveal delivery deviation (2026-07-20, docketed on receipt of both deliveries)
+
+**What was planned:** paste `REVEAL-MESSAGE.txt` + attach `SS0-EXTENSION-SEALED.md`, `EXTENSION-SCENARIOS.md`, `substrate-delta/` (3 files) to both seats.
+
+**What was delivered (per both seats' unprompted compliance statements, mutually consistent):** the pasted reveal message + `EXTENSION-SCENARIOS.md` + the 3 substrate-delta files + `REVEAL-SHA256SUMS.txt` (not in the plan) — and **NOT the `SS0-EXTENSION-SEALED.md` plaintext**. Both seats received the sealed spec's SHA-256 only (in the pasted message and the manifest). Seat A hash-verified its 5 received files against the manifest; Seat B (no execution) enumerated the same 5 by name. **The deviation is SYMMETRIC: both seats received identical bytes**, satisfying the delivery rule's symmetry clause while missing one intended attachment.
+
+**Materiality ruling (chair, after comparing the sealed plaintext against the delivered `EXTENSION-SCENARIOS.md`):** every one of the sealed spec's five required behaviors appears in the delivered scenarios file (its "Recovery obligations" §§1–5 restate them, near-verbatim, per leg); the sealed file's unique content is the extension's name (`batch-transfer` — immaterial, `<label>` was seat-free), the rationale paragraph ("why this extension bites"), and the measured-deliverable statement. **Ruled IMMATERIAL to the seats' obligations; MATERIAL to the record.** Seat A's testimonial claim ("the sealed spec's mechanics were nonetheless fully determined by the provider deltas and the frozen scenario corpus") is hereby CHAIR-VERIFIED by direct comparison — for the obligations; the rationale was never required reading. The seal-commitment mechanism is unaffected: `7bf5abad…` was committed publicly at step 2, both seats hold the hash, and the plaintext publishes at step 8 as planned. Both seats flagged the absence unprompted, as their compliance clause requires — recorded to their credit.
+
+**Extra-file note:** `REVEAL-SHA256SUMS.txt` (delivered unplanned) contains only file hashes already implied by the message; ruled harmless.
+
+## Step 6 COMPLETE — both extension deltas FROZEN (2026-07-20)
+
+**Seat A (Kimi K3, live sandbox).** Delivery via platform download (`Kimi_Agent_SS0 System Implementation (1).zip`, wrapper `24038f4f…`), staged at `_staging/ss0-deliveries/seat-a/extension/` (incoming copy preserved). **Seat's own manifest `SHA256SUMS-EXT.txt` verifies 5/5 on the delivered bytes**; inner archive `SS0-SEAT-EXTENSION-v1.1.zip` = `dc99e6d0…` exactly as the seat declared. Chair freeze manifest: `FREEZE-SHA256SUMS-EXT.txt` —
+```
+b27b0b09…  ss0.py            (v1.1)
+1bf3b6e6…  ss0-reader.lisp   (v1.1)
+3e9ff353…  README-EXTENSION.md
+0249b0a7…  CHANGE-STATEMENT.md
+d952633b…  EXTENSION-DELTA.diff
+```
+**Base-integrity check PASSED:** the delivery re-ships the base freeze; re-shipped `ss0.py` = `eac91d02…` and `ss0-reader.lisp` = `1c416eb9…`, byte-identical to the step-5 commitment — the frozen implementation was not modified; the delta is a true delta. Seat A's self-run extension verification (11/11 selftest on v1.1; S1–S7 records byte-identical to its frozen runs; E1–E3 behaviors; 24/24 cross-language digest agreement incl. planted faults; AFEL 513+166=679, delta 225) is SEAT TESTIMONY — corroborative until the chair's bench reproduces it.
+
+**Seat B (Qwen3.8Max-Preview, chat-only; self-identified Qwen3.7 at seeding — the discrepancy is on record from step 4).** Delivery in-chat as full updated sources + README + change statement + compliance statement; **chair-transcribed** to `_staging/ss0-deliveries/seat-b/extension/` under the step-5 transcription-custody rule (owner-relayed text is the source; doubts resolve against transcription-error claims unless the relay copy shows otherwise). Chair freeze manifest `FREEZE-SHA256SUMS-EXT.txt`:
+```
+331f9ef8…  ss0_runner.py     (full updated source, EXTENSION-DELTA-marked, 14/14 marker pairs)
+113c05de…  ss0_reader.lisp   (full updated source, 8/8 marker pairs)
+984efaed…  README-EXTENSION.md
+788554e7…  CHANGE-STATEMENT.txt
+d358c36c…  COMPLIANCE-STATEMENT.txt
+```
+Transcription smoke checks (custody-grade, not bench): `py_compile` parses; Lisp paren balance closes at 0. **Bench item docketed:** Seat B delivered full sources, not a diff — the bench must verify the unmarked portions match its frozen base (`2f1af6a7…`/`7a154e06…`) modulo the marked additions before crediting "no rewrite of frozen semantics" (its own claim; also the R8 measure). Seat B reaffirmed: no execution environment; all its behavior claims are design intent, not run results — asymmetry 2 rides to the bands as docketed.
+
+**Standing recap for the bench (step 7, next):** drive each runner per its own documented CLI (accommodation rule); byte-identical kill mechanics; corpus = S1–S7 regression + E1–E3 on both seats; cross-language differentials per seat; VOID-1/VOID-3 teeth-checks; mutation battery; AFEL recounts (both seats' self-measures are testimony). Neither seat has seen the other's work; nothing here was relayed back to either seat (quiet hands held).
+
+*— Chair: Claude Fable 5, 2026-07-20*
