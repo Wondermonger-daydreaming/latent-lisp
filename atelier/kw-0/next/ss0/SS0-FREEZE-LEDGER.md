@@ -81,3 +81,25 @@ Owner verified and cleared the KW-0 work directories from the account's persiste
 Model self-identified: Qwen3.7, plain chat session, no tools, no execution environment. All 11 files + prompt listed with correct manifest paths (channel also required the `.lisp.txt` mapping — same form as Seat A). Boot context: general training knowledge only; recognition probe clean. **VOID-5 enumeration:** chat UI, no filesystem, no persistent storage, no web tools claimed; boot context = provider system prompt (not enumerable from outside — recorded as the channel's inherent limit); custody rests on the owner-side staging record (files uploaded from the frozen `seat-b-batches/` sets; Seat B cannot hash-verify, unlike Seat A — asymmetry 1, docketed). **Asymmetry 2, docketed for adjudication:** Seat A has a live sandbox and can iterate against the selftest; Seat B authors blind, execution deferred wholly to the chair. Interpretation bands must weigh this if outcomes differ sharply on execution-sensitive obligations. **Seat B classification `CLEAN-CONTEXT / DIFFERENT-MODEL-LINEAGE`: SATISFIED.** Identical frozen acknowledgment (`f71c5109…`) authorized; its storage clauses are vacuous for this channel and retained for byte-symmetry.
 
 **Step 4 of the freeze procedure: COMPLETE — both seats seeded, declared, enumerated, released.**
+
+## Step 5 — implementation freezes (2026-07-20)
+
+**Seat B (Qwen3.8Max-Preview, per its completion message): FROZEN.** Delivery form: source text relayed through the owner (the seat has no filesystem; it pre-designated the examiner's SHA-256 of the transcribed bytes as the authoritative freeze). Chair transcribed the seat's FINAL submission (which supersedes its earlier in-message draft) byte-faithfully to `_staging/ss0-deliveries/seat-b/`:
+
+```
+2f1af6a7fa7c203980dacabd47ee3a1626760079b29f3f6ebb55a05d140f99d0  ss0_runner.py
+7a154e060e18879e2e17f8e3612306ea84c7aac4902e3eddb5d8d359fb5845e4  ss0_reader.lisp
+90243495691cb0f4145c84a2308178cf87758112f33a5055293c967bedf56338  README.md
+```
+
+Transcription custody: the owner-relayed text is the source; the chair transcribed without modification; any doubt about a byte resolves AGAINST claims of transcription error unless the owner's relay copy shows otherwise.
+
+**Seat A (Kimi-k3 agent): HASH-COMMITTED, bytes pending.** The seat computed and the owner relayed self-declared SHA-256s (staged at `_staging/ss0-deliveries/seat-a/DECLARED-SHA256SUMS.txt`): `ss0.py eac91d02…`, `ss0-reader.lisp 1c416eb9…`, `README.md 90bf996f…`, `ASSUMPTIONS.md d204335a…`. The freeze completes when the actual files arrive and hash-match the commitment; a mismatch is a custody event, not a re-freeze. Seat A also disclosed, lawfully: SBCL 2.4.11 installed inside its sandbox (environment tooling, permitted); its extensive self-run verification (25/25 cross-language agreement, planted-fault suite, self-measured AFEL 361+121=482 with 8 legitimately-marked exclusions) — ALL of which is seat testimony until the chair's bench reproduces it.
+
+## SUBSTRATE-DOC-DEFECT-1 (chair's defect, docketed BEFORE any bench run)
+
+`ss0-harness.py` passes the scenario **kind** (`effect`/`stream`/`refused`) + killpoint to the runner; `SCENARIOS.md`'s contract line says `<scenario>` while its table's first column shows S-names — genuinely ambiguous, and the seats read it differently: Seat A (live sandbox) discovered the truth empirically and maps `(kind, killpoint)` while still accepting S-names; Seat B (no execution) authored to S-names per the plain reading. **Accommodation rule, fixed now:** at the bench, each seat's runner is driven per its own documented CLI (Seat B: S-names; Seat A: either), under byte-identical kill-window mechanics; neither seat is penalized for the chair's ambiguity; the defect and accommodation are part of the adjudication record. The execution asymmetry docketed at seeding is hereby MATERIAL and travels to the bands.
+
+## Custody note
+
+The `SS0-IRREPLACEABLES-2026-07-19.tar.gz` name appearing in the Seat-A relay was a reference to the existing owner backup, not a new artifact; both backup copies re-verified `12b254ad…` intact. No overwrite occurred.
