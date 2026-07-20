@@ -103,3 +103,11 @@ Transcription custody: the owner-relayed text is the source; the chair transcrib
 ## Custody note
 
 The `SS0-IRREPLACEABLES-2026-07-19.tar.gz` name appearing in the Seat-A relay was a reference to the existing owner backup, not a new artifact; both backup copies re-verified `12b254ad…` intact. No overwrite occurred.
+
+## Step 5 COMPLETE — Seat A freeze closed (2026-07-20)
+
+Seat A bytes arrived via platform download (`Kimi_Agent_SS0 System Implementation.zip`, outer `1f25b279…`; inner canonical `SS0-SEAT-DELIVERABLES.zip` `421ad9dc…` = seat's stated hash). **All four files hash-match the pre-freeze commitment 4/4** (`ss0.py eac91d02…`, `ss0-reader.lisp 1c416eb9…`, `README.md 90bf996f…`, `ASSUMPTIONS.md d204335a…`); `.txt` duplicates byte-identical, name-only. Frozen at `_staging/ss0-deliveries/seat-a/`.
+
+Boot-context record (owner-relayed, appended per VOID-5): Kimi K3, Linux x86-64 agent sandbox; 11/11 packet files hash-verified before work; Python 3.12.12 stdlib-only; SBCL 2.4.11 installed by the seat to `/tmp/sbcl` (toolchain only); work confined to `/tmp` + read-only uploads; platform wipes `/tmp` between sessions (bytes persisted via the output area — noted as the download source of record). Seat's sealed-knowledge attestation on record: no adjudication criteria, no mutation details beyond self-planted-and-disclosed, no Seat B material, no comparative results.
+
+Seat A's second live re-execution on the frozen bytes (11/11 selftest; AFEL 361/121/482 with the 8-line exclusion audit; bit-identical scenario records across its two generations; 14/14 cross-language) is recorded as SECOND-GENERATION SEAT TESTIMONY — corroborative, not yet chair-verified. The chair's bench remains the verdict-bearing execution.
