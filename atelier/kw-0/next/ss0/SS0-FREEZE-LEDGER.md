@@ -41,3 +41,14 @@ fb1b18fa7fe75aff6034d11b6ca6f41c3ecac2e1b3b12d59a96fc00b5c44b920  ~/Downloads/SS
 - Sealed plaintexts exist ONLY in `_staging/ss0-sealed/` on this host (gitignored; mirror-sync-excluded). Owner is advised to keep an offline copy; loss would force new, disclosed commitments.
 - The step-6 reveal will include a mechanical provider-fixture delta (provider-side only), hash-frozen at reveal — noted now so its later appearance is not a surprise; its content reveals nothing before then.
 - VOID-1/VOID-3 teeth-checks run against the first delivered implementations, before verdict-bearing runs (sealed packet §4).
+
+## Seat custody record (prepared 2026-07-19, pre-seeding)
+
+Two byte-identical seat copies staged at `~/Downloads/ss0-seats/{seat-a,seat-b}/`, each containing exactly two files:
+
+```
+fb1b18fa7fe75aff6034d11b6ca6f41c3ecac2e1b3b12d59a96fc00b5c44b920  SS0-SEAT-PACKET.zip (17,794 bytes; verified = original in both copies)
+3bc0587375025fd4dae99d5afd074a8f6175b093aa864215c6f23452c4ecbc24  SEED-PROMPT.txt (identical bytes both seats)
+```
+
+Custody rules bound at staging: the archive travels UNOPENED (the zip boundary + hash are custody evidence — no repackaging, no per-provider editions, no extra files); the seed prompt is the ONLY accompanying text; each seat is a fresh session with no conversation history. On seeding, the owner records per seat: model + provider, session freshness, and an enumeration of everything present in the session context beyond the prompt + packet (VOID-5 — the enumeration is the evidence, "nothing" is an enumeration). Seat identities append here at step 4.
