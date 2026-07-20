@@ -170,3 +170,48 @@ cmp vs frozen _staging/ss0-deliveries/seat-b/ → ss0_runner.py IDENTICAL · ss0
 **Sol's examiner instructions (items 5–12 of its handoff)** restate the step-7 bench obligations already docketed above, plus the quiet-hands/no-comparative-disclosure rule already standing; item 11's ordering (sealed adjudication + mutation battery only after ordinary execution is recorded) matches the sealed packet §4 ordering. No new obligations created; consistency noted.
 
 *— Chair: Claude Fable 5, 2026-07-20*
+
+## STEP 7 IN PROGRESS — chair's bench: ordinary execution COMPLETE, both seats (2026-07-20 evening)
+
+*Bench chair: Claude Fable 5, fresh session per the owner's ruling. Full working log + all
+transcripts: `_staging/ss0-bench/BENCH-LOG.md` (gitignored; backup to follow at close).
+Summary of record:*
+
+- **Environment repair at bench-light:** `~/.local/bin/sbcl` was found exec'ing the leftover
+  Debian **2.2.9** root, not the pinned 2.4.6 — caught by operation-check, wrapper repointed,
+  re-verified `2.4.6` by evaluation. All bench runs below used 2.4.6.
+- **BENCH-ORDER-DEVIATION-1 (docketed):** ordinary corpus ran before the VOID-1/VOID-3
+  teeth-checks (sealed packet §4 wanted teeth first). Both gates subsequently PASSED on all
+  eight source files with teeth demonstrated on planted faults; runs are deterministic and
+  re-runnable; no outcome depends on the ordering.
+- **Selftest:** 11/11 ALL PASS under v1.0 and under the v1.1 delta (SBCL 2.4.6).
+- **Both seats, base S1–S7 + ext E1–E3, chair-executed:** every scenario correct (real
+  SIGKILLs at every READY window; S1/E1 exit 0); recovery coherent on every corpse; full
+  R3/R4/R5 + per-leg extension obligations exercised and recorded. **Seat B's code executed
+  for the first time anywhere and ran the entire corpus without a single error.**
+- **S1–S7 regression under v1.1: records byte-identical to base runs, 7/7 hashes, BOTH seats**
+  — the extensions provably left frozen base behavior untouched.
+- **Cross-language differentials: 27/27 digest agreements** (Seat A 10 base + 4 ext; Seat B
+  9 base + 4 ext; pristine AND mutated logs incl. attestation/succession/batch records).
+- **VOID-1/VOID-3: PASS, both seats, base + ext, with teeth** (planted READY-read and planted
+  hardcoded-digest both fired; transcript in bench dir).
+- **AFEL recounts (mechanical):** Seat A base **482** (361/121; = its testimony exactly, incl.
+  the 8-line exclusion list) / ext **679** (513/166; = testimony). Seat B base **339**
+  (233/106) / ext **615** (433/182) — first measures of its code. Exclusion audits clean.
+- **Seat B base-integrity (docketed bench item): runner COMPLIANT** (unmarked portions =
+  frozen base modulo blank lines; marked blocks enclose the extended replacements);
+  **reader PARTIAL** — two token-identical paren reflows plus ONE unmarked structural edit
+  (normalization pass hoisted to a pre-pass, rule content byte-identical). Its semantic
+  claim holds; its locational claim is not byte-strict for the reader. Travels to the bands.
+- **Recorded design divergences (neutral):** refusal protocol (A: exit 3; B: text/exit 0);
+  post-attestation succession (A: refuses, resolved-standing rationale; B: allows); S2
+  pre-record records (A: none; B: one setup record). All documented by their seats.
+- **Mutation-battery scope enumeration, published BEFORE any mutant runs (packet §2 rule):**
+  production paths per side := the AFEL-counted lines of its frozen sources (base + ext),
+  i.e. everything except the audited `@harness` exclusion lists in the bench dir's AFEL
+  audit files. No post-hoc adjustment.
+
+**Remaining for step 7:** mutation battery M1–M6 × both seats under the scope above.
+Then step 8: unseal `673e1126…`, verify, apply bands, publish everything together.
+
+*— Bench chair: Claude Fable 5, 2026-07-20*
