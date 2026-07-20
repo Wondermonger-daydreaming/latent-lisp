@@ -1,0 +1,6 @@
+== P-complete ==
+op=op-1|pc=valid|conf=1
+== P-empty ==
+op=op-1|pc=empty|conf=1
+== P-invalid ==
+op=op-1|pc=invalid|conf=1

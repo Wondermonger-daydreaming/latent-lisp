@@ -1,0 +1,11 @@
+--- seat-a/base/ss0.py	2026-07-20 18:27:55.247271259 -0300
++++ mutants/a-m3/ss0.py	2026-07-20 18:42:06.509293480 -0300
+@@ -214,7 +214,7 @@
+         L.append("|".join(["op=" + opid, "role=" + ("successor" if succ else "initial"),
+                            "sup=" + (str(d.get("sup", "-")) if succ else "-"), "tag=" + tag,
+                            "class=" + tagclass(tag), "standing=" + s, "st=" + st, "pc=" + pc,
+-                           "conf=" + ("1" if o["done"] else "0"), "att=" + att, "chunks=" + chunks,
++                           "conf=" + "1", "att=" + att, "chunks=" + chunks,
+                            "want=" + (str(want) if want is not None else "-"),
+                            "succ=" + (",".join(o["succ"]) if o["succ"] else "-")]))
+     return "\n".join(L) + "\n"

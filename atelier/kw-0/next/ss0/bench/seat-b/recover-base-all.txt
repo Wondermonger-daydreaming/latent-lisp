@@ -1,0 +1,47 @@
+=========== RECOVER S1-clean ===========
+RECOVERY REPORT
+tail: clean
+records: 4
+op=op-S1-clean label=bank-write state=completed regime=complete payload_crc=27C3ADF1 outcome=executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=effect:bank-write
+digest: 6A9432ED
+EXIT=0
+=========== RECOVER S2-pre-record ===========
+RECOVERY REPORT
+tail: clean
+records: 1
+digest: 00000000
+EXIT=0
+=========== RECOVER S3-mid-record ===========
+RECOVERY REPORT
+tail: torn
+records: 0
+digest: 00000000
+EXIT=0
+=========== RECOVER S4-post-dispatch ===========
+RECOVERY REPORT
+tail: clean
+records: 2
+op=op-S4-post-dispatch label=notify state=unresolved regime=invalid payload_crc=1001AE91 outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=true tag=effect:notify
+digest: 812BD276
+EXIT=0
+=========== RECOVER S5-unfsynced-outcome ===========
+RECOVERY REPORT
+tail: clean
+records: 3
+op=op-S5-unfsynced-outcome label=mint state=outcome-recorded regime=empty payload_crc=00000000 outcome=executed outcome_durable=false outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=effect:mint
+digest: 8BB9CAB3
+EXIT=0
+=========== RECOVER S6-mid-stream ===========
+RECOVERY REPORT
+tail: torn
+records: 3
+op=op-S6-mid-stream label=stream state=unresolved regime=none payload_crc=00000000 outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=1 lineage=- derived=true tag=slow:3
+digest: ADCDEFFB
+EXIT=0
+=========== RECOVER S7-refused-unrecorded ===========
+RECOVERY REPORT
+tail: clean
+records: 2
+op=op-S7-refused-unrecorded label=bank-write state=unresolved regime=complete payload_crc=4ED033EA outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=true tag=effect-ne:bank-write
+digest: 895B2280
+EXIT=0

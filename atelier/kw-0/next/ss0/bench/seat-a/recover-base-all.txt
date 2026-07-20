@@ -1,0 +1,196 @@
+=========== RECOVER S1-clean ===========
+== SS-0 cold recovery — evidence/S1-clean/
+storage: 3 intact frame(s), 3 decodable record(s); tail=clean
+A. SURVIVING RECORDS (recorded observations — the only evidence this report uses)
+    [0] k='op' op='op-1' tag='effect:bank-write'
+    [1] dur=True k='out' op='op-1' pc='absent' st='executed'
+    [2] k='done' op='op-1'
+B. DERIVED RECOVERY STATE (computed from section A only; recovery appends nothing, and
+   re-verification cannot upgrade derived state to recorded observation — R6)
+  op 'op-1'  tag=effect:bank-write  class=effect  role=initial
+    standing: SETTLED   [derived]
+    basis: declaration [0]; outcome [1]; completion [2]
+    outcome: st=executed  payload-class=absent  recorded-durable=True
+    re-dispatch gate: REFUSED — records 1+2: 'op-1' is settled-executed; re-dispatch would double-execute
+C. ANOMALIES (planted or real damage; reported, never silently repaired)
+    (none)
+D. CANONICAL RECOVERY RENDERING (digest spec v1 — the independent CL reader must agree)
+ss0-recovery/1
+tail=clean
+records=3
+anomalies=0
+ops=1
+op=op-1|role=initial|sup=-|tag=effect:bank-write|class=effect|standing=SETTLED|st=executed|pc=absent|conf=1|att=-|chunks=-|want=-|succ=-
+digest=904278BF
+EXIT=0
+--- canon:
+ops=1
+op=op-1|role=initial|sup=-|tag=effect:bank-write|class=effect|standing=SETTLED|st=executed|pc=absent|conf=1|att=-|chunks=-|want=-|succ=-
+digest=904278BF
+CANON-EXIT=0
+=========== RECOVER S2-pre-record ===========
+== SS-0 cold recovery — evidence/S2-pre-record/
+storage: 0 intact frame(s), 0 decodable record(s); tail=clean
+A. SURVIVING RECORDS (recorded observations — the only evidence this report uses)
+    (none — nothing survived; the process may have died before any declaration; no operation is known, none may be asserted)
+B. DERIVED RECOVERY STATE (computed from section A only; recovery appends nothing, and
+   re-verification cannot upgrade derived state to recorded observation — R6)
+C. ANOMALIES (planted or real damage; reported, never silently repaired)
+    (none)
+D. CANONICAL RECOVERY RENDERING (digest spec v1 — the independent CL reader must agree)
+ss0-recovery/1
+tail=clean
+records=0
+anomalies=0
+ops=0
+digest=4EBEA8FD
+EXIT=0
+--- canon:
+anomalies=0
+ops=0
+digest=4EBEA8FD
+CANON-EXIT=0
+=========== RECOVER S3-mid-record ===========
+== SS-0 cold recovery — evidence/S3-mid-record/
+storage: 0 intact frame(s), 0 decodable record(s); tail=torn
+A. SURVIVING RECORDS (recorded observations — the only evidence this report uses)
+    (none — nothing survived; the process may have died before any declaration; no operation is known, none may be asserted)
+    note: tail is TORN — a truncated record survives beyond the intact prefix; its content is unknowable and is excluded from every derivation below
+B. DERIVED RECOVERY STATE (computed from section A only; recovery appends nothing, and
+   re-verification cannot upgrade derived state to recorded observation — R6)
+C. ANOMALIES (planted or real damage; reported, never silently repaired)
+    (none)
+D. CANONICAL RECOVERY RENDERING (digest spec v1 — the independent CL reader must agree)
+ss0-recovery/1
+tail=torn
+records=0
+anomalies=0
+ops=0
+digest=2310910C
+EXIT=0
+--- canon:
+anomalies=0
+ops=0
+digest=2310910C
+CANON-EXIT=0
+=========== RECOVER S4-post-dispatch ===========
+== SS-0 cold recovery — evidence/S4-post-dispatch/
+storage: 1 intact frame(s), 1 decodable record(s); tail=clean
+A. SURVIVING RECORDS (recorded observations — the only evidence this report uses)
+    [0] k='op' op='op-1' tag='effect:mint'
+B. DERIVED RECOVERY STATE (computed from section A only; recovery appends nothing, and
+   re-verification cannot upgrade derived state to recorded observation — R6)
+  op 'op-1'  tag=effect:mint  class=effect  role=initial
+    standing: UNRESOLVED   [derived]
+    basis: declaration [0]
+    outcome: UNKNOWN — possible histories consistent with the surviving records:
+      (a) died after declaration, before dispatch — provider never contacted;
+      (b) died after dispatch — provider executed or refused, outcome never recorded.
+      The records cannot distinguish (a) from (b); no outcome may be asserted (R1).
+    re-dispatch gate: REFUSED — record 0 declares 'op-1' but no outcome/completion/attestation completes it; dispatch may already have happened and the records cannot tell — re-dispatch could double-execute
+C. ANOMALIES (planted or real damage; reported, never silently repaired)
+    (none)
+D. CANONICAL RECOVERY RENDERING (digest spec v1 — the independent CL reader must agree)
+ss0-recovery/1
+tail=clean
+records=1
+anomalies=0
+ops=1
+op=op-1|role=initial|sup=-|tag=effect:mint|class=effect|standing=UNRESOLVED|st=-|pc=-|conf=0|att=-|chunks=-|want=-|succ=-
+digest=445B3E0F
+EXIT=0
+--- canon:
+ops=1
+op=op-1|role=initial|sup=-|tag=effect:mint|class=effect|standing=UNRESOLVED|st=-|pc=-|conf=0|att=-|chunks=-|want=-|succ=-
+digest=445B3E0F
+CANON-EXIT=0
+=========== RECOVER S5-unfsynced-outcome ===========
+== SS-0 cold recovery — evidence/S5-unfsynced-outcome/
+storage: 2 intact frame(s), 2 decodable record(s); tail=clean
+A. SURVIVING RECORDS (recorded observations — the only evidence this report uses)
+    [0] k='op' op='op-1' tag='effect:notify'
+    [1] dur=False k='out' op='op-1' pc='absent' st='executed'
+B. DERIVED RECOVERY STATE (computed from section A only; recovery appends nothing, and
+   re-verification cannot upgrade derived state to recorded observation — R6)
+  op 'op-1'  tag=effect:notify  class=effect  role=initial
+    standing: OUTCOME-UNCONFIRMED   [derived]
+    basis: declaration [0]; outcome [1]
+    outcome: st=executed  payload-class=absent  recorded-durable=False
+    re-dispatch gate: REFUSED — record 1: outcome 'executed' survives UNCONFIRMED (no completion record); re-dispatch could double-execute
+C. ANOMALIES (planted or real damage; reported, never silently repaired)
+    (none)
+D. CANONICAL RECOVERY RENDERING (digest spec v1 — the independent CL reader must agree)
+ss0-recovery/1
+tail=clean
+records=2
+anomalies=0
+ops=1
+op=op-1|role=initial|sup=-|tag=effect:notify|class=effect|standing=OUTCOME-UNCONFIRMED|st=executed|pc=absent|conf=0|att=-|chunks=-|want=-|succ=-
+digest=676251DC
+EXIT=0
+--- canon:
+ops=1
+op=op-1|role=initial|sup=-|tag=effect:notify|class=effect|standing=OUTCOME-UNCONFIRMED|st=executed|pc=absent|conf=0|att=-|chunks=-|want=-|succ=-
+digest=676251DC
+CANON-EXIT=0
+=========== RECOVER S6-mid-stream ===========
+== SS-0 cold recovery — evidence/S6-mid-stream/
+storage: 2 intact frame(s), 2 decodable record(s); tail=torn
+A. SURVIVING RECORDS (recorded observations — the only evidence this report uses)
+    [0] k='op' op='op-1' tag='slow:3'
+    [1] data='chunk-1-of-op-1' i=1 k='chunk' op='op-1'
+    note: tail is TORN — a truncated record survives beyond the intact prefix; its content is unknowable and is excluded from every derivation below
+B. DERIVED RECOVERY STATE (computed from section A only; recovery appends nothing, and
+   re-verification cannot upgrade derived state to recorded observation — R6)
+  op 'op-1'  tag=slow:3  class=stream  role=initial
+    standing: STREAM-INCOMPLETE   [derived]
+    basis: declaration [0]
+    stream chunks on record: [1] (declared want=3)
+    re-dispatch gate: REFUSED — record 0 declares 'op-1' but no outcome/completion/attestation completes it; dispatch may already have happened and the records cannot tell — re-dispatch could double-execute
+C. ANOMALIES (planted or real damage; reported, never silently repaired)
+    (none)
+D. CANONICAL RECOVERY RENDERING (digest spec v1 — the independent CL reader must agree)
+ss0-recovery/1
+tail=torn
+records=2
+anomalies=0
+ops=1
+op=op-1|role=initial|sup=-|tag=slow:3|class=stream|standing=STREAM-INCOMPLETE|st=-|pc=-|conf=0|att=-|chunks=1|want=3|succ=-
+digest=03591F28
+EXIT=0
+--- canon:
+ops=1
+op=op-1|role=initial|sup=-|tag=slow:3|class=stream|standing=STREAM-INCOMPLETE|st=-|pc=-|conf=0|att=-|chunks=1|want=3|succ=-
+digest=03591F28
+CANON-EXIT=0
+=========== RECOVER S7-refused-unrecorded ===========
+== SS-0 cold recovery — evidence/S7-refused-unrecorded/
+storage: 1 intact frame(s), 1 decodable record(s); tail=clean
+A. SURVIVING RECORDS (recorded observations — the only evidence this report uses)
+    [0] k='op' op='op-1' tag='effect-ne:mint'
+B. DERIVED RECOVERY STATE (computed from section A only; recovery appends nothing, and
+   re-verification cannot upgrade derived state to recorded observation — R6)
+  op 'op-1'  tag=effect-ne:mint  class=effect  role=initial
+    standing: UNRESOLVED   [derived]
+    basis: declaration [0]
+    outcome: UNKNOWN — possible histories consistent with the surviving records:
+      (a) died after declaration, before dispatch — provider never contacted;
+      (b) died after dispatch — provider executed or refused, outcome never recorded.
+      The records cannot distinguish (a) from (b); no outcome may be asserted (R1).
+    re-dispatch gate: REFUSED — record 0 declares 'op-1' but no outcome/completion/attestation completes it; dispatch may already have happened and the records cannot tell — re-dispatch could double-execute
+C. ANOMALIES (planted or real damage; reported, never silently repaired)
+    (none)
+D. CANONICAL RECOVERY RENDERING (digest spec v1 — the independent CL reader must agree)
+ss0-recovery/1
+tail=clean
+records=1
+anomalies=0
+ops=1
+op=op-1|role=initial|sup=-|tag=effect-ne:mint|class=effect|standing=UNRESOLVED|st=-|pc=-|conf=0|att=-|chunks=-|want=-|succ=-
+digest=5E99DE91
+EXIT=0
+--- canon:
+ops=1
+op=op-1|role=initial|sup=-|tag=effect-ne:mint|class=effect|standing=UNRESOLVED|st=-|pc=-|conf=0|att=-|chunks=-|want=-|succ=-
+digest=5E99DE91
+CANON-EXIT=0

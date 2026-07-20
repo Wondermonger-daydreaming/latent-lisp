@@ -1,0 +1,78 @@
+== ss0_runner.py: blank-lines-ignored, 3 non-equal hunk(s) ==
+  [delete] base lines 35-41 -> ext lines 35-34
+    -        d = ops.setdefault(op, {"op": op, "state": "unknown", "derived": "true",
+    -                                "label": "-", "regime": "-", "payload_crc": "-",
+    -                                "outcome": "-", "outcome_durable": "-",
+    -                                "outcome_payload_crc": "-",
+    -                                "evidence": "-", "successor": "-", "chunks": [],
+    -                                "lineage": "-", "tag": "-", "payload": "",
+    -                                "attempt": "-"})
+  [delete] base lines 81-85 -> ext lines 74-73
+    -        lines.append("|".join([op, d["label"], d["state"], d["regime"],
+    -                               d["payload_crc"], d["outcome"],
+    -                               d["outcome_durable"], d["outcome_payload_crc"],
+    -                               d["evidence"], d["successor"], chunks_str(d),
+    -                               d["lineage"], d["derived"]]))
+  [delete] base lines 94-100 -> ext lines 82-81
+    -        print("op=%s label=%s state=%s regime=%s payload_crc=%s outcome=%s "
+    -              "outcome_durable=%s outcome_payload_crc=%s evidence=%s "
+    -              "successor=%s chunks=%s lineage=%s derived=%s tag=%s" % (
+    -                  op, d["label"], d["state"], d["regime"], d["payload_crc"],
+    -                  d["outcome"], d["outcome_durable"],
+    -                  d["outcome_payload_crc"], d["evidence"], d["successor"],
+    -                  chunks_str(d), d["lineage"], d["derived"], d["tag"]))
+== ss0_reader.lisp: blank-lines-ignored, 7 non-equal hunk(s) ==
+  [delete] base lines 12-18 -> ext lines 12-11
+    -(defun ensure-op (ops op)
+    -  (unless (gethash op ops)
+    -    (setf (gethash op ops)
+    -          (list :op op :state "unknown" :derived "true" :label "-" :regime "-"
+    -                :payload-crc "-" :outcome "-" :outcome-durable "-"
+    -                :outcome-payload-crc "-" :evidence "-" :successor "-"
+    -                :chunks '() :lineage "-" :tag "-" :attempt "-"))))
+  [replace] base lines 35-35 -> ext lines 28-29
+    -                     (getf pl :derived) "false"))
+    +                     (getf pl :derived) "false")
+    +               )
+  [replace] base lines 60-60 -> ext lines 54-55
+    -                   (push idx (getf pl :chunks))))))
+    +                   (push idx (getf pl :chunks)))))
+    +              )
+  [insert] base lines 62-61 -> ext lines 57-67
+    +    (maphash (lambda (k pl)
+    +               (when (getf pl :chunks)
+    +                 (setf (getf pl :chunks)
+    +                       (sort (delete-duplicates (getf pl :chunks)) #'<)))
+    +               (when (string= (getf pl :state) "dispatched")
+    +                 (setf (getf pl :state) "unresolved"
+    +                       (getf pl :derived) "true"))
+    +               (when (string= (getf pl :state) "unknown")
+    +                 (setf (getf pl :derived) "true"))
+    +               (setf (gethash k ops) pl))
+    +             ops)
+  [delete] base lines 65-72 -> ext lines 71-70
+    -                 (when (getf pl :chunks)
+    -                   (setf (getf pl :chunks)
+    -                         (sort (delete-duplicates (getf pl :chunks)) #'<)))
+    -                 (when (string= (getf pl :state) "dispatched")
+    -                   (setf (getf pl :state) "unresolved"
+    -                         (getf pl :derived) "true"))
+    -                 (when (string= (getf pl :state) "unknown")
+    -                   (setf (getf pl :derived) "true"))
+  [delete] base lines 79-85 -> ext lines 77-76
+    -(defun digest-line (pl)
+    -  (format nil "~A|~A|~A|~A|~A|~A|~A|~A|~A|~A|~A|~A|~A"
+    -          (getf pl :op) (getf pl :label) (getf pl :state) (getf pl :regime)
+    -          (getf pl :payload-crc) (getf pl :outcome) (getf pl :outcome-durable)
+    -          (getf pl :outcome-payload-crc) (getf pl :evidence)
+    -          (getf pl :successor) (chunks-string pl) (getf pl :lineage)
+    -          (getf pl :derived)))
+  [delete] base lines 98-105 -> ext lines 89-88
+    -        (dolist (pl ops)
+    -          (format t "op=~A label=~A state=~A regime=~A payload_crc=~A outcome=~A outcome_durable=~A outcome_payload_crc=~A evidence=~A successor=~A chunks=~A lineage=~A derived=~A tag=~A~%"
+    -                  (getf pl :op) (getf pl :label) (getf pl :state)
+    -                  (getf pl :regime) (getf pl :payload-crc) (getf pl :outcome)
+    -                  (getf pl :outcome-durable) (getf pl :outcome-payload-crc)
+    -                  (getf pl :evidence) (getf pl :successor)
+    -                  (chunks-string pl) (getf pl :lineage)
+    -                  (getf pl :derived) (getf pl :tag)))

@@ -1,0 +1,9 @@
+=== VOID-3a: hardcoded digest/CRC literals in readers (8-hex-char constants) ===
+none found ("00000000" empty-crc convention exempt)
+
+=== VOID-3b: does either reader read/import the Python implementation? ===
+none — readers never invoke or read the Python side
+
+=== VOID-3c: reader loads (shared code inventory) ===
+seat-b/base/ss0_reader.lisp:2:(load (merge-pathnames "substrate/ss0-substrate.lisp" *load-truename*))
+seat-a/base/ss0-reader.lisp:7:(load (merge-pathnames "substrate/ss0-substrate.lisp" *load-truename*))

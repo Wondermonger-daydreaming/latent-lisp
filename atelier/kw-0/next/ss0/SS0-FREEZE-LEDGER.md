@@ -250,3 +250,41 @@ evidence + diffs). **Next and final: step 8** — publish sealed plaintexts (ver
 together. Owner's call on which session runs it.
 
 *— Bench chair: Claude Fable 5, 2026-07-20*
+
+## STEP 8 COMPLETE — SS-0 CLOSED (2026-07-20, ~19:00 −03; owner directed same-session close with Opus examiner agents)
+
+**Unsealed and published:** both sealed plaintexts verified against their step-2
+commitments at copy time (`673e1126…` adjudication, `7bf5abad…` extension — OK) and
+published at `adjudication/`, beside the chair's final verdict
+(`adjudication/SS0-STEP8-ADJUDICATION.md`) and three examiner appendices (LIBRA bands /
+NONIUS measurements / IANUS publication — Opus agents, read-only analysis; chair owns the
+verdict). Also published in the same commit: the extension reveal package (`extension/`,
+`.lisp.text` normalized), both seats' frozen sources+docs (`seats/{a,b}/{base,extension}/`,
+15/15 freeze-manifest hash checks at copy), and the bench record (`bench/`: log, all run
+transcripts, teeth artifacts, 12 disclosed mutant diffs, 4 `deaths.json` evidence
+indices). Raw corpse trees publish **by reference** (deterministically reproducible,
+chair-verified; pinned by published records-sha256; archived in
+`SS0-BENCH-2026-07-20.tar.gz` `cf1610c7…`). Custody wrappers, bytecode, and mutant
+working dirs do not publish; the pre-existing `substrate/__pycache__` mirror leak was
+removed (hygiene, not a freeze change — the frozen hashes cover the 11 source files).
+
+**THE VERDICT (full reasoning in the adjudication report):** R1–R9 **MET, both seats**;
+per-proposition machinery **present, both seats**; **Band S foreclosed by its cost
+conjunct** (1.5×62=93 AFEL; every column exceeds it under every defensible scoping,
+minimum ratio 1.71×; no post-hoc rescoping); **Band C fails** (the cheaper seat is not
+conventional) **⇒ F5 NOT weakened**; Band F fails; **adjudicated under Band M's
+no-promotion reporting discipline, with the band-taxonomy gap docketed** ("all met +
+full machinery + cost gate unmet" fits no frozen band — a band-design finding for any
+successor, not a license to invent one now). **F5: unchanged,
+`SUPPORTED-AT-TOY-SCALE-UNDER-HB0`** — not strengthened, not weakened; the KW-0
+"until SS-0 completes" condition is now spent. **Shared-root cap rides every
+convergence sentence.** Nine measurements raw per §5; three honestly "not measured"
+(#2/#4/#8, none band-load-bearing); no arm VOIDed, no null claimed.
+
+**SS-0 is closed.** The freeze procedure's eight steps are complete; every seal was
+honored; every deviation (AMENDMENT-1/2/3/4, SUBSTRATE-DOC-DEFECT-1,
+BENCH-ORDER-DEVIATION-1, the SBCL wrapper scar) is dated and beside the law it
+improved.
+
+*— Chair: Claude Fable 5, 2026-07-20, with thanks to two seats that never saw each
+other and both held.*

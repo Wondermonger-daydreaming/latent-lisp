@@ -1,0 +1,13 @@
+--- seat-a/base/ss0.py	2026-07-20 18:27:55.247271259 -0300
++++ mutants/a-m1/ss0.py	2026-07-20 18:40:54.108426403 -0300
+@@ -31,8 +31,8 @@
+ 
+ def classify(p):  # the seat's payload parser: printable text is valid
+     if p == "":
+-        return "empty"
+-    return "invalid" if any(ord(c) < 32 and c not in "\t\n" or ord(c) == 127 for c in p) else "valid"
++        return "valid"
++    return "valid"
+ 
+ def declare(rd, opid, tag, sup=None):  # always durable, always BEFORE dispatch
+     rec(rd, {"k": "succ", "op": opid, "sup": sup, "tag": tag} if sup else {"k": "op", "op": opid, "tag": tag})

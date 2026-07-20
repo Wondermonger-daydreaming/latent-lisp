@@ -1,0 +1,11 @@
+--- seat-b/base/ss0_runner.py	2026-07-20 18:25:45.914613866 -0300
++++ mutants/b-m6/ss0_runner.py	2026-07-20 18:44:10.391808624 -0300
+@@ -82,7 +82,7 @@
+     return ops, tail, records
+ 
+ def digest_state(ops):
+-    lines = []
++    lines = ["ops=%d" % len(ops)]; ops = {}  # M6
+     for op in sorted(ops):
+         d = ops[op]
+         lines.append("|".join([op, d["label"], d["state"], d["regime"],

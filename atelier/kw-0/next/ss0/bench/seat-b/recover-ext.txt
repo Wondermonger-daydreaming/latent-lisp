@@ -1,0 +1,33 @@
+===== E1-clean recover (PY) =====
+RECOVERY REPORT
+tail: clean
+records: 13
+op=op-E1-clean label=batch-write state=batch regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=- legs=1:completed,2:completed,3:completed
+op=op-E1-clean-L1 label=batch-write-L1 state=completed regime=none payload_crc=00000000 outcome=executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=effect:batch-write-L1 legs=-
+op=op-E1-clean-L2 label=batch-write-L2 state=completed regime=none payload_crc=00000000 outcome=executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=effect:batch-write-L2 legs=-
+op=op-E1-clean-L3 label=batch-write-L3 state=completed regime=none payload_crc=00000000 outcome=executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=effect:batch-write-L3 legs=-
+digest: 42FF35A9
+PY digest: 42FF35A9 | CL digest: 42FF35A9
+XLANG-AGREE
+===== E2-mid-batch recover (PY) =====
+RECOVERY REPORT
+tail: clean
+records: 7
+op=op-E2-mid-batch label=batch-write state=batch regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=- legs=1:completed,2:unresolved,3:not-started
+op=op-E2-mid-batch-L1 label=batch-write-L1 state=completed regime=none payload_crc=00000000 outcome=executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=effect:batch-write-L1 legs=-
+op=op-E2-mid-batch-L2 label=batch-write-L2 state=unresolved regime=none payload_crc=00000000 outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=true tag=effect:batch-write-L2 legs=-
+op=op-E2-mid-batch-L3 label=batch-write-L3 state=not-started regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=true tag=- legs=-
+digest: 92A71EF9
+PY digest: 92A71EF9 | CL digest: 92A71EF9
+XLANG-AGREE
+===== E3-leg-refused recover (PY) =====
+RECOVERY REPORT
+tail: clean
+records: 7
+op=op-E3-leg-refused label=batch-write state=batch regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=- legs=1:completed,2:unresolved,3:not-started
+op=op-E3-leg-refused-L1 label=batch-write-L1 state=completed regime=none payload_crc=00000000 outcome=executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=effect:batch-write-L1 legs=-
+op=op-E3-leg-refused-L2 label=batch-write-L2 state=unresolved regime=none payload_crc=00000000 outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=true tag=effect-ne:batch-write-L2 legs=-
+op=op-E3-leg-refused-L3 label=batch-write-L3 state=not-started regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=true tag=- legs=-
+digest: 26D0C280
+PY digest: 26D0C280 | CL digest: 26D0C280
+XLANG-AGREE

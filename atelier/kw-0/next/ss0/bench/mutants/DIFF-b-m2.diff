@@ -1,0 +1,11 @@
+--- seat-b/base/ss0_runner.py	2026-07-20 18:25:45.914613866 -0300
++++ mutants/b-m2/ss0_runner.py	2026-07-20 18:42:06.505754939 -0300
+@@ -114,7 +114,7 @@
+     if not d:
+         print("REFUSED: op %s not found; no record evidence authorizes dispatch" % op_id)
+         return
+-    if d["state"] == "unresolved":
++    if False and d["state"] == "unresolved":
+         print("REFUSED: op %s dispatched (tag=%s) but outcome unrecorded; evidence: dispatch record without durable outcome or receipt" % (op_id, d["tag"]))
+         return
+     if d["state"] == "outcome-recorded" and d["outcome"] == "executed":

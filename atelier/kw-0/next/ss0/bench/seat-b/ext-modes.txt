@@ -1,0 +1,26 @@
+=== redispatch BATCH op-E2-mid-batch (L2 unresolved) ===
+REFUSED: batch op-E2-mid-batch leg 1 completed; evidence: completion record (op-E2-mid-batch-L1)
+=== redispatch LEG op-E2-mid-batch-L2 ===
+REFUSED: op op-E2-mid-batch-L2 dispatched (tag=effect:batch-write-L2) but outcome unrecorded; evidence: dispatch record without durable outcome or receipt
+=== admit-receipt LEG op-E3-leg-refused-L2 ===
+ADMITTED: receipt for op op-E3-leg-refused-L2 attempt att-E3-leg-refused-L2 outcome=not-executed
+=== recover E3 after admit (sibling isolation check) ===
+op=op-E3-leg-refused label=batch-write state=batch regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=- legs=1:completed,2:receipt-resolved,3:not-started
+op=op-E3-leg-refused-L1 label=batch-write-L1 state=completed regime=none payload_crc=00000000 outcome=executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=effect:batch-write-L1 legs=-
+op=op-E3-leg-refused-L2 label=batch-write-L2 state=receipt-resolved regime=none payload_crc=00000000 outcome=not-executed outcome_durable=- outcome_payload_crc=- evidence=receipt-att-E3-leg-refused-L2.txt successor=- chunks=- lineage=- derived=false tag=effect-ne:batch-write-L2 legs=-
+op=op-E3-leg-refused-L3 label=batch-write-L3 state=not-started regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=true tag=- legs=-
+digest: 3A107766
+=== succeed BATCH op-E3-leg-refused ===
+SUCCESSOR: batch succ-1784583348449 proceeded for predecessor op-E3-leg-refused reattempt=2,3 abandon=1
+=== recover E3 after succession ===
+op=op-E3-leg-refused label=batch-write state=batch regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=succ-1784583348449 chunks=- lineage=- derived=false tag=- legs=1:completed,2:receipt-resolved,3:not-started
+op=op-E3-leg-refused-L1 label=batch-write-L1 state=completed regime=none payload_crc=00000000 outcome=executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=effect:batch-write-L1 legs=-
+op=op-E3-leg-refused-L2 label=batch-write-L2 state=receipt-resolved regime=none payload_crc=00000000 outcome=not-executed outcome_durable=- outcome_payload_crc=- evidence=receipt-att-E3-leg-refused-L2.txt successor=- chunks=- lineage=- derived=false tag=effect-ne:batch-write-L2 legs=-
+op=op-E3-leg-refused-L3 label=batch-write-L3 state=not-started regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=true tag=- legs=-
+op=succ-1784583348449 label=batch-write state=batch regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=batch-successor:re=2,3:ab=1 derived=false tag=- legs=1:abandoned,2:completed,3:completed
+op=succ-1784583348449-L1 label=batch-write-L1 state=abandoned regime=- payload_crc=- outcome=- outcome_durable=- outcome_payload_crc=- evidence=- successor=- chunks=- lineage=- derived=false tag=- legs=-
+op=succ-1784583348449-L2 label=batch-write-L2 state=completed regime=none payload_crc=00000000 outcome=not-executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=successor:op-E3-leg-refused-L2 derived=false tag=effect-ne:batch-write-L2 legs=-
+op=succ-1784583348449-L3 label=batch-write-L3 state=completed regime=none payload_crc=00000000 outcome=executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=successor:op-E3-leg-refused-L3 derived=false tag=effect:batch-write-L3 legs=-
+digest: 5B319A3A
+PY digest: 5B319A3A | CL digest: 5B319A3A
+XLANG-AGREE-MUTATED

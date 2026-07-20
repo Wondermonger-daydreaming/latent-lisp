@@ -1,0 +1,13 @@
+##### AFEL RECOUNT — Seat A base #####
+seat-a/base/ss0.py: 361 AFEL (8 lines excluded as @harness)
+  excluded-lines-audit: [76, 80, 81, 86, 94, 101, 102, 107]
+seat-a/base/ss0-reader.lisp: 121 AFEL (0 lines excluded as @harness)
+  excluded-lines-audit: []
+TOTAL: 482 AFEL
+
+##### AFEL RECOUNT — Seat B base #####
+seat-b/base/ss0_runner.py: 233 AFEL (8 lines excluded as @harness)
+  excluded-lines-audit: [202, 204, 205, 210, 217, 227, 228, 233]
+seat-b/base/ss0_reader.lisp: 106 AFEL (0 lines excluded as @harness)
+  excluded-lines-audit: []
+TOTAL: 339 AFEL

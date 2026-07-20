@@ -1,0 +1,14 @@
+=== VOID-1 sweep on extension sources ===
+CLEAN — no harness-state reads
+=== VOID-3 sweep on extension readers ===
+CLEAN — no fixture literals
+CLEAN — no cross-invocation
+
+##### AFEL ext recount — Seat A #####
+seat-a/ext/ss0.py: 513 AFEL (10 lines excluded as @harness)
+seat-a/ext/ss0-reader.lisp: 166 AFEL (0 lines excluded as @harness)
+TOTAL: 679 AFEL
+##### AFEL ext recount — Seat B #####
+seat-b/ext/ss0_runner.py: 433 AFEL (10 lines excluded as @harness)
+seat-b/ext/ss0_reader.lisp: 182 AFEL (0 lines excluded as @harness)
+TOTAL: 615 AFEL

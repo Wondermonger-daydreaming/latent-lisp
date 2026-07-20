@@ -1,0 +1,33 @@
+=== S1-clean: scenario=effect killpoint=None ===
+  [S1-clean] no kill exit=0 records=a49fdc0b48d6ddf7
+    provider: EXECUTED effect=bank-write attempt=op-1 digest=47675674
+=== S2-pre-record: scenario=effect killpoint=pre-record ===
+  [S2-pre-record] SIGKILL delivered at READY window exit=-9 records=None
+=== S3-mid-record: scenario=effect killpoint=mid-record ===
+  [S3-mid-record] SIGKILL delivered at READY window exit=-9 records=5c6e8c5ecb8b061b
+=== S4-post-dispatch: scenario=effect killpoint=post-dispatch ===
+  [S4-post-dispatch] SIGKILL delivered at READY window exit=-9 records=584fec4a810cbe1b
+    provider: EXECUTED effect=mint attempt=op-1 digest=CC5156D4
+=== S5-unfsynced-outcome: scenario=effect killpoint=unfsynced-outcome ===
+  [S5-unfsynced-outcome] SIGKILL delivered at READY window exit=-9 records=41269bacb201c689
+    provider: EXECUTED effect=notify attempt=op-1 digest=8E4932B4
+=== S6-mid-stream: scenario=stream killpoint=mid-stream ===
+  [S6-mid-stream] SIGKILL delivered at READY window exit=-9 records=7994fd642c789f62
+=== S7-refused-unrecorded: scenario=refused killpoint=refused-unrecorded ===
+  [S7-refused-unrecorded] SIGKILL delivered at READY window exit=-9 records=887b9e1fd7ca05c7
+    provider: RECEIVED-NOT-EXECUTED effect=mint attempt=op-1
+=== E1-clean: scenario=batch killpoint=None ===
+  [E1-clean] no kill exit=0 records=bf8c31dbbfe57a34
+    provider: EXECUTED effect=settle attempt=b1-leg-1 digest=11BF6F4B
+    provider: EXECUTED effect=settle attempt=b1-leg-2 digest=88B63EF1
+    provider: EXECUTED effect=settle attempt=b1-leg-3 digest=FFB10E67
+=== E2-mid-batch: scenario=batch killpoint=mid-batch ===
+  [E2-mid-batch] SIGKILL delivered at READY window exit=-9 records=e6d597f74f5a022e
+    provider: EXECUTED effect=settle attempt=b1-leg-1 digest=11BF6F4B
+    provider: EXECUTED effect=settle attempt=b1-leg-2 digest=88B63EF1
+=== E3-leg-refused: scenario=batch-ne killpoint=leg-refused ===
+  [E3-leg-refused] SIGKILL delivered at READY window exit=-9 records=b293b6798dc07785
+    provider: EXECUTED effect=settle attempt=b1-leg-1 digest=11BF6F4B
+    provider: RECEIVED-NOT-EXECUTED effect=settle attempt=b1-leg-2
+
+evidence in /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/_staging/ss0-bench/seat-a/ext/evidence

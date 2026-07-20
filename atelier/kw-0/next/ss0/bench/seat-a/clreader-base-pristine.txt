@@ -1,0 +1,28 @@
+=== CL S1-clean ===
+op=op-1|role=initial|sup=-|tag=effect:bank-write|class=effect|standing=SETTLED|st=executed|pc=absent|conf=1|att=-|chunks=-|want=-|succ=-
+digest=904278BF
+EXIT=0
+=== CL S2-pre-record ===
+ops=0
+digest=4EBEA8FD
+EXIT=0
+=== CL S3-mid-record ===
+ops=0
+digest=2310910C
+EXIT=0
+=== CL S4-post-dispatch ===
+op=op-1|role=initial|sup=-|tag=effect:mint|class=effect|standing=UNRESOLVED|st=-|pc=-|conf=0|att=-|chunks=-|want=-|succ=-
+digest=445B3E0F
+EXIT=0
+=== CL S5-unfsynced-outcome ===
+op=op-1|role=initial|sup=-|tag=effect:notify|class=effect|standing=OUTCOME-UNCONFIRMED|st=executed|pc=absent|conf=0|att=-|chunks=-|want=-|succ=-
+digest=676251DC
+EXIT=0
+=== CL S6-mid-stream ===
+op=op-1|role=initial|sup=-|tag=slow:3|class=stream|standing=STREAM-INCOMPLETE|st=-|pc=-|conf=0|att=-|chunks=1|want=3|succ=-
+digest=03591F28
+EXIT=0
+=== CL S7-refused-unrecorded ===
+op=op-1|role=initial|sup=-|tag=effect-ne:mint|class=effect|standing=UNRESOLVED|st=-|pc=-|conf=0|att=-|chunks=-|want=-|succ=-
+digest=5E99DE91
+EXIT=0

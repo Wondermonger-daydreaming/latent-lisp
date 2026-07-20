@@ -1,0 +1,8 @@
+Your frozen implementation is recorded; this message is being delivered to you and to one other implementer simultaneously. As stated in the brief (R8), one additional effect type is now revealed.
+
+Attached:
+- SS0-EXTENSION-SEALED.md — the extension specification, authored and hash-committed (SHA-256 7bf5abada93831c6193538100441fcf7af8aa7649abca2d8ac30d16b246505bf) BEFORE either implementer was seeded; you may verify that commitment against the public record when the experiment publishes.
+- EXTENSION-SCENARIOS.md — the three extension scenarios and per-leg recovery obligations.
+- substrate-delta/ — substrate v1.1: the provider gains one mechanical, metadata-only tag (batch:<label>:<n>); the harness gains the three E-scenarios. No other substrate byte changed; your frozen implementation is not modified by this delta.
+
+Implement the extension against your frozen sources: change or add only what the extension requires, and keep your changes identifiable (a delta file, or clearly marked additions). Same rules as before: work only from your packet, this message, and these attachments; say so immediately if anything else reaches your context. When complete, deliver the updated sources, the README addition, and a one-paragraph change statement. Your extension delta will be hashed and frozen exactly as submitted.

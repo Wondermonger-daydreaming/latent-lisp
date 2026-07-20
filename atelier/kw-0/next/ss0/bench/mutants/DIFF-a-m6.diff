@@ -1,0 +1,11 @@
+--- seat-a/base/ss0.py	2026-07-20 18:27:55.247271259 -0300
++++ mutants/a-m6/ss0.py	2026-07-20 18:44:10.393011388 -0300
+@@ -196,7 +196,7 @@
+     L = ["ss0-recovery/1", "tail=" + tail, "records=%d" % nrec, "anomalies=%d" % len(anomalies)]
+     L += ["anomaly=" + a for a in anomalies]
+     L.append("ops=%d" % len(order))
+-    for opid in order:
++    for opid in []:  # M6
+         o = ops[opid]
+         di, d = o["decl"]
+         succ = d.get("k") == "succ"

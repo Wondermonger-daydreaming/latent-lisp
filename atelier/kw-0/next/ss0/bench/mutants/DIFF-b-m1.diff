@@ -1,0 +1,11 @@
+--- seat-b/base/ss0_runner.py	2026-07-20 18:25:45.914613866 -0300
++++ mutants/b-m1/ss0_runner.py	2026-07-20 18:40:54.107079259 -0300
+@@ -49,7 +49,7 @@
+         if t == "intent":
+             d.update(state="attempted", label=r.get("label", "-"),
+                      regime=r.get("regime", "-"), payload=r.get("payload", ""),
+-                     payload_crc=payload_crc(r.get("payload", "")),
++                     payload_crc="00000000",
+                      attempt=r.get("attempt", "-"),
+                      lineage=r.get("lineage", "-"), derived="false")
+         elif t == "dispatch":

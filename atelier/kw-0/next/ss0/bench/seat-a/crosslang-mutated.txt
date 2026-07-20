@@ -1,0 +1,12 @@
+=== evidence/S4-post-dispatch ===
+PY  digest=6DF531A3
+CL  digest=6DF531A3
+AGREE
+=== evidence/S7-refused-unrecorded ===
+PY  digest=0B42ACB6
+CL  digest=0B42ACB6
+AGREE
+=== evidence2/S4-post-dispatch ===
+PY  digest=DA131C79
+CL  digest=DA131C79
+AGREE

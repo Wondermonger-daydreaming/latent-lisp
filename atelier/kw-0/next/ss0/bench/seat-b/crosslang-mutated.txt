@@ -1,0 +1,20 @@
+=== PY recover S4-post-dispatch (mutated) ===
+tail: clean
+records: 3
+op=op-S4-post-dispatch label=notify state=receipt-resolved regime=invalid payload_crc=1001AE91 outcome=executed outcome_durable=- outcome_payload_crc=- evidence=receipt-att-S4-post-dispatch.txt successor=- chunks=- lineage=- derived=false tag=effect:notify
+digest: 8E0C8EF0
+=== CL reader S4-post-dispatch (mutated) ===
+tail: clean
+records: 3
+op=op-S4-post-dispatch label=notify state=receipt-resolved regime=invalid payload_crc=1001AE91 outcome=executed outcome_durable=- outcome_payload_crc=- evidence=receipt-att-S4-post-dispatch.txt successor=- chunks=- lineage=- derived=false tag=effect:notify
+digest: 8E0C8EF0
+=== PY recover S7-refused-unrecorded (mutated) ===
+records: 8
+op=op-S7-refused-unrecorded label=bank-write state=receipt-resolved regime=complete payload_crc=4ED033EA outcome=not-executed outcome_durable=- outcome_payload_crc=- evidence=receipt-att-S7-refused-unrecorded.txt successor=succ-1784582840630 chunks=- lineage=- derived=false tag=effect-ne:bank-write
+op=succ-1784582840630 label=bank-write state=completed regime=complete payload_crc=4ED033EA outcome=not-executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=successor derived=false tag=effect-ne:bank-write
+digest: C40994A8
+=== CL reader S7-refused-unrecorded (mutated) ===
+records: 8
+op=op-S7-refused-unrecorded label=bank-write state=receipt-resolved regime=complete payload_crc=4ED033EA outcome=not-executed outcome_durable=- outcome_payload_crc=- evidence=receipt-att-S7-refused-unrecorded.txt successor=succ-1784582840630 chunks=- lineage=- derived=false tag=effect-ne:bank-write
+op=succ-1784582840630 label=bank-write state=completed regime=complete payload_crc=4ED033EA outcome=not-executed outcome_durable=true outcome_payload_crc=- evidence=- successor=- chunks=- lineage=successor derived=false tag=effect-ne:bank-write
+digest: C40994A8

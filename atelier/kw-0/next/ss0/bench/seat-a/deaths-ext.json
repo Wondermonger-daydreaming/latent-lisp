@@ -1,0 +1,98 @@
+{
+  "S1-clean": {
+    "scenario": "effect",
+    "killpoint": null,
+    "exit": 0,
+    "records-sha256": "a49fdc0b48d6ddf724b03615a32d2820af18b8961aabe035cf4286173fda7fff",
+    "provider-log": [
+      "EXECUTED effect=bank-write attempt=op-1 digest=47675674"
+    ]
+  },
+  "S2-pre-record": {
+    "scenario": "effect",
+    "killpoint": "pre-record",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "records-sha256": null,
+    "provider-log": []
+  },
+  "S3-mid-record": {
+    "scenario": "effect",
+    "killpoint": "mid-record",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "records-sha256": "5c6e8c5ecb8b061b13eb321e06a38e054cb6dbbdd050838c6e751c1c8e1747b1",
+    "provider-log": []
+  },
+  "S4-post-dispatch": {
+    "scenario": "effect",
+    "killpoint": "post-dispatch",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "records-sha256": "584fec4a810cbe1b99d5c8596aae3cde3ce821c6cc76b2b72f1af5be83d18fcd",
+    "provider-log": [
+      "EXECUTED effect=mint attempt=op-1 digest=CC5156D4"
+    ]
+  },
+  "S5-unfsynced-outcome": {
+    "scenario": "effect",
+    "killpoint": "unfsynced-outcome",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "records-sha256": "41269bacb201c689954924cbc607c713f9c0d402f193547940ca07a632f8ba7f",
+    "provider-log": [
+      "EXECUTED effect=notify attempt=op-1 digest=8E4932B4"
+    ]
+  },
+  "S6-mid-stream": {
+    "scenario": "stream",
+    "killpoint": "mid-stream",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "records-sha256": "7994fd642c789f628e5cda481d746f71fed938b86675eec60347675987a46e43",
+    "provider-log": []
+  },
+  "S7-refused-unrecorded": {
+    "scenario": "refused",
+    "killpoint": "refused-unrecorded",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "records-sha256": "887b9e1fd7ca05c7078b8aace9d7366d4f5e7ad1072a5e521d9c87a5e022049a",
+    "provider-log": [
+      "RECEIVED-NOT-EXECUTED effect=mint attempt=op-1"
+    ]
+  },
+  "E1-clean": {
+    "scenario": "batch",
+    "killpoint": null,
+    "exit": 0,
+    "records-sha256": "bf8c31dbbfe57a3474e63d2bc5bf977774ce1a2b243f0dec39c5ad6ef5f5fb7c",
+    "provider-log": [
+      "EXECUTED effect=settle attempt=b1-leg-1 digest=11BF6F4B",
+      "EXECUTED effect=settle attempt=b1-leg-2 digest=88B63EF1",
+      "EXECUTED effect=settle attempt=b1-leg-3 digest=FFB10E67"
+    ]
+  },
+  "E2-mid-batch": {
+    "scenario": "batch",
+    "killpoint": "mid-batch",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "records-sha256": "e6d597f74f5a022eacf8114c2fedac4f41e06de2336fdfe069c84cf5e4ec73f8",
+    "provider-log": [
+      "EXECUTED effect=settle attempt=b1-leg-1 digest=11BF6F4B",
+      "EXECUTED effect=settle attempt=b1-leg-2 digest=88B63EF1"
+    ]
+  },
+  "E3-leg-refused": {
+    "scenario": "batch-ne",
+    "killpoint": "leg-refused",
+    "death": "SIGKILL delivered at READY window",
+    "exit": -9,
+    "records-sha256": "b293b6798dc07785428ff8af0e230b18c3907c7955d6b2c60571b4faec2bff63",
+    "provider-log": [
+      "EXECUTED effect=settle attempt=b1-leg-1 digest=11BF6F4B",
+      "RECEIVED-NOT-EXECUTED effect=settle attempt=b1-leg-2"
+    ]
+  }
+}

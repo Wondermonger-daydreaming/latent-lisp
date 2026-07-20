@@ -1,0 +1,11 @@
+--- seat-a/base/ss0.py	2026-07-20 18:27:55.247271259 -0300
++++ mutants/a-m4/ss0.py	2026-07-20 18:44:10.388051113 -0300
+@@ -359,7 +359,7 @@
+         print("REFUSE: receipt names attempt '%s', not '%s'; provenance mismatch" % (fields.get("attempt"), opid))
+         return 4
+     claims = fields.get("outcome", "")
+-    rec(rd, {"k": "att", "op": opid, "src": src, "sdig": crc32_hex(data), "claims": claims})
++    pass  # M4: upgrade claimed without record-entered evidence
+     print("admitted: %s (crc32 %s) entered the durable record as attestation for '%s', claims='%s'" % (src, crc32_hex(data), opid, claims))
+     if claims == "executed":
+         print("standing now ATTESTED/executed — re-dispatch of this intent is permanently forbidden (R4)")

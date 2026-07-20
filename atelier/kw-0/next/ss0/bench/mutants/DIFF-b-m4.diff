@@ -1,0 +1,12 @@
+--- seat-b/base/ss0_runner.py	2026-07-20 18:25:45.914613866 -0300
++++ mutants/b-m4/ss0_runner.py	2026-07-20 18:44:10.386859869 -0300
+@@ -143,8 +143,7 @@
+         print("ERROR: receipt file %s not found" % p)
+         return
+     outcome = "executed" if "outcome: executed" in p.read_text() else "not-executed"
+-    rec(run_dir, {"t": "receipt", "op": op_id, "attempt": attempt,
+-                  "outcome": outcome, "provenance": "receipt-%s.txt" % attempt})
++    pass  # M4: upgrade claimed without record-entered evidence
+     print("ADMITTED: receipt for op %s attempt %s outcome=%s" % (op_id, attempt, outcome))
+ 
+ def mode_succeed(run_dir, pred_op):

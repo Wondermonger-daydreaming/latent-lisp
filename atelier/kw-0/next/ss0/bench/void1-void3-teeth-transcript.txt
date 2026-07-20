@@ -1,0 +1,7 @@
+=== TEETH VOID-1: sweep on planted runner (must fire) ===
+26:    for m in Path(run_dir).glob("READY-*"): _peek = m.read_text()  # PLANTED VOID-1 FAULT
+>>> VOID-1 GATE FIRED on planted fault: TEETH OK
+
+=== TEETH VOID-3: hex-literal audit on planted reader (must fire) ===
+3:(defparameter *expected-digest* "6A9432ED") ; PLANTED VOID-3 FAULT
+>>> VOID-3 GATE FIRED on planted fault: TEETH OK

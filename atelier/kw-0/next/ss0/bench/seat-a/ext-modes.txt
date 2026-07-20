@@ -1,0 +1,46 @@
+E1-clean: PY digest=7C8F7F00 | CL digest=7C8F7F00
+  XLANG-AGREE
+E2-mid-batch: PY digest=5B6BE85F | CL digest=5B6BE85F
+  XLANG-AGREE
+E3-leg-refused: PY digest=A19C9048 | CL digest=A19C9048
+  XLANG-AGREE
+=== redispatch BATCH b1 in E2 ===
+REFUSED: automatic re-dispatch of 'b1'
+  evidence: record 0 declares batch 'b1' (3 legs; per-leg standings: leg-1 SETTLED, leg-2 UNRESOLVED, leg-3 NONE); a batch is never re-dispatched wholesale — legs are governed individually (per-leg modes) and batch-level proceeding requires an explicit successor with per-leg lineage (mode 'bsucceed')
+    [0] k='batch' legs=3 op='b1' tag='batch:settle:3'
+  policy: this gate never dispatches. Lawful paths: admit a provider receipt (mode 'admit') or proceed under an explicitly distinct identity (mode 'succeed').
+EXIT=3
+=== redispatch LEG b1-leg-2 in E2 ===
+REFUSED: automatic re-dispatch of 'b1-leg-2'
+  evidence: record 4 declares 'b1-leg-2' but no outcome/completion/attestation completes it; dispatch may already have happened and the records cannot tell — re-dispatch could double-execute
+    [4] batch='b1' k='op' leg=2 op='b1-leg-2' tag='effect:settle'
+  policy: this gate never dispatches. Lawful paths: admit a provider receipt (mode 'admit') or proceed under an explicitly distinct identity (mode 'succeed').
+EXIT=3
+=== admit BATCH b1 in E3 (must refuse) ===
+REFUSE: 'b1' is a batch declaration; providers issue receipts per leg, not per batch — admit the individual leg (e.g. 'b1-leg-1')
+EXIT=4
+=== admit LEG b1-leg-2 in E3 ===
+admitted: receipt-b1-leg-2.txt (crc32 2E7D269E) entered the durable record as attestation for 'b1-leg-2', claims='not-executed'
+standing now ATTESTED/not-executed — proceeding lawfully requires a fresh identity (mode 'succeed')
+EXIT=0
+=== succeed on batch id (must point at bsucceed) ===
+REFUSE: 'b1' is a batch; use mode 'bsucceed' so the successor carries per-leg lineage
+EXIT=4
+=== bsucceed b1 b2 in E3 ===
+successor batch 'b2' supersedes 'b1': re-attempts legs ['leg-2', 'leg-3'] (per-leg succ lineage); abandons ['b1-leg-1'] (known executed); predecessor legs' standing unchanged and stays visible
+EXIT=0
+=== census after bsucceed ===
+tail=clean
+records=13
+anomalies=0
+ops=4
+op=b1-leg-1|role=initial|sup=-|tag=effect:settle|class=effect|standing=SETTLED|st=executed|pc=absent|conf=1|att=-|chunks=-|want=-|succ=-|batch=b1|leg=1
+op=b1-leg-2|role=initial|sup=-|tag=effect-ne:settle|class=effect|standing=ATTESTED|st=not-executed|pc=-|conf=0|att=receipt-b1-leg-2.txt:2E7D269E:not-executed|chunks=-|want=-|succ=b2-leg-2|batch=b1|leg=2
+op=b2-leg-2|role=successor|sup=b1-leg-2|tag=effect:settle|class=effect|standing=SETTLED|st=executed|pc=absent|conf=1|att=-|chunks=-|want=-|succ=-|batch=b2|leg=2
+op=b2-leg-3|role=initial|sup=-|tag=effect:settle|class=effect|standing=SETTLED|st=executed|pc=absent|conf=1|att=-|chunks=-|want=-|succ=-|batch=b2|leg=3
+batches=2
+batch=b1|tag=batch:settle:3|legs=3|sup=-|census=1:SETTLED,2:ATTESTED,3:NONE|aband=-
+batch=b2|tag=batch:settle:3|legs=3|sup=b1|census=1:NONE,2:SETTLED,3:SETTLED|aband=b1-leg-1
+digest=1145944E
+mutated: PY digest=1145944E | CL digest=1145944E
+XLANG-AGREE-MUTATED

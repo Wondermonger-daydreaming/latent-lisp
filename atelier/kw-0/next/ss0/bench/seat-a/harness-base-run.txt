@@ -1,0 +1,20 @@
+=== S1-clean: scenario=effect killpoint=None ===
+  [S1-clean] no kill exit=0 records=a49fdc0b48d6ddf7
+    provider: EXECUTED effect=bank-write attempt=op-1 digest=47675674
+=== S2-pre-record: scenario=effect killpoint=pre-record ===
+  [S2-pre-record] SIGKILL delivered at READY window exit=-9 records=None
+=== S3-mid-record: scenario=effect killpoint=mid-record ===
+  [S3-mid-record] SIGKILL delivered at READY window exit=-9 records=5c6e8c5ecb8b061b
+=== S4-post-dispatch: scenario=effect killpoint=post-dispatch ===
+  [S4-post-dispatch] SIGKILL delivered at READY window exit=-9 records=584fec4a810cbe1b
+    provider: EXECUTED effect=mint attempt=op-1 digest=CC5156D4
+=== S5-unfsynced-outcome: scenario=effect killpoint=unfsynced-outcome ===
+  [S5-unfsynced-outcome] SIGKILL delivered at READY window exit=-9 records=41269bacb201c689
+    provider: EXECUTED effect=notify attempt=op-1 digest=8E4932B4
+=== S6-mid-stream: scenario=stream killpoint=mid-stream ===
+  [S6-mid-stream] SIGKILL delivered at READY window exit=-9 records=7994fd642c789f62
+=== S7-refused-unrecorded: scenario=refused killpoint=refused-unrecorded ===
+  [S7-refused-unrecorded] SIGKILL delivered at READY window exit=-9 records=887b9e1fd7ca05c7
+    provider: RECEIVED-NOT-EXECUTED effect=mint attempt=op-1
+
+evidence in /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/_staging/ss0-bench/seat-a/base/evidence

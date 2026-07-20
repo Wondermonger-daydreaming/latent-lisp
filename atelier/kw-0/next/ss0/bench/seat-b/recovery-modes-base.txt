@@ -1,0 +1,27 @@
+=== redispatch op-S1-clean (completed) ===
+REFUSED: op op-S1-clean completed; re-dispatch impossible
+EXIT=0
+=== redispatch op-S4-post-dispatch (unresolved) ===
+REFUSED: op op-S4-post-dispatch dispatched (tag=effect:notify) but outcome unrecorded; evidence: dispatch record without durable outcome or receipt
+EXIT=0
+=== redispatch op-S5-unfsynced-outcome (outcome executed) ===
+REFUSED: op op-S5-unfsynced-outcome outcome record status=executed (durable=false); re-dispatch impossible
+EXIT=0
+=== redispatch op-S7-refused-unrecorded (unresolved) ===
+REFUSED: op op-S7-refused-unrecorded dispatched (tag=effect-ne:bank-write) but outcome unrecorded; evidence: dispatch record without durable outcome or receipt
+EXIT=0
+=== admit-receipt op-S4-post-dispatch (executed receipt) ===
+ADMITTED: receipt for op op-S4-post-dispatch attempt att-S4-post-dispatch outcome=executed
+EXIT=0
+=== redispatch op-S4 AFTER admit (attested executed) ===
+REFUSED: op op-S4-post-dispatch receipt evidence receipt-att-S4-post-dispatch.txt outcome=executed; re-dispatch impossible
+EXIT=0
+=== admit-receipt op-S7-refused-unrecorded (not-executed receipt) ===
+ADMITTED: receipt for op op-S7-refused-unrecorded attempt att-S7-refused-unrecorded outcome=not-executed
+EXIT=0
+=== redispatch op-S7 AFTER admit (attested not-executed) ===
+ALLOWED: op op-S7-refused-unrecorded state=receipt-resolved outcome=not-executed; no executed outcome of record
+EXIT=0
+=== succeed op-S7-refused-unrecorded ===
+SUCCESSOR: succ-1784582840630 proceeded for predecessor op-S7-refused-unrecorded tag=effect-ne:bank-write status=not-executed
+EXIT=0

@@ -1,0 +1,472 @@
+--- frozen/ss0.py	2026-07-20 11:35:00.000000000 +0800
++++ ss0.py	2026-07-21 03:27:03.289547043 +0800
+@@ -18,6 +18,8 @@
+     store_append(rd, ser_encode(m), durable)
+ 
+ def tagclass(tag):  # pure function of the tag string; recovery never branches on labels
++    if tag.startswith("batch:"):
++        return "batch"  # v1.1-ext
+     if tag.startswith("slow:"):
+         return "stream"
+     if tag.startswith("effect:") or tag.startswith("effect-ne:"):
+@@ -108,19 +110,77 @@
+     record_outcome(rd, "op-1", r)
+     finish(rd, "op-1")
+ 
++# ---------- v1.1-ext: batch operations (R8 extension; batch:<label>:<n>) ----------
++# Schema addition: one new record kind `batch` (declaration metadata only: tag,
++# legs, optional sup/aband lineage — NEVER a status), and two optional fields on
++# leg declarations (`batch`, `leg`). Legs are ordinary ops with per-leg attempt
++# identity "<batch-id>-leg-<i>"; all per-leg semantics reuse the frozen machinery.
++
++def leg_id(bid, i):
++    return "%s-leg-%d" % (bid, i)
++
++def batch_decl(rd, bid, label, n, sup=None, aband=None):
++    m = {"k": "batch", "op": bid, "tag": "batch:%s:%d" % (label, n), "legs": n}
++    if sup:
++        m["sup"] = sup
++    if aband:
++        m["aband"] = aband
++    rec(rd, m)
++
++def leg_decl(rd, bid, i, tag, sup=None):
++    m = {"k": "succ" if sup else "op", "op": leg_id(bid, i), "tag": tag, "batch": bid, "leg": i}
++    if sup:
++        m["sup"] = sup
++    rec(rd, m)
++
++def batch_open(rd, bid, label, n):  # declare batch (durable), then fetch the descriptor
++    batch_decl(rd, bid, label, n)
++    return provider_dispatch(rd, "batch:%s:%d" % (label, n), bid)
++
++def leg_run(rd, bid, i, tag):  # declare, dispatch, record, settle one leg end-to-end
++    leg_decl(rd, bid, i, tag)
++    operate(rd, leg_id(bid, i), tag)
++    finish(rd, leg_id(bid, i))
++
++def sc_E1(rd, kp):
++    batch_open(rd, "b1", "settle", 3)
++    for i in (1, 2, 3):
++        leg_run(rd, "b1", i, "effect:settle")
++
++def sc_E2(rd, kp):
++    batch_open(rd, "b1", "settle", 3)
++    leg_run(rd, "b1", 1, "effect:settle")
++    leg_decl(rd, "b1", 2, "effect:settle")
++    r = provider_dispatch(rd, "effect:settle", leg_id("b1", 2))
++    window(rd, kp or "mid-batch")  # @harness
++    record_outcome(rd, leg_id("b1", 2), r)
++    finish(rd, leg_id("b1", 2))  # leg-3 is never dispatched, by contract
++
++def sc_E3(rd, kp):
++    batch_open(rd, "b1", "settle", 3)
++    leg_run(rd, "b1", 1, "effect:settle")
++    leg_decl(rd, "b1", 2, "effect-ne:settle")
++    r = provider_dispatch(rd, "effect-ne:settle", leg_id("b1", 2))
++    window(rd, kp or "leg-refused")  # @harness
++    record_outcome(rd, leg_id("b1", 2), r)
++    finish(rd, leg_id("b1", 2))  # leg-3 is never dispatched, by contract
++
+ SCEN = {"S1-clean": sc_S1, "S2-pre-record": sc_S2, "S3-mid-record": sc_S3,
+         "S4-post-dispatch": sc_S4, "S5-unfsynced-outcome": sc_S5,
+         "S6-mid-stream": sc_S6, "S7-refused-unrecorded": sc_S7,
+         "P-complete": lambda rd, kp: run_clean(rd, "op-1", "complete:hello-world"),
+         "P-empty": lambda rd, kp: run_clean(rd, "op-1", "empty"),
+         "P-invalid": lambda rd, kp: run_clean(rd, "op-1", "invalid"),
+-        "P-stream": lambda rd, kp: run_clean(rd, "op-1", "slow:3")}
++        "P-stream": lambda rd, kp: run_clean(rd, "op-1", "slow:3"),
++        "E1-clean": sc_E1, "E2-mid-batch": sc_E2, "E3-leg-refused": sc_E3}  # v1.1-ext
+ 
+ # the harness invokes <entry> <run-dir>/ <kind> <killpoint-or-empty>; map to scenarios
+ KIND = {("effect", ""): "S1-clean", ("effect", "pre-record"): "S2-pre-record",
+         ("effect", "mid-record"): "S3-mid-record", ("effect", "post-dispatch"): "S4-post-dispatch",
+         ("effect", "unfsynced-outcome"): "S5-unfsynced-outcome", ("stream", "mid-stream"): "S6-mid-stream",
+-        ("refused", "refused-unrecorded"): "S7-refused-unrecorded"}
++        ("refused", "refused-unrecorded"): "S7-refused-unrecorded",
++        ("batch", ""): "E1-clean", ("batch", "mid-batch"): "E2-mid-batch",
++        ("batch-ne", "leg-refused"): "E3-leg-refused"}  # v1.1-ext
+ 
+ # ---------- cold recovery: read-only derivation (R1/R2/R6/R9) ----------
+ 
+@@ -136,9 +196,18 @@
+ 
+ def build(records, anomalies):
+     ops, order = {}, []
++    batches, border = {}, []  # v1.1-ext: batch declarations live outside the op model
+     for i, m in records:
+         k, opid = str(m.get("k", "")), str(m.get("op", ""))
+-        if k in ("op", "succ"):
++        if k == "batch":  # v1.1-ext
++            if not opid:
++                anomalies.append("record %d: batch declaration without id" % i)
++            elif opid in batches:
++                anomalies.append("record %d: duplicate batch declaration of '%s'" % (i, opid))
++            else:
++                batches[opid] = (i, m)
++                border.append(opid)
++        elif k in ("op", "succ"):
+             if not opid:
+                 anomalies.append("record %d: declaration without op id" % i)
+             elif opid in ops:
+@@ -179,7 +248,17 @@
+             for ai, am in o["atts"]:
+                 if str(am.get("claims", "")) != str(o["out"][1].get("st", "")):
+                     anomalies.append("record %d: attestation claims '%s' but outcome record %d says '%s'" % (ai, str(am.get("claims", "")), o["out"][0], str(o["out"][1].get("st", ""))))
+-    return ops, order
++    for opid in order:  # v1.1-ext: leg/batch linkage integrity
++        di, d = ops[opid]["decl"]
++        b = str(d.get("batch", ""))
++        if b and b not in batches:
++            anomalies.append("record %d: leg of undeclared batch '%s'" % (di, b))
++    for bid in border:  # v1.1-ext: successor-batch lineage integrity
++        bi, bm = batches[bid]
++        sup = str(bm.get("sup", ""))
++        if sup and sup not in batches:
++            anomalies.append("record %d: successor batch of undeclared batch '%s'" % (bi, sup))
++    return ops, order, batches, border  # v1.1-ext: signature widened
+ 
+ def standing_of(o):
+     if tagclass(str(o["decl"][1].get("tag", ""))) == "stream":
+@@ -190,10 +269,20 @@
+         return "ATTESTED" if len({str(a[1].get("claims", "")) for a in o["atts"]}) == 1 else "CONFLICT"
+     return "UNRESOLVED"
+ 
+-# ---------- canonical recovery rendering (digest spec v1; see README §Digest) ----------
++# ---------- canonical recovery rendering (digest spec v2; see README-EXTENSION §Digest) ----------
++# v1.1-ext: spec bumped to ss0-recovery/2 — op lines gain trailing batch=/leg= fields;
++# a batch census section follows the op lines. v1 frozen digests remain on the ledger.
+ 
+-def render(ops, order, tail, nrec, anomalies):
+-    L = ["ss0-recovery/1", "tail=" + tail, "records=%d" % nrec, "anomalies=%d" % len(anomalies)]
++def legs_of(ops, order, bid):
++    out = {}
++    for opid in order:
++        d = ops[opid]["decl"][1]
++        if str(d.get("batch", "")) == bid:
++            out[int(d.get("leg", 0))] = opid
++    return out
++
++def render(ops, order, tail, nrec, anomalies, batches, border):
++    L = ["ss0-recovery/2", "tail=" + tail, "records=%d" % nrec, "anomalies=%d" % len(anomalies)]
+     L += ["anomaly=" + a for a in anomalies]
+     L.append("ops=%d" % len(order))
+     for opid in order:
+@@ -216,12 +305,34 @@
+                            "class=" + tagclass(tag), "standing=" + s, "st=" + st, "pc=" + pc,
+                            "conf=" + ("1" if o["done"] else "0"), "att=" + att, "chunks=" + chunks,
+                            "want=" + (str(want) if want is not None else "-"),
+-                           "succ=" + (",".join(o["succ"]) if o["succ"] else "-")]))
++                           "succ=" + (",".join(o["succ"]) if o["succ"] else "-"),
++                           "batch=" + (str(d.get("batch", "")) or "-"),
++                           "leg=" + (str(d.get("leg", "")) or "-")]))
++    L.append("batches=%d" % len(border))  # v1.1-ext: per-leg census, derived only
++    for bid in border:
++        bi, bm = batches[bid]
++        n = int(bm.get("legs", 0))
++        legs = legs_of(ops, order, bid)
++        top = max([n] + list(legs))
++        census = ",".join("%d:%s" % (i, standing_of(ops[legs[i]]) if i in legs else "NONE")
++                          for i in range(1, top + 1)) or "-"
++        L.append("|".join(["batch=" + bid, "tag=" + str(bm.get("tag", "")), "legs=%d" % n,
++                           "sup=" + (str(bm.get("sup", "")) or "-"), "census=" + census,
++                           "aband=" + (str(bm.get("aband", "")) or "-")]))
+     return "\n".join(L) + "\n"
+ 
+ # ---------- re-dispatch gate (R3/R4): automatic re-dispatch is impossible here ----------
+ 
+-def gate(ops, opid, tail):
++def gate(ops, opid, tail, batches=None, order=None):
++    if batches and opid in batches:  # v1.1-ext: wholesale batch re-dispatch is blind by construction
++        bi, bm = batches[opid]
++        legs = legs_of(ops, order or list(ops), opid)
++        n = int(bm.get("legs", 0))
++        census = ", ".join("leg-%d %s" % (i, standing_of(ops[legs[i]]) if i in legs else "NONE") for i in range(1, max([n] + list(legs)) + 1))
++        return False, ["record %d declares batch '%s' (%s legs; per-leg standings: %s); a batch is never "
++                       "re-dispatched wholesale — legs are governed individually (per-leg modes) and batch-level "
++                       "proceeding requires an explicit successor with per-leg lineage (mode 'bsucceed')"
++                       % (bi, opid, bm.get("legs"), census)]
+     if opid not in ops:
+         if tail == "torn":
+             return False, ["log tail is TORN: a truncated record survives, so absence of a prior declaration of '%s' cannot be certified" % opid]
+@@ -257,18 +368,18 @@
+ 
+ def canonical_block(rd):
+     records, tail, anomalies, nrec = load(rd)
+-    ops, order = build(records, anomalies)
+-    text = render(ops, order, tail, nrec, anomalies)
+-    return records, tail, anomalies, nrec, ops, order, text
++    ops, order, batches, border = build(records, anomalies)  # v1.1-ext: widened
++    text = render(ops, order, tail, nrec, anomalies, batches, border)  # v1.1-ext: widened
++    return records, tail, anomalies, nrec, ops, order, batches, border, text  # v1.1-ext: widened
+ 
+ def mode_canon(rd):
+-    records, tail, anomalies, nrec, ops, order, text = canonical_block(rd)
++    records, tail, anomalies, nrec, ops, order, batches, border, text = canonical_block(rd)  # v1.1-ext: widened
+     print(text, end="")
+     print("digest=" + crc32_hex(text.encode("utf-8")))
+     return 0
+ 
+ def mode_recover(rd):
+-    records, tail, anomalies, nrec, ops, order, text = canonical_block(rd)
++    records, tail, anomalies, nrec, ops, order, batches, border, text = canonical_block(rd)  # v1.1-ext: widened
+     print("== SS-0 cold recovery — %s" % rd)
+     print("storage: %d intact frame(s), %d decodable record(s); tail=%s" % (nrec, len(records), tail))
+     print("A. SURVIVING RECORDS (recorded observations — the only evidence this report uses)")
+@@ -285,7 +396,8 @@
+         di, d = o["decl"]
+         s = standing_of(o)
+         role = "successor of '%s' (distinct identity; not a first attempt, not a retry)" % d.get("sup") if d.get("k") == "succ" else "initial"
+-        print("  op '%s'  tag=%s  class=%s  role=%s" % (opid, d.get("tag"), tagclass(str(d.get("tag", ""))), role))
++        legof = "  member-of-batch=%s leg=%s" % (d.get("batch"), d.get("leg")) if "batch" in d else ""  # v1.1-ext
++        print("  op '%s'  tag=%s  class=%s  role=%s%s" % (opid, d.get("tag"), tagclass(str(d.get("tag", ""))), role, legof))
+         print("    standing: %s   [derived]" % s)
+         basis = ["declaration [%d]" % di]
+         if o["out"]:
+@@ -313,6 +425,19 @@
+             print("    successors on record: %s (this op's own standing is unchanged and stays visible)" % ", ".join(o["succ"]))
+         ok, reasons = gate(ops, opid, tail)
+         print("    re-dispatch gate: %s — %s" % ("LAWFUL-FRESH-IDENTITY" if ok else "REFUSED", reasons[0]))
++    for bid in border:  # v1.1-ext: per-leg batch census (derived; the record holds no batch status)
++        bi, bm = batches[bid]
++        legs = legs_of(ops, order, bid)
++        n = int(bm.get("legs", 0))
++        print("  batch '%s'  tag=%s  legs=%s%s%s" % (bid, bm.get("tag"), bm.get("legs"),
++              ("  successor-of='%s'" % bm["sup"]) if bm.get("sup") else "",
++              ("  abandons=%s" % bm["aband"]) if bm.get("aband") else ""))
++        for i in range(1, max([n] + list(legs)) + 1):
++            if i in legs:
++                o = ops[legs[i]]
++                print("    leg %d ('%s'): standing %s [derived]" % (i, legs[i], standing_of(o)))
++            else:
++                print("    leg %d: NONE — no records survive (never declared here, or declaration lost)" % i)
+     print("C. ANOMALIES (planted or real damage; reported, never silently repaired)")
+     for a in anomalies:
+         print("    " + a)
+@@ -325,11 +450,13 @@
+ 
+ def mode_redispatch(rd, opid):
+     records, tail, anomalies, nrec = load(rd)
+-    ops, order = build(records, anomalies)
+-    ok, reasons = gate(ops, opid, tail)
++    ops, order, batches, border = build(records, anomalies)  # v1.1-ext: widened
++    ok, reasons = gate(ops, opid, tail, batches, order)  # v1.1-ext: batch-aware
+     print(("%s automatic re-dispatch of '%s'" % ("CERTIFIED:" if ok else "REFUSED:", opid)))
+     for r in reasons:
+         print("  evidence: " + r)
++    if opid in batches:  # v1.1-ext
++        show_record(*batches[opid])
+     if opid in ops:
+         o = ops[opid]
+         for i, m in [o["decl"]] + [x for x in (o["out"], o["done"]) if x] + o["atts"]:
+@@ -340,7 +467,10 @@
+ 
+ def mode_admit(rd, opid):
+     records, tail, anomalies, nrec = load(rd)
+-    ops, order = build(records, anomalies)
++    ops, order, batches, border = build(records, anomalies)  # v1.1-ext: widened
++    if opid in batches:  # v1.1-ext: providers issue receipts per leg, never per batch
++        print("REFUSE: '%s' is a batch declaration; providers issue receipts per leg, not per batch — admit the individual leg (e.g. '%s')" % (opid, leg_id(opid, 1)))
++        return 4
+     if opid not in ops:
+         print("REFUSE: no declaration of '%s' survives; an attestation cannot be attached to an operation the record does not know" % opid)
+         return 4
+@@ -371,7 +501,10 @@
+ 
+ def mode_succeed(rd, old, new, tag=None):
+     records, tail, anomalies, nrec = load(rd)
+-    ops, order = build(records, anomalies)
++    ops, order, batches, border = build(records, anomalies)  # v1.1-ext: widened
++    if old in batches:  # v1.1-ext
++        print("REFUSE: '%s' is a batch; use mode 'bsucceed' so the successor carries per-leg lineage" % old)
++        return 4
+     if old not in ops:
+         print("REFUSE: predecessor '%s' is not on record; a successor must supersede a recorded operation" % old)
+         return 4
+@@ -391,10 +524,47 @@
+     print("successor '%s' dispatched and settled; predecessor standing unchanged (%s)" % (new, s))
+     return 0
+ 
++def mode_bsucceed(rd, old, new):  # v1.1-ext: batch successor with explicit per-leg lineage
++    records, tail, anomalies, nrec = load(rd)
++    ops, order, batches, border = build(records, anomalies)
++    if old not in batches:
++        print("REFUSE: predecessor batch '%s' is not on record; a batch successor must supersede a recorded batch" % old)
++        return 4
++    if new in batches or new in ops:
++        print("REFUSE: identity '%s' is already on record; successor identity must be fresh" % new)
++        return 4
++    bi, bm = batches[old]
++    n = int(bm.get("legs", 0))
++    label = str(bm.get("tag", "")).rsplit(":", 1)[0][6:]
++    aband, plan = [], []
++    for i in range(1, n + 1):
++        lid = leg_id(old, i)
++        if lid in ops:
++            o = ops[lid]
++            s = standing_of(o)
++            st = str(o["out"][1].get("st")) if o["out"] else (str(o["atts"][0][1].get("claims", "")) if s == "ATTESTED" else "")
++            if s in ("SETTLED", "ATTESTED") and st == "executed":
++                aband.append(lid)  # known executed: re-attempt would double-execute
++            else:
++                plan.append((i, lid))  # unresolved, unconfirmed, or known-not-executed: re-attempt
++        else:
++            plan.append((i, None))  # never declared: first attempt under the successor
++    batch_decl(rd, new, label, n, sup=old, aband=",".join(aband))
++    for i, oldlid in plan:
++        tag = "effect:" + label  # re-attempt pursues the leg's underlying intent
++        leg_decl(rd, new, i, tag, sup=oldlid)
++        operate(rd, leg_id(new, i), tag)
++        finish(rd, leg_id(new, i))
++    print("successor batch '%s' supersedes '%s': re-attempts legs %s (per-leg succ lineage); abandons %s "
++          "(known executed); predecessor legs' standing unchanged and stays visible"
++          % (new, old, ["leg-%d" % i for i, _ in plan], aband or ["none"]))
++    return 0
++
+ USAGE = ("usage: ss0.py <run-dir> <scenario | mode> [args]\n"
+          "  harness form: ss0.py <run-dir>/ <kind> <killpoint-or-empty>  (kind: effect|stream|refused)\n"
+          "  scenarios: " + ", ".join(SCEN) + "\n"
+-         "  modes: recover | canon | redispatch <op> | admit <op> | succeed <old-op> <new-op> [tag]\n")
++         "  modes: recover | canon | redispatch <op> | admit <op> | succeed <old-op> <new-op> [tag]"
++         " | bsucceed <old-batch> <new-batch>\n")  # v1.1-ext
+ 
+ def main(argv):
+     if len(argv) < 3:
+@@ -416,6 +586,8 @@
+         return mode_admit(rd, argv[3])
+     if name == "succeed" and len(argv) > 4:
+         return mode_succeed(rd, argv[3], argv[4], argv[5] if len(argv) > 5 else None)
++    if name == "bsucceed" and len(argv) > 4:  # v1.1-ext
++        return mode_bsucceed(rd, argv[3], argv[4])
+     sys.stderr.write(USAGE)
+     return 2
+ 
+--- frozen/ss0-reader.lisp	2026-07-20 11:35:00.000000000 +0800
++++ ss0-reader.lisp	2026-07-21 03:30:10.988526358 +0800
+@@ -1,6 +1,7 @@
+ ;;;; ss0-reader.lisp — SS-0 independent second reader (Common Lisp / SBCL).
+ ;;;; Independent implementation of the seat's recovery-state derivation and
+-;;;; canonical digest (spec "ss0-recovery/1", see README.md §Digest). Shares NO
++;;;; canonical digest (spec "ss0-recovery/2", see README-EXTENSION.md §Digest;
++;;;; v2 = v1 + batch=/leg= op fields + batch census section, v1.1-ext). Shares NO
+ ;;;; code with the Python implementation; uses only the frozen substrate
+ ;;;; (framed storage, canonical serialization, crc32). Read-only: never appends.
+ ;;;; Usage: sbcl --script ss0-reader.lisp <run-dir>
+@@ -17,7 +18,8 @@
+   (and (>= (length s) (length p)) (string= (subseq s 0 (length p)) p)))
+ 
+ (defun tagclass (tag)
+-  (cond ((pref tag "slow:") "stream")
++  (cond ((pref tag "batch:") "batch")     ; v1.1-ext
++        ((pref tag "slow:") "stream")
+         ((or (pref tag "effect:") (pref tag "effect-ne:")) "effect")
+         ((or (pref tag "complete:") (member tag '("empty" "invalid") :test #'string=)) "payload")
+         (t "unknown")))
+@@ -35,9 +37,10 @@
+ (defun member-str (x xs) (member x xs :test #'string=))
+ 
+ (defun analyze (run-dir)
+-  ;; returns (values ops-hash order-list tail-keyword intact-frame-count anomalies)
++  ;; returns (values ops order tail intact-frame-count anomalies batches border)
+   (multiple-value-bind (payloads tail) (store-read-prefix (as-dir run-dir))
+-    (let ((anomalies '()) (records '()) (ops (make-hash-table :test #'equal)) (order '()))
++    (let ((anomalies '()) (records '()) (ops (make-hash-table :test #'equal)) (order '())
++          (batches (make-hash-table :test #'equal)) (border '()))  ; v1.1-ext
+       (flet ((anom (fmt &rest args)
+                (setf anomalies (append anomalies (list (apply #'format nil fmt args))))))
+         (loop for p in payloads for i from 0 do
+@@ -46,6 +49,13 @@
+         (dolist (r (nreverse records))
+           (let* ((i (car r)) (m (cdr r)) (k (sval m "k")) (opid (sval m "op")))
+             (cond
++              ((string= k "batch")              ; v1.1-ext
++               (cond ((string= opid "")
++                      (anom "record ~D: batch declaration without id" i))
++                     ((gethash opid batches)
++                      (anom "record ~D: duplicate batch declaration of '~A'" i opid))
++                     (t (setf (gethash opid batches) (cons i m))
++                        (setf border (append border (list opid))))))
+               ((member-str k '("op" "succ"))
+                (cond ((string= opid "")
+                       (anom "record ~D: declaration without op id" i))
+@@ -86,7 +96,15 @@
+                   (anom "record ~D: attestation claims '~A' but outcome record ~D says '~A'"
+                         (car a) (sval (cdr a) "claims")
+                         (car (getf o :out)) (sval (cdr (getf o :out)) "st")))))))
+-        (values ops order tail (length payloads) anomalies)))))
++        (dolist (opid order)                    ; v1.1-ext: leg/batch linkage integrity
++          (let* ((o (gethash opid ops)) (d (cdr (getf o :decl))) (b (sval d "batch")))
++            (unless (or (string= b "") (gethash b batches))
++              (anom "record ~D: leg of undeclared batch '~A'" (car (getf o :decl)) b))))
++        (dolist (bid border)                    ; v1.1-ext: successor-batch lineage integrity
++          (let* ((bm (cdr (gethash bid batches))) (sup (sval bm "sup")))
++            (unless (or (string= sup "") (gethash sup batches))
++              (anom "record ~D: successor batch of undeclared batch '~A'" (car (gethash bid batches)) sup))))
++        (values ops order tail (length payloads) anomalies batches border)))))
+ 
+ (defun standing-of (o)
+   (cond ((string= (tagclass (sval (cdr (getf o :decl)) "tag")) "stream")
+@@ -100,9 +118,26 @@
+ 
+ (defun csv (items) (format nil "~{~A~^,~}" items))
+ 
+-(defun render (ops order tail nrec anomalies)
++(defun as-int (v)                                  ; v1.1-ext
++  (cond ((integerp v) v)
++        ((null v) 0)
++        (t (or (ignore-errors (parse-integer (princ-to-string v))) 0))))
++
++(defun or-dash (v)                                 ; v1.1-ext: missing/empty -> "-"
++  (let ((s (if (stringp v) v (if v (princ-to-string v) ""))))
++    (if (string= s "") "-" s)))
++
++(defun legs-of (ops order bid)                     ; v1.1-ext: alist leg-index -> opid
++  (let ((out '()))
++    (dolist (opid order)
++      (let ((d (cdr (getf (gethash opid ops) :decl))))
++        (when (string= (sval d "batch") bid)
++          (setf out (append out (list (cons (as-int (aval d "leg" nil)) opid)))))))
++    out))
++
++(defun render (ops order tail nrec anomalies batches border)
+   (with-output-to-string (s)
+-    (format s "ss0-recovery/1~%tail=~A~%records=~D~%anomalies=~D~%"
++    (format s "ss0-recovery/2~%tail=~A~%records=~D~%anomalies=~D~%"
+             (string-downcase (symbol-name tail)) nrec (length anomalies))
+     (dolist (a anomalies) (format s "anomaly=~A~%" a))
+     (format s "ops=~D~%" (length order))
+@@ -125,16 +160,30 @@
+                            :key (lambda (c) (let ((v (aval (cdr c) "i" 0))) (if (integerp v) v 0)))))
+              (chunks (if sorted (csv (mapcar (lambda (c) (princ-to-string (aval (cdr c) "i" 0))) sorted)) "-"))
+              (want (want-of tag)))
+-        (format s "op=~A|role=~A|sup=~A|tag=~A|class=~A|standing=~A|st=~A|pc=~A|conf=~A|att=~A|chunks=~A|want=~A|succ=~A~%"
++        (format s "op=~A|role=~A|sup=~A|tag=~A|class=~A|standing=~A|st=~A|pc=~A|conf=~A|att=~A|chunks=~A|want=~A|succ=~A|batch=~A|leg=~A~%"
+                 opid (if succp "successor" "initial") (if succp (sval d "sup" "-") "-") tag
+                 (tagclass tag) st stv pc (if (getf o :done) "1" "0") att chunks
+                 (if want (princ-to-string want) "-")
+-                (if (getf o :succ) (csv (getf o :succ)) "-"))))))
++                (if (getf o :succ) (csv (getf o :succ)) "-")
++                (or-dash (aval d "batch" nil)) (or-dash (aval d "leg" nil)))))
++    (format s "batches=~D~%" (length border))       ; v1.1-ext: per-leg census, derived only
++    (dolist (bid border)
++      (let* ((bm (cdr (gethash bid batches)))
++             (n (as-int (aval bm "legs" nil)))
++             (legs (legs-of ops order bid))
++             (top (max n (if legs (apply #'max (mapcar #'car legs)) 0)))
++             (census (if (>= top 1)
++                         (csv (loop for i from 1 to top collect
++                                    (let ((hit (assoc i legs)))
++                                      (format nil "~D:~A" i (if hit (standing-of (gethash (cdr hit) ops)) "NONE")))))
++                         "-")))
++        (format s "batch=~A|tag=~A|legs=~D|sup=~A|census=~A|aband=~A~%"
++                bid (sval bm "tag") n (or-dash (aval bm "sup" nil)) census (or-dash (aval bm "aband" nil)))))))
+ 
+ (let ((args (cdr sb-ext:*posix-argv*)))
+   (if (null args)
+       (format *error-output* "usage: sbcl --script ss0-reader.lisp <run-dir>~%")
+-      (multiple-value-bind (ops order tail nrec anomalies) (analyze (first args))
+-        (let ((text (render ops order tail nrec anomalies)))
++      (multiple-value-bind (ops order tail nrec anomalies batches border) (analyze (first args))
++        (let ((text (render ops order tail nrec anomalies batches border)))
+           (write-string text)
+           (format t "digest=~A~%" (crc32-hex (sb-ext:string-to-octets text :external-format :utf-8)))))))

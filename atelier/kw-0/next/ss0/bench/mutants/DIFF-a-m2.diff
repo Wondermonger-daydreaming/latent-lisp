@@ -1,0 +1,20 @@
+--- seat-a/base/ss0.py	2026-07-20 18:27:55.247271259 -0300
++++ mutants/a-m2/ss0.py	2026-07-20 18:42:48.780746436 -0300
+@@ -228,7 +228,7 @@
+         return True, ["no surviving record mentions '%s'; declarations precede dispatch and are durable, so an intact clean log certifies no prior dispatch — lawful only as a FIRST attempt under a fresh identity" % opid]
+     o = ops[opid]
+     s = standing_of(o)
+-    if s in ("UNRESOLVED", "STREAM-INCOMPLETE"):
++    if s in ("STREAM-INCOMPLETE",):
+         return False, ["record %d declares '%s' but no outcome/completion/attestation completes it; dispatch may already have happened and the records cannot tell — re-dispatch could double-execute" % (o["decl"][0], opid)]
+     if s == "OUTCOME-UNCONFIRMED":
+         return False, ["record %d: outcome '%s' survives UNCONFIRMED (no completion record); re-dispatch could double-execute" % (o["out"][0], o["out"][1].get("st"))]
+@@ -248,7 +248,7 @@
+         if cl == "not-executed":
+             return True, [ev + " resolves '%s' to NOT-EXECUTED; a fresh-identity dispatch is lawful" % opid]
+         return False, [ev + " carries unrecognized claim '%s'; standing unresolved" % cl]
+-    return False, ["standing %s for '%s': automatic re-dispatch refused" % (s, opid)]
++    return (s == "UNRESOLVED"), ["standing %s for '%s': automatic re-dispatch refused" % (s, opid)]
+ 
+ # ---------- recovery modes ----------
+ 

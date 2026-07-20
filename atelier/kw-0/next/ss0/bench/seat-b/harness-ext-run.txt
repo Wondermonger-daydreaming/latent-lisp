@@ -1,0 +1,33 @@
+=== S1-clean: scenario=effect killpoint=None ===
+  [S1-clean] no kill exit=0 records=4ce5901b703605c1
+    provider: EXECUTED effect=bank-write attempt=att-S1-clean digest=FD1F8D31
+=== S2-pre-record: scenario=effect killpoint=pre-record ===
+  [S2-pre-record] SIGKILL delivered at READY window exit=-9 records=f881a2ab6cd0ed7d
+=== S3-mid-record: scenario=effect killpoint=mid-record ===
+  [S3-mid-record] SIGKILL delivered at READY window exit=-9 records=3b7c4548236d73de
+=== S4-post-dispatch: scenario=effect killpoint=post-dispatch ===
+  [S4-post-dispatch] SIGKILL delivered at READY window exit=-9 records=d90ae719bfd86b3a
+    provider: EXECUTED effect=notify attempt=att-S4-post-dispatch digest=6FD3EF22
+=== S5-unfsynced-outcome: scenario=effect killpoint=unfsynced-outcome ===
+  [S5-unfsynced-outcome] SIGKILL delivered at READY window exit=-9 records=6fd8d095591e227e
+    provider: EXECUTED effect=mint attempt=att-S5-unfsynced-outcome digest=8A6D0C0A
+=== S6-mid-stream: scenario=stream killpoint=mid-stream ===
+  [S6-mid-stream] SIGKILL delivered at READY window exit=-9 records=2fc614188365b5b3
+=== S7-refused-unrecorded: scenario=refused killpoint=refused-unrecorded ===
+  [S7-refused-unrecorded] SIGKILL delivered at READY window exit=-9 records=34a581fdf3e8e830
+    provider: RECEIVED-NOT-EXECUTED effect=bank-write attempt=att-S7-refused-unrecorded
+=== E1-clean: scenario=batch killpoint=None ===
+  [E1-clean] no kill exit=0 records=6430eac50c3a8b10
+    provider: EXECUTED effect=batch-write-L1 attempt=att-E1-clean-L1 digest=66D7CFFF
+    provider: EXECUTED effect=batch-write-L2 attempt=att-E1-clean-L2 digest=AC44C5C1
+    provider: EXECUTED effect=batch-write-L3 attempt=att-E1-clean-L3 digest=5CE53E14
+=== E2-mid-batch: scenario=batch killpoint=mid-batch ===
+  [E2-mid-batch] SIGKILL delivered at READY window exit=-9 records=c96c2dcd7254e56d
+    provider: EXECUTED effect=batch-write-L1 attempt=att-E2-mid-batch-L1 digest=819247CA
+    provider: EXECUTED effect=batch-write-L2 attempt=att-E2-mid-batch-L2 digest=63859493
+=== E3-leg-refused: scenario=batch-ne killpoint=leg-refused ===
+  [E3-leg-refused] SIGKILL delivered at READY window exit=-9 records=827f20bf4892d053
+    provider: EXECUTED effect=batch-write-L1 attempt=att-E3-leg-refused-L1 digest=7ADF1016
+    provider: RECEIVED-NOT-EXECUTED effect=batch-write-L2 attempt=att-E3-leg-refused-L2
+
+evidence in /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/_staging/ss0-bench/seat-b/ext/evidence

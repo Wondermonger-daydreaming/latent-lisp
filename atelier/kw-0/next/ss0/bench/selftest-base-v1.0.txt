@@ -1,0 +1,17 @@
+== 1. canonical serialization ==
+  PASS: CL and Py encode byte-identical
+  PASS: Py decodes CL bytes to fixed map
+  PASS: CL round-trips Py bytes byte-identical
+== 2. framed storage, both directions ==
+  PASS: Py reads CL frames (got [b'alpha', b'beta'], torn)
+  PASS: Py reports torn tail on CL torn frame
+  PASS: CL reads Py frames + torn status (alpha,beta|torn)
+  PASS: clean tail reported clean
+== 3. provider determinism across languages ==
+  PASS: provider artifact byte-identical: provider.log
+  PASS: provider artifact byte-identical: receipt-a1.txt
+  PASS: provider artifact byte-identical: receipt-a2.txt
+== 4. CRC32 agreement ==
+  PASS: crc32('hello') matches
+
+SELFTEST: ALL PASS

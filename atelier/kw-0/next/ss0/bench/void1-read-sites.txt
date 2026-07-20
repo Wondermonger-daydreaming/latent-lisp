@@ -1,0 +1,34 @@
+##### VOID-1 read-site enumeration — every file-read in seat sources #####
+=== seat-b/base/ss0_runner.py (Python read sites) ===
+6:HERE = Path(__file__).resolve().parent
+25:    payloads, status = sub.store_read_prefix(run_dir)
+141:    p = Path(run_dir) / ("receipt-%s.txt" % attempt)
+142:    if not p.exists():
+145:    outcome = "executed" if "outcome: executed" in p.read_text() else "not-executed"
+=== seat-a/base/ss0.py (Python read sites) ===
+11:from ss0_substrate import (store_append, store_append_torn, store_read_prefix,  # noqa: E402
+128:    payloads, tail = store_read_prefix(rd)
+356:    data = open(p, "rb").read()
+=== seat-b/base/ss0_reader.lisp (Lisp read sites) ===
+2:(load (merge-pathnames "substrate/ss0-substrate.lisp" *load-truename*))
+9:(defun payload-crc (s)
+13:  (multiple-value-bind (payloads status) (store-read-prefix run-dir)
+14:    (values (mapcar #'ser-decode payloads) status)))
+20:                :payload-crc "-" :outcome "-" :outcome-durable "-"
+21:                :outcome-payload-crc "-" :evidence "-" :successor "-"
+37:                     (getf pl :payload-crc) (payload-crc (get-val "payload" r))
+49:               (when (assoc "payload" r :test #'string=)
+50:                 (setf (getf pl :outcome-payload-crc)
+51:                       (payload-crc (get-val "payload" r)))))
+89:          (getf pl :payload-crc) (getf pl :outcome) (getf pl :outcome-durable)
+90:          (getf pl :outcome-payload-crc) (getf pl :evidence)
+108:          (format t "op=~A label=~A state=~A regime=~A payload_crc=~A outcome=~A outcome_durable=~A outcome_payload_crc=~A evidence=~A successor=~A chunks=~A lineage=~A derived=~A tag=~A~%"
+110:                  (getf pl :regime) (getf pl :payload-crc) (getf pl :outcome)
+111:                  (getf pl :outcome-durable) (getf pl :outcome-payload-crc)
+=== seat-a/base/ss0-reader.lisp (Lisp read sites) ===
+7:(load (merge-pathnames "substrate/ss0-substrate.lisp" *load-truename*))
+22:        ((or (pref tag "complete:") (member tag '("empty" "invalid") :test #'string=)) "payload")
+39:  (multiple-value-bind (payloads tail) (store-read-prefix (as-dir run-dir))
+43:        (loop for p in payloads for i from 0 do
+45:            (error () (anom "record ~D: undecodable payload" i))))
+89:        (values ops order tail (length payloads) anomalies)))))

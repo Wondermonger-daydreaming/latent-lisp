@@ -1,0 +1,16 @@
+=== S4-post-dispatch: scenario=effect killpoint=post-dispatch ===
+  [S4-post-dispatch] SIGKILL delivered at READY window exit=-9 records=584fec4a810cbe1b
+    provider: EXECUTED effect=mint attempt=op-1 digest=CC5156D4
+
+evidence in /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/_staging/ss0-bench/seat-a/base/evidence2
+=== succeed op-1 op-2 on fresh UNRESOLVED corpse ===
+proceeding: predecessor 'op-1' remains UNRESOLVED and stays visible on record;
+successor 'op-2' is an explicitly distinct operation (fresh identity, supersedes 'op-1') — not a first attempt, not a plain retry
+successor 'op-2' dispatched and settled; predecessor standing unchanged (UNRESOLVED)
+EXIT=0
+=== recover after succession ===
+anomalies=0
+ops=2
+op=op-1|role=initial|sup=-|tag=effect:mint|class=effect|standing=UNRESOLVED|st=-|pc=-|conf=0|att=-|chunks=-|want=-|succ=op-2
+op=op-2|role=successor|sup=op-1|tag=effect:mint|class=effect|standing=SETTLED|st=executed|pc=absent|conf=1|att=-|chunks=-|want=-|succ=-
+digest=DA131C79

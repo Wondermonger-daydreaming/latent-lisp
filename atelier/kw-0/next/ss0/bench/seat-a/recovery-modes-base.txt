@@ -1,0 +1,57 @@
+=== redispatch op-1 in S1-clean ===
+REFUSED: automatic re-dispatch of 'op-1'
+  evidence: records 1+2: 'op-1' is settled-executed; re-dispatch would double-execute
+    [0] k='op' op='op-1' tag='effect:bank-write'
+    [1] dur=True k='out' op='op-1' pc='absent' st='executed'
+    [2] k='done' op='op-1'
+  policy: this gate never dispatches. Lawful paths: admit a provider receipt (mode 'admit') or proceed under an explicitly distinct identity (mode 'succeed').
+EXIT=3
+=== redispatch op-1 in S4-post-dispatch ===
+REFUSED: automatic re-dispatch of 'op-1'
+  evidence: record 0 declares 'op-1' but no outcome/completion/attestation completes it; dispatch may already have happened and the records cannot tell — re-dispatch could double-execute
+    [0] k='op' op='op-1' tag='effect:mint'
+  policy: this gate never dispatches. Lawful paths: admit a provider receipt (mode 'admit') or proceed under an explicitly distinct identity (mode 'succeed').
+EXIT=3
+=== redispatch op-1 in S5-unfsynced-outcome ===
+REFUSED: automatic re-dispatch of 'op-1'
+  evidence: record 1: outcome 'executed' survives UNCONFIRMED (no completion record); re-dispatch could double-execute
+    [0] k='op' op='op-1' tag='effect:notify'
+    [1] dur=False k='out' op='op-1' pc='absent' st='executed'
+  policy: this gate never dispatches. Lawful paths: admit a provider receipt (mode 'admit') or proceed under an explicitly distinct identity (mode 'succeed').
+EXIT=3
+=== redispatch op-1 in S6-mid-stream ===
+REFUSED: automatic re-dispatch of 'op-1'
+  evidence: record 0 declares 'op-1' but no outcome/completion/attestation completes it; dispatch may already have happened and the records cannot tell — re-dispatch could double-execute
+    [0] k='op' op='op-1' tag='slow:3'
+  policy: this gate never dispatches. Lawful paths: admit a provider receipt (mode 'admit') or proceed under an explicitly distinct identity (mode 'succeed').
+EXIT=3
+=== redispatch op-1 in S7-refused-unrecorded ===
+REFUSED: automatic re-dispatch of 'op-1'
+  evidence: record 0 declares 'op-1' but no outcome/completion/attestation completes it; dispatch may already have happened and the records cannot tell — re-dispatch could double-execute
+    [0] k='op' op='op-1' tag='effect-ne:mint'
+  policy: this gate never dispatches. Lawful paths: admit a provider receipt (mode 'admit') or proceed under an explicitly distinct identity (mode 'succeed').
+EXIT=3
+=== admit op-1 in S4 (executed receipt) ===
+admitted: receipt-op-1.txt (crc32 D6F73B07) entered the durable record as attestation for 'op-1', claims='executed'
+standing now ATTESTED/executed — re-dispatch of this intent is permanently forbidden (R4)
+EXIT=0
+=== redispatch op-1 in S4 AFTER admit ===
+REFUSED: automatic re-dispatch of 'op-1'
+  evidence: attestation record 1 (src=receipt-op-1.txt sdig=D6F73B07) resolves 'op-1' to EXECUTED; resolution to executed never enables re-dispatch of the same intent (R4)
+    [0] k='op' op='op-1' tag='effect:mint'
+    [1] claims='executed' k='att' op='op-1' sdig='D6F73B07' src='receipt-op-1.txt'
+  policy: this gate never dispatches. Lawful paths: admit a provider receipt (mode 'admit') or proceed under an explicitly distinct identity (mode 'succeed').
+EXIT=3
+=== admit op-1 in S7 (not-executed receipt) ===
+admitted: receipt-op-1.txt (crc32 064F13A2) entered the durable record as attestation for 'op-1', claims='not-executed'
+standing now ATTESTED/not-executed — proceeding lawfully requires a fresh identity (mode 'succeed')
+EXIT=0
+=== redispatch op-1 in S7 AFTER admit ===
+CERTIFIED: automatic re-dispatch of 'op-1'
+  evidence: attestation record 1 (src=receipt-op-1.txt sdig=064F13A2) resolves 'op-1' to NOT-EXECUTED; a fresh-identity dispatch is lawful
+    [0] k='op' op='op-1' tag='effect-ne:mint'
+    [1] claims='not-executed' k='att' op='op-1' sdig='064F13A2' src='receipt-op-1.txt'
+EXIT=0
+=== succeed op-1 op-2 in S7 ===
+REFUSE: predecessor 'op-1' standing is ATTESTED — resolved; there is no unresolved standing to supersede
+EXIT=4

@@ -1,0 +1,11 @@
+--- seat-b/base/ss0_runner.py	2026-07-20 18:25:45.914613866 -0300
++++ mutants/b-m3/ss0_runner.py	2026-07-20 18:42:06.508122418 -0300
+@@ -76,7 +76,7 @@
+         if d["chunks"]:
+             d["chunks"] = sorted(set(d["chunks"]))
+         if d["state"] == "dispatched":
+-            d.update(state="unresolved", derived="true")
++            d.update(state="unresolved", derived="false")
+         if d["state"] == "unknown":
+             d["derived"] = "true"
+     return ops, tail, records
