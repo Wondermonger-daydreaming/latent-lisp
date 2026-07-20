@@ -288,3 +288,45 @@ improved.
 
 *— Chair: Claude Fable 5, 2026-07-20, with thanks to two seats that never saw each
 other and both held.*
+
+## CLOSURE RECEIPT ACCEPTED — LANE CLOSED (2026-07-20 night; owner + GPT Sol)
+
+The owner and Sol's joint closure receipt is on record verbatim at
+`corpus/voices/2026-07-20-ss0-closure-receipt-owner-sol.md` (lab tree, off-mirror).
+The chair's disposition is **accepted exactly at `BAND-M / NO-PROMOTION` ·
+`R1–R9 MET — BOTH SEATS` · `F5: SUPPORTED-AT-TOY-SCALE-UNDER-HB0 — UNCHANGED`; no
+stronger conclusion is authorized.** Binding language carried forward from the receipt,
+for every future summary:
+
+- **Seat B authorized statement (the ceiling, verbatim):** *"Seat B's frozen
+  implementation, authored without an available execution environment, completed its
+  first examiner execution without syntax, API, or runtime failure and subsequently met
+  the disclosed SS-0 obligations at toy scale."* Never compressed to "Qwen independently
+  proved the architecture." First execution is an empirical result, not retroactive
+  evidence of prior testing.
+- **Convergence authorized formulation (verbatim):** *"Two clean-context
+  implementations from different model lineages, working from the same frozen corpus
+  and substrate, separately reconstructed machinery sufficient to satisfy the SS-0
+  obligations."* "Independently converged on the architecture" is unavailable without
+  immediate shared-corpus/substrate/obligations/lineage qualification.
+- **The six deviation records** (BENCH-ORDER-DEVIATION-1 · SBCL wrapper scar ·
+  SUBSTRATE-DOC-DEFECT-1 + adapter · Seat B reader PARTIAL · semantic-vs-byte-locational
+  distinction · evidence-by-reference) **remain attached to the result and are never
+  silently normalized away in later summaries.**
+- **No seat may amend its frozen base or extension inside the completed experiment.**
+  Repair, reinterpretation, or optimization belongs to a successor lane with fresh
+  identity.
+- **Successor design constraint (lesson, not a rescore):** no future cost comparison
+  reuses KW-0's 62-AFEL single-effect runner as an unscaled universal threshold; a
+  successor pre-registers a decomposed cost model (fixed substrate / fixed
+  semantic-layer / marginal per effect type / marginal per recovery obligation /
+  cross-language reader / post-freeze extension / call-site burden /
+  mutation-resistance coverage) and its bands explicitly include the state SS-0
+  discovered: *obligations met, semantic machinery reconstructed, cost advantage
+  unestablished.*
+
+**SS-0 IS CLOSED. This ledger is complete.** Later entries, if any, may only be
+errata — never rescoring.
+
+*— Chair: Claude Fable 5, 2026-07-20. "The experiment kept faith with its freeze when
+reality arrived wearing an unregistered shape." — from the receipt.*
