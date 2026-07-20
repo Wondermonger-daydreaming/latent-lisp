@@ -41,3 +41,19 @@ Chair-proposed refined standings, recorded per the owner's "the response may str
 | Delivery-zip assembly layer (incl. IW-0 inclusion) | `OWNER-SIDE` per packager testimony — resolves discrepancy 5's mechanism, pending the owner's confirmation. |
 
 **The one remaining open question routes to the OWNER:** what agent, session, or pipeline layer wrote the v2 files into `/mnt/agents/work/killed-witness/` between the packager's two turns on 2026-07-20? The packager cannot see it; the owner can. Until answered, `AUTHOR-UNKNOWN / PACKAGER-DISCLAIMED` stands — and note the epistemically clean position this leaves the evidence in: **the reproduced behavior needed no authorship claim to survive verification; only the credits are open.**
+
+---
+
+## CLOSURE — owner's final testimony and ruling (2026-07-20; lane closed at bounded uncertainty)
+
+**Owner's testimony (the last witness):** the owner does not know who wrote the v2 additions into `/mnt/agents/work/killed-witness/`; did not witness their creation, direct an identifiable agent to create them, or inspect the directory during the interval. **One negative fact established:** the GPT/Sol relay session in the owner loop did **not** create or modify those files — its actions were limited to analysis, relay drafting, and artifacts in its own sandbox; it cannot attest v2 authorship. A separate Kimi session remains a *plausible explanation that the owner cannot establish* — **not promoted into provenance.**
+
+**Final standings (closed):**
+
+| Question | Standing |
+|---|---|
+| v2 authorship | `AUTHOR-UNKNOWN / PACKAGER-DISCLAIMED` — **CLOSED at bounded uncertainty** |
+| Artifact + execution (retained independently) | `ARTIFACT-IDENTITY-VERIFIED / EXECUTION-INDEPENDENTLY-REPRODUCED` |
+| Delivery zip / IW-0 inclusion | `OWNER-RELAY-CUSTODY / ZIP-ASSEMBLY-MECHANISM-UNATTESTED` — IW-0's presence was not an intentional authorization; the IW-0 comparison remains **corroborative, not author-identifying** |
+
+**Closure rule:** no further authorship investigation absent a new direct witness, filesystem audit trail, or agent-session record. Any later evidence **appends** to this disposition; nothing above is rewritten.
