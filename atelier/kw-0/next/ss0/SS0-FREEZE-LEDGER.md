@@ -150,4 +150,23 @@ Transcription smoke checks (custody-grade, not bench): `py_compile` parses; Lisp
 
 **Standing recap for the bench (step 7, next):** drive each runner per its own documented CLI (accommodation rule); byte-identical kill mechanics; corpus = S1–S7 regression + E1–E3 on both seats; cross-language differentials per seat; VOID-1/VOID-3 teeth-checks; mutation battery; AFEL recounts (both seats' self-measures are testimony). Neither seat has seen the other's work; nothing here was relayed back to either seat (quiet hands held).
 
+## AMENDMENT-4 — Seat B base freeze: second transcription received, CORROBORATES step 5 (2026-07-20)
+
+A custody packet arrived from **GPT Sol** (acting as a transcription-and-custody hand over Seat B's channel): `SS0-SEAT-B-QWEN-INITIAL.zip`, delivered via `~/Downloads/`, containing Sol's own mechanical transcription of Qwen's complete submitted response (convention declared: exact fenced-block contents, UTF-8, LF line endings, one final LF, no repair) plus `SUBMISSION-TRANSCRIPT.txt` (23,492 bytes — the full submission as custody testimony), `TRANSCRIPTION-RECEIPT.md`, `BYTE-SIZES.txt`, `DELIVERY-SHA256SUMS.txt`.
+
+**Chair verification (this entry's evidence, all run 2026-07-20 ~18:10 −03):**
+
+```
+ff6406caf310e7bf826942464cee48e3ae25d98d518ed2c430c34af241ac54ba  SS0-SEAT-B-QWEN-INITIAL.zip (15,027 bytes — matches Sol's declaration)
+sha256sum -c DELIVERY-SHA256SUMS.txt → 6/6 OK
+BYTE-SIZES.txt → 3/3 match on extracted sources
+cmp vs frozen _staging/ss0-deliveries/seat-b/ → ss0_runner.py IDENTICAL · ss0_reader.lisp IDENTICAL · README.md IDENTICAL
+```
+
+**Ruling — held at its size:** Sol's transcription and the chair's step-5 transcription produced **byte-identical files** (`2f1af6a7…` / `7a154e06…` / `90243495…`, exactly the step-5 commitment). This is a **shared-root corroboration**: both hands transcribed the *same* owner-relayed submission text, so agreement says nothing new about what Qwen submitted — but it independently confirms the **transcription mechanics** (encoding, line endings, final-newline, block boundaries: precisely where two hands could diverge). The step-5 custody rule's residual doubt ("any doubt about a byte resolves AGAINST claims of transcription error…") is now materially narrowed: two independent transcribers, identical bytes. No freeze changes; nothing reopens.
+
+**Custody:** archive preserved read-only (chmod 444) at `_staging/ss0-deliveries/seat-b/incoming/SS0-SEAT-B-QWEN-INITIAL.zip` and `memory/backups/SS0-SEAT-B-QWEN-INITIAL.zip`, both re-hashed `ff6406ca…` after copy. The `SUBMISSION-TRANSCRIPT.txt` is the first file-form custody artifact of Seat B's full base submission held on this host.
+
+**Sol's examiner instructions (items 5–12 of its handoff)** restate the step-7 bench obligations already docketed above, plus the quiet-hands/no-comparative-disclosure rule already standing; item 11's ordering (sealed adjudication + mutation battery only after ordinary execution is recorded) matches the sealed packet §4 ordering. No new obligations created; consistency noted.
+
 *— Chair: Claude Fable 5, 2026-07-20*
