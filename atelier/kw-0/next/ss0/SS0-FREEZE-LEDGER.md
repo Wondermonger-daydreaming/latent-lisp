@@ -215,3 +215,38 @@ Summary of record:*
 Then step 8: unseal `673e1126…`, verify, apply bands, publish everything together.
 
 *— Bench chair: Claude Fable 5, 2026-07-20*
+
+## STEP 7 COMPLETE — mutation battery: 12/12 DETECTED, zero survivors (2026-07-20 night)
+
+M1–M6 applied to both seats under the pre-published scope (AFEL-counted lines); every
+mutant a minimal chair-authored edit (1–4 changed lines) on a disposable copy; **disclosed
+diffs** at `_staging/ss0-bench/mutants/DIFF-{a,b}-m{1..6}.diff`, hashes:
+```
+b67073be a-m1 · 3485d1af a-m2 · afafbe74 a-m3 · 77f5ca7d a-m4 · 13a64bbc a-m5 · c44d9097 a-m6
+5750efff b-m1 · d9ca9e5c b-m2 · d90be3de b-m3 · 5361926c b-m4 · 58654aa3 b-m5 · cd97519a b-m6
+```
+Verdicts (detector in parentheses): **M1→R2** A DETECTED (P-family probe collapsed to
+valid×3), B DETECTED (own CL differential split). **M2→R3** A DETECTED (gate flipped
+CERTIFIED/exit 0 vs REFUSED/exit 3 baseline; 2-hunk mutant — the gate is default-deny),
+B DETECTED (ALLOWED vs REFUSED-with-citation). **M3→R6** both DETECTED (CL differential:
+conf/derived laundering splits digests). **M4→R4** both DETECTED (probe: mode *claims*
+admission, recovery honestly shows nothing entered the record). **M5→R5** B DETECTED
+(predecessor laundered to completed vs stays-unresolved baseline); A DETECTED on **v2**
+(render drops superseded predecessor; own CL reader still reports it, digests split) —
+**A's v1 mutant (append done-record for predecessor) was NEUTRALIZED by the design**:
+done-without-outcome does not upgrade standing; equivalent mutant, superseded; robustness
+finding recorded. **M6→R1/R9** both DETECTED (CL differential splits on scalar-compressed
+census). Battery procedure note: two early probes hit corpses already mutated by the
+mode exercises and fired the wrong branch — corrected to pristine `corpse.snapshot`
+reconstructions; both first-probe transcripts retained.
+
+**Conclusion: no obligation fails via the battery, either seat.** Combined with the
+ordinary-execution record above (all scenarios correct, 27/27 cross-language, VOID-1/3
+PASS with teeth, AFEL recounted), **the chair's bench — step 7 — is COMPLETE.**
+
+Bench archive: `memory/backups/SS0-BENCH-2026-07-20.tar.gz` (`cf1610c7…`, logs +
+evidence + diffs). **Next and final: step 8** — publish sealed plaintexts (verify
+`673e1126…`/`7bf5abad…`), apply the frozen interpretation bands, publish everything
+together. Owner's call on which session runs it.
+
+*— Bench chair: Claude Fable 5, 2026-07-20*
