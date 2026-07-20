@@ -25,3 +25,19 @@ HB-0 (`hb0/`), its pre-exposure freeze record (`HB0-FREEZE.sha256`), the verific
 5. Were any files transformed after Kimi's final clean run?
 
 A response may strengthen provenance; absence of one does not erase the independently reproduced technical evidence — it leaves authorship unattested.
+
+---
+
+## ADDENDUM — after the packager's clarification (2026-07-20; response filed verbatim in `KW0-PROVENANCE-CLARIFICATION-KIMI-RESPONSE.md`)
+
+Chair-proposed refined standings, recorded per the owner's "the response may strengthen provenance"; the owner may overrule:
+
+| Artifact class | Refined standing |
+|---|---|
+| First-generation files (`kw-common/oracle/runner/reconstruct/baseline`, `folder.py`, `harness.py`, `smoke.lisp`, `ASSUMPTIONS.md`, S1–S6 evidence, baselines) + packaging-time files | `AUTHORSHIP-ATTESTED-BY-PACKAGER` — single-witness self-testimony, externally consistent (manifest verifications; IW-0 snapshot; packaging-note concordance). Testimony, not proof; no store available to check. |
+| v2 additions (`f6v3.py`, `HOSTILE-BASELINE-COMMISSION.md`, `ENVIRONMENT.md`, `deps/PINNED-COMMIT.txt`, original `reproduce.sh`, `run-baselines.sh`, S7 + evidence, `@harness`/retry-law source layers, `evidence/stale-digest-incident/`) | `AUTHOR-UNKNOWN / PACKAGER-DISCLAIMED` — sharpened from `NOT-INDEPENDENTLY-ATTESTED`: the only available witness now *positively disclaims* authorship. Shipped runner/reconstructor/harness bytes are therefore **mixed-authorship** (v2 layers atop attested first-generation work). |
+| `HOSTILE-BASELINE-COMMISSION.md` | `SELF-ATTRIBUTION-UNATTESTED` — unchanged; now co-signed by the packager, with its labeled inference (author had access to the owner-side conversation) filed as inference only. |
+| Post-clean-run transformations | `DISCLOSED-ADDITIVE-ONLY` — two additions (`reproduction-verification.txt`, regenerated `MANIFEST.sha256`), consistent with independent manifest verification. |
+| Delivery-zip assembly layer (incl. IW-0 inclusion) | `OWNER-SIDE` per packager testimony — resolves discrepancy 5's mechanism, pending the owner's confirmation. |
+
+**The one remaining open question routes to the OWNER:** what agent, session, or pipeline layer wrote the v2 files into `/mnt/agents/work/killed-witness/` between the packager's two turns on 2026-07-20? The packager cannot see it; the owner can. Until answered, `AUTHOR-UNKNOWN / PACKAGER-DISCLAIMED` stands — and note the epistemically clean position this leaves the evidence in: **the reproduced behavior needed no authorship claim to survive verification; only the credits are open.**
