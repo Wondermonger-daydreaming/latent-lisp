@@ -1,6 +1,6 @@
 # SS-0 Protocol — budgets, VOID criteria, freeze procedure
 
-*DRAFT-FOR-OWNER-REVIEW — not frozen.*
+*FROZEN 2026-07-19 (owner-approved); hashes in SS0-FREEZE-LEDGER.md.*
 
 ## Roles
 

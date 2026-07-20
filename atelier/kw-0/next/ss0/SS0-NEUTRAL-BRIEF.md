@@ -1,6 +1,6 @@
 # Implementer Brief — Durable-Record Semantic Layer (SS-0)
 
-*DRAFT-FOR-OWNER-REVIEW — not frozen. On freeze, this exact text (hash-recorded) goes to every implementer seat, byte-identical.*
+*FROZEN 2026-07-19 (owner-approved). This exact text goes to every implementer seat, byte-identical; hash in SS0-FREEZE-LEDGER.md.*
 
 You are an engineer commissioned to build the **application-facing semantic layer** of a small effectful system. You work alone, from this brief and the attached Substrate API only. Build the best system you can; you are not told what any other party built or expects.
 

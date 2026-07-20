@@ -1,6 +1,6 @@
 # SS-0 Shared Substrate API
 
-*DRAFT-FOR-OWNER-REVIEW — not frozen. The substrate implementation (CL + Python) is built by the chair from this spec, teeth-checked, and hash-frozen before any seat is seeded. Both seats receive identical substrate bytes.*
+*FROZEN 2026-07-19 (owner-approved). Substrate built, cross-language selftested (11/11), VOID-2 audited + teeth-checked; hashes in SS0-FREEZE-LEDGER.md.*
 
 ## 1. Storage (per run-directory, both languages)
 
