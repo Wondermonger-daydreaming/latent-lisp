@@ -1,3 +1,11 @@
+;;;; [BANNER, R6 2026-07-22]: PRE-RATIFICATION SIGNATURE-DISCOVERY DRAFT.
+;;;; Written before Sol's ruling reordered the slate (de-promotione first —
+;;;; both later specimens presuppose governed standing). This file stands as
+;;;; INVENTORY EVIDENCE and discovery record (D1-D5 at bottom), NOT as the
+;;;; de-projectione specimen; the specimen proper arrives at execution step 5
+;;;; with its packet (HYPOTHESIS/BASELINE/SPECIMEN/ABLATION/EXPECTED-FAILURES/
+;;;; RUN-RECEIPT). Its selftest remains runnable; its semantics remain
+;;;; [DRAFT-GUESS] until the charter and de-promotione exist.
 ;;;; de-projectione.lisp — Slice /0 signature discovery, draft /0
 ;;;;
 ;;;; HYPOTHESIS (admission rule, clause 1): receiver-position is computable —
