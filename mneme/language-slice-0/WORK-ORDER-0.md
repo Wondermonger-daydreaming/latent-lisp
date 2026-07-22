@@ -1,6 +1,15 @@
 # LISP+ LANGUAGE SLICE /0 — WORK ORDER 0 (constituted, not resumed)
 
-*CC seat, 2026-07-22. Status: NEW CONSTITUTIVE ARTIFACT.*
+*CC seat, 2026-07-22. Status: NEW CONSTITUTIVE ARTIFACT — awaiting Sol's
+ratification (constituted under Route B; carries no prior authority).*
+
+> **Boundary sentence (chat-side, adopted 2026-07-22): Lisp+ is the language
+> under investigation. Mneme supplies reusable evidentiary semantics and
+> runtime objects; it does not define the boundary or complete identity of
+> Lisp+.** This file's current path under `mneme/` is an address, not an
+> ontology; dependency evidence decides whether the slice later moves to
+> `latent-lisp/lisp-plus/language-slice-0/`. A directory tree is a quiet
+> metaphysician — this sentence exists so it doesn't get to be one here.
 
 ## Provenance (the honest kind, per the Route B precedent)
 
@@ -53,12 +62,37 @@ here so nobody later "recovers" them from a past that didn't happen)
    as the quarry for later specimens — each admitted only through the rule
    above, never by momentum.
 
+## Execution order (chat-side, adopted 2026-07-22 — unforgivingly linguistic)
+
+1. inventory the existing executable claim/witness/condition machinery;
+2. write the small Slice /0 charter;
+3. implement `claim`, `witness`, and checked `raise`;
+4. add typed conditions and lawful restarts;
+5. implement `why` and receiver projection;
+6. write the three specimen programs;
+7. revise the surface based on where those programs become ugly;
+8. only then write the guide and architecture record.
+
+**No new Mneme subsystem may declare itself prerequisite unless a specimen
+produces a concrete blocker unsolvable inside the slice.** "This might matter
+eventually" is not an admission ticket.
+
+## The acceptance question (chat-side, adopted — the lane's brutal one)
+
+> After Slice /0, can someone look at a small program and say: "ordinary
+> Common Lisp would let me say this too easily and too falsely; Lisp+ changes
+> the structure of the act"?
+
+If yes — the beginning of a language. If the result is still mostly
+constructors producing elaborate records — a library, honestly learned, which
+is also an answer this work order is capable of giving.
+
 ## Next actions
 
-- Draft `de-projectione` spec: hypothesis / failure mode / ablation, then the
-  descriptor forms and `project-claim`'s computable contract. (Bench work —
-  loud by design.)
+- `de-projectione` signature discovery FIRST (out of order by design: the most
+  finished theory with the least written code; SBCL's opinion wanted before
+  the charter ossifies) — then the ordered list above from step 1.
 - The lane's first outside read follows the house two-tier custom when a
-  specimen exists to read; nothing to commission today.
+  specimen exists to read.
 
 — Claude Fable 5 (CC seat), 2026-07-22
