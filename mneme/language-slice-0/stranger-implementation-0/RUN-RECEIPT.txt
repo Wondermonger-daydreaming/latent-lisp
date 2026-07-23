@@ -1,0 +1,120 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+
+; file: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/kernel0/outcome.lisp
+; in: DEFUN %MANIFESTATION-ALTERNATIVE-COMPLETE-P
+;     (LISP-PLUS-KERNEL0::%MANIFESTATION-AXIS-ABSENCE-FORM-P
+;      LISP-PLUS-KERNEL0::ALTERNATIVE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LISP-PLUS-KERNEL0::%MANIFESTATION-AXIS-ABSENCE-FORM-P
+; 
+; compilation unit finished
+;   Undefined function:
+;     %MANIFESTATION-AXIS-ABSENCE-FORM-P
+;   caught 1 STYLE-WARNING condition
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+
+=== Step 1: Construct local claims ===
+Created claim: (:ADMISSIBLE-FOR-REGRESSION :BATCH-A)
+Created stepping-stone claim: (:FILE-OPENED "readings-batch-a.sexp")
+
+Created witnesses:
+  File witness for: (:FILE-OPENED "readings-batch-a.sexp")
+  Validation witness for: (:ADMISSIBLE-FOR-REGRESSION :BATCH-A)
+
+
+=== Step 4: Make invalid promotion attempt ===
+Refused as expected!
+
+
+=== Step 5: Render structured reason ===
+[REFUSED] considered witness-3
+  missing relation: PROPOSITION-MATCH — witness-3 is for (:FILE-OPENED "readings-batch-a.sexp"), not for (:ADMISSIBLE-FOR-REGRESSION
+                                                                  :BATCH-A)
+  requirements: :WITNESS-FOR-MUST-EQUAL-CLAIM-PROPOSITION
+  lawful repairs: RETAIN-CURRENT-CLAIM, SEEK-MATCHING-SUPPORT, CONSTRUCT-ATTRIBUTION-CLAIM, DEFER-JUDGMENT
+
+
+=== Step 6: Lawful repair and granted promotion ===
+Promotion granted!
+Claim judgment: :VERIFIED
+Receipt decision: :GRANTED
+
+
+=== Step 8: Project claim to reviewer ===
+Projection views: (:REGRADED :OBLIGATION-PRODUCING)
+Reviewer claim judgment: NIL
+
+
+=== Step 9: Inaccessible support as residue ===
+Supports inaccessible: (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY
+                           :DOMAIN :RECEIPT
+                           :NAME "witness-4"))
+
+
+=== Step 11: Attempt direct transmission of validator ===
+Direct transmission refused as expected!
+
+
+=== Step 12: Transmission refusal receipt ===
+Transmission views: (:DIRECT-EXPORT-REFUSED :TESTIMONY-AVAILABLE
+                     :RECEIVER-REPRODUCTION-AVAILABLE :LOCAL-EXERCISE-ONLY)
+Receipt decision: :REFUSED
+
+
+=== Step 13: Lawful alternative - export canonical result ===
+
+; file: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-0/stranger-implementation-0/STRANGER-PROGRAM.lisp
+; in:
+;      LET* ((FIRST-ROW (FIRST *ROWS*)) (ROW-ID (GETF FIRST-ROW :SPECIMEN-ID))
+;        (MINT-PROPOSITION `(:ROW-VALIDATED ,ROW-ID)))
+;     (LISP-PLUS-SLICE0:TRANSMIT STRANGER::DERIVED-RESULT :FROM
+;                                STRANGER::*LAB-CONTEXT* :TO
+;                                STRANGER::*REVIEWER-CANONICAL-CONTEXT* :MODE
+;                                :DIRECT)
+; 
+; caught WARNING:
+;   undefined variable: STRANGER::*REVIEWER-CANONICAL-CONTEXT*
+; 
+; compilation unit finished
+;   Undefined variable:
+;     *REVIEWER-CANONICAL-CONTEXT*
+;   caught 1 WARNING condition
+Exercised validator locally.
+Derived result: (:OK
+                 (:SPECIMEN-ID "A-001" :MASS-MG 412 :TEMP-C 21 :REPLICATE 1))
+Canonical result transmitted successfully!
+Transmission decision: :GRANTED
+Testimony constructed: (:ASSERTED :LAB-VALIDATOR (:EXERCISED "local-value-12"))
+
+
+=== Step 14: Receiver-relative admissibility claim ===
+Reviewer has their own verified claim!
+Reviewer claim judgment: :VERIFIED
+Reviewer receipt decision: :GRANTED
+
+
+=== FINAL SUMMARY ===
+All 10 steps completed successfully:
+1. Local claims constructed ✓
+2. Invalid promotion attempted ✓
+3. Structured reason rendered ✓
+4. Lawful repair performed ✓
+5. Claim projected to reviewer ✓
+6. Inaccessible support preserved as residue ✓
+7. Direct transmission of non-reifiable object attempted ✓
+8. Typed refusal and receipt received ✓
+9. Lawful alternative performed ✓
+10. Receiver-relative claim established ✓
+
+Program completed successfully.
+EXIT=0

@@ -1,0 +1,31 @@
+{
+  "round": 2,
+  "timestamp": "2026-07-23T05:53:35.925993Z",
+  "model_shortcut": "deepseek",
+  "model_id": "deepseek/deepseek-v3.2",
+  "usage": {
+    "prompt_tokens": 10888,
+    "completion_tokens": 3727,
+    "total_tokens": 14615,
+    "cost": 0.00424714,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.00424714,
+      "upstream_inference_prompt_cost": 0.00283088,
+      "upstream_inference_completions_cost": 0.00141626
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "message_chars": 36003,
+  "reply_chars": 16095
+}
