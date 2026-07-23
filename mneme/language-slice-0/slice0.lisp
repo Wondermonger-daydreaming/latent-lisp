@@ -385,13 +385,26 @@ itself; got :for ~S — construct the attribution, or supply :direct evidence"
 (defun %id-name (id)
   (if (durable-identity-p id) (durable-identity-name id) id))
 
+(defvar *why-extractors* '()
+  "Registry of (predicate . extractor) pairs.  Later Slice /0 modules
+register their receipt types here at load so WHY stays the ONE uniform
+explanation extractor across every governed act (surface-audit ruling,
+closure sitting).  Same visible package-state pattern as the restart
+vocabulary; same charter §9 sizing applies.")
+
 (defun why (object)
-  "Extract the structured explanation from a receipt or a slice0 condition."
-  (etypecase object
-    (why object)
-    (slice0-condition (or (slice0-condition-why object)
-                          (%shape-error :why object "condition carries no why")))
-    (promotion-receipt (promotion-receipt-explanation object))))
+  "Uniform explanation extractor: accepts a why object, a slice0
+condition, or ANY governed receipt (promotion, projection, transmission)."
+  (cond ((why-p object) object)
+        ((typep object 'slice0-condition)
+         (or (slice0-condition-why object)
+             (%shape-error :why object "condition carries no why")))
+        ((promotion-receipt-p object) (promotion-receipt-explanation object))
+        (t (loop for (pred . extract) in *why-extractors*
+                 when (funcall pred object)
+                   do (return (funcall extract object))
+                 finally (%shape-error :object object
+                                       "WHY: not a why, slice0-condition, or governed receipt")))))
 
 (defun render-why (w &optional (stream t))
   "Prose derived from structure — never invented past the fields."

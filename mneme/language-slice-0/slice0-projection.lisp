@@ -366,3 +366,8 @@ authorities, and executable procedures.  Source judgment is never copied."
                            :explanation expl
                            :ordinal (%next-ordinal))))
             (values resulting receipt)))))))
+
+;;; Closure-sitting surface ruling: WHY is the one uniform explanation
+;;; extractor — this module registers its receipt type.
+(push (cons #'projection-receipt-p #'projection-receipt-explanation)
+      *why-extractors*)

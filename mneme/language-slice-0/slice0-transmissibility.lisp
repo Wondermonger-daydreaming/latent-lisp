@@ -491,3 +491,8 @@ export as success."
                   "TRANSMIT mode must be :direct, :testimony, or :reproduction"))
   (%transmit-1 subject from to mode derived))
 
+
+;;; Closure-sitting surface ruling: WHY is the one uniform explanation
+;;; extractor — this module registers its receipt type.
+(push (cons #'transmission-receipt-p #'transmission-receipt-explanation)
+      *why-extractors*)
