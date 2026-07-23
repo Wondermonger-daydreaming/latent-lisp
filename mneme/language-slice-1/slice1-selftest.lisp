@@ -136,7 +136,13 @@
                     (premise-assessment-disposition a)
                     (cdr (first (premise-assessment-mismatched-candidates a)))))))))
 
-;;; ---- T6: ambiguity CONSTRUCTIBLE and fires ----
+;;; ---- T6 (REVISED per CHARTER-DELTA-2): declared uniqueness ⇒ :ambiguous refusal ----
+;;; SUPERSEDING WARRANT: CHARTER-DELTA-2 —
+;;;   (:ambiguity :only-from-declared-uniqueness-constraint)
+;;; The two-key plurality is ambiguity now ONLY because :key is DECLARED unique.
+;;; Delta-1's "undeclared plurality ⇒ :ambiguous" is superseded: that case now
+;;; GRANTS (see T6b).  Plurality is evidence; ambiguity begins only where the
+;;; schema declared that a choice matters.
 (clear-schema-registry)
 (register-schema
  (judgment-schema
@@ -144,12 +150,12 @@
   :conclusion (proposition-pattern '(:predicate :admissible (:artifact (:var :art))))
   :premises (list (proposition-pattern
                    '(:predicate :signature-valid (:artifact (:var :art)) (:key (:var :key)))))
-  :locals '(:key)))
+  :locals '(:key) :unique-locals '(:key)))
 (let* ((s1 (sw '(:predicate :signature-valid (:artifact "artifact-1") (:key "KEY-1"))))
        (s2 (sw '(:predicate :signature-valid (:artifact "artifact-1") (:key "KEY-2"))))
        (supports (list s1 s2))
        (ctx (ctx-of :ctx-a s1 s2)))
-  (fires "T6 ambiguity fires" derivation-refused
+  (fires "T6 declared-unique :key conflict refuses :ambiguous" derivation-refused
     (derive :schema-name :two-keys :schema-version 1
             :conclusion (proposition '(:predicate :admissible (:artifact "artifact-1")))
             :supports supports :receiver ctx))
@@ -158,12 +164,48 @@
               :conclusion (proposition '(:predicate :admissible (:artifact "artifact-1")))
               :supports supports :receiver ctx)
     (derivation-refused (c)
-      (let ((a (assessment-for (slice1-condition-receipt c) :signature-valid)))
-        (ok "T6b disposition :ambiguous with 2 distinct environments"
-            (and (eq (premise-assessment-disposition a) :ambiguous)
-                 (= 2 (length (premise-assessment-ambiguities a)))
+      (let* ((r (slice1-condition-receipt c))
+             (a (assessment-for r :signature-valid))
+             (uc (derivation-receipt-uniqueness-conflicts r)))
+        (ok "T6-detail :key named as conflict, premise :ambiguous, BOTH envs preserved"
+            (and (eq (derivation-receipt-decision r) :refused)
+                 (eq (premise-assessment-disposition a) :ambiguous)
+                 (= 1 (length uc))
+                 (eq (first (first uc)) :key)
+                 (= 2 (length (second (first uc))))   ; two surviving :key values
+                 (= 2 (length (derivation-receipt-complete-binding-environments r)))
                  (= 2 (length (premise-assessment-matching-accessible-supports a))))
-            (format nil "envs=~S" (premise-assessment-ambiguities a)))))))
+            (format nil "conflict=~S envs=~D" uc
+                    (length (derivation-receipt-complete-binding-environments r))))))))
+
+;;; ---- T6b (CHARTER-DELTA-2): SAME two supports, NO uniqueness declared ⇒ GRANT ----
+;;; Warrant: CHARTER-DELTA-2 supersedes CHARTER-DELTA-1 — undeclared plurality is
+;;; redundant sufficiency (grant, both environments preserved), NOT doubt.
+(clear-schema-registry)
+(register-schema
+ (judgment-schema
+  :name :two-keys-open :version 1
+  :conclusion (proposition-pattern '(:predicate :admissible (:artifact (:var :art))))
+  :premises (list (proposition-pattern
+                   '(:predicate :signature-valid (:artifact (:var :art)) (:key (:var :key)))))
+  :locals '(:key)))                    ; NO :unique-locals ⇒ existential
+(let* ((s1 (sw '(:predicate :signature-valid (:artifact "artifact-1") (:key "KEY-1"))))
+       (s2 (sw '(:predicate :signature-valid (:artifact "artifact-1") (:key "KEY-2"))))
+       (supports (list s1 s2))
+       (ctx (ctx-of :ctx-a s1 s2)))
+  (multiple-value-bind (claim receipt)
+      (derive :schema-name :two-keys-open :schema-version 1
+              :conclusion (proposition '(:predicate :admissible (:artifact "artifact-1")))
+              :supports supports :receiver ctx)
+    (ok "T6b undeclared plurality GRANTS with 2 complete environments (Delta-2)"
+        (and (lisp-plus-slice0:claim-p claim)
+             (eq (derivation-receipt-decision receipt) :granted)
+             (= 2 (length (derivation-receipt-complete-binding-environments receipt)))
+             (derivation-receipt-multiply-supported-p receipt)
+             (null (derivation-receipt-uniqueness-conflicts receipt)))
+        (format nil "envs=~D multiply-supported=~S"
+                (length (derivation-receipt-complete-binding-environments receipt))
+                (derivation-receipt-multiply-supported-p receipt)))))
 
 ;;; ---- T7: exact accessible match not defeated by irrelevant mismatched ----
 (install-dp)
@@ -448,6 +490,201 @@
       (ok "T17 pattern-nf immutability: mutating returned normal-form leaves the registry UNCHANGED"
           (eq (car renf) :predicate)
           (format nil "stored nf head on re-read = ~S" (car renf))))))
+
+;;; ==================================================================
+;;; Multiplicity teeth (CHARTER-DELTA-2 M1–M12).  Plurality is evidence;
+;;; ambiguity begins only at a declared uniqueness constraint.
+(format t "~%== Multiplicity teeth (CHARTER-DELTA-2 M1–M12) ==~%")
+
+;; A reusable non-unique two-support fixture: one premise binds schema-local
+;; :tag; two supports for the SAME conclusion differ only in :tag ⇒ two complete
+;; coherent environments.
+(defun install-m (name unique-locals)
+  (clear-schema-registry)
+  (register-schema
+   (judgment-schema
+    :name name :version 1
+    :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+    :premises (list (proposition-pattern
+                     '(:predicate :evidence (:x (:var :x)) (:tag (:var :tag)))))
+    :locals '(:tag) :unique-locals unique-locals)))
+(defun m-concl () (proposition '(:predicate :ok (:x "X1"))))
+(defun m-derive (name supports)
+  (derive :schema-name name :schema-version 1 :conclusion (m-concl)
+          :supports supports :receiver (apply #'ctx-of :ctx supports)))
+
+;;; ---- M1: two sufficient NON-unique environments GRANT ----
+(install-m :m1 '())
+(let* ((e1 (sw '(:predicate :evidence (:x "X1") (:tag "T1"))))
+       (e2 (sw '(:predicate :evidence (:x "X1") (:tag "T2")))))
+  (multiple-value-bind (claim r) (m-derive :m1 (list e1 e2))
+    (ok "M1 two sufficient non-unique environments GRANT"
+        (and (lisp-plus-slice0:claim-p claim)
+             (eq (derivation-receipt-decision r) :granted)
+             (= 2 (length (derivation-receipt-complete-binding-environments r)))))))
+
+;;; ---- M2: ALL sufficient environments are in the receipt ----
+(install-m :m2 '())
+(let* ((e1 (sw '(:predicate :evidence (:x "X1") (:tag "T1"))))
+       (e2 (sw '(:predicate :evidence (:x "X1") (:tag "T2")))))
+  (multiple-value-bind (claim r) (m-derive :m2 (list e1 e2))
+    (declare (ignore claim))
+    (let* ((envs (derivation-receipt-complete-binding-environments r))
+           (tags (sort (loop for e in envs collect (cdr (assoc :tag e)))
+                       #'string<)))
+      (ok "M2 all sufficient environments present in receipt"
+          (equal tags '("T1" "T2"))
+          (format nil "tags=~S" tags)))))
+
+;;; ---- M3: support ORDER changes neither decision nor environment set ----
+(install-m :m3 '())
+(let* ((e1 (sw '(:predicate :evidence (:x "X1") (:tag "T1"))))
+       (e2 (sw '(:predicate :evidence (:x "X1") (:tag "T2")))))
+  (multiple-value-bind (c-a r-a) (m-derive :m3 (list e1 e2))
+    (declare (ignore c-a))
+    (multiple-value-bind (c-b r-b) (m-derive :m3 (list e2 e1))
+      (declare (ignore c-b))
+      (ok "M3 support order changes neither decision nor environment set"
+          (and (eq (derivation-receipt-decision r-a)
+                   (derivation-receipt-decision r-b))
+               (equal (derivation-receipt-complete-binding-environments r-a)
+                      (derivation-receipt-complete-binding-environments r-b)))
+          (format nil "envs-a=~S envs-b=~S"
+                  (derivation-receipt-complete-binding-environments r-a)
+                  (derivation-receipt-complete-binding-environments r-b))))))
+
+;;; ---- M4: a DUPLICATE identical support does not invent a second derivation ----
+(install-m :m4 '())
+(let* ((e (sw '(:predicate :evidence (:x "X1") (:tag "T1"))))
+       (e-dup (sw '(:predicate :evidence (:x "X1") (:tag "T1")))))
+  (multiple-value-bind (claim r) (m-derive :m4 (list e e-dup))
+    (ok "M4 duplicate identical support ⇒ exactly ONE environment, still GRANT"
+        (and (lisp-plus-slice0:claim-p claim)
+             (eq (derivation-receipt-decision r) :granted)
+             (= 1 (length (derivation-receipt-complete-binding-environments r))))
+        (format nil "envs=~D" (length (derivation-receipt-complete-binding-environments r))))))
+
+;;; ---- M5: two DISTINCT supports yielding the SAME binding stay visible as
+;;;      multiple supports WITHOUT becoming ambiguity (declared unique :tag) ----
+(install-m :m5 '(:tag))
+(let* ((e-a (sw '(:predicate :evidence (:x "X1") (:tag "T1")) :source :signer-a))
+       (e-b (sw '(:predicate :evidence (:x "X1") (:tag "T1")) :source :signer-b)))
+  (multiple-value-bind (claim r) (m-derive :m5 (list e-a e-b))
+    (let ((a (assessment-for r :evidence)))
+      (ok "M5 distinct supports, same binding ⇒ multiple supports visible, no ambiguity, GRANT"
+          (and (lisp-plus-slice0:claim-p claim)
+               (eq (derivation-receipt-decision r) :granted)
+               (= 1 (length (derivation-receipt-complete-binding-environments r)))
+               (= 2 (length (premise-assessment-matching-accessible-supports a)))
+               (null (derivation-receipt-uniqueness-conflicts r)))
+          (format nil "supports=~D envs=~D"
+                  (length (premise-assessment-matching-accessible-supports a))
+                  (length (derivation-receipt-complete-binding-environments r)))))))
+
+;;; ---- M6: conflict on a DECLARED unique local REFUSES ----
+(install-m :m6 '(:tag))
+(let* ((e1 (sw '(:predicate :evidence (:x "X1") (:tag "T1"))))
+       (e2 (sw '(:predicate :evidence (:x "X1") (:tag "T2")))))
+  (fires "M6 conflict on declared unique local REFUSES" derivation-refused
+    (m-derive :m6 (list e1 e2))))
+
+;;; ---- M7: conflict on a NON-unique local does NOT refuse ----
+(install-m :m7 '())
+(let* ((e1 (sw '(:predicate :evidence (:x "X1") (:tag "T1"))))
+       (e2 (sw '(:predicate :evidence (:x "X1") (:tag "T2")))))
+  (multiple-value-bind (claim r) (m-derive :m7 (list e1 e2))
+    (ok "M7 conflict on a non-unique local does NOT refuse (GRANT)"
+        (and (lisp-plus-slice0:claim-p claim)
+             (eq (derivation-receipt-decision r) :granted)))))
+
+;;; ---- M8: an undeclared local in :unique-locals refuses schema construction ----
+(fires "M8 undeclared local in :unique-locals refuses construction" schema-construction-error
+  (judgment-schema
+   :name :m8 :version 1
+   :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+   :premises (list (proposition-pattern '(:predicate :evidence (:x (:var :x)) (:tag (:var :tag)))))
+   :locals '(:tag) :unique-locals '(:not-a-local)))
+
+;;; ---- M9: mutating the unique-locals reader list cannot revise registered behavior ----
+(install-m :m9 '(:tag))
+(let* ((resolved (resolve-schema :m9 1))
+       (decl (judgment-schema-unique-locals resolved)))
+  (setf (car decl) :WIPED)                        ; vandalize the returned list
+  (let* ((reread (judgment-schema-unique-locals (resolve-schema :m9 1)))
+         (e1 (sw '(:predicate :evidence (:x "X1") (:tag "T1"))))
+         (e2 (sw '(:predicate :evidence (:x "X1") (:tag "T2"))))
+         (still-refuses
+           (handler-case (progn (m-derive :m9 (list e1 e2)) nil)
+             (derivation-refused (c) (declare (ignore c)) t))))
+    (ok "M9 mutating unique-locals reader cannot revise registered behavior"
+        (and (equal reread '(:tag)) still-refuses)
+        (format nil "reread=~S still-refuses=~S" reread still-refuses))))
+
+;;; ---- M10: a hidden prose-only incompatibility is NOT inferred (Case C as a tooth) ----
+(install-m :m10 '())                              ; no uniqueness declared
+(let* ((e-vendor (sw '(:predicate :evidence (:x "X1") (:tag "vendor"))))
+       (e-self   (sw '(:predicate :evidence (:x "X1") (:tag "self-signed")))))
+  (multiple-value-bind (claim r) (m-derive :m10 (list e-vendor e-self))
+    (ok "M10 prose-incompatible names ('vendor' vs 'self-signed') NOT inferred ⇒ GRANT + both envs"
+        (and (lisp-plus-slice0:claim-p claim)
+             (eq (derivation-receipt-decision r) :granted)
+             (= 2 (length (derivation-receipt-complete-binding-environments r)))
+             (null (derivation-receipt-uniqueness-conflicts r))))))
+
+;;; ---- M11: refutation still blocks even WITH a complete positive environment ----
+(clear-schema-registry)
+(register-schema
+ (judgment-schema
+  :name :m11 :version 1
+  :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+  :premises (list (proposition-pattern '(:predicate :evidence (:x (:var :x)))))))
+(let* ((good (sw '(:predicate :evidence (:x "X1"))))
+       (ref (refutation :refutes '(:predicate :evidence (:x "X1")) :source :auditor))
+       (supports (list good ref)))
+  (fires "M11 refutation blocks even with a complete positive environment" derivation-refused
+    (derive :schema-name :m11 :schema-version 1 :conclusion (m-concl)
+            :supports supports
+            :receiver (apply #'ctx-of :ctx (remove-if-not #'lisp-plus-slice0:witness-p supports))))
+  (handler-case
+      (derive :schema-name :m11 :schema-version 1 :conclusion (m-concl)
+              :supports supports
+              :receiver (apply #'ctx-of :ctx (remove-if-not #'lisp-plus-slice0:witness-p supports)))
+    (derivation-refused (c)
+      (let* ((r (slice1-condition-receipt c))
+             (a (assessment-for r :evidence)))
+        (ok "M11-detail :refuted disposition, positive support present, complete env existed"
+            (and (eq (premise-assessment-disposition a) :refuted)
+                 (premise-assessment-matching-accessible-supports a)
+                 (premise-assessment-refuting-supports a)
+                 (>= (length (derivation-receipt-complete-binding-environments r)) 1))
+            (format nil "complete-envs=~D"
+                    (length (derivation-receipt-complete-binding-environments r))))))))
+
+;;; ---- M12: an incomplete environment for one candidate does not defeat a complete one ----
+;;; premise1 binds :tag two ways (T1, T2); premise2 (:confirm) exists ONLY for T1,
+;;; so the T2 branch is incomplete.  Even with :tag DECLARED unique, the surviving
+;;; complete environment is single ⇒ no conflict ⇒ GRANT.
+(clear-schema-registry)
+(register-schema
+ (judgment-schema
+  :name :m12 :version 1
+  :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+  :premises (list (proposition-pattern '(:predicate :evidence (:x (:var :x)) (:tag (:var :tag))))
+                  (proposition-pattern '(:predicate :confirm (:x (:var :x)) (:tag (:var :tag)))))
+  :locals '(:tag) :unique-locals '(:tag)))
+(let* ((e1 (sw '(:predicate :evidence (:x "X1") (:tag "T1"))))
+       (e2 (sw '(:predicate :evidence (:x "X1") (:tag "T2"))))
+       (c1 (sw '(:predicate :confirm (:x "X1") (:tag "T1"))))   ; only T1 confirmed
+       (supports (list e1 e2 c1)))
+  (multiple-value-bind (claim r)
+      (derive :schema-name :m12 :schema-version 1 :conclusion (m-concl)
+              :supports supports :receiver (apply #'ctx-of :ctx supports))
+    (ok "M12 incomplete T2 branch does not defeat the complete T1 environment ⇒ GRANT, 1 env, no conflict"
+        (and (lisp-plus-slice0:claim-p claim)
+             (eq (derivation-receipt-decision r) :granted)
+             (= 1 (length (derivation-receipt-complete-binding-environments r)))
+             (null (derivation-receipt-uniqueness-conflicts r)))
+        (format nil "envs=~D" (length (derivation-receipt-complete-binding-environments r))))))
 
 ;;; ==================================================================
 (format t "~%slice1 selftest: ~D passed, ~D failed~%" *pass* *fail*)

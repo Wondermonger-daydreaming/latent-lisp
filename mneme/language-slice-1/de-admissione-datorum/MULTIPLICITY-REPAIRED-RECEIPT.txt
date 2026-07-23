@@ -1,0 +1,72 @@
+MULTIPLICITY-REPAIRED-RECEIPT.txt
+Run: sbcl --non-interactive --load MULTIPLICITY-REPAIRED.lisp
+SBCL: 2.4.6   (operation-checked through the wrapper)
+Governed by CHARTER-DELTA-2 (the multiplicity ruling).
+======================================================================
+
+== de-admissione-datorum MULTIPLICITY-REPAIRED — under CHARTER-DELTA-2 ==
+Plurality is evidence; ambiguity begins only at a declared uniqueness constraint.
+
+── CASE A : two independently-sufficient certificates {cert-1, cert-2}, :certificate NON-unique
+   decision                       : :GRANTED
+   calibration disposition        : :SATISFIED
+   complete binding environments  : 2
+   multiply-supported (derived)   : T
+   preserved :certificate values  : ("cert-1" "cert-2")
+   uniqueness conflicts           : NIL
+   [ok] CASE A grants
+   [ok] CASE A calibration :satisfied
+   [ok] CASE A both environments preserved (no canonical selection)
+   [ok] CASE A both certificate bindings present
+   [ok] CASE A multiply-supported
+   [ok] CASE A no uniqueness conflict (redundant sufficiency is strength, not doubt)
+
+── CASE B : incompatible authorities {:recognized-vendor, :self-signed}, :authority DECLARED unique
+   decision                       : :REFUSED
+   calibration disposition        : :AMBIGUOUS
+   complete binding environments  : 2
+   uniqueness conflicts           : ((:AUTHORITY
+                                      (:RECOGNIZED-VENDOR :SELF-SIGNED)
+                                      (((:AUTHORITY . :RECOGNIZED-VENDOR)
+                                        (:BOUND . 5) (:CERTIFICATE . "cert-1")
+                                        (:DATASET . "dataset-1")
+                                        (:INSTRUMENT . "instrument-a")
+                                        (:PURPOSE . :CAUSAL)
+                                        (:RECEIVER . :RECEIVER-A)
+                                        (:SCHEMA . "schema-v3"))
+                                       ((:AUTHORITY . :SELF-SIGNED)
+                                        (:BOUND . 5) (:CERTIFICATE . "cert-2")
+                                        (:DATASET . "dataset-1")
+                                        (:INSTRUMENT . "instrument-a")
+                                        (:PURPOSE . :CAUSAL)
+                                        (:RECEIVER . :RECEIVER-A)
+                                        (:SCHEMA . "schema-v3")))))
+   named conflict local           : (:AUTHORITY)
+   surviving :authority values    : (:RECOGNIZED-VENDOR :SELF-SIGNED)
+   preserved :certificate values  : ("cert-1" "cert-2") (plurality, but NOT the named conflict)
+   [ok] CASE B refuses
+   [ok] CASE B calibration :ambiguous
+   [ok] CASE B exactly one named uniqueness conflict
+   [ok] CASE B the named conflict is :authority
+   [ok] CASE B certificate plurality is NOT the named conflict
+   [ok] CASE B both surviving :authority values named
+   [ok] CASE B both environments preserved
+
+── CASE C : ORIGINAL schema (no authority anatomy) over prose-differing certs {cert-vendor, cert-self-signed}
+   decision                       : :GRANTED
+   calibration disposition        : :SATISFIED
+   complete binding environments  : 2
+   preserved :certificate values  : ("cert-self-signed" "cert-vendor")
+   uniqueness conflicts           : NIL
+   [ok] CASE C grants
+   [ok] CASE C both environments preserved
+   [ok] CASE C no conflict inferred from suggestive certificate names
+
+   THE CEILING (verbatim):
+   the language cannot enforce an incompatibility absent from the declared anatomy — declared anatomy can be enforced; undeclared domain distinctions cannot be divined.
+
+==================================================================
+16 expect-checks held.
+multiplicity repaired: A granted+plural, B ambiguous-by-declaration, C granted (ceiling held)
+======================================================================
+EXIT: 0

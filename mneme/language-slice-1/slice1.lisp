@@ -49,6 +49,7 @@
    #:judgment-schema-name #:judgment-schema-version #:judgment-schema-identity
    #:judgment-schema-conclusion #:judgment-schema-premises
    #:judgment-schema-locals #:judgment-schema-conclusion-variables
+   #:judgment-schema-unique-locals
    #:judgment-schema-admit-kind
    #:register-schema #:resolve-schema #:clear-schema-registry
    ;; refutation
@@ -71,6 +72,9 @@
    #:derivation-receipt-strongest-lawful-result
    #:derivation-receipt-repair-options #:derivation-receipt-identity
    #:derivation-receipt-origin-context
+   #:derivation-receipt-complete-binding-environments
+   #:derivation-receipt-uniqueness-conflicts
+   #:derivation-receipt-multiply-supported-p
    ;; the governed act + transport
    #:derive #:transported-testimony
    #:why #:render-derivation-why
@@ -398,6 +402,7 @@ data are left as-is.  Used for the assessment's :ground-instance field."
   (conclusion nil :read-only t)            ; proposition-pattern (struct; immutable)
   (premises nil :read-only t)              ; list of proposition-pattern
   (locals nil :read-only t)                ; declared schema-local variables
+  (unique-locals nil :read-only t)         ; CHARTER-DELTA-2: uniqueness-bearing locals
   (conclusion-variables nil :read-only t)  ; vars in the conclusion (implicit)
   (admit-kind nil :read-only t))           ; the derivation admit keyword
 
@@ -413,6 +418,11 @@ data are left as-is.  Used for the assessment's :ground-instance field."
 (defun judgment-schema-admit-kind (s) (%judgment-schema-admit-kind s))
 (defun judgment-schema-premises (s) (copy-list (%judgment-schema-premises s)))
 (defun judgment-schema-locals (s) (copy-list (%judgment-schema-locals s)))
+(defun judgment-schema-unique-locals (s)
+  ;; CHARTER-DELTA-2 + AUDIT-1 repair 2: the uniqueness declaration is
+  ;; immutable and its public reader returns a fresh copy (M9: mutating the
+  ;; returned list cannot revise registered schema behavior).
+  (copy-list (%judgment-schema-unique-locals s)))
 (defun judgment-schema-conclusion-variables (s)
   (copy-list (%judgment-schema-conclusion-variables s)))
 
@@ -422,12 +432,16 @@ data are left as-is.  Used for the assessment's :ground-instance field."
                  :offending-field field
                  :offending-value value))
 
-(defun judgment-schema (&key name version conclusion premises locals)
+(defun judgment-schema (&key name version conclusion premises locals unique-locals)
   "Construct a versioned derivation schema.  NAME is a keyword, VERSION a
 nonnegative integer.  CONCLUSION and each PREMISES entry are proposition-patterns.
 LOCALS declares schema-local variables that may occur ONLY in premise patterns.
-Conclusion variables are implicitly declared.  An undeclared variable anywhere,
-or a schema-local appearing in the conclusion, refuses at construction."
+UNIQUE-LOCALS (CHARTER-DELTA-2) declares which schema-locals are
+uniqueness-bearing — every one must be a declared local (never a conclusion
+variable, never unknown), and duplicates refuse.  Schema-locals remain
+existential unless listed here.  Conclusion variables are implicitly declared.
+An undeclared variable anywhere, or a schema-local appearing in the conclusion,
+refuses at construction."
   (unless (keywordp name)
     (%schema-error :name name "a schema NAME must be a keyword; got ~S" name))
   (unless (and (integerp version) (not (minusp version)))
@@ -442,6 +456,9 @@ or a schema-local appearing in the conclusion, refuses at construction."
                      "each premise must be a proposition-pattern; got ~S" p)))
   (unless (and (listp locals) (every #'keywordp locals))
     (%schema-error :locals locals ":locals must be a list of keywords; got ~S" locals))
+  (unless (and (listp unique-locals) (every #'keywordp unique-locals))
+    (%schema-error :unique-locals unique-locals
+                   ":unique-locals must be a list of keywords; got ~S" unique-locals))
   (let* ((cvars (%proposition-pattern-variables conclusion))
          (declared (union cvars locals)))
     ;; a schema-local may not appear in the conclusion (Δ1)
@@ -450,6 +467,22 @@ or a schema-local appearing in the conclusion, refuses at construction."
         (%schema-error :locals l
                        "schema-local ~S also occurs in the conclusion; ~
 schema-locals may occur ONLY in premise patterns" l)))
+    ;; CHARTER-DELTA-2 uniqueness declaration validation (all typed refusals):
+    ;; duplicates refuse · conclusion variables refuse (already ground-bound) ·
+    ;; every unique local must be a declared schema-local (unknown refuses).
+    (unless (= (length unique-locals) (length (remove-duplicates unique-locals)))
+      (%schema-error :unique-locals unique-locals
+                     "duplicate variable in :unique-locals ~S — each declared ~
+uniqueness-bearing local must be listed once" unique-locals))
+    (dolist (u unique-locals)
+      (cond ((member u cvars :test #'eq)
+             (%schema-error :unique-locals u
+                            "conclusion variable ~S may not be declared unique; ~
+it is already ground-bound by the requested conclusion" u))
+            ((not (member u locals :test #'eq))
+             (%schema-error :unique-locals u
+                            "~S is declared unique but is not a schema-local ~
+(:locals); a uniqueness-bearing variable must first be a declared local" u))))
     ;; every premise variable must be a conclusion variable or a declared local
     (dolist (p premises)
       (dolist (v (%proposition-pattern-variables p))
@@ -462,6 +495,7 @@ declare it in :locals or bind it through the conclusion" v))))
      :identity (lisp-plus-kernel0:make-identity
                 :procedure (format nil "schema/~A/~D" (symbol-name name) version))
      :conclusion conclusion :premises premises :locals locals
+     :unique-locals unique-locals
      :conclusion-variables cvars
      :admit-kind (%schema-admit-kind name version))))
 
@@ -478,6 +512,10 @@ declare it in :locals or bind it through the conclusion" v))))
         (%proposition-pattern-normal-form (judgment-schema-conclusion s))
         (mapcar #'%proposition-pattern-normal-form (judgment-schema-premises s))
         (sort (copy-list (judgment-schema-locals s)) #'string<
+              :key #'symbol-name)
+        ;; CHARTER-DELTA-2: the uniqueness declaration is part of schema identity —
+        ;; a schema differing only in :unique-locals is a DIFFERENT schema.
+        (sort (copy-list (judgment-schema-unique-locals s)) #'string<
               :key #'symbol-name)))
 
 (defun register-schema (schema)
@@ -583,7 +621,9 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
   (schema-name nil :read-only t)
   (schema-version nil :read-only t)
   (conclusion nil :read-only t)
-  (bindings nil :read-only t)                 ; chosen environment, or nil
+  (bindings nil :read-only t)                 ; first complete environment, or nil
+  (complete-binding-environments nil :read-only t) ; CHARTER-DELTA-2: ALL complete envs
+  (uniqueness-conflicts nil :read-only t)     ; CHARTER-DELTA-2: (local values envs)…
   (assessments nil :read-only t)              ; list of premise-assessment
   (decision nil :read-only t)                 ; :granted | :refused
   (strongest-lawful-result nil :read-only t)
@@ -611,6 +651,19 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
 (defun derivation-receipt-repair-options (r)
   (copy-tree (%derivation-receipt-repair-options r)))
 (defun derivation-receipt-assessments (r) (copy-list (%derivation-receipt-assessments r)))
+;; CHARTER-DELTA-2 receipt refinement.  Both list-valued fields are structural
+;; (nested alists / role-value lists; struct leaves shared, immutable) so their
+;; public readers copy-tree per AUDIT-1 repair 2 — a past receipt's complete
+;; environments and named uniqueness conflicts can never be silently rewritten.
+(defun derivation-receipt-complete-binding-environments (r)
+  (copy-tree (%derivation-receipt-complete-binding-environments r)))
+(defun derivation-receipt-uniqueness-conflicts (r)
+  (copy-tree (%derivation-receipt-uniqueness-conflicts r)))
+(defun derivation-receipt-multiply-supported-p (r)
+  "Derived VIEW (CHARTER-DELTA-2): true when MORE THAN ONE complete coherent
+binding environment discharges the conclusion.  NOT a premise status, NOT a
+scalar strength — a boolean read of the preserved environment count."
+  (> (length (%derivation-receipt-complete-binding-environments r)) 1))
 
 ;;; ------------------------------------------------------------------
 ;;; Accessibility — id-based against the acting receiver-context.  Reuses the
@@ -629,62 +682,145 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
   "The alist entries present in AFTER but not BEFORE (schema-local extension)."
   (remove-if (lambda (pair) (member pair before :test #'equal)) after))
 
-(defun %assess-premise (pattern bindings witnesses refutations ctx)
-  "Return a PREMISE-ASSESSMENT and (as a second value) the accepted binding
-extension when :satisfied (else NIL)."
-  (let ((pnf (%proposition-pattern-normal-form pattern))
-        (acc-match '()) (inacc-match '()) (mismatched '())
-        (refuting '()) (envs '()))
-    ;; positive candidates
-    (dolist (w witnesses)
-      (multiple-value-bind (status nb conflicts)
-          (%match-proposition pnf (lisp-plus-slice0:witness-for w) bindings)
-        (case status
-          (:match
-           (let ((delta (%binding-delta bindings nb)))
-             (if (%support-accessible-p w ctx)
-                 (progn (push w acc-match)
-                        (pushnew delta envs :test #'equal))
-                 (push w inacc-match))))
-          (:conflict (push (cons w conflicts) mismatched))
-          (t nil))))                             ; predicate/role-set mismatch: skip
-    ;; refuting candidates
-    (dolist (r refutations)
-      (multiple-value-bind (status nb conflicts)
-          (%match-proposition pnf (refutation-refutes r) bindings)
-        (declare (ignore nb conflicts))
-        (when (eq status :match) (push r refuting))))
-    (setf acc-match (nreverse acc-match)
-          inacc-match (nreverse inacc-match)
-          mismatched (nreverse mismatched)
-          refuting (nreverse refuting)
-          envs (nreverse envs))
-    ;; disposition — the Δ2 conjunctive law, in code:
-    ;; refuting blocks (positive kept) > ambiguity blocks > satisfied requires
-    ;; an accessible match > inaccessible is residue (not absent) > mismatched
-    ;; (predicate matched, role conflict) > missing (no candidate of any class).
-    (let* ((distinct-envs (remove-duplicates envs :test #'equal))
+;;; ------------------------------------------------------------------
+;;; Environment set discipline (CHARTER-DELTA-2).  An environment is an alist
+;;; VAR -> VALUE.  Canonical order (by variable name) makes the environment SET
+;;; order-independent under EQUAL, so support order can change neither the
+;;; decision nor the recorded environment set (M3).
+
+(defun %canonical-env (alist)
+  "An environment in canonical order: entries sorted by variable name (each var
+is bound at most once, so the key is total)."
+  (sort (copy-alist alist) #'string<
+        :key (lambda (pair) (symbol-name (car pair)))))
+
+(defun %sort-envs (envs)
+  "Deterministic, order-independent ordering of a SET of canonical environments,
+keyed on each environment's printed canonical form."
+  (sort (remove-duplicates envs :test #'equal) #'string<
+        :key (lambda (e) (format nil "~S" e))))
+
+(defun %uniqueness-conflicts (unique-locals complete-envs)
+  "Per declared uniqueness-bearing local, the distinct values it takes ACROSS the
+COMPLETE coherent environments; a local with >1 surviving value is a conflict.
+Returns a list of (LOCAL SORTED-VALUES CARRYING-ENVIRONMENTS).  Judged over
+COMPLETE environments only (Delta-2), so an incomplete environment's stray value
+never manufactures a conflict (M12)."
+  (loop for u in unique-locals
+        for vals = (remove-duplicates
+                    (loop for e in complete-envs
+                          for cell = (assoc u e)
+                          when cell collect (cdr cell))
+                    :test #'equal)
+        when (> (length vals) 1)
+          collect (list u
+                        (sort (copy-list vals) #'string<
+                              :key (lambda (v) (format nil "~S" v)))
+                        (%sort-envs
+                         (remove-if-not (lambda (e) (assoc u e)) complete-envs)))))
+
+;;; Assess every premise AND enumerate complete environments across premises in
+;;; one pass.  Two carries advance premise by premise:
+;;;   COMPLETE-ENVS — environments that have discharged EVERY premise so far by
+;;;     an accessible match (the Delta-2 existential set); empties permanently the
+;;;     first time a premise admits no accessible extension of a live complete env.
+;;;   ASSESS-ENVS   — the robust context for the per-premise structured view; a
+;;;     premise that adds no binding leaves it unchanged (so later premises are
+;;;     still assessed, exactly as the pre-Delta-2 single-thread did) — but it
+;;;     never re-seeds COMPLETE-ENVS.
+;;; A premise-local plurality on a NON-unique local is never a refusal (it simply
+;;; multiplies the environment set); ambiguity is decided afterward, from
+;;; declared uniqueness over the COMPLETE environments only.
+
+(defun %build-assessment (raw conflicts)
+  "Build one premise-assessment from RAW gathered data and the global uniqueness
+CONFLICTS.  Disposition order (six dispositions preserved): refuting blocks >
+declared-uniqueness conflict on a bound local (:ambiguous) > accessible match
+(:satisfied) > inaccessible residue > mismatched (predicate matched, role
+conflict) > missing."
+  (destructuring-bind (&key premise pnf incoming accessible inaccessible
+                            mismatched refuting deltas)
+      raw
+    (let* ((pvars (%proposition-pattern-variables premise))
+           (this-conflicts (remove-if-not (lambda (c) (member (first c) pvars))
+                                          conflicts))
            (disposition
              (cond (refuting :refuted)
-                   ((and acc-match (> (length distinct-envs) 1)) :ambiguous)
-                   (acc-match :satisfied)
-                   (inacc-match :inaccessible)
+                   ((and accessible this-conflicts) :ambiguous)
+                   (accessible :satisfied)
+                   (inaccessible :inaccessible)
                    (mismatched :mismatched)
-                   (t :missing)))
-           (accepted (when (eq disposition :satisfied)
-                       (first distinct-envs))))
-      (values
-       (%make-premise-assessment
-        :premise-pattern pnf
-        :ground-instance (%instantiate pnf bindings)
-        :matching-accessible-supports acc-match
-        :matching-inaccessible-supports inacc-match
-        :mismatched-candidates mismatched
-        :refuting-supports refuting
-        :binding-environments distinct-envs
-        :ambiguities (if (eq disposition :ambiguous) distinct-envs '())
-        :disposition disposition)
-       accepted))))
+                   (t :missing))))
+      (%make-premise-assessment
+       :premise-pattern pnf
+       :ground-instance (%instantiate pnf incoming)
+       :matching-accessible-supports accessible
+       :matching-inaccessible-supports inaccessible
+       :mismatched-candidates mismatched
+       :refuting-supports refuting
+       :binding-environments (%sort-envs deltas)
+       :ambiguities (if (eq disposition :ambiguous)
+                        (loop for c in this-conflicts
+                              collect (list (first c) (second c)))
+                        '())
+       :disposition disposition))))
+
+(defun %assess-and-enumerate (premises base-env witnesses refutations ctx
+                              unique-locals)
+  "Return (values ASSESSMENTS COMPLETE-ENVS UNIQUENESS-CONFLICTS).
+ASSESSMENTS: one premise-assessment per premise (Δ2 structured view, six
+dispositions preserved).  COMPLETE-ENVS: the sorted set of environments
+discharging every premise.  UNIQUENESS-CONFLICTS: from declared :unique-locals."
+  (let ((assess-envs (list (%canonical-env base-env)))
+        (complete-envs (list (%canonical-env base-env)))
+        (raws '()))
+    (dolist (premise premises)
+      (let ((pnf (%proposition-pattern-normal-form premise))
+            (incoming (first assess-envs))
+            (accessible '()) (inaccessible '()) (mismatched '())
+            (refuting '()) (deltas '())
+            (assess-out '()) (complete-out '()))
+        (dolist (env assess-envs)
+          (let ((env-complete (member env complete-envs :test #'equal)))
+            (dolist (w witnesses)
+              (multiple-value-bind (status nb conflicts)
+                  (%match-proposition pnf (lisp-plus-slice0:witness-for w) env)
+                (case status
+                  (:match
+                   (if (%support-accessible-p w ctx)
+                       (let ((ext (%canonical-env nb))
+                             (delta (%binding-delta env nb)))
+                         (pushnew w accessible)
+                         (pushnew delta deltas :test #'equal)
+                         (pushnew ext assess-out :test #'equal)
+                         (when env-complete
+                           (pushnew ext complete-out :test #'equal)))
+                       (pushnew w inaccessible)))
+                  (:conflict (pushnew (cons w conflicts) mismatched :test #'equal))
+                  (t nil))))                     ; predicate/role-set mismatch: skip
+            (dolist (r refutations)
+              (multiple-value-bind (status nb cf)
+                  (%match-proposition pnf (refutation-refutes r) env)
+                (declare (ignore nb cf))
+                (when (eq status :match) (pushnew r refuting))))))
+        ;; advance the two carries
+        (setf complete-envs (remove-duplicates complete-out :test #'equal))
+        (setf assess-envs (if assess-out
+                              (remove-duplicates assess-out :test #'equal)
+                              assess-envs))
+        (push (list :premise premise :pnf pnf :incoming incoming
+                    :accessible (nreverse accessible)
+                    :inaccessible (nreverse inaccessible)
+                    :mismatched (nreverse mismatched)
+                    :refuting (nreverse refuting)
+                    :deltas deltas)
+              raws)))
+    (setf raws (nreverse raws)
+          complete-envs (%sort-envs complete-envs))
+    (let ((conflicts (%uniqueness-conflicts unique-locals complete-envs)))
+      (values (mapcar (lambda (raw) (%build-assessment raw conflicts)) raws)
+              complete-envs
+              conflicts))))
 
 (defun %repair-for (assessment)
   "What would discharge this unsatisfied premise (Δ6 / charter §6)."
@@ -706,7 +842,10 @@ extension when :satisfied (else NIL)."
              (mapcar #'refutation-id
                      (premise-assessment-refuting-supports assessment))))
       (:ambiguous
-       (list :remove-one-competing-support-or-add-discriminator
+       ;; CHARTER-DELTA-2: Slice /1 has NO discriminator mechanism — a declared
+       ;; uniqueness conflict is resolved only by removing the competing support
+       ;; for the uniqueness-bearing local (named, with its surviving values).
+       (list :resolve-declared-uniqueness-conflict-on
              (premise-assessment-ambiguities assessment)))
       (t nil))))
 
@@ -819,25 +958,30 @@ typed DERIVATION-REFUSED carrying the receipt (mirroring Slice /0's RAISE)."
          (ctx-id (and ctx (lisp-plus-slice0:receiver-context-context-id ctx)))
          (witnesses (remove-if-not #'lisp-plus-slice0:witness-p supports))
          (refutations (remove-if-not #'refutation-p supports))
-         (bindings (%bind-conclusion schema conclusion-nf))
-         (assessments '()))
-    ;; assess premises in order, threading accepted schema-local extensions
-    (dolist (premise (judgment-schema-premises schema))
-      (multiple-value-bind (a accepted)
-          (%assess-premise premise bindings witnesses refutations ctx)
-        (push a assessments)
-        (when accepted (setf bindings (append accepted bindings)))))
-    (setf assessments (nreverse assessments))
-    (let* ((granted-p (and (judgment-schema-premises schema)
-                           (every (lambda (a)
-                                    (eq (premise-assessment-disposition a) :satisfied))
-                                  assessments)))
-           ;; a premiseless schema cannot silently grant (defensive)
-           (granted-p (and granted-p (judgment-schema-premises schema)))
-           (receipt (%make-derivation-receipt
+         (base-env (%bind-conclusion schema conclusion-nf))
+         (unique-locals (%judgment-schema-unique-locals schema)))
+    ;; CHARTER-DELTA-2: enumerate complete environments across premises (a
+    ;; premise-local plurality on a non-unique local never refuses); ambiguity is
+    ;; decided afterward from declared uniqueness over the COMPLETE environments.
+    (multiple-value-bind (assessments complete-envs uniqueness-conflicts)
+        (%assess-and-enumerate (%judgment-schema-premises schema)
+                               base-env witnesses refutations ctx unique-locals)
+      (let* ((has-premises (%judgment-schema-premises schema))
+             ;; refutation still blocks regardless of environments (M11)
+             (refuted-p (some (lambda (a)
+                                (eq (premise-assessment-disposition a) :refuted))
+                              assessments))
+             ;; GRANT iff a complete coherent environment exists, no declared
+             ;; uniqueness conflict, and no refutation — preserving ALL complete
+             ;; environments (a premiseless schema cannot silently grant).
+             (granted-p (and has-premises complete-envs
+                             (not refuted-p) (null uniqueness-conflicts)))
+             (receipt (%make-derivation-receipt
                      :schema-name schema-name :schema-version schema-version
                      :conclusion conclusion-nf
-                     :bindings (and granted-p bindings)
+                     :bindings (and granted-p (first complete-envs))
+                     :complete-binding-environments complete-envs
+                     :uniqueness-conflicts uniqueness-conflicts
                      :assessments assessments
                      :decision (if granted-p :granted :refused)
                      :strongest-lawful-result
@@ -867,7 +1011,7 @@ typed DERIVATION-REFUSED carrying the receipt (mirroring Slice /0's RAISE)."
                          :offending-field :premises
                          :offending-value (mapcar #'premise-assessment-disposition
                                                   assessments)
-                         :receipt receipt)))))
+                         :receipt receipt))))))
 
 ;;; ==================================================================
 ;;; Transported testimony (Δ4).  A transmitted derivation receipt is EVIDENCE
@@ -932,6 +1076,16 @@ from the receipt (Slice /0 discipline, inherited)."
     (format stream "  bindings: ~{~A~^, ~}~%"
             (loop for (k . v) in (derivation-receipt-bindings receipt)
                   collect (format nil "~S=~S" k v))))
+  ;; CHARTER-DELTA-2: name environment plurality and any declared uniqueness
+  ;; conflict — both drawn ONLY from the receipt's own fields.
+  (let ((envs (derivation-receipt-complete-binding-environments receipt)))
+    (when (> (length envs) 1)
+      (format stream "  complete binding environments: ~D (plurality preserved~
+~:[~; — multiply supported~])~%"
+              (length envs) (derivation-receipt-multiply-supported-p receipt))))
+  (dolist (uc (derivation-receipt-uniqueness-conflicts receipt))
+    (format stream "  uniqueness conflict on ~S: surviving values ~S~%"
+            (first uc) (second uc)))
   (dolist (a (derivation-receipt-assessments receipt))
     (format stream "  premise ~S: ~A~%"
             (second (premise-assessment-premise-pattern a))

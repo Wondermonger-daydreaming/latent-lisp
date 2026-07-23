@@ -1,3 +1,8 @@
+;;;; HISTORICAL — records the PRE-RULING semantics per commit 50a94ad6 (plurality
+;;;; read as :ambiguous doubt).  SUPERSEDED by CHARTER-DELTA-2 + MULTIPLICITY-REPAIRED.lisp
+;;;; (grant-and-preserve-all; ambiguity only from a declared :unique-locals constraint).
+;;;; No longer regression-runnable against the revised substrate; kept as the original finding.
+;;;;
 ;;;; MULTIPLICITY.lisp — de-admissione-datorum: the plurality experiment.
 ;;;;
 ;;;; A separate program from SPECIMEN, with its own run and its own section in
