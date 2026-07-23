@@ -73,6 +73,19 @@ spine, receipt rewrite — each must FAIL against pre-repair semantics and PASS
 after), full selftest + BOTH specimen suites re-run green, zero behavior change
 elsewhere.
 
+**Adjudication extension (same sitting, custodian):** the repair builder flagged
+a fourth path of the same breach class it was not licensed to touch —
+`proposition-pattern-normal-form` returned the live stored list, so a registered
+schema's premise pattern could be vandalized through the pattern reader
+(custodian-reproduced: `STORED-AFTER-MUTATION: :VANDALIZED`). Repair 2 EXTENDED
+to the pattern struct's two readers (`%`-conc-name + copying public wrappers,
+internal call sites moved to `%`-readers); tooth **T17** added
+(probe re-run post-repair: `STORED-AFTER-MUTATION: :PREDICATE`). Selftest
+**36/36**; both specimens, SMOKE, and kernel0 re-verified green after the
+extension. Repairs executed by FABER-IV (Opus 4.6) with teeth-bite-before-cure
+discipline (pre-repair failures recorded verbatim: T13/T14/T15 all failed, T15
+reproducing the F2 `(:WIPED)`); extension applied by the custodian directly.
+
 ## Multiplicity finding (from the cross-domain specimen, restated for one file)
 
 Case A (two sufficient calibration certificates) and Case B (two incompatible

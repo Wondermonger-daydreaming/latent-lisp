@@ -1,6 +1,7 @@
 ;;;; slice1-selftest.lisp — substrate teeth for Lisp+ Slice /1.
 ;;;;
-;;;; Δ6 teeth T1–T12 (CHARTER-DELTA-1.md) plus the constructor-refusal checks.
+;;;; Δ6 teeth T1–T12 (CHARTER-DELTA-1.md) plus the constructor-refusal checks,
+;;;; plus AUDIT-1 mutation/aliasing teeth T13–T16 (defensive-copy breach F).
 ;;;; Every tooth that plants a defect SHOWS the catch fire (prints the refusing
 ;;;; condition type).  Output mirrors kernel0-selftest: a final tally line and a
 ;;;; nonzero exit on any failure.
@@ -362,6 +363,91 @@
       (ok "why extractor accepts the derivation receipt" (eq (why r) r))
       (render-derivation-why r (make-string-output-stream))
       (ok "render-derivation-why runs from structured fields" t))))
+
+;;; ==================================================================
+;;; Mutation / aliasing teeth (AUDIT-1 breach F: no defensive copies).
+;;; Each must FAIL against pre-repair semantics and PASS after repairs 1–3.
+(format t "~%== Mutation / aliasing teeth (AUDIT-1 F) ==~%")
+
+;;; ---- T13 input-aliasing: a caller-held cons must not alias into a stored
+;;;      schema premise (kills A7/A7b + input half of F1) ----
+(clear-schema-registry)
+(let* ((val-list (list 1 2 3))                       ; caller keeps this cons
+       (prem-form (list :predicate :p (list :items val-list)))
+       (pat (proposition-pattern prem-form))
+       (concl (proposition-pattern '(:predicate :c (:a (:var :art)))))
+       (schema (judgment-schema :name :alias-test :version 1
+                                :conclusion concl :premises (list pat))))
+  (register-schema schema)
+  (setf (first val-list) :WIPED)                     ; vandalize the original
+  (let ((stored (proposition-pattern-normal-form
+                 (first (judgment-schema-premises (resolve-schema :alias-test 1))))))
+    (ok "T13 input-aliasing: mutating caller list leaves stored premise UNCHANGED"
+        (equal stored '(:predicate :p (:items (1 2 3))))
+        (format nil "stored premise = ~S" stored))))
+
+;;; ---- T14 registry-spine: mutating the list handed out by the premises
+;;;      reader must not rewrite registry state (kills return half of F1) ----
+(install-dp)
+(let ((prem-list (judgment-schema-premises (resolve-schema :de-praemissis 1))))
+  (setf (car prem-list) :WIPED)                      ; vandalize the returned spine
+  (let ((stored (judgment-schema-premises (resolve-schema :de-praemissis 1))))
+    (ok "T14 registry-spine: mutating returned premises list leaves registry UNCHANGED"
+        (and (= 4 (length stored)) (proposition-pattern-p (first stored)))
+        (format nil "first stored premise still a pattern: ~S"
+                (proposition-pattern-p (first stored))))))
+
+;;; ---- T15 receipt-immutability: a past receipt must not be silently rewritten
+;;;      by whoever holds it (kills F2 — "recorded, never erased") ----
+(install-dp)
+(handler-case
+    (derive :schema-name :de-praemissis :schema-version 1
+            :conclusion (dp-conclusion)
+            :supports (list (sw '(:predicate :digest-matches (:artifact "artifact-2"))))
+            :receiver (ctx-of :ctx-a))
+  (derivation-refused (c)
+    (let* ((receipt (slice1-condition-receipt c))
+           (asmts (derivation-receipt-assessments receipt))
+           (len-before (length asmts)))
+      (setf (car asmts) :WIPED)                       ; vandalize the returned list
+      (let ((reread (derivation-receipt-assessments receipt)))
+        (ok "T15 receipt-immutability: mutating returned assessments leaves the receipt UNCHANGED"
+            (and (= len-before (length reread))
+                 (premise-assessment-p (first reread)))
+            (format nil "first assessment on re-read = ~S"
+                    (if (premise-assessment-p (first reread))
+                        (premise-assessment-disposition (first reread))
+                        (first reread))))))))
+
+;;; ---- T16 seam-idempotence: reloading slice1.lisp installs no duplicate
+;;;      why-extractor (AUDIT-1 repair 3; the receipt's "single push" enforced) ----
+;; RECEIPTED INTERNAL ACCESS — see SLICE0-DEFECT-RECEIPT-1.md; this check verifies
+;; the receipted seam ITSELF (the sole other licensed :: in Slice /1's surface).
+(let ((len-before (length lisp-plus-slice0::*why-extractors*)))
+  (handler-bind ((style-warning (lambda (w) (muffle-warning w))))
+    (load (merge-pathnames "slice1.lisp" *load-truename*)))
+  (let ((len-after (length lisp-plus-slice0::*why-extractors*)))
+    (ok "T16 seam-idempotence: reload adds no duplicate extractor (total growth 0)"
+        (= len-before len-after)
+        (format nil "len before=~D after=~D" len-before len-after))))
+
+;;; ---- T17 pattern-nf immutability: the fourth aliasing path (AUDIT-1 repair 2,
+;;;      adjudication extension) — mutating the nf returned by the pattern reader
+;;;      must not vandalize a registered schema ----
+(let* ((cpat (proposition-pattern '(:predicate :t17c (:x (:var :x)))))
+       (prem (proposition-pattern '(:predicate :t17p (:x (:var :x)))))
+       (sch (judgment-schema :name :t17-probe :version 1
+                             :conclusion cpat :premises (list prem) :locals '())))
+  (register-schema sch)
+  (let* ((resolved (resolve-schema :t17-probe 1))
+         (nf (proposition-pattern-normal-form
+              (first (judgment-schema-premises resolved)))))
+    (setf (car nf) :VANDALIZED)                      ; vandalize the returned nf
+    (let* ((renf (proposition-pattern-normal-form
+                  (first (judgment-schema-premises (resolve-schema :t17-probe 1))))))
+      (ok "T17 pattern-nf immutability: mutating returned normal-form leaves the registry UNCHANGED"
+          (eq (car renf) :predicate)
+          (format nil "stored nf head on re-read = ~S" (car renf))))))
 
 ;;; ==================================================================
 (format t "~%slice1 selftest: ~D passed, ~D failed~%" *pass* *fail*)

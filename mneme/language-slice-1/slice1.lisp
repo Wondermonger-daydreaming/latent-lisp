@@ -233,8 +233,16 @@ pair; got ~S" pair))
             (car vars-acc))))
 
 (defun %normal-form (pred sorted-pairs)
+  ;; AUDIT-1 repair 1: structurally copy each value (copy-tree over the
+  ;; canonical vocabulary) so no caller-held cons is aliased into a stored
+  ;; proposition / pattern / schema.  Atoms (keywords, integers, strings) are
+  ;; immutable value nodes and are shared; (:var …) / (:quoted-datum …) are
+  ;; ordinary conses, copied structurally with their head keywords preserved by
+  ;; identity.  This is the ONE construction chokepoint (proposition,
+  ;; proposition-pattern, and refutation all route through here) — it kills
+  ;; A7/A7b and the input half of F1.
   (list* :predicate pred
-         (mapcar (lambda (p) (list (car p) (cdr p))) sorted-pairs)))
+         (mapcar (lambda (p) (list (car p) (copy-tree (cdr p)))) sorted-pairs)))
 
 (defun proposition (form)
   "Construct a GROUND structured proposition in NORMAL FORM.  FORM is
@@ -265,6 +273,7 @@ it because both operands are normalized.)"
 ;;; with a typed condition where it controls the call site).
 
 (defstruct (proposition-pattern (:constructor %make-proposition-pattern)
+                                (:conc-name %proposition-pattern-)
                                 (:copier nil))
   (normal-form nil :read-only t)   ; (:predicate pred (role value)…), vars kept
   (variables nil :read-only t))    ; keywords occurring as (:var KW)
@@ -278,6 +287,16 @@ unusable as a ground claim/support by construction."
       (%parse-proposition form t :proposition-pattern)
     (%make-proposition-pattern :normal-form (%normal-form pred pairs)
                                :variables vars)))
+
+(defun proposition-pattern-normal-form (p)
+  "Public reader: the pattern's normal form, as a fresh structural copy.
+Defensive copy per AUDIT-1 repair 2 (adjudication extension, third sitting):
+the stored list is registry-reachable state and must not be caller-mutable."
+  (copy-tree (%proposition-pattern-normal-form p)))
+
+(defun proposition-pattern-variables (p)
+  "Public reader: the pattern's variables, as a fresh list (AUDIT-1 repair 2)."
+  (copy-list (%proposition-pattern-variables p)))
 
 (defun %require-ground (x field)
   "Refuse a proposition-pattern where GROUND data is required."
@@ -371,15 +390,31 @@ data are left as-is.  Used for the assessment's :ground-instance field."
 ;;; Judgment schema — identity + version, conclusion pattern, conjunctive
 ;;; premise patterns, declared schema-local variables.
 
-(defstruct (judgment-schema (:constructor %make-judgment-schema) (:copier nil))
+(defstruct (judgment-schema (:constructor %make-judgment-schema)
+                            (:conc-name %judgment-schema-) (:copier nil))
   (name nil :read-only t)                  ; keyword
   (version nil :read-only t)               ; nonnegative integer
   (identity nil :read-only t)              ; kernel0 durable-identity (:procedure)
-  (conclusion nil :read-only t)            ; proposition-pattern
+  (conclusion nil :read-only t)            ; proposition-pattern (struct; immutable)
   (premises nil :read-only t)              ; list of proposition-pattern
   (locals nil :read-only t)                ; declared schema-local variables
   (conclusion-variables nil :read-only t)  ; vars in the conclusion (implicit)
   (admit-kind nil :read-only t))           ; the derivation admit keyword
+
+;;; AUDIT-1 repair 2: public readers copy every list-valued field so no caller
+;;; can mutate stored / registry state through a returned list (kills F1).
+;;; Scalar/struct fields (name, version, identity, conclusion, admit-kind) pass
+;;; through unchanged.  Copy depth: PREMISES / LOCALS / CONCLUSION-VARIABLES are
+;;; top-level copy-list (elements are immutable structs or keywords).
+(defun judgment-schema-name (s) (%judgment-schema-name s))
+(defun judgment-schema-version (s) (%judgment-schema-version s))
+(defun judgment-schema-identity (s) (%judgment-schema-identity s))
+(defun judgment-schema-conclusion (s) (%judgment-schema-conclusion s))
+(defun judgment-schema-admit-kind (s) (%judgment-schema-admit-kind s))
+(defun judgment-schema-premises (s) (copy-list (%judgment-schema-premises s)))
+(defun judgment-schema-locals (s) (copy-list (%judgment-schema-locals s)))
+(defun judgment-schema-conclusion-variables (s)
+  (copy-list (%judgment-schema-conclusion-variables s)))
 
 (defun %schema-error (field value invariant &rest more)
   (signal-slice1 'schema-construction-error
@@ -407,7 +442,7 @@ or a schema-local appearing in the conclusion, refuses at construction."
                      "each premise must be a proposition-pattern; got ~S" p)))
   (unless (and (listp locals) (every #'keywordp locals))
     (%schema-error :locals locals ":locals must be a list of keywords; got ~S" locals))
-  (let* ((cvars (proposition-pattern-variables conclusion))
+  (let* ((cvars (%proposition-pattern-variables conclusion))
          (declared (union cvars locals)))
     ;; a schema-local may not appear in the conclusion (Δ1)
     (dolist (l locals)
@@ -417,7 +452,7 @@ or a schema-local appearing in the conclusion, refuses at construction."
 schema-locals may occur ONLY in premise patterns" l)))
     ;; every premise variable must be a conclusion variable or a declared local
     (dolist (p premises)
-      (dolist (v (proposition-pattern-variables p))
+      (dolist (v (%proposition-pattern-variables p))
         (unless (member v declared :test #'eq)
           (%schema-error :premises v
                          "undeclared variable ~S in a premise pattern — ~
@@ -440,8 +475,8 @@ declare it in :locals or bind it through the conclusion" v))))
 (defun %schema-signature (s)
   "A structural fingerprint for idempotent-vs-conflicting re-registration."
   (list (judgment-schema-name s) (judgment-schema-version s)
-        (proposition-pattern-normal-form (judgment-schema-conclusion s))
-        (mapcar #'proposition-pattern-normal-form (judgment-schema-premises s))
+        (%proposition-pattern-normal-form (judgment-schema-conclusion s))
+        (mapcar #'%proposition-pattern-normal-form (judgment-schema-premises s))
         (sort (copy-list (judgment-schema-locals s)) #'string<
               :key #'symbol-name)))
 
@@ -502,7 +537,7 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
 ;;; Premise assessment — the structured object carried per premise (Δ2).
 
 (defstruct (premise-assessment (:constructor %make-premise-assessment)
-                               (:copier nil))
+                               (:conc-name %premise-assessment-) (:copier nil))
   (premise-pattern nil :read-only t)
   (ground-instance nil :read-only t)
   (matching-accessible-supports nil :read-only t)
@@ -513,12 +548,38 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
   (ambiguities nil :read-only t)
   (disposition nil :read-only t))             ; one of the six charter terms
 
+;;; AUDIT-1 repair 2: public readers copy every list-valued field so an
+;;; assessment carried inside a stored receipt cannot be mutated through a
+;;; returned list.  Copy depth: PREMISE-PATTERN / GROUND-INSTANCE (normal-form
+;;; role-value lists), MISMATCHED-CANDIDATES ((witness . roles) conses),
+;;; BINDING-ENVIRONMENTS / AMBIGUITIES (schema-local alists) are structural
+;;; (copy-tree; witness/refutation struct leaves shared, immutable);
+;;; MATCHING-*-SUPPORTS / REFUTING-SUPPORTS are top-level copy-list (immutable
+;;; struct elements).  DISPOSITION (a keyword) passes through.
+(defun premise-assessment-disposition (a) (%premise-assessment-disposition a))
+(defun premise-assessment-premise-pattern (a)
+  (copy-tree (%premise-assessment-premise-pattern a)))
+(defun premise-assessment-ground-instance (a)
+  (copy-tree (%premise-assessment-ground-instance a)))
+(defun premise-assessment-mismatched-candidates (a)
+  (copy-tree (%premise-assessment-mismatched-candidates a)))
+(defun premise-assessment-binding-environments (a)
+  (copy-tree (%premise-assessment-binding-environments a)))
+(defun premise-assessment-ambiguities (a)
+  (copy-tree (%premise-assessment-ambiguities a)))
+(defun premise-assessment-matching-accessible-supports (a)
+  (copy-list (%premise-assessment-matching-accessible-supports a)))
+(defun premise-assessment-matching-inaccessible-supports (a)
+  (copy-list (%premise-assessment-matching-inaccessible-supports a)))
+(defun premise-assessment-refuting-supports (a)
+  (copy-list (%premise-assessment-refuting-supports a)))
+
 ;;; ==================================================================
 ;;; Derivation receipt — issued on EVERY attempt; carries the assessments
 ;;; THEMSELVES, never six name-buckets, never a boolean summary.
 
 (defstruct (derivation-receipt (:constructor %make-derivation-receipt)
-                               (:copier nil))
+                               (:conc-name %derivation-receipt-) (:copier nil))
   (schema-name nil :read-only t)
   (schema-version nil :read-only t)
   (conclusion nil :read-only t)
@@ -530,6 +591,26 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
   (identity nil :read-only t)                 ; fresh :receipt identity per attempt
   (origin-context nil :read-only t)
   (ordinal nil :read-only t))
+
+;;; AUDIT-1 repair 2: public readers copy every list-valued field so a past
+;;; receipt can never be silently rewritten by whoever holds it — the "recorded,
+;;; never erased" law (kills F2).  Copy depth: CONCLUSION / BINDINGS /
+;;; STRONGEST-LAWFUL-RESULT / REPAIR-OPTIONS are structural (copy-tree — nested
+;;; alists / role-value lists; struct leaves shared, immutable); ASSESSMENTS is
+;;; top-level copy-list (elements are immutable premise-assessment structs whose
+;;; own list readers already copy).  Scalar/struct fields pass through.
+(defun derivation-receipt-schema-name (r) (%derivation-receipt-schema-name r))
+(defun derivation-receipt-schema-version (r) (%derivation-receipt-schema-version r))
+(defun derivation-receipt-decision (r) (%derivation-receipt-decision r))
+(defun derivation-receipt-identity (r) (%derivation-receipt-identity r))
+(defun derivation-receipt-origin-context (r) (%derivation-receipt-origin-context r))
+(defun derivation-receipt-conclusion (r) (copy-tree (%derivation-receipt-conclusion r)))
+(defun derivation-receipt-bindings (r) (copy-tree (%derivation-receipt-bindings r)))
+(defun derivation-receipt-strongest-lawful-result (r)
+  (copy-tree (%derivation-receipt-strongest-lawful-result r)))
+(defun derivation-receipt-repair-options (r)
+  (copy-tree (%derivation-receipt-repair-options r)))
+(defun derivation-receipt-assessments (r) (copy-list (%derivation-receipt-assessments r)))
 
 ;;; ------------------------------------------------------------------
 ;;; Accessibility — id-based against the acting receiver-context.  Reuses the
@@ -551,7 +632,7 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
 (defun %assess-premise (pattern bindings witnesses refutations ctx)
   "Return a PREMISE-ASSESSMENT and (as a second value) the accepted binding
 extension when :satisfied (else NIL)."
-  (let ((pnf (proposition-pattern-normal-form pattern))
+  (let ((pnf (%proposition-pattern-normal-form pattern))
         (acc-match '()) (inacc-match '()) (mismatched '())
         (refuting '()) (envs '()))
     ;; positive candidates
@@ -638,7 +719,7 @@ extension when :satisfied (else NIL)."
 (defun %bind-conclusion (schema conclusion)
   "Bind conclusion variables from the ground CONCLUSION.  Refuses (typed) if any
 conclusion variable is left unbound."
-  (let ((cnf (proposition-pattern-normal-form (judgment-schema-conclusion schema))))
+  (let ((cnf (%proposition-pattern-normal-form (judgment-schema-conclusion schema))))
     (multiple-value-bind (status bindings conflicts)
         (%match-proposition cnf conclusion '())
       (declare (ignore conflicts))
@@ -661,7 +742,11 @@ every conclusion variable of schema (~S ~S)~@[; unbound: ~S~]~@[; match status: 
   "The conclusion's judgment procedure: :semantic, admitting ONLY the schema's
 own derivation key.  This is the S3 closure — a generic content witness is
 refused by the frozen admissibility gate because it is not a
-(:derivation (:schema NAME VER)) support."
+(:derivation (:schema NAME VER)) support.  NB: a same-image hand-built witness
+forging that key WITHOUT a governed DERIVE is the acknowledged stratum-3
+host-escape boundary — see CHARTER-DELTA-1.md Δ3 'Acknowledged inherited
+boundary' — inherited from Slice /0's closure unchanged; the slice claims
+nothing stronger."
   (lisp-plus-slice0:promotion-procedure
    :descriptor (lisp-plus-kernel0:make-procedure-descriptor
                 :procedure-id (lisp-plus-kernel0:make-identity
@@ -818,7 +903,14 @@ procedures."
 ;;; the frozen registry, exactly as projection and transmission did.
 
 ;; RECEIPTED INTERNAL ACCESS — see SLICE0-DEFECT-RECEIPT-1.md (sole licensed :: in Slice /1)
-(push (cons #'derivation-receipt-p #'identity) lisp-plus-slice0::*why-extractors*)
+;; AUDIT-1 repair 3: idempotent registration.  The predicate is the SYMBOL
+;; 'derivation-receipt-p (EQ across reloads, and a lawful funcall designator at
+;; the frozen WHY loop) — not #'derivation-receipt-p, which is a fresh function
+;; object each load and so member-unstable.  The find-guard makes reloading
+;; slice1.lisp install no duplicate: the registry grows by exactly one entry
+;; total across any number of loads.
+(unless (find 'derivation-receipt-p lisp-plus-slice0::*why-extractors* :key #'car)
+  (push (cons 'derivation-receipt-p #'identity) lisp-plus-slice0::*why-extractors*))
 
 (defun why (object)
   "Slice /1 façade over the uniform WHY: a derivation-receipt explains itself
