@@ -200,3 +200,53 @@ supported pressure and explicitly declines to authorize it. **No seat opens
 Slice /1 without the owner's word.**
 
 — Claude Fable 5 (CC seat), custodian, 2026-07-23
+
+---
+
+## Closure verification (post-transfer re-validation, 2026-07-23)
+
+*Added at session closure. A likely false-positive classifier event transferred
+this session from Fable 5 to Opus 4.8 shortly after Fable verified the load
+surface. This section is Opus 4.8's independent re-validation and the required
+manifest cross-check. It preserves all prior work unchanged; nothing above this
+line was edited.*
+
+### Independent re-validation (every result backed by a command run this turn)
+
+| Check | Command | Observed |
+|---|---|---|
+| sbcl | `sbcl --version` | `SBCL 2.4.6` |
+| kernel0 | `sbcl --non-interactive --load kernel0-selftest.lisp` (in `../kernel0/`) | `33 passed … 59 mutants killed, 0 failed` |
+| SMOKE | `sbcl --non-interactive --load SMOKE.lisp` | `6 ok, 0 failed` |
+| front-door (final program) | `python3 check-front-door.py STRANGER-PROGRAM.lisp` | `HARD 0 / HEUR 0 / audit 0 internal / FRONT-DOOR: CLEAN` |
+| front-door self-test | `bash check-front-door-selftest.sh` | `SELFTEST: 7/7 passed` |
+| teeth-runner | `sbcl --non-interactive --load teeth-runner.lisp` | `TEETH: 9 fired, 0 missed` |
+| final program rerun | `sbcl --non-interactive --load STRANGER-PROGRAM.lisp` | `EXIT 0`, 10 behavior checkmarks |
+| digest | `sha256sum STRANGER-PROGRAM.lisp rounds/round-2-program.lisp` | both `d44c46e5…` (identical, matches MANIFEST) |
+
+### Manifest / declaration cross-check (CHARGE item 6)
+
+- **Result: MATCH — no discrepancy.** The final program's actual input footprint
+  is exactly `../slice0-transmissibility.lisp` (the allowed opaque dependency via
+  the documented public load mechanism), `task-inputs/validator.lisp`, and
+  `task-inputs/readings-batch-a.sexp`. All three are in the ALLOWED-SOURCES set
+  and carry digests in MANIFEST.md. The seat's declared documents-used
+  ("Programmer Guide and API Brief") are consistent.
+- **Zero forbidden-source references** in `STRANGER-PROGRAM.lisp` (no specimen
+  dir, architecture, closure, SMOKE, charter, work-order). A first grep hit on
+  `specimen` was a **false positive** — it matched `:specimen-id`, the dataset's
+  own field name (line 261), not the specimen directories. Recorded here rather
+  than silently dropped.
+
+### Authorship caveat (recorded, not silently repaired)
+
+The custodian and packet documents are signed "Claude Fable 5 (CC seat)" and the
+commit trailers read `Co-Authored-By: Claude Opus 4.8`. Per the session's declared
+provenance, the pre-transfer portion (through load-surface verification) was Fable
+5 and the post-transfer construction + all commits were Opus 4.8 — so the "Fable 5"
+bylines on post-transfer documents are an inaccuracy. Per lab rule (§I-f: the
+witness is the store, never the sibling's introspection), the authoritative
+per-turn attribution is the session store, which was not queried this turn. The
+historical bylines are **left unchanged** (rewriting would be uncertain and pure
+churn); the discrepancy is flagged for a future session to resolve against the
+store if it matters. The evaluation result is unaffected.

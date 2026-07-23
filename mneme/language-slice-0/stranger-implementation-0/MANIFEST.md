@@ -48,9 +48,13 @@ Ground-truth identity is the OpenRouter store (`round-*-meta.json`), never the s
 |---|---|
 | `RETROSPECTIVE.md` | `83759f04198251c8a5640cd00d1dabcc9b744ac3b8d5e6fb11fc8aaa42086e3b` |
 | `rounds/retrospective-reply.md` | `0c0f7d0b291fbf2cf6af51430b883b333f0c49191b27fd1a08cee6c0e4487439` |
-| `CUSTODIAN-RESULT.md` | `a58959d63d5db831b285efce720d6e2d894c7ea09345c4ad68fb1b48ca6fe5af` |
+| `CUSTODIAN-RESULT.md` | `25c751d3b0a4a63abf749b9933802f5aeeb9199fb38e91d1ab39c30116bb6f39` |
 
 Reveal order honored: pre-reveal artifacts (program, receipt, implementer
 report) were committed at `0879e4ce` BEFORE the architecture/closure were
 shown to the seat. The retrospective (post-reveal) and this custodian result
 follow. The pre-reveal `IMPLEMENTER-REPORT.md` is preserved unchanged.
+
+## Closure extension (post-transfer, 2026-07-23)
+
+`CUSTODIAN-RESULT.md` was extended at session closure with a 'Closure verification' section (Opus 4.8 independent re-validation + manifest cross-check). Digest above updated to the extended file. All content above that section is unchanged from the `84f7f9ee` freeze.
