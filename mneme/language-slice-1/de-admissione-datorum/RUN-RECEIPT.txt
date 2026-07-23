@@ -1,0 +1,246 @@
+RUN-RECEIPT — de-admissione-datorum (Slice /1 cross-domain transfer specimen)
+Captured 2026-07-23T21:56:19Z by STRUCTOR-II (CC seat, Opus 4.8).
+SBCL 2.4.6; (lisp-implementation-version) verified 2.4.6 through the interpreter.
+Outputs verbatim below, SBCL license banner elided (noise). Exit code shown per program.
+EXPECTED-FAILURES.md was frozen BEFORE the first run; every disposition below matches it.
+======================================================================
+
+########################## SPECIMEN.lisp ##########################
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== de-admissione-datorum SPECIMEN — Slice /1, schema :dataset-admissibility v1 ==
+
+── behavior 1: schema-conformance support alone ⇒ refusal; receipt shows the other five unmet
+   decision: :REFUSED
+   schema-conformance=:SATISFIED  measured-by=:MISSING  calibration=:MISSING
+   missingness=:MISSING  population=:MISSING  purpose-permitted=:MISSING
+   [ok 1] schema-valid alone is refused; the other five layers are :missing, not assumed
+
+── behavior 2: schema-conformance + low missingness, calibration absent ⇒ refused; calibration :missing NAMED
+   decision: :REFUSED ; schema=:SATISFIED missingness=:SATISFIED calibration=:MISSING
+   named unmet premise: :CALIBRATION-VALID
+   [ok 2] conforming + low-missingness data is refused; calibration is NAMED :missing (measurement-validity absent)
+
+── behavior 3: calibration cert for instrument-a cannot discharge a premise bound to instrument-b (⇒ :mismatched :instrument)
+   measured-by disposition   : :SATISFIED (binds ?instrument = instrument-b)
+   calibration disposition   : :MISMATCHED ; conflicting roles : (:INSTRUMENT)
+   [ok 3] instrument-a's certificate lands :mismatched on role :instrument against an instrument-b-bound premise
+
+── behavior 4: population-suitable for :descriptive cannot discharge a :causal conclusion (⇒ :mismatched :purpose)
+   population disposition : :MISMATCHED ; conflicting roles : (:PURPOSE)
+   [ok 4] descriptive-fitness lands :mismatched on role :purpose against a causal conclusion — a real layer boundary
+
+── behavior 5: purpose-permission for :descriptive does not silently permit :causal (⇒ :mismatched :purpose)
+   purpose-permitted disposition : :MISMATCHED ; conflicting roles : (:PURPOSE)
+   [ok 5] descriptive-purpose permission lands :mismatched on role :purpose; consent does not spill to causal use
+
+── behavior 6: a dataset-1 premise cannot discharge a dataset-2 conclusion (⇒ :mismatched :dataset)
+   schema-conformance disposition : :MISMATCHED ; conflicting roles : (:DATASET)
+   [ok 6] dataset-1's conformance record lands :mismatched on role :dataset against a dataset-2 conclusion
+
+── behavior 7: receiver-r1's purpose-permission cannot discharge a receiver-r2 conclusion (⇒ :mismatched :receiver)
+   purpose-permitted disposition : :MISMATCHED ; conflicting roles : (:RECEIVER)
+   [ok 7] r1's permission lands :mismatched on role :receiver against an r2 conclusion — permission is receiver-relative
+
+── behavior 8: an exact but inaccessible calibration support is :inaccessible residue, NOT :missing
+   disposition                       : :INACCESSIBLE
+   matching-accessible-supports (n)  : 0
+   matching-inaccessible-supports (n): 1
+   [ok 8] a present-but-unreachable calibration is residue (:inaccessible), distinct from :missing (accessible=0, inaccessible=1)
+
+── behavior 9: a refuted calibration blocks even with positive support present — BOTH preserved
+   disposition                  : :REFUTED
+   positive support present     : T
+   refuting support present     : T
+   [ok 9] positive AND refuting evidence both preserved; premise :refuted, never revisionistically erased
+
+── behavior 10: full coherent discharge ⇒ :granted, a real frozen Slice /0 :verified promotion
+   receipt decision  : :GRANTED
+   granted claim prop: (:PREDICATE :DATASET-ADMISSIBLE (:DATASET "dataset-1")
+                        (:PURPOSE :CAUSAL) (:RECEIVER :RECEIVER-A))
+   judgment-record   : :VERIFIED (procedure v1)
+   [ok 10] all six layers discharged ⇒ a real Slice /0 :verified promotion, keyed to the derivation
+
+── behavior 11: render-derivation-why names every premise assessment precisely (satisfied AND unmet)
+   why façade returns the receipt itself: T
+   ---- render-derivation-why ----
+   [derivation REFUSED] schema :DATASET-ADMISSIBILITY v1
+     premise :SCHEMA-CONFORMANCE: SATISFIED
+     premise :MEASURED-BY: SATISFIED
+     premise :CALIBRATION-VALID: MISSING
+     premise :MISSINGNESS-WITHIN-BOUND: MISSING
+     premise :POPULATION-SUITABLE: MISSING
+     premise :PURPOSE-PERMITTED: MISSING
+     repair for :CALIBRATION-VALID: (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                     (:PREDICATE :CALIBRATION-VALID
+                                      (:CERTIFICATE (:VAR :CERTIFICATE))
+                                      (:DATASET "dataset-1")
+                                      (:INSTRUMENT "instrument-a")))
+     repair for :MISSINGNESS-WITHIN-BOUND: (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                            (:PREDICATE :MISSINGNESS-WITHIN-BOUND
+                                             (:BOUND (:VAR :BOUND))
+                                             (:DATASET "dataset-1")))
+     repair for :POPULATION-SUITABLE: (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                       (:PREDICATE :POPULATION-SUITABLE
+                                        (:DATASET "dataset-1") (:PURPOSE :CAUSAL)))
+     repair for :PURPOSE-PERMITTED: (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                     (:PREDICATE :PURPOSE-PERMITTED
+                                      (:DATASET "dataset-1") (:PURPOSE :CAUSAL)
+                                      (:RECEIVER :RECEIVER-A)))
+   [ok 11] all six premises named, satisfied and missing alike; prose derived only from the receipt's fields
+
+── behavior 12: projection: the conclusion does NOT survive to a second receiver by copy — the target must re-derive
+   source grant at receiver-a, receipt id : receipt:derivation-receipt-24
+   target receiver-b, no local permission ⇒ decision :REFUSED (purpose-permitted :MISSING)
+   target grant at receiver-b, receipt id : receipt:derivation-receipt-28
+   receipt identities distinct (a =/= b)  : T
+   [ok 12] target re-derived over its OWN lawful premises; distinct receipt identity — reconstruction, not copy
+
+── behavior 13: a transported derivation receipt is testimony and cannot masquerade as a target-local derivation
+   transported receipt is (:TESTIMONY :DERIVATION-REPORT) — a product, not a local derivation
+   refused at frozen gate by name : WRONG-PROPOSITION-SUPPORT
+   [ok 13] transported testimony refused at the frozen gate (WRONG-PROPOSITION-SUPPORT); it is evidence-that-a-derivation-occurred, never a local derivation
+
+── behavior 14: a v1-keyed derivation cannot satisfy a v2 schema (different premise set; frozen version gate)
+   v1 admit-key : :DERIVATION/DATASET-ADMISSIBILITY/1
+   v2 admit-key : :DERIVATION/DATASET-ADMISSIBILITY/2
+   keys differ  : T
+   v1 derivation refused by v2-keyed procedure at frozen gate : INSUFFICIENT-SUPPORT-KIND
+   [ok 14] v1's derivation key /= v2's; the frozen admits gate refuses it (INSUFFICIENT-SUPPORT-KIND); no auto-latest, exact versioning
+
+de-admissione-datorum specimen: 14/14 behaviors demonstrated
+
+>>>>> SPECIMEN EXIT CODE: 0 <<<<<
+======================================================================
+
+########################## MULTIPLICITY.lisp ##########################
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== de-admissione-datorum MULTIPLICITY — the plurality experiment ==
+Pre-registered prediction (EXPECTED-FAILURES, errata 3): CASE A ⇒ :ambiguous
+
+── CASE A (redundant sufficiency) : calibration certs {"cert-1", "cert-2"} for instrument-a
+   overall decision            : :REFUSED
+   calibration disposition     : :AMBIGUOUS
+   distinct binding environments: 2
+   ambiguity list (verbatim)   : (((:CERTIFICATE . "cert-1"))
+                                  ((:CERTIFICATE . "cert-2")))
+   matching accessible supports: 2
+
+── CASE B (incompatible authority) : calibration certs {"cert-vendor", "cert-self-signed"} for instrument-a
+   overall decision            : :REFUSED
+   calibration disposition     : :AMBIGUOUS
+   distinct binding environments: 2
+   ambiguity list (verbatim)   : (((:CERTIFICATE . "cert-vendor"))
+                                  ((:CERTIFICATE . "cert-self-signed")))
+   matching accessible supports: 2
+
+==================================================================
+OBSERVED — recording what the CURRENT semantics DID:
+  CASE A calibration disposition : :AMBIGUOUS  (overall :REFUSED)
+  CASE B calibration disposition : :AMBIGUOUS  (overall :REFUSED)
+
+QUESTION (CASE A): should two independently-sufficient proofs be
+  refused as ambiguous, or GRANTED with multiple derivation paths preserved?
+  ANSWER (what the substrate DID): REFUSED as :ambiguous. The two
+  certificates each sufficient, together read as DOUBT, not as
+  redundant strength. The errata-3 prediction HELD (Outcome R).
+
+LINGUISTIC-DEFENSIBILITY ASSESSMENT (CASE A):
+  Refusing two sufficient proofs is defensible ONLY as a conservative
+  floor, not as a truth about the conclusion. In logic, redundant
+  sufficiency STRENGTHENS a conclusion; a proof does not weaken because a
+  second proof exists. What the substrate loses by refusing is precisely
+  that: it cannot say 'admissible, and doubly so.' The founding /1 model
+  has no seat for 'more than one lawful anatomy' — its ambiguity gate was
+  built to catch UNRESOLVED CHOICE (which of two bindings is meant?), and
+  it fires identically on UNNEEDED CHOICE (either binding is fine). The
+  refusal is safe (it never wrongly grants) but linguistically it flattens
+  'over-determined' into 'under-determined' — two opposite conditions.
+
+==================================================================
+VERDICT — does the implementation DISTINGUISH Case A from Case B?
+  CASE A (redundant sufficiency)     : :AMBIGUOUS
+  CASE B (incompatible authority)    : :AMBIGUOUS
+  Both land the SAME disposition with no discriminating field.
+
+MULTIPLICITY FINDING: multiple-sufficient-proofs and unresolved-semantic-choice are CONFLATED under current :ambiguous law
+
+The three permitted minimal repair shapes (from the sitting order),
+enumerated, NONE implemented here:
+  (1) grant-preserving-all-environments — grant the conclusion and
+      carry every discharging environment in the receipt (redundant
+      sufficiency becomes strength, not doubt).
+  (2) refuse-only-semantic-incompatibility — grant when the competing
+      environments are interchangeable for the conclusion; refuse only
+      when they imply materially different downstream commitments.
+  (3) schema-level uniqueness-discriminator flag — let a schema declare
+      whether a given premise's schema-local is uniqueness-bearing;
+      absent the flag, plurality is tolerated, not refused.
+
+The finding IS the success. Exit 0.
+
+>>>>> MULTIPLICITY EXIT CODE: 0 <<<<<
+======================================================================
+
+########################## ABLATION.lisp ##########################
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== de-admissione-datorum ABLATION — opaque token + generic content procedure ==
+opaque proposition : (:PREDICATE :DATASET-VALID (:DATASET "dataset-1"))
+procedure admits   : ((:DIRECT :SCHEMA-EVIDENCE)
+                      (:DIRECT :MISSINGNESS-EVIDENCE))
+
+supports considered : schema-evidence + missingness-evidence (content only)
+calibration support : (none — measurement-validity unrepresentable)
+population support  : (none — population-suitability unrepresentable)
+permission support  : (none — permitted-purpose unrepresentable)
+raise decision      : :VERIFIED
+granted claim prop  : (:PREDICATE :DATASET-VALID (:DATASET "dataset-1"))
+
+ABLATION EPITAPH: admissibility was VERIFIED for dataset-1 from schema-conformance + low-missingness content-witnesses alone; calibration, population-suitability, and permitted-purpose were never represented as propositions and never checked — the flattening species reproduced exactly.
+
+>>>>> ABLATION EXIT CODE: 0 <<<<<
+======================================================================
+
+########################## BASELINE.lisp ##########################
+
+== de-admissione-datorum BASELINE (disciplined idiomatic CL, no Slice /0 or /1) ==
+
+-- Section 1: the discipline WORKS --
+  disciplined, full evidence          => :ADMISSIBLE
+  disciplined, population absent      => :REFUSED; NAMED missing: (:POPULATION-SUITABLE)
+  ^ disciplined CL genuinely refuses and names the omitted premise.
+
+-- Section 2: the discipline is only CONVENTION --
+  straight-line variant, SAME evidence => :ADMISSIBLE
+  ^ population-suitability was never represented, never checked, never missed.
+
+-- Section 3: the gap, shown side by side --
+  disciplined return : (:REFUSED (:POPULATION-SUITABLE))
+  fast return        : (:ADMISSIBLE)
+  A grant that CHECKED population-suitability and one that SKIPPED it are
+  indistinguishable from the return value alone — the ':admissible' keyword
+  carries no anatomy.  Which premises were consulted is invisible to the
+  caller, the type system, and any downstream auditor.  The guarantee lives
+  in a programmer's habit, enforced by nobody.  THIS is the convention-vs-
+  enforcement gap Slice /1 closes by making the premise set a declared,
+  receipt-bearing part of the judgment.
+
+baseline: convention demonstrated (discipline works AND is unenforced)
+
+>>>>> BASELINE EXIT CODE: 0 <<<<<
+======================================================================
+
+FROZEN-TREE RE-VERIFICATION (STRUCTOR-II's own hand):
+  ../slice1-selftest.lisp : 31 passed, 0 failed (exit 0)
+  ../../language-slice-0/SMOKE.lisp : 6 ok, 0 failed (exit 0)
+  :: (internal-symbol access) in de-admissione-datorum/*.lisp : 0
+  git status: only de-admissione-datorum/ is new; slice1.lisp, slice1-selftest.lisp,
+  de-praemissis/, language-slice-0/, kernel0/ all untouched.
