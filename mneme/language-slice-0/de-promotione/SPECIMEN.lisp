@@ -163,7 +163,13 @@
       (check "T2 testimony cannot promote P"
              (equal (getf (getf (why-strongest-lawful-result w) :claim)
                           :proposition)
-                    '(:asserted :colleague (:tests-passed :suite-a)))))))
+                    '(:asserted :colleague (:tests-passed :suite-a))))
+      ;; Ergonomics check (DPM-4 banking condition): the rendered WHY must
+      ;; carry the proposition-level distinction in so many words, derived
+      ;; from the structured failed-relation — not composed ad hoc.
+      (let ((rendered (with-output-to-string (s) (render-why w s))))
+        (check "T2c why renders the proposition-level distinction"
+               (search "testimony supports the attribution" rendered))))))
 
 ;;; ==================================================================
 ;;; OFFICIAL TEST 3 — a warrant for Q cannot promote P: the exit status

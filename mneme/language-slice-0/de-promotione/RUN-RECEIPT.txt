@@ -1,18 +1,18 @@
-DE-PROMOTIONE RUN-RECEIPT — generated from live runs, 2026-07-23 01:12 UTC
+DE-PROMOTIONE RUN-RECEIPT — generated from live runs, 2026-07-23 01:34 UTC
 host sbcl: /home/gauss/.local/bin/sbcl
-sbcl version (operation-checked through wrapper):
-  2.4.6
+sbcl version (operation-checked): 2.4.6
 
-== kernel0 selftest (frozen substrate untouched — re-run after all slice work) ==
+== kernel0 selftest ==
 kernel0 selftest: 33 passed, 23 excluded (out-of-scope), 24 controls fired, 5 controls named-excluded, 59 mutants killed (56 independent + 3 re-attributions), 0 failed
 
-== SPECIMEN.lisp: sbcl --non-interactive --load SPECIMEN.lisp ==
+== SPECIMEN.lisp (incl. T2c testimony-ergonomics check) ==
 pass T0a signal-slice0 refuses unlawful restart name
 pass T0b signal-slice0 refuses foreign condition type
 pass T0c with-slice0-restarts refuses unlawful clause
 pass T1 flattened testimony unrepresentable
 pass T1b lawful testimony carries the second-order proposition
 pass T2 testimony cannot promote P
+pass T2c why renders the proposition-level distinction
 pass T3 warrant for Q cannot promote P
 pass T6 refusal names the exact missing relation
 pass T4 structural procedure cannot verify
@@ -25,10 +25,10 @@ pass T7d defer-judgment records deferral
 pass T8 refutation refuses :verified
 pass T8b refuting judgment recorded without erasing assertion
 pass lawful pipeline: release verified on derivation
-18 passed, 0 failed
+19 passed, 0 failed
 exit: 0
 
-== BASELINE.lisp: sbcl --non-interactive --load BASELINE.lisp ==
+== BASELINE.lisp ==
 === NORMAL COMPETENT USE ===
     => release: :VERIFIED
     => release: :PENDING
@@ -41,7 +41,7 @@ exit: 0
 === de-promotione: baseline demonstration complete ===
 exit: 0
 
-== ABLATION.lisp: sbcl --non-interactive --load ABLATION.lisp ==
+== ABLATION.lisp ==
 SILENT A1 exit-status -> release :verified — (:RELEASE-OK :BUILD-7) judged VERIFIED; conditions signaled: none; receipt issued: none
 SILENT A2 colleague's word -> tests :verified — (:TESTS-PASSED :SUITE-A) judged VERIFIED; conditions signaled: none; receipt issued: none
 SILENT A3 unmatched transcript -> suite :verified — (:EXPECTED-SUITE-MATCHED
@@ -56,6 +56,7 @@ exit: 0
 cc4febeeaa743da43dc6526d734483f07eb55ed3467f9a397226f80a38564f68  slice0.lisp
 de470a77c301ab9faa2ef7c9455c98d8c32ef3ee8d61fc79192712f4b57b63c1  de-promotione/ABLATION.lisp
 0c23387f9f05dd346ea5cfd5db8fb77278284fd588f56d225e7550db807c24ad  de-promotione/BASELINE.lisp
-aa47c3d370cbfcc111505ce2df696529ec99fd79a97b5572556873f39d5b702e  de-promotione/SPECIMEN.lisp
+62cc2eebc37ea117edbc06d222b2812dc40d7dd7cee8f0d6742871ddf88c6a75  de-promotione/SPECIMEN.lisp
+843794974f2c2cd3e9f75ac8df9ffb01feb1db448e467a3825d2b2d84c3f7936  de-promotione/DISPOSITION.md
 5d29c10c4c78d2dfa17881f4f0061b58a7db70895c4c570984786ef4615886a3  de-promotione/EXPECTED-FAILURES.md
 298b1f955ece04eb802cf7298180ec051ee8e1a62088040941c087f5062433a4  de-promotione/HYPOTHESIS.md

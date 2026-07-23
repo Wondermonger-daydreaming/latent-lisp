@@ -1,0 +1,56 @@
+DE-PROJECTIONE SESSION 1 RUN-RECEIPT — generated from live runs, 2026-07-23 01:34 UTC
+host sbcl: /home/gauss/.local/bin/sbcl
+sbcl version (operation-checked): 2.4.6
+
+== kernel0 selftest (after all Slice /0 work) ==
+kernel0 selftest: 33 passed, 23 excluded (out-of-scope), 24 controls fired, 5 controls named-excluded, 59 mutants killed (56 independent + 3 re-attributions), 0 failed
+
+== SPECIMEN.lisp: sbcl --non-interactive --load SPECIMEN.lisp ==
+pass P1 source judgment is not copied
+pass P6 inaccessible is not absent
+pass P6b exportable inaccessible support becomes an obligation
+pass P2 source context and licensing recorded
+pass P7a unrecognized authority blocks UNDER THIS CONTEXT
+pass P7b same claim, recognizing position: receiver's own raise grants
+pass teeth-0 clean projection: no blockers, obligations, or ceilings
+pass P1b receiver judgment is a fresh licensing, not the source record
+pass P4 warrant for Q cannot support P across contexts
+pass P3a attribution claim travels and verifies AS attribution
+pass P3b testimony gives P itself nothing at the receiver
+pass P5a (TEETH) underived public form is blocked by name
+pass P5b derived public form verifies as the DERIVATIVE
+pass P5c private warrant crosses as a ceiling, not silently
+pass P8 mute object blocks ITS OWN export, not the proposition
+pass P9 consequences compose (no single-symbol collapse)
+  P9 views: (:REGRADED :REDACTED :OBLIGATION-PRODUCING :CEILING-BOUND)
+pass P10 source claims untouched by all projections
+17 passed, 0 failed
+exit: 0
+
+== BASELINE.lisp ==
+========== HONEST PROJECTION (project-claim recomputes standing per position) ==========
+========== MOVE (i): copy-claim carries :verified past the receiver ==========
+========== MOVE (ii): holder set to a bare name, context never consulted ==========
+========== MOVE (iii): testimony recorded as a :verification row ==========
+========== MOVE (iv): public paraphrase keeps the private :warrant-id ==========
+========== MOVE (v): remove-if-not drops the unreachable, leaving no receipt ==========
+========== MOVE (vi): one status symbol hides a simultaneous regrade+redact+obligation ==========
+========== WHAT CONVENTION CAN AND CANNOT DO ==========
+exit: 0
+
+== ABLATION.lisp ==
+SILENT CLIENT receives (:TESTS-PASSED :SUITE-A) judged VERIFIED, label :PRESERVED — context never consulted; blockers: none; obligations: none; inaccessible residue: none
+SILENT STRANGER receives (:TESTS-PASSED :SUITE-A) judged VERIFIED, label :PRESERVED — context never consulted; blockers: none; obligations: none; inaccessible residue: none
+copied judgment claims procedure "suite-verification" licensed it for :client — a procedure :client cannot run.
+2 launderings, 0 blockers, 0 receipts — travel no longer changes anything; the property is destroyed.
+exit: 0
+
+== file digests (sha256) ==
+acd7f196fce6c0f4d1241685ab1b3f49c04c4a77f3e748b170e57f929a7edf2d  slice0-projection.lisp
+8ddc00c6f4a1a586a9eec678ced3453feca0d3b3fea8521662c45063dfa18e5f  de-projectione-1/ABLATION.lisp
+21d87ad12e22b5b6f34230384cf82c397a66cc130c1d2c886353b7bfd7dd2e09  de-projectione-1/BASELINE.lisp
+4bcded36b2b4efa2b7bb992f301ae497f367618682dff9c9baf794e23c887404  de-projectione-1/SPECIMEN.lisp
+daee72403ce7bb9e6917639d2aa00ec38d075ff6ee9b69adebac2e27d0c2cc38  de-projectione-1/EXPECTED-FAILURES.md
+dfdbdc412a804626856ef900650bc1ed4cbd4a436f087f8678407926adb2bd94  de-projectione-1/HYPOTHESIS.md
+51a2b0e4b4f307ed37a036ac993eaec2e019a30f1b17592fd4d4cbb5b029c6b5  ../language-slice-0/KERNEL0-DEFECT-RECEIPT-0.md
+843794974f2c2cd3e9f75ac8df9ffb01feb1db448e467a3825d2b2d84c3f7936  de-promotione/DISPOSITION.md
