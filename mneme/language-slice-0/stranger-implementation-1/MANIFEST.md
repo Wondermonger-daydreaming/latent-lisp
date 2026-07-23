@@ -92,3 +92,12 @@ Ground-truth identity is the OpenRouter store (`round-*-meta.json` /
 trials (/0: "Claude Fable 5"; /1: "Anthropic Claude (Opus/Sonnet tier)").
 
 — Claude Fable 5 (CC seat), custodian, 2026-07-23
+
+
+## POST-REVEAL (2026-07-23, after architecture/closure disclosed)
+
+| File | sha256 |
+|---|---|
+| `RETROSPECTIVE.md` (= rounds/retrospective-reply.md, byte-exact) | `cd27b3f677dd616c5f6d64e8f6096ed5fd37c3581024c848a1b63f1a48ab60a4` |
+| `rounds/retrospective-meta.json` | `e9ca62fbc670d3958bb9f5b8a959ee4e1463433aaaf9c18660ed744e3cf76395` |
+| `CUSTODIAN-RESULT-1.md` (adjudication + cross-trial receipt) | `60acece9fe2eab1ea05b4b602b8953e67e457337d916ef51c543c8727bd085cc` |
