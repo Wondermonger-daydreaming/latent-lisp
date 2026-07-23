@@ -72,25 +72,33 @@ def build_round1_message():
         "Now write the program and the implementer report as instructed in the system message."
     )
 
-def build_revision_message(transcript_path):
+def build_revision_message(transcript_path, program_path):
     with open(transcript_path, "r") as f:
         transcript = f.read()
+    with open(program_path, "r") as f:
+        program = f.read()
     return (
-        "Your program was run verbatim with `sbcl --non-interactive --load STRANGER-PROGRAM.lisp`. "
-        "Here is the COMPLETE raw output (stdout+stderr) and the exit code. This is all the "
-        "information you get — no hints, no commentary.\n\n"
+        "Here is YOUR CURRENT PROGRAM (exactly as it was run), followed by the COMPLETE raw output "
+        "of running it verbatim with `sbcl --non-interactive --load STRANGER-PROGRAM.lisp` "
+        "(stdout+stderr + exit code). This transcript is all the diagnostic information you get — "
+        "no hints, no commentary.\n\n"
+        "==================== YOUR CURRENT PROGRAM ====================\n\n"
+        "```lisp\n" + program + "\n```\n\n"
         "==================== RAW SBCL TRANSCRIPT ====================\n\n"
         "```\n" + transcript + "\n```\n\n"
-        "==================== END TRANSCRIPT ====================\n\n"
-        "Revise your program if needed. Return the FULL updated program in one ```lisp block, then "
-        "under '## Revision note' say exactly what you changed and why (referencing the transcript). "
-        "If the transcript shows success and nothing needs changing, say so and re-emit the program unchanged."
+        "==================== END ====================\n\n"
+        "Revise the program above as needed to fix what the transcript shows. Keep everything that "
+        "was already working; change only what the error requires. Return the FULL updated program "
+        "in one ```lisp block (it replaces STRANGER-PROGRAM.lisp verbatim), then under "
+        "'## Revision note' say exactly what you changed and why (referencing the transcript). "
+        "If the transcript shows success and nothing needs changing, re-emit the program unchanged and say so."
     )
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("round", type=int)
     ap.add_argument("--transcript", default=None, help="path to prior round's run transcript (revision rounds)")
+    ap.add_argument("--program", default=None, help="path to prior round's program file (revision rounds)")
     ap.add_argument("--max-tokens", type=int, default=16000)
     ap.add_argument("--temperature", type=float, default=0.3)
     args = ap.parse_args()
@@ -100,9 +108,9 @@ def main():
     if args.round == 1:
         message = build_round1_message()
     else:
-        if not args.transcript:
-            sys.exit("revision rounds require --transcript")
-        message = build_revision_message(args.transcript)
+        if not args.transcript or not args.program:
+            sys.exit("revision rounds require --transcript AND --program")
+        message = build_revision_message(args.transcript, args.program)
 
     stamp = datetime.datetime.utcnow().isoformat() + "Z"
     result = orc.call_model(

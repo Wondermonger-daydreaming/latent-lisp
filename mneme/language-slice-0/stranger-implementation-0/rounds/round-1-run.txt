@@ -1,0 +1,267 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+
+; file: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/kernel0/outcome.lisp
+; in: DEFUN %MANIFESTATION-ALTERNATIVE-COMPLETE-P
+;     (LISP-PLUS-KERNEL0::%MANIFESTATION-AXIS-ABSENCE-FORM-P
+;      LISP-PLUS-KERNEL0::ALTERNATIVE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LISP-PLUS-KERNEL0::%MANIFESTATION-AXIS-ABSENCE-FORM-P
+; 
+; compilation unit finished
+;   Undefined function:
+;     %MANIFESTATION-AXIS-ABSENCE-FORM-P
+;   caught 1 STYLE-WARNING condition
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+
+=== Step 1: Construct local claims ===
+Created claim: (:ADMISSIBLE-FOR-REGRESSION :BATCH-A)
+Created stepping-stone claim: (:FILE-OPENED "readings-batch-a.sexp")
+
+Created witnesses:
+  File witness for: (:FILE-OPENED "readings-batch-a.sexp")
+  Validation witness for: (:ADMISSIBLE-FOR-REGRESSION :BATCH-A)
+
+
+=== Step 4: Make invalid promotion attempt ===
+Refused as expected!
+
+
+=== Step 5: Render structured reason ===
+[REFUSED] considered witness-3
+  missing relation: PROPOSITION-MATCH — witness-3 is for (:FILE-OPENED "readings-batch-a.sexp"), not for (:ADMISSIBLE-FOR-REGRESSION
+                                                                  :BATCH-A)
+  requirements: :WITNESS-FOR-MUST-EQUAL-CLAIM-PROPOSITION
+  lawful repairs: RETAIN-CURRENT-CLAIM, SEEK-MATCHING-SUPPORT, CONSTRUCT-ATTRIBUTION-CLAIM, DEFER-JUDGMENT
+
+
+=== Step 6: Lawful repair and granted promotion ===
+Promotion granted!
+Claim judgment: :VERIFIED
+Receipt decision: :GRANTED
+
+
+=== Step 8: Project claim to reviewer ===
+Projection views: (:REGRADED :OBLIGATION-PRODUCING)
+Reviewer claim judgment: NIL
+
+
+=== Step 9: Inaccessible support as residue ===
+Supports inaccessible: (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY
+                           :DOMAIN :RECEIPT
+                           :NAME "witness-4"))
+
+
+=== Step 11: Attempt direct transmission of validator ===
+Direct transmission refused as expected!
+
+
+=== Step 12: Transmission refusal receipt ===
+Transmission views: (:DIRECT-EXPORT-REFUSED :TESTIMONY-AVAILABLE
+                     :RECEIVER-REPRODUCTION-AVAILABLE :LOCAL-EXERCISE-ONLY)
+Receipt decision: :REFUSED
+
+
+=== Step 13: Lawful alternative - export canonical result ===
+
+; file: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-0/stranger-implementation-0/STRANGER-PROGRAM.lisp
+; in: MULTIPLE-VALUE-BIND (DERIVED-RESULT LOCAL-WITNESS)
+;     (MULTIPLE-VALUE-BIND (STRANGER::DERIVED-RESULT STRANGER::LOCAL-WITNESS)
+;         (LISP-PLUS-SLICE0:EXERCISE-VALUE STRANGER::*VALIDATOR-CAPABILITY* :IN
+;                                          STRANGER::*LAB-CONTEXT* :ARGS
+;                                          (LIST (FIRST STRANGER::*ROWS*))
+;                                          :MINT-FOR
+;                                          '(:ROW-VALIDATED
+;                                            (FIRST STRANGER::*ROWS*)))
+;       (FORMAT T "Exercised validator locally.~%")
+;       (FORMAT T "Derived result: ~S~%"
+;               (LISP-PLUS-SLICE0:DERIVED-RESULT-VALUE STRANGER::DERIVED-RESULT))
+;       (DEFPARAMETER STRANGER::*REVIEWER-CANONICAL-CONTEXT*
+;         (LISP-PLUS-SLICE0:RECEIVER-CONTEXT :CONTEXT-ID
+;                                            :EXTERNAL-REVIEWER-CANONICAL
+;                                            :ACCESSIBLE-SUPPORTS 'NIL
+;                                            :EXECUTABLE-PROCEDURES
+;                                            (LIST
+;                                             STRANGER::*VALIDATION-PROCEDURE*)
+;                                            :RECOGNIZED-AUTHORITIES
+;                                            '(:EXTERNAL-AUDIT)
+;                                            :ACCEPTED-REPRESENTATIONS
+;                                            '(:CANONICAL-DATUM)))
+;       (MULTIPLE-VALUE-BIND (STRANGER::PAYLOAD STRANGER::TRANSMISSION-RECEIPT)
+;           (LISP-PLUS-SLICE0:TRANSMIT STRANGER::DERIVED-RESULT :FROM
+;                                      STRANGER::*LAB-CONTEXT* :TO
+;                                      STRANGER::*REVIEWER-CANONICAL-CONTEXT* :MODE
+;                                      :DIRECT)
+;         (FORMAT T "Canonical result transmitted successfully!~%")
+;         (FORMAT T "Transmission decision: ~S~%"
+;                 (LISP-PLUS-SLICE0:TRANSMISSION-RECEIPT-DECISION
+;                  STRANGER::TRANSMISSION-RECEIPT))
+;         (MULTIPLE-VALUE-BIND
+;             (STRANGER::TESTIMONY-CLAIM STRANGER::TESTIMONY-RECEIPT)
+;             (LISP-PLUS-SLICE0:TRANSMIT STRANGER::*VALIDATOR-CAPABILITY* :FROM
+;                                        STRANGER::*LAB-CONTEXT* :TO
+;                                        STRANGER::*REVIEWER-CONTEXT* :MODE
+;                                        :TESTIMONY)
+;           (FORMAT T "Testimony constructed: ~S~%"
+;                   (LISP-PLUS-SLICE0:CLAIM-PROPOSITION
+;                    STRANGER::TESTIMONY-CLAIM)))))
+; --> MULTIPLE-VALUE-CALL 
+; ==>
+;   #'(LAMBDA
+;         (
+;          &OPTIONAL STRANGER::DERIVED-RESULT STRANGER::LOCAL-WITNESS
+;          &REST #:IGNORE)
+;       (DECLARE (IGNORE #:IGNORE))
+;       (FORMAT T "Exercised validator locally.~%")
+;       (FORMAT T "Derived result: ~S~%"
+;               (LISP-PLUS-SLICE0:DERIVED-RESULT-VALUE STRANGER::DERIVED-RESULT))
+;       (DEFPARAMETER STRANGER::*REVIEWER-CANONICAL-CONTEXT*
+;         (LISP-PLUS-SLICE0:RECEIVER-CONTEXT :CONTEXT-ID
+;                                            :EXTERNAL-REVIEWER-CANONICAL
+;                                            :ACCESSIBLE-SUPPORTS 'NIL
+;                                            :EXECUTABLE-PROCEDURES
+;                                            (LIST
+;                                             STRANGER::*VALIDATION-PROCEDURE*)
+;                                            :RECOGNIZED-AUTHORITIES
+;                                            '(:EXTERNAL-AUDIT)
+;                                            :ACCEPTED-REPRESENTATIONS
+;                                            '(:CANONICAL-DATUM)))
+;       (MULTIPLE-VALUE-BIND (STRANGER::PAYLOAD STRANGER::TRANSMISSION-RECEIPT)
+;           (LISP-PLUS-SLICE0:TRANSMIT STRANGER::DERIVED-RESULT :FROM
+;                                      STRANGER::*LAB-CONTEXT* :TO
+;                                      STRANGER::*REVIEWER-CANONICAL-CONTEXT*
+;                                      :MODE :DIRECT)
+;         (FORMAT T "Canonical result transmitted successfully!~%")
+;         (FORMAT T "Transmission decision: ~S~%"
+;                 (LISP-PLUS-SLICE0:TRANSMISSION-RECEIPT-DECISION
+;                  STRANGER::TRANSMISSION-RECEIPT))
+;         (MULTIPLE-VALUE-BIND
+;             (STRANGER::TESTIMONY-CLAIM STRANGER::TESTIMONY-RECEIPT)
+;             (LISP-PLUS-SLICE0:TRANSMIT STRANGER::*VALIDATOR-CAPABILITY* :FROM
+;                                        STRANGER::*LAB-CONTEXT* :TO
+;                                        STRANGER::*REVIEWER-CONTEXT* :MODE
+;                                        :TESTIMONY)
+;           (FORMAT T "Testimony constructed: ~S~%"
+;                   (LISP-PLUS-SLICE0:CLAIM-PROPOSITION
+;                    STRANGER::TESTIMONY-CLAIM)))))
+; 
+; caught STYLE-WARNING:
+;   The variable LOCAL-WITNESS is defined but never used.
+
+;     (MULTIPLE-VALUE-BIND (STRANGER::PAYLOAD STRANGER::TRANSMISSION-RECEIPT)
+;         (LISP-PLUS-SLICE0:TRANSMIT STRANGER::DERIVED-RESULT :FROM
+;                                    STRANGER::*LAB-CONTEXT* :TO
+;                                    STRANGER::*REVIEWER-CANONICAL-CONTEXT* :MODE
+;                                    :DIRECT)
+;       (FORMAT T "Canonical result transmitted successfully!~%")
+;       (FORMAT T "Transmission decision: ~S~%"
+;               (LISP-PLUS-SLICE0:TRANSMISSION-RECEIPT-DECISION
+;                STRANGER::TRANSMISSION-RECEIPT))
+;       (MULTIPLE-VALUE-BIND
+;           (STRANGER::TESTIMONY-CLAIM STRANGER::TESTIMONY-RECEIPT)
+;           (LISP-PLUS-SLICE0:TRANSMIT STRANGER::*VALIDATOR-CAPABILITY* :FROM
+;                                      STRANGER::*LAB-CONTEXT* :TO
+;                                      STRANGER::*REVIEWER-CONTEXT* :MODE
+;                                      :TESTIMONY)
+;         (FORMAT T "Testimony constructed: ~S~%"
+;                 (LISP-PLUS-SLICE0:CLAIM-PROPOSITION STRANGER::TESTIMONY-CLAIM))))
+; ==>
+;   #'(LAMBDA
+;         (
+;          &OPTIONAL STRANGER::PAYLOAD STRANGER::TRANSMISSION-RECEIPT
+;          &REST #:IGNORE)
+;       (DECLARE (IGNORE #:IGNORE))
+;       (FORMAT T "Canonical result transmitted successfully!~%")
+;       (FORMAT T "Transmission decision: ~S~%"
+;               (LISP-PLUS-SLICE0:TRANSMISSION-RECEIPT-DECISION
+;                STRANGER::TRANSMISSION-RECEIPT))
+;       (MULTIPLE-VALUE-BIND
+;           (STRANGER::TESTIMONY-CLAIM STRANGER::TESTIMONY-RECEIPT)
+;           (LISP-PLUS-SLICE0:TRANSMIT STRANGER::*VALIDATOR-CAPABILITY* :FROM
+;                                      STRANGER::*LAB-CONTEXT* :TO
+;                                      STRANGER::*REVIEWER-CONTEXT* :MODE
+;                                      :TESTIMONY)
+;         (FORMAT T "Testimony constructed: ~S~%"
+;                 (LISP-PLUS-SLICE0:CLAIM-PROPOSITION
+;                  STRANGER::TESTIMONY-CLAIM))))
+; 
+; caught STYLE-WARNING:
+;   The variable PAYLOAD is defined but never used.
+
+;     (MULTIPLE-VALUE-BIND (STRANGER::TESTIMONY-CLAIM STRANGER::TESTIMONY-RECEIPT)
+;         (LISP-PLUS-SLICE0:TRANSMIT STRANGER::*VALIDATOR-CAPABILITY* :FROM
+;                                    STRANGER::*LAB-CONTEXT* :TO
+;                                    STRANGER::*REVIEWER-CONTEXT* :MODE :TESTIMONY)
+;       (FORMAT T "Testimony constructed: ~S~%"
+;               (LISP-PLUS-SLICE0:CLAIM-PROPOSITION STRANGER::TESTIMONY-CLAIM)))
+; ==>
+;   #'(LAMBDA
+;         (
+;          &OPTIONAL STRANGER::TESTIMONY-CLAIM STRANGER::TESTIMONY-RECEIPT
+;          &REST #:IGNORE)
+;       (DECLARE (IGNORE #:IGNORE))
+;       (FORMAT T "Testimony constructed: ~S~%"
+;               (LISP-PLUS-SLICE0:CLAIM-PROPOSITION STRANGER::TESTIMONY-CLAIM)))
+; 
+; caught STYLE-WARNING:
+;   The variable TESTIMONY-RECEIPT is defined but never used.
+
+; file: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-0/stranger-implementation-0/STRANGER-PROGRAM.lisp
+; in: MULTIPLE-VALUE-BIND (DERIVED-RESULT LOCAL-WITNESS)
+;     (LISP-PLUS-SLICE0:TRANSMIT STRANGER::DERIVED-RESULT :FROM
+;                                STRANGER::*LAB-CONTEXT* :TO
+;                                STRANGER::*REVIEWER-CANONICAL-CONTEXT* :MODE
+;                                :DIRECT)
+; 
+; caught WARNING:
+;   undefined variable: STRANGER::*REVIEWER-CANONICAL-CONTEXT*
+; 
+; compilation unit finished
+;   Undefined variable:
+;     *REVIEWER-CANONICAL-CONTEXT*
+;   caught 1 WARNING condition
+;   caught 3 STYLE-WARNING conditions
+While evaluating the form starting at line 259, column 0
+  of #P"/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-0/stranger-implementation-0/STRANGER-PROGRAM.lisp":
+Unhandled MALFORMED-SLICE0-SHAPE in thread #<SB-THREAD:THREAD tid=409455 "main thread" RUNNING
+                                              {1000AC01D3}>:
+  MALFORMED-SLICE0-SHAPE: proposition parts must be keywords, strings, integers, or proper lists (bare symbols do not cross the canonical boundary); got FIRST
+
+Backtrace for: #<SB-THREAD:THREAD tid=409455 "main thread" RUNNING {1000AC01D3}>
+0: (SB-DEBUG::DEBUGGER-DISABLED-HOOK #<MALFORMED-SLICE0-SHAPE {1002629F43}> #<unused argument> :QUIT T)
+1: (SB-DEBUG::RUN-HOOK SB-EXT:*INVOKE-DEBUGGER-HOOK* #<MALFORMED-SLICE0-SHAPE {1002629F43}>)
+2: (INVOKE-DEBUGGER #<MALFORMED-SLICE0-SHAPE {1002629F43}>)
+3: (ERROR #<MALFORMED-SLICE0-SHAPE {1002629F43}>)
+4: (LISP-PLUS-SLICE0:SIGNAL-SLICE0 MALFORMED-SLICE0-SHAPE :FAILED-INVARIANT "proposition parts must be keywords, strings, integers, or proper lists (bare symbols do not cross the canonical boundary); got FIRST" :OFFENDING-FIELD :FOR :OFFENDING-VALUE FIRST)
+5: ((LABELS LISP-PLUS-SLICE0::WALK :IN LISP-PLUS-SLICE0::%REQUIRE-PROPOSITION) (FIRST *ROWS*))
+6: ((LABELS LISP-PLUS-SLICE0::WALK :IN LISP-PLUS-SLICE0::%REQUIRE-PROPOSITION) (:ROW-VALIDATED (FIRST *ROWS*)))
+7: (LISP-PLUS-SLICE0::%REQUIRE-PROPOSITION (:ROW-VALIDATED (FIRST *ROWS*)) :FOR)
+8: (WITNESS :FOR (:ROW-VALIDATED (FIRST *ROWS*)) :MODE :DIRECT :KIND :CAPABILITY-CHECK :SOURCE :LAB-VALIDATOR :PROCEDURE NIL :CONTENT (:OK (:SPECIMEN-ID "A-001" :MASS-MG 412 :TEMP-C 21 :REPLICATE 1)) :POLARITY :SUPPORTS :PRODUCED-AT NIL :OBSERVED-AT NIL :VALID-THROUGH NIL :TRANSMISSIBLE T :ACCESSIBLE-TO :ALL)
+9: (EXERCISE-VALUE #S(LOCAL-VALUE :ID #S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY :DOMAIN :CAPABILITY :NAME "local-value-12") :HOST-OBJECT #<FUNCTION (LAMBDA (DATASET-LAB::ROW) :IN MAKE-ROW-VALIDATOR) {551EC60B}> :KIND :CLOSURE :AUTHORITY :LAB-VALIDATOR :EXERCISE-AUTHORIZED (:LAB) :RECIPE (:REBUILD (:KIND :ROW-VALIDATOR) (:SCHEMA "internal-lexical")) :PURPOSE NIL :ORDINAL 13) :IN #S(RECEIVER-CONTEXT :CONTEXT-ID :LAB :ACCESSIBLE-SUPPORTS (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY :DOMAIN :RECEIPT :NAME "witness-4") #S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY :DOMAIN :RECEIPT :NAME "witness-3")) :EXECUTABLE-PROCEDURES (#S(PROMOTION-PROCEDURE :DESCRIPTOR #S(LISP-PLUS-KERNEL0:PROCEDURE-DESCRIPTOR :PROCEDURE-ID #S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY :DOMAIN :PROCEDURE :NAME "batch-validator") :VERSION 0 :JUDGMENT-CLASS :SEMANTIC :INPUT-DOMAIN NIL :RESULT-VOCABULARY (:ACCEPTED :REJECTED) :EVIDENCE-REQUIREMENTS NIL :BOUNDED-UNKNOWNS NIL) :ADMITS ((:DIRECT :VALIDATION-RESULT)))) :RECOGNIZED-AUTHORITIES (:LAB-FILESYSTEM :LAB-VALIDATOR) :ACCEPTED-REPRESENTATIONS (:FULL)) :ARGS ((:SPECIMEN-ID "A-001" :MASS-MG 412 :TEMP-C 21 :REPLICATE 1)) :MINT-FOR (:ROW-VALIDATED (FIRST *ROWS*)) :MINT-KIND :CAPABILITY-CHECK)
+10: ((LAMBDA NIL :IN "/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-0/stranger-implementation-0/STRANGER-PROGRAM.lisp"))
+11: (SB-INT:SIMPLE-EVAL-IN-LEXENV (MULTIPLE-VALUE-BIND (DERIVED-RESULT LOCAL-WITNESS) (EXERCISE-VALUE *VALIDATOR-CAPABILITY* :IN *LAB-CONTEXT* :ARGS (LIST (FIRST *ROWS*)) :MINT-FOR (QUOTE (:ROW-VALIDATED (FIRST *ROWS*)))) (FORMAT T "Exercised validator locally.~%") (FORMAT T "Derived result: ~S~%" (DERIVED-RESULT-VALUE DERIVED-RESULT)) (DEFPARAMETER *REVIEWER-CANONICAL-CONTEXT* (RECEIVER-CONTEXT :CONTEXT-ID :EXTERNAL-REVIEWER-CANONICAL :ACCESSIBLE-SUPPORTS (QUOTE NIL) :EXECUTABLE-PROCEDURES (LIST *VALIDATION-PROCEDURE*) :RECOGNIZED-AUTHORITIES (QUOTE (:EXTERNAL-AUDIT)) :ACCEPTED-REPRESENTATIONS (QUOTE (:CANONICAL-DATUM)))) (MULTIPLE-VALUE-BIND (PAYLOAD TRANSMISSION-RECEIPT) (TRANSMIT DERIVED-RESULT :FROM *LAB-CONTEXT* :TO *REVIEWER-CANONICAL-CONTEXT* :MODE :DIRECT) (FORMAT T "Canonical result transmitted successfully!~%") (FORMAT T "Transmission decision: ~S~%" (TRANSMISSION-RECEIPT-DECISION TRANSMISSION-RECEIPT)) (MULTIPLE-VALUE-BIND (TESTIMONY-CLAIM TESTIMONY-RECEIPT) (TRANSMIT *VALIDATOR-CAPABILITY* :FROM *LAB-CONTEXT* :TO *REVIEWER-CONTEXT* :MODE :TESTIMONY) (FORMAT T "Testimony constructed: ~S~%" (CLAIM-PROPOSITION TESTIMONY-CLAIM))))) #<NULL-LEXENV>)
+12: (SB-EXT:EVAL-TLF (MULTIPLE-VALUE-BIND (DERIVED-RESULT LOCAL-WITNESS) (EXERCISE-VALUE *VALIDATOR-CAPABILITY* :IN *LAB-CONTEXT* :ARGS (LIST (FIRST *ROWS*)) :MINT-FOR (QUOTE (:ROW-VALIDATED (FIRST *ROWS*)))) (FORMAT T "Exercised validator locally.~%") (FORMAT T "Derived result: ~S~%" (DERIVED-RESULT-VALUE DERIVED-RESULT)) (DEFPARAMETER *REVIEWER-CANONICAL-CONTEXT* (RECEIVER-CONTEXT :CONTEXT-ID :EXTERNAL-REVIEWER-CANONICAL :ACCESSIBLE-SUPPORTS (QUOTE NIL) :EXECUTABLE-PROCEDURES (LIST *VALIDATION-PROCEDURE*) :RECOGNIZED-AUTHORITIES (QUOTE (:EXTERNAL-AUDIT)) :ACCEPTED-REPRESENTATIONS (QUOTE (:CANONICAL-DATUM)))) (MULTIPLE-VALUE-BIND (PAYLOAD TRANSMISSION-RECEIPT) (TRANSMIT DERIVED-RESULT :FROM *LAB-CONTEXT* :TO *REVIEWER-CANONICAL-CONTEXT* :MODE :DIRECT) (FORMAT T "Canonical result transmitted successfully!~%") (FORMAT T "Transmission decision: ~S~%" (TRANSMISSION-RECEIPT-DECISION TRANSMISSION-RECEIPT)) (MULTIPLE-VALUE-BIND (TESTIMONY-CLAIM TESTIMONY-RECEIPT) (TRANSMIT *VALIDATOR-CAPABILITY* :FROM *LAB-CONTEXT* :TO *REVIEWER-CONTEXT* :MODE :TESTIMONY) (FORMAT T "Testimony constructed: ~S~%" (CLAIM-PROPOSITION TESTIMONY-CLAIM))))) 40 NIL)
+13: ((LABELS SB-FASL::EVAL-FORM :IN SB-INT:LOAD-AS-SOURCE) (MULTIPLE-VALUE-BIND (DERIVED-RESULT LOCAL-WITNESS) (EXERCISE-VALUE *VALIDATOR-CAPABILITY* :IN *LAB-CONTEXT* :ARGS (LIST (FIRST *ROWS*)) :MINT-FOR (QUOTE (:ROW-VALIDATED (FIRST *ROWS*)))) (FORMAT T "Exercised validator locally.~%") (FORMAT T "Derived result: ~S~%" (DERIVED-RESULT-VALUE DERIVED-RESULT)) (DEFPARAMETER *REVIEWER-CANONICAL-CONTEXT* (RECEIVER-CONTEXT :CONTEXT-ID :EXTERNAL-REVIEWER-CANONICAL :ACCESSIBLE-SUPPORTS (QUOTE NIL) :EXECUTABLE-PROCEDURES (LIST *VALIDATION-PROCEDURE*) :RECOGNIZED-AUTHORITIES (QUOTE (:EXTERNAL-AUDIT)) :ACCEPTED-REPRESENTATIONS (QUOTE (:CANONICAL-DATUM)))) (MULTIPLE-VALUE-BIND (PAYLOAD TRANSMISSION-RECEIPT) (TRANSMIT DERIVED-RESULT :FROM *LAB-CONTEXT* :TO *REVIEWER-CANONICAL-CONTEXT* :MODE :DIRECT) (FORMAT T "Canonical result transmitted successfully!~%") (FORMAT T "Transmission decision: ~S~%" (TRANSMISSION-RECEIPT-DECISION TRANSMISSION-RECEIPT)) (MULTIPLE-VALUE-BIND (TESTIMONY-CLAIM TESTIMONY-RECEIPT) (TRANSMIT *VALIDATOR-CAPABILITY* :FROM *LAB-CONTEXT* :TO *REVIEWER-CONTEXT* :MODE :TESTIMONY) (FORMAT T "Testimony constructed: ~S~%" (CLAIM-PROPOSITION TESTIMONY-CLAIM))))) 40)
+14: ((LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) (MULTIPLE-VALUE-BIND (DERIVED-RESULT LOCAL-WITNESS) (EXERCISE-VALUE *VALIDATOR-CAPABILITY* :IN *LAB-CONTEXT* :ARGS (LIST (FIRST *ROWS*)) :MINT-FOR (QUOTE (:ROW-VALIDATED (FIRST *ROWS*)))) (FORMAT T "Exercised validator locally.~%") (FORMAT T "Derived result: ~S~%" (DERIVED-RESULT-VALUE DERIVED-RESULT)) (DEFPARAMETER *REVIEWER-CANONICAL-CONTEXT* (RECEIVER-CONTEXT :CONTEXT-ID :EXTERNAL-REVIEWER-CANONICAL :ACCESSIBLE-SUPPORTS (QUOTE NIL) :EXECUTABLE-PROCEDURES (LIST *VALIDATION-PROCEDURE*) :RECOGNIZED-AUTHORITIES (QUOTE (:EXTERNAL-AUDIT)) :ACCEPTED-REPRESENTATIONS (QUOTE (:CANONICAL-DATUM)))) (MULTIPLE-VALUE-BIND (PAYLOAD TRANSMISSION-RECEIPT) (TRANSMIT DERIVED-RESULT :FROM *LAB-CONTEXT* :TO *REVIEWER-CANONICAL-CONTEXT* :MODE :DIRECT) (FORMAT T "Canonical result transmitted successfully!~%") (FORMAT T "Transmission decision: ~S~%" (TRANSMISSION-RECEIPT-DECISION TRANSMISSION-RECEIPT)) (MULTIPLE-VALUE-BIND (TESTIMONY-CLAIM TESTIMONY-RECEIPT) (TRANSMIT *VALIDATOR-CAPABILITY* :FROM *LAB-CONTEXT* :TO *REVIEWER-CONTEXT* :MODE :TESTIMONY) (FORMAT T "Testimony constructed: ~S~%" (CLAIM-PROPOSITION TESTIMONY-CLAIM))))) :CURRENT-INDEX 40)
+15: (SB-C::%DO-FORMS-FROM-INFO #<FUNCTION (LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) {74F9585874CB}> #<SB-C::SOURCE-INFO {1000AAC8B3}> SB-C::INPUT-ERROR-IN-LOAD)
+16: (SB-INT:LOAD-AS-SOURCE #<SB-INT:FORM-TRACKING-STREAM for "file /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-0/stranger-implementation-0/STRANGER-PROGRAM.lisp" {1000165EC3}> :VERBOSE NIL :PRINT NIL :CONTEXT "loading")
+17: ((LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) #<SB-INT:FORM-TRACKING-STREAM for "file /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-0/stranger-implementation-0/STRANGER-PROGRAM.lisp" {1000165EC3}> NIL)
+18: (SB-FASL::CALL-WITH-LOAD-BINDINGS #<FUNCTION (LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) {74F95858788B}> #<SB-INT:FORM-TRACKING-STREAM for "file /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-0/stranger-implementation-0/STRANGER-PROGRAM.lisp" {1000165EC3}> NIL #<SB-INT:FORM-TRACKING-STREAM for "file /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-0/stranger-implementation-0/STRANGER-PROGRAM.lisp" {1000165EC3}>)
+19: (LOAD #P"STRANGER-PROGRAM.lisp" :VERBOSE NIL :PRINT NIL :IF-DOES-NOT-EXIST :ERROR :EXTERNAL-FORMAT :DEFAULT)
+20: (SB-IMPL::PROCESS-EVAL/LOAD-OPTIONS ((:LOAD . "STRANGER-PROGRAM.lisp") (:QUIT)))
+21: (SB-IMPL::TOPLEVEL-INIT)
+22: ((FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP))
+23: ((FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP))
+24: (SB-IMPL::%START-LISP)
+
+unhandled condition in --disable-debugger mode, quitting
+EXIT=1
