@@ -109,6 +109,7 @@ All rulings from specimen usage, none from aesthetics:
 | `why` | **extended** (the one code-forced surface change): now uniform over all receipt types via registered extractors | closure sitting; smoke check 6 |
 | argument conventions | coherent family verified: acts take the subject first; `:from`/`:to` positions; `:per` procedure; `:considering` evidence; `:mode` on transmit | all specimens + SMOKE.lisp |
 | public kernel0 dependencies | `lisp-plus-kernel0:make-identity`, `make-procedure-descriptor`, `identity=` — declared, documented in the API; a stranger needs them and they are exported public symbols | SMOKE.lisp builds a procedure with them |
+| known wart (PROVISIONAL) | `receiver-context` defaults `:accepted-representations` to `'(:full)` while `transmit :direct` gates on `:canonical-datum` — a default-constructed receiver refuses direct datum transport. Found by the API scribe's execute-everything discipline; **left in the bytes at closure** (changing a default is behavior-visible) and folded into Slice /1 candidate 4 (receiver policy) | LANGUAGE-SLICE-0-API.md, PROVISIONAL notes |
 
 **Uniform refusal interface, verified:** every refusal across the three
 acts signals a `slice0-condition` subtype carrying `:receipt` and `:why`,

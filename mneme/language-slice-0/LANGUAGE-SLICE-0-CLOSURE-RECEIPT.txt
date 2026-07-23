@@ -1,0 +1,56 @@
+LANGUAGE-SLICE-0 CLOSURE RECEIPT — generated from live runs, 2026-07-23 03:20 UTC
+More information about SBCL is available at <http://www.sbcl.org/>.
+sbcl (operation-checked): 2.4.6
+
+== kernel0 selftest (closure, after all work) ==
+kernel0 selftest: 33 passed, 23 excluded (out-of-scope), 24 controls fired, 5 controls named-excluded, 59 mutants killed (56 independent + 3 re-attributions), 0 failed
+
+== de-promotione: SPECIMEN / BASELINE / ABLATION ==
+19 passed, 0 failed
+specimen exit: 0
+baseline exit: 0
+ablation exit: 0
+== de-projectione-1: SPECIMEN / BASELINE / ABLATION ==
+17 passed, 0 failed
+specimen exit: 0
+baseline exit: 0
+ablation exit: 0
+== de-infando: SPECIMEN / BASELINE / ABLATION ==
+30 passed, 0 failed
+specimen exit: 0
+baseline exit: 0
+ablation exit: 0
+
+== SMOKE.lisp (public API only) ==
+smoke-ok granted promotion returns a judged revision + granted receipt
+smoke-ok refused promotion signals the exact missing relation
+smoke-ok projection with loss: receiver holds only what it licenses
+smoke-ok direct transmission of the closure is refused, with receipt
+smoke-ok lawful alternative: reproduction recipe travels, granted
+smoke-ok why() is uniform across receipt types
+6 ok, 0 failed
+exit: 0
+double-colon occurrences in SMOKE.lisp: 0
+
+== package-export check ==
+BSD-style licenses.  See the CREDITS and COPYING files in the
+lisp-plus-slice0 external symbols: 161
+  CLAIM: EXTERNAL
+  WITNESS: EXTERNAL
+  RAISE: EXTERNAL
+  WHY: EXTERNAL
+  RENDER-WHY: EXTERNAL
+  PROJECT-CLAIM: EXTERNAL
+  PROJECTION-VIEWS: EXTERNAL
+  LOCAL-VALUE: EXTERNAL
+  EXERCISE-VALUE: EXTERNAL
+  TRANSMIT: EXTERNAL
+  TRANSMISSION-VIEWS: EXTERNAL
+  REIFIABLE-P: EXTERNAL
+
+== document digests (sha256) ==
+2ed63e251a58555a16e2c263b73c537e3bd26fb545ab510ca003746183abd8f5  LANGUAGE-SLICE-0-GUIDE.md
+750f655f161cb1d37fa62a4be86b096c33fad04698c90ce802143615e0bf059a  LANGUAGE-SLICE-0-ARCHITECTURE.md
+3f75fa03cd3d00da4faa5fb17d815384135f4392efcbd96e155d2c218c182821  LANGUAGE-SLICE-0-API.md
+49bd4588d6499bb67129a89789f23fa8081df8bcb24a8c99c03e374b1e783aa5  LANGUAGE-SLICE-0-CLOSURE.md
+7f6bb79767ce5f2d830c628895cffff949036c0f86749a84887687fad8d25a95  SMOKE.lisp
