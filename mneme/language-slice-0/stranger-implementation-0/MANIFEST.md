@@ -41,3 +41,16 @@ Final program `STRANGER-PROGRAM.lisp` == `rounds/round-2-program.lisp` (byte-ide
 
 Ground-truth identity is the OpenRouter store (`round-*-meta.json`), never the seat's self-report.
 
+
+## Post-reveal artifacts (hashed after the pre-reveal freeze commit `0879e4ce`)
+
+| File | sha256 |
+|---|---|
+| `RETROSPECTIVE.md` | `83759f04198251c8a5640cd00d1dabcc9b744ac3b8d5e6fb11fc8aaa42086e3b` |
+| `rounds/retrospective-reply.md` | `0c0f7d0b291fbf2cf6af51430b883b333f0c49191b27fd1a08cee6c0e4487439` |
+| `CUSTODIAN-RESULT.md` | `a58959d63d5db831b285efce720d6e2d894c7ea09345c4ad68fb1b48ca6fe5af` |
+
+Reveal order honored: pre-reveal artifacts (program, receipt, implementer
+report) were committed at `0879e4ce` BEFORE the architecture/closure were
+shown to the seat. The retrospective (post-reveal) and this custodian result
+follow. The pre-reveal `IMPLEMENTER-REPORT.md` is preserved unchanged.
