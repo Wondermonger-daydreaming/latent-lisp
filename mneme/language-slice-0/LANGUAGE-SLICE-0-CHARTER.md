@@ -172,10 +172,18 @@ never lost.
 
 ## 9. Conditions and restarts (Q4)
 
-Kernel0's condition base **cannot be subtyped** for this work: its
-`initialize-instance :after` enforces the frozen 7-name restart whitelist on
-the `permitted-restarts` slot (conditions.lisp:211–216), and none of the
-seven fits claim promotion. Editing the frozen file is forbidden. Therefore
+Kernel0's condition base **cannot be subtyped** for this work: the §20.9
+restart whitelist is kernel0 law, none of whose seven names fits claim
+promotion, and its live containment is `with-kernel0-restarts`'
+macroexpansion-time refusal. **Execution-verified correction (PROBE brief,
+`kernel0-api-brief.md` (this directory); supersedes this charter's first wording):**
+the condition-layer guard *written* at conditions.lisp:211–216 is INERT
+under SBCL 2.4.6's `make-condition` — CL does not require `make-condition`
+to call `initialize-instance`, and SBCL's does not — so a subtyping layer
+would be either unlawful under §20.9 or resting on an inert guard. The
+slice's own layer accordingly enforces its contract in `signal-slice0` and
+at macroexpansion (live code paths), never in a condition initializer.
+Editing the frozen file is forbidden. Therefore
 Slice /0 builds a **parallel, structurally homologous layer**: `slice0-condition`
 carries the same diagnostic shape (`failed-invariant`, `requirement-id`,
 `offending-field`, `offending-value`, `permitted-restarts`, plus

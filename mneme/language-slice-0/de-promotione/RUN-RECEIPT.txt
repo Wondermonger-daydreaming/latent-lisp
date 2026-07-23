@@ -1,0 +1,61 @@
+DE-PROMOTIONE RUN-RECEIPT — generated from live runs, 2026-07-23 01:12 UTC
+host sbcl: /home/gauss/.local/bin/sbcl
+sbcl version (operation-checked through wrapper):
+  2.4.6
+
+== kernel0 selftest (frozen substrate untouched — re-run after all slice work) ==
+kernel0 selftest: 33 passed, 23 excluded (out-of-scope), 24 controls fired, 5 controls named-excluded, 59 mutants killed (56 independent + 3 re-attributions), 0 failed
+
+== SPECIMEN.lisp: sbcl --non-interactive --load SPECIMEN.lisp ==
+pass T0a signal-slice0 refuses unlawful restart name
+pass T0b signal-slice0 refuses foreign condition type
+pass T0c with-slice0-restarts refuses unlawful clause
+pass T1 flattened testimony unrepresentable
+pass T1b lawful testimony carries the second-order proposition
+pass T2 testimony cannot promote P
+pass T3 warrant for Q cannot promote P
+pass T6 refusal names the exact missing relation
+pass T4 structural procedure cannot verify
+pass T5a constructor cannot mint judgment
+pass T5b no setf on claim-judgment
+pass T7a retain-current-claim preserves assertion
+pass T7b seek-matching-support repairs the raise
+pass T7c construct-attribution-claim
+pass T7d defer-judgment records deferral
+pass T8 refutation refuses :verified
+pass T8b refuting judgment recorded without erasing assertion
+pass lawful pipeline: release verified on derivation
+18 passed, 0 failed
+exit: 0
+
+== BASELINE.lisp: sbcl --non-interactive --load BASELINE.lisp ==
+=== NORMAL COMPETENT USE ===
+    => release: :VERIFIED
+    => release: :PENDING
+    => release: :PENDING
+    => release: :PENDING
+=== THE MISLEADING LOCAL MOVES ===
+        => release: :VERIFIED   [MISLEADING: exit code is fact #2 only;
+        => release: :VERIFIED   [MISLEADING: every REPORTED test passed,
+        => release: :VERIFIED   [MISLEADING: warrant is the string
+=== de-promotione: baseline demonstration complete ===
+exit: 0
+
+== ABLATION.lisp: sbcl --non-interactive --load ABLATION.lisp ==
+SILENT A1 exit-status -> release :verified — (:RELEASE-OK :BUILD-7) judged VERIFIED; conditions signaled: none; receipt issued: none
+SILENT A2 colleague's word -> tests :verified — (:TESTS-PASSED :SUITE-A) judged VERIFIED; conditions signaled: none; receipt issued: none
+SILENT A3 unmatched transcript -> suite :verified — (:EXPECTED-SUITE-MATCHED
+SILENT A4 structural procedure stamped as verifier — (:TESTS-PASSED :SUITE-A) judged VERIFIED; conditions signaled: none; receipt issued: none
+indistinguishability: claim-p=T judgment=VERIFIED procedure=suite-verification support-ids=NIL lineage=NIL
+4 launderings, 0 conditions, 0 receipts — the property is destroyed.
+exit: 0
+
+== file digests (sha256) ==
+9d96e7e8a9c889f69cda5ec964ef566cc3c4b370f18ce5dbb86acfed40a562eb  LANGUAGE-SLICE-0-CHARTER.md
+4b738e55b82397b185297b6fd407fcb819fc8bee8cb471c7081d12f30236bb40  kernel0-api-brief.md
+cc4febeeaa743da43dc6526d734483f07eb55ed3467f9a397226f80a38564f68  slice0.lisp
+de470a77c301ab9faa2ef7c9455c98d8c32ef3ee8d61fc79192712f4b57b63c1  de-promotione/ABLATION.lisp
+0c23387f9f05dd346ea5cfd5db8fb77278284fd588f56d225e7550db807c24ad  de-promotione/BASELINE.lisp
+aa47c3d370cbfcc111505ce2df696529ec99fd79a97b5572556873f39d5b702e  de-promotione/SPECIMEN.lisp
+5d29c10c4c78d2dfa17881f4f0061b58a7db70895c4c570984786ef4615886a3  de-promotione/EXPECTED-FAILURES.md
+298b1f955ece04eb802cf7298180ec051ee8e1a62088040941c087f5062433a4  de-promotione/HYPOTHESIS.md
