@@ -197,8 +197,17 @@ Condition families: `unsupported-promotion` · `wrong-proposition-support` ·
 Lawful restarts (closed set): `retain-current-claim` ·
 `seek-matching-support` · `construct-attribution-claim` · `defer-judgment` ·
 `retarget-receiver` · `mark-testimony-impossible`.
-**Not offered, ever:** `continue-anyway`, blind `retry`, arbitrary standing
-assignment.
+**Not offered to well-formed programs:** `continue-anyway`, blind `retry`,
+arbitrary standing assignment — no governed signalling site lists them, and
+`with-slice0-restarts` refuses them at macroexpansion. **Sizing (IANUS
+audit, 2026-07-23 — supersedes this section's original absolute wording):**
+the whitelist is package state; a loaded file can extend it
+(`slice0-transmissibility.lisp` does so openly as governed vocabulary
+extension, and the audit demonstrated an adversarial file minting
+`continue-anyway` the same way, then expressing it through the macro). The
+closed set is surface discipline against ordinary programs, **not a
+host-level guarantee** — the same R3-class escape as `::`, on the record in
+`de-infando/IANUS-AUDIT.md`.
 
 ## 10. Structured explanation (Q6)
 

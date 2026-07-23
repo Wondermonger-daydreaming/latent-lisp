@@ -1,0 +1,70 @@
+DE-INFANDO RUN-RECEIPT — generated from live runs, 2026-07-23 02:47 UTC
+More information about SBCL is available at <http://www.sbcl.org/>.
+sbcl (operation-checked): 2.4.6
+
+== kernel0 selftest (after ALL Slice /0 work) ==
+kernel0 selftest: 33 passed, 23 excluded (out-of-scope), 24 controls fired, 5 controls named-excluded, 59 mutants killed (56 independent + 3 re-attributions), 0 failed
+
+== de-promotione/SPECIMEN.lisp ==
+19 passed, 0 failed
+exit: 0
+== de-projectione-1/SPECIMEN.lisp ==
+17 passed, 0 failed
+exit: 0
+== de-infando/SPECIMEN.lisp ==
+30 passed, 0 failed
+exit: 0
+
+== de-infando full check lines ==
+pass teeth-1 stringified closure cannot claim :closure
+pass teeth-3 flattened invocation testimony unrepresentable
+pass teeth-6 standing cannot be copy-constructed
+pass I1a the closure exercises locally (canonical product)
+pass I1b ...and is not reifiable
+pass I1c governed direct export refuses the closure
+pass I11 five views compose on the refusal receipt
+pass teeth-4 refusal represents the value; nothing becomes absent
+pass teeth-5a blocker carries its scope (:mode :direct, object-local)
+pass I2a the closure still exercises after refusal
+pass I3a locally verified on the non-transmissible witness
+pass I3b witness refusal names :transmissibility (declared axis)
+pass I4 derived result exports; producer explicitly not included
+pass I5 testimony transmits the attribution proposition
+pass I6 equivalent support minted at receiver via lawful repair
+pass I7 the proposition verifies at the receiver — muteness was local
+pass teeth-5b reproduction mode grants after direct refused
+pass I8 representation refusal names the context
+pass I9a authorized position exercises; result is data, not the closure
+pass I9b unauthorized position refused; axis :exercise
+pass I9c the public surface exports no host-object accessor
+pass teeth-7 nconc on returned auth list mints nothing
+pass teeth-2 a receipt is not a procedure
+pass I12 refusals name their axes: reifiability/transmissibility/representation/exercise/reproduction
+pass I10 value, support, and claim unchanged by every attempt
+pass repair: export-derived-result yields a GRANT for the product
+pass repair: construct-testimony-claim keeps the refusal receipt
+pass repair: exercise-locally is use, not transmission
+pass repair: defer-transmission returns only the record
+pass control: canonical datum transmits clean
+
+== de-infando/BASELINE.lisp ==
+exit: 0
+== de-infando/ABLATION.lisp ==
+SILENT L1 closure exports as its printed form
+SILENT L2 testimony ships as the deed
+SILENT L3 the product ships as the producer
+SILENT L4 the vocabulary of residue is gone
+4 launderings, 0 refusals, 0 receipts — the five axes collapsed into a printer check; the property is destroyed.
+exit: 0
+
+== file digests (sha256) ==
+1a27d2ac36c3aea358059f480d437b9d104210a473be4836ffd92692f8682ef9  LANGUAGE-SLICE-0-CHARTER.md
+a5103b817104ba18d0236e8c0004e1c669bbed0180d641cf4f0a69f06aa469a5  SLICE-0-INTERIM-DISPOSITION.md
+face8ebc276fbe554f9c264b48846901929133c7239e056b23232511f40e09a0  slice0.lisp
+fe8a0743bc9ab79f5bc68f5457d1a7bf6e5a98d0b3afb66004471402cbb35fa9  slice0-transmissibility.lisp
+eb771b6fc033c136cb972dd111d2944bc380ec4a963cd69edd176527d9263f4b  de-infando/ABLATION.lisp
+82975f65bb97997b5b90b74f934dc8c64f4d71029035118f59b59ba97be89b02  de-infando/BASELINE.lisp
+dfa2388baa7ee0117a78c8dc8408e6acb4e5a85c129ef1d71cb60bf1d095b632  de-infando/SPECIMEN.lisp
+f77bcfaac3efb3e9ce66a76ec076370c89a81b182269f6a247a9836f9fe58bee  de-infando/EXPECTED-FAILURES.md
+7d1742753d33d8ec3195a86c4487a3ce05a486488b6c6a309083d3248514bd60  de-infando/HYPOTHESIS.md
+d314de2b1b8a872b8e4549255fcebcd0308f23586a66d643f37d5d810e8a3288  de-infando/IANUS-AUDIT.md

@@ -155,7 +155,10 @@
 
 (defmacro with-slice0-restarts (clauses &body body)
   "RESTART-CASE limited to the charter §9 lawful names.  CONTINUE-ANYWAY,
-blind RETRY, and arbitrary standing assignment are not expressible here."
+blind RETRY, and arbitrary standing assignment are not expressible through
+this vocabulary by well-formed programs.  Sizing (charter §9, IANUS audit):
+the whitelist is package state, mutable by any loaded code — this is
+surface discipline, not host closure."
   (dolist (clause clauses)
     (unless (and (consp clause) (%slice0-restart-name-p (car clause)))
       (error "restart clause not permitted by charter §9: ~S" clause)))
