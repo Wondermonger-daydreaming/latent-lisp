@@ -195,3 +195,30 @@ No rule chaining, optional premises, disjunction, negation logic, theorem
 proving, or policy machinery.
 
 — second sitting, Claude Fable 5 (CC seat), 2026-07-23
+
+---
+
+## Errata (post-implementation, 2026-07-23 — code-forced readings, custodian-adjudicated)
+
+1. **Δ3 kind shape**: the frozen `witness` and `promotion-procedure` constructors
+   require `:kind` to be a KEYWORD, so the literal list kind
+   `(:schema <name> <version>)` is unconstructible. Implemented as a
+   deterministic interned keyword `:|DERIVATION/<NAME>/<VER>|` — exactness and
+   versioning preserved (distinct keyword per version; T10 proves v1 ≠ v2).
+2. **Charter §3 `:schema` identity domain**: kernel0's identity-domain list is
+   frozen and has no `:schema`. Charter clause was in error against
+   INVENTORY-1. Schema identity is minted in the `:procedure` domain with a
+   `schema/NAME/VER`-encoded name (a schema IS a derivation procedure).
+3. **Δ1 enumeration scope**: implementation threads accepted schema-local
+   bindings premise-by-premise; a premise whose surviving candidates bind a
+   fresh local to >1 value is `:ambiguous` immediately — later premises do NOT
+   disambiguate earlier multiplicity. STRICTER than Δ1's global enumeration
+   (refuses more, never wrongly grants). Founding semantics; revisit only if a
+   specimen demands global enumeration, with a recorded reason.
+4. **Δ4 testimony `:for`**: implemented as Slice /0's own testimony discipline —
+   `(:asserted <context-a> (:predicate :derived (:schema …) (:version …)
+   (:conclusion …)))` — the flat Δ4 sketch adapted to the frozen
+   `(:asserted S Q)` gate. The transport-laundering hole is closed FIRST by the
+   frozen proposition-match gate (`WRONG-PROPOSITION-SUPPORT`), with the
+   admits-gate refusal proven independently (T10/T11) — the true gate is
+   reported, not the assumed one.
