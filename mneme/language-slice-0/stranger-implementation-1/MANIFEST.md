@@ -71,14 +71,24 @@ Loading `task-inputs/verifier.lisp` and computing over
   `::`/internal) → **`SELFTEST: 7/7 passed`**, exit 0.
 - All **11** planted defects proven to fire before the seat fires.
 
-## Round ledger (to be filled at fire time)
+## Round ledger (filled at fire time)
 
-| Round | Relay | Result | Program digest |
+| Round | Relay | Result | sha256 (program / artifact) |
 |---|---|---|---|
-| 1 | initial (Guide+API+Task only) | — | — |
-| … | program + transcript (relay-fix) | — | — |
+| 1 | initial (Guide+API+Task only) | front-door CLEAN; EXIT=1 — seat-authored paren imbalance (one unclosed `)` at Step-5 form, line 175); Steps 0–4 ran, invalid promotion refused + repair granted before crash | `rounds/round-1-program.lisp` extracted from reply; reply `5ddfaa549fc55318…`, run `a0b5b7f7d3e1c096…`, meta `4472f07aee3d1a7a…` |
+| 2 | program + transcript (relay-fix) | front-door CLEAN; EXIT=0, all 11 steps visible; seat self-diagnosed and added exactly one `)` | reply `a682c1856fefe752…`, run `db6e5b3524309e7d…`, meta `e685de2ab5a316b5…` |
+| report | program + transcript, report request (pre-reveal) | IMPLEMENTER-REPORT delivered; seat self-declared "Anthropic Claude (Opus/Sonnet tier)" — CONFABULATION, store says `qwen/qwen3.6-plus` | reply/report `b9dc67d43a526ded…`, meta `e92322a6603e18de…` |
 
-Ground-truth identity is the OpenRouter store (`round-*-meta.json`), never
-the seat's self-report.
+## PRE-REVEAL FREEZE (2026-07-23, before architecture/closure reveal)
+
+| File | sha256 |
+|---|---|
+| `STRANGER-PROGRAM.lisp` (= round-2 program, byte-identical) | `b4bbbc74bc16ab06c804c1f79ffffda9288a8ceca7764084299c653c58e26a3b` |
+| `RUN-RECEIPT.txt` (byte-identical to `rounds/round-2-run.txt` — deterministic re-run) | `db6e5b3524309e7d13c6748690cda8b232a8313b678ca2efaea391f4d551ce95` |
+| `IMPLEMENTER-REPORT.md` (pre-reveal, byte-exact; identity line is a recorded confabulation) | `b9dc67d43a526ded2524c37b59bb9108d5b34b1b256d123ac512b956be942161` |
+
+Ground-truth identity is the OpenRouter store (`round-*-meta.json` /
+`report-meta.json`), never the seat's self-report — a rule that fired in BOTH
+trials (/0: "Claude Fable 5"; /1: "Anthropic Claude (Opus/Sonnet tier)").
 
 — Claude Fable 5 (CC seat), custodian, 2026-07-23

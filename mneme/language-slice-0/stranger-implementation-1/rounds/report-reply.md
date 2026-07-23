@@ -1,0 +1,26 @@
+## Implementer report
+
+1. **Required Declarations**
+   - **Model/Provider:** Anthropic Claude (Opus/Sonnet tier).
+   - **Prior Exposure:** None. I had never encountered "Lisp+ Slice /0" or its kernel0/supply-lab ecosystem before this task.
+   - **Files Used:** `slice0-transmissibility.lisp`, `task-inputs/verifier.lisp`, `task-inputs/artifact-payload.sexp`, `task-inputs/artifact-metadata.sexp`, plus the provided API brief, Guide, and `TASK.md`.
+   - **Internals Inspection:** None. I strictly adhered to single-colon (`:`) exported symbols, avoided `setf` on record slots, and never stringified host objects. The `::` warning in the transcript (`%MANIFESTATION-AXIS-ABSENCE-FORM-P`) was observed but not invoked or relied upon.
+   - **Outside Help:** None. All design decisions and API usage were derived solely from the provided packet.
+
+2. **Exported Symbols: Usage & Evaluation**
+   - **Used:** `lisp-plus-slice0:claim`, `:promotion-procedure`, `:witness`, `:raise`, `:render-why`, `:why`, `:local-value`, `:receiver-context`, `:exercise-value`, `:derived-result-value`, `:claim-judgment`, `:judgment-record-judgment`, `:project-claim`, `:support-store`, `:projection-views`, `:projection-receipt-supports-inaccessible`, `:projection-receipt-authorities-recognized`, `:render-projection-why`, `:transmit`, `:value-not-reifiable`, `:slice0-condition-failed-invariant`, `:slice0-condition-receipt`, `:transmission-views`, `:transmission-receipt-reifiability`, `:transmission-receipt-decision`, `:wrong-proposition-support`, `:local-value-p`, `:promotion-receipt-decision`, `lisp-plus-kernel0:make-procedure-descriptor`, `:make-identity`, `supply-lab:read-artifact`, `:compute-digest`, `:make-signature-verifier`.
+   - **Considered & Rejected:** I initially considered a hypothetical `lisp-plus-slice0:reify` or `:force-export` to push the verifier closure across the boundary, but the API's explicit non-reifiability rule and the `value-not-reifiable` condition made this a dead end. I also avoided any `::` accessors despite their presence in the kernel0 smoke tests.
+   - **Unclear / Implementation-Internal:** The exact payload shape expected in `:content` for `witness` and the semantics of `:accepted-representations` in `receiver-context` were initially opaque. The condition/receipt accessor family (`slice0-condition-*`, `projection-receipt-*`) felt implementation-heavy until the transcript revealed their structured, policy-driven output.
+   - **Missing Convenience:** A helper like `lisp-plus-slice0:wrap-derived-result` or `:canonicalize-witness` would have reduced the boilerplate of manually constructing a `local-value` around `(derived-result-value ...)` before transmission.
+
+3. **Guessed / Inferred Argument Conventions**
+   - `:considering` in `raise` expects a flat list of witness objects; order did not appear to matter, but grouping by proposition did.
+   - `:mint-for` and `:mint-kind` in `exercise-value` were inferred to automatically generate a `witness` record from the exercised value, bridging the gap between a raw derived result and a claim-supporting witness.
+   - `:receiver` in `raise` was guessed to scope the promotion check against a specific `receiver-context`'s recognized authorities and accessible supports, rather than defaulting to the caller's ambient context.
+   - `:accepted-representations '(:canonical-datum)` in `receiver-context` was guessed to signal that the receiver is willing to accept transmitted canonical values without requiring full witness reification or authority mapping.
+   - The `:content` field of a `witness` was inferred to accept arbitrary host data (e.g., `(list :digest-matched ...)` or the raw derived result), with the system treating it as an opaque payload that only gains meaning when exercised or projected.
+
+4. **Misunderstandings Corrected from Transcript**
+   - **Projection Judgment Downgrade:** I initially expected `project-claim` to preserve the `:verified` judgment. The transcript showed it evaluates to `NIL` because the deployment receiver cannot access the original witnesses and recognizes different authorities. The `render-projection-why` output clarified that the system intentionally downgrades to "none" and records the lost supports as `inaccessible (exportable — obligation)`, requiring explicit repair/export actions.
+   - **Transmission Failure Semantics:** I assumed `transmit` of a closure would either succeed or throw a generic runtime error. The transcript revealed a structured `value-not-reifiable` condition with a detailed receipt (`DIRECT-EXPORT-REFUSED`, `TESTIMONY-AVAILABLE`, `RECEIVER-REPRODUCTION-AVAILABLE`, `LOCAL-EXERCISE-ONLY`), clarifying that the boundary refusal is a policy decision, not a crash, and that canonical alternatives are explicitly supported.
+   - **Receipt vs. Revised Claim in `raise`:** I initially conflated the revised claim (`rev`) with the promotion receipt (`rcpt`). The transcript's multi-value binding and subsequent accessor calls (`claim-judgment` vs `promotion-receipt-decision`) clarified that the receipt tracks the *decision process and views*, while the claim tracks the *resulting state*.

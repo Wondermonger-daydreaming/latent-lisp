@@ -1,0 +1,80 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+
+; file: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/kernel0/outcome.lisp
+; in: DEFUN %MANIFESTATION-ALTERNATIVE-COMPLETE-P
+;     (LISP-PLUS-KERNEL0::%MANIFESTATION-AXIS-ABSENCE-FORM-P
+;      LISP-PLUS-KERNEL0::ALTERNATIVE)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LISP-PLUS-KERNEL0::%MANIFESTATION-AXIS-ABSENCE-FORM-P
+; 
+; compilation unit finished
+;   Undefined function:
+;     %MANIFESTATION-AXIS-ABSENCE-FORM-P
+;   caught 1 STYLE-WARNING condition
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+[Step 0] Artifact digest: 1744950028
+[Step 0] Verification result: (SIGNATURE VALID OVER-DIGEST 1744950028)
+[Step 1] Created admissibility claim.
+[Step 2] Attempting invalid promotion with wrong-proposition witness...
+[Step 2] Refused as expected: PROPOSITION-MATCH: witness-2 is for (:DOWNLOAD-COMPLETE "acme-crypto-lib"), not for (:ARTIFACT-ADMISSIBLE
+                                                                  "acme-crypto-lib"
+                                                                  "2.4.0")
+[Step 3] Rendering refusal reason:
+[REFUSED] considered witness-2
+  missing relation: PROPOSITION-MATCH — witness-2 is for (:DOWNLOAD-COMPLETE "acme-crypto-lib"), not for (:ARTIFACT-ADMISSIBLE
+                                                                  "acme-crypto-lib"
+                                                                  "2.4.0")
+  requirements: :WITNESS-FOR-MUST-EQUAL-CLAIM-PROPOSITION
+  lawful repairs: RETAIN-CURRENT-CLAIM, SEEK-MATCHING-SUPPORT, CONSTRUCT-ATTRIBUTION-CLAIM, DEFER-JUDGMENT
+[Step 4] Derived result: (SIGNATURE VALID OVER-DIGEST 1744950028)
+[Step 4] Promotion granted! Judgment: VERIFIED
+[Step 5] Projecting claim to deployment receiver...
+[Step 5] Projected claim judgment: NIL
+[Step 5] Projection views: (REGRADED OBLIGATION-PRODUCING)
+[Step 6] Supports inaccessible (not absent, recorded): (#S(DURABLE-IDENTITY
+                                                           :DOMAIN RECEIPT
+                                                           :NAME witness-4)
+                                                        #S(DURABLE-IDENTITY
+                                                           :DOMAIN RECEIPT
+                                                           :NAME witness-9))
+[Step 7] Authorities recognized/unrecognized: NIL
+[Step 7] Rendered projection why:
+[projection] source judgment: VERIFIED admissibility-check
+  considered: witness-4, witness-9
+  lost witness-4 — inaccessible (exportable — obligation)
+  lost witness-9 — inaccessible (exportable — obligation)
+  procedures: available admissibility-check; selected NONE
+  resulting judgment: none — receiver context licenses no stronger act
+  repair: (:EXPORT
+           #S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY
+              :DOMAIN :RECEIPT
+              :NAME "witness-9"))
+  repair: (:EXPORT
+           #S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY
+              :DOMAIN :RECEIPT
+              :NAME "witness-4"))
+[Step 8] Attempting direct transmission of verifier capability...
+[Step 9] Refused: REIFIABILITY: local-value-5 is a closure over local state; the canonical boundary refuses it (noncanonical-durable-value) — this blocks THIS OBJECT'S export in THIS mode; it does not erase its local existence, forbid its exercise, or foreclose equivalent support at :DEPLOYMENT-TARGET
+[Step 9] Transmission views: (DIRECT-EXPORT-REFUSED TESTIMONY-AVAILABLE
+                              RECEIVER-REPRODUCTION-AVAILABLE
+                              LOCAL-EXERCISE-ONLY)
+[Step 9] Reifiability status: NOT-REIFIABLE
+[Step 10] Transmitting canonical verification result instead...
+[Step 10] Transmission granted!
+[Step 10] Payload is local-value-p: T
+[Step 10] Decision: GRANTED
+[Step 11] Creating receiver-relative admissibility claim...
+[Step 11] Receiver claim judgment: VERIFIED
+[Step 11] Receiver receipt decision: GRANTED
+=== SUMMARY ===
+All 11 steps completed successfully.
+EXIT=0

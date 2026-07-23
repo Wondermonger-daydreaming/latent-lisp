@@ -1,0 +1,31 @@
+{
+  "round": 1,
+  "timestamp": "2026-07-23T18:27:59.077295Z",
+  "model_shortcut": "qwen36-plus",
+  "model_id": "qwen/qwen3.6-plus",
+  "usage": {
+    "prompt_tokens": 18236,
+    "completion_tokens": 20012,
+    "total_tokens": 38248,
+    "cost": 0.0449501,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.0449501,
+      "upstream_inference_prompt_cost": 0.0059267,
+      "upstream_inference_completions_cost": 0.0390234
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 13626,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "message_chars": 66842,
+  "reply_chars": 26189
+}
