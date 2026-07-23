@@ -1,0 +1,157 @@
+==============================================================================
+de-praemissis RUN-RECEIPT — Slice /1 founding regression specimen
+SBCL This is SBCL 2.4.6, an implementation of ANSI Common Lisp.  |  generated 2026-07-23T21:29:16Z
+==============================================================================
+
+########## RUN 1/3  >  sbcl --non-interactive --load SPECIMEN.lisp ##########
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== de-praemissis SPECIMEN — Slice /1, schema :artifact-admissibility v1 ==
+
+── behavior 1: digest-match support alone ⇒ refusal; receipt shows the other three missing
+   decision: :REFUSED
+   digest-matches=:SATISFIED  signature-valid=:MISSING  recognition=:MISSING  provenance=:MISSING
+   ✓ [1] refused; signature+recognition+provenance all :missing
+
+── behavior 2: digest+signature ⇒ still refused (recognition + provenance missing)
+   decision: :REFUSED ; recognition=:MISSING provenance=:MISSING
+   ✓ [2] refused despite two satisfied premises
+
+── behavior 3: the signature-valid premise stays :satisfied beside recognition :missing
+   signature-valid disposition       : :SATISFIED
+   receiver-recognizes-signer        : :MISSING
+   ✓ [3] a valid signature is not contaminated by a missing sibling premise
+
+── behavior 4: missing recognition ⇒ a NAMED refusal (premise pattern + :missing), not generic
+   named premise : :RECEIVER-RECOGNIZES-SIGNER
+   disposition   : :MISSING
+   strongest-lawful-result: (:BLOCKED-ON :RECEIVER-RECOGNIZES-SIGNER :MISSING)
+   ✓ [4] the refusal names :receiver-recognizes-signer as the blocking premise
+
+── behavior 5: receiver-a's recognition does NOT discharge receiver-b's conclusion (⇒ :mismatched :receiver)
+   recognition disposition : :MISMATCHED ; conflicting roles : (:RECEIVER)
+   ✓ [5] A's recognition lands :mismatched on role :receiver against a B-conclusion
+
+── behavior 6: :staging provenance does not discharge a :production conclusion (⇒ :mismatched :purpose)
+   provenance disposition : :MISMATCHED ; conflicting roles : (:PURPOSE)
+   ✓ [6] :staging support lands :mismatched on role :purpose
+
+── behavior 7: another artifact's premise cannot discharge this artifact (⇒ :mismatched :artifact)
+   digest disposition : :MISMATCHED ; conflicting roles : (:ARTIFACT)
+   ✓ [7] artifact-2's digest lands :mismatched on role :artifact
+
+── behavior 8: an inaccessible recognition support is :inaccessible residue, NOT :missing
+   disposition                       : :INACCESSIBLE
+   matching-accessible-supports      : NIL
+   matching-inaccessible-supports (n): 1
+   ✓ [8] a present-but-unreachable support is residue (:inaccessible), distinct from :missing
+
+── behavior 9: refuted provenance blocks even with positive support present — BOTH visible
+   disposition                  : :REFUTED
+   positive support present     : T
+   refuting support present     : T
+   ✓ [9] positive AND refuting evidence both preserved; premise :refuted, never erased
+
+── behavior 10: full coherent discharge ⇒ :granted, a real Slice /0 promotion
+   receipt decision  : :GRANTED
+   granted claim prop: (:PREDICATE :ARTIFACT-ADMISSIBLE
+                        (:ARTIFACT "artifact-1") (:PURPOSE :PRODUCTION)
+                        (:RECEIVER :RECEIVER-A))
+   judgment-record   : :VERIFIED (procedure v1)
+   ✓ [10] a real Slice /0 :verified promotion, keyed to the derivation
+
+── behavior 11: why / render-derivation-why names every satisfied AND unsatisfied premise
+   why façade returns the receipt itself: T
+   ---- render-derivation-why ----
+   [derivation REFUSED] schema :ARTIFACT-ADMISSIBILITY v1
+     premise :DIGEST-MATCHES: SATISFIED
+     premise :SIGNATURE-VALID: SATISFIED
+     premise :RECEIVER-RECOGNIZES-SIGNER: MISSING
+     premise :PROVENANCE-ADMISSIBLE: MISSING
+     repair for :RECEIVER-RECOGNIZES-SIGNER: (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                              (:PREDICATE
+                                               :RECEIVER-RECOGNIZES-SIGNER
+                                               (:RECEIVER :RECEIVER-A)
+                                               (:SIGNER (:VAR :SIGNER))))
+     repair for :PROVENANCE-ADMISSIBLE: (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                         (:PREDICATE :PROVENANCE-ADMISSIBLE
+                                          (:ARTIFACT "artifact-1")
+                                          (:PURPOSE :PRODUCTION)
+                                          (:RECEIVER :RECEIVER-A)))
+   ✓ [11] all four premises named, satisfied and missing alike
+
+── behavior 12: projection: the conclusion does NOT survive to a second receiver by copy
+   source grant at receiver-a, receipt id : receipt:derivation-receipt-24
+   transported receipt is (:TESTIMONY :DERIVATION-REPORT) — a product, not a local derivation
+   copy-plant refused at frozen gate : WRONG-PROPOSITION-SUPPORT
+   target receiver-b, no local recognition ⇒ decision :REFUSED (recognition :MISSING)
+   target grant at receiver-b, receipt id : receipt:derivation-receipt-28
+   receipt identities distinct (a≠b)      : T
+   ✓ [12] target re-derived over its OWN lawful premises; distinct receipt identity — no copy
+
+de-praemissis specimen: 12/12 behaviors demonstrated
+EXIT=0
+
+########## RUN 2/3  >  sbcl --non-interactive --load ABLATION.lisp ##########
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== de-praemissis ABLATION — opaque token + generic content procedure ==
+opaque proposition : (:PREDICATE :ARTIFACT-ADMISSIBLE (:ARTIFACT "artifact-1"))
+procedure admits   : ((:DIRECT :DIGEST-EVIDENCE) (:DIRECT :SIGNATURE-EVIDENCE))
+
+supports considered : digest-evidence + signature-evidence (content only)
+recognition support : (none — unrepresentable in the opaque model)
+raise decision      : :VERIFIED
+granted claim prop  : (:PREDICATE :ARTIFACT-ADMISSIBLE (:ARTIFACT "artifact-1"))
+
+ABLATION EPITAPH: admissibility was VERIFIED for artifact-1 from digest-match + signature-valid content-witnesses alone; signer recognition was never represented as a proposition and never checked — the S3 species reproduced exactly.
+EXIT=0
+
+########## RUN 3/3  >  sbcl --non-interactive --load BASELINE.lisp ##########
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+== de-praemissis BASELINE (disciplined idiomatic CL, no Slice /0 or /1) ==
+
+-- Section 1: the discipline WORKS --
+  disciplined, full evidence         => :GRANTED
+  disciplined, recognition absent    => :REFUSED; NAMED missing: (:RECEIVER-RECOGNIZES-SIGNER)
+  ^ disciplined CL genuinely refuses and names the omitted premise.
+
+-- Section 2: the discipline is only CONVENTION --
+  straight-line variant, SAME evidence => :GRANTED
+  ^ recognition was never represented, never checked, never missed.
+
+-- Section 3: the gap, shown side by side --
+  disciplined return : (:REFUSED (:RECEIVER-RECOGNIZES-SIGNER))
+  fast return        : (:GRANTED)
+  A grant that CHECKED recognition and a grant that SKIPPED it are
+  indistinguishable from the return value alone — the ':granted' keyword
+  carries no anatomy.  Which premises were consulted is invisible to
+  the caller, the type system, and any downstream auditor.  The
+  guarantee lives in a programmer's habit, enforced by nobody.
+  THIS is the convention-vs-enforcement gap Slice /1 closes by making
+  the premise set a declared, receipt-bearing part of the judgment.
+
+baseline: convention demonstrated (discipline works AND is unenforced)
+EXIT=0
