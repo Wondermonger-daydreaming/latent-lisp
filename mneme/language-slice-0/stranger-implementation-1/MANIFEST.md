@@ -1,0 +1,84 @@
+# MANIFEST.md — Stranger Implementation /1 (pre-fire freeze)
+
+*Digests frozen 2026-07-23, BEFORE the seat fires. No stranger output
+exists yet: this manifest covers the frozen packet only. Post-fire
+artifacts (`STRANGER-PROGRAM.lisp`, `RUN-RECEIPT.txt`,
+`IMPLEMENTER-REPORT.md`, `rounds/*`, `RETROSPECTIVE.md`,
+`CUSTODIAN-RESULT.md`) are hashed and appended at their own freeze points,
+per CHARGE §Freeze-and-reveal.*
+
+Seat: `qwen36-plus` (`qwen/qwen3.6-plus`, OpenRouter, clean memoryless
+call) — Qwen-family, lineage-distant from Claude/Anthropic, NOT DeepSeek
+(/0's seat). The **exact model id is recorded from each `round-N-meta.json`
+at fire time** and is the ground truth over any seat self-description.
+
+## Frozen packet digests (sha256)
+
+| File | sha256 | Audience |
+|---|---|---|
+| `CHARGE.md` | `f4f848b289a89c6bac91ad6d95f9f9d5bdbf67750c1d2e09ea93f21f74c49ba4` | custodian-only |
+| `ALLOWED-SOURCES.md` | `e9d711b279f0f50319dfe64f22bfab0c9eab0e35b1a2c8fd9155556b3d9cdb4c` | custodian-only |
+| `TASK.md` | `92ea9cec9f255228048aa3b703fd70e4fb623e599f10dd05edb631ad8c66e01f` | **implementer-visible** |
+| `EVALUATION.md` | `eb209b331ebeb88a52d7a74185c82932656c46cd3fd21fba908caab29b5b2e05` | custodian-only |
+| `SOLVABILITY.md` | `9f355b951130709f788fbe76134a5d5caf020744294f4d018004774ec8168383` | custodian-only |
+| `task-inputs/artifact-payload.sexp` | `4fea112a9df5b7dba3dcbc4e922402151e1879e7eeb300cab125cc0b2802b605` | **implementer-visible** |
+| `task-inputs/artifact-metadata.sexp` | `07fd3f27d3d5ecca548d2ac30526e35a31b054065300e4d5e735e68d743bef38` | **implementer-visible** |
+| `task-inputs/verifier.lisp` | `d3947a7c60b46adcd4db08e37d2454d08361fbccf62f521c0befef75be6bd50e` | **implementer-visible** |
+| `check-front-door.py` | `9fd5b19b7e9588192618ef8fae6715ff106c6bced82ed10a72766fb1f68158d8` | custodian-only (copy, path-adjusted) |
+| `check-external-symbols.lisp` | `92055176bb211f23272282e8d3729e1ad9bc3b5a622ed9d77e06b3dafaa15318` | custodian-only (copy, name-adjusted) |
+| `check-front-door-selftest.sh` | `cce30dd0ebd39299bf7c93003ceded00673c6350b6e06f56197709237aa3f9c1` | custodian-only (byte-identical copy) |
+| `teeth-runner-1.lisp` | `96d527428d31cd93a4ec2db97b4f3b3d4516bd0ed9db4accf3fc127091fc1fcb` | custodian-only |
+| `run_stranger1_round.py` | `380bbf15b9ed86487d7e31d24c5a608cef06c62ee0fccd788363815fe728c924` | custodian-only |
+
+## Provenance of the copied front-door tooling
+
+Three tools were copied from `stranger-implementation-0/`:
+
+- **`check-front-door-selftest.sh`** — **byte-identical** to /0's
+  (sha256 `cce30dd0…` matches /0's manifest). Its fixtures reference only
+  `lisp-plus-slice0` symbols, so no adjustment was needed.
+- **`check-front-door.py`** — copy with **only** two hardcoded repointings:
+  the loaded verifier path `task-inputs/validator.lisp` →
+  `task-inputs/verifier.lisp`, and the mutation-scan package qualifier
+  `dataset-lab:` → `supply-lab:`. Logic unchanged.
+- **`check-external-symbols.lisp`** — copy with **only** the governed home
+  package `"DATASET-LAB"` → `"SUPPLY-LAB"` (functional) and two comment
+  lines updated (validator→verifier). Logic unchanged.
+
+These adjustments are the "hardcoded paths, if any" the charge permits; a
+byte-identical copy of the audit checker could not resolve `supply-lab`
+symbols and would fail closed on every program. Both checkers were verified
+in place: `check-front-door-selftest.sh` → `SELFTEST: 7/7 passed`.
+
+## Fixture verification (live, SBCL 2.4.6)
+
+Loading `task-inputs/verifier.lisp` and computing over
+`task-inputs/artifact-payload.sexp`:
+
+- `(supply-lab:compute-digest (supply-lab:read-artifact …))` ⇒ **1744950028**
+  = metadata `:expected-digest`. ✔
+- signature of `(:sig KEY-MATERIAL 1744950028)` ⇒ **1486375690**
+  = metadata `:claimed-signature`. ✔
+- verifier over `(:artifact-digest 1744950028 :claimed-signature 1486375690)`
+  ⇒ `(:SIGNATURE :VALID :OVER-DIGEST 1744950028)`; over a wrong signature ⇒
+  `(:SIGNATURE :INVALID …)`. ✔
+
+## Teeth verification (live, at freeze)
+
+- `teeth-runner-1.lisp` (runtime defects D1–D8, D11; D6 split) →
+  **`TEETH: 10 fired, 0 missed`**, exit 0.
+- `check-front-door-selftest.sh` (static defects D9 slot-`setf`, D10
+  `::`/internal) → **`SELFTEST: 7/7 passed`**, exit 0.
+- All **11** planted defects proven to fire before the seat fires.
+
+## Round ledger (to be filled at fire time)
+
+| Round | Relay | Result | Program digest |
+|---|---|---|---|
+| 1 | initial (Guide+API+Task only) | — | — |
+| … | program + transcript (relay-fix) | — | — |
+
+Ground-truth identity is the OpenRouter store (`round-*-meta.json`), never
+the seat's self-report.
+
+— Claude Fable 5 (CC seat), custodian, 2026-07-23
