@@ -1,0 +1,85 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== SMOKE-1 — Slice /1 public smoke: lab-notebook entry sign-off ==
+
+(1) structured primitive propositions
+    a normal-form-p=T ; a=b (role-order-insensitive)=T
+  [1] PASS  ground primitives are normal-form; equality is role-order-insensitive; distinct props differ
+
+(2) derived conclusion granted (real Slice /0 promotion)
+
+; file: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-slice-1/SMOKE-1.lisp
+; in:
+;      LET* ((SUP (LIST (S-COMPLETE) (S-REPRODUCED) (S-QUALIFIED) (S-PERMITTED)))
+;        (CTX (APPLY #'CONTEXT-OVER :CTX-ALICE SUP)))
+;     (AND SLICE1-PUBLIC-SMOKE::CLAIM
+;          (LISP-PLUS-SLICE0:CLAIM-JUDGMENT SLICE1-PUBLIC-SMOKE::CLAIM))
+; ==>
+;   NIL
+; 
+; caught STYLE-WARNING:
+;   This is not a LISP-PLUS-SLICE0::JUDGMENT-RECORD:
+;    NIL
+;   See also:
+;     The SBCL Manual, Node "Handling of Types"
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+    decision=:GRANTED ; claim-prop=(:PREDICATE :ENTRY-SIGNED-OFF
+                                    (:ENTRY "entry-88") (:PURPOSE :ARCHIVAL)
+                                    (:REVIEWER :REVIEWER-ALICE))
+  [2] PASS  full discharge ⇒ :granted, a real :verified Slice /0 promotion keyed to the derivation
+
+(3) a named missing premise
+    decision=:REFUSED ; results-reproduced=:MISSING
+  [3] PASS  omitting a premise refuses; the receipt names :results-reproduced as :missing
+
+(4) purpose mismatch ⇒ :mismatched (role named)
+    purpose-permitted=:MISMATCHED ; conflicting roles=(:PURPOSE)
+  [4] PASS  a :teaching permission lands :mismatched on role :purpose against an :archival conclusion
+
+(5) plural sufficiency ⇒ GRANT, all environments preserved
+    decision=:GRANTED ; complete-environments=2 ; multiply-supported=T ; conflicts=NIL
+  [5] PASS  two sufficient non-unique environments GRANT; both preserved; multiply-supported; no conflict
+
+(6) declared :unique-locals conflict ⇒ REFUSE :ambiguous
+    decision=:REFUSED ; results-reproduced=:AMBIGUOUS ; named conflict=(:AUTHORITY)
+  [6] PASS  a declared uniqueness conflict on :authority REFUSES :ambiguous; receipt names :authority
+
+(7) structured why (rendered from receipt fields only)
+    ---- render-derivation-why ----
+    [derivation REFUSED] schema :NOTEBOOK-SIGNOFF v1
+      premise :ENTRY-COMPLETE: SATISFIED
+      premise :RESULTS-REPRODUCED: MISSING
+      premise :REVIEWER-QUALIFIED: SATISFIED
+      premise :PURPOSE-PERMITTED: MISSING
+      repair for :RESULTS-REPRODUCED: (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                       (:PREDICATE :RESULTS-REPRODUCED
+                                        (:ENTRY "entry-88")
+                                        (:REPLICATE (:VAR :REPLICATE))))
+      repair for :PURPOSE-PERMITTED: (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                      (:PREDICATE :PURPOSE-PERMITTED
+                                       (:ENTRY "entry-88") (:PURPOSE :ARCHIVAL)
+                                       (:REVIEWER :REVIEWER-ALICE)))
+  [7] PASS  why façade returns the receipt; render names every premise + its disposition
+
+(8) reconstruction under projection (distinct receipt identities)
+    receiver-alice receipt id=receipt:derivation-receipt-13
+    receiver-bob   receipt id=receipt:derivation-receipt-15
+    distinct=T
+  [8] PASS  a second receiver re-derives over its own lawful premises; receipt identities distinct — no copy
+
+(9) transported testimony refused at the frozen gate (no masquerade)
+    transported support is (:TESTIMONY :DERIVATION-REPORT) ; frozen gate refused it=T
+  [9] PASS  a transported (:testimony :derivation-report) support is refused (WRONG-PROPOSITION-SUPPORT) for a derivation-keyed procedure
+
+slice1 public smoke: 9/9, 0 failed
+EXIT: 0
