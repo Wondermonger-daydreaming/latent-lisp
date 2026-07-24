@@ -943,6 +943,64 @@ bindings=~S envs=~S conflicts=~S strongest=~S repairs=~S origin=~S"
            (every (lambda (e) (null (second e))) pre-threshold-receipts))
       (format nil "~S" pre-threshold-receipts)))
 
+;;; ---- T28 (D2) a (:quoted-datum …) payload must be Canonical Datum /0.
+;;;      The quoted escape protects literal data whose SHAPE would be read as a
+;;;      variable; it is NOT a host-language escape hatch.  The check delegates
+;;;      to the kernel0 codec boundary (REQUIRE-CANONICAL as a discard-result
+;;;      probe), never to a local hand-written vocabulary ----
+(format t "~%== D2 quoted-datum payload boundary ==~%")
+
+;; BITE: a float behind the tag used to construct successfully; it must now refuse.
+(fires "T28a (:quoted-datum 1.5) refuses — float is not CD/0"
+       malformed-structured-proposition
+  (proposition '(:predicate :p (:r (:quoted-datum 1.5d0)))))
+
+;; The other classes the ruling names, each behind the tag.
+(fires "T28b (:quoted-datum <bare symbol>) refuses"
+       malformed-structured-proposition
+  (proposition (list :predicate :p (list :r (list :quoted-datum 'foo)))))
+(fires "T28c (:quoted-datum <dotted list>) refuses"
+       malformed-structured-proposition
+  (proposition (list :predicate :p (list :r (list :quoted-datum (cons :a :b))))))
+(fires "T28d (:quoted-datum <host vector>) refuses"
+       malformed-structured-proposition
+  (proposition (list :predicate :p (list :r (list :quoted-datum (vector 1 2))))))
+(fires "T28e (:quoted-datum <hash-table>) refuses"
+       malformed-structured-proposition
+  (proposition (list :predicate :p (list :r (list :quoted-datum (make-hash-table))))))
+(fires "T28f (:quoted-datum \"\") refuses — empty string is not CD/0"
+       malformed-structured-proposition
+  (proposition (list :predicate :p (list :r (list :quoted-datum "")))))
+
+;; The same boundary holds inside a PATTERN, not only in ground data.
+(fires "T28g the boundary holds inside a proposition-pattern too"
+       malformed-structured-proposition
+  (proposition-pattern '(:predicate :p (:x (:var :x)) (:r (:quoted-datum 1.5d0)))))
+
+;;; ---- T28h GUARD (passes BOTH pre- and post-repair, like T27c): Δ5's actual
+;;;      purpose survives.  A proper list of keywords IS acceptable at the CD/0
+;;;      boundary, so var-shaped literal data is still lawful behind the tag —
+;;;      this is the check that would have caught a DATUM-P-based gate ----
+(let ((q (proposition '(:predicate :p (:a (:quoted-datum (:var :x)))))))
+  (ok "T28h GUARD (:quoted-datum (:var :x)) is STILL lawful after D2"
+      (equal q '(:predicate :p (:a (:quoted-datum (:var :x)))))
+      (format nil "constructed = ~S" q)))
+(let ((q (proposition '(:predicate :p (:a (:quoted-datum :kw))
+                        (:b (:quoted-datum 42))
+                        (:c (:quoted-datum "s"))
+                        (:d (:quoted-datum (:a :b :c)))))))
+  (ok "T28i GUARD lawful CD/0 payloads (keyword, integer, string, list) still pass"
+      (equal q '(:predicate :p (:a (:quoted-datum :kw)) (:b (:quoted-datum 42))
+                 (:c (:quoted-datum "s")) (:d (:quoted-datum (:a :b :c)))))
+      (format nil "constructed = ~S" q)))
+
+;; The payload is checked but NOT REWRITTEN — the probe discards its conversion.
+(let* ((payload (list :a "b" 3))
+       (q (proposition (list :predicate :p (list :r (list :quoted-datum payload))))))
+  (ok "T28j the payload is checked, never converted — the literal survives verbatim"
+      (equal q '(:predicate :p (:r (:quoted-datum (:a "b" 3)))))
+      (format nil "stored = ~S" q)))
+
 ;;; ==================================================================
 (format t "~%slice1 selftest: ~D passed, ~D failed~%" *pass* *fail*)
 (finish-output)
