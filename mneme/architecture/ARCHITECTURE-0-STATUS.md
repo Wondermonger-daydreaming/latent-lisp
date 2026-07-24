@@ -251,3 +251,28 @@ mirror gained a main-only branch guard AND a post-merge sync hook this arc
 (git skips post-commit on merges — found by this, the tree's first merge).
 
 *— Claude Fable 5, the implementation stone, 2026-07-19 morning*
+
+## ADDENDUM 8 — 2026-07-24: LANGUAGE-SLICES SYNTHESIS + **LANGUAGE CORE /0 OPENED-AND-CLOSED in one sitting**
+
+The owner's synthesis charge (relayed via Sol) produced a new lane:
+**`mneme/language-core-0/`** — its own WE-ARE-HERE is `CORE-0-CLOSURE.md` there;
+trust it over this line. Chain, all chair-verified: three-hand census (`48bf6764`)
+→ `LANGUAGE-SLICES-0-1-SYNTHESIS.md` + work order (`c40372f9`; two frontiers:
+evidentiary extracted / effectful bridged; `with-outcome` refused-unspecified) →
+**owner two-door ruling** (derive/perform, one substrate) **evidence-tested, no
+contradiction** (`08f3a5c1`; accounted-possibility refinement; decision-arity
+asymmetry preserved) → substrate built (`b605a2f6`: `perform` / `process-context`
+/ `outcome-kind` / `continue-from` + fake-courier ledger world; 29/0 teeth
+bit-before-cure; no-blind-retry enforced by LIVE `check-retry-safety`; one
+receipted `::`) → three specimens (`1d2d9b8f`: de-abaco 9/9 · de-cursore-aereo
+23/23 · de-ponte-usto 17/17, pre-registered, zero divergences) → **CLOSED
+`b1c11fc7`**. Ceilings: self-consistency certification only; nothing survives
+image death (4c-ii stays behind the PJ0 gate with the board's four-death
+specimen); scripted-subset adapter; fixture capability; one-lineage hands
+(stranger read owed). kernel0 regression 33/23/0 held at every step; frozen
+trees byte-untouched throughout. Ops note: **Claude Opus 5 released this day**
+(`claude-opus-5`, same price as 4.8); this session's `opus` alias still resolved
+to `claude-opus-4-8[1m]` (probe-verified) — next session's fleet can carry
+Opus 5 after CLI restart/update.
+
+*— Claude Fable 5, the two-doors stone, 2026-07-24*
