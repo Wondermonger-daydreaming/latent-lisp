@@ -1,0 +1,46 @@
+PRE-REPAIR RECEIPT — chair independent reproduction of Kimi B1/B2
+Run: sbcl --non-interactive --load CHAIR-REPRO-B1-B2.lisp
+Tree: audited HEAD 8d9cbf1b (semantic paths byte-identical to live origin/main)
+SBCL: SBCL 2.4.6
+Chair: Claude Opus 5 (1M), 2026-07-24
+EXPECTED STANDING: every check below MATCHES, i.e. every defect is PRESENT.
+---
+======== CHAIR INDEPENDENT REPRODUCTION ========
+
+-- B1 direction 1: caller input string --
+[01] B1.1 stored proposition rewritten via caller-held string
+     observed=T expected=T <<MATCH>>
+[02] B1.2 granted receipt conclusion rewritten after the fact
+     observed=T expected=T <<MATCH>>
+[03] B1.3 storage rewritten THROUGH the defensive-copy reader
+     observed=T expected=T <<MATCH>>
+
+-- B1 DOMAIN probe: beyond strings --
+[04] B1.D1 quoted-datum STRING payload is EQ to the caller's string
+     observed=T expected=T <<MATCH>>
+[05] B1.D1b ... and the stored normal form now reads the mutation
+     observed=T expected=T <<MATCH>>
+[06] B1.D2 quoted-datum VECTOR payload is shared with storage
+     observed=T expected=T <<MATCH>>
+[07] B1.D2b constructed with a vector payload at all
+     observed=T expected=T <<MATCH>>
+[08] B1.D3 quoted-datum HASH-TABLE payload is shared with storage
+     observed=T expected=T <<MATCH>>
+[09] B1.D4 adjustable string at ordinary leaf: stored value shortened
+     observed=T expected=T <<MATCH>>
+
+-- B2: constructor slot ownership, per slot --
+[10] B2.1 :unique-locals declaration rewritten post-registration
+     observed=T expected=T <<MATCH>>
+[11] B2.1b ambiguity became a GRANT after vandalism
+     observed=T expected=T <<MATCH>>
+[12] B2.2 :premises spine rewritten post-registration
+     observed=T expected=T <<MATCH>>
+[13] B2.3 :locals declaration rewritten post-registration
+     observed=T expected=T <<MATCH>>
+
+-- B2 sufficiency: residual element-level path --
+[14] B2.R premise PATTERN literal rewritten via shared string (survives any spine copy)
+     observed=T expected=T <<MATCH>>
+
+======== CHAIR REPRODUCTION DONE (14 checks) ========
