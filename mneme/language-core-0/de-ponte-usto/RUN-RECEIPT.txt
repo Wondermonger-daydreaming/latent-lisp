@@ -1,0 +1,76 @@
+==============================================================================
+de-ponte-usto RUN-RECEIPT — THE LETTER ACROSS THE BURNED BRIDGE (Core /0, 4c-i)
+SBCL 2.4.6  |  generated 2026-07-24T18:35:04Z
+runtime (lisp-implementation-version) operation-checked = 2.4.6 through the wrapper
+==============================================================================
+
+########## sbcl --non-interactive --load SPECIMEN.lisp ##########
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+== de-ponte-usto SPECIMEN — THE LETTER ACROSS THE BURNED BRIDGE (4c-i) ==
+
+   ABSENCE OF TESTIMONY IS NOT TESTIMONY OF ABSENCE.
+
+── movement 1: the bridge burns (effect committed, local record lost) ──
+  ok   [1a] perform signalled core0-interrupted carrying SURVIVING evidence
+  ok   [1b] the outcome view is :indeterminate (the effect is UNCERTAIN, not committed/refused)
+   the adapter's private ledger already holds: 1 row
+  ok   [1c] the EFFECT committed in the ledger world (exactly one row exists)
+  ok   [1d] the program was told NO token (its local record never landed)
+   surviving events: (:PROCESS-CREATED :SEAT-RESERVED :ATTEMPT-BEGUN
+                      :EFFECT-PREPARED :FRONTIER-CROSSED :REQUEST-ACKNOWLEDGED
+                      :EFFECT-BOUNDED :ATTEMPT-FAILED)
+
+── movement 2: the duplicate-payment reflex is REFUSED by live code ──
+   ★ UNSAFE-RETRY fired: UNSAFE-RETRY
+  ok   [2a] a blind retry into the seat FIRES live check-retry-safety (UNSAFE-RETRY)
+
+── movement 3: standing is FOLD-derived from the events, not self-reported ──
+  ok   [3a] the fold over the surviving events yields an UNRESOLVED effect standing
+  ok   [3b] the fold names the terminal class from the events (not a stored flag) — terminal-class=:FAILED
+
+── movement 4: reconciliation — exactly ONE row, never re-invoked ──
+   ledger rows: before=1  after=1
+  ok   [4a] continue-from reconciles (disposition :reconciled)
+  ok   [4b] a reconciliation-receipt was produced, naming its evidence basis
+   reconciliation-receipt: target=attempt:core0/attempt/22 via procedure=procedure:core0/reconcile-courier; new-evidence present
+  ok   [4c] the narrowed standing is now RESOLVED (the fold, re-run, settles the effect)
+  ok   [4d] EXACTLY ONE ledger row after continuation (never two) — rows=1
+  ok   [4e] the continuation NEVER re-invoked the adapter (the row count is the witness)
+
+── movement 5: no authority re-minted from a historical receipt ──
+  ok   [5a] a historical mint-receipt is REFUSED as continuation authority
+  ok   [5b] a FRESH live capability authorises the continuation (reconciled)
+
+── movement 6: the ledger withholds ⇒ honest indeterminate ──
+  ok   [6a] a withholding ledger yields disposition :indeterminate (never a lie)
+  ok   [6b] the indeterminate result NAMES known / unknown / required-action
+   required-action plist: (:KNOWN (:FRONTIER-CROSSED :EFFECT-UNCERTAIN)
+                           :UNKNOWN (:WHETHER-THE-EFFECT-SETTLED)
+                           :REQUIRED-ACTION
+                           (:OBTAIN-A-JURISDICTION-BEARING-WITNESS-OF-THE-LEDGER))
+  ok   [6c] still EXACTLY ONE ledger row (no retry, no second effect) — rows=1
+
+── what this specimen does NOT demonstrate (stated in its own bytes) ──
+   NOTHING HERE DEMONSTRATES CRASH-SURVIVAL.  The event sequence survived
+   because the IMAGE did — the process object went, the in-memory events
+   did not.  Durability across a real process death is the cross-death
+   specimen (4c-ii), behind the PJ0 CL-independence gate — NOT this work
+   order.  No result above may be cited as crash-survival.
+
+de-ponte-usto: 17 checks passed / 0 failed
+(reconciliation as jurisprudence: derive standing from evidence, refuse the blind retry, and be honest when the witness withholds — all superior to lying)
+EXIT=0
+
+########## front-door discipline: double-colon (::) grep over the packet ##########
+$ grep -n '::' *.lisp   (expect: zero governed internal-symbol access)
+(no :: found — 0 double-colon references)

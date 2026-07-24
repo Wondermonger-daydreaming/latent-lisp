@@ -1,0 +1,150 @@
+==============================================================================
+de-cursore-aereo RUN-RECEIPT — THE BRASS COURIER (Language Core /0 specimen)
+SBCL 2.4.6  |  generated 2026-07-24T18:32:11Z
+runtime (lisp-implementation-version) operation-checked = 2.4.6 through the wrapper
+==============================================================================
+
+########## sbcl --non-interactive --load SPECIMEN.lisp ##########
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+== de-cursore-aereo SPECIMEN — THE BRASS COURIER ==
+
+── arm 1: COMMITTED (the letter crosses; the outcome is structured) ──
+   outcome-kind => :COMMITTED
+   report       => (:DELIVERED <manifestation>)
+  ok   [1a] the outcome view is :committed (a keyword VIEW, never a boolean)
+   manifestation: kind=:COURIER-RECEIPT status=:PRESENT payload-id=receipt:fake:courier:0001
+  ok   [1b] perform returned a structured OUTCOME, never a bare value
+  ok   [1c] the manifestation is a RECORD, not the bare payload string
+  ok   [1d] the manifestation carries a RECEIPT TOKEN, not the letter's text
+   ledger rows (the EFFECT world): (("attempt:core0/attempt/4"
+                                     "fake:courier:0001"
+                                     (:PREDICATE :DELIVER
+                                      (:PAYLOAD "The orchard remembers."))))
+   events (the TESTIMONY): (:PROCESS-CREATED :SEAT-RESERVED :ATTEMPT-BEGUN
+                            :EFFECT-PREPARED :FRONTIER-CROSSED
+                            :REQUEST-ACKNOWLEDGED :MANIFESTATION-RECORDED
+                            :EFFECT-SETTLED :ATTEMPT-COMPLETED)
+  ok   [1e] LEDGER vs TESTIMONY: effect (ledger row in the adapter's world) and testimony (kernel0 manifestation record + events) are DISTINCT records
+  ok   [1f] the token the program was TOLD equals the token in the ledger row (testimony ABOUT the effect, not the effect itself)
+  ok   [1g] the event sequence is lawful (validate-event-sequence passes)
+  ok   [1h] the frontier WAS crossed (a :frontier-crossed event exists)
+
+── arm 2: REFUSED (wrong-scope capability ⇒ typed pre-frontier refusal) ──
+   caught CAPABILITY-SCOPE-VIOLATION
+   refusal outcome-kind => :REFUSED
+  ok   [2a] a :deliver capability REFUSES a :shred request (typed, pre-frontier)
+  ok   [2b] the refusal carries a refused OUTCOME whose view is :refused
+  ok   [2c] NO :frontier-crossed event exists (the refusal is pre-frontier)
+  ok   [2d] NO ledger row landed (the effect world is untouched)
+
+── arm 3: INDETERMINATE (crossed, but the local record did not land) ──
+
+; file: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-core-0/de-cursore-aereo/SPECIMEN.lisp
+; in: MULTIPLE-VALUE-BIND (ADAPTER WORLD)
+;     (MULTIPLE-VALUE-BIND
+;         (DE-CURSORE-AEREO-SPECIMEN::ADAPTER DE-CURSORE-AEREO-SPECIMEN::WORLD)
+;         (LISP-PLUS-FAKE-COURIER:MAKE-FAKE-COURIER :SCRIPT :KILL-AFTER-COMMIT)
+;       (HANDLER-CASE
+;        (PROGN
+;         (DE-CURSORE-AEREO-SPECIMEN::SEND-THE-LETTER
+;          DE-CURSORE-AEREO-SPECIMEN::ADAPTER
+;          (DE-CURSORE-AEREO-SPECIMEN::COURIER-KEY) "brass-courier/kill")
+;         (DE-CURSORE-AEREO-SPECIMEN::OK
+;          "[3a] a W1-shaped kill signals core0-interrupted" NIL
+;          "no interruption fired"))
+;        (LISP-PLUS-CORE0:CORE0-INTERRUPTED (DE-CURSORE-AEREO-SPECIMEN::C)
+;         (LET (# #)
+;           (FORMAT T "   caught ~A~%" #)
+;           (FORMAT T "   outcome-kind => ~S~%" #)
+;           (DE-CURSORE-AEREO-SPECIMEN::OK
+;            "[3a] the kill signals core0-interrupted carrying surviving evidence"
+;            #)
+;           (DE-CURSORE-AEREO-SPECIMEN::OK
+;            "[3b] the outcome view is :indeterminate (NOT :committed, NOT :refused)"
+;            #)
+;           (DE-CURSORE-AEREO-SPECIMEN::OK
+;            "[3c] the frontier WAS crossed even though the effect is uncertain" #)
+;           (DE-CURSORE-AEREO-SPECIMEN::OK
+;            "[3d] the program was NOT told a ledger token (its local record did not land)"
+;            #)))))
+; --> MULTIPLE-VALUE-CALL 
+; ==>
+;   #'(LAMBDA
+;         (
+;          &OPTIONAL DE-CURSORE-AEREO-SPECIMEN::ADAPTER
+;          DE-CURSORE-AEREO-SPECIMEN::WORLD
+;          &REST #:IGNORE)
+;       (DECLARE (IGNORE #:IGNORE))
+;       (HANDLER-CASE
+;        (PROGN
+;         (DE-CURSORE-AEREO-SPECIMEN::SEND-THE-LETTER
+;          DE-CURSORE-AEREO-SPECIMEN::ADAPTER
+;          (DE-CURSORE-AEREO-SPECIMEN::COURIER-KEY) "brass-courier/kill")
+;         (DE-CURSORE-AEREO-SPECIMEN::OK
+;          "[3a] a W1-shaped kill signals core0-interrupted" NIL
+;          "no interruption fired"))
+;        (LISP-PLUS-CORE0:CORE0-INTERRUPTED (DE-CURSORE-AEREO-SPECIMEN::C)
+;         (LET (# #)
+;           (FORMAT T "   caught ~A~%" #)
+;           (FORMAT T "   outcome-kind => ~S~%" #)
+;           (DE-CURSORE-AEREO-SPECIMEN::OK
+;            "[3a] the kill signals core0-interrupted carrying surviving evidence"
+;            #)
+;           (DE-CURSORE-AEREO-SPECIMEN::OK
+;            "[3b] the outcome view is :indeterminate (NOT :committed, NOT :refused)"
+;            #)
+;           (DE-CURSORE-AEREO-SPECIMEN::OK
+;            "[3c] the frontier WAS crossed even though the effect is uncertain"
+;            #)
+;           (DE-CURSORE-AEREO-SPECIMEN::OK
+;            "[3d] the program was NOT told a ledger token (its local record did not land)"
+;            #)))))
+; 
+; caught STYLE-WARNING:
+;   The variable WORLD is defined but never used.
+; 
+; compilation unit finished
+;   caught 1 STYLE-WARNING condition
+   caught CORE0-INTERRUPTED
+   outcome-kind => :INDETERMINATE
+  ok   [3a] the kill signals core0-interrupted carrying surviving evidence
+  ok   [3b] the outcome view is :indeterminate (NOT :committed, NOT :refused)
+  ok   [3c] the frontier WAS crossed even though the effect is uncertain
+  ok   [3d] the program was NOT told a ledger token (its local record did not land)
+
+── ack has NO settling force by itself (AP-ACK-4) ──
+   committed events:   (:PROCESS-CREATED :SEAT-RESERVED :ATTEMPT-BEGUN
+                        :EFFECT-PREPARED :FRONTIER-CROSSED
+                        :REQUEST-ACKNOWLEDGED :MANIFESTATION-RECORDED
+                        :EFFECT-SETTLED :ATTEMPT-COMPLETED)
+   interrupted events: (:PROCESS-CREATED :SEAT-RESERVED :ATTEMPT-BEGUN
+                        :EFFECT-PREPARED :FRONTIER-CROSSED
+                        :REQUEST-ACKNOWLEDGED :EFFECT-BOUNDED :ATTEMPT-FAILED)
+  ok   [4a] BOTH arms were acknowledged (a :request-acknowledged event in each)
+  ok   [4b] only the COMMITTED arm settled (:effect-settled) — the ack did NOT settle it
+  ok   [4c] the FOLD (not the ack) settles: the acked-but-interrupted effect is UNRESOLVED
+
+── forbidden shortcuts asserted ABSENT ──
+  ok   [5a] ambient authority is FORBIDDEN: :authority nil refuses (never reads ambient)
+  ok   [5b] the ambient refusal left NO ledger row
+  ok   [5c] a durable mint-receipt (a record authority EXISTED) is refused as authority
+  ok   [5d] no boolean success: outcome-kind is a keyword VIEW, never t/nil
+   (bare-value shortcut foreclosed in 1c/1d; boolean in 5d; ambient in 5a-c)
+
+de-cursore-aereo: 23 checks passed / 0 failed
+(the first crossing: an effect can change the world and return a structured account of what it did — never a bare value, never a boolean, never ambient authority)
+EXIT=0
+
+########## front-door discipline: double-colon (::) grep over the packet ##########
+$ grep -n '::' *.lisp   (expect: zero governed internal-symbol access)
+(no :: found — 0 double-colon references)

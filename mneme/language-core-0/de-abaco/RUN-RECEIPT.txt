@@ -1,0 +1,57 @@
+==============================================================================
+de-abaco RUN-RECEIPT — THE POCKET ABACUS (Language Core /0 quiet-zone control)
+SBCL This is SBCL 2.4.6, an implementation of ANSI Common Lisp.  |  generated 2026-07-24T18:28:54Z
+runtime (lisp-implementation-version) operation-checked = 2.4.6 through the wrapper
+==============================================================================
+
+########## sbcl --non-interactive --load SPECIMEN.lisp ##########
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+== de-abaco SPECIMEN — THE POCKET ABACUS (quiet-zone control) ==
+
+── movement 1: tally-vowels (ordinary lexical CL) ──
+   tally-vowels "The orchard remembers." => ((#\a . 1) (#\e . 4) (#\i . 0)
+                                             (#\o . 1) (#\u . 0))
+  ok   [1] tally is an ordinary alist (a plain value, not a claim)
+
+── movement 2: parse-lantern-counts with a plain CL restart repair ──
+   caught CL condition MALFORMED-LANTERN-ENTRY; invoking CL restart USE-COUNT 0
+   parse-lantern-counts ("east:3" "west:5" "broken" "north:2")
+   => (("east" . 3) ("west" . 5) ("broken" . 0) ("north" . 2))
+  ok   [2] the malformed entry was repaired by a CL restart (4 rows, "broken" -> 0)
+
+── movement 3: acceptance = the NEGATIVE (machine-checked zero references) ──
+   de-abaco-abacus package-use-list: ("COMMON-LISP")
+  ok   [3a] the abacus package uses ONLY #:cl (no governed package in its use-list)
+   governed-home symbols interned in the abacus package: NIL
+  ok   [3b] ZERO symbols with a governed home-package live in the abacus package
+   static scan of the abacus source => governed external refs: NIL
+  ok   [3c] the written abacus program references ZERO governed external symbols
+  ok   [3c-control] the scanner DOES flag a governed reference when one is planted — planted scan => (LISP-PLUS-CORE0:PERFORM)
+
+── movement 4: the schema + adapter registries are UNTOUCHED ──
+  ok   [4a] schema registry: probe ABSENT before AND after (nothing registered)
+  ok   [4b] adapter registry: probe ABSENT before AND after (nothing registered)
+
+── movement 5: a CL restart is NOT a governed core0 repair ──
+  ok   [5] the repair produced NO governed object (no evidence / outcome / receipt exists)
+   the two grammars coexist without leaking: parse-lantern-counts used
+   CL restart-case / invoke-restart; core0's governed repairs live behind
+   with-core0-restarts and emit receipts — none was reachable here.
+
+de-abaco: 9 checks passed / 0 failed
+(quiet zone confirmed: ordinary Lisp+ is Common Lisp — no consequence without a claim or a governed act)
+EXIT=0
+
+########## front-door discipline: double-colon (::) grep over the packet ##########
+$ grep -n '::' *.lisp   (expect: zero governed internal-symbol access)
+(no :: found — 0 double-colon references)
