@@ -1,5 +1,17 @@
 # LANGUAGE SLICE /1 CHARTER — Structured Proposition and Derived Judgment /0
 
+> **⚠ SUPERSEDED IN PART — `SLICE1-ERRATUM-1.md` (2026-07-24) GOVERNS.**
+> A cold external audit and chair adjudication corrected statements in this
+> document: the receipt-scope promise (E1 — receipts are issued on every
+> *assessed derivation*, not every invocation; **four** pre-assessment exits
+> carry none), universal Slice /0 flow-through (E2 — false for non-boundary
+> `(:quoted-datum …)` payloads; a recorded constructor defect), judged-claim
+> premise discharge (E3 — an unconverted design obligation, now recorded
+> `:not-earned`), the undefined term "admissible" (E4), the D-forge's stratum
+> placement (E5 — reachable from the public surface, not via `::`), and
+> order-independence granularity (E6). Read the erratum before citing anything
+> here. Original text left unaltered on purpose.
+
 *2026-07-23, first sitting. Authorized by owner ruling; constituted from
 INVENTORY-1 evidence. Slice /0 is a frozen dependency. Every normative
 "must/cannot/never" below either names its live enforcement path or carries

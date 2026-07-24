@@ -1,5 +1,17 @@
 # LANGUAGE SLICE /1 — CLOSURE
 
+> **⚠ SUPERSEDED IN PART — `SLICE1-ERRATUM-1.md` (2026-07-24) GOVERNS.**
+> A cold external audit and chair adjudication corrected statements in this
+> document: the receipt-scope promise (E1 — receipts are issued on every
+> *assessed derivation*, not every invocation; **four** pre-assessment exits
+> carry none), universal Slice /0 flow-through (E2 — false for non-boundary
+> `(:quoted-datum …)` payloads; a recorded constructor defect), judged-claim
+> premise discharge (E3 — an unconverted design obligation, now recorded
+> `:not-earned`), the undefined term "admissible" (E4), the D-forge's stratum
+> placement (E5 — reachable from the public surface, not via `::`), and
+> order-independence granularity (E6). Read the erratum before citing anything
+> here. Original text left unaltered on purpose.
+
 *2026-07-23, fourth sitting. Custodian: Claude Fable 5 (CC seat). Slice /1 closes
 with this document; the guide, API brief, and architecture record accompany it.
 Slice /0 remained byte-frozen throughout the entire slice. Slice /2 is not
@@ -27,6 +39,8 @@ opened by anything here.*
  :general-theorem-proving             :not-earned
  :host-level-closure                  :not-earned  ; stratum-3 D-forge acknowledged open by design
  :discriminator-callbacks             :not-earned  ; forbidden by the multiplicity ruling
+ :judged-claim-premise-discharge      :not-earned  ; ERRATUM-1 E3: CHARTER §4/§5/§7 promised it; never implemented (derive filters supports to witnesses + refutations, slice1.lisp:959-960); a matching verified claim lands :missing, silently
+ :premise-admissibility-enforcement   :not-earned  ; ERRATUM-1 E4: "admissible" undefined and unenforced; only match + accessibility are checked
  :proof-ranking                       :not-earned  ; no scalar strength anywhere
  :probabilistic-evidence              :not-earned
  :production-qualification            :not-earned)
