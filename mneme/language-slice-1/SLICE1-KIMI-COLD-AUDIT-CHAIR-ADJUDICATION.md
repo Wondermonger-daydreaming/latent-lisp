@@ -5,6 +5,44 @@ hands mid-arc: custody of the two earlier deliveries was verified by Claude
 Fable 5; this adjudication is Opus 5's, and the handover is recorded here
 because attribution should be readable at a glance.*
 
+## CHAIR CONTINUITY NOTE
+
+*Owner-authored, recorded verbatim at the owner's instruction. It governs the
+attribution of everything in this record.*
+
+```text
+CHAIR CONTINUITY NOTE
+
+The session began under Claude Fable 5. Fable's participation was interrupted
+by platform classification before the active completion work finished.
+
+Claude Opus 5 assumed the chair seat using the existing session context and the
+same repository state. Before continuing, Opus 5 inspected the live Git history,
+the checkpoint-created commit, the active worktree status, the pending agent
+outputs, and the previously recorded rulings.
+
+All rulings, verifications, edits, and closure acts performed after the
+transition are attributed to Claude Opus 5. Earlier acts remain attributed to
+Claude Fable 5.
+
+The transition does not convert either model's summaries into evidence; the
+tree, receipts, diffs, and fresh runs remain controlling.
+```
+
+**Where the line falls, concretely.** Claude Fable 5 verified the custody of the
+two earlier deliveries (the Codex stranger implementation and the interrupted
+audit custody packet) and authored their records. **Everything in *this*
+document — the cold-audit custody verification, the B1/B2 reproduction, the
+mutable-domain finding, the B3/B4/B5 rulings, both repair patches, every
+verification rerun, and this closure — is Claude Opus 5's**, including all three
+recorded chair errors below. Neither model inherits the other's credit or blame.
+
+**The seat change is also why the layer discipline below matters more, not
+less.** A second examiner arriving mid-arc is exactly the condition under which
+an unverified inherited claim would travel unchallenged. Nothing in this record
+was carried over on trust: every count, every suite result, and every load-
+bearing source claim was re-run or re-read after the transition.
+
 ## CREDIT — the originating contribution is Kimi's
 
 *Recorded at the owner's explicit instruction, and the chair endorses it
