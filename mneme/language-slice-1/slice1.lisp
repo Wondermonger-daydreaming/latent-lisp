@@ -907,9 +907,26 @@ discharging every premise.  UNIQUENESS-CONFLICTS: from declared :unique-locals."
 ;;; discharge mints a derivation witness and drives the frozen RAISE — a real
 ;;; Slice /0 promotion keyed to (:derivation (:schema NAME VER)).
 
-(defun %bind-conclusion (schema conclusion)
+(defun %bind-conclusion (schema conclusion ctx-id)
   "Bind conclusion variables from the ground CONCLUSION.  Refuses (typed) if any
-conclusion variable is left unbound."
+conclusion variable is left unbound.
+
+D1 (SLICE1-ERRATUM-1 docket, owner-determined threshold): this refusal is
+POST-THRESHOLD.  The schema has been RESOLVED and CONCLUSION is already a lawful
+normal form, so the invocation has become a CONSTRUCTIBLE DERIVATION ATTEMPT —
+the attempted derivation is identifiable — and the refusal MUST therefore carry
+a derivation-receipt, exactly as DERIVATION-REFUSED does at its two sites.  The
+receipt records ONLY what is actually known here: the resolved schema's name and
+version, the lawful conclusion normal form, the acting origin context, a
+:REFUSED decision, and EMPTY assessment structure — no premise was assessed, and
+none is invented (no bindings, no complete environments, no uniqueness
+conflicts, no strongest-lawful-result, no repair options).
+
+The three PRE-threshold exits — PATTERN-USED-AS-GROUND (before schema
+resolution), SCHEMA-NOT-FOUND (schema resolution failed), and
+MALFORMED-STRUCTURED-PROPOSITION (the conclusion never became a lawful
+proposition) — fire before a derivation is constructible; they are lawful typed
+pre-derivation failures and MUST NOT manufacture a fictional receipt."
   (let ((cnf (%proposition-pattern-normal-form (judgment-schema-conclusion schema))))
     (multiple-value-bind (status bindings conflicts)
         (%match-proposition cnf conclusion '())
@@ -926,7 +943,24 @@ every conclusion variable of schema (~S ~S)~@[; unbound: ~S~]~@[; match status: 
                                  unbound
                                  (unless (eq status :match) status))
                          :offending-field :conclusion
-                         :offending-value conclusion))
+                         :offending-value conclusion
+                         :receipt
+                         (%make-derivation-receipt
+                          :schema-name (judgment-schema-name schema)
+                          :schema-version (judgment-schema-version schema)
+                          :conclusion conclusion
+                          :bindings nil
+                          :complete-binding-environments nil
+                          :uniqueness-conflicts nil
+                          :assessments nil
+                          :decision :refused
+                          :strongest-lawful-result nil
+                          :repair-options nil
+                          :identity (lisp-plus-kernel0:make-identity
+                                     :receipt (format nil "derivation-receipt-~D"
+                                                      (%next-ordinal)))
+                          :origin-context ctx-id
+                          :ordinal (%next-ordinal))))
         bindings))))
 
 (defun %build-conclusion-procedure (schema)
@@ -1010,7 +1044,9 @@ typed DERIVATION-REFUSED carrying the receipt (mirroring Slice /0's RAISE)."
          (ctx-id (and ctx (lisp-plus-slice0:receiver-context-context-id ctx)))
          (witnesses (remove-if-not #'lisp-plus-slice0:witness-p supports))
          (refutations (remove-if-not #'refutation-p supports))
-         (base-env (%bind-conclusion schema conclusion-nf))
+         ;; D1: CTX-ID rides in so the post-threshold UNBOUND-CONCLUSION-VARIABLE
+         ;; receipt can record the acting origin context truthfully.
+         (base-env (%bind-conclusion schema conclusion-nf ctx-id))
          (unique-locals (%judgment-schema-unique-locals schema)))
     ;; CHARTER-DELTA-2: enumerate complete environments across premises (a
     ;; premise-local plurality on a non-unique local never refuses); ambiguity is

@@ -848,6 +848,101 @@
         (equal nf '(:predicate :ev (:lit "lit") (:x (:var :x))))
         (format nil "registered premise nf = ~S" nf))))
 
+;;; ---- T27 (D1) the POST-THRESHOLD refusal carries a receipt.  The schema is
+;;;      RESOLVED and the conclusion is already a lawful normal form; only the
+;;;      BINDING failed.  That is a constructible derivation attempt, so
+;;;      UNBOUND-CONCLUSION-VARIABLE must carry a derivation-receipt exactly as
+;;;      DERIVATION-REFUSED does — and the receipt must be HONEST: :refused, the
+;;;      resolved schema name/version, the lawful conclusion, the acting origin
+;;;      context, and EMPTY assessment structure (no premise was assessed, so no
+;;;      assessment, binding, environment, conflict, strongest-result or repair
+;;;      option may be invented) ----
+(clear-schema-registry)
+(register-schema
+ (judgment-schema
+  :name :t27 :version 1
+  :conclusion (proposition-pattern
+               '(:predicate :ok (:x (:var :x)) (:y (:var :y))))
+  :premises (list (proposition-pattern '(:predicate :ev (:x (:var :x)))))))
+(let ((conclusion (proposition '(:predicate :ok (:x "A"))))   ; role :y absent
+      (ctx (lisp-plus-slice0:receiver-context :context-id :ctx-t27
+                                              :accessible-supports '())))
+  (handler-case
+      (progn (derive :schema-name :t27 :schema-version 1
+                     :conclusion conclusion :supports '() :receiver ctx)
+             (ok "T27 unbound-conclusion-variable carries a receipt" nil
+                 "no condition fired (expected a refusal)"))
+    (unbound-conclusion-variable (c)
+      (let ((r (slice1-condition-receipt c)))
+        (ok "T27a unbound-conclusion-variable carries a derivation-receipt"
+            (derivation-receipt-p r)
+            (format nil "receipt = ~S" r))
+        (ok "T27b the receipt is honest for what is known at the threshold"
+            (and (derivation-receipt-p r)
+                 (eq (derivation-receipt-schema-name r) :t27)
+                 (eql (derivation-receipt-schema-version r) 1)
+                 (equal (derivation-receipt-conclusion r) conclusion)
+                 (eq (derivation-receipt-decision r) :refused)
+                 (null (derivation-receipt-assessments r))
+                 (null (derivation-receipt-bindings r))
+                 (null (derivation-receipt-complete-binding-environments r))
+                 (null (derivation-receipt-uniqueness-conflicts r))
+                 (null (derivation-receipt-strongest-lawful-result r))
+                 (null (derivation-receipt-repair-options r))
+                 (lisp-plus-kernel0:durable-identity-p
+                  (derivation-receipt-identity r))
+                 (eq (derivation-receipt-origin-context r) :ctx-t27))
+            (and (derivation-receipt-p r)
+                 (format nil "schema=(~S ~S) decision=~S assessments=~S ~
+bindings=~S envs=~S conflicts=~S strongest=~S repairs=~S origin=~S"
+                         (derivation-receipt-schema-name r)
+                         (derivation-receipt-schema-version r)
+                         (derivation-receipt-decision r)
+                         (derivation-receipt-assessments r)
+                         (derivation-receipt-bindings r)
+                         (derivation-receipt-complete-binding-environments r)
+                         (derivation-receipt-uniqueness-conflicts r)
+                         (derivation-receipt-strongest-lawful-result r)
+                         (derivation-receipt-repair-options r)
+                         (derivation-receipt-origin-context r))))))))
+
+;;; ---- T27c the three PRE-threshold exits still lawfully carry NO receipt.
+;;;      A receipt there would be a fiction (no schema, or no lawful conclusion) ----
+(clear-schema-registry)
+(register-schema
+ (judgment-schema :name :t27 :version 1
+   :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+   :premises (list (proposition-pattern '(:predicate :ev (:x (:var :x)))))))
+(let ((pre-threshold-receipts '()))
+  ;; (1) pattern-used-as-ground — fires before schema resolution
+  (handler-case
+      (derive :schema-name :t27 :schema-version 1
+              :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+              :supports '())
+    (pattern-used-as-ground (c)
+      (push (list :pattern-used-as-ground (slice1-condition-receipt c))
+            pre-threshold-receipts)))
+  ;; (2) schema-not-found — schema resolution FAILED
+  (handler-case
+      (derive :schema-name :t27-absent :schema-version 99
+              :conclusion (proposition '(:predicate :ok (:x "A")))
+              :supports '())
+    (schema-not-found (c)
+      (push (list :schema-not-found (slice1-condition-receipt c))
+            pre-threshold-receipts)))
+  ;; (3) malformed-structured-proposition — the conclusion never became lawful
+  (handler-case
+      (derive :schema-name :t27 :schema-version 1
+              :conclusion '(:predicate :ok (:x 1.5d0))
+              :supports '())
+    (malformed-structured-proposition (c)
+      (push (list :malformed-structured-proposition (slice1-condition-receipt c))
+            pre-threshold-receipts)))
+  (ok "T27c the three pre-threshold exits lawfully carry NO receipt"
+      (and (= 3 (length pre-threshold-receipts))
+           (every (lambda (e) (null (second e))) pre-threshold-receipts))
+      (format nil "~S" pre-threshold-receipts)))
+
 ;;; ==================================================================
 (format t "~%slice1 selftest: ~D passed, ~D failed~%" *pass* *fail*)
 (finish-output)
