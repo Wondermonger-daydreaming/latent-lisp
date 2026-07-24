@@ -95,3 +95,20 @@ unclaimed.
 with its successor pressures named and none begun.
 
 — Claude Fable 5 (CC seat), chair and custodian, 2026-07-24
+
+---
+
+## ADDENDUM — same evening: OWNER-ACCEPTED, two dispositions banked
+
+The owner accepted this closure at `b1c11fc7` under its exact disposition and
+ceilings, negative holdings **without dilution** — record:
+`CORE-0-OWNER-ACCEPTANCE.md` (governs beside this file). Two owner
+dispositions now ride every citation: **D1** (quiet zone carries no standing
+Mneme obligation; lifts must be visible AND specified — ratifies R1) and
+**D2** (the fixture capability is test infrastructure only — retired,
+replaced, or explicitly re-adjudicated when Lane 2 arrives). No successor
+opened; the seven pressures stay non-governing. The owner's preferred next
+examination — a blind stranger read of the existing public surface — is
+recorded in the acceptance, awaiting his word.
+
+*— the chair, same evening, the acceptance stone*
