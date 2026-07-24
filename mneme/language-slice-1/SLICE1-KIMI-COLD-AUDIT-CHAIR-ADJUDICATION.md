@@ -490,8 +490,68 @@ its receipt were committed at `9057294c` **before** any repair was written.
 
 ## 10. Post-repair verification **[V]**
 
-*Recorded in the appendix below once the repair lands; this section is written
-last, by the chair, from its own reruns — never from the builder's report.*
+*Every line below was produced by the chair's own run. The builder's report was
+read for its claims and then re-run; nothing here is adopted from it.*
+
+**Repair as built.** An internal `%copy-value` (`copy-tree` + `copy-seq` on
+string leaves) at **13 call sites — 1 ingress + 12 egress, exactly the surface
+this adjudication specified** (chair-enumerated by enclosing function; the
+apparent 16 grep hits resolve to 13 sites + the recursive body + 2 comments).
+Zero `copy-tree` remain as code. Constructor snapshots at
+`slice1.lisp:541-543` (`:premises`, `:locals`, `:unique-locals`). The declared
+quoted-datum ceiling is carried in `%copy-value`'s own docstring, stating the
+guarantee exactly: *"no caller-held CONS or STRING is aliased into stored
+state,"* **not** *"stored state is immutable against every caller."*
+
+**Scope lock — HELD.** Three files touched, all in `language-slice-1`
+(`slice1.lisp`, `slice1-selftest.lisp`, `LANGUAGE-SLICE-1-API.md`). **Zero**
+export additions or removals (`%copy-value` is unexported — verified against
+the `:export` list). **Nothing** in Core /0, kernel0, canonical-datum, or
+Slice /0 was touched. No charter, guide, architecture, or closure edit — those
+await the B3/B4/B5 documentation errata, which are separate.
+
+**Teeth bit before the cure.** T18–T26 (10 checks) were run against a
+byte-restored pre-repair tree: **50 passed / 10 failed**, each failure's text
+captured verbatim. Post-repair: **60 passed / 0 failed**. Evidence:
+`_staging/terminus-teeth-evidence.txt` (125 lines). The chair's own battery
+was **not modified by the builder** (verified clean) — evidence integrity
+preserved.
+
+**Chair reruns, all suites:**
+
+| Suite | Pre-repair | Post-repair (chair hand) |
+|---|---|---|
+| `slice1-selftest` | 50 passed / 0 failed | **60 passed, 0 failed** (+10 teeth) |
+| `SMOKE-1` | 9/9 | **9/9, 0 failed** |
+| `de-praemissis` | 12/12 | **12/12** |
+| `de-admissione-datorum` | 14/14 | **14/14** |
+| `MULTIPLICITY-REPAIRED` | 16 held | **16 expect-checks held** |
+| `kernel0-selftest` | — | **33 passed, 0 failed, 59 mutants killed** |
+| Slice /0 `SMOKE` | — | **6 ok, 0 failed** |
+
+**Chair battery: 11 of 14 flipped to `<<DIVERGENCE>>`** — every defect gone.
+The three that did not flip are **exactly the declared ceiling**, and their
+standing is ruled here:
+
+| Check | Status | Ruling **[A]** |
+|---|---|---|
+| `[06]` quoted-datum **vector** payload shared | unflipped | **Inside the declared ceiling.** Correct behavior, documented, not a residual defect. |
+| `[08]` quoted-datum **hash-table** payload shared | unflipped | Same. |
+| `[07]` "constructs with a vector payload at all" (`normal-form-p` ⇒ T) | unflipped | **Not a defect and never was** — a domain fact about the admitted grammar. **The chair's own check was mis-framed**, conflating "defect present" with "grammar admits this." It could only flip by changing `%validate-value`, which is out of scope. |
+
+**Chair error, recorded [A].** The builder's writ (written by this chair)
+demanded *"expect all 14 to now read `<<DIVERGENCE>>`"* **and** declared a
+ceiling under which three of them cannot flip. Those two instructions are
+contradictory. The builder treated the ceiling as governing, refused to exceed
+scope, and reported the conflict rather than resolving it silently — which is
+the correct disposition and the one the writ asked for. **The contradiction was
+the chair's; the catch was the builder's.** Recorded rather than quietly fixed,
+because a writ that contradicts itself is the kind of defect that otherwise
+only shows up as an agent quietly overreaching.
+
+**Verification verdict [V]: the repair is CORRECT, COMPLETE WITHIN ITS DECLARED
+CEILING, and SCOPE-CLEAN.** B1 and B2 are cured at every path the chair
+reproduced; the residual is declared in code, not implied away.
 
 ---
 
