@@ -105,12 +105,16 @@ kernel0 (`make-identity`, `make-procedure-descriptor`, `identity-key`,
   **Declared ceiling (honest residual) — SHRUNK BY D2.** The copy walks **cons
   structure and strings** only. A `(:quoted-datum FORM)` payload rides inside the
   cons tree, so **string** leaves within it *are* detached. A payload object that
-  is **neither a cons nor a string** (a vector, a hash-table, a struct, an
-  adjustable non-string array) is still not detached by `%copy-value` — **but
-  since D2 it can no longer arrive**: such a payload does not cross the kernel0
+  is **neither a cons nor a string** (a vector, a hash-table, an ordinary struct,
+  an adjustable non-string array) is still not detached by `%copy-value` — **but
+  since D2 almost none can arrive**: such a payload does not cross the kernel0
   CD/0 codec boundary and **refuses at construction**, so it never reaches stored
-  state. The escape this ceiling described is closed for everything reachable
-  through the public constructors. A general deep copy of arbitrary objects would
+  state. **The residual is not empty — it shrank to exactly one class:** a kernel0
+  `durable-identity` *is* a registered canonicalization subject, so it may still
+  be a quoted payload and is still undetached. That is benign for slot rewriting
+  (every `durable-identity` slot is `:read-only`), so it is a declared
+  **undetached object**, not a declared **mutable escape** — named precisely
+  rather than rounded to zero. A general deep copy of arbitrary objects would
   remain both a contradiction of quoted-datum opacity and impossible in general
   (identity-bearing, circular and unreadable objects have no lawful copy) — which
   is why the cure is **refusal at the boundary**, not a deeper copy. (Prior text
@@ -182,7 +186,8 @@ taken.
   duplicate roles and any raw `(:var …)`, sort role pairs deterministically,
   structurally copy every value — `%copy-value`, so **neither a caller cons nor a
   caller string is aliased in** (§1 ceiling, as shrunk by D2: a non-cons,
-  non-string `:quoted-datum` payload can no longer be constructed at all).
+  non-string `:quoted-datum` payload can no longer be constructed, except a
+  kernel0 `durable-identity`).
   Idempotent — its output is a lawful input.
 - **Result:** canonical Slice /0 data (a list), not a struct.
 - **Refusal:** `malformed-structured-proposition` — non-`:predicate` head,
@@ -231,6 +236,13 @@ taken.
   | hash table | **refused** |
   | host vector / non-string array | **refused** |
   | empty string | **refused** |
+  | ordinary host struct | **refused** |
+  | kernel0 `durable-identity` | **accepted** — a *registered* canonicalization subject, so it genuinely crosses the boundary |
+
+  Note the last row: the rule is **"only what the kernel0 codec admits"**, *not*
+  the tidier-but-false "no struct may be a quoted payload". An identity is
+  CD/0-crossing by construction and is admitted. Teeth T28k / T28l pin both
+  sides.
 
   ```lisp
   (handler-case (proposition '(:predicate :p (:r (:quoted-datum 1.5d0))))
@@ -531,9 +543,9 @@ by the B1 repair): a held receipt or assessment can never be silently rewritten
 through a returned list **or through a returned string** — the `copy-tree` rows
 below are `%copy-value`, i.e. `copy-tree` plus `copy-seq` at string leaves.
 Subject to the declared ceiling in §1 — as shrunk by D2: a non-cons, non-string
-`:quoted-datum` payload can no longer be constructed, so that residual is closed
-for values admitted through the public constructors. Struct leaves are shared, as
-before.
+`:quoted-datum` payload can no longer be constructed, **except** a kernel0
+`durable-identity`, which the codec admits and which stays undetached (read-only
+slots). Struct leaves are shared, as before.
 
 ### `derivation-receipt` — issued for every CONSTRUCTIBLE derivation attempt
 

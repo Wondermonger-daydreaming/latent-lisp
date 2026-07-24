@@ -1003,6 +1003,25 @@ bindings=~S envs=~S conflicts=~S strongest=~S repairs=~S origin=~S"
                  (:c (:quoted-datum "s")) (:d (:quoted-datum (:a :b :c)))))
       (format nil "constructed = ~S" q)))
 
+;;; ---- T28k the boundary is the kernel0 CODEC's, not a "no structs" rule.  A
+;;;      kernel0 DURABLE-IDENTITY is a REGISTERED canonicalization subject, so it
+;;;      crosses and is a lawful quoted payload — while an ordinary host struct
+;;;      does not and refuses.  Pinned so the rule is never restated as the
+;;;      tidier-but-false "no struct may be a quoted payload" ----
+(let ((id (lisp-plus-kernel0:make-identity :receipt "r-1")))
+  (ok "T28k a kernel0 durable-identity payload is LAWFUL (it crosses the codec)"
+      (handler-case
+          (normal-form-p (proposition (list :predicate :p
+                                            (list :r (list :quoted-datum id)))))
+        (malformed-structured-proposition () nil))
+      "registered canonicalization subject: durable-identity-p -> identity->datum"))
+(fires "T28l an ORDINARY host struct payload refuses (it does not cross)"
+       malformed-structured-proposition
+  (proposition (list :predicate :p
+                     (list :r (list :quoted-datum
+                                    (proposition-pattern
+                                     '(:predicate :q (:x (:var :x)))))))))
+
 ;; The payload is checked but NOT REWRITTEN — the probe discards its conversion.
 (let* ((payload (list :a "b" 3))
        (q (proposition (list :predicate :p (list :r (list :quoted-datum payload))))))
