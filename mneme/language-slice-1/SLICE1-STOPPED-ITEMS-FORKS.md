@@ -75,6 +75,62 @@ registered at discharge time? A claim can outlive its schema's registration.
 The chair suggests **yes, resolvable-at-discharge**, so the basis is inspectable
 — but flags it rather than assuming it.
 
+### EMPIRICAL INPUT — the first application hit this wall and proved the workaround unsafe
+
+*Added after `de-bibliotheca-peregrina` (the interlibrary-loan desk, committed
+`2db56913`) was written by a fresh hand from the public guides and chair-run:
+34 checks, 0 failed, zero `::`. It was charged to hit this wall honestly. It
+did, and it brought back more than a cost estimate.*
+
+**The cost in lines is trivial: 11 lines and 4 call sites.** If that were the
+whole story, D3 could wait indefinitely. It is not the whole story.
+
+**What the program demonstrated in its own bytes, as passing checks:**
+
+1. **The refusal misdirects.** The premise lands `:missing` with **every
+   evidential field empty** — no field of the receipt mentions the claim at
+   all. The claim is not *rejected*; it is **not seen**. The receipt's repair
+   advice reads *"supply an accessible support matching `(:predicate
+   :may-borrow …)`"* — which is exactly what the programmer *did* supply. The
+   application's author checked schema, bindings, and receiver context before
+   locating the real cause.
+2. **The workaround requires calling a derived conclusion a direct
+   observation.** The only route available today is to take the granted claim's
+   proposition and mint a fresh `:mode :direct` witness for it — asserting
+   direct observation of something **nobody observed**.
+3. **And therefore the workaround grants for a standing that was REFUSED.** The
+   program shows a patron who *owes 14 crowns and was refused* in an earlier
+   movement obtaining an identical grant through a restated "standing."
+4. **The provenance breadcrumb is never read.** A forged identifier in the
+   restatement passed unexamined.
+
+The application's own summary of the price, which the chair endorses as exact:
+
+> *the language cannot tell a restated grant from a fabricated one. The only
+> thing standing between them is my hash table, my discipline, unreceipted.
+> **That is the S3 species this slice exists to make refusable, reintroduced
+> by hand, at the one joint that needs it.***
+
+**Why this changes the weight of the decision.** Slice /1 was opened because of
+the S3 catch — a stranger flattening signature-validity into signer-recognition
+behind an opaque proposition. The judged-claim gap does not merely *inconvenience*
+composition; **its only available workaround reintroduces that exact defect
+class**, and does so precisely where evidence is handed from one derivation to
+the next. The gap therefore **degrades in proportion to how much a program
+composes** — the opposite of what a compositional language should do. This is a
+soundness argument, not an ergonomics one, and the chair records it as raising
+the priority of the fork rather than resolving it.
+
+**A small, FORK-INDEPENDENT repair the application's author proposed, and the
+chair seconds.** Whatever the owner decides about the compatibility relation,
+`derive` **silently discarding a claim from its supports is wrong on its own
+terms**: have `derive` *notice* a claim in `supports` and record it in the
+receipt as **undischargeable**, even while continuing to refuse to discharge it.
+That removes the misdirection (finding 1) without deciding anything about
+findings 2–4, costs nothing in language surface, and is decidable today
+independently of α1/α2/α3. **Offered as a separate one-line decision, not folded
+into the fork.**
+
 ### One further determined point, recorded so it is not re-argued
 **Receiver accessibility applies to judged claims too.** The charter's
 `:satisfied` definition reads *"a matching, admissible, **accessible**

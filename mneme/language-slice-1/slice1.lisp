@@ -301,21 +301,26 @@ DECLARED CEILING (AUDIT-1 continuation, defect B1 — state it, do not exceed it
 this walks CONS STRUCTURE and STRINGS only.  Because a (:quoted-datum FORM)
 payload rides inside the cons tree, string leaves within it ARE detached.  A
 payload object that is NEITHER a cons NOR a string is still not detached by this
-function — but SINCE D2 IT CAN NO LONGER ARRIVE.  %VALIDATE-VALUE now requires
+function — but SINCE D2 almost none can ARRIVE.  %VALIDATE-VALUE now requires
 every quoted payload to cross the kernel0 CD/0 codec boundary, and a vector,
-hash-table, struct or adjustable non-string array does not cross it: such a
-payload REFUSES AT CONSTRUCTION and never reaches storage.  So the residual this
-ceiling once described has SHRUNK to the empty set for values admitted through
-the public constructors — what remains is only the honest statement of what this
-function itself does, not a live escape.
+hash-table, ordinary struct or adjustable non-string array does not cross it:
+such a payload REFUSES AT CONSTRUCTION and never reaches storage.
+
+THE RESIDUAL IS NOT EMPTY — it shrank to EXACTLY ONE CLASS, stated precisely
+rather than rounded to zero: a kernel0 DURABLE-IDENTITY is a registered
+canonicalization subject, so it may still be a quoted payload, and this function
+does not copy it.  That is benign as far as SLOT rewriting goes — every
+durable-identity slot is :READ-ONLY — so the case is a declared *undetached
+object*, not a declared *mutable escape*.  It is named here so the ceiling stays
+honest instead of collapsing into a tidier claim than the code earns.
 
 The guarantee this function provides is therefore exactly: *no caller-held CONS
-or STRING is aliased into stored state* — and, for anything reachable through the
-public constructors, that is now the whole of the boundary, because non-cons
-non-string payloads no longer enter.  (A general deep copy of arbitrary objects
-would remain both a contradiction of quoted-datum opacity and impossible in
-general — identity-bearing, circular and unreadable objects have no lawful copy —
-which is why the cure is REFUSAL AT THE BOUNDARY rather than a deeper copy.)"
+or STRING is aliased into stored state* — and, for values admitted through the
+public constructors, the only undetached payload objects that remain are
+read-only kernel0 identities.  (A general deep copy of arbitrary objects would
+remain both a contradiction of quoted-datum opacity and impossible in general —
+identity-bearing, circular and unreadable objects have no lawful copy — which is
+why the cure is REFUSAL AT THE BOUNDARY rather than a deeper copy.)"
   (cond ((consp v) (cons (%copy-value (car v)) (%copy-value (cdr v))))
         ((stringp v) (copy-seq v))
         (t v)))
