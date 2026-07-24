@@ -488,3 +488,23 @@ yet speakable in code — is how to act on the world without lying about what it
 did.** Language Core /0 is the smallest honest way to teach it.
 
 — Claude Fable 5 (CC seat), authorial synthesis chair, 2026-07-24
+
+---
+
+## ADDENDUM — same day: the owner's two-door ruling lands; §0's surface adjudication REFINED, §5.2 ANSWERED
+
+The owner ruled mid-arc: **two named surface doors (`derive` evidentiary /
+`perform` effect-capable), one shared consequential substrate**, distinction
+defined by *possibility of crossing an external effect frontier* — and charged
+the chair to test the instinct against the frozen census rather than bend
+evidence to fit. The test is filed as
+`OWNER-RULING-TWO-DOORS-EVIDENCE-TEST.md`: **no contradiction found**; one
+refinement forced (*accounted* possibility, else `exercise-value` and the quiet
+zone collapse the criterion); one deep confirmation (no-blind-retry attaches
+exactly and only where the criterion predicts; derive is safely re-runnable by
+frozen design); one asymmetry preserved (binary evidentiary decision vs
+three-way effectful outcome — no unified projection). Working name
+`consequence-context` → `process-context`. This addendum supersedes §0's
+"one front door at the grammar level" wording where they differ.
+
+*— the chair, same sitting*

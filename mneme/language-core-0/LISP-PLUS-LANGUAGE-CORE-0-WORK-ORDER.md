@@ -108,3 +108,20 @@ authority → real minting bridge, full fake-adapter fixture family) · the
 macro question. None opened by this order.
 
 — Claude Fable 5 (CC seat), 2026-07-24
+
+---
+
+## AMENDMENT 1 — same day, pre-implementation: the owner's two-door ruling
+
+Adopted from `OWNER-RULING-TWO-DOORS-EVIDENCE-TEST.md` (evidence-tested, no
+contradiction): **(a)** working name `consequence-context` is renamed
+**`process-context`** everywhere in §1; **(b)** `perform`'s documentation must
+define its door by **accounted external-effect-frontier possibility** — never by
+purity, determinism, expense, or durable-journal production; **(c)** reaffirmed
+on the owner's word: no generic `(consequence …)` wrapper; unity lives in the
+substrate (identity, CD/0 boundary, procedure descriptors, `why`, refusal/repair
+grammar) — and NO unified outcome-projection across the two doors (derive's
+decision stays binary by Δ2; perform's view stays three-way). No other
+requirement changes.
+
+*— the chair, same sitting, before any substrate byte existed*
