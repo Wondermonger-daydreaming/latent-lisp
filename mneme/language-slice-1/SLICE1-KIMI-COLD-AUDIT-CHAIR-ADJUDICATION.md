@@ -639,6 +639,101 @@ reproduced; the residual is declared in code, not implied away.
 
 ---
 
+## 12. Completion patch under the owner's rulings **[R]/[V]** — D1 and D2
+
+*Second and final patch of this cycle. Chair-verified by its own reruns.*
+
+**D1 — one exit, classified and repaired.** The owner's threshold (*a receipt is
+mandatory once an invocation has become a constructible derivation attempt —
+schema resolved AND enough conclusion/environment structure to identify the
+attempt*) sorts `derive`'s four un-receipted exits **3 pre-threshold / 1
+post-threshold**. `unbound-conclusion-variable` alone is post-threshold: the
+schema resolved and a lawful conclusion normal form is in hand. It now carries a
+receipt whose every field is truthfully fillable — schema name and version, the
+conclusion, `:refused`, empty assessments — with nothing invented. The other
+three lawfully carry none, and a **guard tooth (T27c) asserts they still do**,
+passing on both sides on purpose: it exists to catch *over*-fixing.
+
+**D2 — the quoted payload boundary, delegated to the governing codec.** The
+`%quoted-datum-p` clause now probes the payload with
+`lisp-plus-kernel0:require-canonical` inside a `handler-case` that catches
+`noncanonical-durable-value` specifically and **discards the converted result**
+— asking *"would this cross?"*, never rewriting the literal. A tooth proves the
+lawful payload is stored **verbatim, un-normalized**. This is delegation, not a
+local vocabulary: it is the same function Slice /0's `%require-proposition`
+calls on every leaf. `(:quoted-datum (:var :x))` remains lawful, so Δ5's actual
+purpose is intact.
+
+**Chair-verified probe of the resulting boundary:**
+`:hello` · `42` · `"s"` · `(:var :x)` · `(:a :b :c)` **accepted** —
+float · bare symbol · dotted list · vector · hash-table · empty string ·
+ordinary struct **refused**.
+
+**The builder's self-correction, endorsed and recorded because it is the good
+kind of error-catching [A].** Writing the ceiling notes, LIMES asserted that the
+`%copy-value` residual had shrunk to the **empty set** — no struct of any kind
+could arrive behind the tag. It tested the claim instead of shipping it, and the
+claim was **false**: kernel0 registers a canonicalization procedure for its own
+durable identities, so a **kernel0 identity genuinely crosses** and is a lawful
+quoted payload. **Chair-reproduced:** durable identity ACCEPTED, ordinary struct
+REFUSED, vector REFUSED. So the residual shrank to **exactly one class, not
+zero** — and that class is *benign for slot rewriting* (every identity slot is
+read-only), making it a declared **undetached object**, never a declared
+**mutable escape**. The governing rule is *"only what the kernel0 codec
+admits,"* never the tidier-but-false *"no struct may be a quoted payload."*
+Pinned by two teeth so it cannot be re-rounded. **"The residual is now empty" is
+precisely the shape of claim that reads as rigor while being one size too
+large** — the flinch-ladder's aesthetic rung, caught by its own author.
+
+**Chair reruns — every suite, own hand:**
+
+| Suite | Result |
+|---|---|
+| `slice1-selftest` | **75 passed, 0 failed** (60 baseline + 3 D1 + 12 D2) |
+| `SMOKE-1` | 9/9, 0 failed |
+| `de-praemissis` | 12/12 |
+| `de-admissione-datorum` | 14/14 |
+| `MULTIPLICITY-REPAIRED` | 16 expect-checks held |
+| `kernel0-selftest` | 33 passed, 0 failed, 59 mutants killed |
+| Slice /0 `SMOKE` | 6 ok, 0 failed |
+
+**Scope lock — HELD.** Three files, all in `language-slice-1`; **zero export
+changes**; kernel0 / canonical-datum / Slice /0 byte-untouched.
+
+### The chair battery's new standing — recorded, not repaired
+
+`CHAIR-REPRO-B1-B2.lisp` now **aborts at check [06] with exit 1**, and this is
+the correct outcome. It dies not at an assertion but at the *fixture
+construction* — `(:quoted-datum #(1 2 3))` can no longer be built at all.
+
+- **[01]–[05]: observed, all DIVERGENCE.** The B1 string paths remain cured.
+- **[06] [07] [08]: SUPERSEDED by the D2 boundary.** These were exactly the
+  three "declared ceiling" survivors of the first patch. **That ceiling no
+  longer exists for them** — vectors and hash-tables cannot reach storage
+  because they cannot enter a proposition. **[07] is the sharpest: it asserts
+  that construction with a vector payload SUCCEEDS, which is now itself the
+  defect.**
+- **[09]–[14]: unreachable in this run, and therefore UNOBSERVED — so the chair
+  verified them separately rather than citing an earlier run.** A direct
+  chair probe confirms both B2 paths remain cured: `:unique-locals` reads
+  `(:TAG)` after caller vandalism (not `(:WIPED)`), and `:premises` reads
+  `:EV-A` (not `:EV-B`).
+
+**The battery file is NOT edited.** It is frozen pre-repair evidence, and a
+piece of evidence that a later ruling made unrunnable is still evidence — it now
+records the boundary's arrival as precisely as it once recorded the defect.
+
+### Standing after the completion patch
+
+**D1, D2, D4, D5: DONE.** **D3 and D6: stopped, forks returned**
+(`SLICE1-STOPPED-ITEMS-FORKS.md`), with the application's empirical finding
+attached to D3. **D7: deferred by the owner**, unattempted; a circular payload
+still diverges inside `require-canonical` rather than refusing — the same
+pre-existing exposure, not widened, and noted in the code and the API.
+**THE SLICE /1 ERRATUM CYCLE IS CLOSED.**
+
+---
+
 ## 11. Standing after this record
 
 Kimi's cold evaluation is **accepted as evidence** at the size its bytes
