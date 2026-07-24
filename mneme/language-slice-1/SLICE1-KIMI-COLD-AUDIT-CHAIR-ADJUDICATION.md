@@ -26,6 +26,69 @@ discovery, not made one. Where this record corrects the audit's counts, those
 corrections are refinements of a true report — the auditor was right about
 what mattered and the corrections went in its favor twice.
 
+## THE CHAIR'S ERRORS — all three, recorded at the top where they belong
+
+*Two were accepted by the owner; the third occurred afterward and is logged on
+the same terms. They are collected here rather than buried in the sections they
+happened in, because an error record a reader has to hunt for is a record
+designed not to be read.*
+
+**Error 1 — a mis-typed literal that temporarily concealed a real alias.** The
+chair's first reproduction of the quoted-datum string case compared against
+`"Zinner"` when mutating `"inner"` at index 0 yields `"Znner"`. The check
+returned a spurious clean result. Had it been banked, the chair would have
+published a **false all-clear** on an alias that is real. Caught by a direct
+`eq` probe; the check is now identity-based and the error is noted in the
+artifact rather than edited away.
+
+**Error 2 — a self-contradictory writ.** The chair's instructions to the
+repair-builder demanded that all fourteen reproduction checks flip **and**
+declared a ceiling under which three of them cannot. TERMINUS treated the
+ceiling as governing, refused to overreach, and reported the conflict. **The
+contradiction was the chair's; the catch was the builder's.**
+
+**Error 3 — a false claim about the code, asserted to a builder as fact.** The
+chair instructed LIMES to enforce the Canonical Datum /0 boundary using
+`lisp-plus-cd0:datum-p`, stating as established fact that a proper list of
+keywords *is* CD/0 and would pass. **This was invented.** `datum-p` recognizes
+CD/0 datum *objects*; it returns NIL for **every** host value, including every
+payload lawful today. The chair had read `require-canonical`'s body, seen its
+`datum-p` short-circuit, and mistaken a fast path for the gate. As instructed,
+the change would have refused `(:quoted-datum (:var :x))` — the very case the
+escape exists to protect — while wearing the authority of a chair verification.
+LIMES probed it, found the premise false, **stopped rather than implementing a
+contradiction**, and reported. Chair-reproduced independently before accepting.
+
+**What the three have in common, and it is not carelessness.** Each was a
+*plausible* thing that fit the shape of what was already believed: a string
+literal that looked like the mutation, a writ whose two halves each read
+correctly alone, an inference from real code read in a real file. This is the
+§I-f failure mode exactly — *pattern-matching from memory feels like knowledge;
+only the read confirms it* — and the third is its worst form, because the chair
+was **quoting a file it had actually opened.** Reading a function is not the
+same as reading what it does.
+
+**The structural point worth keeping.** All three were caught by **someone
+else**, twice by workers the chair itself commissioned and instructed. The
+chair did not catch a single one of its own. That is the lab theorem in its
+plainest form — *you cannot grade your own mirror* — and it held even when the
+mirror was writing the instructions.
+
+**Process note, from the same builder (a fourth catch, not a chair error but a
+chair assumption).** LIMES observed that while it worked under an explicit
+instruction *"do not git commit — the chair commits,"* an automated checkpoint
+hook (`.claude/hooks/continuity/session-checkpoint.sh`) committed the
+in-progress tree anyway, sweeping in two chair documents the builder never
+touched. The builder ran no writing git command. **The lesson is the lab's own
+doctrine arriving from the unexpected side:** *who commits* was a guarantee the
+chair wrote as **prose in a prompt**, and prose in a prompt is the weakest form
+of a guarantee — here it was overridden not by a disobedient agent but by the
+environment itself. If commit-ownership during agent work matters, it belongs in
+the hook's own conditions, not in a sentence an agent is asked to honor. The
+builder's baseline was unaffected: its pre-repair scratch copy was taken before
+the checkpoint fired and was diff-verified byte-identical to the true parent
+commit.
+
 **Layer discipline (required by the owner's relay).** Every statement below is
 tagged by provenance. **[K]** = Kimi's delivered evidence. **[C]** = chair
 reproduction, run by this chair's own hand. **[A]** = authorial

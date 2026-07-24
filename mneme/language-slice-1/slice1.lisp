@@ -165,14 +165,60 @@ SBCL 2.4.6's MAKE-CONDITION, as slice0 records.)"
   (and (consp v) (eq (first v) :quoted-datum) (consp (cdr v))
        (null (cddr v))))
 
+(defun %quoted-datum-payload-canonical-p (payload)
+  "Would PAYLOAD cross the governing Canonical Datum /0 boundary?
+
+D2 (SLICE1-ERRATUM-1 docket E2, owner-determined): (:quoted-datum …) is NOT a
+host-language escape hatch.  Slice /1 defines no broader intermediate-data
+language of its own, so a quoted payload must belong to CD/0 exactly as every
+other proposition part does.
+
+This DELEGATES to the kernel0 codec boundary — LISP-PLUS-KERNEL0:REQUIRE-CANONICAL,
+the same function Slice /0's own %REQUIRE-PROPOSITION calls on each proposition
+leaf — and encodes NO vocabulary of its own.  It is a DISCARD-RESULT PROBE: the
+question asked is 'would this payload cross?', and the converted datum is thrown
+away, because a quoted payload is LITERAL DATA and must never be silently
+rewritten.  (This is why REQUIRE-CANONICAL is not used as a converter here.)
+
+NB — LISP-PLUS-CD0:DATUM-P is NOT the boundary predicate and must not be used
+here: it recognizes constructed CD/0 datum OBJECTS, returning NIL for every host
+value a caller can write, INCLUDING (:var :x).  REQUIRE-CANONICAL calls it only
+as an already-converted fast path.
+
+The line this draws, verified live: ACCEPTS keywords, integers, non-empty
+strings, and proper lists thereof (so (:quoted-datum (:var :x)) — a proper list
+of keywords — stays lawful, which is Δ5's actual purpose).  REFUSES floats, bare
+host symbols, dotted lists, hash tables, host vectors, the empty string, and
+other non-canonical host objects.
+
+DEFERRED EXPOSURE (owner-deferred, pre-existing, NOT introduced here): a
+CIRCULAR or pathologically deep payload diverges inside REQUIRE-CANONICAL's own
+recursion rather than refusing.  Slice /1 has no cycle or depth guard anywhere;
+this probe inherits that exposure unchanged and does not widen it."
+  (handler-case (progn (lisp-plus-kernel0:require-canonical payload) t)
+    (lisp-plus-kernel0:noncanonical-durable-value () nil)))
+
 (defun %validate-value (v field allow-vars vars-acc)
   "Validate a proposition value V.  When ALLOW-VARS, (:var KW) is a variable
 and is collected into VARS-ACC (an adjustable list cell (list …)); otherwise a
-raw (:var …) refuses.  (:quoted-datum FORM) is opaque literal data — its
-payload is never walked or interpreted.  Returns nil, signals on violation."
+raw (:var …) refuses.  (:quoted-datum FORM) is literal data — its payload is
+never INTERPRETED (no var-substitution, no matching, no walking for meaning) —
+but since D2 it must still BELONG to Canonical Datum /0: opacity of meaning is
+not exemption from the boundary.  Returns nil, signals on violation."
   (cond
     ((%quoted-datum-p v)
-     ;; literal escape: payload is data, var-shaped or not — never interpreted
+     ;; D2: literal escape, NOT a host escape hatch.  The payload is never
+     ;; interpreted — var-shaped or not — but it must cross the governing CD/0
+     ;; boundary, delegated to the kernel0 codec (see the probe above).
+     (unless (%quoted-datum-payload-canonical-p (second v))
+       (%malformed field v
+                   "a (:quoted-datum FORM) payload must be Canonical Datum /0; ~
+~S is not and does not cross the governing kernel0 canonicalization boundary. ~
+The quoted escape protects literal data whose SHAPE would otherwise be read as ~
+a variable — it is not a host-language escape hatch: floats, bare symbols, ~
+dotted lists, hash tables, host vectors, the empty string and other ~
+non-canonical host objects are refused behind the tag exactly as in front of it"
+                   (second v)))
      nil)
     ((%var-form-p v)
      (if allow-vars

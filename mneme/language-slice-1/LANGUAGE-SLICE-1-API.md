@@ -12,6 +12,34 @@
 > order-independence granularity (E6). Read the erratum before citing anything
 > here. Original text left unaltered on purpose.
 
+> **REPAIR NOTE (D1, 2026-07-24, post-erratum).** One of E1's four
+> receipt-less exits has since been repaired in `slice1.lisp` and is no longer
+> receipt-less. The owner fixed the threshold: **a receipt is mandatory once an
+> invocation has become a *constructible derivation attempt*** — the schema has
+> been resolved AND enough conclusion structure exists to identify the attempted
+> derivation. `unbound-conclusion-variable` is **post-threshold** (schema
+> resolved, conclusion a lawful normal form, only the binding failed) and now
+> **carries a receipt**. The remaining **three** — `pattern-used-as-ground`,
+> `schema-not-found`, `malformed-structured-proposition` — fire *before* that
+> threshold; they are lawful typed **pre-derivation failures** and carry none, by
+> design: a receipt there would be a fiction. Read E1's "four" as **three** for
+> current code. The receipt-scope rule is restated in full at
+> `derivation-receipt` below. *(E2's `(:quoted-datum …)` boundary defect is
+> **NOT** repaired — see the note there.)*
+
+> **VOCABULARY RULING (D4, owner, 2026-07-24).** The word **"admissible" may not
+> carry a load-bearing proof claim** in this document while it is not
+> mechanically recognizable — there is no `admissible-p`, no gate, and no
+> definition a stranger could execute. Where a guarantee was stated as holding
+> for "admissible" supports, it is now restated naming the **actually enforced**
+> boundary — values accepted by the public constructors, operations passing
+> normal-form validation, witnesses passing the accessibility check, derivations
+> performed through the documented front door (`derive`). The word survives only
+> where it names a *domain predicate keyword* in a worked specimen
+> (`:provenance-admissible`) or an *aspiration*, never where it does proof work.
+> Slice /0's frozen **admissibility gate** is a different thing entirely — a real
+> executable mechanism — and is unaffected.
+
 **Package:** `lisp-plus-slice1` (use the full name).
 **Load surface:** `sbcl --non-interactive --load slice1.lisp` — the file loads the
 frozen `../language-slice-0/slice0-transmissibility.lisp` (which pulls in
@@ -370,8 +398,11 @@ Readers: `refutation-p`, `refutation-refutes` (normal-form ground proposition),
 - **Act:** Resolve the schema by exact `(schema-name, schema-version)`; bind the
   conclusion variables from the **ground** `conclusion`; assess each declared
   premise over `supports` (Slice /0 `witness`es and Slice /1 `refutation`s)
-  relative to the acting `receiver` context; **issue a derivation receipt on every
-  path.** On full coherent discharge (a complete environment exists, no declared
+  relative to the acting `receiver` context; **issue a derivation receipt once the
+  invocation is a constructible derivation attempt** — i.e. on every assessed
+  path, granted or refused, and on the post-threshold `unbound-conclusion-variable`
+  refusal. The three pre-threshold exits carry none (D1; see the receipt-scope
+  rule at `derivation-receipt`). On full coherent discharge (a complete environment exists, no declared
   uniqueness conflict, no refutation), mint a derivation witness and drive the
   **frozen** `raise` — a real `:verified` Slice /0 promotion keyed to the schema's
   admit-kind — returning `(values claim receipt)`.
@@ -441,7 +472,29 @@ below are `%copy-value`, i.e. `copy-tree` plus `copy-seq` at string leaves.
 Subject to the declared ceiling in §1 (a non-cons, non-string `:quoted-datum`
 payload stays caller-owned); struct leaves are shared, as before.
 
-### `derivation-receipt` — issued on EVERY attempt
+### `derivation-receipt` — issued for every CONSTRUCTIBLE derivation attempt
+
+**Receipt scope (D1-corrected; supersedes the "every attempt" promise).** A
+receipt is issued for:
+
+1. **every derivation that reaches premise assessment** — granted or refused
+   (returned as the second value on grant; carried on `derivation-refused`); and
+2. the **post-threshold** `unbound-conclusion-variable` refusal — the schema
+   *was* resolved and the conclusion *is* a lawful normal form, so the attempted
+   derivation is identifiable even though no premise was assessed. Its receipt
+   records only what is known there: resolved schema name/version, the lawful
+   conclusion, the acting origin context, `decision` ⇒ `:REFUSED`, and **empty
+   assessment structure** (`assessments`, `bindings`,
+   `complete-binding-environments`, `uniqueness-conflicts`,
+   `strongest-lawful-result`, `repair-options` all `nil`). Nothing is invented.
+
+A receipt is **not** issued for the three **pre-threshold** exits —
+`pattern-used-as-ground`, `schema-not-found`, `malformed-structured-proposition`.
+These fire before a derivation is constructible (no schema, or no lawful
+conclusion); they are lawful typed pre-derivation failures and `nil` on
+`slice1-condition-receipt` is the correct, honest answer. Teeth: T27a/T27b
+(post-threshold receipt) and T27c (pre-threshold silence) in
+`slice1-selftest.lisp`.
 
 `derivation-receipt-p` is the predicate. Readers:
 
@@ -474,7 +527,7 @@ premise unless noted):
 |---|---|---|
 | `premise-assessment-premise-pattern` | the premise pattern's normal form | copy-tree |
 | `premise-assessment-ground-instance` | the pattern under accepted bindings (unbound vars kept) | copy-tree |
-| `premise-assessment-matching-accessible-supports` | admissible accessible witnesses that matched | copy-list |
+| `premise-assessment-matching-accessible-supports` | witnesses that matched the premise pattern **and** passed the accessibility check (their `witness-id` is in the acting `receiver-context`'s `accessible-supports`, or `receiver` was `nil`) | copy-list |
 | `premise-assessment-matching-inaccessible-supports` | matched witnesses the receiver cannot reach (residue) | copy-list |
 | `premise-assessment-mismatched-candidates` | `(witness . conflicting-roles)` conses | copy-tree |
 | `premise-assessment-refuting-supports` | refutations naming this premise | copy-list |
@@ -559,23 +612,36 @@ Every condition carries these (`nil` where inapplicable):
 | `slice1-condition-failed-invariant` | non-empty string describing the broken invariant |
 | `slice1-condition-offending-field` | the field key at fault |
 | `slice1-condition-offending-value` | its offending value |
-| `slice1-condition-receipt` | the derivation receipt of the refused attempt (on `derivation-refused`; `nil` elsewhere) |
+| `slice1-condition-receipt` | the derivation receipt of the refused attempt — on `derivation-refused` **and** on `unbound-conclusion-variable` (both post-threshold); `nil` on the three pre-threshold exits, where a receipt would be a fiction |
 
 The `:report` prints `TYPE: failed-invariant`.
 
 ### Condition types — who signals, what it names
 
-| Condition | Signaled by | Names |
-|---|---|---|
-| `malformed-structured-proposition` | `proposition`, `proposition-pattern`, `transported-testimony`, `render-derivation-why` | bad shape/vocabulary; duplicate role; raw `(:var …)` in ground |
-| `pattern-used-as-ground` | `refutation`, `derive` (conclusion) | a pattern where ground data is required |
-| `schema-construction-error` | `judgment-schema`, `register-schema` | undeclared/duplicate variable; bad unique-local; wrong argument type |
-| `schema-registration-conflict` | `register-schema` | a different schema under a taken `(name, version)` |
-| `schema-not-found` | `resolve-schema`, `derive` | no schema at `(name, version)` |
-| `unbound-conclusion-variable` | `derive` | the conclusion does not ground every conclusion variable |
-| `derivation-refused` | `derive` | a derivation that did not fully discharge — **carries the receipt** |
+| Condition | Signaled by | Names | Receipt? |
+|---|---|---|---|
+| `malformed-structured-proposition` | `proposition`, `proposition-pattern`, `transported-testimony`, `render-derivation-why` | bad shape/vocabulary; duplicate role; raw `(:var …)` in ground | **no** — pre-threshold |
+| `pattern-used-as-ground` | `refutation`, `derive` (conclusion) | a pattern where ground data is required | **no** — pre-threshold (fires before schema resolution) |
+| `schema-construction-error` | `judgment-schema`, `register-schema` | undeclared/duplicate variable; bad unique-local; wrong argument type | **no** — not a derivation act |
+| `schema-registration-conflict` | `register-schema` | a different schema under a taken `(name, version)` | **no** — not a derivation act |
+| `schema-not-found` | `resolve-schema`, `derive` | no schema at `(name, version)` | **no** — pre-threshold (schema resolution failed) |
+| `unbound-conclusion-variable` | `derive` | the conclusion does not ground every conclusion variable | **YES** — post-threshold; carries a `:refused` receipt with empty assessment structure (D1) |
+| `derivation-refused` | `derive` | a derivation that did not fully discharge — **carries the receipt** | **YES** — post-assessment |
 
-### `signal-slice1` — the one live signalling path
+### `signal-slice1` — LOW-LEVEL IMPLEMENTATION SUPPORT (not a language operation)
+
+> **RULING (D5, owner, 2026-07-24).** `signal-slice1` **is not a Lisp+ language
+> operation.** It is low-level implementation support — the layer's internal
+> signalling path — and is documented here only because it is currently
+> exported. **Invoking it is not participation in the governed Slice /1
+> language:** it constructs and raises a condition directly, bypassing every
+> governed act (`proposition`, `judgment-schema`, `derive`, …), so nothing it
+> signals is evidence that a derivation was attempted, refused, or assessed. Do
+> not read a hand-signalled `derivation-refused` as a derivation result. The
+> ordinary public forms are the ones listed in §2; use those.
+>
+> The export is **retained** — removing it awaits a separately authorized
+> surface revision, and this note is not that authorization.
 
 ```
 (signal-slice1 condition-type &rest initargs &key failed-invariant &allow-other-keys)
