@@ -1,0 +1,10 @@
+# branch.oid 8d9cbf1b9c517bb3ee657bf557e520aead4f96bf
+# branch.head codex/quotation-admission
+# branch.upstream origin/main
+# branch.ab +0 -0
+? EXPORTS-USED.txt
+? IMPLEMENTER-REPORT.md
+? PRE-REVEAL-SHA256SUMS.txt
+? RETROSPECTIVE.md
+? RUN-RECEIPT.txt
+? STRANGER-PROGRAM.lisp

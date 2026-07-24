@@ -1,0 +1,149 @@
+# Packaging verification
+
+Source capture path: /home/gauss/latent-lisp-stranger
+Staging path: /tmp/slice1-custody.4RUvox/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24
+Original worktree was read only; required artifacts were copied with cp -p.
+Manifest convention: SHA256SUMS.txt covers every other regular file, including PACKET-MANIFEST.txt and this verification file; SHA256SUMS.txt necessarily excludes itself.
+
+## Live source metadata commands and complete outputs
+$ git branch --show-current
+codex/quotation-admission
+
+$ git rev-parse HEAD
+8d9cbf1b9c517bb3ee657bf557e520aead4f96bf
+
+$ git rev-parse origin/main
+8d9cbf1b9c517bb3ee657bf557e520aead4f96bf
+
+$ git merge-base HEAD origin/main
+8d9cbf1b9c517bb3ee657bf557e520aead4f96bf
+
+$ git status
+On branch codex/quotation-admission
+Your branch is up to date with 'origin/main'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	EXPORTS-USED.txt
+	IMPLEMENTER-REPORT.md
+	PRE-REVEAL-SHA256SUMS.txt
+	RETROSPECTIVE.md
+	RUN-RECEIPT.txt
+	STRANGER-PROGRAM.lisp
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+$ git status --porcelain=v2 --branch
+# branch.oid 8d9cbf1b9c517bb3ee657bf557e520aead4f96bf
+# branch.head codex/quotation-admission
+# branch.upstream origin/main
+# branch.ab +0 -0
+? EXPORTS-USED.txt
+? IMPLEMENTER-REPORT.md
+? PRE-REVEAL-SHA256SUMS.txt
+? RETROSPECTIVE.md
+? RUN-RECEIPT.txt
+? STRANGER-PROGRAM.lisp
+
+$ git diff --binary --no-ext-diff
+
+$ git diff --cached --binary --no-ext-diff
+
+$ git ls-files --others --exclude-standard
+EXPORTS-USED.txt
+IMPLEMENTER-REPORT.md
+PRE-REVEAL-SHA256SUMS.txt
+RETROSPECTIVE.md
+RUN-RECEIPT.txt
+STRANGER-PROGRAM.lisp
+
+$ git log --oneline --decorate -10
+8d9cbf1 (HEAD -> codex/quotation-admission, origin/main, origin/HEAD) auto-sync: lab 1aba6619
+ae4e79e auto-sync: lab 3ee4f308
+a09bc79 auto-sync: lab b1c11fc7
+6cec758 auto-sync: lab 1d2d9b8f
+9c73ef4 auto-sync: lab b605a2f6
+be06dc0 auto-sync: lab 08f3a5c1
+d28a233 auto-sync: lab 48bf6764
+118b414 auto-sync: lab 05dbcc19
+b3f6f4d auto-sync: lab 14b9a9c7
+a47d7d1 auto-sync: lab fb11ceb7
+
+$ sbcl --version
+SBCL 2.4.6
+
+## Source-to-stage byte comparisons
+$ cmp -s /home/gauss/latent-lisp-stranger/STRANGER-PROGRAM.lisp /tmp/slice1-custody.4RUvox/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/STRANGER-PROGRAM.lisp
+OK: byte-identical: STRANGER-PROGRAM.lisp
+$ cmp -s /home/gauss/latent-lisp-stranger/RUN-RECEIPT.txt /tmp/slice1-custody.4RUvox/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/RUN-RECEIPT.txt
+OK: byte-identical: RUN-RECEIPT.txt
+$ cmp -s /home/gauss/latent-lisp-stranger/IMPLEMENTER-REPORT.md /tmp/slice1-custody.4RUvox/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/IMPLEMENTER-REPORT.md
+OK: byte-identical: IMPLEMENTER-REPORT.md
+$ cmp -s /home/gauss/latent-lisp-stranger/EXPORTS-USED.txt /tmp/slice1-custody.4RUvox/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/EXPORTS-USED.txt
+OK: byte-identical: EXPORTS-USED.txt
+$ cmp -s /home/gauss/latent-lisp-stranger/PRE-REVEAL-SHA256SUMS.txt /tmp/slice1-custody.4RUvox/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/PRE-REVEAL-SHA256SUMS.txt
+OK: byte-identical: PRE-REVEAL-SHA256SUMS.txt
+$ cmp -s /home/gauss/latent-lisp-stranger/RETROSPECTIVE.md /tmp/slice1-custody.4RUvox/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/RETROSPECTIVE.md
+OK: byte-identical: RETROSPECTIVE.md
+
+## Frozen pre-reveal checksum verification
+$ (cd /tmp/slice1-custody.4RUvox/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24 && sha256sum -c PRE-REVEAL-SHA256SUMS.txt)
+STRANGER-PROGRAM.lisp: OK
+RUN-RECEIPT.txt: OK
+IMPLEMENTER-REPORT.md: OK
+
+## Archive verification commands and complete outputs
+$ unzip -t /home/gauss/Downloads/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24.zip
+Archive:  /home/gauss/Downloads/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24.zip
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/BRANCH.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/EXPORTS-USED.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/GIT-STATUS-PORCELAIN-V2.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/GIT-STATUS.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/HEAD.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/IMPLEMENTER-REPORT.md   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/INDEX.patch   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/MERGE-BASE.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/ORIGIN-MAIN.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/PACKAGING-VERIFICATION.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/PACKET-MANIFEST.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/PACKET-README.md   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/PRE-REVEAL-SHA256SUMS.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/RECENT-COMMITS.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/RETROSPECTIVE.md   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/RUN-RECEIPT.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/SBCL-VERSION.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/SHA256SUMS.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/SOURCE-PATH.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/STRANGER-PROGRAM.lisp   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/TRACKED-WORKTREE.patch   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/UNTRACKED-FILES-WITH-SIZES.txt   OK
+    testing: SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24/UNTRACKED-FILES.txt   OK
+No errors detected in compressed data of /home/gauss/Downloads/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24.zip.
+
+$ unzip -q /home/gauss/Downloads/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24.zip -d FRESH-TEMP-DIRECTORY
+(no output; exit status 0)
+$ (cd FRESH-TEMP-DIRECTORY/SLICE1-CODEX-STRANGER-DELIVERY-2026-07-24 && sha256sum -c SHA256SUMS.txt)
+BRANCH.txt: OK
+EXPORTS-USED.txt: OK
+GIT-STATUS-PORCELAIN-V2.txt: OK
+GIT-STATUS.txt: OK
+HEAD.txt: OK
+IMPLEMENTER-REPORT.md: OK
+INDEX.patch: OK
+MERGE-BASE.txt: OK
+ORIGIN-MAIN.txt: OK
+PACKAGING-VERIFICATION.txt: OK
+PACKET-MANIFEST.txt: OK
+PACKET-README.md: OK
+PRE-REVEAL-SHA256SUMS.txt: OK
+RECENT-COMMITS.txt: OK
+RETROSPECTIVE.md: OK
+RUN-RECEIPT.txt: OK
+SBCL-VERSION.txt: OK
+SOURCE-PATH.txt: OK
+STRANGER-PROGRAM.lisp: OK
+TRACKED-WORKTREE.patch: OK
+UNTRACKED-FILES-WITH-SIZES.txt: OK
+UNTRACKED-FILES.txt: OK
+
+The same two verification commands are rerun after final embedding; final outputs are compared byte-for-byte with the complete outputs above.

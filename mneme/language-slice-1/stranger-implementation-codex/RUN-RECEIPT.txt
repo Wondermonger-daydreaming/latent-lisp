@@ -1,0 +1,42 @@
+Command:
+  sbcl --non-interactive --load STRANGER-PROGRAM.lisp
+
+Runtime:
+  SBCL 2.4.6
+
+Result:
+  kernel0 foundations smoke: PASS
+  kernel0 algebra smoke: PASS
+  kernel0 records+folds smoke: PASS
+  01 transcription-alone-refused: PASS
+  02 wrong-edition-locator-mismatched: PASS
+  03 wrong-passage-translation-mismatched: PASS
+  04 receiver-access-does-not-transfer: PASS
+  05 purpose-does-not-transfer: PASS
+  06 inaccessible-is-residue: PASS
+  07 refutation-recorded-and-blocking: PASS
+  08 coherent-premises-grant: PASS
+  09 plurality-preserved: PASS
+  10 declared-uniqueness-only: PASS
+  11 why-is-structured: PASS
+  12 projection-reconstructs-target: PASS
+  13 transported-receipt-is-testimony: PASS
+
+Exit status: 0
+
+Result ceiling:
+  (:slice1-stranger-implementation
+   :task-completed t
+   :guide-sufficient t
+   :api-sufficient t
+   :front-door-only t
+   :proposition-anatomy-preserved t
+   :declared-premises-enforced t
+   :plurality-preserved t
+   :declared-uniqueness-understood t
+   :projection-reconstructed t
+   :transported-testimony-preserved t
+   :exports-total 69
+   :exports-used 35
+   :tacit-knowledge-dependence nil
+   :successor-pressure (:public-derived-projection-bridge))
