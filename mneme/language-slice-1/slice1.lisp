@@ -236,17 +236,46 @@ pair; got ~S" pair))
                           (string< (symbol-name (car a)) (symbol-name (car b)))))
             (car vars-acc))))
 
+(defun %copy-value (v)
+  "Copy a boundary value so that NO MUTABLE NODE is shared with the caller.
+COPY-TREE alone is insufficient: it copies conses and shares every atom, but a
+Common Lisp STRING is a MUTABLE atom (and may be adjustable, so even its LENGTH
+is caller-controlled).  This descends cons structure and copies string leaves
+with COPY-SEQ; keywords and integers are genuinely immutable and pass through.
+
+DECLARED CEILING (AUDIT-1 continuation, defect B1 — state it, do not exceed it):
+this walks CONS STRUCTURE and STRINGS only.  Because a (:quoted-datum FORM)
+payload rides inside the cons tree, string leaves within it ARE detached — but a
+payload object that is NEITHER a cons NOR a string (a vector, a hash-table, a
+struct, an adjustable non-string array) REMAINS CALLER-OWNED and is NOT detached:
+mutating it after construction still shows through into stored state.  This is
+deliberate.  The charter declares a quoted-datum payload opaque — \"never walked
+or interpreted\" — and a general deep copy of arbitrary objects is both a
+contradiction of that opacity and impossible in general (identity-bearing,
+circular, and unreadable objects have no lawful copy).  So the guarantee this
+function provides is exactly: *no caller-held CONS or STRING is aliased into
+stored state*, not *stored state is immutable against every caller*.  A caller
+who puts a mutable non-string object inside :quoted-datum retains ownership of it
+and of any state derived from it."
+  (cond ((consp v) (cons (%copy-value (car v)) (%copy-value (cdr v))))
+        ((stringp v) (copy-seq v))
+        (t v)))
+
 (defun %normal-form (pred sorted-pairs)
-  ;; AUDIT-1 repair 1: structurally copy each value (copy-tree over the
-  ;; canonical vocabulary) so no caller-held cons is aliased into a stored
-  ;; proposition / pattern / schema.  Atoms (keywords, integers, strings) are
-  ;; immutable value nodes and are shared; (:var …) / (:quoted-datum …) are
-  ;; ordinary conses, copied structurally with their head keywords preserved by
-  ;; identity.  This is the ONE construction chokepoint (proposition,
+  ;; AUDIT-1 repair 1: structurally copy each value so no caller-held cons is
+  ;; aliased into a stored proposition / pattern / schema.  AUDIT-1 continuation
+  ;; (defect B1): COPY-TREE was NOT enough — it shares atoms, and a string is a
+  ;; mutable atom, so caller-held strings wrote through into stored propositions,
+  ;; patterns and granted receipts.  %COPY-VALUE (copy-tree + copy-seq at string
+  ;; leaves) replaces it; keywords and integers are immutable and are still
+  ;; shared; (:var …) / (:quoted-datum …) are ordinary conses, copied structurally
+  ;; with their head keywords preserved by identity — subject to the ceiling
+  ;; declared at %COPY-VALUE (non-cons, non-string quoted-datum payloads stay
+  ;; caller-owned).  This is the ONE construction chokepoint (proposition,
   ;; proposition-pattern, and refutation all route through here) — it kills
-  ;; A7/A7b and the input half of F1.
+  ;; A7/A7b, the input half of F1, and the ingress half of B1.
   (list* :predicate pred
-         (mapcar (lambda (p) (list (car p) (copy-tree (cdr p)))) sorted-pairs)))
+         (mapcar (lambda (p) (list (car p) (%copy-value (cdr p)))) sorted-pairs)))
 
 (defun proposition (form)
   "Construct a GROUND structured proposition in NORMAL FORM.  FORM is
@@ -295,8 +324,10 @@ unusable as a ground claim/support by construction."
 (defun proposition-pattern-normal-form (p)
   "Public reader: the pattern's normal form, as a fresh structural copy.
 Defensive copy per AUDIT-1 repair 2 (adjudication extension, third sitting):
-the stored list is registry-reachable state and must not be caller-mutable."
-  (copy-tree (%proposition-pattern-normal-form p)))
+the stored list is registry-reachable state and must not be caller-mutable.
+AUDIT-1 continuation (defect B1): the copy is %COPY-VALUE, not COPY-TREE — a
+returned string leaf was a live handle on stored state.  Ceiling at %COPY-VALUE."
+  (%copy-value (%proposition-pattern-normal-form p)))
 
 (defun proposition-pattern-variables (p)
   "Public reader: the pattern's variables, as a fresh list (AUDIT-1 repair 2)."
@@ -490,12 +521,26 @@ it is already ground-bound by the requested conclusion" u))
           (%schema-error :premises v
                          "undeclared variable ~S in a premise pattern — ~
 declare it in :locals or bind it through the conclusion" v))))
+    ;; AUDIT-1 continuation (defect B2): SNAPSHOT the three caller-supplied list
+    ;; SPINES at construction.  `:read-only t` protects the SLOT, not the list
+    ;; structure — without this, a post-registration (setf (car …)) on a
+    ;; caller-held cons rewrites a REGISTERED schema, up to and including erasing
+    ;; a declared uniqueness constraint (an expected AMBIGUOUS refusal silently
+    ;; becoming a GRANT).  Shallow COPY-LIST is the right depth here, in both
+    ;; cases for a stated reason: :LOCALS / :UNIQUE-LOCALS are validated above as
+    ;; lists of KEYWORDS, whose elements are immutable, so the spine copy is
+    ;; TOTAL; :PREMISES elements are read-only PROPOSITION-PATTERN structs, so the
+    ;; spine copy is total at this level and the remaining element-level path
+    ;; (mutable string leaves inside a pattern's normal form) belongs to defect B1
+    ;; and is cured at the %NORMAL-FORM chokepoint by %COPY-VALUE — not here.
     (%make-judgment-schema
      :name name :version version
      :identity (lisp-plus-kernel0:make-identity
                 :procedure (format nil "schema/~A/~D" (symbol-name name) version))
-     :conclusion conclusion :premises premises :locals locals
-     :unique-locals unique-locals
+     :conclusion conclusion
+     :premises (copy-list premises)
+     :locals (copy-list locals)
+     :unique-locals (copy-list unique-locals)
      :conclusion-variables cvars
      :admit-kind (%schema-admit-kind name version))))
 
@@ -591,20 +636,23 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
 ;;; returned list.  Copy depth: PREMISE-PATTERN / GROUND-INSTANCE (normal-form
 ;;; role-value lists), MISMATCHED-CANDIDATES ((witness . roles) conses),
 ;;; BINDING-ENVIRONMENTS / AMBIGUITIES (schema-local alists) are structural
-;;; (copy-tree; witness/refutation struct leaves shared, immutable);
+;;; (%copy-value — copy-tree PLUS copy-seq at string leaves, per the AUDIT-1
+;;; continuation defect B1: a returned string leaf was a live handle on stored
+;;; state; witness/refutation struct leaves remain shared, and the ceiling
+;;; declared at %COPY-VALUE applies);
 ;;; MATCHING-*-SUPPORTS / REFUTING-SUPPORTS are top-level copy-list (immutable
 ;;; struct elements).  DISPOSITION (a keyword) passes through.
 (defun premise-assessment-disposition (a) (%premise-assessment-disposition a))
 (defun premise-assessment-premise-pattern (a)
-  (copy-tree (%premise-assessment-premise-pattern a)))
+  (%copy-value (%premise-assessment-premise-pattern a)))
 (defun premise-assessment-ground-instance (a)
-  (copy-tree (%premise-assessment-ground-instance a)))
+  (%copy-value (%premise-assessment-ground-instance a)))
 (defun premise-assessment-mismatched-candidates (a)
-  (copy-tree (%premise-assessment-mismatched-candidates a)))
+  (%copy-value (%premise-assessment-mismatched-candidates a)))
 (defun premise-assessment-binding-environments (a)
-  (copy-tree (%premise-assessment-binding-environments a)))
+  (%copy-value (%premise-assessment-binding-environments a)))
 (defun premise-assessment-ambiguities (a)
-  (copy-tree (%premise-assessment-ambiguities a)))
+  (%copy-value (%premise-assessment-ambiguities a)))
 (defun premise-assessment-matching-accessible-supports (a)
   (copy-list (%premise-assessment-matching-accessible-supports a)))
 (defun premise-assessment-matching-inaccessible-supports (a)
@@ -635,8 +683,10 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
 ;;; AUDIT-1 repair 2: public readers copy every list-valued field so a past
 ;;; receipt can never be silently rewritten by whoever holds it — the "recorded,
 ;;; never erased" law (kills F2).  Copy depth: CONCLUSION / BINDINGS /
-;;; STRONGEST-LAWFUL-RESULT / REPAIR-OPTIONS are structural (copy-tree — nested
-;;; alists / role-value lists; struct leaves shared, immutable); ASSESSMENTS is
+;;; STRONGEST-LAWFUL-RESULT / REPAIR-OPTIONS are structural (%copy-value —
+;;; copy-tree PLUS copy-seq at string leaves, per the AUDIT-1 continuation defect
+;;; B1: a returned string leaf was a live handle on a granted receipt; struct
+;;; leaves shared; ceiling declared at %COPY-VALUE); ASSESSMENTS is
 ;;; top-level copy-list (elements are immutable premise-assessment structs whose
 ;;; own list readers already copy).  Scalar/struct fields pass through.
 (defun derivation-receipt-schema-name (r) (%derivation-receipt-schema-name r))
@@ -644,21 +694,23 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
 (defun derivation-receipt-decision (r) (%derivation-receipt-decision r))
 (defun derivation-receipt-identity (r) (%derivation-receipt-identity r))
 (defun derivation-receipt-origin-context (r) (%derivation-receipt-origin-context r))
-(defun derivation-receipt-conclusion (r) (copy-tree (%derivation-receipt-conclusion r)))
-(defun derivation-receipt-bindings (r) (copy-tree (%derivation-receipt-bindings r)))
+(defun derivation-receipt-conclusion (r) (%copy-value (%derivation-receipt-conclusion r)))
+(defun derivation-receipt-bindings (r) (%copy-value (%derivation-receipt-bindings r)))
 (defun derivation-receipt-strongest-lawful-result (r)
-  (copy-tree (%derivation-receipt-strongest-lawful-result r)))
+  (%copy-value (%derivation-receipt-strongest-lawful-result r)))
 (defun derivation-receipt-repair-options (r)
-  (copy-tree (%derivation-receipt-repair-options r)))
+  (%copy-value (%derivation-receipt-repair-options r)))
 (defun derivation-receipt-assessments (r) (copy-list (%derivation-receipt-assessments r)))
 ;; CHARTER-DELTA-2 receipt refinement.  Both list-valued fields are structural
 ;; (nested alists / role-value lists; struct leaves shared, immutable) so their
-;; public readers copy-tree per AUDIT-1 repair 2 — a past receipt's complete
-;; environments and named uniqueness conflicts can never be silently rewritten.
+;; public readers %copy-value per AUDIT-1 repair 2 as continued by the B1 repair
+;; (copy-tree PLUS copy-seq at string leaves; ceiling declared at %COPY-VALUE) —
+;; a past receipt's complete environments and named uniqueness conflicts can
+;; never be silently rewritten, not even through a returned string.
 (defun derivation-receipt-complete-binding-environments (r)
-  (copy-tree (%derivation-receipt-complete-binding-environments r)))
+  (%copy-value (%derivation-receipt-complete-binding-environments r)))
 (defun derivation-receipt-uniqueness-conflicts (r)
-  (copy-tree (%derivation-receipt-uniqueness-conflicts r)))
+  (%copy-value (%derivation-receipt-uniqueness-conflicts r)))
 (defun derivation-receipt-multiply-supported-p (r)
   "Derived VIEW (CHARTER-DELTA-2): true when MORE THAN ONE complete coherent
 binding environment discharges the conclusion.  NOT a premise status, NOT a

@@ -687,6 +687,168 @@
         (format nil "envs=~D" (length (derivation-receipt-complete-binding-environments r))))))
 
 ;;; ==================================================================
+;;; Ownership teeth T18–T26 (AUDIT-1 continuation, Kimi B1/B2 confirmed by the
+;;; chair's independent reproduction).  Two defect families:
+;;;   B1 — MUTABLE LEAVES were shared with storage.  COPY-TREE copies conses and
+;;;        shares every atom, but a Common Lisp STRING is a mutable atom, so a
+;;;        caller-held (or reader-returned) string aliased straight into stored
+;;;        propositions, patterns and granted receipts.  Cured by %COPY-VALUE
+;;;        (COPY-TREE + COPY-SEQ at string leaves) at the one construction
+;;;        chokepoint and at every structural egress reader.
+;;;   B2 — the JUDGMENT-SCHEMA constructor retained the caller's :PREMISES /
+;;;        :LOCALS / :UNIQUE-LOCALS list SPINES (`:read-only t` protects the
+;;;        slot, not the list), so post-registration SETF on a caller-held cons
+;;;        rewrote a registered schema — including erasing a declared uniqueness
+;;;        constraint.  Cured by COPY-LIST at construction.
+;;; Each tooth below FAILS against pre-repair semantics and PASSES after.
+;;; DECLARED RESIDUAL (not a defect these teeth assert away): a (:quoted-datum …)
+;;; payload that is neither a cons nor a string — a vector, hash-table, struct,
+;;; adjustable array — remains CALLER-OWNED.  See the %COPY-VALUE ceiling note.
+(format t "~%== Ownership teeth (AUDIT-1 continuation B1/B2) ==~%")
+
+;;; ---- T18 caller string -> stored proposition ----
+(let* ((s (copy-seq "alpha"))
+       (p (proposition (list :predicate :p (list :r s)))))
+  (setf (char s 0) #\Z)                                ; vandalize the caller's string
+  (ok "T18 caller-held string leaf does not rewrite the stored proposition"
+      (equal p '(:predicate :p (:r "alpha")))
+      (format nil "stored = ~S" p)))
+
+;;; ---- T19 caller string -> GRANTED receipt conclusion ----
+(clear-schema-registry)
+(register-schema
+ (judgment-schema :name :t19 :version 1
+   :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+   :premises (list (proposition-pattern '(:predicate :ev (:x (:var :x)))))))
+(let* ((s (copy-seq "V1"))
+       (w (sw (list :predicate :ev (list :x (copy-seq "V1"))))))
+  (multiple-value-bind (claim r)
+      (derive :schema-name :t19 :schema-version 1
+              :conclusion (proposition (list :predicate :ok (list :x s)))
+              :supports (list w) :receiver (ctx-of :ctx w))
+    (declare (ignore claim))
+    (setf (char s 0) #\Z)                              ; vandalize AFTER the grant
+    (ok "T19 caller-held string does not rewrite a GRANTED receipt's conclusion"
+        (equal (derivation-receipt-conclusion r) '(:predicate :ok (:x "V1")))
+        (format nil "receipt conclusion = ~S" (derivation-receipt-conclusion r)))))
+
+;;; ---- T20 reader-returned string -> storage (the defensive copy must be deep
+;;;      enough to include the string leaves it hands out) ----
+(let ((w (sw '(:predicate :ev (:x "V1")))))
+  (multiple-value-bind (claim r)
+      (derive :schema-name :t19 :schema-version 1
+              :conclusion (proposition '(:predicate :ok (:x "V1")))
+              :supports (list w) :receiver (ctx-of :ctx w))
+    (declare (ignore claim))
+    (let* ((returned (derivation-receipt-conclusion r))
+           (leaf (second (assoc :x (cddr returned)))))
+      (setf (char leaf 0) #\Q)                         ; vandalize the RETURNED leaf
+      (ok "T20 mutating a reader-returned string leaf leaves the receipt UNCHANGED"
+          (equal (derivation-receipt-conclusion r) '(:predicate :ok (:x "V1")))
+          (format nil "receipt conclusion on re-read = ~S"
+                  (derivation-receipt-conclusion r))))))
+
+;;; ---- T21 ADJUSTABLE string at an ordinary leaf: the stored value's LENGTH
+;;;      must not follow the caller's fill pointer ----
+(let* ((a (make-array 3 :element-type 'character :adjustable t
+                        :fill-pointer 3 :initial-contents '(#\a #\b #\c)))
+       (p (proposition (list :predicate :p (list :r a)))))
+  (setf (fill-pointer a) 1)                            ; shrink the caller's string
+  (ok "T21 adjustable string leaf: stored value keeps its own length"
+      (equal p '(:predicate :p (:r "abc")))
+      (format nil "stored = ~S" p)))
+
+;;; ---- T22 string inside a (:quoted-datum …) payload — the payload rides in the
+;;;      cons tree, so its string leaves ARE detached (the cons-and-string part of
+;;;      the declared ceiling, asserted; the non-cons/non-string part is not) ----
+(let* ((s (copy-seq "inner"))
+       (p (proposition (list :predicate :p (list :r (list :quoted-datum s))))))
+  (setf (char s 0) #\Z)
+  (ok "T22 string inside a quoted-datum payload is detached from the caller"
+      (equal p '(:predicate :p (:r (:quoted-datum "inner"))))
+      (format nil "stored = ~S" p)))
+
+;;; ---- T23 :premises spine retained by the constructor ----
+(clear-schema-registry)
+(let* ((pat-a (proposition-pattern '(:predicate :ev-a (:x (:var :x)))))
+       (pat-b (proposition-pattern '(:predicate :ev-b (:x (:var :x)))))
+       (pl (list pat-a)))                              ; caller keeps this spine
+  (register-schema
+   (judgment-schema :name :t23 :version 1
+     :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+     :premises pl))
+  (setf (car pl) pat-b)                                ; vandalize post-registration
+  (let ((head (second (proposition-pattern-normal-form
+                       (first (judgment-schema-premises (resolve-schema :t23 1)))))))
+    (ok "T23 :premises spine is snapshotted at construction (registry UNCHANGED)"
+        (eq head :ev-a)
+        (format nil "registered premise predicate = ~S" head))))
+
+;;; ---- T24 :locals spine retained by the constructor ----
+(clear-schema-registry)
+(let* ((lo (list :tag))
+       (schema (judgment-schema :name :t24 :version 1
+                 :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+                 :premises (list (proposition-pattern
+                                  '(:predicate :ev (:x (:var :x)) (:tag (:var :tag)))))
+                 :locals lo)))
+  (register-schema schema)
+  (setf (car lo) :wiped)
+  (ok "T24 :locals spine is snapshotted at construction (declaration UNCHANGED)"
+      (equal (judgment-schema-locals (resolve-schema :t24 1)) '(:tag))
+      (format nil "registered locals = ~S" (judgment-schema-locals (resolve-schema :t24 1)))))
+
+;;; ---- T25 :unique-locals spine, and T25b its BEHAVIOURAL consequence: a
+;;;      declared uniqueness constraint must still bite after caller vandalism ----
+(clear-schema-registry)
+(let* ((ul (list :tag))
+       (schema (judgment-schema :name :t25 :version 1
+                 :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+                 :premises (list (proposition-pattern
+                                  '(:predicate :ev (:x (:var :x)) (:tag (:var :tag)))))
+                 :locals '(:tag) :unique-locals ul)))
+  (register-schema schema)
+  (setf (car ul) :wiped)
+  (ok "T25 :unique-locals spine is snapshotted at construction (declaration UNCHANGED)"
+      (equal (judgment-schema-unique-locals (resolve-schema :t25 1)) '(:tag))
+      (format nil "registered unique-locals = ~S"
+              (judgment-schema-unique-locals (resolve-schema :t25 1))))
+  (let ((e1 (sw '(:predicate :ev (:x "X1") (:tag "T1"))))
+        (e2 (sw '(:predicate :ev (:x "X1") (:tag "T2")))))
+    (handler-case
+        (multiple-value-bind (claim r)
+            (derive :schema-name :t25 :schema-version 1
+                    :conclusion (proposition '(:predicate :ok (:x "X1")))
+                    :supports (list e1 e2) :receiver (ctx-of :ctx e1 e2))
+          (declare (ignore claim))
+          (ok "T25b declared uniqueness still REFUSES after caller vandalism" nil
+              (format nil "GRANTED instead — decision=~S conflicts=~S"
+                      (derivation-receipt-decision r)
+                      (derivation-receipt-uniqueness-conflicts r))))
+      (derivation-refused (c)
+        (let ((uc (derivation-receipt-uniqueness-conflicts (slice1-condition-receipt c))))
+          (ok "T25b declared uniqueness still REFUSES after caller vandalism"
+              (and uc (member :tag uc :key #'first) t)
+              (format nil "refused; conflicts = ~S" uc)))))))
+
+;;; ---- T26 the B2 residual: a STRING literal inside a premise PATTERN.  A spine
+;;;      copy cannot reach it; only %COPY-VALUE at the construction chokepoint can ----
+(clear-schema-registry)
+(let* ((s (copy-seq "lit"))
+       (pat (proposition-pattern (list :predicate :ev (list :x (list :var :x))
+                                       (list :lit s)))))
+  (register-schema
+   (judgment-schema :name :t26 :version 1
+     :conclusion (proposition-pattern '(:predicate :ok (:x (:var :x))))
+     :premises (list pat)))
+  (setf (char s 0) #\Z)
+  (let ((nf (proposition-pattern-normal-form
+             (first (judgment-schema-premises (resolve-schema :t26 1))))))
+    (ok "T26 premise-pattern string literal is detached from the caller"
+        (equal nf '(:predicate :ev (:lit "lit") (:x (:var :x))))
+        (format nil "registered premise nf = ~S" nf))))
+
+;;; ==================================================================
 (format t "~%slice1 selftest: ~D passed, ~D failed~%" *pass* *fail*)
 (finish-output)
 (sb-ext:exit :code (if (zerop *fail*) 0 1))

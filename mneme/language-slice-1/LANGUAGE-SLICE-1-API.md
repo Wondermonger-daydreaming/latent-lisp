@@ -34,13 +34,40 @@ kernel0 (`make-identity`, `make-procedure-descriptor`, `identity-key`,
   propositions remain lawful. Bare symbols, floats, and dotted lists still refuse
   at the frozen boundary.
 
-- **Defensive-copy discipline (AUDIT-1 repair 2).** Every **list-valued public
-  reader** — on schemas, patterns, premise-assessments, and derivation-receipts —
-  returns a **fresh copy** (`copy-list`/`copy-tree`; immutable struct leaves
-  shared). A caller cannot revise a registered schema or a past receipt through a
-  returned list. Scalar/struct/keyword fields pass through unchanged. This is the
-  "recorded, never erased" law made structural; do not rely on `EQ` identity of a
-  returned list across two reads.
+- **Defensive-copy discipline (AUDIT-1 repair 2, corrected by the AUDIT-1
+  continuation repair for defects B1/B2).** Every **list-valued public reader** —
+  on schemas, patterns, premise-assessments, and derivation-receipts — returns a
+  **fresh copy** (`copy-list` for spines of immutable elements; `%copy-value`,
+  which is `copy-tree` **plus `copy-seq` at every string leaf**, for structural
+  values). The **construction chokepoint** (`%normal-form`, reached by
+  `proposition` / `proposition-pattern` / refutation) copies the same way, and the
+  `judgment-schema` constructor **snapshots** the caller's `:premises`, `:locals`
+  and `:unique-locals` **spines** with `copy-list`. Scalar/struct/keyword fields
+  pass through unchanged. Do not rely on `EQ` identity of a returned list — or of
+  a returned **string** — across two reads.
+
+  What this guarantees, exactly: **no caller-held cons and no caller-held string
+  is aliased into stored state, in either direction.** A caller cannot revise a
+  registered schema or a past receipt by mutating a list *or a string* it passed
+  in or got back, and cannot erase a declared uniqueness constraint by mutating a
+  constructor argument after registration. This is the "recorded, never erased"
+  law made structural.
+
+  **Declared ceiling (honest residual, not a promise of total immutability).**
+  The copy walks **cons structure and strings** only. A `(:quoted-datum FORM)`
+  payload rides inside the cons tree, so **string** leaves within it *are*
+  detached — but a payload object that is **neither a cons nor a string** (a
+  vector, a hash-table, a struct, an adjustable non-string array) **remains
+  caller-owned and is not detached**: mutating it after construction still shows
+  through into stored state. This is deliberate. The charter declares a
+  quoted-datum payload opaque — *never walked or interpreted* — and a general deep
+  copy of arbitrary objects would both contradict that opacity and be impossible
+  in general. A caller who places a mutable non-string object inside
+  `:quoted-datum` retains ownership of it and of any stored state derived from it.
+  (Prior text asserted flatly that a caller "cannot revise a registered schema or
+  a past receipt"; before the B1/B2 repair that was false for strings and for
+  constructor list spines, and it remains qualified by this ceiling. See
+  `%copy-value` in `slice1.lisp` for the same statement at the source.)
 
 - **Ordering.** Every derivation-receipt carries an `-ordinal` (from
   `*slice1-ordinal*`), the constitutive order; there is no wall clock in Slice /1.
@@ -103,8 +130,10 @@ taken.
 
 - **Act:** Validate `form` = `(:predicate <keyword> (<role> <value>) …)`, refuse
   duplicate roles and any raw `(:var …)`, sort role pairs deterministically,
-  structurally copy every value (no caller cons is aliased in). Idempotent — its
-  output is a lawful input.
+  structurally copy every value — `%copy-value`, so **neither a caller cons nor a
+  caller string is aliased in** (§1 ceiling applies: a non-cons, non-string
+  `:quoted-datum` payload stays caller-owned). Idempotent — its output is a
+  lawful input.
 - **Result:** canonical Slice /0 data (a list), not a struct.
 - **Refusal:** `malformed-structured-proposition` — non-`:predicate` head,
   non-keyword predicate/role, duplicate role, raw `(:var …)` in ground, empty
@@ -183,7 +212,7 @@ Readers (both **defensive-copy**, AUDIT-1 repair 2 + extension):
 | Reader | Returns |
 |---|---|
 | `proposition-pattern-p` | type predicate |
-| `proposition-pattern-normal-form` | fresh `copy-tree` of the pattern's normal form (vars kept) |
+| `proposition-pattern-normal-form` | fresh `%copy-value` copy of the pattern's normal form — `copy-tree` **plus `copy-seq` at string leaves** (vars kept); §1 ceiling applies |
 | `proposition-pattern-variables` | fresh list of the pattern's variable keywords |
 
 VERIFIED `proposition-pattern-normal-form`:
@@ -393,8 +422,12 @@ Readers: `refutation-p`, `refutation-refutes` (normal-form ground proposition),
 
 ## 6. Receipt + assessment readers
 
-Every list-valued reader below is **defensive-copy** (AUDIT-1 repair 2): a held
-receipt or assessment can never be silently rewritten through a returned list.
+Every list-valued reader below is **defensive-copy** (AUDIT-1 repair 2, deepened
+by the B1 repair): a held receipt or assessment can never be silently rewritten
+through a returned list **or through a returned string** — the `copy-tree` rows
+below are `%copy-value`, i.e. `copy-tree` plus `copy-seq` at string leaves.
+Subject to the declared ceiling in §1 (a non-cons, non-string `:quoted-datum`
+payload stays caller-owned); struct leaves are shared, as before.
 
 ### `derivation-receipt` — issued on EVERY attempt
 
