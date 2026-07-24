@@ -5,6 +5,27 @@ hands mid-arc: custody of the two earlier deliveries was verified by Claude
 Fable 5; this adjudication is Opus 5's, and the handover is recorded here
 because attribution should be readable at a glance.*
 
+## CREDIT — the originating contribution is Kimi's
+
+*Recorded at the owner's explicit instruction, and the chair endorses it
+without qualification.*
+
+**The resumed Kimi audit seat produced the minimal reproducers that exposed
+both confirmed ownership defects.** B1 and B2 are its findings. It was
+interrupted by a provider quota wall mid-verdict, came back, finished its own
+evaluation rather than letting another seat finish it, and delivered working
+attack programs with per-probe expected-vs-observed output — the form of
+evidence that makes independent reproduction cheap and disagreement precise.
+
+Nothing downstream erases that. The chair's independent reproduction, the
+wider mutable-leaf domain finding (quoted-datum payloads, adjustable strings),
+the four-path receipt count, the third escaping payload class, and the whole
+repair adjudication are **extensions of Kimi's finding, not replacements for
+it.** A chair that reproduces a defect someone else located has confirmed a
+discovery, not made one. Where this record corrects the audit's counts, those
+corrections are refinements of a true report — the auditor was right about
+what mattered and the corrections went in its favor twice.
+
 **Layer discipline (required by the owner's relay).** Every statement below is
 tagged by provenance. **[K]** = Kimi's delivered evidence. **[C]** = chair
 reproduction, run by this chair's own hand. **[A]** = authorial
