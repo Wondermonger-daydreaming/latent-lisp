@@ -1,0 +1,173 @@
+RUN-RECEIPT — de-bibliotheca-peregrina
+command: sbcl --non-interactive --load APPLICATION.lisp
+sbcl:    SBCL 2.4.6
+date:    2026-07-24T23:24:33Z (UTC, read from the clock, not asserted)
+exit:    0
+
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+╔══════════════════════════════════════════════════════════════════╗
+║  DE BIBLIOTHECA PEREGRINA — the wandering library, day 4120      ║
+╚══════════════════════════════════════════════════════════════════╝
+
+── MOVEMENT I: the quiet zone (ordinary Common Lisp, no standing) ──
+   III.a.7      Peregrinatio Alephi  (900 crowns, 14-day loan)
+   III.b.3      De Ponte Combusto  (640 crowns, 14-day loan)
+   I.g.11       Herbarium Vagabundum  (210 crowns, 28-day loan)
+   IV.d.1       Cursor Aereus, cum notis  (1450 crowns, 14-day loan)
+
+   ▸ FERRAND      owes 0 crowns
+   ▸ QUILLON      owes 14 crowns
+   ▸ DAMBROISE    owes 0 crowns
+  ok   [I-a] shelf lookup returns an ordinary structure, not a claim
+  ok   [I-b] due-date arithmetic is ordinary integer arithmetic
+  ok   [I-c] the fee tally is an ordinary number carrying no receipt
+   ▸ nothing in this movement produced a receipt, a witness, or an outcome —
+   ▸ and nothing in this movement owed one. (Owner ruling D1: the quiet zone.)
+
+── MOVEMENT II: standing (derive turns evidence into reusable standing) ──
+
+   Ferrand asks for ms-Aleph-7 (member, no fines, volume free):
+   ▸ granted.
+  ok   [II-a] three separately-witnessed premises grant a :MAY-BORROW standing
+  ok   [II-b] the grant is a real Slice /0 promotion (judgment :VERIFIED), not a flag
+  ok   [II-c] the standing is REUSABLE: it is an object with a proposition and a lineage
+
+   Quillon asks for in-Gimel-11 (member, but owes 14 crowns):
+   ▸ refused — :FINES-CLEAR is :MISSING: your account is not clear at the counter; the treasurer must attest it
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                          (:PREDICATE :FINES-CLEAR
+                                           (:AS-OF (:VAR :AS-OF))
+                                           (:PATRON :QUILLON)))
+  ok   [II-d] an unminted witness lands :MISSING — the premise BLOCKS, it is not FALSE
+  ok   [II-e] the desk's speech is selected by the receipt, and the repair is verbatim
+
+   Dambroise asks for ms-Daleth-1, which the desk knows is out:
+   ▸ refused — :VOLUME-UNRESERVED is :REFUTED: no — that volume is out on loan; I can enter you for a hold
+     repair (verbatim from the receipt): (:WITHDRAW-OR-ANSWER-REFUTATION
+                                          (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY
+                                              :DOMAIN :RECEIPT
+                                              :NAME "refutation-5")))
+  ok   [II-f] represented counter-evidence lands :REFUTED — a different refusal entirely
+  ok   [II-g] :MISSING and :REFUTED are distinct verdicts the desk answers differently
+
+── MOVEMENT III: the wall (a granted claim cannot be a premise today) ──
+
+   3a. hand the granted claim straight to the next derivation:
+   ▸ refused — :MAY-BORROW is :MISSING: I have granted you nothing I can hand onward (see Movement III)
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                          (:PREDICATE :MAY-BORROW
+                                           (:PATRON :FERRAND)
+                                           (:VOLUME "ms-Aleph-7")))
+  ok   [III-a] the granted claim does NOT discharge the premise (refused, :MISSING)
+  ok   [III-b] and it was not REJECTED — it was NOT SEEN: every evidential field is empty — no field of the receipt mentions the claim at all
+  ok   [III-c] the OTHER premise was satisfied — so the schema and bindings are fine
+
+   3b. try the transport door (`transported-testimony`):
+   ▸ also :MISSING — and CORRECTLY so: a transported receipt is testimony that a
+   ▸ derivation HAPPENED, whose proposition is an attribution, not :MAY-BORROW.
+  ok   [III-d] `transported-testimony` cannot discharge it either (lawfully so) — no in-language route from a granted claim to a premise exists today
+
+   3c. the workaround that exists today — and what it costs:
+   ▸ granted.
+  ok   [III-e] the workaround works: restated standing + insurance grants :MAY-DISPATCH
+
+   the price, stated in the program's own bytes:
+  ok   [III-f] a restatement of a standing that was REFUSED grants just the same — Quillon owes 14 crowns and was refused in Movement II
+  ok   [III-g] the :CONTENT provenance breadcrumb is never read — the forged id passed
+   ▸ the language cannot tell a restated grant from a fabricated one.
+   ▸ the only thing standing between them is *DESK-GRANTS* — my hash table,
+   ▸ my discipline, unreceipted. That is the S3 species this slice exists to
+   ▸ make refusable, reintroduced by hand, at the one joint that needs it.
+
+── MOVEMENT IV: the crossing (perform hands the volume to the courier) ──
+
+   4a. ms-Aleph-7 to Ferrand — the courier's ledger takes it and answers:
+   ▸ outcome-kind => :COMMITTED
+   ▸ loan opened, clock started, due day 4134, receipt fake:courier:0001
+  ok   [IV-a] the committed dispatch returns a structured outcome, view :COMMITTED
+  ok   [IV-b] the desk was told a ledger token and started the loan clock
+  ok   [IV-c] exactly one row in the courier's private ledger
+
+   4b. ms-Beth-3 to Ferrand — the crossing is interrupted, and the
+       courier's ledger WITHHOLDS its answer:
+  ok   [IV-d] Beth-3 has its own dispatch standing before anything crosses
+   ▸ outcome-kind => :INDETERMINATE
+   ▸ the desk holds no token. The ledger already holds 1 row.
+  ok   [IV-e] the interrupted dispatch's view is :INDETERMINATE
+  ok   [IV-f] the desk was told NO token, yet the effect DID land in the world — absence of testimony is not testimony of absence
+
+   the desk's worst instinct, refused by the language itself:
+   ▸ ★ UNSAFE-RETRY — the second copy never leaves the desk.
+  ok   [IV-g] a blind re-send is refused by live code, not by my good intentions
+
+   the honest move: continue from evidence (never repeat the act):
+   ▸ disposition => :INDETERMINATE
+     known:           (:FRONTIER-CROSSED :EFFECT-UNCERTAIN)
+     unknown:         (:WHETHER-THE-EFFECT-SETTLED)
+     required-action: (:OBTAIN-A-JURISDICTION-BEARING-WITNESS-OF-THE-LEDGER)
+   ▸ tracer T-1 opened; loan recorded IN-TRANSIT-UNCONFIRMED; clock NOT started;
+   ▸ shelf state for ms-Beth-3 set to :UNKNOWN (not :ON-LOAN — the desk does not know).
+  ok   [IV-h] a withholding ledger yields :INDETERMINATE, never a fabricated answer
+  ok   [IV-i] the continuation NEVER re-invoked the courier (row count unchanged)
+  ok   [IV-j] the tracer's text is the continuation's own plist, not desk prose
+
+   4c. ms-Daleth-1 to Dambroise — the courier declines at its own door:
+   ▸ caught CORE0-REFUSED; the outcome it carries has view :REFUSED
+  ok   [IV-l] a refusal arrives as a CONDITION whose outcome's view is :REFUSED — not as a returned value — the caller must catch to see it
+  ok   [IV-m] the refused dispatch left the world untouched (no ledger row)
+   ▸ no loan opened, no clock started, nothing to reconcile.
+
+   the two loans on the desk's books are structurally different records:
+     ms-Aleph-7    IN-TRANSIT-CONFIRMED     due=4134  token=fake:courier:0001  tracer=—
+     ms-Beth-3     IN-TRANSIT-UNCONFIRMED   due=—  token=—  tracer=T-1
+  ok   [IV-k] the committed loan accrues time; the unconfirmed one cannot — ninety days on, the confirmed loan owes a fee and the unconfirmed one owes nothing
+
+── MOVEMENT V: the divergence (the same question, two honest answers) ──
+
+   Dambroise asks for ms-Aleph-7 (confirmed out on loan):
+   ▸ refused — :VOLUME-UNRESERVED is :REFUTED: no — that volume is out on loan; I can enter you for a hold
+     repair (verbatim from the receipt): (:WITHDRAW-OR-ANSWER-REFUTATION
+                                          (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY
+                                              :DOMAIN :RECEIPT
+                                              :NAME "refutation-20")))
+   ▸ → entered on the hold queue behind the current loan.
+
+   Dambroise asks for ms-Beth-3 (in transit, unconfirmed):
+   ▸ refused — :VOLUME-UNRESERVED is :MISSING: I cannot say where that volume is; it is in transit, unconfirmed
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                          (:PREDICATE :VOLUME-UNRESERVED
+                                           (:DESK (:VAR :DESK))
+                                           (:VOLUME "ms-Beth-3")))
+   ▸ → NOT a hold: the desk cannot promise a queue for a
+   ▸   volume whose whereabouts are unconfirmed. Queued
+   ▸   behind tracer T-1 instead.
+  ok   [V-a] the confirmed-out volume refuses :REFUTED — the desk says no and holds
+  ok   [V-b] the unconfirmed volume refuses :MISSING — the desk says it does not know
+  ok   [V-c] the two paths DIVERGE in the desk's state, not only in its printout
+  ok   [V-d] across the whole session the courier was invoked exactly twice, never thrice
+
+   the desk's books at close of day 4120:
+     hold queue:        ((:DAMBROISE . "ms-Aleph-7"))
+     tracer follow-ups: ((:DAMBROISE . "ms-Beth-3"))
+     open tracers:      ("T-1")
+
+── what this application does NOT show ──
+   Nothing here demonstrates crash survival: the interrupted dispatch's
+   evidence survived because the IMAGE did. The courier is the labelled
+   scripted fake, never AP0-conformant; no result above licenses any
+   conformance language. And the Movement III workaround is a hole the
+   desk digs itself — see FIELD-REPORT.md §3.
+
+de-bibliotheca-peregrina: 34 checks passed / 0 failed
+(a desk that can say "no", "not yet", and "I do not know" in three
+ different voices, and cannot accidentally send the same book twice)

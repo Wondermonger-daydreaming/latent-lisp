@@ -701,9 +701,13 @@
 ;;;        rewrote a registered schema — including erasing a declared uniqueness
 ;;;        constraint.  Cured by COPY-LIST at construction.
 ;;; Each tooth below FAILS against pre-repair semantics and PASSES after.
-;;; DECLARED RESIDUAL (not a defect these teeth assert away): a (:quoted-datum …)
-;;; payload that is neither a cons nor a string — a vector, hash-table, struct,
-;;; adjustable array — remains CALLER-OWNED.  See the %COPY-VALUE ceiling note.
+;;; DECLARED RESIDUAL — SHRUNK BY D2.  This once read: a (:quoted-datum …)
+;;; payload that is neither a cons nor a string (vector, hash-table, struct,
+;;; adjustable array) remains CALLER-OWNED.  %COPY-VALUE still does not detach
+;;; such an object — but SINCE D2 IT CANNOT ARRIVE: a quoted payload must cross
+;;; the kernel0 CD/0 codec boundary, and those objects refuse at construction
+;;; (teeth T28d/T28e).  Strings inside a quoted payload are still detached by
+;;; %COPY-VALUE, as T22 shows.  See the %COPY-VALUE ceiling note.
 (format t "~%== Ownership teeth (AUDIT-1 continuation B1/B2) ==~%")
 
 ;;; ---- T18 caller string -> stored proposition ----

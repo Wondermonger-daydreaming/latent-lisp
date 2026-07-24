@@ -24,8 +24,17 @@
 > threshold; they are lawful typed **pre-derivation failures** and carry none, by
 > design: a receipt there would be a fiction. Read E1's "four" as **three** for
 > current code. The receipt-scope rule is restated in full at
-> `derivation-receipt` below. *(E2's `(:quoted-datum …)` boundary defect is
-> **NOT** repaired — see the note there.)*
+> `derivation-receipt` below.
+
+> **REPAIR NOTE (D2, 2026-07-24, post-erratum).** E2's `(:quoted-datum …)`
+> constructor defect is **repaired**. Owner ruling: **`(:quoted-datum …)` is not
+> a host-language escape hatch.** Slice /1 defines no broader intermediate-data
+> language of its own, so a quoted payload **must belong to Canonical Datum /0**
+> exactly as every other proposition part does. The three escaping classes E2
+> recorded — and the rest with them — **now refuse at construction**. Read E2's
+> "flow-through is false for non-boundary quoted payloads" as **repaired: such
+> payloads can no longer be constructed.** Full rule under
+> `proposition` / the value vocabulary below.
 
 > **VOCABULARY RULING (D4, owner, 2026-07-24).** The word **"admissible" may not
 > carry a load-bearing proof claim** in this document while it is not
@@ -93,21 +102,22 @@ kernel0 (`make-identity`, `make-procedure-descriptor`, `identity-key`,
   constructor argument after registration. This is the "recorded, never erased"
   law made structural.
 
-  **Declared ceiling (honest residual, not a promise of total immutability).**
-  The copy walks **cons structure and strings** only. A `(:quoted-datum FORM)`
-  payload rides inside the cons tree, so **string** leaves within it *are*
-  detached — but a payload object that is **neither a cons nor a string** (a
-  vector, a hash-table, a struct, an adjustable non-string array) **remains
-  caller-owned and is not detached**: mutating it after construction still shows
-  through into stored state. This is deliberate. The charter declares a
-  quoted-datum payload opaque — *never walked or interpreted* — and a general deep
-  copy of arbitrary objects would both contradict that opacity and be impossible
-  in general. A caller who places a mutable non-string object inside
-  `:quoted-datum` retains ownership of it and of any stored state derived from it.
-  (Prior text asserted flatly that a caller "cannot revise a registered schema or
-  a past receipt"; before the B1/B2 repair that was false for strings and for
-  constructor list spines, and it remains qualified by this ceiling. See
-  `%copy-value` in `slice1.lisp` for the same statement at the source.)
+  **Declared ceiling (honest residual) — SHRUNK BY D2.** The copy walks **cons
+  structure and strings** only. A `(:quoted-datum FORM)` payload rides inside the
+  cons tree, so **string** leaves within it *are* detached. A payload object that
+  is **neither a cons nor a string** (a vector, a hash-table, a struct, an
+  adjustable non-string array) is still not detached by `%copy-value` — **but
+  since D2 it can no longer arrive**: such a payload does not cross the kernel0
+  CD/0 codec boundary and **refuses at construction**, so it never reaches stored
+  state. The escape this ceiling described is closed for everything reachable
+  through the public constructors. A general deep copy of arbitrary objects would
+  remain both a contradiction of quoted-datum opacity and impossible in general
+  (identity-bearing, circular and unreadable objects have no lawful copy) — which
+  is why the cure is **refusal at the boundary**, not a deeper copy. (Prior text
+  asserted flatly that a caller "cannot revise a registered schema or a past
+  receipt"; before the B1/B2 repair that was false for strings and for constructor
+  list spines. See `%copy-value` in `slice1.lisp` for the same statement at the
+  source.)
 
 - **Ordering.** Every derivation-receipt carries an `-ordinal` (from
   `*slice1-ordinal*`), the constitutive order; there is no wall clock in Slice /1.
@@ -171,13 +181,14 @@ taken.
 - **Act:** Validate `form` = `(:predicate <keyword> (<role> <value>) …)`, refuse
   duplicate roles and any raw `(:var …)`, sort role pairs deterministically,
   structurally copy every value — `%copy-value`, so **neither a caller cons nor a
-  caller string is aliased in** (§1 ceiling applies: a non-cons, non-string
-  `:quoted-datum` payload stays caller-owned). Idempotent — its output is a
-  lawful input.
+  caller string is aliased in** (§1 ceiling, as shrunk by D2: a non-cons,
+  non-string `:quoted-datum` payload can no longer be constructed at all).
+  Idempotent — its output is a lawful input.
 - **Result:** canonical Slice /0 data (a list), not a struct.
 - **Refusal:** `malformed-structured-proposition` — non-`:predicate` head,
   non-keyword predicate/role, duplicate role, raw `(:var …)` in ground, empty
-  string, float, dotted list.
+  string, float, dotted list — **and (D2) the same non-canonical classes when
+  placed behind `(:quoted-datum …)`**, which is not an exemption.
 - **Example (VERIFIED)** — roles sort at construction:
   ```lisp
   (proposition '(:predicate :entry-complete (:entry "e-88") (:checklist "CL-full")))
@@ -201,6 +212,56 @@ taken.
   (proposition '(:predicate :p (:x (:quoted-datum (:var :x)))))
   ;; => (:PREDICATE :P (:X (:QUOTED-DATUM (:VAR :X))))   ; normal-form-p => T
   ```
+
+  **The payload must be Canonical Datum /0 (D2, VERIFIED).** The quoted escape is
+  **not a host-language escape hatch**. It buys exactly one thing: literal data
+  whose *shape* would otherwise be read as a variable. It does **not** buy
+  exemption from the boundary — opacity of *meaning* is not exemption from CD/0
+  *membership*, and Slice /1 defines no broader intermediate-data language of its
+  own. Payloads the governing boundary rejects **refuse at construction** with
+  `malformed-structured-proposition`, behind the tag exactly as in front of it:
+
+  | Payload | Behind `:quoted-datum` |
+  |---|---|
+  | keyword, integer, non-empty string, proper list thereof | **accepted** |
+  | `(:var :x)` and other var-shaped literal lists | **accepted** — a proper list of keywords is fine at the boundary; this is Δ5's actual purpose and it survives |
+  | float | **refused** |
+  | bare host symbol | **refused** |
+  | dotted list | **refused** |
+  | hash table | **refused** |
+  | host vector / non-string array | **refused** |
+  | empty string | **refused** |
+
+  ```lisp
+  (handler-case (proposition '(:predicate :p (:r (:quoted-datum 1.5d0))))
+    (malformed-structured-proposition (c) (slice1-condition-failed-invariant c)))
+  ;; => "a (:quoted-datum FORM) payload must be Canonical Datum /0; 1.5d0 is not
+  ;;     and does not cross the governing kernel0 canonicalization boundary. …"
+  ```
+
+  **The check delegates; it does not define.** Slice /1 encodes **no vocabulary
+  of its own** here — it calls the kernel0 **codec boundary**,
+  `lisp-plus-kernel0:require-canonical`, which is the same function Slice /0's
+  own `%require-proposition` calls on every proposition leaf. It is used as a
+  **discard-result probe**: the question asked is *"would this payload cross?"*,
+  and the converted datum is **thrown away**, because a quoted payload is
+  literal data and must never be silently rewritten. A lawful payload is stored
+  **verbatim**, un-normalized and un-converted. (`lisp-plus-cd0:datum-p` is
+  *not* the boundary predicate and is not used: it recognizes constructed CD/0
+  datum *objects*, returning `nil` for every host value a caller can write —
+  including `(:var :x)`. `require-canonical` calls it only as an
+  already-converted fast path.)
+
+  The boundary holds in **patterns** as well as ground data — both route through
+  the one construction chokepoint. Teeth: T28a–T28g (refusals), T28h/T28i
+  (guards: the lawful payloads, including `(:var :x)`, still pass), T28j (the
+  literal survives verbatim) in `slice1-selftest.lisp`.
+
+  **Deferred exposure (pre-existing, not introduced by D2).** A **circular** or
+  pathologically deep payload diverges inside `require-canonical`'s own recursion
+  rather than refusing. Slice /1 has no cycle or depth guard anywhere; this probe
+  inherits that exposure unchanged and does not widen it. Cycle/depth handling
+  remains an owner-deferred open item.
 
 ### `structured-proposition=` — equality of ground propositions
 
@@ -469,8 +530,10 @@ Every list-valued reader below is **defensive-copy** (AUDIT-1 repair 2, deepened
 by the B1 repair): a held receipt or assessment can never be silently rewritten
 through a returned list **or through a returned string** — the `copy-tree` rows
 below are `%copy-value`, i.e. `copy-tree` plus `copy-seq` at string leaves.
-Subject to the declared ceiling in §1 (a non-cons, non-string `:quoted-datum`
-payload stays caller-owned); struct leaves are shared, as before.
+Subject to the declared ceiling in §1 — as shrunk by D2: a non-cons, non-string
+`:quoted-datum` payload can no longer be constructed, so that residual is closed
+for values admitted through the public constructors. Struct leaves are shared, as
+before.
 
 ### `derivation-receipt` — issued for every CONSTRUCTIBLE derivation attempt
 

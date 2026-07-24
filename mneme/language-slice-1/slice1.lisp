@@ -188,8 +188,16 @@ as an already-converted fast path.
 The line this draws, verified live: ACCEPTS keywords, integers, non-empty
 strings, and proper lists thereof (so (:quoted-datum (:var :x)) — a proper list
 of keywords — stays lawful, which is Δ5's actual purpose).  REFUSES floats, bare
-host symbols, dotted lists, hash tables, host vectors, the empty string, and
-other non-canonical host objects.
+host symbols, dotted lists, hash tables, host vectors, the empty string, ordinary
+host structs, and other non-canonical host objects.
+
+ONE STRUCT CLASS STILL CROSSES, and it is not an oversight: a kernel0
+DURABLE-IDENTITY is a REGISTERED canonicalization subject (boundary.lisp registers
+DURABLE-IDENTITY-P → IDENTITY->DATUM), so (:quoted-datum <a durable-identity>) is
+LAWFUL — correctly, since an identity is CD/0-crossing by construction.  Its slots
+are :READ-ONLY, so no slot can be rewritten through a retained handle.  Do not
+state this rule as \"no struct may be a quoted payload\"; the true rule is \"only
+what the kernel0 codec boundary admits\", and identities are admitted.
 
 DEFERRED EXPOSURE (owner-deferred, pre-existing, NOT introduced here): a
 CIRCULAR or pathologically deep payload diverges inside REQUIRE-CANONICAL's own
@@ -291,18 +299,23 @@ with COPY-SEQ; keywords and integers are genuinely immutable and pass through.
 
 DECLARED CEILING (AUDIT-1 continuation, defect B1 — state it, do not exceed it):
 this walks CONS STRUCTURE and STRINGS only.  Because a (:quoted-datum FORM)
-payload rides inside the cons tree, string leaves within it ARE detached — but a
-payload object that is NEITHER a cons NOR a string (a vector, a hash-table, a
-struct, an adjustable non-string array) REMAINS CALLER-OWNED and is NOT detached:
-mutating it after construction still shows through into stored state.  This is
-deliberate.  The charter declares a quoted-datum payload opaque — \"never walked
-or interpreted\" — and a general deep copy of arbitrary objects is both a
-contradiction of that opacity and impossible in general (identity-bearing,
-circular, and unreadable objects have no lawful copy).  So the guarantee this
-function provides is exactly: *no caller-held CONS or STRING is aliased into
-stored state*, not *stored state is immutable against every caller*.  A caller
-who puts a mutable non-string object inside :quoted-datum retains ownership of it
-and of any state derived from it."
+payload rides inside the cons tree, string leaves within it ARE detached.  A
+payload object that is NEITHER a cons NOR a string is still not detached by this
+function — but SINCE D2 IT CAN NO LONGER ARRIVE.  %VALIDATE-VALUE now requires
+every quoted payload to cross the kernel0 CD/0 codec boundary, and a vector,
+hash-table, struct or adjustable non-string array does not cross it: such a
+payload REFUSES AT CONSTRUCTION and never reaches storage.  So the residual this
+ceiling once described has SHRUNK to the empty set for values admitted through
+the public constructors — what remains is only the honest statement of what this
+function itself does, not a live escape.
+
+The guarantee this function provides is therefore exactly: *no caller-held CONS
+or STRING is aliased into stored state* — and, for anything reachable through the
+public constructors, that is now the whole of the boundary, because non-cons
+non-string payloads no longer enter.  (A general deep copy of arbitrary objects
+would remain both a contradiction of quoted-datum opacity and impossible in
+general — identity-bearing, circular and unreadable objects have no lawful copy —
+which is why the cure is REFUSAL AT THE BOUNDARY rather than a deeper copy.)"
   (cond ((consp v) (cons (%copy-value (car v)) (%copy-value (cdr v))))
         ((stringp v) (copy-seq v))
         (t v)))
