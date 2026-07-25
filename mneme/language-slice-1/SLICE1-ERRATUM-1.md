@@ -94,6 +94,39 @@ list, and the chair did not take it.
 
 ## E3 — Already-judged claims as premise support: an UNCONVERTED design obligation
 
+> **⚠ E3 IS DISCHARGED (2026-07-24), UNDER `SLICE1-SOL-DESIGN-RULING-FORKS.md`
+> DECISION 1 — adopted by the owner.** The obligation recorded dead below was
+> converted, and its standing is now:
+>
+> ```text
+>  :judged-claim-premise-discharge      :earned  ; judgment-identity chaining, slice1.lisp; teeth T29a–T29j (slice1-selftest.lisp); bite-before-cure transcript _staging/catena-teeth-evidence.txt
+> ```
+>
+> **What was implemented — the ruling's reading, not the chair's.** A previously
+> judged claim discharges a premise **only through an identity-bearing reference
+> to the actual governed judgment**: durable claim identity · receiver-accessible
+> under the already-governing rule · positive `:verified` judgment · normalized
+> judged proposition matching the required ground premise · the judgment record
+> read off *that exact claim* · claim identity **and** judgment basis recorded in
+> the receiving derivation's receipt · the original judgment left inspectable and
+> never converted into a newly minted witness. **The chair's α3 recommendation
+> (schema conclusion-pattern equality via `procedure-id`) was REJECTED by the
+> ruling as smuggling a source-type system into a language with no
+> representation for one, and is NOT what was built:** `procedure-id` is recorded
+> provenance and is read by nothing. There is **no** mode/kind relation and **no**
+> recursion.
+>
+> **The three answers the docket asked for**, now on record: *(1) which judgment
+> states discharge?* — `:verified` only. *(2) does receiver-accessibility apply to
+> a claim?* — yes, the identical id-membership rule, read against `claim-id`.
+> *(3) what disposition does a refuted claim produce?* — the premise stays
+> `:MISSING` (the six §5 statuses are closed; no seventh is minted), but the claim
+> and the exact reason it did not discharge are recorded in
+> `premise-assessment-judged-claims` and named in the repair advice.
+>
+> **The silent-discard defect named below is also repaired:** a claim offered in
+> `supports` is never invisible again, whatever becomes of it.
+
 **Affected (three charter statements, restated once post-implementation):**
 `CHARTER` §4 (*"a premise is discharged by a support or an already-judged
 claim"*), §5's in-code definition of `:satisfied` (*"a matching, admissible,
@@ -122,9 +155,10 @@ path or is labeled `[DESIGN-OBLIGATION]`; `CHARTER`: *"the founding specimen
 converts them or they die"*), this obligation was **neither converted nor
 recorded dead.** It is recorded dead now.
 
-**DOCKETED, NOT REPAIRED — owner decision.** Implementing it is a genuine design
-question: which judgment states discharge? does receiver-accessibility apply to
-a claim? what disposition does a *refuted* claim produce?
+**~~DOCKETED, NOT REPAIRED — owner decision.~~ DISCHARGED 2026-07-24** under the
+adopted Sol design ruling; see the banner at the head of E3 for the three
+answers and the enforcement path. The text above is left unaltered on purpose —
+it is the record of the gap, not a live claim about the implementation.
 
 ## E4 — "Admissible" is a normative term with no live enforcement path
 

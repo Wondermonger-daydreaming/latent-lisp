@@ -470,7 +470,8 @@ Readers: `refutation-p`, `refutation-refutes` (normal-form ground proposition),
 
 - **Act:** Resolve the schema by exact `(schema-name, schema-version)`; bind the
   conclusion variables from the **ground** `conclusion`; assess each declared
-  premise over `supports` (Slice /0 `witness`es and Slice /1 `refutation`s)
+  premise over `supports` (Slice /0 `witness`es, Slice /1 `refutation`s, **and
+  Slice /0 already-judged `claim`s** — SOL DECISION 1, §6 below)
   relative to the acting `receiver` context; **issue a derivation receipt once the
   invocation is a constructible derivation attempt** — i.e. on every assessed
   path, granted or refused, and on the post-threshold `unbound-conclusion-variable`
@@ -591,7 +592,12 @@ conclusion); they are lawful typed pre-derivation failures and `nil` on
 
 **Never a boolean summary of "all premises present"** — the assessments carry the
 per-premise structure themselves (charter §6). VERIFIED `repair-options` for a
-missing premise: `((… :SUPPLY-ACCESSIBLE-SUPPORT-MATCHING …) …)`.
+missing premise: `((… :SUPPLY-ACCESSIBLE-SUPPORT-MATCHING …) …)` when the premise
+has exactly one grounding environment; `:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING-ANY-OF`
+carrying **all** of them when it has several (SOL DECISION 2 — the advice never
+picks one to keep the old key's shape). When judged claims were seen but did not
+discharge, the same entry additionally carries
+`:JUDGED-CLAIMS-SEEN-BUT-NOT-DISCHARGING ((claim-key outcome) …)` (SOL DECISION 1).
 
 ### `premise-assessment` — the per-premise structured object (Δ2)
 
