@@ -152,7 +152,7 @@ reason everything else here is."
   permitted-substrates max-ink-grade)
 
 (defstruct (work-order (:conc-name wo-))
-  id manuscript method state opened stage-log completed-on account case-id)
+  id manuscript method state opened stage-log completed-on account case-id blocked-on)
 
 (defstruct (reassessment-case (:conc-name rc-))
   id manuscript reason known unknown required-action)
@@ -197,7 +197,16 @@ reason everything else here is."
         (make-treatment-option
          :key :solvent-consolidation :label "solvent consolidation of the medium"
          :reversible nil :stages 1 :chamber-hours 4 :blotter-sheets 0
-         :permitted-substrates '(:parchment :laid-paper) :max-ink-grade 2)))
+         :permitted-substrates '(:parchment :laid-paper) :max-ink-grade 2)
+        ;; Materially unobjectionable for a torn parchment codex, and the case
+        ;; Movement V arm C is built on: the conservation committee's mandate
+        ;; POL-CONS-7 covers moisture work, and a structural repair is not
+        ;; moisture work. Nothing about the parchment refuses it; the institution
+        ;; does.
+        (make-treatment-option
+         :key :local-tear-repair :label "local tear repair, parchment strips"
+         :reversible nil :stages 1 :chamber-hours 0 :blotter-sheets 6
+         :permitted-substrates '(:parchment) :max-ink-grade 3)))
 
 (defparameter *chamber-rate* 7 "Crowns per chamber hour.")
 (defparameter *blotter-unit* 2 "Crowns per blotter sheet.")
@@ -242,22 +251,22 @@ performed — that is Movements II to IV, and it is a different kind of question
      (* *blotter-unit* (to-blotter-sheets option))))
 
 (defun bench-line (option)
-  (format nil "~22A stages ~D  chamber ~2Dh  blotter ~2D  ~4D crowns  back by day ~D"
+  (format nil "~34A stages ~D  chamber ~2Dh  blotter ~2D  ~4D crowns  back by day ~D"
           (to-label option) (to-stages option) (to-chamber-hours option)
           (to-blotter-sheets option) (materials-cost option)
           (earliest-return-day option)))
 
 (defun survey-line (id)
   (let ((m (bench-lookup id)) (n (note-for id)))
-    (format nil "~14A ~22A ~10A/~10A ~3D folios  distortion ~2Dmm (~A)  ink grade ~D  ~D tear~:P~@[  tideline~]"
+    (format nil "~14A ~22A ~10A / ~9A ~3D folio~:P  distortion ~2Dmm (~A)  ink grade ~D  ~D tear~:P~@[  tideline~]"
             (ms-id m) (ms-title m) (ms-substrate m) (ms-medium m) (ms-folios m)
             (cn-distortion-mm n) (distortion-class (cn-distortion-mm n))
             (cn-ink-grade n) (cn-tears n) (cn-tideline n))))
 
-(format t "~%+==================================================================+~%")
-(format t   "|  DE CODICE RESTAURANDO — the conservation workshop, day ~D      |~%" *today*)
-(format t   "|  one damaged manuscript; the exhibition opens on day ~D        |~%" *exhibition-opens*)
-(format t   "+==================================================================+~%")
+(format t "~%+================================================================+~%")
+(format t   "|  DE CODICE RESTAURANDO - the conservation workshop, day ~D    |~%" *today*)
+(format t   "|  one damaged manuscript; the exhibition opens on day ~D       |~%" *exhibition-opens*)
+(format t   "+================================================================+~%")
 
 (format t "~%-- MOVEMENT I: the bench (ordinary Common Lisp, no standing) --~%")
 (format t "~%   the condition survey, as the surveyor left it:~%")
@@ -269,7 +278,7 @@ performed — that is Movements II to IV, and it is a different kind of question
 (format t "~%   and the two the filter excluded, with the reason:~%")
 (dolist (o *treatment-catalogue*)
   (unless (option-permitted-p o (note-for "codex:umbra-17") (bench-lookup "codex:umbra-17"))
-    (format t "     ~22A excluded — substrates ~A, ink tolerance grade ~D~%"
+    (format t "     ~34A excluded — substrates ~A, ink tolerance grade ~D~%"
             (to-label o) (fmt (to-permitted-substrates o)) (to-max-ink-grade o))))
 
 (bench "the exhibition opens in ~D day~:P; every permitted option comes back in time."
@@ -282,9 +291,9 @@ performed — that is Movements II to IV, and it is a different kind of question
     (and (eq :cockled (distortion-class 11))
          (eq :flat (distortion-class 2))
          (eq :severely-distorted (distortion-class 19))))
-(ok "[I-c] the compatibility filter is an ordinary predicate: 2 of 4 options survive it"
-    (and (= 2 (length (options-for "codex:umbra-17")))
-         (equal '(:controlled-humidification :pressure-flattening)
+(ok "[I-c] the compatibility filter is an ordinary predicate: 3 of 5 options survive it for this object"
+    (and (= 3 (length (options-for "codex:umbra-17")))
+         (equal '(:controlled-humidification :pressure-flattening :local-tear-repair)
                 (mapcar #'to-key (options-for "codex:umbra-17")))))
 (ok "[I-d] the schedule and the cost are ordinary integers carrying no receipt"
     (and (= 4 (drying-days (option-for :controlled-humidification)))
@@ -599,6 +608,7 @@ program is read out of it.")
     ("codex:umbra-17" :substrate-humidification :responded "ASY-4413")
     ("codex:umbra-17" :substrate-humidification :responded "ASY-4419")
     ("codex:umbra-17" :substrate-flattening     :responded "ASY-4421")
+    ("codex:umbra-17" :substrate-tear-repair     :responded "ASY-4425")
     ("codex:vetus-4"  :substrate-humidification :responded "ASY-4603")
     ("chart:hydro-2"  :solubility :bled        "ASY-4501")
     ("chart:hydro-2"  :binder     :identified  "ASY-4502")
@@ -637,7 +647,8 @@ independent test is corroboration and not a nuisance.")
 and the workshop does not choose between them."
   (let ((test (ecase method
                 (:controlled-humidification :substrate-humidification)
-                (:pressure-flattening :substrate-flattening))))
+                (:pressure-flattening :substrate-flattening)
+                (:local-tear-repair :substrate-tear-repair))))
     (mapcar (lambda (row)
               (attest `(:predicate :substrate-response-tested (:manuscript ,id)
                         (:method ,method) (:assay ,(fourth row)))
@@ -785,9 +796,10 @@ in the same folder as the first. Nobody at the bench can adjudicate this.")
 (format t "~%-- MOVEMENT III: the authority branch (consent -> authority -> mandate) --~%")
 
 (format t "~%   3a. the deposit file as it FIRST arrived — both consents in one folder:~%")
+(defparameter *contested-consent-receipt* nil)
 (multiple-value-bind (claim receipt)
     (establish-owner-authority *consent-heir* *consent-foundation*)
-  (record-receipt receipt)
+  (setf *contested-consent-receipt* (record-receipt receipt))
   (say-the-verdict receipt)
   (let ((conflicts (lisp-plus-slice1:derivation-receipt-uniqueness-conflicts receipt))
         (a (assessment-for receipt :intervention-consent-recorded)))
@@ -1050,9 +1062,14 @@ rule would look at is identical.")
 (defparameter *cases* '())
 
 (defun state-from-authorization (receipt)
-  "The work-order state, read off the authorization receipt. The workshop does
-not choose here; the ECASE is total over the six dispositions and one of them is
-the answer."
+  "The work-order state, read off the authorization receipt.
+
+The ECASE is total over the six dispositions and the workshop chooses none of
+them. It is keyed on the DISPOSITION only, deliberately: the state records how
+far the file GOT, and a missing assay and a missing mandate leave it in the same
+place -- not authorized, waiting on a document. WHICH document is a different
+question, and it is preserved separately and verbatim in the order's BLOCKED-ON
+slot rather than compressed into the state name."
   (if (eq :granted (lisp-plus-slice1:derivation-receipt-decision receipt))
       :treatment-authorized
       (let ((blocked (second (verdict receipt))))
@@ -1065,10 +1082,16 @@ the answer."
           (:satisfied     :treatment-authorized)))))
 
 (defun open-work-order (id method receipt)
-  (let ((wo (make-work-order :id id :manuscript *umbra* :method method
-                             :state (state-from-authorization receipt)
-                             :opened *today* :stage-log '() :completed-on nil
-                             :account nil :case-id nil)))
+  (let ((wo (make-work-order
+             :id id :manuscript *umbra* :method method
+             :state (state-from-authorization receipt)
+             :opened *today* :stage-log '() :completed-on nil
+             :account nil :case-id nil
+             ;; the receipt's own strongest lawful result, copied and not
+             ;; paraphrased -- NIL when the authorization granted
+             :blocked-on (unless (eq :granted (lisp-plus-slice1:derivation-receipt-decision
+                                               receipt))
+                           (verdict receipt)))))
     (push wo *work-orders*)
     wo))
 
@@ -1252,7 +1275,7 @@ the program reads when it must branch, never the account it stores."
   (dolist (name '(:execution :manifestation :effects :interpretation))
     (let* ((ax (lisp-plus-kernel0:outcome-axis outcome name))
            (v (lisp-plus-kernel0:axis-value ax)))
-      (format t "       axis ~13A ~24A determinacy ~A~%"
+      (format t "       axis ~14A ~24A determinacy ~A~%"
               (string-downcase (symbol-name name))
               ;; the manifestation axis's value is a manifestation RECORD when the
               ;; local record landed, and an absence PLIST when it did not; the
@@ -2055,17 +2078,40 @@ which holds the witness objects themselves and is compared separately below.")
           (fmt (sort (remove-duplicates be-counts) #'<)) be-max)
   (format t "     ground instances per assessment             values ~A  max ~D~%"
           (fmt (sort (remove-duplicates gi-counts) #'<)) gi-max)
-  (bench "PLURALITY AROSE, and it arose where the domain put it: two independent")
-  (bench "humidification assays, and two authorized treatments under one custody log.")
-  (bench "It is visible in the ENVIRONMENTS and not in the ground instances, and the")
-  (bench "reason is exact: a ground instance substitutes the CONCLUSION bindings and")
-  (bench "leaves a schema-local as a variable, so two environments differing only in")
-  (bench "a local encode to the same bytes and deduplicate to one. In this workshop")
-  (bench "every plurality lives in a local -- :ASSAY, and :METHOD -- so every ground")
-  (bench "instance is singular while the environments are not.")
-  (ok "[IX-c] plural grounding AROSE NATURALLY and was not staged: two receipts carry two complete binding environments each, and no representative was selected"
-      (and (= 2 env-max) (= 2 plural-receipts) (= 2 be-max))
-      "counted with the normative plural readers, over every receipt this program produced")
+  ;; and WHICH receipts they are, named rather than counted — an aggregate that
+  ;; nobody can trace back to a derivation is a number, not a measurement
+  (format t "     the plural receipts, named:~%")
+  (dolist (r (reverse *all-receipts*))
+    (let ((n (length (lisp-plus-slice1:derivation-receipt-complete-binding-environments r))))
+      (when (> n 1)
+        (format t "       ~D environments  schema ~A v~D  conclusion ~A~%"
+                n (fmt (lisp-plus-slice1:derivation-receipt-schema-name r))
+                (lisp-plus-slice1:derivation-receipt-schema-version r)
+                (fmt (second (lisp-plus-slice1:derivation-receipt-conclusion r)))))))
+  (bench "PLURALITY AROSE THREE TIMES, and each time where the domain put it: two")
+  (bench "independent humidification assays; two parties consenting as owner; two")
+  (bench "authorized treatments under one custody log. Nothing was manufactured to")
+  (bench "exercise the plural surface.")
+  (format t "~%")
+  (bench "AND THE THIRD ONE IS THE INSTRUCTIVE CASE. The contested-consent receipt")
+  (bench "of arm 3a carries TWO complete environments and REFUSED, because")
+  (bench ":PRINCIPAL was declared unique. So plurality and ambiguity are two axes,")
+  (bench "not one word: two assays agreeing is corroboration and grants; two owners")
+  (bench "consenting is a conflict and refuses -- and the difference is one keyword")
+  (bench "in a schema, decided when the schema was written rather than when the")
+  (bench "second consent turned up.")
+  (format t "~%")
+  (bench "Plurality is visible in the ENVIRONMENTS and not in the ground instances,")
+  (bench "and the reason is exact: a ground instance substitutes the CONCLUSION")
+  (bench "bindings and leaves a schema-local as a variable, so two environments")
+  (bench "differing only in a local encode to the same bytes and deduplicate to one.")
+  (bench "In this workshop every plurality lives in a local -- :ASSAY, :PRINCIPAL,")
+  (bench ":METHOD -- so every ground instance is singular while the environments are")
+  (bench "not. An arm that counted only ground instances would have reported no")
+  (bench "plurality at all; the first draft of this one did, and was wrong.")
+  (ok "[IX-c] plural grounding AROSE NATURALLY and was not staged: THREE receipts carry two complete binding environments each, and no representative was ever selected"
+      (and (= 2 env-max) (= 3 plural-receipts) (= 2 be-max))
+      "counted with the normative plural readers, over every receipt this program produced, and each plural receipt is named above")
   (ok "[IX-d] and the ground-instance cardinality is 1 everywhere, for the stated structural reason — so the singular projection was lawful wherever it could have been read, and this program never read it above cardinality one"
       (and (= 1 gi-max)
            ;; demonstrated rather than asserted: the projection answers here
@@ -2081,7 +2127,17 @@ which holds the witness objects themselves and is compared separately below.")
                   *material-humid-receipt*))
            (null (lisp-plus-slice1:derivation-receipt-uniqueness-conflicts
                   *documented-receipt*)))
-      "and the ONE place uniqueness WAS declared -- :PRINCIPAL -- refused instead, in Movement III arm 3a"))
+      "and the ONE place uniqueness WAS declared -- :PRINCIPAL -- refused instead, in Movement III arm 3a")
+  (ok "[IX-f] and that refusal is the separateness of the two axes, checked: the contested-consent receipt carries TWO complete environments AND a declared conflict AND decision :REFUSED, all three at once"
+      (and (= 2 (length (lisp-plus-slice1:derivation-receipt-complete-binding-environments
+                         *contested-consent-receipt*)))
+           (lisp-plus-slice1:derivation-receipt-multiply-supported-p *contested-consent-receipt*)
+           (equal '(:principal)
+                  (mapcar #'first (lisp-plus-slice1:derivation-receipt-uniqueness-conflicts
+                                   *contested-consent-receipt*)))
+           (eq :refused (lisp-plus-slice1:derivation-receipt-decision
+                         *contested-consent-receipt*)))
+      "grounding multiplicity is evidence and is kept; whether it refuses is a separate question the schema answered in advance"))
 
 ;;; --- 9c. the two planted controls ------------------------------------
 (format t "~%   9c. the two planted controls — a check that has never failed is untested:~%")
@@ -2092,7 +2148,7 @@ which holds the witness objects themselves and is compared separately below.")
     (authorize :controlled-humidification *material-humid* *authority-humid*
                :receiver (at-the-bench *authority-humid*))
   (record-receipt receipt)
-  (ok "[IX-e] CONTROL 1 — access removed from the MATERIAL branch: the reconvergence fails :INACCESSIBLE, and it is the material premise that fails"
+  (ok "[IX-g] CONTROL 1 — access removed from the MATERIAL branch: the reconvergence fails :INACCESSIBLE, and it is the material premise that fails"
       (and (null claim)
            (eq :inaccessible (disposition-of receipt :treatment-materially-suitable))
            (eq :satisfied (disposition-of receipt :treatment-institutionally-authorized)))
@@ -2101,7 +2157,7 @@ which holds the witness objects themselves and is compared separately below.")
 ;;; Control 2: substitute a fabricated effect witness and prove the PROBE grants
 ;;; while the production path declines it. The two facts must hold together, or
 ;;; the workshop's refusal is decoration.
-(ok "[IX-f] CONTROL 2 — a fabricated effect witness GRANTS on the probe path, and the production path declines that grant in the same run"
+(ok "[IX-h] CONTROL 2 — a fabricated effect witness GRANTS on the probe path, and the production path declines that grant in the same run"
     (and (eq :granted (lisp-plus-slice1:derivation-receipt-decision *fabricated-probe-receipt*))
          (eq :satisfied (disposition-of *fabricated-probe-receipt* :treatment-completed))
          (eq :treated-unassessed (wo-state *wo-humid*))
