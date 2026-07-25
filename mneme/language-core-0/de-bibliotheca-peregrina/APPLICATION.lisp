@@ -32,9 +32,9 @@
 ;;;;                           confuse them, and now it cannot.
 ;;;;
 ;;;; FRONT-DOOR DISCIPLINE: single-colon public surface only.  Zero double-colon
-;;;; package access in this directory — grep-verified, the only occurrences of
-;;;; that digraph being this sentence and its twin in FIELD-REPORT.md §7, which
-;;;; is where the mechanical check is recorded.
+;;;; package access in this directory — grep-verified: the digraph does not occur
+;;;; in either file at all, which is why both spell it out in words.  The
+;;;; mechanical check is recorded in FIELD-REPORT.md §7.
 ;;;;
 ;;;; Run: sbcl --non-interactive --load APPLICATION.lisp   (exits 0 on every arm)
 ;;;;
@@ -456,6 +456,10 @@ offered in `supports` and considered for that premise, whatever became of it."
             (getf entry :procedure-version))
     (format t "       supports   ~S~%"
             (mapcar #'lisp-plus-kernel0:identity-key (getf entry :support-ids)))
+    ;; and the same receipt as the LANGUAGE renders it, unaided by the desk —
+    ;; the legibility question of FIELD-REPORT §3.2, answered in the output.
+    (format t "     the receipt in its own words:~%")
+    (lisp-plus-slice1:render-derivation-why receipt)
     (ok "[III-d] the OTHER premise was satisfied — so the schema and bindings are fine"
         (eq :satisfied (disposition-of receipt :courier-insured)))
     (ok "[III-e] the original judgment was NOT converted into a witness: the same record is still on the claim, still :VERIFIED, still inspectable"
