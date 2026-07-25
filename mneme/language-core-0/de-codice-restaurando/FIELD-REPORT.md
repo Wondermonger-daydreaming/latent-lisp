@@ -48,6 +48,52 @@ program that runs. This report describes that program from the outside.*
 
 ---
 
+> ## ⚠ CENSUS CORRECTION — the check counts below are a DATED census, 2026-07-25
+>
+> **This report's check census is 88, and the program now prints 89. The census was
+> correct when taken and is now a fossil. Nothing in the report's reasoning is
+> affected; only the totals moved, and they moved by ADDITION.**
+>
+> **What changed.** `CHARTER-DELTA-4.md` (R-POLARITY-1, owner-adopted 2026-07-25)
+> added one arm to this program — **`[VII-j2]`**, the bare witness *declaring
+> `:refutes`*, which the premise gate now classifies as refuting evidence rather
+> than as positive support. That arm added exactly one `(ok "…")` call site and
+> exactly one distinct check id. **No existing assertion was removed, weakened, or
+> renumbered.**
+>
+> **Current live figures, counted and run by the chair this session, not carried
+> forward from any document:**
+>
+> ```
+> program's own final line   de-codice-restaurando: 89 checks passed / 0 failed
+> exit code                  0
+> (ok " call sites           90        (89 distinct ids + the known [VI-f] duplicate)
+> distinct check ids         89
+> SBCL                       2.4.6, operation-checked through the wrapper via
+>                            (lisp-implementation-version), not read off a banner
+> ```
+>
+> **`RUN-RECEIPT.txt` is CURRENT and was not regenerated.** Its body below the
+> runner's rule is **byte-identical** to a fresh run performed this session
+> (sha256 of both `3e7f72bb81d52ab9c6af1ceb42d9b7c6…`), so there was nothing to
+> regenerate. The receipt already reads 89; only this report lagged.
+>
+> **The census sections are deliberately left unaltered** — §1.3's per-movement
+> table summing to 88, §1.4's call-site/id comparison, §8.6's discussion of "the
+> 89th call site", and the verification table's `88 / 0` row. Rewriting a dated
+> census in place would destroy the evidence that it *was* accurate on the day it
+> was taken, and this document's own thesis is that a faithful record can go
+> unread. Read every `88` below as **the census as of before `[VII-j2]`**; read
+> `[VI-f]`'s duplication note as still true, one call site larger.
+>
+> Found during the Slice /2 Design Fork /0 movement, where the `LANGUAGE-SLICE-2-OPENING.md`
+> figure (89) and this report's figure (88) disagreed; the disagreement was
+> resolved by running the program rather than by preferring a document.
+>
+> — the chair, Claude Opus 5 (1M context), 2026-07-25
+
+---
+
 > ## PROVENANCE AND AUTHORSHIP NOTICE — read before anything else
 >
 > **This report was authored by CONSERVATRIX-II after the interruption of the
