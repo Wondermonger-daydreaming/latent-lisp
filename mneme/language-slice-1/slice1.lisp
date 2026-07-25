@@ -58,6 +58,16 @@
    ;; premise assessment
    #:premise-assessment #:premise-assessment-p
    #:premise-assessment-premise-pattern #:premise-assessment-ground-instance
+   ;; SOL DECISION 2 — the SINGLE plural surface addition.  The normative stored
+   ;; value is the complete canonical SET; the singular reader above survives only
+   ;; as a compatibility projection over it.
+   #:premise-assessment-ground-instances
+   ;; SOL DECISION 1 — the judged-claim roster.  Required by ruling condition 6
+   ;; ("the receiving derivation records both the supporting claim identity and
+   ;; its judgment basis") and by the misdirection repair ("a claim offered in
+   ;; supports must no longer be invisible"): a recorded field with no reader is
+   ;; not an inspectable record.
+   #:premise-assessment-judged-claims
    #:premise-assessment-matching-accessible-supports
    #:premise-assessment-matching-inaccessible-supports
    #:premise-assessment-mismatched-candidates
@@ -686,7 +696,17 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
 (defstruct (premise-assessment (:constructor %make-premise-assessment)
                                (:conc-name %premise-assessment-) (:copier nil))
   (premise-pattern nil :read-only t)
-  (ground-instance nil :read-only t)
+  ;; SOL DECISION 2: the NORMATIVE stored value is PLURAL — the complete
+  ;; canonical SET of ground instances, one per environment this premise was
+  ;; assessed under, including when its cardinality is one.  The former singular
+  ;; slot is gone: it recorded (FIRST ASSESS-ENVS), i.e. a traversal-order
+  ;; accident dressed as a fact.
+  (ground-instances nil :read-only t)
+  ;; SOL DECISION 1: every judged CLAIM offered in SUPPORTS and considered for
+  ;; this premise, with what became of it — and, for the ones that discharged,
+  ;; the inherited judgment basis (ruling condition 6).  A claim is never again
+  ;; silently discarded.
+  (judged-claims nil :read-only t)
   (matching-accessible-supports nil :read-only t)
   (matching-inaccessible-supports nil :read-only t)
   (mismatched-candidates nil :read-only t)    ; list of (witness . roles)
@@ -697,8 +717,10 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
 
 ;;; AUDIT-1 repair 2: public readers copy every list-valued field so an
 ;;; assessment carried inside a stored receipt cannot be mutated through a
-;;; returned list.  Copy depth: PREMISE-PATTERN / GROUND-INSTANCE (normal-form
-;;; role-value lists), MISMATCHED-CANDIDATES ((witness . roles) conses),
+;;; returned list.  Copy depth: PREMISE-PATTERN / GROUND-INSTANCES (normal-form
+;;; role-value lists) / JUDGED-CLAIMS (plists whose only non-cons, non-string
+;;; leaves are read-only kernel0 identities and keywords),
+;;; MISMATCHED-CANDIDATES ((witness . roles) conses),
 ;;; BINDING-ENVIRONMENTS / AMBIGUITIES (schema-local alists) are structural
 ;;; (%copy-value — copy-tree PLUS copy-seq at string leaves, per the AUDIT-1
 ;;; continuation defect B1: a returned string leaf was a live handle on stored
@@ -709,8 +731,56 @@ under (~S ~S); (name,version) is a unique key and is never overwritten"
 (defun premise-assessment-disposition (a) (%premise-assessment-disposition a))
 (defun premise-assessment-premise-pattern (a)
   (%copy-value (%premise-assessment-premise-pattern a)))
+(defun premise-assessment-ground-instances (a)
+  "The COMPLETE CANONICAL SET of ground instances of this premise — one per
+environment the premise was assessed under, deduplicated only on byte-identical
+canonical encodings and ordered lexicographically by canonical encoded bytes
+(SOL DECISION 2).  PLURAL IS NORMATIVE: a one-element sequence is returned when
+there is exactly one, never a bare instance."
+  (%copy-value (%premise-assessment-ground-instances a)))
+
 (defun premise-assessment-ground-instance (a)
-  (%copy-value (%premise-assessment-ground-instance a)))
+  "COMPATIBILITY PROJECTION over PREMISE-ASSESSMENT-GROUND-INSTANCES, and nothing
+more (SOL DECISION 2).
+
+Returns the SOLE instance when the canonical set has exactly one, and NIL when it
+is empty — the pre-ruling behaviour for every premise that ever had a single
+grounding environment.  Above cardinality one it REFUSES: there is no 'the'
+ground instance, and choosing one by any rule whatsoever would manufacture a
+singular history that never existed.  It does NOT sometimes return an instance
+and sometimes a sequence — that would relocate the ambiguity into the value shape,
+which the ruling forbids explicitly.
+
+The refusal is a typed SLICE1-CONDITION (no new condition family is minted for
+it) naming the cardinality and the plural reader that has the evidence."
+  (let ((set (%premise-assessment-ground-instances a)))
+    (cond ((null set) nil)
+          ((null (cdr set)) (%copy-value (first set)))
+          (t (signal-slice1
+              'slice1-condition
+              :failed-invariant
+              (format nil "this premise has ~D distinct complete grounding ~
+environments, so it has NO single ground instance; the plurality is evidence and ~
+is preserved — read PREMISE-ASSESSMENT-GROUND-INSTANCES, which returns all ~D in ~
+canonical order.  Selecting one here would manufacture a singular history that ~
+never existed" (length set) (length set))
+              :offending-field :ground-instance
+              :offending-value (length set))))))
+
+(defun premise-assessment-judged-claims (a)
+  "The per-premise JUDGED-CLAIM ROSTER (SOL DECISION 1): one plist per judged
+claim offered in SUPPORTS and considered for this premise, in the form
+
+  (:CLAIM-ID id :OUTCOME kw [:ROLES roles] [:JUDGMENT kw]
+   [:PROCEDURE-ID id :PROCEDURE-VERSION v :SUPPORT-IDS ids
+    :JUDGMENT-RECEIVER r :JUDGMENT-ORDINAL n])
+
+OUTCOME is one of :DISCHARGED · :PROPOSITION-DOES-NOT-MATCH · :ROLE-CONFLICT ·
+:UNJUDGED · :JUDGMENT-NOT-VERIFIED · :JUDGMENT-BASIS-UNAVAILABLE ·
+:INACCESSIBLE-TO-RECEIVER.  The judgment basis fields are present exactly on the
+:DISCHARGED entries — that is ruling condition 6, and it is what makes an
+inherited standing auditable instead of restated."
+  (%copy-value (%premise-assessment-judged-claims a)))
 (defun premise-assessment-mismatched-candidates (a)
   (%copy-value (%premise-assessment-mismatched-candidates a)))
 (defun premise-assessment-binding-environments (a)
@@ -799,29 +869,168 @@ scalar strength — a boolean read of the preserved environment count."
   (remove-if (lambda (pair) (member pair before :test #'equal)) after))
 
 ;;; ------------------------------------------------------------------
-;;; Environment set discipline (CHARTER-DELTA-2).  An environment is an alist
-;;; VAR -> VALUE.  Canonical order (by variable name) makes the environment SET
-;;; order-independent under EQUAL, so support order can change neither the
-;;; decision nor the recorded environment set (M3).
+;;; CANONICAL ENCODING OF EVIDENTIARY SEQUENCES (SOL DESIGN RULING, DECISION 2).
+;;;
+;;; The ruling fixes the canonical form of an environment in five parts:
+;;;   1. bindings arranged by the schema's DECLARED VARIABLE ORDER;
+;;;   2. each bound value satisfying the governing CD/0 boundary;
+;;;   3. the complete environment encoded through the CANONICAL DATUM CODEC;
+;;;   4. distinct environments ordered LEXICOGRAPHICALLY BY CANONICAL ENCODED
+;;;      BYTES;
+;;;   5. deduplicated ONLY on byte-identical complete canonical encodings.
+;;;
+;;; and forbids: printed representation · host hash-table iteration · support
+;;; traversal order · host symbol order · object identity · implementation-
+;;; specific comparison.  The prior %SORT-ENVS keyed on (FORMAT NIL "~S" e) —
+;;; exactly the forbidden first item — and the prior %CANONICAL-ENV arranged
+;;; bindings by SYMBOL-NAME — exactly the forbidden fifth.  Both are replaced
+;;; here.
+;;;
+;;; NOTHING IS INVENTED AT THE CANONICAL-DATUM LAYER.  The codec entry point is
+;;; the one Slice /0's own proposition validation and Slice /1's D2 quoted-payload
+;;; probe already route through: LISP-PLUS-KERNEL0:REQUIRE-CANONICAL (host value
+;;; -> CD/0 datum, by an IDENTIFIED canonicalization procedure) followed by
+;;; LISP-PLUS-CD0:ENCODE-EXACT (CD/0 datum -> canonical octet string).  Byte
+;;; order is read off those octets directly (%OCTETS<), never off a hex or
+;;; printed rendering, so no host string collation enters the comparison.
+;;;
+;;; Boundary note (ruling item 2): every bound value reaching here came out of a
+;;; constructor-validated ground proposition, so it is already boundary-lawful by
+;;; construction; REQUIRE-CANONICAL is nevertheless the live gate — a value that
+;;; would not cross signals the kernel0 typed condition rather than being ordered
+;;; by some weaker fallback.
 
-(defun %canonical-env (alist)
-  "An environment in canonical order: entries sorted by variable name (each var
-is bound at most once, so the key is total)."
-  (sort (copy-alist alist) #'string<
-        :key (lambda (pair) (symbol-name (car pair)))))
+(defun %declared-variable-order (schema)
+  "The schema's DECLARED variable order: the conclusion variables as RECORDED AT
+CONSTRUCTION, then the declared :LOCALS in declaration order.
+
+Both components are fixed by the schema author's own text and are stable for the
+life of the schema.  (The conclusion-variable component is whatever
+%PARSE-PROPOSITION recorded when the conclusion pattern was constructed; that
+recorded order is not re-derived, re-sorted, or otherwise reinterpreted here —
+this function reads a declaration, it does not compute one.)  A variable bound in
+an environment but absent from this order cannot arise for a registered schema
+(schema construction refuses an undeclared premise variable), and %CANONICAL-ENV
+below still gives such a residual a deterministic, non-host-symbol placement
+rather than leaving it order-dependent."
+  (append (%judgment-schema-conclusion-variables schema)
+          (%judgment-schema-locals schema)))
+
+(defun %canonical-octets (host-value)
+  "The CD/0 canonical encoding of HOST-VALUE as an octet string.
+
+Delegates, in this exact order, to the two already-governing layers:
+LISP-PLUS-KERNEL0:REQUIRE-CANONICAL (the boundary Slice /0 proposition
+validation and Slice /1's D2 payload probe both use) and
+LISP-PLUS-CD0:ENCODE-EXACT (the canonical datum codec).  Slice /1 supplies no
+serializer of its own."
+  (lisp-plus-cd0:encode-exact
+   (lisp-plus-kernel0:require-canonical host-value)))
+
+(defun %octets< (a b)
+  "Strict LEXICOGRAPHIC order on two CD/0 octet strings: first differing octet
+decides; otherwise the shorter is first.  Reads octets through the codec's own
+accessors — never a printed or hex rendering, so no host character collation
+participates."
+  (let ((la (lisp-plus-cd0:octets-length a))
+        (lb (lisp-plus-cd0:octets-length b)))
+    (dotimes (i (min la lb))
+      (let ((x (lisp-plus-cd0:octets-ref a i))
+            (y (lisp-plus-cd0:octets-ref b i)))
+        (cond ((< x y) (return-from %octets< t))
+              ((> x y) (return-from %octets< nil)))))
+    (< la lb)))
+
+(defun %octets= (a b)
+  "BYTE-IDENTITY of two CD/0 octet strings — the ONLY licensed deduplication
+test (ruling item 5)."
+  (let ((la (lisp-plus-cd0:octets-length a)))
+    (and (= la (lisp-plus-cd0:octets-length b))
+         (dotimes (i la t)
+           (unless (= (lisp-plus-cd0:octets-ref a i)
+                      (lisp-plus-cd0:octets-ref b i))
+             (return nil))))))
+
+(defun %canonical-sequence (values)
+  "The complete canonical SEQUENCE of VALUES: deduplicated ONLY on byte-identical
+canonical encodings, then ordered lexicographically by canonical encoded bytes.
+Nothing is selected and nothing is discarded except an exact byte duplicate."
+  (let ((keyed '()))
+    (dolist (v values)
+      (let ((bytes (%canonical-octets v)))
+        (unless (find bytes keyed :key #'car :test #'%octets=)
+          (push (cons bytes v) keyed))))
+    (mapcar #'cdr (sort (nreverse keyed) #'%octets< :key #'car))))
+
+;;; ------------------------------------------------------------------
+;;; Environment set discipline (CHARTER-DELTA-2, completed by SOL DECISION 2).
+;;; An environment is an alist VAR -> VALUE.  Canonical form makes the
+;;; environment SET order-independent under EQUAL, so support order can change
+;;; neither the decision nor the recorded environment set (M3).
+
+(defun %env->encodable (env)
+  "An environment rendered as the proper list of (VAR VALUE) pairs that crosses
+the CD/0 boundary.  The stored environment is an ALIST (dotted pairs are not
+canonical data); this is the encodable projection of it, and the binding ORDER of
+the alist is preserved verbatim — the arrangement decision belongs to
+%CANONICAL-ENV, not to the encoder."
+  (mapcar (lambda (cell) (list (car cell) (cdr cell))) env))
+
+(defun %canonical-sequence-of-cells (cells)
+  "Deterministic arrangement of undeclared binding cells (see %CANONICAL-ENV);
+ordered by the canonical encoded bytes of each (VAR VALUE) pair."
+  (mapcar (lambda (pair) (cons (first pair) (second pair)))
+          (%canonical-sequence (mapcar (lambda (c) (list (car c) (cdr c))) cells))))
+
+(defun %canonical-env (alist order)
+  "An environment in CANONICAL FORM: bindings arranged by the schema's DECLARED
+VARIABLE ORDER (ruling item 1), never by host symbol order.
+
+ORDER is %DECLARED-VARIABLE-ORDER's list.  Each variable is bound at most once,
+so the arrangement is total over the declared variables.  A binding whose
+variable is not declared cannot arise for a registered schema; if one ever did it
+is placed AFTER the declared bindings, ordered by its own canonical encoded bytes
+— deterministic, and still not host symbol order."
+  (let* ((entries (copy-alist alist))
+         (declared (loop for v in order
+                         for cell = (assoc v entries)
+                         when cell collect cell))
+         (residual (remove-if (lambda (cell) (member (car cell) order :test #'eq))
+                              entries)))
+    (append declared
+            (if (cdr residual)
+                (%canonical-sequence-of-cells residual)
+                residual))))
+
+(defun %env-canonical-octets (env)
+  "The canonical encoded bytes of an ALREADY-CANONICAL environment (ruling item 3)."
+  (%canonical-octets (%env->encodable env)))
 
 (defun %sort-envs (envs)
-  "Deterministic, order-independent ordering of a SET of canonical environments,
-keyed on each environment's printed canonical form."
-  (sort (remove-duplicates envs :test #'equal) #'string<
-        :key (lambda (e) (format nil "~S" e))))
+  "The complete canonical SEQUENCE of a SET of canonical environments: distinct
+environments ordered LEXICOGRAPHICALLY BY CANONICAL ENCODED BYTES (ruling item 4)
+and deduplicated ONLY on byte-identical complete canonical encodings (item 5).
+
+This REPLACES the printed-representation key the ruling names as forbidden.  Its
+callers pass environments that %CANONICAL-ENV has already arranged, so the bytes
+being compared are the bytes of the canonical form, not of an accidental one."
+  (let ((keyed '()))
+    (dolist (e envs)
+      (let ((bytes (%env-canonical-octets e)))
+        (unless (find bytes keyed :key #'car :test #'%octets=)
+          (push (cons bytes e) keyed))))
+    (mapcar #'cdr (sort (nreverse keyed) #'%octets< :key #'car))))
 
 (defun %uniqueness-conflicts (unique-locals complete-envs)
   "Per declared uniqueness-bearing local, the distinct values it takes ACROSS the
 COMPLETE coherent environments; a local with >1 surviving value is a conflict.
-Returns a list of (LOCAL SORTED-VALUES CARRYING-ENVIRONMENTS).  Judged over
+Returns a list of (LOCAL CANONICAL-VALUES CARRYING-ENVIRONMENTS).  Judged over
 COMPLETE environments only (Delta-2), so an incomplete environment's stray value
-never manufactures a conflict (M12)."
+never manufactures a conflict (M12).
+
+SOL DECISION 2: the surviving-value sequence is ordered by CANONICAL ENCODED
+BYTES, not by the printed representation it used before — the same forbidden
+mechanism, one field over."
   (loop for u in unique-locals
         for vals = (remove-duplicates
                     (loop for e in complete-envs
@@ -830,8 +1039,7 @@ never manufactures a conflict (M12)."
                     :test #'equal)
         when (> (length vals) 1)
           collect (list u
-                        (sort (copy-list vals) #'string<
-                              :key (lambda (v) (format nil "~S" v)))
+                        (%canonical-sequence vals)
                         (%sort-envs
                          (remove-if-not (lambda (e) (assoc u e)) complete-envs)))))
 
