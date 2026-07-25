@@ -3,8 +3,9 @@ command: sbcl --non-interactive --load APPLICATION.lisp
 cwd:     experiments/latent-lisp/mneme/language-core-0/de-bibliotheca-peregrina
 sbcl:    SBCL 2.4.6 (operation-checked through the wrapper via
          (lisp-implementation-version), not read off a banner)
-date:    2026-07-25T02:00:06Z (UTC, read from the clock, not asserted)
+date:    2026-07-25T02:13:29Z (UTC, read from the clock, not asserted)
 exit:    0
+runs:    executed twice from a clean image; the two outputs are byte-identical
 
 Everything below this line is the program's own verbatim standard output.
 Everything above it is a claim ABOUT that output, made by the runner.
@@ -29,6 +30,7 @@ kernel0 records+folds smoke: PASS
    III.b.3      De Ponte Combusto  (640 crowns, 14-day loan)
    I.g.11       Herbarium Vagabundum  (210 crowns, 28-day loan)
    IV.d.1       Cursor Aereus, cum notis  (1450 crowns, 14-day loan)
+   V.h.9        Speculum Peregrinum  (1180 crowns, 14-day loan)
 
    ▸ FERRAND      owes 0 crowns
    ▸ QUILLON      owes 14 crowns
@@ -196,6 +198,266 @@ kernel0 records+folds smoke: PASS
      tracer follow-ups: ((:DAMBROISE . "ms-Beth-3"))
      open tracers:      ("T-1")
 
+── MOVEMENT VI: the long road (four hops, each fed by the last) ──
+
+   the road begins where Movement II ended — an ordinary borrowing standing:
+   ▸ granted.
+  ok   [VI-a] the restricted volume is on the shelf and Ferrand may borrow it
+
+   hop 1 — the reciprocity agreement makes a borrower eligible:
+   ▸ granted.
+  ok   [VI-1-a] the hop is GRANTED
+  ok   [VI-1-b] the premise fed by the previous claim reads :SATISFIED
+  ok   [VI-1-c] the roster names THAT claim, :DISCHARGED, judgment :VERIFIED — :MAY-BORROW via procedure:derive/BORROWING-STANDING/1
+  ok   [VI-1-d] the spent claim is UNTOUCHED — same judgment record, still :VERIFIED — nothing converted a judgment into a witness on the way past
+
+   hop 2 — eligibility plus the curator's hand opens the restricted case:
+   ▸ granted.
+  ok   [VI-2-a] the hop is GRANTED
+  ok   [VI-2-b] the premise fed by the previous claim reads :SATISFIED
+  ok   [VI-2-c] the roster names THAT claim, :DISCHARGED, judgment :VERIFIED — :RECIPROCAL-ELIGIBLE via procedure:derive/RECIPROCITY-STANDING/1
+  ok   [VI-2-d] the spent claim is UNTOUCHED — same judgment record, still :VERIFIED — nothing converted a judgment into a witness on the way past
+
+   hop 3 — access plus a volume still on the shelf makes a reservation:
+   ▸ granted.
+  ok   [VI-3-a] the hop is GRANTED
+  ok   [VI-3-b] the premise fed by the previous claim reads :SATISFIED
+  ok   [VI-3-c] the roster names THAT claim, :DISCHARGED, judgment :VERIFIED — :MAY-ACCESS-RESTRICTED via procedure:derive/RESTRICTED-ACCESS-STANDING/1
+  ok   [VI-3-d] the spent claim is UNTOUCHED — same judgment record, still :VERIFIED — nothing converted a judgment into a witness on the way past
+
+   hop 4 — the reservation, not the borrowing, is what v2 dispatches on:
+   ▸ granted.
+  ok   [VI-4a] the hop is GRANTED
+  ok   [VI-4b] the premise fed by the previous claim reads :SATISFIED
+  ok   [VI-4c] the roster names THAT claim, :DISCHARGED, judgment :VERIFIED
+  ok   [VI-4d] the spent claim is UNTOUCHED — same judgment record, still :VERIFIED
+
+   6b. the desk tries to walk BACK down the road, from the last claim,
+       using nothing but the public accessors on a claim:
+     hop 1  claim:claim-65
+             proposition :MAY-DISPATCH
+             judgment    :VERIFIED by procedure:derive/DISPATCH-STANDING/2 v2
+             supported by ("receipt:witness-63")  (domains (:RECEIPT))
+             lineage      ("claim:claim-64")  (domains (:CLAIM))
+   ▸ the walk resolved 1 claim object and then stopped: :IDENTITY-CANNOT-BE-DEREFERENCED.
+   ▸ the road is walkable FORWARD — each hop was handed the previous claim —
+   ▸ and it is not walkable BACKWARD from a claim alone. Both onward
+   ▸ pointers a claim carries are identities, and nothing dereferences one.
+  ok   [VI-w1] the backward walk resolves exactly ONE claim object — the one it was handed — the missing accessor: an identity -> object resolver; Slice /0 and /1 export none, and keep no registry that could back one
+  ok   [VI-w2] the judgment's support is a :RECEIPT identity (the derivation witness), not the supporting CLAIM — a granted claim's judgment names the witness DERIVE minted, never the claim that discharged the premise
+  ok   [VI-w3] and the lineage names the claim's own pre-promotion shell, NOT the previous hop — the link from a granted claim to the claim that discharged its premise lives in the derivation RECEIPT alone
+   ▸ so the chain IS auditable — hop by hop, from the receipts. It is not
+   ▸ auditable from the claim alone. Arm 6c walks it the way that works.
+
+   6c. the same road walked backward the way that works: from the
+       RECEIPTS, through immediate governed links, to the patron's
+       original standing and the three witnesses under it:
+     ┌ hop 1  receipt for :MAY-DISPATCH
+     │   granted claim   claim:claim-65
+     │   premise :MAY-RESERVE inherited from claim claim:claim-61
+     │     judgment :VERIFIED by procedure:derive/RESERVATION-STANDING/1 v1
+     ┌ hop 2  receipt for :MAY-RESERVE
+     │   granted claim   claim:claim-61
+     │   premise :MAY-ACCESS-RESTRICTED inherited from claim claim:claim-56
+     │     judgment :VERIFIED by procedure:derive/RESTRICTED-ACCESS-STANDING/1 v1
+     ┌ hop 3  receipt for :MAY-ACCESS-RESTRICTED
+     │   granted claim   claim:claim-56
+     │   premise :RECIPROCAL-ELIGIBLE inherited from claim claim:claim-52
+     │     judgment :VERIFIED by procedure:derive/RECIPROCITY-STANDING/1 v1
+     ┌ hop 4  receipt for :RECIPROCAL-ELIGIBLE
+     │   granted claim   claim:claim-52
+     │   premise :MAY-BORROW inherited from claim claim:claim-48
+     │     judgment :VERIFIED by procedure:derive/BORROWING-STANDING/1 v1
+     ┌ hop 5  receipt for :MAY-BORROW
+     │   granted claim   claim:claim-48
+     └   THE GROUND — every premise here rests on a WITNESS:
+           :MEMBERSHIP-ATTESTED  ← receipt:witness-43 (:DIRECT/:OBSERVATION) from :PEREGRINA
+           :FINES-CLEAR  ← receipt:witness-44 (:DIRECT/:OBSERVATION) from :PEREGRINA
+           :VOLUME-UNRESERVED  ← receipt:witness-45 (:DIRECT/:OBSERVATION) from :PEREGRINA
+  ok   [VI-w4] the chain walker reaches the GROUND — five receipts, four inherited hops, then witnesses — public accessors only; the walker renders governed records and decides nothing
+  ok   [VI-w5] each receipt's inherited claim-id IS the previous hop's claim — the chain is verified by identity, not by the order the desk printed it in
+   ▸ so: forward, the language carries standing by identity and the receipts
+   ▸ record it. Backward, a READER needs the receipts — a claim alone does not
+   ▸ point home. The missing public operation is an identity → object resolver;
+   ▸ the desk does not build one, and holds five receipts, not a registry.
+
+── MOVEMENT VII: the two crossings (authorize, then act — never the reverse) ──
+
+   7a. the reservation act — the shelf is asked to let the volume go:
+   ▸ outcome-kind => :COMMITTED  (a view, not the account)
+   ▸ attempt attempt:core0/attempt/27
+   ▸ seat    seat:core0/seat/peregrina/reserve/he-9
+   ▸ ledger  fake:courier:0001, over 9 recorded events
+  ok   [VII-a] the reserve act crosses under a capability scoped to :RESERVE and commits
+  ok   [VII-b] the evidence carries an ATTEMPT IDENTITY and a LEDGER TOKEN — the desk stored the account, not a verdict
+
+   7b. the dispatch standing comes from the CLAIM, not from the reservation:
+   ▸ the volume is off the shelf because :MAY-RESERVE was granted. Nothing
+   ▸ the reservation DID is a premise of anything. The road runs one way.
+  ok   [VII-c] hop 4 was derived from the :MAY-RESERVE claim, and its receipt says so — derived before either crossing happened — the ordering is in the program, not in a comment
+
+   7c. the delivery — Speculum Peregrinum leaves the building:
+   ▸ outcome-kind => :COMMITTED
+   ▸ loan opened, due day 4134, receipt fake:courier:0001
+  ok   [VII-d] the delivery commits: one ledger row, one loan, one clock started
+
+   7d. the second crossing — the reciprocity docket owed to Collegium
+       Boreale, whose courier is interrupted and whose ledger withholds:
+   ▸ outcome-kind => :INDETERMINATE; the desk holds no token; the ledger holds 1 row.
+  ok   [VII-e] the interrupted docket is :INDETERMINATE, and the desk was told no token
+
+   and the desk continues from the surviving evidence — it does not resend:
+   ▸ disposition => :INDETERMINATE
+     known:           (:FRONTIER-CROSSED :EFFECT-UNCERTAIN)
+     unknown:         (:WHETHER-THE-EFFECT-SETTLED)
+     required-action: (:OBTAIN-A-JURISDICTION-BEARING-WITNESS-OF-THE-LEDGER)
+   ▸ tracer T-2 opened against the reciprocal library's docket.
+   ▸ no second docket is sent; no hold is entered; nothing is called settled.
+  ok   [VII-f] the withheld docket routes to RECONCILIATION — not to a confirmation
+  ok   [VII-g] the continuation did NOT re-invoke the courier (row count unchanged)
+  ok   [VII-h] and nothing phantom was written: no loan, no due date, no hold for the docket — the one loan on ms-He-9 is the CONFIRMED delivery; the unconfirmed docket produced a tracer and nothing else
+
+── MOVEMENT VIII: the three refusals (where the long road stops) ──
+
+   B. Quillon — still owing 14 crowns — asks for the restricted volume:
+  ok   [VIII-b1] the desk holds no borrowing standing for Quillon — hop 0 never produced one
+   ▸ refused — :MAY-BORROW is :MISSING: I have granted you no borrowing standing I could hand onward
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                          (:PREDICATE :MAY-BORROW
+                                           (:PATRON :QUILLON)
+                                           (:VOLUME "ms-He-9")))
+  ok   [VIII-b2] the road stops at hop 1, and the RECEIPT is the reason — no guard of mine fired
+
+   Quillon's desk mints itself the eligibility it was not granted:
+   ▸ the proposition matches to the letter. It still does not travel.
+  ok   [VIII-b3] a claim whose text is right and whose judgment is absent lands :UNJUDGED — matching text is not standing; standing is a governed judgment or it is nothing
+
+   C. a perfectly good access standing, offered to a desk not given it:
+   ▸ refused — :MAY-ACCESS-RESTRICTED is :INACCESSIBLE: the curator cleared you; this desk was not given the right to read that clearance
+     repair (verbatim from the receipt): (:GRANT-RECEIVER-ACCESS-TO NIL
+                                          :GRANT-RECEIVER-ACCESS-TO-JUDGED-CLAIMS
+                                          (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY
+                                              :DOMAIN :CLAIM
+                                              :NAME "claim-56")))
+  ok   [VIII-c1] the premise is :INACCESSIBLE — emphatically NOT :MISSING — the desk is not told 'find evidence'; it is told 'you were not given the right to read the evidence you have'
+  ok   [VIII-c2] and the roster says exactly which claim, and exactly why
+  ok   [VIII-c3] the repair names the claim by DURABLE IDENTITY
+
+   E. THE COUNTEREXAMPLE ARM. The desk asserts a reservation standing
+      it never derived, and compares the two receipts side by side:
+  ok   [VIII-e1] the ASSERTED standing grants too — the :DIRECT door is open, and this movement does not close it
+  ok   [VIII-e2] but it leaves a WITNESS and no judged-claim record
+  ok   [VIII-e3] while the inherited standing left a judged-claim record with a judgment basis and NO witness — the two are told apart from the receipts alone — a reader sees a judgment basis or a witness, never both
+
+── MOVEMENT IX: the effect frontier (settlement wants the world) ──
+
+   probe 1 — the desk offers nothing for the acknowledgment:
+   ▸ refused — :DISPATCH-ACKNOWLEDGED is :MISSING: I cannot close this loan: nothing before me says the dispatch arrived
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
+                                          (:PREDICATE :DISPATCH-ACKNOWLEDGED
+                                           (:COURIER :BRASS-COURIER)
+                                           (:VOLUME "ms-He-9")))
+  ok   [IX-1] with nothing offered the effect premise is :MISSING (and the CLAIM half is :SATISFIED)
+
+   probe 2 — the desk mints itself a claim that the dispatch was acknowledged:
+  ok   [IX-2] a self-minted claim is SEEN, recorded, and refused — :UNJUDGED — the desk cannot bootstrap a fact about the world by asserting it
+
+   probe 3 — the courier's TESTIMONY, constructed at the level the
+             language insists on:
+     its :FOR is the attribution, whole: (:ASSERTED :BRASS-COURIER
+                                          (:PREDICATE :DISPATCH-ACKNOWLEDGED
+                                           (:COURIER :BRASS-COURIER)
+                                           (:VOLUME "ms-He-9")))
+     the premise wants:                 (:PREDICATE :DISPATCH-ACKNOWLEDGED
+                                         (:COURIER :BRASS-COURIER)
+                                         (:VOLUME "ms-He-9"))
+  ok   [IX-3] a :TESTIMONY witness is :FOR the ATTRIBUTION, so it does not discharge the ground premise — the courier saying so is a fact about the courier's saying, and the language will not let the two be confused
+
+   probe 4 — a :DIRECT witness carrying the real crossing: the attempt
+             identity in :PROCEDURE, the ledger token in :CONTENT:
+   ▸ granted.
+  ok   [IX-4] the :DIRECT witness DISCHARGES the effect premise — settlement granted
+
+   probe 5 — the same witness, RAISED into a judged claim first, then
+             chained the lawful way:
+   ▸ the reading becomes a judged claim, and the judged claim chains like any other.
+  ok   [IX-5] RAISE produces a genuinely :VERIFIED claim that then chains lawfully — :DISCHARGED
+
+   9b. THE COUNTEREXAMPLE ARM. No crossing happened. The desk invents
+       an attempt identity and a ledger token and offers those instead:
+  ok   [IX-6] the fabrication DISCHARGES the effect premise identically — same disposition, same decision
+
+   the two receipts, read through every public accessor:
+     :DISPOSITION             identical
+     :PREMISE-PATTERN         identical
+     :GROUND-INSTANCES        identical
+     :JUDGED-CLAIMS           identical
+     :MATCHING-INACCESSIBLE   identical
+     :MISMATCHED-CANDIDATES   identical
+     :REFUTING-SUPPORTS       identical
+     :BINDING-ENVIRONMENTS    identical
+     :AMBIGUITIES             identical
+  ok   [IX-7] every public reader of the effect premise is IDENTICAL between the true receipt and the fabricated one, save the one holding the witnesses
+     matching-accessible      1 witness each; governed attributes:
+       mode/kind/polarity/source  (:DIRECT :COURIER-LEDGER :SUPPORTS
+                                   :BRASS-COURIER) vs (:DIRECT :COURIER-LEDGER
+                                                       :SUPPORTS :BRASS-COURIER)
+       :procedure                 "attempt:core0/attempt/35" vs "attempt:peregrina/crossing-that-never-was"
+       :content                   (:LEDGER-TOKEN "fake:courier:0001") vs (:LEDGER-TOKEN
+                                                                          "fake:courier:0000")
+  ok   [IX-8] the two witnesses are identical in every attribute the language GOVERNS, and differ only in the two fields it merely CARRIES — so a READER can see two different strings; nothing tells the reader which of them names a crossing that happened
+
+   9c. and the two carried fields are not load-bearing at all:
+   ▸ a witness with NO :PROCEDURE and NO :CONTENT — no attempt, no token, nothing:
+  ok   [IX-9] a witness carrying NO effect account whatsoever discharges the premise identically — promotion admissibility is a (MODE KIND) membership test; it never reads :PROCEDURE or :CONTENT
+
+   9d. and on the RAISED route the account does not survive the promotion:
+     the judgment record keeps: judgment :VERIFIED, procedure procedure:peregrina/read-the-courier-ledger v1, supports (:RECEIPT)
+  ok   [IX-10] the receiving receipt holds NO witness object and NO :ATTEMPT identity — the crossing's identity is gone by the time the claim chains — the judgment record keeps the WITNESS's id, never what the witness was carrying
+
+   ── where the road ends, stated exactly ──
+   ▸ The effect account can be CARRIED. A kernel0 attempt identity fits in
+   ▸ :PROCEDURE, a ledger token fits in :CONTENT, and a reader can read both
+   ▸ back out of the receipt. It cannot be CHECKED. No governed operation
+   ▸ consumes either field: promotion admissibility is a (MODE KIND) pair
+   ▸ membership test, and [IX-9] shows a witness carrying nothing at all
+   ▸ discharging exactly as well. The judgment record does not preserve them
+   ▸ ([IX-10]), so what survives a promotion is the witness's id and nothing
+   ▸ the witness was holding.
+
+   ▸ So the frontier is not a wall the desk was refused at. It is a place where
+   ▸ the receipts stop meaning what they look like they mean. Everything from
+   ▸ Movement VI to Movement VII was governed: a premise was satisfied because
+   ▸ a judgment existed and the receipt named it. Cross into settlement and the
+   ▸ premise is satisfied because the desk SAID SO in the one mode reserved for
+   ▸ what it saw with its own eyes — and the desk's discipline in saying so
+   ▸ truthfully is unverified application discipline, exactly the kind the
+   ▸ deletion of the private grants table removed from the claim frontier.
+   ▸ The desk stops here. It does not propose a bridge.
+
+   9e. and so the loan on ms-He-9 lands in an honest state:
+   ▸ the lawful settlement receipt says :DISPATCH-ACKNOWLEDGED is :MISSING.
+   ▸ → loan status set to :DISPATCH-UNACKNOWLEDGED; tracer T-3 opened; the loan is NOT closed.
+   ▸   the desk holds a ledger token from a crossing that really happened,
+   ▸   and still cannot close the loan — because a token is a thing it was
+   ▸   TOLD, and settlement asks for a thing that was JUDGED.
+  ok   [IX-11] the loan lands :DISPATCH-UNACKNOWLEDGED, and the state came from the receipt's disposition — not from a desk-side guess
+  ok   [IX-12] nothing phantom was written: no settlement date, no closure, and the loan still carries its real due day — the desk keeps the true due date it earned in Movement VII and refuses the closure it did not earn here
+
+   the door the desk declines, named as a policy and not as a guarantee:
+   ▸ probe 4 GRANTED settlement on a :DIRECT witness the desk minted. The desk
+   ▸ does not take that grant. That refusal is DESK POLICY, unenforced by the
+   ▸ language and unreceipted anywhere — exactly the species of discipline
+   ▸ Movement III deleted from the claim frontier and could not delete here.
+  ok   [IX-13] the desk's own books show the declined door: settlement WAS grantable, and the loan is still open — a language that made this refusal unnecessary would be the thing Slice /2 is for
+
+   9f. plural grounding — counted across every receipt the desk holds:
+     19 premise assessments; ground-instance cardinalities (1); maximum 1
+   ▸ no premise in this application is grounded more than one way. The desk
+   ▸ will NOT invent a second binding to exercise the plural surface — a case
+   ▸ manufactured to tick a box tests the box, not the language.
+  ok   [IX-14] plural grounding is NOT exercised by this application, and the desk reports that rather than staging it — reported as non-exercise; the normative plural reader was used for the count, and the singular projection was never read above cardinality one
+
 ── what this application does NOT show ──
    Nothing here demonstrates crash survival: the interrupted dispatch's
    evidence survived because the IMAGE did. The courier is the labelled
@@ -206,6 +468,13 @@ kernel0 records+folds smoke: PASS
    receipt now distinguishes an inherited judgment from an assertion —
    see FIELD-REPORT.md §3.
 
-de-bibliotheca-peregrina: 42 checks passed / 0 failed
+   And Movement IX proves NOTHING about effects being unverifiable in
+   principle. It reports what the CURRENT public surface does: no
+   governed operation consumes an effect account, so settlement rests
+   on a minted witness or it does not happen. That is a statement about
+   Slice /0 + Slice /1 + Core /0 as they stand today, and about nothing
+   else. No bridge is proposed here, and none should be read in.
+
+de-bibliotheca-peregrina: 95 checks passed / 0 failed
 (a desk that can say "no", "not yet", and "I do not know" in three
  different voices, and cannot accidentally send the same book twice)

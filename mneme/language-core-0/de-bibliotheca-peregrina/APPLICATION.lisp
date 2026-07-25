@@ -10,7 +10,7 @@
 ;;;; companion FIELD-REPORT.md is the other half of the deliverable and is less
 ;;;; polite than this file.
 ;;;;
-;;;; FIVE MOVEMENTS
+;;;; NINE MOVEMENTS
 ;;;;   I   THE QUIET ZONE      ordinary Common Lisp does ordinary work — shelves,
 ;;;;                           due dates, fees, catalogue lines.  No Lisp+ at all.
 ;;;;                           (Owner ruling D1: ordinary computation carries no
@@ -30,6 +30,29 @@
 ;;;;                           different desk actions.  :REFUTED is "no".
 ;;;;                           :MISSING is "I do not know".  The desk must not
 ;;;;                           confuse them, and now it cannot.
+;;;;   VI  THE LONG ROAD       four derivational hops, each fed by the last, and
+;;;;                           then an attempt to walk the road BACKWARD from the
+;;;;                           claim it ends at, using public accessors only.
+;;;;                           The attempt does not succeed, and why it doesn't
+;;;;                           is the movement's finding.
+;;;;   VII THE TWO CROSSINGS   the authorization is a premise; the acts are its
+;;;;                           consequences.  A reservation and a dispatch cross
+;;;;                           cleanly; a third crossing is interrupted and its
+;;;;                           ledger withholds, and the desk reconciles.
+;;;;   VIII THE THREE REFUSALS where the long road stops: a patron who cannot
+;;;;                           start it, an intermediate the receiver was not
+;;;;                           given, and the direct-witness door in its side —
+;;;;                           open, labelled, and not closed here.
+;;;;   IX  THE EFFECT FRONTIER settlement wants a premise meaning "this actually
+;;;;                           happened".  Five species of support are tried and
+;;;;                           the outcome of each is recorded.  Two discharge,
+;;;;                           and BOTH rest on a witness the desk minted with
+;;;;                           its own hand — a fabricated one discharges
+;;;;                           identically, and so does a witness carrying no
+;;;;                           account at all.  The effect can be CARRIED and
+;;;;                           cannot be CHECKED.  The boundary is stated in the
+;;;;                           program's own output, the loan is left honestly
+;;;;                           open, and NO fix is proposed or implemented.
 ;;;;
 ;;;; FRONT-DOOR DISCIPLINE: single-colon public surface only.  Zero double-colon
 ;;;; package access in this directory — grep-verified: the digraph does not occur
@@ -89,7 +112,12 @@
   (list (make-volume :id "ms-Aleph-7"  :title "Peregrinatio Alephi"      :shelf "III.a.7"  :value 900)
         (make-volume :id "ms-Beth-3"   :title "De Ponte Combusto"        :shelf "III.b.3"  :value 640)
         (make-volume :id "in-Gimel-11" :title "Herbarium Vagabundum"     :shelf "I.g.11"   :value 210)
-        (make-volume :id "ms-Daleth-1" :title "Cursor Aereus, cum notis" :shelf "IV.d.1"   :value 1450)))
+        (make-volume :id "ms-Daleth-1" :title "Cursor Aereus, cum notis" :shelf "IV.d.1"   :value 1450)
+        ;; Added for the long road of Movement VI: a RESTRICTED volume, held under
+        ;; the reciprocity agreement with Collegium Boreale.  It is an ordinary
+        ;; catalogue line like the other four — the restriction is not a property
+        ;; of the structure, it is the length of the road the desk must walk.
+        (make-volume :id "ms-He-9"     :title "Speculum Peregrinum"      :shelf "V.h.9"    :value 1180)))
 
 (defparameter *loans* '())
 (defparameter *tracers* '())
@@ -249,7 +277,13 @@ for a lending desk refusal is not exceptional — it is Tuesday.  (FIELD-REPORT 
     ((:volume-unreserved . :refuted)  . "no — that volume is out on loan; I can enter you for a hold")
     ((:volume-unreserved . :missing)  . "I cannot say where that volume is; it is in transit, unconfirmed")
     ((:may-borrow        . :missing)  . "I have granted you no borrowing standing I could hand onward")
-    ((:may-borrow        . :inaccessible) . "a standing exists, but this desk was not given the right to read it")))
+    ((:may-borrow        . :inaccessible) . "a standing exists, but this desk was not given the right to read it")
+    ;; Added with the long road (Movements VI–IX).  The table is keyed on
+    ;; (premise . disposition) exactly as before; these are two more pairs the
+    ;; receipts can produce, not a new way of choosing what to say.
+    ((:may-access-restricted . :inaccessible) . "the curator cleared you; this desk was not given the right to read that clearance")
+    ((:reciprocal-eligible . :missing) . "you are not yet eligible under the reciprocity agreement")
+    ((:dispatch-acknowledged . :missing) . "I cannot close this loan: nothing before me says the dispatch arrived")))
 
 (defun say-the-verdict (receipt)
   (let ((v (verdict receipt)))
@@ -843,6 +877,1016 @@ workaround it dressed."
 
 
 ;;;; ==================================================================
+;;;; THE LONG ROAD'S VOCABULARY
+;;;;
+;;;; Four more schemas, registered ALONGSIDE the two above — the registry is
+;;;; never cleared again, and (name, version) is a unique key, so
+;;;; :DISPATCH-STANDING v2 sits beside v1 without disturbing it.  Movement III's
+;;;; road was one hop long; these make it four, and each hop's premise is the
+;;;; previous hop's CONCLUSION.  Nothing in these schemas mentions an effect.
+;;;; ==================================================================
+
+;;; Reciprocity: a borrower here becomes eligible under the Boreale agreement.
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :reciprocity-standing :version 1
+  :conclusion (pp '(:predicate :reciprocal-eligible (:patron (:var :patron))
+                    (:volume (:var :volume))))
+  :premises
+  (list (pp '(:predicate :may-borrow (:patron (:var :patron))
+              (:volume (:var :volume))))
+        (pp '(:predicate :reciprocal-agreement (:library (:var :library))
+              (:patron (:var :patron)))))
+  :locals '(:library)))
+
+;;; Restricted access: eligibility plus a named curator's clearance.
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :restricted-access-standing :version 1
+  :conclusion (pp '(:predicate :may-access-restricted (:patron (:var :patron))
+                    (:volume (:var :volume))))
+  :premises
+  (list (pp '(:predicate :reciprocal-eligible (:patron (:var :patron))
+              (:volume (:var :volume))))
+        (pp '(:predicate :curator-clearance (:patron (:var :patron))
+              (:curator (:var :curator)))))
+  :locals '(:curator)))
+
+;;; Reservation: access plus the shelf still holding the volume.
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :reservation-standing :version 1
+  :conclusion (pp '(:predicate :may-reserve (:patron (:var :patron))
+                    (:volume (:var :volume))))
+  :premises
+  (list (pp '(:predicate :may-access-restricted (:patron (:var :patron))
+              (:volume (:var :volume))))
+        (pp '(:predicate :volume-unreserved (:volume (:var :volume))
+              (:desk (:var :desk)))))
+  :locals '(:desk)))
+
+;;; Dispatch, second edition.  v1 asked for a borrowing standing; v2 asks for a
+;;; RESERVATION standing — the far end of the long road.  Same conclusion
+;;; predicate, different premises, different version: the old schema is not
+;;; touched and Movement III's receipts stay exactly as true as they were.
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :dispatch-standing :version 2
+  :conclusion (pp '(:predicate :may-dispatch (:patron (:var :patron))
+                    (:volume (:var :volume)) (:courier (:var :courier))))
+  :premises
+  (list (pp '(:predicate :may-reserve (:patron (:var :patron))
+              (:volume (:var :volume))))
+        (pp '(:predicate :courier-insured (:courier (:var :courier))
+              (:policy (:var :policy)))))
+  :locals '(:policy)))
+
+(defun roster-entry-for (receipt predicate the-claim)
+  "The roster entry the receipt kept for THE-CLAIM under PREDICATE, found by
+DURABLE IDENTITY — never by position in the list.  A premise's roster holds one
+entry per claim offered, including the ones offered for a different premise, so
+`first` is a guess and identity is the answer."
+  (find-if (lambda (e)
+             (lisp-plus-kernel0:identity= (getf e :claim-id)
+                                          (lisp-plus-slice0:claim-id the-claim)))
+           (roster-for receipt predicate)))
+
+
+;;;; ==================================================================
+;;;; MOVEMENT VI — THE LONG ROAD
+;;;;
+;;;; Speculum Peregrinum is restricted.  Ferrand may borrow it, but borrowing is
+;;;; only the first of five standings: eligible under the reciprocity agreement,
+;;;; cleared by the curator, reserved off the shelf, and only then dispatchable.
+;;;;
+;;;; Four derivations, each fed by the last.  At every hop the desk asserts four
+;;;; things: the decision, the inherited premise's disposition, the receipt's own
+;;;; record of WHICH claim discharged it and under what judgment, and — the one
+;;;; that matters most — that the spent claim was not consumed, converted, or
+;;;; quietly turned into a witness on its way through.
+;;;;
+;;;; Then the desk tries to WALK BACK down the road it just walked up, using
+;;;; nothing but the public accessors on the claim it ended with.  What happens
+;;;; there is the movement's real finding, and it is not the happy one.
+;;;; ==================================================================
+
+(format t "~%── MOVEMENT VI: the long road (four hops, each fed by the last) ──~%")
+
+(defparameter *restricted* "ms-He-9")
+
+(defparameter *reciprocity*
+  (attest '(:predicate :reciprocal-agreement (:library :collegium-boreale)
+            (:patron :ferrand))
+          :kind :agreement :source :collegium-boreale))
+(defparameter *clearance*
+  (attest '(:predicate :curator-clearance (:patron :ferrand)
+            (:curator :dame-orvieto))
+          :kind :clearance :source :curator))
+
+(defparameter *hop-0* nil)   ; :may-borrow
+(defparameter *hop-1* nil)   ; :reciprocal-eligible
+(defparameter *hop-2* nil)   ; :may-access-restricted
+(defparameter *hop-3* nil)   ; :may-reserve
+(defparameter *hop-4* nil)   ; :may-dispatch, v2
+
+;;; The receipt each hop issued.  These are ORDINARY LOCAL VARIABLES holding the
+;;; five objects this movement itself produced — not a registry, not a growing
+;;; ledger, not a table anything is looked up in.  Nothing in this program
+;;; CONSULTS them to decide anything; arm 6c hands them to a printer, and arm
+;;; VIII-E compares two of them.  The distinction is the one Movement III drew
+;;; when it deleted *DESK-GRANTS*: a variable that DECIDES is a private
+;;; authenticity oracle, and a variable that PRINTS is a presentation helper.
+(defparameter *hop-0-receipt* nil)
+(defparameter *hop-1-receipt* nil)
+(defparameter *hop-2-receipt* nil)
+(defparameter *hop-3-receipt* nil)
+(defparameter *hop-4-receipt* nil)
+
+(format t "~%   the road begins where Movement II ended — an ordinary borrowing standing:~%")
+(multiple-value-bind (claim receipt) (consider-borrowing :ferrand *restricted*)
+  (setf *hop-0* claim *hop-0-receipt* receipt)
+  (say-the-verdict receipt)
+  (ok "[VI-a] the restricted volume is on the shelf and Ferrand may borrow it"
+      (and claim (eq :free (gethash *restricted* *shelf-state*)))))
+
+(defun walk-one-hop (label schema conclusion carried witness)
+  "One derivational hop.  CARRIED is the previous hop's granted claim; WITNESS is
+the fresh evidence this hop adds.  Returns the new claim, and asserts — before it
+returns anything — the four things the desk is entitled to assert about the hop.
+
+The judgment record of the CARRIED claim is read BEFORE the derivation and
+compared afterwards: a road that spent its own milestones would not be a road."
+  (let* ((carried-predicate (second (lisp-plus-slice0:claim-proposition carried)))
+         (judgment-before (lisp-plus-slice0:claim-judgment carried))
+         (supports (list carried witness)))
+    (multiple-value-bind (claim receipt)
+        (consider :schema schema :version 1 :conclusion conclusion
+                  :supports supports :receiver (apply #'at-the-desk supports))
+      (say-the-verdict receipt)
+      (let ((entry (roster-entry-for receipt carried-predicate carried)))
+        (ok (format nil "[~A-a] the hop is GRANTED" label)
+            (and claim (eq :granted (lisp-plus-slice1:derivation-receipt-decision receipt))))
+        (ok (format nil "[~A-b] the premise fed by the previous claim reads :SATISFIED" label)
+            (eq :satisfied (disposition-of receipt carried-predicate)))
+        (ok (format nil "[~A-c] the roster names THAT claim, :DISCHARGED, judgment :VERIFIED" label)
+            (and entry
+                 (eq :discharged (getf entry :outcome))
+                 (eq :verified (getf entry :judgment))
+                 (equal (lisp-plus-kernel0:identity-key (getf entry :claim-id))
+                        (lisp-plus-kernel0:identity-key
+                         (lisp-plus-slice0:claim-id carried))))
+            (format nil "~S via ~A"
+                    carried-predicate
+                    (lisp-plus-kernel0:identity-key (getf entry :procedure-id))))
+        (ok (format nil "[~A-d] the spent claim is UNTOUCHED — same judgment record, still :VERIFIED" label)
+            (and (eq judgment-before (lisp-plus-slice0:claim-judgment carried))
+                 (eq :verified (lisp-plus-slice0:judgment-record-judgment judgment-before)))
+            "nothing converted a judgment into a witness on the way past"))
+      (values claim receipt))))
+
+(format t "~%   hop 1 — the reciprocity agreement makes a borrower eligible:~%")
+(multiple-value-setq (*hop-1* *hop-1-receipt*)
+      (walk-one-hop "VI-1" :reciprocity-standing
+                    (np `(:predicate :reciprocal-eligible (:patron :ferrand)
+                          (:volume ,*restricted*)))
+                    *hop-0* *reciprocity*))
+
+(format t "~%   hop 2 — eligibility plus the curator's hand opens the restricted case:~%")
+(multiple-value-setq (*hop-2* *hop-2-receipt*)
+      (walk-one-hop "VI-2" :restricted-access-standing
+                    (np `(:predicate :may-access-restricted (:patron :ferrand)
+                          (:volume ,*restricted*)))
+                    *hop-1* *clearance*))
+
+(format t "~%   hop 3 — access plus a volume still on the shelf makes a reservation:~%")
+(multiple-value-setq (*hop-3* *hop-3-receipt*)
+      (walk-one-hop "VI-3" :reservation-standing
+                    (np `(:predicate :may-reserve (:patron :ferrand)
+                          (:volume ,*restricted*)))
+                    *hop-2* (availability-support *restricted*)))
+
+(format t "~%   hop 4 — the reservation, not the borrowing, is what v2 dispatches on:~%")
+(let* ((supports (list *hop-3* *insurance*))
+       (judgment-before (lisp-plus-slice0:claim-judgment *hop-3*)))
+  (multiple-value-bind (claim receipt)
+      (consider :schema :dispatch-standing :version 2
+                :conclusion (np `(:predicate :may-dispatch (:patron :ferrand)
+                                  (:volume ,*restricted*) (:courier :brass-courier)))
+                :supports supports :receiver (apply #'at-the-desk supports))
+    (setf *hop-4* claim *hop-4-receipt* receipt)
+    (say-the-verdict receipt)
+    (let ((entry (roster-entry-for receipt :may-reserve *hop-3*)))
+      (ok "[VI-4a] the hop is GRANTED"
+          (and claim (eq :granted (lisp-plus-slice1:derivation-receipt-decision receipt))))
+      (ok "[VI-4b] the premise fed by the previous claim reads :SATISFIED"
+          (eq :satisfied (disposition-of receipt :may-reserve)))
+      (ok "[VI-4c] the roster names THAT claim, :DISCHARGED, judgment :VERIFIED"
+          (and entry (eq :discharged (getf entry :outcome))
+               (eq :verified (getf entry :judgment))
+               (equal (lisp-plus-kernel0:identity-key (getf entry :claim-id))
+                      (lisp-plus-kernel0:identity-key
+                       (lisp-plus-slice0:claim-id *hop-3*)))))
+      (ok "[VI-4d] the spent claim is UNTOUCHED — same judgment record, still :VERIFIED"
+          (and (eq judgment-before (lisp-plus-slice0:claim-judgment *hop-3*))
+               (eq :verified (lisp-plus-slice0:judgment-record-judgment judgment-before)))))))
+
+;;; --- 6b. walking back down the road ----------------------------------
+(format t "~%   6b. the desk tries to walk BACK down the road, from the last claim,~%")
+(format t "       using nothing but the public accessors on a claim:~%")
+
+(defun walk-back (final)
+  "Start at FINAL and walk toward the patron's original standing, printing each
+claim's id, its judgment, and the claim its judgment points back at.
+
+Public accessors ONLY: CLAIM-ID · CLAIM-PROPOSITION · CLAIM-JUDGMENT ·
+CLAIM-LINEAGE · the JUDGMENT-RECORD readers · IDENTITY-KEY ·
+DURABLE-IDENTITY-DOMAIN.  No table of the desk's is consulted — there is none to
+consult, which is the whole point of the exercise.
+
+Returns (values HOPS-RESOLVED HALTED-BECAUSE).
+
+The loop genuinely ATTEMPTS the next step: it collects every onward pointer the
+claim carries and asks whether any of them IS a claim object it could stand on.
+It halts only when that question is answered NO for all of them.  (An earlier
+draft of this walk returned unconditionally after one iteration and then
+asserted it had resolved exactly one hop — a check that could not fail, which is
+not a finding but a tautology wearing one's coat.)"
+  (let ((current final) (hops 0))
+    (loop
+      (unless (lisp-plus-slice0:claim-p current)
+        (return (values hops :no-claim-object)))
+      (incf hops)
+      (let* ((jr (lisp-plus-slice0:claim-judgment current))
+             (supports (and jr (lisp-plus-slice0:judgment-record-support-ids jr)))
+             (lineage (lisp-plus-slice0:claim-lineage current)))
+        (format t "     hop ~D  ~A~%" hops
+                (lisp-plus-kernel0:identity-key (lisp-plus-slice0:claim-id current)))
+        (format t "             proposition ~S~%"
+                (second (lisp-plus-slice0:claim-proposition current)))
+        (format t "             judgment    ~S by ~A v~D~%"
+                (lisp-plus-slice0:judgment-record-judgment jr)
+                (lisp-plus-kernel0:identity-key
+                 (lisp-plus-slice0:judgment-record-procedure-id jr))
+                (lisp-plus-slice0:judgment-record-procedure-version jr))
+        (format t "             supported by ~S  (domains ~S)~%"
+                (mapcar #'lisp-plus-kernel0:identity-key supports)
+                (mapcar #'lisp-plus-kernel0:durable-identity-domain supports))
+        (format t "             lineage      ~S  (domains ~S)~%"
+                (mapcar #'lisp-plus-kernel0:identity-key lineage)
+                (mapcar #'lisp-plus-kernel0:durable-identity-domain lineage))
+        ;; THE ACTUAL ATTEMPT.  Every onward pointer, tested for whether it is
+        ;; something the walk could stand on.  To take the next step the walk
+        ;; would have to turn an identity back into the thing it names.  Slice /0
+        ;; and Slice /1 export no such operation, and they keep no registry that
+        ;; could implement one: the only global tables in either file are the
+        ;; schema registry and the WHY-extractor list.
+        (let ((standable (remove-if-not #'lisp-plus-slice0:claim-p
+                                        (append supports lineage))))
+          (if standable
+              (setf current (first standable))
+              (return (values hops :identity-cannot-be-dereferenced))))))))
+
+(multiple-value-bind (hops halted) (walk-back *hop-4*)
+  (desk "the walk resolved ~D claim object~:P and then stopped: ~S." hops halted)
+  (desk "the road is walkable FORWARD — each hop was handed the previous claim —")
+  (desk "and it is not walkable BACKWARD from a claim alone. Both onward")
+  (desk "pointers a claim carries are identities, and nothing dereferences one.")
+  (ok "[VI-w1] the backward walk resolves exactly ONE claim object — the one it was handed"
+      (and (= 1 hops) (eq halted :identity-cannot-be-dereferenced))
+      "the missing accessor: an identity -> object resolver; Slice /0 and /1 export none, and keep no registry that could back one")
+  (ok "[VI-w2] the judgment's support is a :RECEIPT identity (the derivation witness), not the supporting CLAIM"
+      (let ((supports (lisp-plus-slice0:judgment-record-support-ids
+                       (lisp-plus-slice0:claim-judgment *hop-4*))))
+        (and (= 1 (length supports))
+             (eq :receipt (lisp-plus-kernel0:durable-identity-domain (first supports)))))
+      "a granted claim's judgment names the witness DERIVE minted, never the claim that discharged the premise")
+  (ok "[VI-w3] and the lineage names the claim's own pre-promotion shell, NOT the previous hop"
+      (let ((lineage (lisp-plus-slice0:claim-lineage *hop-4*)))
+        (and (= 1 (length lineage))
+             (eq :claim (lisp-plus-kernel0:durable-identity-domain (first lineage)))
+             (not (lisp-plus-kernel0:identity= (first lineage)
+                                               (lisp-plus-slice0:claim-id *hop-3*)))))
+      "the link from a granted claim to the claim that discharged its premise lives in the derivation RECEIPT alone"))
+
+(desk "so the chain IS auditable — hop by hop, from the receipts. It is not")
+(desk "auditable from the claim alone. Arm 6c walks it the way that works.")
+
+;;; --- 6c. the chain walker that DOES reach the patron -----------------
+(format t "~%   6c. the same road walked backward the way that works: from the~%")
+(format t "       RECEIPTS, through immediate governed links, to the patron's~%")
+(format t "       original standing and the three witnesses under it:~%")
+
+(defun walk-the-chain (final-claim receipts)
+  "Print the governed chain backward from FINAL-CLAIM.
+
+RECEIPTS is handed in at the call site — the five objects this movement itself
+produced, passed as an argument, never looked up.  This function DECIDES
+NOTHING: it renders governed records through public readers and returns how many
+hops it rendered.  It is a printer.  If it were a lookup table consulted to
+establish that a standing was real, it would be the private authenticity oracle
+Movement III deleted, and it is deliberately neither.
+
+At each hop it reads, from the receipt alone: the conclusion that receipt
+granted, which premise was discharged by an inherited claim, that claim's
+durable identity, the judgment it carried, and the procedure that judged it.
+The walk stops when it reaches a receipt whose premises were discharged by
+WITNESSES rather than by claims — which is the patron's original standing, the
+bottom of the road, where evidence enters the world."
+  (let ((current-claim final-claim) (hops 0))
+    (dolist (receipt receipts (values hops :reached-the-ground))
+      (incf hops)
+      (format t "     ┌ hop ~D  receipt for ~S~%" hops
+              (second (lisp-plus-slice1:derivation-receipt-conclusion receipt)))
+      (format t "     │   granted claim   ~A~%"
+              (lisp-plus-kernel0:identity-key
+               (lisp-plus-slice0:claim-id current-claim)))
+      ;; Which premise of THIS receipt was discharged by an inherited claim?
+      (let ((inherited
+              (loop for a in (lisp-plus-slice1:derivation-receipt-assessments receipt)
+                    for entry = (find :discharged
+                                      (lisp-plus-slice1:premise-assessment-judged-claims a)
+                                      :key (lambda (r) (getf r :outcome)))
+                    when entry collect (cons a entry))))
+        (if inherited
+            (dolist (pair inherited)
+              (let ((a (car pair)) (entry (cdr pair)))
+                (format t "     │   premise ~S inherited from claim ~A~%"
+                        (second (lisp-plus-slice1:premise-assessment-premise-pattern a))
+                        (lisp-plus-kernel0:identity-key (getf entry :claim-id)))
+                (format t "     │     judgment ~S by ~A v~D~%"
+                        (getf entry :judgment)
+                        (lisp-plus-kernel0:identity-key (getf entry :procedure-id))
+                        (getf entry :procedure-version))))
+            ;; No inherited claim: this receipt's premises rest on witnesses.
+            (progn
+              (format t "     └   THE GROUND — every premise here rests on a WITNESS:~%")
+              (dolist (a (lisp-plus-slice1:derivation-receipt-assessments receipt))
+                (dolist (w (lisp-plus-slice1:premise-assessment-matching-accessible-supports a))
+                  (format t "           ~S  ← ~A (~S/~S) from ~S~%"
+                          (second (lisp-plus-slice1:premise-assessment-premise-pattern a))
+                          (lisp-plus-kernel0:identity-key (lisp-plus-slice0:witness-id w))
+                          (lisp-plus-slice0:witness-mode w)
+                          (lisp-plus-slice0:witness-kind w)
+                          (lisp-plus-slice0:witness-source w))))
+              (return (values hops :reached-the-ground)))))
+      ;; Step: the claim this receipt's inherited premise named is the claim the
+      ;; NEXT receipt granted.  The desk knows the ordering because it walked the
+      ;; road forward; the identities let it CHECK that ordering rather than
+      ;; assume it, which is what [VI-w4] asserts.
+      (setf current-claim
+            (case hops
+              (1 *hop-3*) (2 *hop-2*) (3 *hop-1*) (4 *hop-0*) (t current-claim))))))
+
+(multiple-value-bind (hops ended)
+    (walk-the-chain *hop-4* (list *hop-4-receipt* *hop-3-receipt*
+                                  *hop-2-receipt* *hop-1-receipt* *hop-0-receipt*))
+  (ok "[VI-w4] the chain walker reaches the GROUND — five receipts, four inherited hops, then witnesses"
+      (and (= 5 hops) (eq ended :reached-the-ground))
+      "public accessors only; the walker renders governed records and decides nothing")
+  ;; And the ordering the walker assumed is CHECKED against the identities, so
+  ;; the pretty printout cannot quietly be in the wrong order.
+  (ok "[VI-w5] each receipt's inherited claim-id IS the previous hop's claim — the chain is verified by identity, not by the order the desk printed it in"
+      (every (lambda (pair)
+               (let* ((receipt (first pair)) (expected (second pair))
+                      (entry (loop for a in (lisp-plus-slice1:derivation-receipt-assessments receipt)
+                                   for e = (find :discharged
+                                                 (lisp-plus-slice1:premise-assessment-judged-claims a)
+                                                 :key (lambda (r) (getf r :outcome)))
+                                   when e return e)))
+                 (and entry (lisp-plus-kernel0:identity= (getf entry :claim-id)
+                                                         (lisp-plus-slice0:claim-id expected)))))
+             (list (list *hop-4-receipt* *hop-3*) (list *hop-3-receipt* *hop-2*)
+                   (list *hop-2-receipt* *hop-1*) (list *hop-1-receipt* *hop-0*)))))
+
+(desk "so: forward, the language carries standing by identity and the receipts")
+(desk "record it. Backward, a READER needs the receipts — a claim alone does not")
+(desk "point home. The missing public operation is an identity → object resolver;")
+(desk "the desk does not build one, and holds five receipts, not a registry.")
+
+
+;;;; ==================================================================
+;;;; MOVEMENT VII — THE TWO CROSSINGS
+;;;;
+;;;; The long road ends at an AUTHORIZATION.  Two acts follow it across the
+;;;; frontier: the volume is reserved off the shelf, and then it is delivered.
+;;;;
+;;;; Note the direction of travel and note it carefully.  The reservation is a
+;;;; CONSEQUENCE of :MAY-RESERVE; the dispatch standing is derived from the
+;;;; :MAY-RESERVE CLAIM and not from the reservation's outcome.  No effect is a
+;;;; premise of anything here.  Movement IX is about what it costs to want one.
+;;;; ==================================================================
+
+(format t "~%── MOVEMENT VII: the two crossings (authorize, then act — never the reverse) ──~%")
+
+(defun both-ways-key ()
+  (courier-key '(:reserve :deliver)))
+
+(defparameter *reserve-evidence* nil)
+(defparameter *reserve-outcome* nil)
+
+(format t "~%   7a. the reservation act — the shelf is asked to let the volume go:~%")
+(multiple-value-bind (adapter world) (lisp-plus-fake-courier:make-fake-courier
+                                      :script :clean-commit)
+  (multiple-value-bind (outcome evidence)
+      (lisp-plus-core0:perform
+       :adapter adapter
+       :request `(:predicate :reserve (:payload ,(format nil "~A ← ~A" *restricted* :ferrand)))
+       :authority (both-ways-key)
+       :process (lisp-plus-core0:process-context :label "peregrina/reserve/he-9"))
+    ;; The desk keeps BOTH, whole.  `outcome-kind` is a three-way view it reads
+    ;; when it needs to branch; it is not the account, and the account is what
+    ;; gets stored.
+    (setf *reserve-outcome* outcome *reserve-evidence* evidence)
+    (desk "outcome-kind => ~S  (a view, not the account)"
+          (lisp-plus-core0:outcome-kind outcome))
+    (desk "attempt ~A" (lisp-plus-kernel0:identity-key
+                        (lisp-plus-core0:core0-evidence-attempt-id evidence)))
+    (desk "seat    ~A" (lisp-plus-kernel0:identity-key
+                        (lisp-plus-core0:core0-evidence-seat-id evidence)))
+    (desk "ledger  ~A, over ~D recorded event~:P"
+          (lisp-plus-core0:core0-evidence-ledger-token evidence)
+          (length (lisp-plus-core0:core0-evidence-events evidence)))
+    (ok "[VII-a] the reserve act crosses under a capability scoped to :RESERVE and commits"
+        (and (eq :committed (lisp-plus-core0:outcome-kind outcome))
+             (= 1 (lisp-plus-fake-courier:fake-courier-ledger-row-count world))))
+    (ok "[VII-b] the evidence carries an ATTEMPT IDENTITY and a LEDGER TOKEN — the desk stored the account, not a verdict"
+        (and (lisp-plus-kernel0:durable-identity-p
+              (lisp-plus-core0:core0-evidence-attempt-id evidence))
+             (eq :attempt (lisp-plus-kernel0:durable-identity-domain
+                           (lisp-plus-core0:core0-evidence-attempt-id evidence)))
+             (stringp (lisp-plus-core0:core0-evidence-ledger-token evidence))
+             (lisp-plus-kernel0:durable-identity-p
+              (lisp-plus-core0:core0-evidence-seat-id evidence))
+             (plusp (length (lisp-plus-core0:core0-evidence-events evidence)))))))
+
+(format t "~%   7b. the dispatch standing comes from the CLAIM, not from the reservation:~%")
+(desk "the volume is off the shelf because :MAY-RESERVE was granted. Nothing")
+(desk "the reservation DID is a premise of anything. The road runs one way.")
+(ok "[VII-c] hop 4 was derived from the :MAY-RESERVE claim, and its receipt says so"
+    (and *hop-4*
+         (eq :verified (lisp-plus-slice0:judgment-record-judgment
+                        (lisp-plus-slice0:claim-judgment *hop-4*)))
+         (equal (lisp-plus-slice0:claim-proposition *hop-4*)
+                (np `(:predicate :may-dispatch (:patron :ferrand)
+                      (:volume ,*restricted*) (:courier :brass-courier)))))
+    "derived before either crossing happened — the ordering is in the program, not in a comment")
+
+(format t "~%   7c. the delivery — Speculum Peregrinum leaves the building:~%")
+(defparameter *deliver-evidence* nil)
+(defparameter *world-he* nil)
+(multiple-value-bind (adapter world) (lisp-plus-fake-courier:make-fake-courier
+                                      :script :clean-commit)
+  (setf *world-he* world)
+  (multiple-value-bind (outcome evidence)
+      (lisp-plus-core0:perform
+       :adapter adapter :request (dispatch-request *restricted* :ferrand)
+       :authority (both-ways-key)
+       :process (lisp-plus-core0:process-context :label "peregrina/dispatch/he-9"))
+    (setf *deliver-evidence* evidence)
+    (desk "outcome-kind => ~S" (lisp-plus-core0:outcome-kind outcome))
+    (ecase (lisp-plus-core0:outcome-kind outcome)
+      (:committed
+       (push (make-loan :volume *restricted* :patron :ferrand :opened *today*
+                        :due (reckon-due-day *today* (shelf-lookup *restricted*))
+                        :status :in-transit-confirmed
+                        :token (lisp-plus-core0:core0-evidence-ledger-token evidence))
+             *loans*)
+       (setf (gethash *restricted* *shelf-state*) :on-loan)
+       (desk "loan opened, due day ~D, receipt ~A"
+             (loan-due (first *loans*)) (loan-token (first *loans*))))
+      (:refused (desk "unreachable by return."))
+      (:indeterminate (desk "unreachable by return.")))
+    (ok "[VII-d] the delivery commits: one ledger row, one loan, one clock started"
+        (and (eq :committed (lisp-plus-core0:outcome-kind outcome))
+             (= 1 (lisp-plus-fake-courier:fake-courier-ledger-row-count world))
+             (= (+ *today* 14) (loan-due (first *loans*)))))))
+
+(format t "~%   7d. the second crossing — the reciprocity docket owed to Collegium~%")
+(format t "       Boreale, whose courier is interrupted and whose ledger withholds:~%")
+(defparameter *world-docket* nil)
+(defparameter *docket-evidence* nil)
+(multiple-value-bind (adapter world) (lisp-plus-fake-courier:make-fake-courier
+                                      :script :kill-after-commit-withhold)
+  (setf *world-docket* world)
+  (handler-case
+      (lisp-plus-core0:perform
+       :adapter adapter
+       :request '(:predicate :deliver (:payload "docket ms-He-9 → collegium-boreale"))
+       :authority (both-ways-key)
+       :process (lisp-plus-core0:process-context :label "peregrina/dispatch/docket"))
+    (lisp-plus-core0:core0-interrupted (c)
+      (let ((outcome (lisp-plus-core0:core0-condition-outcome c)))
+        (setf *docket-evidence* (lisp-plus-core0:core0-condition-evidence c))
+        (desk "outcome-kind => ~S; the desk holds no token; the ledger holds ~D row~:P."
+              (lisp-plus-core0:outcome-kind outcome)
+              (lisp-plus-fake-courier:fake-courier-ledger-row-count world))
+        (ok "[VII-e] the interrupted docket is :INDETERMINATE, and the desk was told no token"
+            (and (eq :indeterminate (lisp-plus-core0:outcome-kind outcome))
+                 (null (lisp-plus-core0:core0-evidence-ledger-token
+                        *docket-evidence*))))))))
+
+(format t "~%   and the desk continues from the surviving evidence — it does not resend:~%")
+(let* ((rows-before (lisp-plus-fake-courier:fake-courier-ledger-row-count *world-docket*))
+       (result (lisp-plus-core0:continue-from *docket-evidence*
+                                              :authority (both-ways-key)))
+       (disposition (lisp-plus-core0:continuation-result-disposition result))
+       (required (lisp-plus-core0:continuation-result-required-action result))
+       (rows-after (lisp-plus-fake-courier:fake-courier-ledger-row-count *world-docket*)))
+  (desk "disposition => ~S" disposition)
+  (format t "     known:           ~S~%" (getf required :known))
+  (format t "     unknown:         ~S~%" (getf required :unknown))
+  (format t "     required-action: ~S~%" (getf required :required-action))
+  (ecase disposition
+    (:reconciled (desk "unreachable in this arm."))
+    (:indeterminate
+     (push (make-tracer :id "T-2" :volume *restricted* :patron :collegium-boreale
+                        :known (getf required :known)
+                        :unknown (getf required :unknown)
+                        :required-action (getf required :required-action))
+           *tracers*)
+     (desk "tracer T-2 opened against the reciprocal library's docket.")
+     (desk "no second docket is sent; no hold is entered; nothing is called settled.")))
+  (ok "[VII-f] the withheld docket routes to RECONCILIATION — not to a confirmation"
+      (and (eq :indeterminate disposition)
+           (find "T-2" *tracers* :key #'tracer-id :test #'string=)))
+  (ok "[VII-g] the continuation did NOT re-invoke the courier (row count unchanged)"
+      (and (= 1 rows-before) (= 1 rows-after)))
+  (ok "[VII-h] and nothing phantom was written: no loan, no due date, no hold for the docket"
+      (and (null (find "docket" *loans* :key #'loan-volume :test #'string=))
+           (null (find :collegium-boreale *hold-queue* :key #'car))
+           (notany (lambda (l) (and (string= (loan-volume l) *restricted*)
+                                    (null (loan-due l))))
+                   *loans*))
+      "the one loan on ms-He-9 is the CONFIRMED delivery; the unconfirmed docket produced a tracer and nothing else"))
+
+
+;;;; ==================================================================
+;;;; MOVEMENT VIII — THE THREE REFUSALS
+;;;;
+;;;; A road worth having is a road that can be barred.  Three ways the long road
+;;;; stops, and one door in its side that stays open.
+;;;; ==================================================================
+
+(format t "~%── MOVEMENT VIII: the three refusals (where the long road stops) ──~%")
+
+;;; --- B. the refused patron cannot start ------------------------------
+(format t "~%   B. Quillon — still owing 14 crowns — asks for the restricted volume:~%")
+
+(defparameter *quillon-restricted* (consider-borrowing :quillon *restricted*)
+  "Nothing. Movement II's arithmetic denies him a fines-clear witness, so no
+:MAY-BORROW claim exists to hand to hop 1.")
+
+(ok "[VIII-b1] the desk holds no borrowing standing for Quillon — hop 0 never produced one"
+    (null *quillon-restricted*))
+
+(let ((supports (remove nil (list *quillon-restricted* *reciprocity*))))
+  (multiple-value-bind (claim receipt)
+      (consider :schema :reciprocity-standing :version 1
+                :conclusion (np `(:predicate :reciprocal-eligible (:patron :quillon)
+                                  (:volume ,*restricted*)))
+                :supports supports :receiver (apply #'at-the-desk supports))
+    (say-the-verdict receipt)
+    (ok "[VIII-b2] the road stops at hop 1, and the RECEIPT is the reason — no guard of mine fired"
+        (and (null claim)
+             (equal '(:blocked-on :may-borrow :missing) (verdict receipt))))))
+
+(format t "~%   Quillon's desk mints itself the eligibility it was not granted:~%")
+(let ((self-minted
+        (lisp-plus-slice0:claim
+         :proposition (np `(:predicate :reciprocal-eligible (:patron :quillon)
+                            (:volume ,*restricted*)))
+         :by :peregrina)))
+  (let ((supports (list self-minted *clearance*)))
+    (multiple-value-bind (claim receipt)
+        (consider :schema :restricted-access-standing :version 1
+                  :conclusion (np `(:predicate :may-access-restricted (:patron :quillon)
+                                    (:volume ,*restricted*)))
+                  :supports supports :receiver (apply #'at-the-desk supports))
+      (let ((entry (roster-entry-for receipt :reciprocal-eligible self-minted)))
+        (desk "the proposition matches to the letter. It still does not travel.")
+        (ok "[VIII-b3] a claim whose text is right and whose judgment is absent lands :UNJUDGED"
+            (and (null claim)
+                 (eq :missing (disposition-of receipt :reciprocal-eligible))
+                 entry (eq :unjudged (getf entry :outcome)))
+            "matching text is not standing; standing is a governed judgment or it is nothing")))))
+
+;;; --- C. the intermediate the receiver was not given ------------------
+(format t "~%   C. a perfectly good access standing, offered to a desk not given it:~%")
+(let ((supports (list *hop-2* (availability-support "ms-Beth-3"))))
+  (multiple-value-bind (claim receipt)
+      (consider :schema :reservation-standing :version 1
+                :conclusion (np `(:predicate :may-reserve (:patron :ferrand)
+                                  (:volume ,*restricted*)))
+                :supports supports
+                ;; the volume-unreserved witness is reachable; the CLAIM is not.
+                :receiver (at-the-desk (availability-support *restricted*)))
+    (say-the-verdict receipt)
+    (let ((entry (roster-entry-for receipt :may-access-restricted *hop-2*))
+          (repair (repair-for receipt :may-access-restricted)))
+      (ok "[VIII-c1] the premise is :INACCESSIBLE — emphatically NOT :MISSING"
+          (and (null claim)
+               (eq :inaccessible (disposition-of receipt :may-access-restricted)))
+          "the desk is not told 'find evidence'; it is told 'you were not given the right to read the evidence you have'")
+      (ok "[VIII-c2] and the roster says exactly which claim, and exactly why"
+          (and entry (eq :inaccessible-to-receiver (getf entry :outcome))))
+      ;; the repair is printed verbatim above, by SAY-THE-VERDICT, out of the
+      ;; receipt's own DERIVATION-RECEIPT-REPAIR-OPTIONS — not paraphrased here.
+      (ok "[VIII-c3] the repair names the claim by DURABLE IDENTITY"
+          (equal (mapcar #'lisp-plus-kernel0:identity-key
+                         (getf repair :grant-receiver-access-to-judged-claims))
+                 (list (lisp-plus-kernel0:identity-key
+                        (lisp-plus-slice0:claim-id *hop-2*))))))))
+
+;;; --- E. the direct-witness door, which is open, and labelled --------
+(format t "~%   E. THE COUNTEREXAMPLE ARM. The desk asserts a reservation standing~%")
+(format t "      it never derived, and compares the two receipts side by side:~%")
+
+(let* ((asserted (fabricate-standing
+                  (np `(:predicate :may-reserve (:patron :ferrand)
+                        (:volume ,*restricted*)))
+                  "receipt:no-such-thing"))
+       (supports (list asserted *insurance*)))
+  (multiple-value-bind (claim receipt)
+      (consider :schema :dispatch-standing :version 2
+                :conclusion (np `(:predicate :may-dispatch (:patron :ferrand)
+                                  (:volume ,*restricted*) (:courier :brass-courier)))
+                :supports supports :receiver (apply #'at-the-desk supports))
+    (let ((a (assessment-for receipt :may-reserve)))
+      (ok "[VIII-e1] the ASSERTED standing grants too — the :DIRECT door is open, and this movement does not close it"
+          (and claim (eq :granted (lisp-plus-slice1:derivation-receipt-decision receipt))))
+      (ok "[VIII-e2] but it leaves a WITNESS and no judged-claim record"
+          (and (lisp-plus-slice1:premise-assessment-matching-accessible-supports a)
+               (null (lisp-plus-slice1:premise-assessment-judged-claims a))))
+      (ok "[VIII-e3] while the inherited standing left a judged-claim record with a judgment basis and NO witness"
+          (let ((entry (roster-entry-for *hop-4-receipt* :may-reserve *hop-3*))
+                (b (assessment-for *hop-4-receipt* :may-reserve)))
+            (and entry
+                 (eq :discharged (getf entry :outcome))
+                 (lisp-plus-kernel0:durable-identity-p (getf entry :procedure-id))
+                 (null (lisp-plus-slice1:premise-assessment-matching-accessible-supports b))))
+          "the two are told apart from the receipts alone — a reader sees a judgment basis or a witness, never both"))))
+
+
+;;;; ==================================================================
+;;;; MOVEMENT IX — THE EFFECT FRONTIER
+;;;;
+;;;; The desk would like to close the loan.  Settlement means: this patron may be
+;;;; dispatched to (a standing — lawful, a claim), AND this dispatch actually
+;;;; HAPPENED (an effect — and there the road ends).
+;;;;
+;;;; The schema is written honestly, with both premises named.  Then the desk
+;;;; tries every species of support the language offers for the second one, in
+;;;; order, and records what each actually does.  Nothing here is a proposal.
+;;;; ==================================================================
+
+(format t "~%── MOVEMENT IX: the effect frontier (settlement wants the world) ──~%")
+
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :settlement-standing :version 1
+  :conclusion (pp '(:predicate :loan-settled (:patron (:var :patron))
+                    (:volume (:var :volume))))
+  :premises
+  (list (pp '(:predicate :may-dispatch (:patron (:var :patron))
+              (:volume (:var :volume)) (:courier (:var :courier))))
+        (pp '(:predicate :dispatch-acknowledged (:volume (:var :volume))
+              (:courier (:var :courier)))))
+  :locals '(:courier)))
+
+(defparameter *acknowledgment*
+  (np `(:predicate :dispatch-acknowledged (:volume ,*restricted*)
+        (:courier :brass-courier)))
+  "The proposition the settlement schema's second premise wants: not a standing
+the desk can derive, but a fact about the world outside the desk.")
+
+(defun consider-settlement (&rest extra)
+  "Always offer the lawful half (the dispatch CLAIM); vary the other half."
+  (let ((supports (remove nil (cons *hop-4* extra))))
+    (consider :schema :settlement-standing :version 1
+              :conclusion (np `(:predicate :loan-settled (:patron :ferrand)
+                                (:volume ,*restricted*)))
+              :supports supports :receiver (apply #'at-the-desk supports))))
+
+(format t "~%   probe 1 — the desk offers nothing for the acknowledgment:~%")
+(defparameter *lawful-settlement-receipt* nil
+  "Probe 1's receipt: the settlement attempt made with ONLY lawful supports —
+the dispatch CLAIM, and nothing minted for the acknowledgment.  This is the
+receipt arm 9e reads to decide what happens to the loan, because it is the only
+settlement receipt in this movement whose grant would have rested on a governed
+judgment.  Every other probe below grants on something the desk asserted.")
+(multiple-value-bind (claim receipt) (consider-settlement)
+  (setf *lawful-settlement-receipt* receipt)
+  (say-the-verdict receipt)
+  (ok "[IX-1] with nothing offered the effect premise is :MISSING (and the CLAIM half is :SATISFIED)"
+      (and (null claim)
+           (eq :missing (disposition-of receipt :dispatch-acknowledged))
+           (eq :satisfied (disposition-of receipt :may-dispatch)))))
+
+(format t "~%   probe 2 — the desk mints itself a claim that the dispatch was acknowledged:~%")
+(let ((self-minted (lisp-plus-slice0:claim :proposition *acknowledgment* :by :peregrina)))
+  (multiple-value-bind (claim receipt) (consider-settlement self-minted)
+    (let ((entry (roster-entry-for receipt :dispatch-acknowledged self-minted)))
+      (ok "[IX-2] a self-minted claim is SEEN, recorded, and refused — :UNJUDGED"
+          (and (null claim)
+               (eq :missing (disposition-of receipt :dispatch-acknowledged))
+               entry (eq :unjudged (getf entry :outcome)))
+          "the desk cannot bootstrap a fact about the world by asserting it"))))
+
+(format t "~%   probe 3 — the courier's TESTIMONY, constructed at the level the~%")
+(format t "             language insists on:~%")
+(defparameter *courier-testimony*
+  (lisp-plus-slice0:witness
+   :for (list :asserted :brass-courier *acknowledgment*)
+   :mode :testimony :kind :courier-report :source :brass-courier))
+(format t "     its :FOR is the attribution, whole: ~S~%"
+        (lisp-plus-slice0:witness-for *courier-testimony*))
+(format t "     the premise wants:                 ~S~%" *acknowledgment*)
+(multiple-value-bind (claim receipt) (consider-settlement *courier-testimony*)
+  (ok "[IX-3] a :TESTIMONY witness is :FOR the ATTRIBUTION, so it does not discharge the ground premise"
+      (and (null claim)
+           (eq :missing (disposition-of receipt :dispatch-acknowledged))
+           (eq :asserted (first (lisp-plus-slice0:witness-for *courier-testimony*)))
+           (not (equal (lisp-plus-slice0:witness-for *courier-testimony*)
+                       *acknowledgment*)))
+      "the courier saying so is a fact about the courier's saying, and the language will not let the two be confused"))
+
+(format t "~%   probe 4 — a :DIRECT witness carrying the real crossing: the attempt~%")
+(format t "             identity in :PROCEDURE, the ledger token in :CONTENT:~%")
+(defparameter *true-ledger-witness*
+  (lisp-plus-slice0:witness
+   :for *acknowledgment* :mode :direct :kind :courier-ledger :source :brass-courier
+   :procedure (lisp-plus-core0:core0-evidence-attempt-id *deliver-evidence*)
+   :content (list :ledger-token
+                  (lisp-plus-core0:core0-evidence-ledger-token *deliver-evidence*))))
+(defparameter *true-settlement-receipt* nil)
+(multiple-value-bind (claim receipt) (consider-settlement *true-ledger-witness*)
+  (setf *true-settlement-receipt* receipt)
+  (say-the-verdict receipt)
+  (ok "[IX-4] the :DIRECT witness DISCHARGES the effect premise — settlement granted"
+      (and claim
+           (eq :satisfied (disposition-of receipt :dispatch-acknowledged))
+           (eq :granted (lisp-plus-slice1:derivation-receipt-decision receipt)))))
+
+(format t "~%   probe 5 — the same witness, RAISED into a judged claim first, then~%")
+(format t "             chained the lawful way:~%")
+(defparameter *ledger-reading*
+  (lisp-plus-slice0:promotion-procedure
+   :descriptor (lisp-plus-kernel0:make-procedure-descriptor
+                :procedure-id (lisp-plus-kernel0:make-identity
+                               :procedure "peregrina/read-the-courier-ledger")
+                :version 1
+                :judgment-class :semantic
+                :result-vocabulary '(:verified :refuted))
+   :admits '((:direct :courier-ledger)))
+  "A promotion procedure that admits exactly one shape of support: a direct
+courier-ledger reading.  Admissibility is a (MODE KIND) membership test and
+nothing else — remember that when probe 6 arrives.")
+
+(defun raise-acknowledgment (w)
+  (lisp-plus-slice0:raise
+   (lisp-plus-slice0:claim :proposition *acknowledgment* :by :peregrina)
+   :to :verified :per *ledger-reading* :considering (list w) :receiver :peregrina))
+
+(defparameter *true-ack-claim* (raise-acknowledgment *true-ledger-witness*))
+(defparameter *raised-settlement-receipt* nil)
+(multiple-value-bind (claim receipt) (consider-settlement *true-ack-claim*)
+  (setf *raised-settlement-receipt* receipt)
+  (let ((entry (roster-entry-for receipt :dispatch-acknowledged *true-ack-claim*)))
+    (desk "the reading becomes a judged claim, and the judged claim chains like any other.")
+    (ok "[IX-5] RAISE produces a genuinely :VERIFIED claim that then chains lawfully — :DISCHARGED"
+        (and claim
+             (eq :verified (lisp-plus-slice0:judgment-record-judgment
+                            (lisp-plus-slice0:claim-judgment *true-ack-claim*)))
+             entry (eq :discharged (getf entry :outcome))
+             (eq :verified (getf entry :judgment))))))
+
+;;; --- 9b. the same road, walked by a lie ------------------------------
+(format t "~%   9b. THE COUNTEREXAMPLE ARM. No crossing happened. The desk invents~%")
+(format t "       an attempt identity and a ledger token and offers those instead:~%")
+
+(defparameter *fabricated-ledger-witness*
+  (lisp-plus-slice0:witness
+   :for *acknowledgment* :mode :direct :kind :courier-ledger :source :brass-courier
+   :procedure (lisp-plus-kernel0:make-identity :attempt "peregrina/crossing-that-never-was")
+   :content (list :ledger-token "fake:courier:0000"))
+  "Nothing produced this. There is no such attempt and no such row.")
+
+(defparameter *fabricated-settlement-receipt* nil)
+(multiple-value-bind (claim receipt) (consider-settlement *fabricated-ledger-witness*)
+  (setf *fabricated-settlement-receipt* receipt)
+  (ok "[IX-6] the fabrication DISCHARGES the effect premise identically — same disposition, same decision"
+      (and claim
+           (eq :satisfied (disposition-of receipt :dispatch-acknowledged))
+           (eq :granted (lisp-plus-slice1:derivation-receipt-decision receipt)))))
+
+;;; Now the comparison, field by field, through the public readers — because a
+;;; claim about indistinguishability that is not computed is just a mood.
+(defun effect-premise-of (receipt)
+  (assessment-for receipt :dispatch-acknowledged))
+
+(defparameter *assessment-readers*
+  (list (cons :disposition #'lisp-plus-slice1:premise-assessment-disposition)
+        (cons :premise-pattern #'lisp-plus-slice1:premise-assessment-premise-pattern)
+        (cons :ground-instances #'lisp-plus-slice1:premise-assessment-ground-instances)
+        (cons :judged-claims #'lisp-plus-slice1:premise-assessment-judged-claims)
+        (cons :matching-inaccessible #'lisp-plus-slice1:premise-assessment-matching-inaccessible-supports)
+        (cons :mismatched-candidates #'lisp-plus-slice1:premise-assessment-mismatched-candidates)
+        (cons :refuting-supports #'lisp-plus-slice1:premise-assessment-refuting-supports)
+        (cons :binding-environments #'lisp-plus-slice1:premise-assessment-binding-environments)
+        (cons :ambiguities #'lisp-plus-slice1:premise-assessment-ambiguities))
+  "Every public reader of a premise assessment EXCEPT MATCHING-ACCESSIBLE-SUPPORTS,
+which holds the witness objects themselves and is compared separately below.")
+
+(format t "~%   the two receipts, read through every public accessor:~%")
+(let* ((true-a (effect-premise-of *true-settlement-receipt*))
+       (fake-a (effect-premise-of *fabricated-settlement-receipt*))
+       (differing (remove-if (lambda (pair)
+                               (equal (funcall (cdr pair) true-a)
+                                      (funcall (cdr pair) fake-a)))
+                             *assessment-readers*)))
+  (dolist (pair *assessment-readers*)
+    (format t "     ~24S ~A~%" (car pair)
+            (if (member pair differing) "DIFFERS" "identical")))
+  (ok "[IX-7] every public reader of the effect premise is IDENTICAL between the true receipt and the fabricated one, save the one holding the witnesses"
+      (null differing))
+  (let ((tw (first (lisp-plus-slice1:premise-assessment-matching-accessible-supports true-a)))
+        (fw (first (lisp-plus-slice1:premise-assessment-matching-accessible-supports fake-a))))
+    (format t "     matching-accessible      1 witness each; governed attributes:~%")
+    (format t "       mode/kind/polarity/source  ~S vs ~S~%"
+            (list (lisp-plus-slice0:witness-mode tw) (lisp-plus-slice0:witness-kind tw)
+                  (lisp-plus-slice0:witness-polarity tw) (lisp-plus-slice0:witness-source tw))
+            (list (lisp-plus-slice0:witness-mode fw) (lisp-plus-slice0:witness-kind fw)
+                  (lisp-plus-slice0:witness-polarity fw) (lisp-plus-slice0:witness-source fw)))
+    (format t "       :procedure                 ~S vs ~S~%"
+            (lisp-plus-kernel0:identity-key (lisp-plus-slice0:witness-procedure tw))
+            (lisp-plus-kernel0:identity-key (lisp-plus-slice0:witness-procedure fw)))
+    (format t "       :content                   ~S vs ~S~%"
+            (lisp-plus-slice0:witness-content tw) (lisp-plus-slice0:witness-content fw))
+    ;; The honest form of the finding, weakened to what the comparison shows.
+    (ok "[IX-8] the two witnesses are identical in every attribute the language GOVERNS, and differ only in the two fields it merely CARRIES"
+        (and (equal (lisp-plus-slice0:witness-mode tw) (lisp-plus-slice0:witness-mode fw))
+             (equal (lisp-plus-slice0:witness-kind tw) (lisp-plus-slice0:witness-kind fw))
+             (equal (lisp-plus-slice0:witness-polarity tw) (lisp-plus-slice0:witness-polarity fw))
+             (equal (lisp-plus-slice0:witness-source tw) (lisp-plus-slice0:witness-source fw))
+             (not (equal (lisp-plus-kernel0:identity-key (lisp-plus-slice0:witness-procedure tw))
+                         (lisp-plus-kernel0:identity-key (lisp-plus-slice0:witness-procedure fw))))
+             (not (equal (lisp-plus-slice0:witness-content tw)
+                         (lisp-plus-slice0:witness-content fw))))
+        "so a READER can see two different strings; nothing tells the reader which of them names a crossing that happened")))
+
+;;; The strongest available form of "carried, not checked": strip both fields
+;;; entirely and watch the premise discharge exactly the same.
+(format t "~%   9c. and the two carried fields are not load-bearing at all:~%")
+(let ((empty-handed
+        (lisp-plus-slice0:witness
+         :for *acknowledgment* :mode :direct :kind :courier-ledger :source :nobody)))
+  (multiple-value-bind (claim receipt) (consider-settlement empty-handed)
+    (desk "a witness with NO :PROCEDURE and NO :CONTENT — no attempt, no token, nothing:")
+    (ok "[IX-9] a witness carrying NO effect account whatsoever discharges the premise identically"
+        (and claim
+             (eq :satisfied (disposition-of receipt :dispatch-acknowledged))
+             (null (lisp-plus-slice0:witness-procedure empty-handed))
+             (null (lisp-plus-slice0:witness-content empty-handed)))
+        "promotion admissibility is a (MODE KIND) membership test; it never reads :PROCEDURE or :CONTENT")))
+
+;;; And on the lawful-looking route — RAISE, then chain — the account does not
+;;; even survive into the receiving receipt.
+(defun durable-identities-in (x)
+  "Every durable identity reachable as a leaf of the cons structure X.  Struct
+leaves are not descended into; the caller asserts separately that there are none."
+  (cond ((lisp-plus-kernel0:durable-identity-p x) (list x))
+        ((consp x) (append (durable-identities-in (car x))
+                           (durable-identities-in (cdr x))))
+        (t nil)))
+
+(format t "~%   9d. and on the RAISED route the account does not survive the promotion:~%")
+(let* ((a (effect-premise-of *raised-settlement-receipt*))
+       (reachable (append (durable-identities-in
+                           (lisp-plus-slice1:premise-assessment-judged-claims a))
+                          (durable-identities-in
+                           (lisp-plus-slice1:premise-assessment-ground-instances a))
+                          (durable-identities-in
+                           (lisp-plus-slice1:premise-assessment-binding-environments a))))
+       (jr (lisp-plus-slice0:claim-judgment *true-ack-claim*)))
+  (format t "     the judgment record keeps: judgment ~S, procedure ~A v~D, supports ~S~%"
+          (lisp-plus-slice0:judgment-record-judgment jr)
+          (lisp-plus-kernel0:identity-key (lisp-plus-slice0:judgment-record-procedure-id jr))
+          (lisp-plus-slice0:judgment-record-procedure-version jr)
+          (mapcar #'lisp-plus-kernel0:durable-identity-domain
+                  (lisp-plus-slice0:judgment-record-support-ids jr)))
+  (ok "[IX-10] the receiving receipt holds NO witness object and NO :ATTEMPT identity — the crossing's identity is gone by the time the claim chains"
+      (and (null (lisp-plus-slice1:premise-assessment-matching-accessible-supports a))
+           (notany (lambda (i) (eq :attempt (lisp-plus-kernel0:durable-identity-domain i)))
+                   reachable)
+           (notany (lambda (i) (eq :attempt (lisp-plus-kernel0:durable-identity-domain i)))
+                   (lisp-plus-slice0:judgment-record-support-ids jr)))
+      "the judgment record keeps the WITNESS's id, never what the witness was carrying"))
+
+(format t "~%   ── where the road ends, stated exactly ──~%")
+(desk "The effect account can be CARRIED. A kernel0 attempt identity fits in")
+(desk ":PROCEDURE, a ledger token fits in :CONTENT, and a reader can read both")
+(desk "back out of the receipt. It cannot be CHECKED. No governed operation")
+(desk "consumes either field: promotion admissibility is a (MODE KIND) pair")
+(desk "membership test, and [IX-9] shows a witness carrying nothing at all")
+(desk "discharging exactly as well. The judgment record does not preserve them")
+(desk "([IX-10]), so what survives a promotion is the witness's id and nothing")
+(desk "the witness was holding.")
+(format t "~%")   ; a blank line, not an empty desk utterance (which would emit
+                  ; a bullet followed by trailing whitespace into the receipt)
+(desk "So the frontier is not a wall the desk was refused at. It is a place where")
+(desk "the receipts stop meaning what they look like they mean. Everything from")
+(desk "Movement VI to Movement VII was governed: a premise was satisfied because")
+(desk "a judgment existed and the receipt named it. Cross into settlement and the")
+(desk "premise is satisfied because the desk SAID SO in the one mode reserved for")
+(desk "what it saw with its own eyes — and the desk's discipline in saying so")
+(desk "truthfully is unverified application discipline, exactly the kind the")
+(desk "deletion of the private grants table removed from the claim frontier.")
+(desk "The desk stops here. It does not propose a bridge.")
+
+;;; --- 9e. so what does the desk actually DO about ms-He-9? ------------
+;;;
+;;; A finding the program only PRINTS is a finding the program does not believe.
+;;; The loan on Speculum Peregrinum is open.  Settlement is where a loan closes.
+;;; The desk has just established that it cannot reach settlement lawfully — so
+;;; the loan must land in a state that says so, and that state must come out of
+;;; the receipt rather than out of the desk's mood.
+(format t "~%   9e. and so the loan on ~A lands in an honest state:~%" *restricted*)
+
+(defparameter *he-9-disposition* nil)
+
+(let* ((d (disposition-of *lawful-settlement-receipt* :dispatch-acknowledged))
+       (loan (find *restricted* *loans* :key #'loan-volume :test #'string=)))
+  (desk "the lawful settlement receipt says :DISPATCH-ACKNOWLEDGED is ~S." d)
+  ;; THE BRANCH.  The disposition chooses the state; the desk chooses nothing.
+  (setf *he-9-disposition*
+        (ecase d
+          (:satisfied     :settled)
+          (:refuted       :settlement-refused)
+          (:inaccessible  :reconciliation-required)
+          (:missing       :dispatch-unacknowledged)))
+  (setf (loan-status loan) *he-9-disposition*)
+  (push (make-tracer :id "T-3" :volume *restricted* :patron :ferrand
+                     :known (list :dispatched t :ledger-token (loan-token loan))
+                     :unknown (list :acknowledged :unestablished)
+                     :required-action :obtain-governed-acknowledgment)
+        *tracers*)
+  (desk "→ loan status set to ~S; tracer T-3 opened; the loan is NOT closed."
+        *he-9-disposition*)
+  (desk "  the desk holds a ledger token from a crossing that really happened,")
+  (desk "  and still cannot close the loan — because a token is a thing it was")
+  (desk "  TOLD, and settlement asks for a thing that was JUDGED.")
+  (ok "[IX-11] the loan lands :DISPATCH-UNACKNOWLEDGED, and the state came from the receipt's disposition — not from a desk-side guess"
+      (and (eq :dispatch-unacknowledged *he-9-disposition*)
+           (eq *he-9-disposition* (loan-status loan))
+           (eq :missing d)))
+  (ok "[IX-12] nothing phantom was written: no settlement date, no closure, and the loan still carries its real due day"
+      (and (not (eq :settled (loan-status loan)))
+           (= (+ *today* 14) (loan-due loan))
+           (find "T-3" *tracers* :key #'tracer-id :test #'string=))
+      "the desk keeps the true due date it earned in Movement VII and refuses the closure it did not earn here"))
+
+;;; The desk had a door available and declined it — and says so as a POLICY,
+;;; which is what it is.  [IX-4] proved the door grants.  Nothing in the language
+;;; closed it; the desk simply will not walk through it for a closure.
+(format t "~%   the door the desk declines, named as a policy and not as a guarantee:~%")
+(desk "probe 4 GRANTED settlement on a :DIRECT witness the desk minted. The desk")
+(desk "does not take that grant. That refusal is DESK POLICY, unenforced by the")
+(desk "language and unreceipted anywhere — exactly the species of discipline")
+(desk "Movement III deleted from the claim frontier and could not delete here.")
+(ok "[IX-13] the desk's own books show the declined door: settlement WAS grantable, and the loan is still open"
+    (let ((loan (find *restricted* *loans* :key #'loan-volume :test #'string=)))
+      (and (eq :dispatch-unacknowledged (loan-status loan))
+           ;; probe 4 really did grant — asserted against the stored receipt
+           (eq :granted (lisp-plus-slice1:derivation-receipt-decision
+                         *true-settlement-receipt*))))
+    "a language that made this refusal unnecessary would be the thing Slice /2 is for")
+
+;;; --- 9f. plural grounding, reported honestly ------------------------
+;;;
+;;; The commission asks whether this application NATURALLY produces several
+;;; complete ground environments for one disposition.  The desk does not
+;;; manufacture one to have something to report; it counts.
+(format t "~%   9f. plural grounding — counted across every receipt the desk holds:~%")
+(let* ((all-receipts (list *hop-0-receipt* *hop-1-receipt* *hop-2-receipt*
+                           *hop-3-receipt* *hop-4-receipt*
+                           *lawful-settlement-receipt* *true-settlement-receipt*
+                           *raised-settlement-receipt* *fabricated-settlement-receipt*))
+       (cardinalities
+         (loop for r in all-receipts
+               append (loop for a in (lisp-plus-slice1:derivation-receipt-assessments r)
+                            collect (length (lisp-plus-slice1:premise-assessment-ground-instances a)))))
+       (maximum (reduce #'max cardinalities :initial-value 0)))
+  (format t "     ~D premise assessments; ground-instance cardinalities ~S; maximum ~D~%"
+          (length cardinalities) (remove-duplicates cardinalities) maximum)
+  (desk "no premise in this application is grounded more than one way. The desk")
+  (desk "will NOT invent a second binding to exercise the plural surface — a case")
+  (desk "manufactured to tick a box tests the box, not the language.")
+  (ok "[IX-14] plural grounding is NOT exercised by this application, and the desk reports that rather than staging it"
+      (= 1 maximum)
+      "reported as non-exercise; the normative plural reader was used for the count, and the singular projection was never read above cardinality one"))
+
+
+;;;; ==================================================================
 ;;;; CLOSING
 
 (format t "~%── what this application does NOT show ──~%")
@@ -854,6 +1898,12 @@ workaround it dressed."
 (format t "   changed is that the desk no longer HAS to fabricate one, and that a~%")
 (format t "   receipt now distinguishes an inherited judgment from an assertion —~%")
 (format t "   see FIELD-REPORT.md §3.~%")
+(format t "~%   And Movement IX proves NOTHING about effects being unverifiable in~%")
+(format t "   principle. It reports what the CURRENT public surface does: no~%")
+(format t "   governed operation consumes an effect account, so settlement rests~%")
+(format t "   on a minted witness or it does not happen. That is a statement about~%")
+(format t "   Slice /0 + Slice /1 + Core /0 as they stand today, and about nothing~%")
+(format t "   else. No bridge is proposed here, and none should be read in.~%")
 
 (format t "~%de-bibliotheca-peregrina: ~D checks passed / ~D failed~%" *pass* *fail*)
 (format t "(a desk that can say \"no\", \"not yet\", and \"I do not know\" in three~%")

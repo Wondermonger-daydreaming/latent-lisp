@@ -651,3 +651,206 @@ governed path — the governed path refused correctly every time it was asked.
 > `:MISSING`; a self-minted claim, `:UNJUDGED`) and refused Ferrand's perfectly good
 > claim once (`:INACCESSIBLE`, when the desk withheld its own reach) — granting only
 > where a `:verified` judgment stood behind the premise and the receiver could read it.
+
+---
+
+## 8. THE LONG ROAD AND THE EFFECT FRONTIER (2026-07-25, VIATOR)
+
+Four movements were added — VI the long road, VII the two crossings, VIII the three
+refusals, IX the effect frontier. The application went from **42 checks to 95**, no
+existing assertion was weakened, and no existing check was renumbered or deleted.
+
+### 8.1 — The road got longer, and it held
+
+Movement III proved that *one* judged claim can discharge *one* premise. Movement VI
+asks the only question that mattered next: **does it compose?** Five standings, four
+hops, each hop's conclusion the next hop's premise:
+
+```
+:may-borrow → :reciprocal-eligible → :may-access-restricted → :may-reserve → :may-dispatch
+```
+
+It composes, and it composes without ceremony. `walk-one-hop` is **thirty lines and
+handles every hop** — the hop function takes the carried claim and one fresh witness,
+and there is no per-hop adapter, no restatement, no translation layer. That is the
+strongest thing in this report: the second, third and fourth hops cost *nothing over*
+the first. The road is not four special cases; it is one law applied four times.
+
+At each hop the program asserts four things, and the fourth is the one I care about:
+`[VI-n-d]` reads the carried claim's judgment record with `EQ` **after** the claim has
+been spent, and finds the identical object, still `:VERIFIED`. **Spending a standing
+does not consume it.** A claim is not a token that gets used up; it is a fact that
+keeps being true, and four derivations can lean on it without wearing it out.
+
+### 8.2 — The chain is auditable forward, and backward only from receipts
+
+Two walks, and the difference between them is a real finding.
+
+**From a claim alone (`6b`): the walk dies after one hop.** A granted claim carries two
+onward pointers and *neither* leads home. `judgment-record-support-ids` names the
+**derivation witness `derive` minted** (domain `:RECEIPT`) — not the claim that
+discharged the premise. `claim-lineage` names the claim's own **pre-promotion shell**
+(domain `:CLAIM`), which is not the previous hop. The walker genuinely attempts the
+next step — it collects every onward pointer and asks whether any *is* a claim object
+it could stand on — and halts because the answer is no.
+
+> **A correction I made to my own draft, recorded because the defect class matters.**
+> My first version of `walk-back` returned unconditionally after one iteration and
+> then asserted `(= 1 hops)`. That check **could not fail**. It was a tautology wearing
+> a finding's coat: it tested my own `return` statement, not the language. The
+> substance survived — `[VI-w2]` and `[VI-w3]` read the actual identity domains and
+> carry the finding — but the check that *looked* most like the headline was the one
+> doing no work. Rewritten to attempt the step and halt on the answer.
+
+**From the receipts (`6c`): the walk reaches the ground.** `walk-the-chain` is handed
+the five receipts this movement itself produced — *as an argument, not from a registry*
+— and prints five hops back to Ferrand's original standing and the three witnesses
+under it (`:membership-attested`, `:fines-clear`, `:volume-unreserved`). `[VI-w5]` then
+**verifies the printed order by identity** rather than trusting it, so a pretty diagram
+in the wrong order would fail the run.
+
+The distinction the desk is holding here is the one Movement III drew when it deleted
+`*DESK-GRANTS*`: **a variable that DECIDES is a private authenticity oracle; a variable
+that PRINTS is a presentation helper.** `walk-the-chain` decides nothing.
+
+**The missing public operation, named exactly: an identity → object resolver.** Slice /0
+and Slice /1 export none and keep no registry that could back one. This is *convenience
+pressure*, not a defect — a reader who holds the receipts has everything.
+
+### 8.3 — The effect frontier: what actually happens
+
+The direction of travel matters and Movement VII is built to make it visible: the
+**authorization is the premise and the acts are its consequences.** `:may-reserve` is
+granted, and *then* the reservation crosses. `:may-dispatch` is derived from the
+`:may-reserve` **claim** — not from the reservation's outcome. Nothing an effect *did*
+is a premise of anything. That direction is lawful and it is comfortable.
+
+Settlement is where it stops being comfortable, because settlement genuinely needs the
+world: *this dispatch actually happened*. Five species of support were tried for that
+premise, and here is what each did — **observed, not predicted:**
+
+| # | Support offered for `:dispatch-acknowledged` | Result |
+|---|---|---|
+| 1 | nothing | `:MISSING` |
+| 2 | a claim the desk minted for itself | `:MISSING`, roster `:UNJUDGED` — seen and refused |
+| 3 | a `:testimony` witness, correctly shaped `(:asserted SOURCE P)` | `:MISSING` — it is *for* the attribution, not for P |
+| 4 | a `:direct` witness carrying the real attempt id and ledger token | **`:SATISFIED` — granted** |
+| 5 | that same witness `raise`d into a `:VERIFIED` claim, then chained | **`:SATISFIED` — granted, `:DISCHARGED`** |
+
+And three probes outside the table, which are the actual finding:
+
+- **`[IX-6]`** — a witness naming *a crossing that never happened* (invented attempt id,
+  invented token) discharges **identically**: same disposition, same decision.
+- **`[IX-7]`** — every public reader of the premise assessment is **identical** between
+  the true receipt and the fabricated one, save the one holding the witness objects.
+- **`[IX-9]`** — a witness carrying **no `:procedure` and no `:content` at all** — no
+  attempt, no token, nothing — discharges **exactly as well**.
+
+`[IX-9]` is the whole of it. Promotion admissibility is
+`(member (list mode kind) admits :test #'equal)` and **nothing else**. It never reads
+`:procedure`. It never reads `:content`. So the effect account can be **CARRIED** — a
+kernel0 attempt identity fits in `:procedure`, a ledger token fits in `:content`, and a
+reader can read both back out — and it cannot be **CHECKED**. `[IX-10]` closes it: the
+judgment record keeps the *witness's id* and never what the witness was holding, so on
+the `raise` route the crossing's identity is gone by the time the claim chains.
+
+**Route 5 is not a bridge. It is the same fabrication with better paperwork.**
+
+### 8.4 — What the language says about its own boundary
+
+The sharpest thing found this session was said by Slice /0 itself. Attempting the
+promotion with a `:structural` judgment-class is refused with:
+
+> `:VERIFIED requires a :semantic procedure; probe/effect-promotion is :structural —`
+> `structural execution evidence cannot license semantic acceptance`
+
+The language **has a name for what Core /0 produces** — *structural execution evidence*
+— and explicitly forbids it from licensing `:verified`. But there is no way to *present*
+it: `raise :considering` a `core0-evidence` is a **`TYPE-ERROR: not of type WITNESS`**,
+and `derive` classifies supports into witnesses / refutations / claims and **silently
+discards** anything else — so offering the evidence object leaves a receipt whose repair
+advice says *"supply accessible support matching…"*, i.e. the receipt cannot see that the
+strongest thing the desk owns was ever offered.
+
+**So the prohibition is stated against a thing that cannot be submitted.** That is the
+precise joint. The two worlds share only kernel0 identities — `grep -c core0` over
+`slice0.lisp` and `slice1.lisp` returns **0** — and the sole bridge that exists,
+`core0`'s registration into slice0's `*why-extractors*`, is for **explanation rendering
+only** and is the one receipted double-colon access in Core /0.
+
+### 8.5 — So the desk leaves the loan open
+
+A finding a program only *prints* is a finding the program does not believe. `[IX-11]`
+makes the desk act on it: the lawful settlement receipt says `:dispatch-acknowledged` is
+`:MISSING`, and **the disposition chooses the state** — the loan on `ms-He-9` becomes
+`:DISPATCH-UNACKNOWLEDGED`, tracer T-3 opens, and the loan does not close. `[IX-12]`
+checks that nothing phantom was written: no settlement date, no closure, and the real
+due day from Movement VII is still there.
+
+The desk holds a ledger token from a crossing that really happened and still cannot
+close the loan — **because a token is a thing it was TOLD, and settlement asks for a
+thing that was JUDGED.**
+
+And `[IX-13]` records the uncomfortable part honestly: probe 4 **granted** settlement.
+The desk declines that grant, and that refusal is **desk policy — unenforced by the
+language and unreceipted anywhere.** It is exactly the species of discipline Movement
+III deleted from the claim frontier and could not delete here.
+
+### 8.6 — Verdict: correct through claims, blocked at effects
+
+Through claims, this is now **safer and more natural**: four hops cost what one cost,
+the spent claim survives, refusals are the language's, and the receipts read back.
+At the effect frontier it is **neither safer nor more ceremonial — it is unchanged**,
+because the language does not participate. Settlement rests on a witness the desk mints
+with its own hand, and the desk's truthfulness in minting it is unverified application
+discipline.
+
+**No bridge is proposed here, and none should be read in.** Movement IX proves nothing
+about effects being unverifiable *in principle*; it reports what the current public
+surface does. Whether an effect account *should* be able to license a semantic judgment
+— and what a `:structural`-to-`:semantic` crossing would have to prove — is a language
+question, not an application one, and the desk is not the right room for it.
+
+### 8.7 — Plural grounding: not exercised, reported as such
+
+`[IX-14]` counts ground-instance cardinalities across all nineteen premise assessments
+in every receipt the desk holds. **Maximum: 1.** No premise in this application is
+grounded more than one way. The desk declined to invent a second binding to exercise the
+plural surface — *a case manufactured to tick a box tests the box, not the language.*
+The normative plural reader (`premise-assessment-ground-instances`) was used for the
+count; the singular projection was never read above cardinality one.
+
+### 8.8 — Negative controls
+
+Two planted, both fired, both restored:
+
+1. **Receiver access revoked** at every hop (`(at-the-desk witness)` in place of the
+   full support list): the chain failed at **exactly the expected hop** — `[VI-1-a]` and
+   `[VI-1-b]` FAILed with `:MAY-BORROW is :INACCESSIBLE`, and the receipt's verbatim
+   repair named `claim-48` by durable identity. Exit 1.
+2. **A basis link obscured** — `[VI-w5]`'s expected predecessor for hop 4 pointed at
+   `*hop-2*` instead of `*hop-3*`: `[VI-w5]` FAILed, 94/1, exit 1. The identity check has
+   teeth; it is not decorative.
+
+Restored: **95 checks passed / 0 failed, exit 0**, byte-identical across two clean runs.
+
+### 8.9 — Mechanical checks (this session)
+
+| Check | Result |
+|---|---|
+| double-colon digraph in `APPLICATION.lisp` (grep) | **0** |
+| double-colon digraph in `FIELD-REPORT.md` (grep) | **0** |
+| `[III-k]` `*DESK-GRANTS*` not interned | **passing** |
+| `random` / wall-clock calls in APPLICATION.lisp | **0** |
+| two clean runs byte-identical | **yes** |
+| shared language/runtime files changed | **none** |
+| de-bibliotheca-peregrina | **95 / 0** |
+| slice1 selftest | **93 / 0** |
+| SMOKE-1 | **9 / 9** |
+| GUIDE-WALK-1 | **18, 0 failed** |
+| GUIDE-REPAIR-1-REPRO | **9, 0 failed** |
+| de-cursore-aereo (perform specimen) | **23 / 0** |
+| de-ponte-usto (interruption / reconciliation) | **17 / 0** |
+| de-abaco | **9 / 0** |
+
+*— Claude Opus 5 (1M context), VIATOR*
