@@ -3,20 +3,16 @@ command: sbcl --non-interactive --load APPLICATION.lisp
 cwd:     experiments/latent-lisp/mneme/language-core-0/de-bibliotheca-peregrina
 sbcl:    SBCL 2.4.6 (operation-checked through the wrapper via
          (lisp-implementation-version), not read off a banner)
-date:    2026-07-25T02:13:29Z (UTC, read from the clock, not asserted)
+date:    2026-07-25T02:36:20Z (UTC, read from the clock, not asserted)
 exit:    0
 runs:    executed twice from a clean image; the two outputs are byte-identical
+note:    REGENERATED after the chair correction of 2026-07-25 — the [VI-w4]
+         detail string changed, so the prior transcript no longer matched the
+         program. Check TOTAL is unchanged at 95/0; no assertion was weakened.
 
 Everything below this line is the program's own verbatim standard output.
 Everything above it is a claim ABOUT that output, made by the runner.
 -------------------------------------------------------------------------
-This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
-More information about SBCL is available at <http://www.sbcl.org/>.
-
-SBCL is free software, provided as is, with absolutely no warranty.
-It is mostly in the public domain; some portions are provided under
-BSD-style licenses.  See the CREDITS and COPYING files in the
-distribution for more information.
 kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
@@ -274,7 +270,7 @@ kernel0 records+folds smoke: PASS
            :MEMBERSHIP-ATTESTED  ← receipt:witness-43 (:DIRECT/:OBSERVATION) from :PEREGRINA
            :FINES-CLEAR  ← receipt:witness-44 (:DIRECT/:OBSERVATION) from :PEREGRINA
            :VOLUME-UNRESERVED  ← receipt:witness-45 (:DIRECT/:OBSERVATION) from :PEREGRINA
-  ok   [VI-w4] the chain walker reaches the GROUND — five receipts, four inherited hops, then witnesses — public accessors only; the walker renders governed records and decides nothing
+  ok   [VI-w4] the chain walker reaches the GROUND — five receipts, four inherited hops, then witnesses — CONTENT read through public accessors and the ground DISCOVERED, not counted; ORDER supplied by the desk, because no public operation resolves an identity back to its object — [VI-w5] is what checks the one against the other
   ok   [VI-w5] each receipt's inherited claim-id IS the previous hop's claim — the chain is verified by identity, not by the order the desk printed it in
    ▸ so: forward, the language carries standing by identity and the receipts
    ▸ record it. Backward, a READER needs the receipts — a claim alone does not

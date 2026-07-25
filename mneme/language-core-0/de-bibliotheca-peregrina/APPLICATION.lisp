@@ -1180,11 +1180,33 @@ not a finding but a tautology wearing one's coat.)"
   "Print the governed chain backward from FINAL-CLAIM.
 
 RECEIPTS is handed in at the call site — the five objects this movement itself
-produced, passed as an argument, never looked up.  This function DECIDES
-NOTHING: it renders governed records through public readers and returns how many
-hops it rendered.  It is a printer.  If it were a lookup table consulted to
-establish that a standing was real, it would be the private authenticity oracle
-Movement III deleted, and it is deliberately neither.
+produced.  This function DECIDES NOTHING: it renders governed records through
+public readers and returns how many hops it rendered.  It is a printer.  If it
+were a lookup table consulted to establish that a standing was real, it would be
+the private authenticity oracle Movement III deleted, and it is deliberately
+neither.
+
+BE EXACT ABOUT WHAT THIS IS, because an earlier version of this docstring was
+not.  It said the receipts were \"passed as an argument, never looked up\" while
+the last form of this very function stepped through FIVE GLOBALS — false about
+the code three screens below it, which is the defect the guide repair of
+2026-07-25 was about.  The truth is a split:
+
+  CONTENT is governed.  Every identity, judgment and procedure printed below is
+  read out of the receipt itself through public readers, and the walk TERMINATES
+  by discovering a receipt whose premises rest on witnesses — not by counting.
+
+  TRAVERSAL ORDER is the application's.  Stepping from one receipt to the next
+  reads *HOP-N*, because there is NO public operation that resolves a durable
+  claim identity back to the object it names.  The desk knows the order because
+  it walked the road forward.
+
+So this is a VERIFIED RENDERING OF A KNOWN-ORDER CHAIN, not a self-directed
+traversal, and the difference is not cosmetic: [VI-w5] is what makes the walk
+worth anything, because it checks the governed records AGAINST the desk's
+ordering rather than trusting it.  Obscure one link and [VI-w5] fails — that was
+planted and confirmed.  A resolver from identity to object is the missing public
+convenience this movement found; it is docketed, not invented here.
 
 At each hop it reads, from the receipt alone: the conclusion that receipt
 granted, which premise was discharged by an inherited claim, that claim's
@@ -1242,7 +1264,7 @@ bottom of the road, where evidence enters the world."
                                   *hop-2-receipt* *hop-1-receipt* *hop-0-receipt*))
   (ok "[VI-w4] the chain walker reaches the GROUND — five receipts, four inherited hops, then witnesses"
       (and (= 5 hops) (eq ended :reached-the-ground))
-      "public accessors only; the walker renders governed records and decides nothing")
+      "CONTENT read through public accessors and the ground DISCOVERED, not counted; ORDER supplied by the desk, because no public operation resolves an identity back to its object — [VI-w5] is what checks the one against the other")
   ;; And the ordering the walker assumed is CHECKED against the identities, so
   ;; the pretty printout cannot quietly be in the wrong order.
   (ok "[VI-w5] each receipt's inherited claim-id IS the previous hop's claim — the chain is verified by identity, not by the order the desk printed it in"

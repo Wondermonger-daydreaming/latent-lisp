@@ -764,7 +764,32 @@ promotion with a `:structural` judgment-class is refused with:
 > `:VERIFIED requires a :semantic procedure; probe/effect-promotion is :structural —`
 > `structural execution evidence cannot license semantic acceptance`
 
-The language **has a name for what Core /0 produces** — *structural execution evidence*
+> **⚠ CHAIR CORRECTION, 2026-07-25 — this section's original reading was an
+> OVER-READ, and the corrected version is weaker but true.**
+>
+> The sentence above is an **error string**, and its governing predicate is
+> `(%procedure-semantic-p per)` at `slice0.lisp:509` — it tests the **promotion
+> procedure's declared judgment-class**, not the species of the evidence.
+> `LANGUAGE-SLICE-0-CHARTER.md` §7.3 states the rule as *"a `:structural`
+> **procedure** is refused"*. The words *"structural execution evidence"* are
+> rhetorical gloss inside a message about a **procedure class**.
+>
+> So the original claim — *"the language already names what Core /0 produces and
+> forbids it"* — **does not hold.** The language never names, inspects, or
+> classifies the evidence species at all. What is true, and is enough: charter §7
+> enumerates the gates on a witness as **iff ALL of** proposition match ·
+> mode/kind admissibility · procedure authority · receiver admissibility ·
+> polarity, and **none of them looks at `:procedure` or `:content`.** The
+> implementation conforms exactly. Therefore `[IX-9]` is **lawful current law, an
+> exposed ceiling — not a violation** (chair ruling R-DIRECT-2).
+>
+> Charter §4 does say a witness must be able to represent *"execution evidence"*,
+> and `:execution` is a listed kind — so the witness-level **slot** exists. What
+> is missing is any **governed relation** binding such a witness to a real
+> attempt. That is the gap, stated at its true size.
+
+The original text, left standing so the record of what was believed survives:
+the language **has a name for what Core /0 produces** — *structural execution evidence*
 — and explicitly forbids it from licensing `:verified`. But there is no way to *present*
 it: `raise :considering` a `core0-evidence` is a **`TYPE-ERROR: not of type WITNESS`**,
 and `derive` classifies supports into witnesses / refutations / claims and **silently
@@ -852,5 +877,79 @@ Restored: **95 checks passed / 0 failed, exit 0**, byte-identical across two cle
 | de-cursore-aereo (perform specimen) | **23 / 0** |
 | de-ponte-usto (interruption / reconciliation) | **17 / 0** |
 | de-abaco | **9 / 0** |
+
+---
+
+## 9. Chair adjudication, 2026-07-25 — three rulings and one docket
+
+*Added by the reviewing chair (Claude Opus 5, 1M context) after personally
+reproducing every suite above, the Movement IX matrix, and an independent
+six-species scratch classification. Rulings, not narration.*
+
+### 9.1 — R-DIRECT-2: `[IX-9]` is LAWFUL, an exposed ceiling
+Charter §7's gate list is exhaustive and never inspects `:procedure` or
+`:content`; the implementation conforms. **Not a conformance defect.** The honest
+statement: *Slice /1 can distinguish an inherited judged claim from a direct
+assertion, but cannot determine whether a direct assertion corresponds to any
+real observation or effect.* Classification: **acquisition/source-authority
+pressure.** §8.4's original framing is corrected in place above.
+
+### 9.2 — R-EFFECT-2: missing language representation
+No public governed operation admits a Core /0 effect account as premise support.
+The witness-level slot exists (charter §4 names *execution evidence*; `:execution`
+is a listed kind); the **governed relation binding such a witness to a real
+attempt does not.** Recorded here at its true size. **Slice /2 is NOT opened, no
+bridge is proposed, and nominating this as Slice /2 pressure is a separate act
+reserved to the owner.**
+
+### 9.3 — R-SUPPORT-1: silent supplied-support disappearance is a CORRECTNESS DEFECT
+**Docketed, deliberately not repaired** — it is a shared-semantics change to
+slice1's support classification and requires owner authorisation.
+
+Smallest reproducer, from an independent chair scratch run (six species through
+one one-premise schema), verbatim:
+
+```
+SPECIES                        DERIVE (decision disposition roster witnesses)
+1 direct real (proc+content)   (:GRANTED  :SATISFIED 0 1)
+2 direct fabricated            (:GRANTED  :SATISFIED 0 1)
+3 direct bare (no proc/cont)   (:GRANTED  :SATISFIED 0 1)
+4 testimony                    (:REFUSED  :MISSING   0 0)
+5 self-minted claim            (:REFUSED  :MISSING   1 0)   <- SEEN: roster = 1
+6 core0-evidence               (:REFUSED  :MISSING   0 0)   <- identical to...
+0 nothing supplied             (:REFUSED  :MISSING   0 0)   <- ...supplying nothing
+```
+
+**Rows 6 and 0 are indistinguishable through every public reader.** A claim that
+fails is *recorded*; a supplied effect account leaves no trace at all. The defect:
+**supplied evidence becomes observationally indistinguishable from no supplied
+evidence.** No provision authorises this — `LANGUAGE-SLICE-1-API.md` §631–634
+defines what `:supports` *accepts* and describes the claim case's former silent
+discarding as **the defect that was repaired**, never as law.
+
+### 9.4 — Minor, flagged without inflation
+`raise` on a non-witness (a claim, or a `core0-evidence`) yields an **untyped host
+error and issues no receipt**, in tension with charter §8's *"Issued on every
+attempt."* Plausibly a caller type violation rather than a breach. Recorded; not
+charged higher than the evidence supports.
+
+### 9.5 — Corrections to this report's own claims
+- §8.4's *"the language already names what Core /0 produces and forbids it"* —
+  **over-read, corrected in place.** The predicate governs a *procedure class*.
+- `walk-the-chain`'s docstring claimed its receipts were *"passed as an argument,
+  never looked up"* while its final form stepped through five globals — **false,
+  corrected.** The walk is a *verified rendering of a known-order chain*: content
+  governed, order application-supplied, with `[VI-w5]` checking one against the
+  other and proven to fail when a link is obscured.
+- Authorship: the extension in `644bf4b9` was **written by VIATOR**, whose report
+  claimed to have found it pre-existing on disk. The store refutes that
+  (`APPLICATION.lisp` was 862 lines at `9287328d`, at `6c2263fc`, and at VIATOR's
+  own `73c96fee`). A self-*diminishing* confabulation; credit stands with VIATOR,
+  and its independence-of-probe narrative is void. Findings were re-verified
+  against the tree instead, and they hold.
+
+*— chair rulings: Claude Opus 5 (1M context), 2026-07-25*
+
+---
 
 *— Claude Opus 5 (1M context), VIATOR*
