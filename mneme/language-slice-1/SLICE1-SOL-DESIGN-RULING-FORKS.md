@@ -4,6 +4,12 @@
 with both decisions. Banked verbatim in substance by Claude Opus 5 (chair).
 **This ruling GOVERNS the completion patch it authorizes.***
 
+> **⚠ NAME CORRECTED 2026-07-25 — see the dated addendum at the foot of this file.**
+> Decision 2's **substance is preserved**. The word **`ground-instances`** in it was
+> **ambiguous** and is corrected as a **NAME** by `CHARTER-DELTA-4.md`
+> (R-GROUNDING-NAME-1). The original ruling text below is **NOT rewritten** — read
+> it as written, then read the addendum.
+
 ## Standing of this document
 
 Sol attached its own governance boundary and the chair endorses it without
@@ -182,3 +188,66 @@ discipline.** Then return the project's main attention to application work.
 > function easiest to write.
 
 — banked by Claude Opus 5 (1M context), chair, 2026-07-24
+
+
+---
+
+## ADDENDUM — 2026-07-25: Decision 2's canonical set is the COMPLETE ENVIRONMENT set
+
+*Added under `CHARTER-DELTA-4.md` (R-GROUNDING-NAME-1, owner-adopted). The ruling
+text above is preserved unaltered; this addendum states what the name in it denotes.
+Naming and API clarification only — **not** a collapse of the complete set.*
+
+1. **Decision 2's ordering and dedup law applies to COMPLETE BINDING
+   ENVIRONMENTS.** Every distinct complete environment is preserved, ordered
+   lexicographically by canonical encoded bytes, deduplicated only on
+   byte-identical complete canonical encodings. That is the **normative complete
+   set**, and the substance of the decision is untouched.
+
+2. **The implementation preserves that set under the BINDING-ENVIRONMENT readers** —
+   `premise-assessment-binding-environments` per premise,
+   `derivation-receipt-complete-binding-environments` across premises. It always
+   did; nothing about it changed.
+
+3. **The prior name `ground-instances` was ambiguous, and it collided with a
+   different public projection.** The object those readers return is a
+   **conclusion-projected premise instance** — the premise pattern under the
+   bindings available on entry to that premise, with schema-locals that premise
+   itself binds left as **variables**. It is a different object from a complete
+   binding environment and carries a **different cardinality**: three complete
+   environments differing only in a local collapse to **one** projection.
+   Measured, on a one-premise schema with three such supports: `complete-envs 3`,
+   `binding-environments 3`, **`projection 1`**, `ambiguities 0`.
+
+4. **The projection remains available, under a precise name plus compatibility
+   aliases.** Precise: `premise-assessment-projected-premise-instances`. Legacy,
+   retained and unchanged in return shape and value:
+   `premise-assessment-ground-instances` (plural) and
+   `premise-assessment-ground-instance` (singular). The legacy names are documented
+   as **legacy projection readers** and are neither repurposed nor removed. No
+   receipt-level alias is added, because no public receipt-level ground-instance
+   reader exists.
+
+5. **No complete environment may be arbitrarily selected** — not by the singular
+   projection reader, not by repair advice, not by the renderer, not by any rule
+   whatsoever. This is Decision 2's own prohibition, restated at the corrected
+   name.
+
+6. **Decision 2's semantic substance is preserved in full.** Nothing is collapsed,
+   nothing is dropped, no plurality is discarded. What changed is that the plural
+   evidence is now read under a name that denotes it.
+
+**One consequence worth recording, because the original ruling's own closing image
+invites it.** The ruling wrote that grounding-set preservation means *"do not erase
+the plurality of the evidence when it becomes a conclusion."* The singular
+projection reader does not do that work: it **answers**, with one instance, on
+exactly the ordinary premise that binds a schema-local — while several complete
+environments stand preserved elsewhere in the same receipt. **Its refusal above
+cardinality one guards the projection's cardinality, not the environment set's**,
+and that refusal is **reachable in ordinary use** on any premise entered with a
+local already bound. The existing tooth `T30e` fires it; the new `T32-G4b` exhibits
+one receipt in which the reader *answers* on premise 1 and *refuses* on premise 2
+while the environment plurality is identical for both. The plurality is protected —
+by the environment readers, which is where it lives.
+
+— addendum by Claude Opus 5 (1M context), 2026-07-25, under CHARTER-DELTA-4

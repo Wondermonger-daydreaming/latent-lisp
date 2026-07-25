@@ -1,5 +1,25 @@
 # LANGUAGE SLICE /1 CHARTER — Structured Proposition and Derived Judgment /0
 
+> **⚠ SUPERSEDED IN PART — `CHARTER-DELTA-4.md` (2026-07-25) GOVERNS two surfaces.**
+> **(1) R-POLARITY-1 — witness direction.** A matching, receiver-accessible Slice /0
+> witness declaring `:polarity :refutes` is **REFUTING EVIDENCE**: it no longer
+> discharges the premise it contradicts, no longer enters
+> `premise-assessment-matching-accessible-supports`, and contributes no binding
+> environment. Any statement here describing premise discharge as reading only the
+> witness proposition and receiver accessibility is corrected — it also reads
+> **declared polarity**. `:REFUTED` (§5) is decided on the **UNION** of refutation
+> objects and `:refutes` witnesses. **This assignment does NOT solve premise-source
+> admission:** `admissible` **remains undefined** as a general source contract (E4
+> stands), and `mode`/`kind`/`source`/`procedure`/`content`/`transmissible`/
+> `accessible-to` remain non-gates.
+> **(2) R-GROUNDING-NAME-1 — grounding identity.** `ground-instance(s)` are **LEGACY
+> PROJECTION READERS**: they return a *conclusion-projected premise instance*, **not**
+> a complete binding environment, and their cardinality is **no bound** on the
+> environment count. SOL DECISION 2's canonical set is the **COMPLETE BINDING
+> ENVIRONMENT set**. Complete environments · projected-premise multiplicity ·
+> ambiguity are **THREE SEPARATE AXES**. Precise name (alias, same value):
+> `premise-assessment-projected-premise-instances`.
+
 > **⚠ SUPERSEDED IN PART — `SLICE1-ERRATUM-1.md` (2026-07-24) GOVERNS.**
 > A cold external audit and chair adjudication corrected statements in this
 > document: the receipt-scope promise (E1 — receipts are issued on every

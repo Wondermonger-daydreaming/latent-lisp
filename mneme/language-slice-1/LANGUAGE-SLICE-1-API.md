@@ -1,5 +1,23 @@
 # LANGUAGE-SLICE-1-API.md
 
+> **⚠ SUPERSEDED IN PART — `CHARTER-DELTA-4.md` (2026-07-25) GOVERNS two surfaces.**
+> **(1) R-POLARITY-1 — witness direction.** A matching, receiver-accessible Slice /0
+> witness declaring `:polarity :refutes` is **REFUTING EVIDENCE**. It no longer
+> discharges the premise it contradicts, no longer appears in
+> `premise-assessment-matching-accessible-supports`, and no longer contributes a
+> binding environment. Every statement in this document describing premise discharge
+> as reading only `witness-for` and receiver accessibility is corrected: it also
+> reads **declared polarity**, and nothing else was added. New export:
+> `premise-assessment-refuting-witnesses`.
+> **(2) R-GROUNDING-NAME-1 — grounding identity.** `ground-instances` /
+> `ground-instance` are **LEGACY PROJECTION READERS**; what they return is a
+> *conclusion-projected premise instance*, **not** a complete binding environment,
+> and its cardinality is **not** the number of them. The normative complete set is
+> the **complete binding environment set**. New export (alias, same value):
+> `premise-assessment-projected-premise-instances`. **`admissible` remains
+> undefined** as a general source contract (E4 stands) — neither ruling supplies a
+> premise-source admission contract.
+
 > **⚠ SUPERSEDED IN PART — `SLICE1-ERRATUM-1.md` (2026-07-24) GOVERNS.**
 > A cold external audit and chair adjudication corrected statements in this
 > document: the receipt-scope promise (E1 — receipts are issued on every
@@ -445,6 +463,10 @@ Empties the per-image registry. Call before installing a fresh schema set.
   validated as ground). Minimal: no negation algebra, no `(:not …)`. Recorded,
   never erased; a matching refutation **blocks** its premise even beside positive
   support.
+- **CHARTER-DELTA-4:** a refutation object is **one of two** refuting species. The
+  other is a matching, accessible Slice /0 witness declaring `:polarity :refutes`
+  (`premise-assessment-refuting-witnesses`). Both block; each keeps its own roster;
+  this constructor mints only the first.
 - **Refusal:** `pattern-used-as-ground` if `:refutes` is a `proposition-pattern`;
   `malformed-structured-proposition` for a malformed ground proposition.
 - **Example (VERIFIED):**
@@ -618,13 +640,15 @@ premise unless noted):
 | Accessor | Returns | Copy |
 |---|---|---|
 | `premise-assessment-premise-pattern` | the premise pattern's normal form | copy-tree |
-| `premise-assessment-ground-instances` | **(SOL DECISION 2 — the normative plural)** the COMPLETE CANONICAL SET of ground instances: one per environment this premise was assessed under, deduplicated only on byte-identical canonical encodings and ordered lexicographically by canonical encoded bytes. A one-element sequence when there is exactly one — never a bare instance | copy-tree |
-| `premise-assessment-ground-instance` | **compatibility projection only.** The sole instance when the canonical set has exactly one; `NIL` when it is empty; **REFUSES (typed `slice1-condition`) above cardinality one** — there is no "the" ground instance when several complete environments support the premise, and it will not select one. It never returns sometimes-one-sometimes-a-sequence | copy-tree |
+| `premise-assessment-projected-premise-instances` | **(CHARTER-DELTA-4 — the PRECISE name)** the canonical SEQUENCE of this premise's **conclusion-projected premise instances**: the premise pattern with the bindings available *on entry to this premise* substituted (conclusion bindings, plus any schema-local bound by an **earlier** premise), with schema-locals *this* premise binds left as **variables**. Deduplicated only on byte-identical canonical encodings, ordered lexicographically by canonical encoded bytes. A one-element sequence when there is exactly one — never a bare instance. **NOT the complete binding environment set, and no bound on its cardinality in either direction** | copy-tree |
+| `premise-assessment-ground-instances` | **LEGACY PROJECTION READER** (CHARTER-DELTA-4). Identical in value, shape and copy behaviour to `premise-assessment-projected-premise-instances`, whose row above is authoritative. Retained, operational, never repurposed to return complete environments, never removed. The name is a compatibility name: SOL DECISION 2's normative complete set is the **complete binding environment set**, read at `premise-assessment-binding-environments` and `derivation-receipt-complete-binding-environments` | copy-tree |
+| `premise-assessment-ground-instance` | **LEGACY SINGULAR PROJECTION READER** — a compatibility projection over the row above, and nothing more. The sole **projection** when the sequence has exactly one; `NIL` when it is empty; **REFUSES (typed `slice1-condition`) above cardinality one** and will not select one. It never returns sometimes-one-sometimes-a-sequence. **IT DOES NOT PROTECT COMPLETE-ENVIRONMENT PLURALITY** (CHARTER-DELTA-4): it *answers* whenever the projection is singular — the ordinary case for a premise that binds a schema-local — while several complete environments stand preserved in the same receipt. Its refusal guards the **projection's** cardinality only, and **is reachable in ordinary use** on any premise entered with a local already bound | copy-tree |
 | `premise-assessment-judged-claims` | **(SOL DECISION 1)** the per-premise judged-claim roster: one plist per judged claim offered in `supports` and considered for this premise — `(:CLAIM-ID id :OUTCOME kw [:ROLES …] [:JUDGMENT kw] [:PROCEDURE-ID id :PROCEDURE-VERSION v :SUPPORT-IDS … :JUDGMENT-RECEIVER … :JUDGMENT-ORDINAL …])`. `OUTCOME` ∈ `:DISCHARGED` · `:PROPOSITION-DOES-NOT-MATCH` · `:ROLE-CONFLICT` · `:UNJUDGED` · `:JUDGMENT-NOT-VERIFIED` · `:JUDGMENT-BASIS-UNAVAILABLE` · `:INACCESSIBLE-TO-RECEIVER`. The judgment-basis fields appear exactly on `:DISCHARGED` entries | copy-tree |
-| `premise-assessment-matching-accessible-supports` | witnesses that matched the premise pattern **and** passed the accessibility check (their `witness-id` is in the acting `receiver-context`'s `accessible-supports`, or `receiver` was `nil`) | copy-list |
+| `premise-assessment-matching-accessible-supports` | witnesses that matched the premise pattern, passed the accessibility check (their `witness-id` is in the acting `receiver-context`'s `accessible-supports`, or `receiver` was `nil`), **and declare `:polarity :supports`** (CHARTER-DELTA-4). This roster is **positive support only**: a matching accessible witness declaring `:refutes` is *never* here — it is in `premise-assessment-refuting-witnesses`. Before Delta /4 it was here, and discharged | copy-list |
 | `premise-assessment-matching-inaccessible-supports` | matched witnesses the receiver cannot reach (residue) | copy-list |
 | `premise-assessment-mismatched-candidates` | `(witness . conflicting-roles)` conses | copy-tree |
-| `premise-assessment-refuting-supports` | refutations naming this premise | copy-list |
+| `premise-assessment-refuting-supports` | Slice /1 **refutation objects** naming this premise. Contract **unchanged and deliberately homogeneous** (CHARTER-DELTA-4): refutations, and only refutations — `%repair-for` reads `refutation-id` off its elements. **NOT the whole of the refuting evidence:** see the next row. A premise is `:REFUTED` on the **union** | copy-list |
+| `premise-assessment-refuting-witnesses` | **(CHARTER-DELTA-4 / R-POLARITY-1 — new)** matching, receiver-**accessible** Slice /0 witnesses whose declared polarity is `:refutes`. Classified **before** positive matching support accumulates: such a witness never enters `matching-accessible-supports`, never discharges, never extends a binding environment, never reaches `complete-binding-environments` — and stays fully inspectable **here**. Precedence follows the refutation species: support + accessible matching `:refutes` ⇒ `:REFUTED`, with both rosters visible. **Accessibility and matching come first:** an *inaccessible* `:refutes` witness is `:INACCESSIBLE` residue and a *role-conflicting* one is `:MISMATCHED`; neither is applied as refutation | copy-list |
 | `premise-assessment-binding-environments` | distinct schema-local deltas this premise admits | copy-tree |
 | `premise-assessment-ambiguities` | `(local surviving-values)` when `:ambiguous`, else `()` | copy-tree |
 | `premise-assessment-disposition` | one of the six (§5) | scalar |
@@ -751,6 +775,76 @@ excluded — the ordering is read off the codec's octets directly.
 This also governs `derivation-receipt-complete-binding-environments`,
 `premise-assessment-binding-environments`, and the surviving-value sequence in
 `derivation-receipt-uniqueness-conflicts`.
+
+---
+
+### CHARTER-DELTA-4 — witness direction, and the grounding name
+
+**Governing text: `CHARTER-DELTA-4.md` (2026-07-25, owner-adopted).** Two narrow
+rulings. **Superseded here:** any statement in this document, the charter, the
+architecture, the guide or the closure that (a) describes premise discharge as
+reading only `witness-for` and receiver accessibility, or (b) treats
+`ground-instance(s)` as the complete grounding/environment set.
+
+#### R-POLARITY-1 — polarity is load-bearing direction
+
+*Prospective, not retroactive:* `witness-polarity` appeared in **no** Slice /1
+governing document before this delta; meaning is assigned from adoption onward.
+
+| condition | result |
+|---|---|
+| matching + accessible + `:supports` | candidate positive support |
+| matching + accessible + `:refutes` | **REFUTING EVIDENCE** |
+| matching + **INACCESSIBLE** | `:INACCESSIBLE`, regardless of polarity |
+| proposition **MISMATCH** | `:MISMATCHED`, regardless of polarity |
+
+A `:refutes` witness never discharges a positive premise, never appears as positive
+corroboration, never increases the positive matching-support count, and never
+contributes a binding environment. Precedence follows the refutation species:
+`supporting witness + accessible matching :refutes ⇒ :REFUTED`. A premise is
+`:REFUTED` on the **UNION** of `premise-assessment-refuting-supports` (refutation
+objects) and `premise-assessment-refuting-witnesses` (new). `%repair-for` emits
+`:withdraw-or-answer-refuting-witness` for the second species; advice for a premise
+refuted only by refutation objects is **byte-identical** to its pre-delta form.
+
+**THE CEILING.** This ruling **does not solve premise-source admission**, and must
+not be read as doing so. **`admissible` remains undefined** as a general source
+contract (E4 stands). `mode`, `kind`, `source`, `procedure`, `content`,
+`transmissible` and `accessible-to` are **not** admission gates. Receiver-context
+`accessible-supports` remains the **sole** Slice /1 accessibility rule. No assertion
+is bound to any real observation or effect: a witness declaring `:supports` over a
+fabricated account still discharges. **It forbids one inversion and nothing more.**
+
+#### R-GROUNDING-NAME-1 — Decision 2 names complete environments
+
+SOL DECISION 2's **substance stands** (see the section above); the **word**
+`ground-instances` is corrected as a **name**. Naming/API clarification — **not** a
+collapse of the complete set.
+
+- The **normative complete set** is the **complete binding environment set**:
+  `premise-assessment-binding-environments`,
+  `derivation-receipt-complete-binding-environments`. Decision 2's ordering and
+  dedup law applies to *that* set, and the implementation always preserved it.
+- What `ground-instance(s)` return is a **conclusion-projected premise instance**.
+  Precise name: `premise-assessment-projected-premise-instances` (alias, same
+  value). The legacy names are **legacy projection readers** — retained, operational,
+  never repurposed, never removed. **No receipt-level alias** is added, because no
+  public receipt-level ground-instance reader exists.
+- **No complete environment may be arbitrarily selected**, by any rule whatsoever.
+
+**THREE INDEPENDENT AXES, none a bound on another:**
+
+| axis | reader | note |
+|---|---|---|
+| 1. projected-premise multiplicity | `projected-premise-instances` (legacy `ground-instances`) | may read **1** while axis 2 reads **3** |
+| 2. complete-environment plurality | `binding-environments` / `complete-binding-environments` | **NORMATIVE** |
+| 3. ambiguity | `ambiguities` / `uniqueness-conflicts` | from declared `:unique-locals` only |
+
+Measured, one-premise schema, three supports differing only in the local:
+`complete-envs 3` · `binding-environments 3` · **`projection 1`** · `ambiguities 0`.
+Declaring the local unique moves **only** axis 3. **The singular projection reader
+does not protect complete-environment plurality**, and its refusal — which guards
+the projection's cardinality only — **is reachable in ordinary use**.
 
 ---
 

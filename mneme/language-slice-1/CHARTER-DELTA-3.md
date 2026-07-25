@@ -1,5 +1,14 @@
 # CHARTER DELTA /3 — the unsupported-support residue ruling (owner-adopted)
 
+> **⚠ EXTENDED BY `CHARTER-DELTA-4.md` (2026-07-25).** Delta /3's three **recognized
+> species** (Slice /0 witness · Slice /1 refutation · Slice /0 claim) are
+> **unchanged** — Delta /4 admits no new species and creates no new residue class.
+> What it changes is how ONE recognized species is *classified within* premise
+> assessment: a witness declaring `:polarity :refutes` is **refuting evidence**, not
+> positive support. It is still a recognized witness, still classified **exactly
+> once**, and is **never** unsupported residue. `:supports` handling and the
+> receipt-level `unsupported-supports` record are untouched.
+
 *2026-07-25. Owner ruling, verbatim law adopted; this delta licenses the
 substrate revision that implements it. Scope: **this repair only.** It repairs
 **R-SUPPORT-1**, docketed in `de-bibliotheca-peregrina/FIELD-REPORT.md` §9.3 and

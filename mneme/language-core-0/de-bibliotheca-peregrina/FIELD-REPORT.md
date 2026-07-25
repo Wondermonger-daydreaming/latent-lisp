@@ -780,7 +780,13 @@ promotion with a `:structural` judgment-class is refused with:
 > enumerates the gates on a witness as **iff ALL of** proposition match ·
 > mode/kind admissibility · procedure authority · receiver admissibility ·
 > polarity, and **none of them looks at `:procedure` or `:content`.** The
-> implementation conforms exactly. Therefore `[IX-9]` is **lawful current law, an
+> implementation conforms exactly.
+>
+> *(⚠ 2026-07-25: `CHARTER-DELTA-4.md` / R-POLARITY-1 makes **polarity** load-bearing
+> at the Slice /1 **premise gate** too, not only at `raise` — a matching accessible
+> witness declaring `:refutes` now refuses instead of discharging. `:procedure` and
+> `:content` remain unconsulted everywhere, so `[IX-9]` and this exposed ceiling are
+> unchanged.)* Therefore `[IX-9]` is **lawful current law, an
 > exposed ceiling — not a violation** (chair ruling R-DIRECT-2).
 >
 > Charter §4 does say a witness must be able to represent *"execution evidence"*,
@@ -844,6 +850,24 @@ grounded more than one way. The desk declined to invent a second binding to exer
 plural surface — *a case manufactured to tick a box tests the box, not the language.*
 The normative plural reader (`premise-assessment-ground-instances`) was used for the
 count; the singular projection was never read above cardinality one.
+
+> **⚠ CORRECTED 2026-07-25 — the conclusion stands; the WARRANT did not.** Under
+> `CHARTER-DELTA-4.md` (R-GROUNDING-NAME-1, owner-adopted),
+> `premise-assessment-ground-instances` is **not** "the normative plural reader": it is
+> a **legacy projection reader** returning *conclusion-projected premise instances*,
+> and its cardinality is **no bound** on the number of complete binding environments.
+> A premise binding a schema-local projects that local as a **variable**, so several
+> complete environments collapse to **one** projection — an arm counting only
+> projections can report "no plurality" while three environments stand in the receipt.
+> This arm counted only projections.
+>
+> **Re-measured on the normative quantity
+> (`derivation-receipt-complete-binding-environments`), 2026-07-25:** max **1** across
+> all nine receipts; premise binding environments max **1** across all nineteen
+> assessments; projected premise instances max **1**; declared uniqueness conflicts
+> max **0**. **The finding is unchanged** — this desk genuinely has no plural
+> grounding — and `[IX-14]` now rests on the quantity that could have refuted it.
+> `APPLICATION.lisp` arm 9f counts all three axes and prints them separately.
 
 ### 8.8 — Negative controls
 

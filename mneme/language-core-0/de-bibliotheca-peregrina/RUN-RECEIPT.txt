@@ -3,20 +3,53 @@ command: sbcl --non-interactive --load APPLICATION.lisp
 cwd:     experiments/latent-lisp/mneme/language-core-0/de-bibliotheca-peregrina
 sbcl:    SBCL 2.4.6 (operation-checked through the wrapper via
          (lisp-implementation-version), not read off a banner)
-date:    2026-07-25T03:15:19Z (UTC, read from the clock, not asserted)
+date:    2026-07-25T06:55:31Z (UTC, read from the clock, not asserted)
 exit:    0
 runs:    executed twice from a clean image; the two outputs are byte-identical
-note:    REGENERATED 2026-07-25 for the R-SUPPORT-1 repair (CHARTER-DELTA-3).
-         Movement IX gained probe 9d-bis and checks [IX-15]/[IX-16], and the
-         "where the road ends" summary gained one paragraph, so the prior
-         transcript no longer matched the program. Check TOTAL moves 95/0 ->
-         97/0 by ADDITION only: no existing check was renumbered, weakened or
-         removed, and no disposition changed. The earlier note about the
-         [VI-w4] detail string still applies to that correction.
+note:    REGENERATED 2026-07-25 under CHARTER-DELTA-4 (R-GROUNDING-NAME-1).
+         Movement IX arm 9f previously counted ONE quantity --
+         `premise-assessment-ground-instances` -- described it as "the normative
+         plural reader", and concluded from it that plural grounding was not
+         exercised. That reader returns CONCLUSION-PROJECTED PREMISE INSTANCES,
+         not complete binding environments, and its cardinality is no bound on
+         theirs: a premise binding a schema-local projects that local as a
+         VARIABLE, so several complete environments collapse to one projection.
+         The arm therefore reached a true conclusion by an argument that could
+         not have detected its falsehood.
+
+         9f now counts THREE separate axes and rests the claim on the NORMATIVE
+         one: complete binding environments per receipt (max 1), premise binding
+         environments per assessment (max 1), projected premise instances per
+         assessment (max 1), declared uniqueness conflicts (max 0). The finding
+         is UNCHANGED -- this desk has no plural grounding -- and is now read off
+         the set that could have said otherwise.
+
+         Also updated: *assessment-readers*, whose docstring claims to hold
+         "every public reader of a premise assessment", gained
+         PREMISE-ASSESSMENT-REFUTING-WITNESSES (CHARTER-DELTA-4 / R-POLARITY-1).
+         An indistinguishability finding computed over an incomplete reader set
+         is not the finding it claims to be; [IX-7] now spans the full surface.
+
+         Check TOTAL is UNCHANGED at 97/0. No check was added, removed,
+         renumbered or weakened; no disposition changed; no witness in this
+         program declares :REFUTES, so NO behaviour changed anywhere -- the
+         program's own pre-cure and post-cure transcripts were byte-identical
+         before these prose and counting corrections were made. The transcript
+         differs from the pre-correction run at exactly 24 lines: the new
+         three-axis counting block, its bench prose, and two detail strings.
+
+         Chair-verified: zero package-internal (two-colon) access.
 
 Everything below this line is the program's own verbatim standard output.
 Everything above it is a claim ABOUT that output, made by the runner.
 -------------------------------------------------------------------------
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
 kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
@@ -395,6 +428,7 @@ kernel0 records+folds smoke: PASS
      :MATCHING-INACCESSIBLE   identical
      :MISMATCHED-CANDIDATES   identical
      :REFUTING-SUPPORTS       identical
+     :REFUTING-WITNESSES      identical
      :BINDING-ENVIRONMENTS    identical
      :AMBIGUITIES             identical
   ok   [IX-7] every public reader of the effect premise is IDENTICAL between the true receipt and the fabricated one, save the one holding the witnesses
@@ -467,12 +501,23 @@ kernel0 records+folds smoke: PASS
    ▸ Movement III deleted from the claim frontier and could not delete here.
   ok   [IX-13] the desk's own books show the declined door: settlement WAS grantable, and the loan is still open — a language that made this refusal unnecessary would be the thing Slice /2 is for
 
-   9f. plural grounding — counted across every receipt the desk holds:
-     19 premise assessments; ground-instance cardinalities (1); maximum 1
-   ▸ no premise in this application is grounded more than one way. The desk
-   ▸ will NOT invent a second binding to exercise the plural surface — a case
-   ▸ manufactured to tick a box tests the box, not the language.
-  ok   [IX-14] plural grounding is NOT exercised by this application, and the desk reports that rather than staging it — reported as non-exercise; the normative plural reader was used for the count, and the singular projection was never read above cardinality one
+   9f. plural grounding — counted across every receipt the desk holds,
+       on all THREE axes, because they are three different things:
+     9 receipts, 19 premise assessments
+     complete binding environments per receipt   values (0 1)  max 1  <- NORMATIVE
+     premise binding environments per assessment values (0 1)  max 1
+     projected premise instances per assessment  values (1)  max 1
+     declared uniqueness conflicts per receipt   values (0)  max 0
+   ▸ no premise in this application is grounded more than one way -- and that is
+   ▸ now read off the COMPLETE BINDING ENVIRONMENTS, the set that could have said
+   ▸ otherwise. The projection count agrees here, but it would have agreed even
+   ▸ if it did not: a premise binding a schema-local projects that local as a
+   ▸ VARIABLE, so several complete environments collapse to ONE projection. An
+   ▸ arm counting only projections could report no plurality while three
+   ▸ environments stood in the receipt. This arm did, and was wrong.
+   ▸ The desk will NOT invent a second binding to exercise the plural surface --
+   ▸ a case manufactured to tick a box tests the box, not the language.
+  ok   [IX-14] plural grounding is NOT exercised by this application, and the desk reports that rather than staging it — established on the NORMATIVE complete-environment set, not on the projection — reported as non-exercise; the deciding quantity is the complete binding environment set (max 1), the projection agrees (max 1), and no declared uniqueness conflict arose — three axes counted separately per CHARTER-DELTA-4, and the singular projection was never read above cardinality one
 
 ── what this application does NOT show ──
    Nothing here demonstrates crash survival: the interrupted dispatch's

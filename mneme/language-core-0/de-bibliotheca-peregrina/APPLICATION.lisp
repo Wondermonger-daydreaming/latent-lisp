@@ -1711,11 +1711,18 @@ nothing else — remember that when probe 6 arrives.")
 (defparameter *assessment-readers*
   (list (cons :disposition #'lisp-plus-slice1:premise-assessment-disposition)
         (cons :premise-pattern #'lisp-plus-slice1:premise-assessment-premise-pattern)
+        ;; CHARTER-DELTA-4: the LEGACY projection name, kept as the reader this
+        ;; comparison has always used; its precise name is
+        ;; PREMISE-ASSESSMENT-PROJECTED-PREMISE-INSTANCES and it returns the same value.
         (cons :ground-instances #'lisp-plus-slice1:premise-assessment-ground-instances)
         (cons :judged-claims #'lisp-plus-slice1:premise-assessment-judged-claims)
         (cons :matching-inaccessible #'lisp-plus-slice1:premise-assessment-matching-inaccessible-supports)
         (cons :mismatched-candidates #'lisp-plus-slice1:premise-assessment-mismatched-candidates)
         (cons :refuting-supports #'lisp-plus-slice1:premise-assessment-refuting-supports)
+        ;; CHARTER-DELTA-4: the second refuting species has its own reader, and a
+        ;; list that claims to be "every public reader" must carry it -- otherwise
+        ;; an indistinguishability finding is computed over an incomplete surface.
+        (cons :refuting-witnesses #'lisp-plus-slice1:premise-assessment-refuting-witnesses)
         (cons :binding-environments #'lisp-plus-slice1:premise-assessment-binding-environments)
         (cons :ambiguities #'lisp-plus-slice1:premise-assessment-ambiguities))
   "Every public reader of a premise assessment EXCEPT MATCHING-ACCESSIBLE-SUPPORTS,
@@ -1972,24 +1979,65 @@ value at :supports[~{~D~^, ~}]."
 ;;; The commission asks whether this application NATURALLY produces several
 ;;; complete ground environments for one disposition.  The desk does not
 ;;; manufacture one to have something to report; it counts.
-(format t "~%   9f. plural grounding — counted across every receipt the desk holds:~%")
+;;;
+;;; CORRECTED 2026-07-25 under CHARTER-DELTA-4 (R-GROUNDING-NAME-1).  This arm
+;;; counted ONE quantity — `premise-assessment-ground-instances` — called it "the
+;;; normative plural reader," and concluded plural grounding was not exercised.
+;;; Both moves were wrong in the same way: that reader returns CONCLUSION-PROJECTED
+;;; PREMISE INSTANCES, not complete binding environments, and its cardinality is no
+;;; bound on theirs.  The normative complete set is the COMPLETE BINDING ENVIRONMENT
+;;; set.  The conclusion survives — the desk really has no plural grounding — but it
+;;; now rests on the quantity that could have refuted it.  THREE axes are counted.
+(format t "~%   9f. plural grounding — counted across every receipt the desk holds,~%")
+(format t "       on all THREE axes, because they are three different things:~%")
 (let* ((all-receipts (list *hop-0-receipt* *hop-1-receipt* *hop-2-receipt*
                            *hop-3-receipt* *hop-4-receipt*
                            *lawful-settlement-receipt* *true-settlement-receipt*
                            *raised-settlement-receipt* *fabricated-settlement-receipt*))
+       ;; AXIS 2 — the NORMATIVE complete set.  This is what decides the claim.
+       (env-counts
+         (loop for r in all-receipts
+               collect (length (lisp-plus-slice1:derivation-receipt-complete-binding-environments r))))
+       (env-max (reduce #'max env-counts :initial-value 0))
+       (premise-env-counts
+         (loop for r in all-receipts
+               append (loop for a in (lisp-plus-slice1:derivation-receipt-assessments r)
+                            collect (length (lisp-plus-slice1:premise-assessment-binding-environments a)))))
+       (premise-env-max (reduce #'max premise-env-counts :initial-value 0))
+       ;; AXIS 1 — the PROJECTION: what this arm used to count, under a name that
+       ;; made it look like axis 2.
        (cardinalities
          (loop for r in all-receipts
                append (loop for a in (lisp-plus-slice1:derivation-receipt-assessments r)
-                            collect (length (lisp-plus-slice1:premise-assessment-ground-instances a)))))
-       (maximum (reduce #'max cardinalities :initial-value 0)))
-  (format t "     ~D premise assessments; ground-instance cardinalities ~S; maximum ~D~%"
-          (length cardinalities) (remove-duplicates cardinalities) maximum)
-  (desk "no premise in this application is grounded more than one way. The desk")
-  (desk "will NOT invent a second binding to exercise the plural surface — a case")
-  (desk "manufactured to tick a box tests the box, not the language.")
-  (ok "[IX-14] plural grounding is NOT exercised by this application, and the desk reports that rather than staging it"
-      (= 1 maximum)
-      "reported as non-exercise; the normative plural reader was used for the count, and the singular projection was never read above cardinality one"))
+                            collect (length (lisp-plus-slice1:premise-assessment-projected-premise-instances a)))))
+       (maximum (reduce #'max cardinalities :initial-value 0))
+       ;; AXIS 3 — declared-uniqueness ambiguity.
+       (conflict-counts
+         (loop for r in all-receipts
+               collect (length (lisp-plus-slice1:derivation-receipt-uniqueness-conflicts r))))
+       (conflict-max (reduce #'max conflict-counts :initial-value 0)))
+  (format t "     ~D receipts, ~D premise assessments~%"
+          (length all-receipts) (length cardinalities))
+  (format t "     complete binding environments per receipt   values ~S  max ~D  <- NORMATIVE~%"
+          (sort (remove-duplicates env-counts) #'<) env-max)
+  (format t "     premise binding environments per assessment values ~S  max ~D~%"
+          (sort (remove-duplicates premise-env-counts) #'<) premise-env-max)
+  (format t "     projected premise instances per assessment  values ~S  max ~D~%"
+          (sort (remove-duplicates cardinalities) #'<) maximum)
+  (format t "     declared uniqueness conflicts per receipt   values ~S  max ~D~%"
+          (sort (remove-duplicates conflict-counts) #'<) conflict-max)
+  (desk "no premise in this application is grounded more than one way -- and that is")
+  (desk "now read off the COMPLETE BINDING ENVIRONMENTS, the set that could have said")
+  (desk "otherwise. The projection count agrees here, but it would have agreed even")
+  (desk "if it did not: a premise binding a schema-local projects that local as a")
+  (desk "VARIABLE, so several complete environments collapse to ONE projection. An")
+  (desk "arm counting only projections could report no plurality while three")
+  (desk "environments stood in the receipt. This arm did, and was wrong.")
+  (desk "The desk will NOT invent a second binding to exercise the plural surface --")
+  (desk "a case manufactured to tick a box tests the box, not the language.")
+  (ok "[IX-14] plural grounding is NOT exercised by this application, and the desk reports that rather than staging it — established on the NORMATIVE complete-environment set, not on the projection"
+      (and (= 1 env-max) (= 1 premise-env-max) (= 1 maximum) (= 0 conflict-max))
+      "reported as non-exercise; the deciding quantity is the complete binding environment set (max 1), the projection agrees (max 1), and no declared uniqueness conflict arose — three axes counted separately per CHARTER-DELTA-4, and the singular projection was never read above cardinality one"))
 
 
 ;;;; ==================================================================

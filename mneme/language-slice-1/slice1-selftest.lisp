@@ -1769,6 +1769,526 @@ receipt keeps NO handle on, and NO transcription of, an unsupported value."
              restored)
         (format nil "old=~S ; restored-green=~S" disappeared restored))))
 
+
+;;; ==================================================================
+;;; T31 — CHARTER-DELTA-4 / R-POLARITY-1: WITNESS DIRECTION.
+;;;
+;;; The defect these teeth close was an INVERSION, not an omission: a matching,
+;;; accessible Slice /0 witness DECLARING :polarity :refutes was pushed onto the
+;;; positive matching-support roster, discharged the premise it contradicted, and
+;;; granted :verified.  With a supporting witness beside it, MATCHING-ACCESSIBLE
+;;; read 2 — counter-evidence tallied as corroboration.  The pre-cure transcript
+;;; is reproduced in the DISCRIMEN return; every tooth below FAILS against the
+;;; pre-Delta-4 gate (T-POLARITY, at the end of this file, restores that gate and
+;;; shows them fail).
+;;;
+;;; ONE premise, NO locals: direction is the only variable under test.
+;;; ==================================================================
+
+(defun install-pol ()
+  (clear-schema-registry)
+  (register-schema
+   (judgment-schema
+    :name :pol :version 1
+    :conclusion (proposition-pattern '(:predicate :thing-ok (:thing (:var :thing))))
+    :premises (list (proposition-pattern '(:predicate :p (:a (:var :thing))))))))
+
+(defun pol-w (thing &optional (polarity :supports))
+  (lisp-plus-slice0:witness :for (proposition `(:predicate :p (:a ,thing)))
+                            :mode :direct :kind :observation :source :steward
+                            :polarity polarity))
+
+(defun pol-run (supports &key (accessible :all))
+  "Derive (:thing-ok (:thing \"t1\")) over SUPPORTS.  ACCESSIBLE :all lists every
+witness in the receiver context; :none lists nothing."
+  (let ((ctx (apply #'c-ctx :ctx-pol
+                    (if (eq accessible :none)
+                        '()
+                        (mapcar #'lisp-plus-slice0:witness-id
+                                (remove-if-not #'lisp-plus-slice0:witness-p
+                                               supports))))))
+    (c-attempt :pol 1 '(:predicate :thing-ok (:thing "t1")) supports ctx)))
+
+(defun pol-a (receipt) (assessment-for receipt :p))
+
+(install-pol)
+
+;;; ---- A — a supporting witness is UNAFFECTED ----
+(c-guarded "T31a control: a supporting witness still satisfies and grants"
+  (multiple-value-bind (r c d) (pol-run (list (pol-w "t1")))
+    (declare (ignore c))
+    (let ((a (pol-a r)))
+      (ok "T31a control: a supporting witness still satisfies and grants"
+          (and (eq d :granted)
+               (eq :satisfied (premise-assessment-disposition a))
+               (= 1 (length (premise-assessment-matching-accessible-supports a)))
+               (null (premise-assessment-refuting-witnesses a))
+               (eq :verified (derivation-receipt-strongest-lawful-result r)))
+          (format nil "decision=~S disposition=~S accessible=~D"
+                  d (premise-assessment-disposition a)
+                  (length (premise-assessment-matching-accessible-supports a)))))))
+
+;;; ---- B — a refuting-polarity witness ALONE refutes; it does NOT satisfy ----
+(c-guarded "T31b a matching accessible :REFUTES witness REFUTES the premise (pre-cure: it SATISFIED and GRANTED)"
+  (multiple-value-bind (r c d) (pol-run (list (pol-w "t1" :refutes)))
+    (declare (ignore c))
+    (let ((a (pol-a r)))
+      (ok "T31b a matching accessible :REFUTES witness REFUTES the premise (pre-cure: it SATISFIED and GRANTED)"
+          (and (eq d :refused)
+               (eq :refused (derivation-receipt-decision r))
+               (eq :refuted (premise-assessment-disposition a))
+               ;; the whole point: ABSENT from the positive roster
+               (null (premise-assessment-matching-accessible-supports a))
+               (= 1 (length (premise-assessment-refuting-witnesses a)))
+               (equal '(:blocked-on :p :refuted)
+                      (derivation-receipt-strongest-lawful-result r)))
+          (format nil "decision=~S disposition=~S positive=~D refuting-witnesses=~D"
+                  d (premise-assessment-disposition a)
+                  (length (premise-assessment-matching-accessible-supports a))
+                  (length (premise-assessment-refuting-witnesses a)))))))
+
+;;; ---- B2 — it contributes NO binding environment to the grant path ----
+(c-guarded "T31b2 a :REFUTES witness extends NO binding environment"
+  (multiple-value-bind (r c d) (pol-run (list (pol-w "t1" :refutes)))
+    (declare (ignore c d))
+    (ok "T31b2 a :REFUTES witness extends NO binding environment"
+        (and (null (derivation-receipt-complete-binding-environments r))
+             (null (premise-assessment-binding-environments (pol-a r))))
+        (format nil "complete-envs=~D premise-envs=~S"
+                (length (derivation-receipt-complete-binding-environments r))
+                (premise-assessment-binding-environments (pol-a r))))))
+
+;;; ---- C — support BESIDE refutation: :REFUTED, and the count does NOT inflate ----
+(c-guarded "T31c support + :REFUTES witness = :REFUTED, and the positive count stays 1 (pre-cure: 2)"
+  (let* ((sup (pol-w "t1"))
+         (ref (pol-w "t1" :refutes)))
+    (multiple-value-bind (r c d) (pol-run (list sup ref))
+      (declare (ignore c))
+      (let* ((a (pol-a r))
+             (pos (premise-assessment-matching-accessible-supports a))
+             (rw (premise-assessment-refuting-witnesses a)))
+        (ok "T31c support + :REFUTES witness = :REFUTED, and the positive count stays 1 (pre-cure: 2)"
+            (and (eq d :refused)
+                 (eq :refuted (premise-assessment-disposition a))
+                 (= 1 (length pos))
+                 (eq sup (first pos))
+                 ;; BOTH remain visible — charter §5 / Δ2.4
+                 (= 1 (length rw))
+                 (eq ref (first rw))
+                 ;; and no :REFUTES witness ever reaches the positive roster
+                 (every (lambda (w) (eq :supports (lisp-plus-slice0:witness-polarity w)))
+                        pos))
+            (format nil "positive=~D (~S) refuting-witnesses=~D disposition=~S"
+                    (length pos)
+                    (mapcar #'lisp-plus-slice0:witness-polarity pos)
+                    (length rw) (premise-assessment-disposition a)))))))
+
+;;; ---- D/E — the refutation-object species is UNTOUCHED, byte-identically ----
+(c-guarded "T31d/e the Slice /1 refutation object path is UNCHANGED (alone, and beside support)"
+  (let* ((rf (refutation :refutes '(:predicate :p (:a "t1")) :source :auditor))
+         (sup (pol-w "t1")))
+    (multiple-value-bind (r1 c1 d1) (pol-run (list rf))
+      (declare (ignore c1))
+      (multiple-value-bind (r2 c2 d2) (pol-run (list sup rf))
+        (declare (ignore c2))
+        (let ((a1 (pol-a r1)) (a2 (pol-a r2)))
+          (ok "T31d/e the Slice /1 refutation object path is UNCHANGED (alone, and beside support)"
+              (and (eq d1 :refused) (eq d2 :refused)
+                   (eq :refuted (premise-assessment-disposition a1))
+                   (eq :refuted (premise-assessment-disposition a2))
+                   (= 1 (length (premise-assessment-refuting-supports a1)))
+                   (= 1 (length (premise-assessment-refuting-supports a2)))
+                   ;; the NEW roster stays empty — the two species do not mix
+                   (null (premise-assessment-refuting-witnesses a1))
+                   (null (premise-assessment-refuting-witnesses a2))
+                   ;; positive support still recorded beside the refutation
+                   (= 1 (length (premise-assessment-matching-accessible-supports a2)))
+                   ;; repair advice byte-identical to the pre-Delta-4 form
+                   (equal (cdr (first (derivation-receipt-repair-options r1)))
+                          (list :withdraw-or-answer-refutation
+                                (list (refutation-id rf)))))
+              (format nil "refuting-supports=~D/~D refuting-witnesses=~S/~S repair=~S"
+                      (length (premise-assessment-refuting-supports a1))
+                      (length (premise-assessment-refuting-supports a2))
+                      (premise-assessment-refuting-witnesses a1)
+                      (premise-assessment-refuting-witnesses a2)
+                      (cdr (first (derivation-receipt-repair-options r1))))))))))
+
+;;; ---- F — INACCESSIBLE beats direction: residue, NOT applied as refutation ----
+(c-guarded "T31f an INACCESSIBLE :REFUTES witness is :INACCESSIBLE residue, never applied as refutation"
+  (multiple-value-bind (r c d) (pol-run (list (pol-w "t1" :refutes)) :accessible :none)
+    (declare (ignore c))
+    (let ((a (pol-a r)))
+      (ok "T31f an INACCESSIBLE :REFUTES witness is :INACCESSIBLE residue, never applied as refutation"
+          (and (eq d :refused)
+               (eq :inaccessible (premise-assessment-disposition a))
+               (= 1 (length (premise-assessment-matching-inaccessible-supports a)))
+               ;; NOT refuting, NOT positive
+               (null (premise-assessment-refuting-witnesses a))
+               (null (premise-assessment-refuting-supports a))
+               (null (premise-assessment-matching-accessible-supports a))
+               (equal '(:blocked-on :p :inaccessible)
+                      (derivation-receipt-strongest-lawful-result r)))
+          (format nil "disposition=~S inaccessible=~D refuting-witnesses=~D"
+                  (premise-assessment-disposition a)
+                  (length (premise-assessment-matching-inaccessible-supports a))
+                  (length (premise-assessment-refuting-witnesses a)))))))
+
+;;; ---- G — MISMATCH beats direction: role conflict, NOT applied as refutation ----
+(c-guarded "T31g a role-CONFLICTING :REFUTES witness is :MISMATCHED, never applied as refutation"
+  (multiple-value-bind (r c d) (pol-run (list (pol-w "t2" :refutes)))
+    (declare (ignore c))
+    (let ((a (pol-a r)))
+      (ok "T31g a role-CONFLICTING :REFUTES witness is :MISMATCHED, never applied as refutation"
+          (and (eq d :refused)
+               (eq :mismatched (premise-assessment-disposition a))
+               (= 1 (length (premise-assessment-mismatched-candidates a)))
+               (equal '(:a) (cdr (first (premise-assessment-mismatched-candidates a))))
+               (null (premise-assessment-refuting-witnesses a))
+               (null (premise-assessment-matching-accessible-supports a)))
+          (format nil "disposition=~S mismatched=~S refuting-witnesses=~D"
+                  (premise-assessment-disposition a)
+                  (mapcar #'cdr (premise-assessment-mismatched-candidates a))
+                  (length (premise-assessment-refuting-witnesses a)))))))
+
+;;; ---- H — the RECEIPT makes corroboration-masquerade structurally impossible ----
+(c-guarded "T31h the rendered receipt names the :REFUTES witness as counter-evidence, never as support"
+  (let* ((sup (pol-w "t1"))
+         (ref (pol-w "t1" :refutes)))
+    (multiple-value-bind (r c d) (pol-run (list sup ref))
+      (declare (ignore c d))
+      (let ((text (with-output-to-string (s) (render-derivation-why r s)))
+            (rk (lisp-plus-kernel0:identity-key (lisp-plus-slice0:witness-id ref))))
+        (ok "T31h the rendered receipt names the :REFUTES witness as counter-evidence, never as support"
+            (and (search "REFUTED" text)
+                 (search ":REFUTES" text)
+                 (search rk text)
+                 (search "NOT positive support" text)
+                 ;; and the repair advice names it under the refuting key
+                 (equal (getf (cdr (first (derivation-receipt-repair-options r)))
+                              :withdraw-or-answer-refuting-witness)
+                        (list (lisp-plus-slice0:witness-id ref))))
+            (format nil "refuting witness ~A named in the rendering; repair=~S"
+                    rk (cdr (first (derivation-receipt-repair-options r)))))))))
+
+;;; ---- I — THE CEILING: polarity did NOT become an admission gate ----
+(c-guarded "T31i CEILING: the six carried-but-ungoverned witness fields remain ungoverned"
+  ;; Three :supports witnesses differing in mode/kind/source/procedure/content/
+  ;; transmissible discharge IDENTICALLY.  R-POLARITY-1 assigns direction and
+  ;; NOTHING else; it creates no premise-source contract.
+  (let ((plain (lisp-plus-slice0:witness
+                :for (proposition '(:predicate :p (:a "t1")))
+                :mode :direct :kind :observation :source :steward))
+        (exotic (lisp-plus-slice0:witness
+                 :for (proposition '(:predicate :p (:a "t1")))
+                 :mode :direct :kind :haruspicy :source :nobody
+                 :content '(:fabricated t) :transmissible nil
+                 :accessible-to '(:someone-else))))
+    (multiple-value-bind (r1 c1 d1) (pol-run (list plain))
+      (declare (ignore c1))
+      (multiple-value-bind (r2 c2 d2) (pol-run (list exotic))
+        (declare (ignore c2))
+        (ok "T31i CEILING: the six carried-but-ungoverned witness fields remain ungoverned"
+            (and (eq d1 :granted) (eq d2 :granted)
+                 (eq (premise-assessment-disposition (pol-a r1))
+                     (premise-assessment-disposition (pol-a r2)))
+                 (eq :satisfied (premise-assessment-disposition (pol-a r2))))
+            "mode/kind/source/content/transmissible/accessible-to still not consulted by premise discharge — only WITNESS-FOR, receiver accessibility, and (now) declared POLARITY")))))
+
+;;; ---- J — the two refuting species are DISJOINT and the union blocks ----
+(c-guarded "T31j both refuting species at once: each in its own roster, union blocks"
+  (let* ((sup (pol-w "t1"))
+         (ref (pol-w "t1" :refutes))
+         (rf (refutation :refutes '(:predicate :p (:a "t1")) :source :auditor)))
+    (multiple-value-bind (r c d) (pol-run (list sup ref rf))
+      (declare (ignore c))
+      (let ((a (pol-a r)))
+        (ok "T31j both refuting species at once: each in its own roster, union blocks"
+            (and (eq d :refused)
+                 (eq :refuted (premise-assessment-disposition a))
+                 (= 1 (length (premise-assessment-refuting-supports a)))
+                 (= 1 (length (premise-assessment-refuting-witnesses a)))
+                 ;; no cross-contamination of value species
+                 (every #'refutation-p (premise-assessment-refuting-supports a))
+                 (every #'lisp-plus-slice0:witness-p
+                        (premise-assessment-refuting-witnesses a))
+                 ;; and BOTH repair keys are present
+                 (getf (cdr (first (derivation-receipt-repair-options r)))
+                       :withdraw-or-answer-refutation)
+                 (getf (cdr (first (derivation-receipt-repair-options r)))
+                       :withdraw-or-answer-refuting-witness))
+            (format nil "refuting-supports=~D refuting-witnesses=~D repair-keys=~S"
+                    (length (premise-assessment-refuting-supports a))
+                    (length (premise-assessment-refuting-witnesses a))
+                    (loop for (k v) on (cdr (first (derivation-receipt-repair-options r)))
+                            by #'cddr collect k)))))))
+
+;;; ==================================================================
+;;; T32 — CHARTER-DELTA-4 / R-GROUNDING-NAME-1: GROUNDING IDENTITY.
+;;;
+;;; The normative complete set is the COMPLETE BINDING ENVIRONMENT set.  What the
+;;; legacy `ground-instance(s)` readers return is a CONCLUSION-PROJECTED PREMISE
+;;; INSTANCE — a different object with a different cardinality — and the collision
+;;; of the two under one name is what this cluster pins.
+;;;
+;;; A ONE-premise schema whose only local is bound BY that premise: the local
+;;; projects as a VARIABLE, so the projection collapses to 1 while the environment
+;;; set is as plural as the supports make it.  That gap is the finding.
+;;; ==================================================================
+
+(defun install-gname (&key unique)
+  (clear-schema-registry)
+  (register-schema
+   (judgment-schema
+    :name :gname :version 1
+    :conclusion (proposition-pattern '(:predicate :ok (:who (:var :who))))
+    :premises (list (proposition-pattern
+                     '(:predicate :tagged (:who (:var :who)) (:tag (:var :tag)))))
+    :locals '(:tag)
+    :unique-locals (if unique '(:tag) '()))))
+
+(defun gname-run (tags &key unique)
+  (install-gname :unique unique)
+  (let* ((ws (mapcar (lambda (tg)
+                       (sw `(:predicate :tagged (:who "ann") (:tag ,tg))))
+                     tags))
+         (ctx (apply #'c-ctx :ctx-gn (mapcar #'lisp-plus-slice0:witness-id ws))))
+    (c-attempt :gname 1 '(:predicate :ok (:who "ann")) ws ctx)))
+
+;;; ---- G1 — one environment ----
+(c-guarded "T32-G1 one environment: envs 1 · projected 1 · ambiguities 0"
+  (multiple-value-bind (r c d) (gname-run '("b"))
+    (declare (ignore c))
+    (let ((a (assessment-for r :tagged)))
+      (ok "T32-G1 one environment: envs 1 · projected 1 · ambiguities 0"
+          (and (eq d :granted)
+               (= 1 (length (derivation-receipt-complete-binding-environments r)))
+               (= 1 (length (premise-assessment-projected-premise-instances a)))
+               (= 1 (length (premise-assessment-binding-environments a)))
+               (null (premise-assessment-ambiguities a)))
+          (format nil "envs=~D projected=~D ambiguities=~S"
+                  (length (derivation-receipt-complete-binding-environments r))
+                  (length (premise-assessment-projected-premise-instances a))
+                  (premise-assessment-ambiguities a))))))
+
+;;; ---- G2 — THREE environments, non-unique local: projection still 1 ----
+(c-guarded "T32-G2 three envs, non-unique local: envs 3 · projected 1 · ambiguities 0 · GRANTED"
+  (multiple-value-bind (r c d) (gname-run '("b" "ab" "cb"))
+    (declare (ignore c))
+    (let ((a (assessment-for r :tagged)))
+      (ok "T32-G2 three envs, non-unique local: envs 3 · projected 1 · ambiguities 0 · GRANTED"
+          (and (eq d :granted)
+               (= 3 (length (derivation-receipt-complete-binding-environments r)))
+               (= 3 (length (premise-assessment-binding-environments a)))
+               ;; THE FINDING: the projection collapses to ONE while three
+               ;; complete environments exist and are preserved.
+               (= 1 (length (premise-assessment-projected-premise-instances a)))
+               ;; and the surviving local is still a VARIABLE in that projection
+               (equal '(:var :tag)
+                      (second (assoc :tag (cddr (first (premise-assessment-projected-premise-instances a))))))
+               (null (premise-assessment-ambiguities a))
+               (null (derivation-receipt-uniqueness-conflicts r)))
+          (format nil "envs=~D projected=~D projection=~S"
+                  (length (derivation-receipt-complete-binding-environments r))
+                  (length (premise-assessment-projected-premise-instances a))
+                  (first (premise-assessment-projected-premise-instances a)))))))
+
+;;; ---- G3 — the same three, local DECLARED UNIQUE: the THIRD axis fires alone ----
+(c-guarded "T32-G3 same three, local DECLARED UNIQUE: envs 3 · projected 1 · ambiguities 1 · REFUSED"
+  (multiple-value-bind (r c d) (gname-run '("b" "ab" "cb") :unique t)
+    (declare (ignore c))
+    (let ((a (assessment-for r :tagged)))
+      (ok "T32-G3 same three, local DECLARED UNIQUE: envs 3 · projected 1 · ambiguities 1 · REFUSED"
+          (and (eq d :refused)
+               (eq :ambiguous (premise-assessment-disposition a))
+               ;; environment plurality UNCHANGED by the declaration …
+               (= 3 (length (derivation-receipt-complete-binding-environments r)))
+               ;; … projection UNCHANGED by the declaration …
+               (= 1 (length (premise-assessment-projected-premise-instances a)))
+               ;; … only the THIRD axis moved.
+               (= 1 (length (premise-assessment-ambiguities a)))
+               (equal '(:tag) (mapcar #'first (derivation-receipt-uniqueness-conflicts r))))
+          (format nil "envs=~D projected=~D ambiguities=~S decision=~S"
+                  (length (derivation-receipt-complete-binding-environments r))
+                  (length (premise-assessment-projected-premise-instances a))
+                  (premise-assessment-ambiguities a) d)))))
+
+;;; ---- G4 — the legacy names are COMPATIBILITY ALIASES, and the singular one
+;;;      does NOT select a complete environment ----
+(c-guarded "T32-G4 legacy ground-instances EQUALS the new projected-premise-instances; the singular reader returns the sole PROJECTION and selects no environment"
+  (multiple-value-bind (r c d) (gname-run '("b" "ab" "cb"))
+    (declare (ignore c d))
+    (let* ((a (assessment-for r :tagged))
+           (legacy (premise-assessment-ground-instances a))
+           (precise (premise-assessment-projected-premise-instances a))
+           (singular (premise-assessment-ground-instance a))
+           (envs (derivation-receipt-complete-binding-environments r)))
+      (ok "T32-G4 legacy ground-instances EQUALS the new projected-premise-instances; the singular reader returns the sole PROJECTION and selects no environment"
+          (and (equal legacy precise)
+               ;; legacy shape preserved: a SEQUENCE, never a bare instance
+               (listp legacy) (= 1 (length legacy))
+               ;; the singular reader answers with the SOLE PROJECTION …
+               (equal singular (first precise))
+               ;; … which is NOT any complete environment, and is not one of them
+               (= 3 (length envs))
+               (not (member singular envs :test #'equal))
+               ;; and no complete environment was dropped to make it answer
+               (= 3 (length (premise-assessment-binding-environments a))))
+          (format nil "legacy=precise=~S singular=~S envs=~D"
+                  precise singular (length envs))))))
+
+;;; ---- G4b — the singular reader's refusal is REACHABLE, and guards the
+;;;      PROJECTION's cardinality only (not the environment set's) ----
+(c-guarded "T32-G4b the singular projection reader REFUSES on a plural PROJECTION — reachable in ordinary use, and orthogonal to environment plurality"
+  ;; The two-premise :g-mult schema: the SECOND premise is entered with :aaa
+  ;; already bound, so its projection is as plural as the environments that
+  ;; reached it — and the singular reader refuses there while ANSWERING on the
+  ;; first premise of the very same receipt, where three environments also exist.
+  (install-g-mult)
+  (let* ((r (g-run '("b" "ab")))
+         (first-a (assessment-for r :tagged))
+         (second-a (assessment-for r :countersigned))
+         (answered (premise-assessment-ground-instance first-a))
+         (refused nil))
+    (handler-case (premise-assessment-ground-instance second-a)
+      (slice1-condition () (setf refused t)))
+    (ok "T32-G4b the singular projection reader REFUSES on a plural PROJECTION — reachable in ordinary use, and orthogonal to environment plurality"
+        (and refused
+             ;; SAME receipt, SAME environment plurality, OPPOSITE answers from
+             ;; the singular reader — which is exactly why it protects nothing
+             ;; about the environment set.
+             answered
+             (= 1 (length (premise-assessment-projected-premise-instances first-a)))
+             (= 2 (length (premise-assessment-projected-premise-instances second-a)))
+             (= 2 (length (derivation-receipt-complete-binding-environments r))))
+        (format nil "premise-1 projected=1 → ANSWERED ~S ; premise-2 projected=~D → REFUSED=~A ; complete-envs=~D"
+                answered
+                (length (premise-assessment-projected-premise-instances second-a))
+                refused
+                (length (derivation-receipt-complete-binding-environments r)))))
+  (install-gname))
+
+;;; ---- G5 — the complete environments are ordered by CANONICAL ENCODED BYTES ----
+(c-guarded "T32-G5 the three complete environments are ordered by Canonical Datum /0 encoded bytes — not printed representation, not traversal order"
+  ;; Traversal ("ab" "cb" "b") is chosen deliberately: by canonical bytes the
+  ;; string-length varint puts "b" FIRST, so byte order differs from BOTH the
+  ;; traversal order and the printed order, and the check has teeth against both.
+  (let* ((fwd (nth-value 0 (gname-run '("ab" "cb" "b"))))
+         (rev (nth-value 0 (gname-run '("b" "cb" "ab"))))
+         (e-fwd (derivation-receipt-complete-binding-environments fwd))
+         (e-rev (derivation-receipt-complete-binding-environments rev))
+         ;; the authority: the encoded bytes themselves, ascending
+         (bytes (mapcar #'%env-canonical-octets e-fwd))
+         (sorted-by-bytes (loop for (x y) on bytes
+                                always (or (null y) (%octets< x y))))
+         (tags (mapcar (lambda (e) (cdr (assoc :tag e))) e-fwd))
+         ;; what a PRINTED-representation sort would have produced
+         (printed (sort (copy-list tags) #'string<))
+         (traversal '("ab" "cb" "b")))
+    (ok "T32-G5 the three complete environments are ordered by Canonical Datum /0 encoded bytes — not printed representation, not traversal order"
+        (and (= 3 (length e-fwd))
+             sorted-by-bytes
+             ;; traversal order is irrelevant: reversing the supports changes nothing
+             (equal e-fwd e-rev)
+             ;; and the byte order is NOT the printed order (so the check has teeth)
+             (not (equal tags printed))
+             (not (equal tags traversal)))
+        (format nil "byte order=~S ; printed order would be ~S ; traversal order was ~S ; ascending-bytes=~A ; order-independent=~A"
+                tags printed traversal sorted-by-bytes (equal e-fwd e-rev)))))
+
+;;; ==================================================================
+;;; TEETH — the two planted regressions.  Each temporarily restores the DEFECT,
+;;; shows the new cluster FAILS against it, then restores the cure and shows the
+;;; cluster green again.  A gate that has never fired is untested, not passing.
+;;; ==================================================================
+
+;;; ---- T-POLARITY ----
+;;; Restore the pre-Delta-4 gate: EVERY matching accessible witness routed into
+;;; positive matching support, direction unread.
+(c-guarded "T-POLARITY the pre-Delta-4 gate (all matching accessible witnesses → positive support) FAILS the new polarity cluster"
+  (install-pol)
+  (let ((cured (symbol-function '%witness-refutes-p))
+        (caught '()) (restored nil))
+    (unwind-protect
+         ;; The narrowest and most faithful reinstatement of the defect: BLIND the
+         ;; gate to direction.  %WITNESS-REFUTES-P is the ONE new input the cured
+         ;; gate reads about a witness, so forcing it to NIL restores the
+         ;; pre-Delta-4 behaviour VERBATIM — every matching accessible witness
+         ;; routed into positive matching support, extending environments and
+         ;; reaching the grant path — rather than approximating it one layer up.
+         (progn
+           (setf (symbol-function '%witness-refutes-p) (lambda (w) (declare (ignore w)) nil))
+           ;; B would fail
+           (multiple-value-bind (r c d) (pol-run (list (pol-w "t1" :refutes)))
+             (declare (ignore c))
+             (let ((a (pol-a r)))
+               (push (list :b-granted (eq d :granted)
+                           :b-satisfied (eq :satisfied (premise-assessment-disposition a))
+                           :b-counted-as-positive
+                           (= 1 (length (premise-assessment-matching-accessible-supports a)))
+                           :b-refuting-roster-empty
+                           (null (premise-assessment-refuting-witnesses a)))
+                     caught)))
+           ;; C would fail: the positive count inflates to 2
+           (multiple-value-bind (r c d) (pol-run (list (pol-w "t1") (pol-w "t1" :refutes)))
+             (declare (ignore c d))
+             (push (list :c-positive-count
+                         (length (premise-assessment-matching-accessible-supports (pol-a r))))
+                   caught)))
+      (setf (symbol-function '%witness-refutes-p) cured))
+    ;; and green again
+    (multiple-value-bind (r c d) (pol-run (list (pol-w "t1") (pol-w "t1" :refutes)))
+      (declare (ignore c))
+      (setf restored (and (eq d :refused)
+                          (eq :refuted (premise-assessment-disposition (pol-a r)))
+                          (= 1 (length (premise-assessment-matching-accessible-supports (pol-a r))))
+                          (= 1 (length (premise-assessment-refuting-witnesses (pol-a r)))))))
+    (let ((b (find :b-granted caught :key #'first))
+          (c2 (find :c-positive-count caught :key #'first)))
+      (ok "T-POLARITY the pre-Delta-4 gate (all matching accessible witnesses → positive support) FAILS the new polarity cluster"
+          (and b c2
+               (getf b :b-granted)              ; T31b would fail
+               (getf b :b-satisfied)            ; T31b would fail
+               (getf b :b-counted-as-positive)  ; T31b would fail
+               (getf b :b-refuting-roster-empty)
+               (= 2 (getf c2 :c-positive-count)) ; T31c would fail (inflated)
+               restored)
+          (format nil "under the defect: ~S ~S ; restored-green=~A" b c2 restored)))))
+
+;;; ---- T-GROUND-NAME ----
+;;; Make the new precise projection reader return COMPLETE ENVIRONMENTS instead of
+;;; projections — the exact confusion R-GROUNDING-NAME-1 forbids.  The grounding
+;;; cluster must fail: G4's legacy-equals-precise identity breaks, and G2's
+;;; projected-count-is-1 breaks.
+(c-guarded "T-GROUND-NAME equating the projection with the complete environment set FAILS the new grounding cluster"
+  (let ((cured (symbol-function 'premise-assessment-projected-premise-instances))
+        (broke-g4 nil) (broke-g2 nil) (restored nil))
+    (unwind-protect
+         (progn
+           (setf (symbol-function 'premise-assessment-projected-premise-instances)
+                 (lambda (a) (premise-assessment-binding-environments a)))
+           (multiple-value-bind (r c d) (gname-run '("b" "ab" "cb"))
+             (declare (ignore c d))
+             (let ((a (assessment-for r :tagged)))
+               ;; G4 asserts legacy EQUALS precise — now it does not
+               (setf broke-g4 (not (equal (premise-assessment-ground-instances a)
+                                          (premise-assessment-projected-premise-instances a))))
+               ;; G2 asserts projected = 1 — now it reads 3
+               (setf broke-g2
+                     (= 3 (length (premise-assessment-projected-premise-instances a)))))))
+      (setf (symbol-function 'premise-assessment-projected-premise-instances) cured))
+    (multiple-value-bind (r c d) (gname-run '("b" "ab" "cb"))
+      (declare (ignore c d))
+      (let ((a (assessment-for r :tagged)))
+        (setf restored (and (equal (premise-assessment-ground-instances a)
+                                   (premise-assessment-projected-premise-instances a))
+                            (= 1 (length (premise-assessment-projected-premise-instances a)))
+                            (= 3 (length (derivation-receipt-complete-binding-environments r)))))))
+    (ok "T-GROUND-NAME equating the projection with the complete environment set FAILS the new grounding cluster"
+        (and broke-g4 broke-g2 restored)
+        (format nil "G4-identity-broken=~A G2-projected-read-3-instead-of-1=~A restored-green=~A"
+                broke-g4 broke-g2 restored))))
+
 ;;; ==================================================================
 (format t "~%slice1 selftest: ~D passed, ~D failed~%" *pass* *fail*)
 (finish-output)

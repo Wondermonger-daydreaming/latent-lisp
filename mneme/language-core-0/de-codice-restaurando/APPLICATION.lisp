@@ -1719,7 +1719,45 @@ struck clause silently applied it to `derive`.")
          (eq :satisfied (disposition-of *bare-probe-receipt* :treatment-completed))
          (null (lisp-plus-slice0:witness-procedure *bare-witness*))
          (null (lisp-plus-slice0:witness-content *bare-witness*)))
-    "the three discharge identically because Slice /1 premise assessment compares their WITNESS-FOR proposition against the premise pattern and their receiver-relative accessibility, and reads nothing else about them; the displayed mode, kind, polarity, procedure and content are not consulted by this gate (CORRECTED 2026-07-25: this line previously named PROMOTION admissibility, a mode-and-kind membership test, which governs `raise` -- not the `derive` path these three actually took)")
+    "the three discharge identically because Slice /1 premise assessment compares their WITNESS-FOR proposition against the premise pattern, their receiver-relative accessibility, and their DECLARED POLARITY, and reads nothing else about them; the displayed mode, kind, source, procedure and content are not consulted by this gate. All three witnesses here declare :SUPPORTS, so their discharge is unaffected -- see [VII-j2], where the SAME bare witness declaring :REFUTES refuses instead (CORRECTED 2026-07-25 twice: this line first named PROMOTION admissibility, a mode-and-kind membership test governing `raise` and not the `derive` path these three took; it then still listed POLARITY among the fields this gate ignores, which CHARTER-DELTA-4 / R-POLARITY-1 made false)")
+;;; species 5R — the SAME bare witness, one field changed: :polarity :refutes.
+;;; ADDED 2026-07-25 under CHARTER-DELTA-4 (R-POLARITY-1).  The matrix above is
+;;; retained as historical evidence of what the premise gate does and does not
+;;; read; this is the ONE place the workshop shows the field that stopped being
+;;; ignored.  Everything else about the witness is held identical to species 5, so
+;;; the declared direction is the only variable.
+(defparameter *refuting-bare-witness*
+  (lisp-plus-slice0:witness
+   :for *completed* :mode :direct :kind :chamber-ledger :source :nobody
+   :polarity :refutes)
+  "Species 5 with its polarity declaration flipped and NOTHING else changed. It
+says, in the only vocabulary Slice /0 gives a witness for saying it, that the
+treatment was NOT completed.")
+
+(defparameter *refuting-bare-probe-receipt* nil)
+(multiple-value-bind (c r) (probe "species 5R: BARE witness, :REFUTES"
+                                  *refuting-bare-witness*)
+  (declare (ignore c)) (setf *refuting-bare-probe-receipt* r))
+
+(ok "[VII-j2] species 5R — the same bare witness DECLARING :REFUTES now REFUSES instead of corroborating, and is recorded as counter-evidence rather than as support"
+    (let ((a (assessment-for *refuting-bare-probe-receipt* :treatment-completed)))
+      (and
+       ;; it no longer grants …
+       (eq :refused (lisp-plus-slice1:derivation-receipt-decision
+                     *refuting-bare-probe-receipt*))
+       (eq :refuted (disposition-of *refuting-bare-probe-receipt* :treatment-completed))
+       ;; … it is ABSENT from the positive roster, where it used to be counted …
+       (null (lisp-plus-slice1:premise-assessment-matching-accessible-supports a))
+       ;; … and it is present, inspectable, in the refuting roster instead.
+       (= 1 (length (lisp-plus-slice1:premise-assessment-refuting-witnesses a)))
+       (eq *refuting-bare-witness*
+           (first (lisp-plus-slice1:premise-assessment-refuting-witnesses a)))
+       ;; the OTHER refuting species is untouched — no refutation object exists here
+       (null (lisp-plus-slice1:premise-assessment-refuting-supports a))
+       ;; and species 5, identical but for the one field, still grants
+       (eq :granted (lisp-plus-slice1:derivation-receipt-decision *bare-probe-receipt*))))
+    "one field changed, opposite outcome. Before CHARTER-DELTA-4 this witness was pushed onto the POSITIVE matching-support roster and granted :VERIFIED -- counter-evidence tallied as corroboration. Note the exact size of the repair: it forbids that one inversion. It does NOT make procedure, content, mode, kind or source into admission gates, and species 4 above still discharges on a fabricated account")
+
 (ok "[VII-k] species 6 — RAISE turns the real witness into a genuinely :VERIFIED claim that then chains lawfully"
     (and (eq :verified (lisp-plus-slice0:judgment-record-judgment
                         (lisp-plus-slice0:claim-judgment *raised-claim*)))
@@ -1733,11 +1771,18 @@ struck clause silently applied it to `derive`.")
 (defparameter *assessment-readers*
   (list (cons :disposition #'lisp-plus-slice1:premise-assessment-disposition)
         (cons :premise-pattern #'lisp-plus-slice1:premise-assessment-premise-pattern)
+        ;; CHARTER-DELTA-4: the LEGACY projection name, kept as the reader this
+        ;; comparison has always used; its precise name is
+        ;; PREMISE-ASSESSMENT-PROJECTED-PREMISE-INSTANCES and it returns the same value.
         (cons :ground-instances #'lisp-plus-slice1:premise-assessment-ground-instances)
         (cons :judged-claims #'lisp-plus-slice1:premise-assessment-judged-claims)
         (cons :matching-inaccessible #'lisp-plus-slice1:premise-assessment-matching-inaccessible-supports)
         (cons :mismatched-candidates #'lisp-plus-slice1:premise-assessment-mismatched-candidates)
         (cons :refuting-supports #'lisp-plus-slice1:premise-assessment-refuting-supports)
+        ;; CHARTER-DELTA-4: the second refuting species has its own reader, and a
+        ;; list that claims to be "every public reader" must carry it -- otherwise
+        ;; an indistinguishability finding is computed over an incomplete surface.
+        (cons :refuting-witnesses #'lisp-plus-slice1:premise-assessment-refuting-witnesses)
         (cons :binding-environments #'lisp-plus-slice1:premise-assessment-binding-environments)
         (cons :ambiguities #'lisp-plus-slice1:premise-assessment-ambiguities))
   "Every public reader of a premise assessment EXCEPT MATCHING-ACCESSIBLE-SUPPORTS,

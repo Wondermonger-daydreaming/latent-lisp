@@ -583,7 +583,25 @@ was given.**
 And the strongest available form of this, verified by counting rather than
 reading: **`grep -c "witness-mode\|witness-kind\|witness-polarity"
 language-slice-1/slice1.lisp` returns `0`.** **RERUN**, §9.2. Slice /1 does not
-read a witness's mode, kind, or polarity **anywhere, even once**. The mode/kind
+read a witness's mode, kind, or polarity **anywhere, even once**.
+
+> **⚠ CORRECTED 2026-07-25 — this count is now `1`, and the sentence after it is
+> false as to POLARITY.** Under `CHARTER-DELTA-4.md` (R-POLARITY-1, owner-adopted)
+> Slice /1 reads `witness-polarity` at exactly one site: `%witness-refutes-p`
+> (`slice1.lisp:1034`), consulted by the premise gate. Re-measured 2026-07-25:
+> `grep -c` returns **1**, and the sole hit is that line.
+>
+> **MODE and KIND are still never read** — the count is 1, not 3, and the corrected
+> sentence is: *Slice /1 does not read a witness's mode or kind anywhere, even once;
+> it reads POLARITY at one site.* So the paragraph's two-condition summary below
+> becomes **three** conditions: the proposition matches, the receiver may read the
+> witness's id, **and the witness does not declare `:polarity :refutes`**.
+>
+> The direction of the correction matters: the gate now inspects **one field more**
+> than this report found, and that field can only ever **withhold** a discharge,
+> never grant one. Every Movement VII check assertion still holds — species 3, 4 and
+> 5 all declare `:supports` — and `[VII-i]`'s finding is untouched: a fabricated
+> account still discharges. See the new `[VII-j2]` for the one field's teeth. The mode/kind
 admissibility that governs `raise` never runs on a premise support at all; the
 only promotion procedure `derive` builds is for its own conclusion, admitting the
 single pair `(:derivation <schema's admit kind>)` and considering the derivation
@@ -591,7 +609,8 @@ witness `derive` itself minted (**SOURCE** 1531–1583).
 
 **So the corrected mechanism, stated once:** a `:direct` witness discharges the
 effect premise if and only if its proposition matches and the receiver may read
-its id. Mode, kind and polarity are validated **at construction** by the witness
+its id **— and, since `CHARTER-DELTA-4.md` (2026-07-25), only if it does not declare
+`:polarity :refutes`.** Mode, kind and polarity are validated **at construction** by the witness
 constructor (**SOURCE** slice0.lisp 259–281: mode must be one of three keywords,
 kind must be a keyword, polarity must be one of two, and a `:testimony` witness
 must be for an attribution proposition) and are read again **at raise**. They are
@@ -603,7 +622,9 @@ mechanism* in two prose strings — and the change makes the finding sharper, no
 softer, because the actual gate inspects *less* than the gloss claims. `[VII-m]`'s
 phrase "every attribute the language GOVERNS" is defensible in a
 construction-validation sense, and it would be indefensible if it were read as
-"every attribute this gate consults," because this gate consults none of them.
+"every attribute this gate consults," because this gate consults none of them. *(Post-CHARTER-DELTA-4: it consults
+exactly one of them, POLARITY. Mode and kind remain unconsulted, so the sentence's
+point stands with one named exception.)*
 The report records this under §8.2 as an imprecision found and not repaired,
 because it is a mechanism claim inside a check description, and a mechanism claim
 is a claim.
@@ -614,7 +635,8 @@ is a claim.
 
 The language **governs** mode, kind and polarity: it enumerates the legal values,
 refuses illegal ones at construction, enforces a level discipline on
-`:testimony`, and tests mode-and-kind membership at promotion. The language
+`:testimony`, and tests mode-and-kind membership at promotion — and, since
+`CHARTER-DELTA-4.md`, consults **polarity** at the Slice /1 premise gate as well. The language
 **carries** `:procedure` and `:content`: they are slots a witness may hold, a
 reader may read back, and no governed operation consults.
 

@@ -3,29 +3,52 @@ command: sbcl --non-interactive --load APPLICATION.lisp
 cwd:     experiments/latent-lisp/mneme/language-core-0/de-codice-restaurando
 sbcl:    SBCL 2.4.6 (operation-checked through the wrapper via
          (lisp-implementation-version), not read off a banner)
-date:    2026-07-25T06:10:19Z (UTC, read from the clock, not asserted)
+date:    2026-07-25T06:55:31Z (UTC, read from the clock, not asserted)
 exit:    0
 runs:    executed twice from a clean image; the two outputs are byte-identical
-note:    CREATED 2026-07-25 by the chair, not regenerated. This application had
-         NO run receipt: CONSERVATRIX, its author, was interrupted before it
-         could write one, and Sol's post-workshop writ asked for a regeneration
-         of a file that did not exist. The house form (see the sibling
-         de-bibliotheca-peregrina) carries one, so it is created here.
+note:    REGENERATED 2026-07-25 under CHARTER-DELTA-4 (R-POLARITY-1). Created
+         2026-07-25 by the chair; the prior note about the three prose-site
+         corrections under Sol's Part I still applies and is not superseded.
 
-         The program itself is unchanged in behaviour. Under Sol's Part I the
-         chair corrected THREE PROSE SITES that named the wrong admission
-         surface, and nothing else: (1) the *ledger-reading* docstring, whose
-         clause "which is why species 4 and 5 arrive at the same door" was
-         false — those species never reach that promotion procedure; (2) the
-         [VII-j] detail string, which named PROMOTION admissibility for a
-         result produced by `derive`; (3) the 7e header calling mode, kind and
-         polarity "the governed attributes", which they are at `raise` and are
-         not at `derive`.
+         R-POLARITY-1 made ONE live statement in this program false. The
+         [VII-j] detail string listed POLARITY among the witness fields the
+         premise gate does not consult. It now does consult it: a matching,
+         accessible witness declaring :polarity :refutes is REFUTING EVIDENCE
+         and no longer discharges the premise it contradicts. The string is
+         corrected to name WITNESS-FOR, receiver accessibility and DECLARED
+         POLARITY as what the gate reads, and mode/kind/source/procedure/content
+         as what it carries but does not read.
 
-         Check TOTAL is UNCHANGED at 88/0. No check was added, removed,
-         renumbered or weakened; no disposition changed; no semantic assertion
-         was touched. The transcript differs from the pre-correction run at
-         exactly 8 lines, all of them explanatory prose.
+         The premise-admission matrix of Movement VII is RETAINED as historical
+         evidence, unchanged in substance: species 3 (real account), 4
+         (fabricated) and 5 (bare) all declare :SUPPORTS, so all three still
+         discharge identically and [VII-i]'s finding stands -- a witness naming
+         a treatment that never happened still grants exactly as well as one
+         naming a treatment that did. R-POLARITY-1 forbids one inversion; it
+         does not make procedure or content into admission gates, and this
+         program continues to show that.
+
+         ONE check is ADDED: [VII-j2], species 5R -- the species-5 bare witness
+         with its polarity declaration flipped and NOTHING else changed. It
+         REFUSES where species 5 grants, is ABSENT from the positive
+         matching-support roster where it used to be counted, and is present in
+         PREMISE-ASSESSMENT-REFUTING-WITNESSES instead. One field changed,
+         opposite outcome.
+
+         Also updated: *assessment-readers* gained
+         PREMISE-ASSESSMENT-REFUTING-WITNESSES, so [VII-l]'s claim to compare
+         "every public reader" spans the full surface again.
+
+         Check TOTAL moves 88/0 -> 89/0 by ADDITION only. No existing check was
+         renumbered, weakened or removed; no disposition changed; the effect
+         frontier is unchanged and still blocked; the production refusal is
+         unchanged; Movement IX's environment / projection / ambiguity
+         distinction is intact and its prose needed no correction -- [IX-c] still
+         reports THREE receipts carrying two complete environments each and
+         [IX-d] still reports projection cardinality 1 everywhere (the refused
+         5R receipt carries zero complete environments and one projection, so
+         neither figure moves). The transcript differs from the pre-correction
+         run at exactly 9 lines.
 
          Chair-verified: zero package-internal (two-colon) access; the
          counterfeit witness route remains OFF the production path.
@@ -325,7 +348,9 @@ kernel0 records+folds smoke: PASS
      species 6: real witness RAISED     decision :GRANTED  premise :SATISFIED  witnesses 0 roster 1
   ok   [VII-h] species 3 — a direct witness carrying the real attempt identity and the real token DISCHARGES the effect premise
   ok   [VII-i] species 4 — the FABRICATED witness discharges IDENTICALLY. Stated plainly, because it is the finding: a witness naming a treatment that never happened grants exactly as well as one naming a treatment that did
-  ok   [VII-j] species 5 — the BARE witness, carrying no procedure and no content whatsoever, also discharges identically — the three discharge identically because Slice /1 premise assessment compares their WITNESS-FOR proposition against the premise pattern and their receiver-relative accessibility, and reads nothing else about them; the displayed mode, kind, polarity, procedure and content are not consulted by this gate (CORRECTED 2026-07-25: this line previously named PROMOTION admissibility, a mode-and-kind membership test, which governs `raise` -- not the `derive` path these three actually took)
+  ok   [VII-j] species 5 — the BARE witness, carrying no procedure and no content whatsoever, also discharges identically — the three discharge identically because Slice /1 premise assessment compares their WITNESS-FOR proposition against the premise pattern, their receiver-relative accessibility, and their DECLARED POLARITY, and reads nothing else about them; the displayed mode, kind, source, procedure and content are not consulted by this gate. All three witnesses here declare :SUPPORTS, so their discharge is unaffected -- see [VII-j2], where the SAME bare witness declaring :REFUTES refuses instead (CORRECTED 2026-07-25 twice: this line first named PROMOTION admissibility, a mode-and-kind membership test governing `raise` and not the `derive` path these three took; it then still listed POLARITY among the fields this gate ignores, which CHARTER-DELTA-4 / R-POLARITY-1 made false)
+     species 5R: BARE witness, :REFUTES decision :REFUSED  premise :REFUTED    witnesses 0 roster 0
+  ok   [VII-j2] species 5R — the same bare witness DECLARING :REFUTES now REFUSES instead of corroborating, and is recorded as counter-evidence rather than as support — one field changed, opposite outcome. Before CHARTER-DELTA-4 this witness was pushed onto the POSITIVE matching-support roster and granted :VERIFIED -- counter-evidence tallied as corroboration. Note the exact size of the repair: it forbids that one inversion. It does NOT make procedure, content, mode, kind or source into admission gates, and species 4 above still discharges on a fabricated account
   ok   [VII-k] species 6 — RAISE turns the real witness into a genuinely :VERIFIED claim that then chains lawfully
 
    7e. species 3 against species 4, read through every public reader of
@@ -338,6 +363,7 @@ kernel0 records+folds smoke: PASS
      :MATCHING-INACCESSIBLE   identical across all three
      :MISMATCHED-CANDIDATES   identical across all three
      :REFUTING-SUPPORTS       identical across all three
+     :REFUTING-WITNESSES      identical across all three
      :BINDING-ENVIRONMENTS    identical across all three
      :AMBIGUITIES             identical across all three
   ok   [VII-l] every public reader of the effect premise is identical across species 3, 4 and 5, save the one holding the witness objects
@@ -437,7 +463,7 @@ kernel0 records+folds smoke: PASS
    9b. grounding multiplicity — counted across every receipt, not asserted.
        THREE quantities are counted, because they are three different
        things and the first draft of this arm conflated two of them:
-     29 receipts, 58 premise assessments
+     30 receipts, 60 premise assessments
      complete binding environments per receipt   values (0 1 2)  max 2  plural 3
      premise binding environments per assessment values (0 1 2)  max 2
      ground instances per assessment             values (1)  max 1
@@ -499,7 +525,7 @@ kernel0 records+folds smoke: PASS
    program looks like where a JUDGMENT carries it instead, and the
    difference between those two halves is the whole finding.
 
-de-codice-restaurando: 88 checks passed / 0 failed
+de-codice-restaurando: 89 checks passed / 0 failed
 (a workshop that can refuse for the object's sake and for the owner's
  sake in two different voices, that will not press a sheet twice
  because its bookkeeping is uncertain, and that holds a true account
