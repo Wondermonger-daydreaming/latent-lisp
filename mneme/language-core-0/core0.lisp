@@ -54,6 +54,9 @@
    #:register-adapter #:resolve-adapter
    ;; evidence + reconciliation result
    #:core0-evidence #:core0-evidence-p
+   ;; the ONE public issuance check (Evidence Issuance Erratum /0, R-ISSUANCE-0.7).
+   ;; core0-evidence-p is a TYPE predicate; this is the ISSUANCE predicate.
+   #:core0-evidence-current-image-issued-p
    #:core0-evidence-process #:core0-evidence-attempt-id #:core0-evidence-seat-id
    #:core0-evidence-adapter-identity #:core0-evidence-events
    #:core0-evidence-manifestation #:core0-evidence-ledger-token
@@ -70,6 +73,7 @@
    #:core0-condition-evidence #:core0-condition-outcome
    #:core0-refused #:unknown-adapter #:malformed-request
    #:capability-scope-violation #:ambient-authority-forbidden
+   #:unissued-evidence
    #:core0-interrupted #:blind-retry-refused
    #:signal-core0 #:with-core0-restarts))
 
@@ -118,7 +122,12 @@
   ;; pre-frontier refusals (execution :refused, no frontier-crossed event)
   (families core0-condition core0-refused core0-interrupted blind-retry-refused)
   (families core0-refused unknown-adapter malformed-request
-            capability-scope-violation ambient-authority-forbidden))
+            capability-scope-violation ambient-authority-forbidden
+            ;; Evidence Issuance Erratum /0 R-ISSUANCE-0.5.  Its meaning is
+            ;; EXACTLY: "this content is not registered as Core /0-issued in
+            ;; this image."  It says nothing about how the value was produced
+            ;; and makes no accusation about the caller.
+            unissued-evidence))
 
 (defun signal-core0 (condition-type &rest initargs
                      &key failed-invariant &allow-other-keys)
@@ -466,6 +475,412 @@ unknown adapter is declared unknown, never treated as absent" designator)
 (defun core0-evidence-refusal-reason (e) (%core0-evidence-refusal-reason e))
 
 ;;; ==================================================================
+;;; EVIDENCE ISSUANCE — governed by CORE0-EVIDENCE-ISSUANCE-ERRATUM-0.md
+;;; (owner-adopted, 2026-07-25).  Core /0 had been treating one object as DATA
+;;; when it constructed it and PROVENANCE when it consumed it.  This section
+;;; gives it one ontology: a core0-evidence has provenance standing exactly
+;;; when its EXACT CANONICAL ACCOUNT CONTENT was issued by Core /0 in the
+;;; current Lisp image.
+;;;
+;;;   core0-evidence-p                        a TYPE predicate.  Nothing more.
+;;;   core0-evidence-current-image-issued-p   the ISSUANCE predicate.
+;;;
+;;; Three decisions the erratum makes, enacted here and nowhere else:
+;;;   R-ISSUANCE-0.2  authenticity belongs to CONTENT, not to the host object's
+;;;                   pointer identity.  An exact copy is issued; the same
+;;;                   object after content mutation is not.  There is NO EQ
+;;;                   membership anywhere in this section.
+;;;   R-ISSUANCE-0.3  the registry is governed by EXACT canonical octets.  The
+;;;                   hex rendering is an INDEX; a key hit alone never answers
+;;;                   the question — the stored octets are compared element by
+;;;                   element before this code says yes.
+;;;   R-ISSUANCE-0.9  the registry is IMAGE-LOCAL.  Nothing here earns crash
+;;;                   survival, durability, cross-image standing, or
+;;;                   serialization authenticity.
+;;;
+;;; CEILING (R-ISSUANCE-0.10).  A positive answer establishes AT MOST: this
+;;; exact canonical account content was minted by the Core /0 runtime in this
+;;; Lisp image.  It does NOT establish that the external-world deed occurred,
+;;; that the provider told the truth, that the adapter is honest, that the
+;;; account's semantic interpretation is correct, or that the effect is
+;;; settled.  NO cryptographic-security claim is made or implied.
+
+(defparameter +core0-issuance-datum-format+ "core0/evidence-issuance-datum/v0"
+  "The canonical-content format identifier.  It is bound INTO the datum, so a
+future format revision cannot be mistaken for this one.")
+
+(defparameter +core0-issuance-account-version+ 0
+  "The account version R-ISSUANCE-0.4 requires be bound.  Core /0 stores no
+version SLOT; the version of the account SHAPE is this constant, and it is
+bound into the canonical content rather than into the structure.")
+
+(defun %iss-key (name)
+  "A CD/0 record key in the Core /0 issuance namespace."
+  (lisp-plus-cd0:make-identifier-datum
+   '("lisp-plus-core0" "evidence-issuance") (list name)))
+
+(defun %iss-entry (name value-datum)
+  (lisp-plus-cd0:make-record-entry (%iss-key name) value-datum))
+
+(defun %iss-refuse (what value)
+  "An internal invariant breach, not a governed refusal: Core /0 built an
+account field for which this closed encoder has no canonical representation.
+Loud by design — silently declining to register would leave a genuine account
+unissued, which is exactly the failure this section exists to prevent.  (House
+precedent: SIGNAL-CORE0's own contract breaches use a plain ERROR.)"
+  (error "core0 issuance datum: no canonical representation for ~A: ~S"
+         what (type-of value)))
+
+(defun %iss-record (type-name entries)
+  "A tagged CD/0 record.  The RECORD-TYPE tag makes two different record types
+with coinciding field sets canonically distinct.  CD/0 sorts record entries by
+key octets and refuses duplicate keys, so field ORDER here is not load-bearing
+and the encoding is deterministic by construction."
+  (lisp-plus-cd0:make-record-datum
+   (cons (%iss-entry "record-type" (lisp-plus-cd0:make-string-datum type-name))
+         entries)))
+
+(defun %iss-symbol-datum (s)
+  "An INTERNED symbol as a CD/0 identifier.  Refuses an uninterned symbol,
+whose name alone would not distinguish it.  No printer, no host address."
+  (unless (symbol-package s)
+    (%iss-refuse "an uninterned symbol" s))
+  (lisp-plus-cd0:make-identifier-datum
+   '("common-lisp" "symbol")
+   (list (package-name (symbol-package s)) (symbol-name s))))
+
+;; The record encoders below are mutually recursive with %ISS-DATUM (a record
+;; holds values; a value may be a record).  Declared here so the walker compiles
+;; without forward-reference warnings, exactly as the shape of the data requires.
+(declaim (ftype (function (t) t)
+                %iss-process-context-datum %iss-event-datum %iss-attempt-datum
+                %iss-uncertain-effect-datum %iss-manifestation-datum
+                %iss-reconciliation-receipt-datum %iss-axis-datum
+                %iss-determinacy-datum %iss-stream-relation-datum))
+
+(defun %iss-datum (value)
+  "Canonical CD/0 representation of one account value.
+
+A CLOSED, ENUMERATED dispatcher — NOT a general serializer.  It has no default
+branch: every scalar leaf it admits is converted by the GOVERNED kernel0
+boundary (REQUIRE-CANONICAL) or by a named CD/0 constructor, every record it
+admits is one of the enumerated Core /0 / Kernel /0 record types a Core /0
+account can contain, and everything else REFUSES.  It reads no host address, no
+pointer identity, no hash-table identity, and no printer output; it calls no
+SXHASH.  Every CD/0 datum it builds is inert and snapshots its input, so no
+mutable alias is retained.
+
+NIL encodes as UNIT, T as BOOLEAN-TRUE, any other interned symbol as a symbol
+identifier: three disjoint treatments, each total on its own domain.  (NIL is
+both `absent` and `the empty list` in the host, so those two encode alike —
+they are the same host value, and no two DISTINCT host values collide here.)
+
+INHERITED CEILING, not widened: Slice /1 declares that a circular or
+pathologically deep value diverges inside REQUIRE-CANONICAL's own recursion
+rather than refusing.  This walker inherits that exposure unchanged."
+  (cond
+    ((null value) (lisp-plus-cd0:make-unit-datum))
+    ((eq value t) (lisp-plus-cd0:make-boolean-datum t))
+    ((stringp value) (lisp-plus-cd0:make-string-datum value))
+    ((keywordp value) (lisp-plus-kernel0:require-canonical value))
+    ((integerp value) (lisp-plus-kernel0:require-canonical value))
+    ((lisp-plus-kernel0:durable-identity-p value)
+     (lisp-plus-kernel0:require-canonical value))
+    ((symbolp value) (%iss-symbol-datum value))
+    ((consp value)
+     (unless (%proper-list-p value) (%iss-refuse "a dotted list" value))
+     (lisp-plus-cd0:make-sequence-datum (mapcar #'%iss-datum value)))
+    ((process-context-p value) (%iss-process-context-datum value))
+    ((lisp-plus-kernel0:kernel0-event-p value) (%iss-event-datum value))
+    ((lisp-plus-kernel0:attempt-p value) (%iss-attempt-datum value))
+    ((lisp-plus-kernel0:uncertain-effect-p value)
+     (%iss-uncertain-effect-datum value))
+    ((lisp-plus-kernel0:manifestation-p value) (%iss-manifestation-datum value))
+    ((lisp-plus-kernel0:reconciliation-receipt-p value)
+     (%iss-reconciliation-receipt-datum value))
+    ((lisp-plus-kernel0:axis-p value) (%iss-axis-datum value))
+    ((lisp-plus-kernel0:determinacy-p value) (%iss-determinacy-datum value))
+    ((lisp-plus-kernel0:stream-relation-p value)
+     (%iss-stream-relation-datum value))
+    (t (%iss-refuse "an unenumerated host value" value))))
+
+(defun %iss-process-context-datum (c)
+  (%iss-record
+   "core0/process-context"
+   (list (%iss-entry "label" (%iss-datum (%process-context-label c)))
+         (%iss-entry "process-id" (%iss-datum (%process-context-process-id c)))
+         (%iss-entry "logical-operation-id"
+                     (%iss-datum (%process-context-logical-operation-id c)))
+         (%iss-entry "seat-id" (%iss-datum (%process-context-seat-id c))))))
+
+(defun %iss-event-datum (e)
+  "All TWELVE kernel0-event slots, each through its EXPORTED reader."
+  (macrolet ((f (name reader)
+               `(%iss-entry ,name (%iss-datum (,reader e)))))
+    (%iss-record
+     "kernel0/event"
+     (list (f "event-type" lisp-plus-kernel0:kernel0-event-event-type)
+           (f "extension-p" lisp-plus-kernel0:kernel0-event-extension-p)
+           (f "process-id" lisp-plus-kernel0:kernel0-event-process-id)
+           (f "logical-operation-id"
+              lisp-plus-kernel0:kernel0-event-logical-operation-id)
+           (f "seat-id" lisp-plus-kernel0:kernel0-event-seat-id)
+           (f "attempt-id" lisp-plus-kernel0:kernel0-event-attempt-id)
+           (f "external-request-id"
+              lisp-plus-kernel0:kernel0-event-external-request-id)
+           (f "exposure-id" lisp-plus-kernel0:kernel0-event-exposure-id)
+           (f "machine-configuration-id"
+              lisp-plus-kernel0:kernel0-event-machine-configuration-id)
+           (f "effect-id" lisp-plus-kernel0:kernel0-event-effect-id)
+           (f "manifestation-id" lisp-plus-kernel0:kernel0-event-manifestation-id)
+           (f "payload" lisp-plus-kernel0:kernel0-event-payload)))))
+
+(defun %iss-attempt-datum (a)
+  (macrolet ((f (name reader) `(%iss-entry ,name (%iss-datum (,reader a)))))
+    (%iss-record
+     "kernel0/attempt"
+     (list (f "attempt-id" lisp-plus-kernel0:attempt-attempt-id)
+           (f "logical-operation-id" lisp-plus-kernel0:attempt-logical-operation-id)
+           (f "seat-id" lisp-plus-kernel0:attempt-seat-id)
+           (f "process-id" lisp-plus-kernel0:attempt-process-id)
+           (f "predecessor-attempts" lisp-plus-kernel0:attempt-predecessor-attempts)
+           (f "exposure-id" lisp-plus-kernel0:attempt-exposure-id)
+           (f "machine-configuration-id"
+              lisp-plus-kernel0:attempt-machine-configuration-id)
+           (f "external-request-id" lisp-plus-kernel0:attempt-external-request-id)
+           (f "supersession-records"
+              lisp-plus-kernel0:attempt-supersession-records)))))
+
+(defun %iss-uncertain-effect-datum (u)
+  (macrolet ((f (name reader) `(%iss-entry ,name (%iss-datum (,reader u)))))
+    (%iss-record
+     "kernel0/uncertain-effect"
+     (list (f "kind" lisp-plus-kernel0:uncertain-effect-kind)
+           (f "attempt" lisp-plus-kernel0:uncertain-effect-attempt)
+           (f "external-request" lisp-plus-kernel0:uncertain-effect-external-request)
+           (f "possible-effects" lisp-plus-kernel0:uncertain-effect-possible-effects)
+           (f "known-facts" lisp-plus-kernel0:uncertain-effect-known-facts)
+           (f "reconciliation-procedure"
+              lisp-plus-kernel0:uncertain-effect-reconciliation-procedure)
+           (f "retry-policy" lisp-plus-kernel0:uncertain-effect-retry-policy)))))
+
+(defun %iss-manifestation-datum (m)
+  (macrolet ((f (name reader) `(%iss-entry ,name (%iss-datum (,reader m)))))
+    (%iss-record
+     "kernel0/manifestation"
+     (list (f "manifestation-id" lisp-plus-kernel0:manifestation-manifestation-id)
+           (f "attempt-id" lisp-plus-kernel0:manifestation-attempt-id)
+           (f "kind" lisp-plus-kernel0:manifestation-kind)
+           (f "status" lisp-plus-kernel0:manifestation-status)
+           (f "payload-id" lisp-plus-kernel0:manifestation-payload-id)
+           (f "absence-state" lisp-plus-kernel0:manifestation-absence-state)
+           (f "parser-id" lisp-plus-kernel0:manifestation-parser-id)
+           (f "source-boundary" lisp-plus-kernel0:manifestation-source-boundary)
+           (f "visibility" lisp-plus-kernel0:manifestation-visibility)
+           (f "emptiness-rule-id" lisp-plus-kernel0:manifestation-emptiness-rule-id)
+           (f "adapter-identity" lisp-plus-kernel0:manifestation-adapter-identity)
+           (f "producer-identity" lisp-plus-kernel0:manifestation-producer-identity)
+           (f "stream-relation" lisp-plus-kernel0:manifestation-stream-relation)))))
+
+(defun %iss-stream-relation-datum (r)
+  (macrolet ((f (name reader) `(%iss-entry ,name (%iss-datum (,reader r)))))
+    (%iss-record
+     "kernel0/stream-relation"
+     (list (f "stream-id" lisp-plus-kernel0:stream-relation-stream-id)
+           (f "relation-kind" lisp-plus-kernel0:stream-relation-relation-kind)
+           (f "chunk-record-ids" lisp-plus-kernel0:stream-relation-chunk-record-ids)
+           (f "projection-receipt-id"
+              lisp-plus-kernel0:stream-relation-projection-receipt-id)))))
+
+(defun %iss-determinacy-datum (d)
+  (macrolet ((f (name reader) `(%iss-entry ,name (%iss-datum (,reader d)))))
+    (%iss-record
+     "kernel0/determinacy"
+     (list (f "mode" lisp-plus-kernel0:determinacy-mode)
+           (f "alternatives" lisp-plus-kernel0:determinacy-alternatives)
+           (f "evidence" lisp-plus-kernel0:determinacy-evidence)))))
+
+(defun %iss-axis-datum (a)
+  "Every EXPORTED axis reader.
+
+STATED EXCLUSION, not an omission: the kernel0 AXIS-NAME slot is an INTERNAL
+discriminator with no exported reader (verified by live symbol-status
+enumeration), so binding it would require a package-boundary violation in a
+frozen layer.  It is not a core0-evidence account field; it is fixed by the
+constructor that built the axis and is mirrored by the enclosing plist key of
+the reconciliation receipt, which IS bound."
+  (macrolet ((f (name reader) `(%iss-entry ,name (%iss-datum (,reader a)))))
+    (%iss-record
+     "kernel0/axis"
+     (list (f "value" lisp-plus-kernel0:axis-value)
+           (f "determinacy" lisp-plus-kernel0:axis-determinacy)
+           (f "evidence" lisp-plus-kernel0:axis-evidence)
+           (f "procedure-id" lisp-plus-kernel0:axis-procedure-id)
+           (f "frontier-qualifier" lisp-plus-kernel0:axis-frontier-qualifier)
+           (f "uncertain-effect-ref" lisp-plus-kernel0:axis-uncertain-effect-ref)
+           (f "effect-group" lisp-plus-kernel0:axis-effect-group)
+           (f "judgment-class" lisp-plus-kernel0:axis-judgment-class)
+           (f "procedure-version" lisp-plus-kernel0:axis-procedure-version)))))
+
+(defun %iss-reconciliation-receipt-datum (r)
+  (macrolet ((f (name reader) `(%iss-entry ,name (%iss-datum (,reader r)))))
+    (%iss-record
+     "kernel0/reconciliation-receipt"
+     (list (f "target-attempt-id"
+              lisp-plus-kernel0:reconciliation-receipt-target-attempt-id)
+           (f "procedure-id" lisp-plus-kernel0:reconciliation-receipt-procedure-id)
+           (f "procedure-version"
+              lisp-plus-kernel0:reconciliation-receipt-procedure-version)
+           (f "new-evidence" lisp-plus-kernel0:reconciliation-receipt-new-evidence)
+           (f "previous-axis-values+determinacy"
+              lisp-plus-kernel0:reconciliation-receipt-previous-axis-values+determinacy)
+           (f "resulting-axis-values+determinacy"
+              lisp-plus-kernel0:reconciliation-receipt-resulting-axis-values+determinacy)
+           (f "unresolved-residue"
+              lisp-plus-kernel0:reconciliation-receipt-unresolved-residue)))))
+
+(defun %core0-evidence-issuance-datum (evidence)
+  "The canonical issuance content of EVIDENCE: an INERT Canonical Datum /0
+value built from every semantic account field the erratum adopts
+(R-ISSUANCE-0.4), including the internally stored canonical request — which is
+bound here WITHOUT becoming publicly readable (R-ISSUANCE-0.11).
+
+STATED EXCLUSION, decided rather than omitted: the `adapter` slot holds a LIVE
+core0-adapter object whose DISPATCH and LEDGER-QUERY slots are host closures.
+A closure has no canonical representation, and the object's pointer identity is
+forbidden content (R-ISSUANCE-0.4).  What the slot canonically MEANS — which
+adapter — is bound in full: the adapter's stable IDENTITY is already its own
+account field, and the stored object's NAME and VERSION are bound beside it,
+with an explicit presence flag.  Two adapter objects agreeing on identity, name
+and version are canonically indistinguishable here, and that is the stated
+ceiling."
+  (let ((adapter (%core0-evidence-adapter evidence)))
+    (%iss-record
+     "core0/evidence-account"
+     (list
+      (%iss-entry "datum-format"
+                  (lisp-plus-cd0:make-string-datum +core0-issuance-datum-format+))
+      (%iss-entry "account-version"
+                  (%iss-datum +core0-issuance-account-version+))
+      (%iss-entry "process" (%iss-datum (%core0-evidence-process evidence)))
+      (%iss-entry "attempt-id" (%iss-datum (%core0-evidence-attempt-id evidence)))
+      (%iss-entry "seat-id" (%iss-datum (%core0-evidence-seat-id evidence)))
+      (%iss-entry "adapter-identity"
+                  (%iss-datum (%core0-evidence-adapter-identity evidence)))
+      (%iss-entry "adapter-present" (%iss-datum (if adapter t nil)))
+      (%iss-entry "adapter-name"
+                  (%iss-datum (and adapter (core0-adapter-name adapter))))
+      (%iss-entry "adapter-version"
+                  (%iss-datum (and adapter (core0-adapter-version adapter))))
+      (%iss-entry "request" (%iss-datum (%core0-evidence-request evidence)))
+      (%iss-entry "events" (%iss-datum (%core0-evidence-events evidence)))
+      (%iss-entry "manifestation"
+                  (%iss-datum (%core0-evidence-manifestation evidence)))
+      (%iss-entry "ledger-token"
+                  (%iss-datum (%core0-evidence-ledger-token evidence)))
+      (%iss-entry "reconciliation-receipts"
+                  (%iss-datum (%core0-evidence-reconciliation-receipts evidence)))
+      (%iss-entry "refusal-reason"
+                  (%iss-datum (%core0-evidence-refusal-reason evidence)))))))
+
+;;; ------------------------------------------------------------------
+;;; The PRIVATE, IMAGE-LOCAL issuance registry of exact canonical contents.
+;;; NOT exported, no public reader, no public writer (R-ISSUANCE-0.7).
+;;;
+;;; This is deliberately NOT modelled on the capability's liveness token.  That
+;;; check is `(consp token)` — a slot that must be non-nil — which authorises
+;;; copies and self-declared scopes; a token in a slot rides along with any
+;;; structure copy.  There is no token here and no non-nil test: the key is the
+;;; account's exact canonical octets, and the authority is a byte-for-byte
+;;; comparison.
+
+(defvar *core0-issuance-registry* (make-hash-table :test #'equal)
+  "Exact canonical account contents issued by Core /0 in THIS image.  Keys are
+the lowercase hex rendering of the canonical octets — an INDEX only; values are
+fresh defensive copies of the octets themselves, which are the authority.  The
+hex index is lossless (hex is injective on octet strings), so no collision is
+possible AND no collision could establish issuance either way: the exact-octet
+comparison below runs on every lookup and is what answers the question.")
+
+(defun %core0-issuance-content (evidence)
+  "(values INDEX-KEY EXACT-OCTETS) for EVIDENCE's CURRENT account content.
+
+ONE encoding produces both, so the index can never name bytes other than the
+ones returned beside it.  Recomputed on every call — never cached on the object
+— so content mutation is DETECTED rather than papered over."
+  (let ((encoded (lisp-plus-cd0:canonical-octets
+                  (%core0-evidence-issuance-datum evidence))))
+    (values (lisp-plus-cd0:octets-to-hex encoded)
+            (lisp-plus-cd0:octets-copy encoded))))
+
+(defun %core0-octets-identical-p (a b)
+  "Byte-for-byte equality.  The authority of the registry."
+  (and (= (length a) (length b))
+       (loop for i below (length a) always (= (aref a i) (aref b i)))))
+
+(defun %issue-core0-evidence (evidence)
+  "Register EVIDENCE's exact canonical content as Core /0-issued in this image,
+then return it.  Called ONLY at internal Core /0 evidence-minting sites, on a
+value Core /0 itself just constructed — NEVER on a caller-supplied value, and
+never merely because a value was presented to a public entry point."
+  (multiple-value-bind (key octets) (%core0-issuance-content evidence)
+    ;; both the key string and the stored octets are fresh, defensively-copied
+    ;; values; the registry retains no caller-reachable structure.
+    (setf (gethash key *core0-issuance-registry*) octets)
+    evidence))
+
+(defun %core0-issued-content-p (evidence)
+  "Internal: is EVIDENCE's CURRENT canonical content registered as issued here?
+The hex key only selects a candidate; the answer is the exact-octet comparison."
+  (and (core0-evidence-p evidence)
+       (multiple-value-bind (key octets) (%core0-issuance-content evidence)
+         (let ((stored (gethash key *core0-issuance-registry*)))
+           (and stored (%core0-octets-identical-p stored octets) t)))))
+
+(defun %clear-core0-issuance-registry ()
+  "Image hygiene / test isolation, after Slice /1's CLEAR-SCHEMA-REGISTRY
+precedent — but INTERNAL: no public registry access is authorised
+(R-ISSUANCE-0.7).  Core /0 had no reset path before this section; this is it.
+Nothing in the registry's semantics depends on insertion order, so clearing and
+re-issuing in any order reproduces the same answers."
+  (clrhash *core0-issuance-registry*)
+  (values))
+
+(defun core0-evidence-current-image-issued-p (evidence)
+  "Is EVIDENCE's CURRENT canonical account content registered as issued by the
+Core /0 runtime in THIS Lisp image?
+
+EXACT CEILING (Evidence Issuance Erratum /0, R-ISSUANCE-0.10).  A true answer
+establishes AT MOST:
+
+    this exact canonical account content was minted by the Core /0 runtime in
+    this Lisp image.
+
+It does NOT establish that the external-world deed occurred, that the provider
+told the truth, that the adapter is honest, that the account's semantic
+interpretation is correct, that the downstream domain proposition holds, or
+that the effect is settled.  It is NOT a type predicate (that is
+CORE0-EVIDENCE-P), NOT an external-truth predicate, NOT a settlement predicate,
+NOT a domain-condition predicate, and NOT a persistence predicate.  No
+cryptographic-security claim is made or implied.
+
+Observable sensitivity: a genuine account and an EXACT COPY of one both answer
+true; a blank object, a coherent caller-built account, a caller-built account
+reusing a genuine attempt identity, and a genuine account whose content has
+been mutated all answer false — and a mutated account answers true again once
+its content is restored exactly.
+
+It CONSULTS the private registry and does not mutate it; it does not consult
+the adapter's ledger; and it infers issuance from no proxy — not from type, not
+from attempt identity, not from event validation, not from the fold, not from
+adapter identity, not from a ledger token, not from a procedure identity.
+
+Answers false — never signals — for a value that is not a core0-evidence, and
+for an account whose content has no canonical representation at all."
+  (handler-case (%core0-issued-content-p evidence)
+    (error () nil)))
+
+;;; ==================================================================
 ;;; Canonical request discipline.  A request is a Slice /1 GROUND structured
 ;;; proposition in normal form — CD/0-lawful data, never a host object.  Its
 ;;; predicate is the scope-check key.
@@ -597,11 +1012,15 @@ outcome, and SIGNAL.  No frontier-crossed event exists ⇒ the view is :refused.
                                      :attempt attempt-id
                                      :operation (process-context-logical-operation-id
                                                  process)))))
-         (evidence (%make-core0-evidence
-                    :process process :attempt-id attempt-id :seat-id seat
-                    :adapter-identity adapter-identity :request request
-                    :events events* :manifestation nil :ledger-token nil
-                    :reconciliation-receipts nil :refusal-reason reason))
+         ;; ISSUANCE SITE 1 of 4 — a pre-frontier refusal genuinely issues a
+         ;; Core /0 account (it rides out inside the typed condition), so it is
+         ;; registered before it escapes (R-ISSUANCE-0.8).
+         (evidence (%issue-core0-evidence
+                    (%make-core0-evidence
+                     :process process :attempt-id attempt-id :seat-id seat
+                     :adapter-identity adapter-identity :request request
+                     :events events* :manifestation nil :ledger-token nil
+                     :reconciliation-receipts nil :refusal-reason reason)))
          (outcome (%refused-outcome process attempt-id effect-group)))
     (signal-core0 condition-type
                   :failed-invariant reason
@@ -710,12 +1129,14 @@ returns a bare value; no boolean success anywhere."
                        :interpretation
                        (lisp-plus-kernel0:make-interpretation-axis
                         :value :not-applicable :determinacy (%determinate))))
-                    (evidence (%make-core0-evidence
-                               :process process :attempt-id attempt-id :seat-id seat
-                               :adapter-identity adapter-identity :adapter adapter-obj
-                               :request nf :events events :manifestation manifestation
-                               :ledger-token ledger-token
-                               :reconciliation-receipts nil :refusal-reason nil)))
+                    ;; ISSUANCE SITE 2 of 4 — the clean commit.
+                    (evidence (%issue-core0-evidence
+                               (%make-core0-evidence
+                                :process process :attempt-id attempt-id :seat-id seat
+                                :adapter-identity adapter-identity :adapter adapter-obj
+                                :request nf :events events :manifestation manifestation
+                                :ledger-token ledger-token
+                                :reconciliation-receipts nil :refusal-reason nil))))
                ;; fold-derived cross-check: the outcome's axes are NOT self-report —
                ;; they agree with the independent fold over the same events.
                (lisp-plus-kernel0:validate-event-sequence events)
@@ -752,12 +1173,17 @@ returns a bare value; no boolean success anywhere."
                        :interpretation
                        (lisp-plus-kernel0:make-interpretation-axis
                         :value :not-attempted :determinacy (%determinate))))
-                    (evidence (%make-core0-evidence
-                               :process process :attempt-id attempt-id :seat-id seat
-                               :adapter-identity adapter-identity :adapter adapter-obj
-                               :request nf :events events :manifestation nil
-                               :ledger-token nil ; the program was NOT told a token
-                               :reconciliation-receipts nil :refusal-reason nil)))
+                    ;; ISSUANCE SITE 3 of 4 — the W1-shaped interruption.  The
+                    ;; surviving account rides out inside core0-interrupted and
+                    ;; is precisely the value continue-from later consumes, so
+                    ;; it MUST be registered before it escapes.
+                    (evidence (%issue-core0-evidence
+                               (%make-core0-evidence
+                                :process process :attempt-id attempt-id :seat-id seat
+                                :adapter-identity adapter-identity :adapter adapter-obj
+                                :request nf :events events :manifestation nil
+                                :ledger-token nil ; the program was NOT told a token
+                                :reconciliation-receipts nil :refusal-reason nil))))
                (lisp-plus-kernel0:validate-event-sequence events)
                (signal-core0 'core0-interrupted
                              :failed-invariant
@@ -866,15 +1292,40 @@ there is nothing to reconcile and no retry is warranted"
         t))))
 
 (defun continue-from (evidence &key adapter authority)
-  "Continue an interrupted attempt from its surviving EVIDENCE.  Derives
-standing from the events (never self-report); PROVES blind retry unsafe via
-live check-retry-safety and refuses it; reconciles against the adapter's ledger
-(a witness of limited jurisdiction).  ADAPTER is the live adapter; AUTHORITY a
-FRESH live capability (a historical mint-receipt is refused — a record that
-authority existed is not live authority).  Returns a continuation-result."
+  "Continue an interrupted attempt from its SURVIVING evidence — where
+`surviving` now has a definition and a check (Evidence Issuance Erratum /0,
+R-ISSUANCE-0.5/0.6): a core0-evidence whose EXACT CURRENT canonical account
+content is registered as issued by Core /0 in this Lisp image.  An exact
+defensive copy of an issued account survives; a structurally coherent account
+that was never issued does not, and neither does an issued account whose
+content has since changed.
+
+Derives standing from the events (never self-report); PROVES blind retry unsafe
+via live check-retry-safety and refuses it; reconciles against the adapter's
+ledger (a witness of limited jurisdiction).  ADAPTER is the live adapter;
+AUTHORITY a FRESH live capability (a historical mint-receipt is refused — a
+record that authority existed is not live authority).  Returns a
+continuation-result.
+
+For content that is not registered as issued here, NOTHING authority-bearing
+happens: the adapter's ledger is not consulted, no reconciliation receipt is
+minted, no replacement evidence is issued, and no runtime-issued record is
+derived from the supplied account.  The refusal means exactly that the content
+is not known to have been issued by Core /0 in this image; it makes no claim
+about how the value was produced."
   (unless (core0-evidence-p evidence)
     (signal-core0 'malformed-request
                   :failed-invariant "CONTINUE-FROM requires core0-evidence"
+                  :offending-field :evidence :offending-value evidence))
+  ;; Issuance check — the EARLIEST point after basic type checking, and before
+  ;; every authority-bearing action: before the authority check, before adapter
+  ;; resolution, before the fold, before the ledger query, before any receipt.
+  (unless (%core0-issued-content-p evidence)
+    (signal-core0 'unissued-evidence
+                  :failed-invariant
+                  "continue-from continues from evidence Core /0 issued: this ~
+value's current canonical account content is not registered as Core /0-issued ~
+in this image, so no ledger is consulted and no receipt is minted"
                   :offending-field :evidence :offending-value evidence))
   ;; authority must be FRESH and LIVE — never re-minted from a historical record.
   (unless (%capability-live-p authority)
@@ -934,14 +1385,18 @@ mint-receipt (a record that authority existed) is not live authority"
                 ;; narrowed standing — fold again, now the effect is resolved.
                 (narrowed (lisp-plus-kernel0:fold-attempt-outcome events* attempt-id))
                 (manifestation (%present-manifestation attempt-id token))
-                (evidence* (%make-core0-evidence
-                            :process process :attempt-id attempt-id :seat-id seat
-                            :adapter-identity (%core0-evidence-adapter-identity evidence)
-                            :adapter adapter-obj :request request
-                            :events events* :manifestation manifestation
-                            :ledger-token token
-                            :reconciliation-receipts (list receipt)
-                            :refusal-reason nil)))
+                ;; ISSUANCE SITE 4 of 4 — the replacement evidence a VALIDATED
+                ;; continue-from mints.  Reached only after the issuance check
+                ;; below has accepted the supplied account.
+                (evidence* (%issue-core0-evidence
+                            (%make-core0-evidence
+                             :process process :attempt-id attempt-id :seat-id seat
+                             :adapter-identity (%core0-evidence-adapter-identity evidence)
+                             :adapter adapter-obj :request request
+                             :events events* :manifestation manifestation
+                             :ledger-token token
+                             :reconciliation-receipts (list receipt)
+                             :refusal-reason nil))))
            (%make-continuation-result
             :disposition :reconciled :standing narrowed
             :reconciliation-receipt receipt :evidence evidence*

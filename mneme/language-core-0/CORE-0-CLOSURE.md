@@ -112,3 +112,95 @@ examination — a blind stranger read of the existing public surface — is
 recorded in the acceptance, awaiting his word.
 
 *— the chair, same evening, the acceptance stone*
+
+---
+
+## ADDENDUM — 2026-07-25: EVIDENCE ISSUANCE ERRATUM /0, bounded repair landed
+
+> **SUPERSESSION BANNER (2026-07-25).** Where anything above bears on what a
+> `core0-evidence` value *is*, or on what `continue-from` is entitled to assume
+> about the account it is handed, **`CORE0-EVIDENCE-ISSUANCE-ERRATUM-0.md`
+> controls and the text above is superseded.** The closure text is left
+> unaltered so the record of what was believed, and when, survives — the lane's
+> own practice. Nothing above is withdrawn as *false about what it measured*;
+> the disposition table, the ceilings, and the final battery all stand.
+
+**What the erratum settled.** Core /0 had been treating one object as **data
+when it constructed it and provenance when it consumed it**. `continue-from`'s
+own first sentence said *"from its **surviving** evidence"* — a provenance word
+that nothing defined and nothing checked. The owner classified this as an
+**authorial gap** (a promise the layer needed, used, and never made) and closed
+it prospectively. The repair is bounded to `core0-evidence`, `continue-from`,
+and internal Core /0 evidence minting.
+
+**The adopted semantics, in one line each.**
+
+```
+core0-evidence-p                       a TYPE predicate ONLY.  It was never an
+                                       authenticity predicate and is not one now.
+core0-evidence-current-image-issued-p  THE issuance predicate.  True exactly when
+                                       the argument's CURRENT canonical account
+                                       content is registered as issued by Core /0
+                                       in THIS Lisp image.
+exact copies                           PRESERVE issued-content standing — authenticity
+                                       belongs to content, not to object identity.
+content mutation                       INVALIDATES the current content; restoring it
+                                       exactly restores the answer.
+continue-from                          REJECTS unissued content BEFORE any ledger use,
+                                       any receipt, and any replacement evidence.
+subject readability                    UNCHANGED.  core0-evidence-request remains
+                                       internal; R-SOURCE-1.10 is NOT repaired here.
+```
+
+**Disposition delta — one line added, nothing else amended:**
+
+```lisp
+ :evidence-issuance-standing      :earned      ; exact-canonical-content, private image-local
+                                               ; registry, one public predicate, checked in
+                                               ; continue-from before any authority-bearing act
+```
+
+**Export delta (live `do-external-symbols` over `LISP-PLUS-CORE0`, not counted
+from export forms): 59 → 61.** Exactly two symbols, both named by the erratum:
+`core0-evidence-current-image-issued-p` (R-ISSUANCE-0.7's one public operation)
+and `unissued-evidence` (R-ISSUANCE-0.5's typed refusal, a `core0-refused`
+subtype, so the house law that every refusal is typed still holds at this
+door). **No public constructor, issuance token, seal, registry reader, or
+general authenticity object was added, and none is authorized.**
+
+**Ceilings this repair does NOT lift** — they ride with every citation of the
+new predicate, alongside the five above:
+
+6. **A positive issuance answer establishes AT MOST that this exact canonical
+   account content was minted by the Core /0 runtime in this Lisp image.** It
+   does not establish that the external-world deed occurred, that the provider
+   told the truth, that the adapter is honest, that the account's semantic
+   interpretation is correct, or that the effect is settled. **Issuance
+   authenticity of the record is not settlement authenticity of the effect.**
+7. **The registry is image-local by design.** After image death or a registry
+   reset, persisted bytes retain no current-image issuance standing. This
+   repair earns **no** crash survival, durability, cross-image authenticity, or
+   serialization authenticity — ceiling 2 above is untouched.
+8. **No cryptographic-security claim is made or implied.** The registry is
+   governed by exact canonical octets compared byte for byte; the hex index is
+   an index. Same-image reach into package-internal state is not claimed
+   closed, and stratum 4 remains outside every Core /0 claim.
+
+**Battery for the repair (chair-run, this sitting):** core0-selftest **29/0,
+byte-identical to its pre-repair output** · core0-issuance-selftest **59/0**
+(new) · de-abaco **9/9** · de-cursore-aereo **23/23** · de-ponte-usto **17/17**
+· de-bibliotheca-peregrina and de-codice-restaurando each run twice from clean
+images, **byte-identical to each other and to their pre-repair output** ·
+kernel0 selftest **33/23/0, 59 mutants killed** · Slice /0 smoke **6/0** ·
+Slice /1 selftest **123/0** · SMOKE-1 **9/9** · GUIDE-WALK-1 **0 of 20 failed**
+· GUIDE-REPAIR-1-REPRO green. Two teeth were planted and shown to bite: with
+the issuance check bypassed the pre-repair reconciliation returns and the new
+tests fail; with exact-content membership replaced by object identity the
+exact-copy test fails. Both were restored and the suites re-run green.
+
+**Standing cap, unchanged and reinforced:** one model family wrote this
+language, its applications, the adjudication behind the erratum, and this
+repair. **Nothing here is independent verification.** The stranger audit
+remains owed, and is now owed against this addendum too.
+
+*— the chair, 2026-07-25, the issuance stone*

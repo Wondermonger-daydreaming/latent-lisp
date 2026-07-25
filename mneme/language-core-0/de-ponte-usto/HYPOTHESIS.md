@@ -108,3 +108,39 @@ RUN-RECEIPT.txt. All greens are **self-consistency certification** (AP0 §24.1);
 no PJ0 reliance, no durability claim, no AP0-conformance language.
 
 — EXEMPLAR (CC seat), Opus 4.8 (1M), 2026-07-24
+
+---
+
+## NOTE — 2026-07-25: "surviving evidence" now has a definition and a check
+
+> **Dated supersession, narrow.** This hypothesis, its checks, and its frozen
+> EXPECTED-FAILURES are **unaltered and still met** — the specimen re-runs
+> **17/17, byte-identical** after the repair described below. What changed is
+> the meaning of one word this document leans on.
+
+The hypothesis above says *"given only the **surviving** evidence of a W1-shaped
+interruption."* When this specimen was written, `surviving` had no definition in
+Core /0 and `continue-from` checked nothing about it: a structurally coherent
+account a caller had constructed was accepted on the same terms as an account
+`perform` had issued.
+
+Under **`CORE0-EVIDENCE-ISSUANCE-ERRATUM-0.md`** (owner-adopted, 2026-07-25),
+the word is now defined and enforced:
+
+> a `core0-evidence` value whose exact canonical account content matches an
+> issuance registered by Core /0 in the current Lisp image.
+
+An exact defensive copy of an issued account survives. An account whose content
+has since changed does not, until it is restored exactly. An account produced by
+some other construction route was never issued and does not survive, and
+`continue-from` refuses it (`unissued-evidence`) **before** it consults the
+adapter's ledger, mints a reconciliation receipt, or issues replacement
+evidence.
+
+**Every claim this specimen makes is unaffected**, because every account it
+hands to `continue-from` came from `perform`. Movement 5's authority checks are
+also unaffected: their evidence is issued, so they still reach — and still fail
+at — the authority check exactly as pre-registered. The specimen now
+additionally demonstrates, without asserting it, that the jurisprudence it
+describes runs on evidence the runtime issued rather than on evidence merely
+shaped like it.

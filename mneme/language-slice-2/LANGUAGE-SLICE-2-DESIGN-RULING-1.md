@@ -256,3 +256,40 @@ specimen 93 checks / 0 failed, run twice by the chair from clean images, byte-id
 package SHA-256 `01ac2ec9…` verified independently by the owner.*
 
 — **Claude Opus 5 (1M context)**, chair, 2026-07-25
+
+---
+
+## NOTE — 2026-07-25: the held Core /0 issuance question received an owner ruling
+
+**The held Core /0 issuance question received an owner ruling and a bounded
+repair.** `CORE0-EVIDENCE-ISSUANCE-ERRATUM-0.md` (owner-adopted, 2026-07-25)
+classified the prior state as an **authorial gap** and closed it prospectively:
+a `core0-evidence` value has provenance standing exactly when its exact
+canonical account content was issued by Core /0 in the current Lisp image; one
+public predicate, `core0-evidence-current-image-issued-p`, asks that question;
+and `continue-from` now refuses unissued content before any ledger use.
+
+**Slice /2 remains HELD**, and this ruling is otherwise unamended.
+§4's open question is answered — of the four listed possibilities the owner
+ruled **C**, and closed it forward — but the progression does not resume on that
+alone: **Slice /2 stays held until the repaired public issuance predicate is
+exercised by a subsequent source-basis design specimen.** No such specimen is
+authorized or implemented by this note.
+
+Two rulings above are worth reading in the erratum's light, neither withdrawn:
+
+- **R-SOURCE-1.6 stands exactly as written** — `core0-evidence-p` is not an
+  authenticity predicate, and the erratum adopts that sentence rather than
+  correcting it. What changed is that a predicate which *does* answer the
+  issuance question now exists beside it.
+- **R-SOURCE-1.10 is untouched, deliberately.** The canonical request is now
+  bound into the private issuance content **without becoming publicly
+  readable**; `core0-evidence-request` remains internal. The subject-readability
+  blocker was not repaired here, by accident or otherwise, and this note must
+  not be cited as repairing it.
+
+**§2's result is not rewritten as mistaken.** The Source-Basis Paper /0
+correctly measured the pre-repair surface, and its measurement is why the
+erratum exists.
+
+*— the chair, 2026-07-25*

@@ -1444,3 +1444,36 @@ close the file. Those are the program's own closing words. It wrote them, ran
 them, and did not get to explain them.*
 
 — Claude Opus 5 (1M context), CONSERVATRIX-II · SBCL 2.4.6 · 2026-07-25
+
+---
+
+## NOTE — 2026-07-25: Core /0 evidence issuance repair; this report's measurements stand
+
+> **Dated supersession, narrow.** Nothing measured in this field report is
+> withdrawn. The application re-runs **byte-identical** to the output this
+> report describes, twice from clean images, after the repair below. No
+> issuance line was added to its output.
+
+Under **`CORE0-EVIDENCE-ISSUANCE-ERRATUM-0.md`** (owner-adopted, 2026-07-25),
+Core /0 now issues its evidence: `perform` and a validated `continue-from`
+register the exact canonical content of every account they mint, and
+`continue-from` refuses content that is not so registered **before** consulting
+the adapter's ledger, minting a reconciliation receipt, or issuing replacement
+evidence.
+
+Two consequences for anyone reading this report as a guide:
+
+1. **`core0-evidence-p` is a type predicate only** — it always was, and the
+   erratum says so in terms. The issuance question is asked with
+   **`core0-evidence-current-image-issued-p`**, whose exact ceiling is: *this
+   exact canonical account content was minted by the Core /0 runtime in this
+   Lisp image* — nothing about the external world, the provider, the adapter's
+   honesty, or whether the effect is settled.
+2. **An exact copy of an account keeps its standing; a mutated account loses
+   it** until its content is restored exactly. Defensive copying, which this
+   codebase does everywhere, therefore costs nothing.
+
+Where this report observes that a classifier or a host operation cannot
+distinguish a `core0-evidence` from some other value, that observation is about
+the surface it names and is unchanged: the repair adds a predicate, it does not
+teach any other operation to make that distinction.
