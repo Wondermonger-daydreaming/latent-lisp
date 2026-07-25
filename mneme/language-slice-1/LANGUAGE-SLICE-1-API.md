@@ -72,13 +72,16 @@
 frozen `../language-slice-0/slice0-transmissibility.lisp` (which pulls in
 `slice0.lisp` → `slice0-projection.lisp` → `../kernel0/load.lisp`) if Slice /0 is
 not already present.
-**Exported symbols:** **72** — re-enumerated live 2026-07-25 by
+**Exported symbols:** **74** — re-enumerated live 2026-07-25 (evening) by
 `do-external-symbols` over the loaded package, not by arithmetic and not by
-counting export forms. *The figure previously printed here, 69, was stale before
-`CHARTER-DELTA-3` touched anything: the live package already exported 71 (the
-Sol Decision 1 and 2 readers landed without this line being updated). Delta /3
-adds exactly one — `derivation-receipt-unsupported-supports` — for 72. Count it
-live; do not derive it from this sentence.*
+counting export forms. *This line has now been stale twice. It printed **69**
+before `CHARTER-DELTA-3` touched anything, when the live package already
+exported 71 (the Sol Decision 1 and 2 readers landed without this line being
+updated); Delta /3 added one, and the line was corrected to **72** — which was
+already short by two at the moment it was written. The live count is **74**.
+Count it live; do not derive it from this sentence. **This correction is
+mechanical: nothing about Slice /1's behaviour changed, and no export was added
+by any Slice /2 movement — `slice1.lisp` is byte-untouched.***
 
 This brief is deliberately dull. Every signature below was proven by executing it
 in SBCL 2.4.6, not inferred from reading. A stranger should be able to write a
