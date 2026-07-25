@@ -10,7 +10,7 @@
 ;;;; companion FIELD-REPORT.md is the other half of the deliverable and is less
 ;;;; polite than this file.
 ;;;;
-;;;; NINE MOVEMENTS
+;;;; ELEVEN MOVEMENTS  (I–IX, then X and XI, added 2026-07-25)
 ;;;;   I   THE QUIET ZONE      ordinary Common Lisp does ordinary work — shelves,
 ;;;;                           due dates, fees, catalogue lines.  No Lisp+ at all.
 ;;;;                           (Owner ruling D1: ordinary computation carries no
@@ -55,6 +55,24 @@
 ;;;;                           cannot be CHECKED.  The boundary is stated in the
 ;;;;                           program's own output, the loan is left honestly
 ;;;;                           open, and NO fix is proposed or implemented.
+;;;;   X   THE SOURCE-BOUND     Language Slice /2, Candidate /0.  The premise
+;;;;       ROAD                 stops accepting a witness the desk minted and
+;;;;                           starts requiring a GOVERNED SOURCE BASIS over an
+;;;;                           account Core /0 issued IN THIS IMAGE for THAT
+;;;;                           EXACT REQUEST.  Deed, account report,
+;;;;                           acknowledgment and settlement stay four distinct
+;;;;                           stages.  The loan settles — because the account
+;;;;                           Movement VII already produced says enough, not
+;;;;                           because anything was moved to let it.
+;;;;   XI  THE COMPOSED ROAD    Language Slice /2, Candidate /1.  [IX-10] closed
+;;;;                           one layer up: the standing Movement X earned can
+;;;;                           now travel WITH the admission record that granted
+;;;;                           it, as a DERIVATION BASIS a later premise may
+;;;;                           insist on — and the desk's own naked claim, and
+;;;;                           an ordinarily raised twin of it, are both refused
+;;;;                           at that premise.  Nothing was re-derived: the
+;;;;                           basis is the third value of the grant Movement X
+;;;;                           already made.
 ;;;;
 ;;;; FRONT-DOOR DISCIPLINE: single-colon public surface only.  Zero double-colon
 ;;;; package access in this directory — grep-verified: the digraph does not occur
@@ -71,8 +89,8 @@
 (unless (find-package :lisp-plus-slice1)
   (handler-bind ((style-warning (lambda (w) (muffle-warning w))))
     (load (merge-pathnames "../../language-slice-1/slice1.lisp" *load-truename*))))
-;; MOVEMENT X (2026-07-25) — Language Slice /2, Candidate /0.  Movements I–IX
-;; are unchanged and do not use it.
+;; MOVEMENTS X and XI (2026-07-25) — Language Slice /2, Candidates /0 and /1.
+;; Movements I–IX are unchanged and do not use either.
 (unless (find-package :lisp-plus-slice2)
   (handler-bind ((style-warning (lambda (w) (muffle-warning w))))
     (load (merge-pathnames "../../language-slice-2/slice2.lisp" *load-truename*))))
@@ -221,6 +239,12 @@ it — there is no ambient reachability and the language will not assume one."
                     (list (lisp-plus-slice0:witness-id s)))
                    ((lisp-plus-slice0:claim-p s)
                     (list (lisp-plus-slice0:claim-id s)))
+                   ;; MOVEMENT XI: a derivation basis is reached by its
+                   ;; DERIVATION-BASIS IDENTITY — which IS the underlying
+                   ;; claim's identity, so this adds a species to the cond and
+                   ;; no new accessibility regime to the desk.
+                   ((lisp-plus-slice2:derivation-basis-p s)
+                    (list (lisp-plus-slice2:derivation-basis-identity s)))
                    ;; MOVEMENT X: a Slice /2 source basis is reached by its
                    ;; SOURCE-BASIS IDENTITY — the same id-membership rule, read
                    ;; against a third durable identity.  No new accessibility
@@ -2156,13 +2180,16 @@ judged claim is exactly what Movement IX showed a fabrication can become.")
   "DERIVE/2 with the receipt recovered either way — the Slice /2 twin of
 `consider`, and needed for the same reason."
   (handler-case
-      (multiple-value-bind (claim receipt)
+      (multiple-value-bind (claim receipt dbasis)
           (lisp-plus-slice2:derive/2 :schema schema :conclusion conclusion
                                      :supports supports
                                      :receiver (apply #'at-the-desk supports))
-        (values claim receipt))
+        ;; THREE values as of Candidate /1.  Every existing caller below binds
+        ;; two and is unaffected — which is the whole point of an additive
+        ;; return, and is left standing here as the demonstration of it.
+        (values claim receipt dbasis))
     (lisp-plus-slice2:slice2-derivation-refused (c)
-      (values nil (lisp-plus-slice2:slice2-condition-receipt c)))))
+      (values nil (lisp-plus-slice2:slice2-condition-receipt c) nil))))
 
 (defun admission-of (receipt predicate)
   (find predicate (lisp-plus-slice2:slice2-receipt-admissions receipt)
@@ -2178,9 +2205,15 @@ judged claim is exactly what Movement IX showed a fabrication can become.")
 
 (format t "~%   10b. the desk derives an acknowledgment standing from the report:~%")
 (defparameter *ack-claim* nil)
-(multiple-value-bind (claim receipt) (consider/2 *dispatch-account-schema*
-                                                 *ack-conclusion* (list *he-9-basis*))
-  (setf *ack-claim* claim)
+(defparameter *ack-receipt* nil)
+(defparameter *ack-dbasis* nil
+  "MOVEMENT XI captures the THIRD value of this ALREADY-EARNED grant.  No second
+derivation is run to produce it: the basis is minted by the same act whose
+checks are recorded below, which is what makes it an account OF that act rather
+than a claim about it.")
+(multiple-value-bind (claim receipt dbasis)
+    (consider/2 *dispatch-account-schema* *ack-conclusion* (list *he-9-basis*))
+  (setf *ack-claim* claim *ack-receipt* receipt *ack-dbasis* dbasis)
   (desk "decision => ~S" (lisp-plus-slice2:slice2-receipt-decision receipt))
   (ok "[X-3] the source basis DISCHARGES the source-bound premise — acknowledgment standing granted"
       (and claim
@@ -2364,6 +2397,163 @@ Nothing produced it. There is no such attempt and no such row.")
     "a ceiling a program prints but does not carry is a ceiling the next reader loses")
 
 ;;;; ==================================================================
+;;;; MOVEMENT XI — THE COMPOSED ROAD (Language Slice /2, Candidate /1)
+;;;;
+;;;; Movement X closed the UPSTREAM frontier: an effect account reached a
+;;;; premise through a governed source basis, and the loan settled.  It left the
+;;;; DOWNSTREAM one exactly where [IX-10] found it —
+;;;;
+;;;;   "the receiving receipt holds NO witness object and NO :ATTEMPT identity —
+;;;;    the crossing's identity is gone by the time the claim chains"
+;;;;
+;;;; — one layer up.  The acknowledgment standing Movement X earned travelled
+;;;; onward as an ORDINARY Slice /1 claim.  A later premise could not tell it
+;;;; from a claim somebody raised over an assertion, because by the time it
+;;;; arrived there was nothing left to tell it BY.
+;;;;
+;;;; Movement XI does not re-derive anything.  It takes the THIRD value of the
+;;;; grant Movement X already made, and asks one question: can a premise insist
+;;;; on THAT, and refuse everything that merely looks like it?
+;;;; ==================================================================
+
+(format t "~%── MOVEMENT XI: the composed road (Slice /2, Candidate /1) ──~%")
+
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :loan-closure-standing :version 1
+  :conclusion (pp '(:predicate :loan-closure-authorized
+                    (:volume (:var :volume)) (:courier (:var :courier))))
+  :premises (list (pp '(:predicate :dispatch-account-acknowledged
+                        (:volume (:var :volume)) (:courier (:var :courier)))))))
+
+(defparameter *derivation-bound-only*
+  (lisp-plus-slice2:make-support-admission-contract
+   :contract-id :closure-by-prior-admission
+   :contract-version 1
+   :accepted-clauses '((:derivation-basis)))
+  "A version-1 contract accepting ONE species and nothing else.  It does not
+accept a judged claim — because a judged claim is exactly what the desk's own
+acknowledgment standing LOOKS LIKE once it leaves the receipt that granted it.")
+
+(defparameter *closure-schema*
+  (lisp-plus-slice2:make-slice2-schema
+   :schema-id :loan-closure-standing/2
+   :base-schema (lisp-plus-slice1:resolve-schema :loan-closure-standing 1)
+   :premise-contracts (list (list 0 *derivation-bound-only*))))
+
+(defparameter *closure-conclusion*
+  (np `(:predicate :loan-closure-authorized (:volume ,*restricted*)
+        (:courier :brass-courier))))
+
+;;; --- 11a. what the desk will NOT accept -----------------------------
+
+(format t "~%   11a. the desk offers its OWN granted claim, naked:~%")
+(multiple-value-bind (claim receipt)
+    (consider/2 *closure-schema* *closure-conclusion* (list *ack-claim*))
+  (desk "decision => ~S" (lisp-plus-slice2:slice2-receipt-decision receipt))
+  (ok "[XI-1] the desk's own NAKED granted claim is recognized and NOT ADMITTED — slice /1 satisfied it, slice /2 refused the ROUTE"
+      (and (null claim)
+           (eq :refused (lisp-plus-slice2:slice2-receipt-decision receipt))
+           (eq :not-admitted (disposition/2 receipt :dispatch-account-acknowledged))
+           (eq :satisfied
+               (lisp-plus-slice2:premise-admission-base-disposition
+                (admission-of receipt :dispatch-account-acknowledged)))
+           (member *ack-claim*
+                   (lisp-plus-slice2:premise-admission-recognized-not-admitted
+                    (admission-of receipt :dispatch-account-acknowledged))))
+      "this is [IX-10] refused rather than reported: the claim is VISIBLE and still not enough"))
+
+(format t "~%   11b. and an ordinarily raised claim wearing the same proposition:~%")
+(defparameter *closure-impostor*
+  (lisp-plus-slice0:raise
+   (lisp-plus-slice0:claim :proposition *ack-conclusion* :by :desk)
+   :to :verified :per *ledger-reading*
+   :considering (list (lisp-plus-slice0:witness
+                       :for *ack-conclusion* :mode :direct :kind :courier-ledger
+                       :source :desk))
+   :receiver :peregrina)
+  "A genuinely :VERIFIED claim over the identical proposition, raised the
+ordinary way. Movement IX's finding, aimed one layer up.")
+
+(multiple-value-bind (claim receipt)
+    (consider/2 *closure-schema* *closure-conclusion* (list *closure-impostor*))
+  (desk "decision => ~S" (lisp-plus-slice2:slice2-receipt-decision receipt))
+  (ok "[XI-2] an ORDINARILY RAISED claim with the SAME proposition is NOT ADMITTED — :VERIFIED standing is not an admission record"
+      (and (null claim)
+           (eq :refused (lisp-plus-slice2:slice2-receipt-decision receipt))
+           (eq :not-admitted (disposition/2 receipt :dispatch-account-acknowledged)))))
+
+;;; --- 11c. what it WILL accept ---------------------------------------
+
+(format t "~%   11c. the desk offers the DERIVATION BASIS the same grant produced:~%")
+(defparameter *closure-claim* nil)
+(defparameter *closure-receipt* nil)
+(multiple-value-bind (claim receipt)
+    (consider/2 *closure-schema* *closure-conclusion* (list *ack-dbasis*))
+  (setf *closure-claim* claim *closure-receipt* receipt)
+  (desk "decision => ~S" (lisp-plus-slice2:slice2-receipt-decision receipt))
+  (desk "ceiling  => ~S"
+        (lisp-plus-slice2:premise-admission-truth-ceilings
+         (admission-of receipt :dispatch-account-acknowledged)))
+  (ok "[XI-3] the ESTABLISHED derivation basis DISCHARGES the premise — closure standing granted"
+      (and claim
+           (eq :granted (lisp-plus-slice2:slice2-receipt-decision receipt))
+           (eq :satisfied (disposition/2 receipt :dispatch-account-acknowledged))
+           (= 1 (length (lisp-plus-slice2:slice2-receipt-derivation-bases-used receipt)))))
+  (ok "[XI-4] and the downstream receipt reaches the EXACT prior Slice /2 receipt — BY OBJECT, no resolver"
+      (let* ((b (first (lisp-plus-slice2:slice2-receipt-derivation-bases-used receipt)))
+             (prior (lisp-plus-slice2:derivation-basis-receipt b)))
+        (and (eq prior *ack-receipt*)
+             (eq :granted (lisp-plus-slice2:slice2-receipt-decision prior))
+             ;; and THROUGH it, the source basis and the Core /0 attempt itself
+             (eq *he-9-basis*
+                 (first (lisp-plus-slice2:slice2-receipt-source-bases-used prior)))
+             (lisp-plus-kernel0:identity=
+              (lisp-plus-slice2:source-basis-attempt-id *he-9-basis*)
+              (lisp-plus-core0:core0-evidence-attempt-id *deliver-evidence*))))
+      "closure standing -> prior receipt -> source basis -> the He-9 crossing, walked by object")
+  (ok "[XI-5] the recorded ceiling is the PRIOR-JUDGMENT one — it did NOT inherit the account-report ceiling"
+      (and (equal '((:derivation-basis . :prior-explicit-admission-judgment))
+                  (lisp-plus-slice2:premise-admission-truth-ceilings
+                   (admission-of receipt :dispatch-account-acknowledged)))
+           (not (eq :prior-explicit-admission-judgment
+                    :current-image-issued-account-report)))
+      "a composed judgment does not become source-bound by having been composed from one")
+  (let ((text (with-output-to-string (out)
+                (lisp-plus-slice2:render-slice2-why receipt out))))
+    (ok "[XI-6] the rendered explanation preserves the modest ceiling and claims nothing larger"
+        (and (search "PRIOR EXPLICIT ADMISSION" text)
+             (notany (lambda (w) (search w text))
+                     '("proved" "effect occurred" "externally verified" "settled")))
+        "the ceiling survives the trip to the printer")))
+
+;;; --- 11d. nothing was moved to make this land -----------------------
+
+(ok "[XI-7] NO courier script, adapter outcome, Core /0 event or source relation was altered for Movement XI"
+    (and
+     ;; the same account object Movement VII produced, unchanged
+     (lisp-plus-core0:core0-evidence-p *deliver-evidence*)
+     (lisp-plus-core0:core0-evidence-current-image-issued-for-request-p
+      *deliver-evidence* *he-9-request*)
+     ;; the same source basis object Movement X established, on the same relation
+     (eq :core0-account-reports-acknowledgment
+         (lisp-plus-slice2:source-basis-relation-kind *he-9-basis*))
+     (eq :acknowledged (lisp-plus-slice2:source-basis-account-status *he-9-basis*))
+     ;; and Movement XI added exactly one thing: a premise that insists on the record
+     (lisp-plus-slice2:derivation-basis-established-in-current-image-p *ack-dbasis*))
+    "Movement XI adds a premise, not a fact")
+
+(ok "[XI-8] the derivation basis carries the ACCOUNT-STANDING proposition, never the closure conclusion — the domain step stays the desk's own"
+    (and (eq :dispatch-account-acknowledged
+             (second (lisp-plus-slice2:derivation-basis-proposition *ack-dbasis*)))
+         (not (eq :loan-closure-authorized
+                  (second (lisp-plus-slice2:derivation-basis-proposition *ack-dbasis*))))
+         ;; the closure conclusion exists ONLY because a schema the desk wrote
+         ;; says these premises license it
+         *closure-claim*)
+    "a derivation basis never establishes a domain conclusion automatically (Work Order /1 §8)")
+
+;;;; ==================================================================
 ;;;; CLOSING
 
 (format t "~%── what this application does NOT show ──~%")
@@ -2392,6 +2582,16 @@ Nothing produced it. There is no such attempt and no such row.")
 (format t "   still the labelled scripted fake; a lying adapter produces the same~%")
 (format t "   readers throughout. The distance from an issued account to the world~%")
 (format t "   is exactly what it was, and nothing in Movement X shortens it.~%")
+
+(format t "~%   AND MOVEMENT XI SHORTENS IT LESS STILL. What it adds is a premise~%")
+(format t "   that can INSIST on the record of a prior admission, and refuse a~%")
+(format t "   claim that merely looks like its result. A derivation basis says~%")
+(format t "   exactly one thing: this image granted this exact claim under explicit~%")
+(format t "   per-premise contracts, and here is the receipt. It does NOT say that~%")
+(format t "   every premise behind it was source-bound, that anything was checked~%")
+(format t "   outside this image, or that a deed took place. The closure standing~%")
+(format t "   in 11c is authorized by a schema the DESK wrote — no basis makes a~%")
+(format t "   domain conclusion on its own, and [XI-8] is the check that says so.~%")
 
 (format t "~%de-bibliotheca-peregrina: ~D checks passed / ~D failed~%" *pass* *fail*)
 (format t "(a desk that can say \"no\", \"not yet\", and \"I do not know\" in three~%")

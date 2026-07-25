@@ -85,7 +85,11 @@
   ;; meaning is EXACTLY that, after Core /0's own UNISSUED-EVIDENCE: it says
   ;; nothing about how the value was produced and makes no accusation about the
   ;; caller (R-ISSUANCE-0.5's wording, carried up one layer).
-  (families source-basis-refused unissued-core0-account))
+  (families source-basis-refused unissued-core0-account)
+  ;; CANDIDATE /1.  A derivation basis could not be established, or a value of
+  ;; its shape could not be used.  Like UNISSUED-CORE0-ACCOUNT it says exactly
+  ;; what it says and makes no claim about how the value was produced.
+  (families slice2-condition derivation-basis-refused))
 
 (defun signal-slice2 (condition-type &rest initargs
                       &key failed-invariant offending-field offending-value
@@ -192,10 +196,35 @@ result cannot edit the vocabulary."
 ;;;
 ;;; and a fourth is not a configuration change but a language change.
 
-(defparameter +contract-version+ 0)
+(defparameter +contract-version+ 0
+  "The DEFAULT contract version, unchanged by Candidate /1.  A contract written
+before Candidate /1 existed keeps exactly the behaviour it had: this is why the
+new clause family arrives behind a VERSION rather than by widening version 0.")
 
-(defparameter +known-clause-species+
-  '(:verified-judged-claim :source-basis :asserted-witness))
+(defparameter +known-contract-versions+ '(0 1)
+  "The contract versions this implementation can evaluate.  An unknown version
+refuses AT CONSTRUCTION, for the same reason an unknown clause does: a contract
+whose meaning this image cannot compute must not exist, rather than be
+discovered unevaluable at a premise.")
+
+(defparameter +clause-species-v0+
+  '(:verified-judged-claim :source-basis :asserted-witness)
+  "Candidate /0's three families.  A version-0 contract accepts exactly these,
+and REFUSES (:DERIVATION-BASIS) — not by ignoring it, but by refusing to be
+constructed.")
+
+(defparameter +clause-species-v1+
+  '(:verified-judged-claim :source-basis :asserted-witness :derivation-basis)
+  "Candidate /1 adds EXACTLY ONE family.  It has no caller-selectable options:
+there is nothing to configure, because the only question a derivation-basis
+clause asks is whether this premise accepts the route at all.")
+
+(defun %clause-species-for-version (version)
+  (ecase version (0 +clause-species-v0+) (1 +clause-species-v1+)))
+
+(defparameter +known-clause-species+ +clause-species-v1+
+  "Every species any supported version defines.  Kept for readers; the
+version-specific list is what a contract is validated against.")
 
 (defparameter +known-proposition-relations+ '(:exact-normalized-equality))
 
@@ -216,6 +245,22 @@ result cannot edit the vocabulary."
   "The R-ISSUANCE-0.10 ceiling, named.  It reads: this exact canonical account
 content was minted by the Core /0 runtime in THIS Lisp image, for THIS request,
 and the account REPORTS the stated field.  It does not read: the deed occurred.")
+
+(defparameter +derivation-basis-truth-ceiling+ :prior-explicit-admission-judgment
+  "CANDIDATE /1's fixed ceiling, and it is FIXED — not caller-selectable.
+
+It reads, exactly: this exact claim was granted by DERIVE/2 under explicit
+per-premise admission contracts whose resulting admission record is retained in
+the attached receipt.
+
+It does NOT read: that every premise was source-bound; that every premise was
+externally verified; that an admitted asserted witness became source evidence;
+that the conclusion inherits :CURRENT-IMAGE-ISSUED-ACCOUNT-REPORT; that the
+conclusion is externally true; or that an effect occurred or settled.
+
+An effect-sensitive premise that requires an actual Core /0 account report must
+still require a SOURCE BASIS.  A derivation basis must never impersonate one,
+and the two ceilings are distinct keywords so that no reader can confuse them.")
 
 (defparameter +judged-claim-truth-ceiling+ :prior-governed-judgment
   "A positively judged claim establishes that a governed judgment was made and
@@ -238,10 +283,11 @@ clause (D2-0.9).")
 
 (defun %clause-species (clause) (and (consp clause) (first clause)))
 
-(defun %normalize-clause (clause)
+(defun %normalize-clause (clause &optional (version +contract-version+))
   "Validate ONE clause and return it in canonical form.  Refuses AT
-CONSTRUCTION — an unknown species, an unknown option, a missing required
-option, an unknown relation, or a ceiling the mechanism does not earn."
+CONSTRUCTION — an unknown species, a species this CONTRACT VERSION does not
+define, an unknown option, a missing required option, an unknown relation, or a
+ceiling the mechanism does not earn."
   (unless (and (consp clause) (keywordp (first clause))
                (evenp (length (rest clause))))
     (%refuse 'unknown-admission-clause :accepted-clauses clause
@@ -249,12 +295,15 @@ option, an unknown relation, or a ceiling the mechanism does not earn."
              clause))
   (let ((species (first clause))
         (options (rest clause)))
-    (unless (member species +known-clause-species+ :test #'eq)
+    (unless (member species (%clause-species-for-version version) :test #'eq)
       (%refuse 'unknown-admission-clause :accepted-clauses species
-               "~S is not an admission clause species Candidate /0 defines.  The ~
-three are ~{~S~^, ~} — and a fourth is a language change, not a configuration ~
-change, so it is refused here rather than ignored at evaluation time"
-               species +known-clause-species+))
+               "~S is not an admission clause species a version-~D contract ~
+defines.  Version ~D accepts ~{~S~^, ~} — and a further family is a language ~
+change, not a configuration change, so it is refused here rather than ignored ~
+at evaluation time.  (:DERIVATION-BASIS arrived in Candidate /1 behind ~
+contract version 1 precisely so that a version-0 contract written before it ~
+existed keeps exactly the behaviour it had.)"
+               species version version (%clause-species-for-version version)))
     (flet ((opt (k) (getf options k))
            (only (&rest allowed)
              (loop for (k nil) on options by #'cddr
@@ -278,6 +327,14 @@ merely :ESTABLISHES, and there is no wildcard (D2-0.6)"
                       (core0-source-relations) relations))
            (list :source-basis :relations
                  (remove-duplicates (copy-list relations) :from-end t))))
+        (:derivation-basis
+         ;; NO caller-selectable options in Candidate /1, and no ceiling to
+         ;; write: the ceiling is fixed by the mechanism (Work Order /1 §5).
+         ;; A clause with nothing to configure is not an oversight — it is the
+         ;; statement that the only question is whether this premise accepts
+         ;; the route.
+         (only)
+         (list :derivation-basis))
         (:asserted-witness
          (only :mode :kind :truth-ceiling)
          (let ((mode (opt :mode)) (kind (opt :kind))
@@ -308,6 +365,7 @@ not a complete authenticity mechanism and is not to be cited as one (D2-0.10)"
   (ecase (%clause-species clause)
     (:verified-judged-claim +judged-claim-truth-ceiling+)
     (:source-basis +source-basis-truth-ceiling+)
+    (:derivation-basis +derivation-basis-truth-ceiling+)
     (:asserted-witness (getf (rest clause) :truth-ceiling))))
 
 (defun make-support-admission-contract
@@ -363,7 +421,14 @@ string) so a receipt can name which contract applied; got ~S" contract-id))
   (unless (integerp contract-version)
     (%refuse 'admission-contract-error :contract-version contract-version
              "a contract version must be an integer; got ~S" contract-version))
-  (let ((normalized (mapcar #'%normalize-clause accepted-clauses)))
+  (unless (member contract-version +known-contract-versions+ :test #'eql)
+    (%refuse 'admission-contract-error :contract-version contract-version
+             "~S is not a contract version this implementation can evaluate; ~
+the known versions are ~{~D~^, ~}.  An unknown version refuses AT ~
+CONSTRUCTION rather than at a premise: a contract whose meaning cannot be ~
+computed must not exist" contract-version +known-contract-versions+))
+  (let ((normalized (mapcar (lambda (c) (%normalize-clause c contract-version))
+                            accepted-clauses)))
     ;; One clause per species: two :SOURCE-BASIS clauses would make "which
     ;; relations does this premise accept" a question with two answers.
     (let ((species (mapcar #'%clause-species normalized)))
@@ -653,11 +718,24 @@ authenticity)."
        (gethash basis *established-source-bases*)
        t))
 
+(defvar *established-derivation-bases* (make-hash-table :test #'eq)
+  "Derivation-basis objects minted by the successful DERIVE/2 path in THIS
+image.  Parallel in shape to *ESTABLISHED-SOURCE-BASES*, EQ for the same stated
+reason: a basis is a token this image hands out and takes back, so a structural
+reconstruction of one is NOT admitted and Slice /2 does not pretend copies are
+safe.  Nothing here earns durability, cross-image standing or serialization
+authenticity.")
+
+(defun %register-derivation-basis (basis)
+  (setf (gethash basis *established-derivation-bases*) t)
+  basis)
+
 (defun %clear-slice2-registries ()
   "Image hygiene / test isolation, after Slice /1's CLEAR-SCHEMA-REGISTRY and
 Core /0's %CLEAR-CORE0-ISSUANCE-REGISTRY — and INTERNAL for the same reason: no
 public registry access is authorised."
   (clrhash *established-source-bases*)
+  (clrhash *established-derivation-bases*)
   (values))
 
 (defun %relation-procedure (relation)
@@ -866,6 +944,7 @@ not evidence that any external deed occurred."
   (admitted-supports nil :read-only t)
   (recognized-not-admitted nil :read-only t)
   (source-bases nil :read-only t)
+  (derivation-bases nil :read-only t)
   (judged-claims nil :read-only t)
   (refuting-supports nil :read-only t)
   (refuting-witnesses nil :read-only t)
@@ -893,6 +972,9 @@ contract does NOT admit.  This is the roster that makes a narrowing visible:
 without it, refusing a laundered support would be indistinguishable from never
 having been offered one."
   (copy-list (%premise-admission-recognized-not-admitted a)))
+(defun premise-admission-derivation-bases (a)
+  "The derivation bases ADMITTED at this premise, in caller order."
+  (copy-list (%premise-admission-derivation-bases a)))
 (defun premise-admission-source-bases (a)
   (copy-list (%premise-admission-source-bases a)))
 (defun premise-admission-judged-claims (a)
@@ -954,6 +1036,13 @@ retained, in any form."
    (loop for a in (%slice2-receipt-admissions r)
          append (copy-list (%premise-admission-source-bases a)))
    :from-end t))
+(defun slice2-receipt-derivation-bases-used (r)
+  "Every derivation basis ADMITTED anywhere in this derivation, in premise
+order.  The basis objects themselves — so a reader reaches the prior claim, the
+prior Slice /2 receipt and its whole admission record WITHOUT a resolver."
+  (loop for a in (%slice2-receipt-admissions r)
+        append (copy-list (%premise-admission-derivation-bases a))))
+
 (defun slice2-receipt-judged-claims-used (r)
   (remove-duplicates
    (loop for a in (%slice2-receipt-admissions r)
@@ -979,6 +1068,127 @@ named here as the blocker it actually was."
              (list :blocked-on
                    (second (%premise-admission-premise-pattern blocking))
                    (%premise-admission-disposition blocking))))))
+
+;;; ==================================================================
+;;; THE DERIVATION BASIS (Candidate /1, Work Order /1).
+;;;
+;;; The downstream half of the frontier.  Candidate /0 let an EFFECT ACCOUNT
+;;; reach a premise through a governed source basis; it left open what
+;;; [IX-10] recorded one layer down — that a claim granted under admission
+;;; contracts travelled onward as an ORDINARY Slice /1 claim, with the account
+;;; of its own admission gone by the time it chained.  A later premise could
+;;; not tell "this was granted under explicit per-premise contracts" from
+;;; "somebody raised an assertion."
+;;;
+;;; A derivation basis is NOT a claim, a witness, a refutation, a source basis,
+;;; a judgment standing, or a second promotion.  It is a governed record that
+;;; binds a granted claim to the exact receipt that granted it.
+;;;
+;;; THE CONSTRUCTOR IS INTERNAL, and that is the whole mechanism.  There is no
+;;; public operation that pairs an arbitrary claim with an arbitrary receipt,
+;;; because such an operation would let a caller assemble a coherent basis for
+;;; a grant that never happened — the Candidate /0 lesson (R-SOURCE-1.7),
+;;; applied before it could be repeated: coherence is a property of the object,
+;;; and the only defence is that this image minted it.
+;;;
+;;; ONE DURABLE IDENTITY, not two.  The basis takes the underlying claim's
+;;; identity, mirroring the source-basis/carrier arrangement.  A second name
+;;; for one support act would be a second thing to keep in agreement, and the
+;;; accessibility path already reads claim identities.
+
+(defstruct (derivation-basis (:constructor %make-derivation-basis)
+                             (:conc-name %derivation-basis-) (:copier nil))
+  (identity nil :read-only t)          ; = the underlying claim's identity
+  (version 0 :read-only t)
+  (species nil :read-only t)           ; :slice2-derivation
+  (claim nil :read-only t)             ; the EXACT granted claim object
+  (receipt nil :read-only t)           ; the EXACT slice2-receipt from that act
+  (proposition nil :read-only t)       ; the claim proposition
+  (schema-id nil :read-only t)
+  (schema-version nil :read-only t)
+  (origin-context nil :read-only t)
+  (truth-ceiling nil :read-only t))
+
+(defun %derivation-basis-coherent-p (b)
+  "Is B's own claim/receipt conjunction internally consistent?
+
+Checked SEPARATELY from registry membership, and both are required.  A basis
+minted by DERIVE/2 satisfies this by construction — so this predicate exists
+for the case the work order names explicitly: a basis whose internal
+conjunction is inconsistent must answer FALSE even if it somehow reached the
+registry.  Registry membership alone would make the registry the only
+authority; this makes the object answerable for itself as well."
+  (let ((claim (%derivation-basis-claim b))
+        (receipt (%derivation-basis-receipt b)))
+    (and (lisp-plus-slice0:claim-p claim)
+         (slice2-receipt-p receipt)
+         (eq (%slice2-receipt-decision receipt) :granted)
+         (eq (%derivation-basis-truth-ceiling b) +derivation-basis-truth-ceiling+)
+         (eq (%derivation-basis-species b) :slice2-derivation)
+         (lisp-plus-slice1:structured-proposition=
+          (lisp-plus-slice0:claim-proposition claim)
+          (%slice2-receipt-conclusion receipt))
+         (equal (%derivation-basis-schema-id b) (%slice2-receipt-schema-id receipt))
+         (eql (%derivation-basis-schema-version b)
+              (%slice2-receipt-schema-version receipt))
+         t)))
+
+(defun derivation-basis-established-in-current-image-p (basis)
+  "Was BASIS minted by the successful DERIVE/2 path in this Lisp image, and is
+it internally consistent?
+
+EXACT CEILING.  A true answer establishes AT MOST that this exact
+derivation-basis object was minted in this image for this exact claim and this
+exact granted Slice /2 receipt.  It does not establish domain truth,
+external-world occurrence, adapter honesty, provider honesty, cross-image
+standing, durability, serialization authenticity, or cryptographic
+authenticity.
+
+ANSWERS FALSE — NEVER SIGNALS — for a non-basis value, a basis-shaped value
+built through the host object model, a structural reconstruction or copy, a
+basis not minted by the successful DERIVE/2 path, and a basis whose internal
+claim/receipt conjunction is inconsistent."
+  (and (derivation-basis-p basis)
+       (gethash basis *established-derivation-bases*)
+       (%derivation-basis-coherent-p basis)
+       t))
+
+(defun derivation-basis-identity (b) (%derivation-basis-identity b))
+(defun derivation-basis-version (b) (%derivation-basis-version b))
+(defun derivation-basis-species (b) (%derivation-basis-species b))
+(defun derivation-basis-claim (b)
+  "The EXACT granted claim object.  Not a copy: a claim is a read-only Slice /0
+structure, and returning a reconstruction would break the identity comparison
+the admission conjunct depends on.  This is the already-declared
+undetached-object ceiling, not a new one."
+  (%derivation-basis-claim b))
+(defun derivation-basis-receipt (b)
+  "The EXACT prior Slice /2 receipt.  Returned directly, so a downstream reader
+reaches the whole prior admission record — applied contracts, source bases,
+per-premise truth ceilings — WITHOUT a resolver, which is the requirement this
+species exists to meet."
+  (%derivation-basis-receipt b))
+(defun derivation-basis-proposition (b) (%copy-value (%derivation-basis-proposition b)))
+(defun derivation-basis-schema-id (b) (%derivation-basis-schema-id b))
+(defun derivation-basis-schema-version (b) (%derivation-basis-schema-version b))
+(defun derivation-basis-origin-context (b) (%derivation-basis-origin-context b))
+(defun derivation-basis-truth-ceiling (b) (%derivation-basis-truth-ceiling b))
+
+(defun %mint-derivation-basis (claim receipt)
+  "Mint and register a derivation basis.  INTERNAL, and called from exactly one
+place: DERIVE/2, after it has reached a genuine Slice /2 grant."
+  (%register-derivation-basis
+   (%make-derivation-basis
+    :identity (lisp-plus-slice0:claim-id claim)
+    :version 0
+    :species :slice2-derivation
+    :claim claim
+    :receipt receipt
+    :proposition (%copy-value (lisp-plus-slice0:claim-proposition claim))
+    :schema-id (%slice2-receipt-schema-id receipt)
+    :schema-version (%slice2-receipt-schema-version receipt)
+    :origin-context (%slice2-receipt-origin-context receipt)
+    :truth-ceiling +derivation-basis-truth-ceiling+)))
 
 ;;; ==================================================================
 ;;; DERIVE/2 — the new consequential surface (D2-0.4).
@@ -1025,14 +1235,16 @@ the misdirection repair Slice /1 already paid for.")
   "ONE classification pass over :SUPPORTS, in caller order, every element
 visited exactly once.  Returns
 
-  (values SOURCE-BASES WITNESSES REFUTATIONS CLAIMS UNSUPPORTED-DESCRIPTORS)
+  (values SOURCE-BASES DERIVATION-BASES WITNESSES REFUTATIONS CLAIMS
+          UNSUPPORTED-DESCRIPTORS)
 
-The four recognized species are pairwise disjoint structure classes with no
+The five recognized species are pairwise disjoint structure classes with no
 :INCLUDE, so the COND's order is not a silent precedence rule.  An element is
-unsupported because it is NOT one of the four — never because Slice /2
+unsupported because it is NOT one of the five — never because Slice /2
 recognized it as something else; a Core /0 account handed straight across is
 residue for exactly the reason the integer 17 is."
-  (let ((bases '()) (witnesses '()) (refutations '()) (claims '()) (residue '()))
+  (let ((bases '()) (dbases '()) (witnesses '()) (refutations '())
+        (claims '()) (residue '()))
     (loop for element in supports
           for index from 0
           do (cond ((source-basis-p element)
@@ -1047,14 +1259,26 @@ residue for exactly the reason the integer 17 is."
                         (push (list :index index
                                     :reason :source-basis-without-carrier)
                               residue)))
+                   ((derivation-basis-p element)
+                    ;; A derivation basis whose CLAIM slot does not hold a
+                    ;; claim has no usable carrier and cannot reach a premise
+                    ;; at all — residue at the caller's own index, with its own
+                    ;; reason, never silently dropped.  Same treatment as a
+                    ;; carrier-less source basis, same reason: the shape is not
+                    ;; the thing.
+                    (if (lisp-plus-slice0:claim-p (%derivation-basis-claim element))
+                        (push element dbases)
+                        (push (list :index index
+                                    :reason :derivation-basis-without-carrier)
+                              residue)))
                    ((lisp-plus-slice0:witness-p element) (push element witnesses))
                    ((lisp-plus-slice1:refutation-p element) (push element refutations))
                    ((lisp-plus-slice0:claim-p element) (push element claims))
                    (t (push (list :index index
                                   :reason :unsupported-support-species)
                             residue))))
-    (values (nreverse bases) (nreverse witnesses) (nreverse refutations)
-            (nreverse claims) (nreverse residue))))
+    (values (nreverse bases) (nreverse dbases) (nreverse witnesses)
+            (nreverse refutations) (nreverse claims) (nreverse residue))))
 
 (defun %admits-source-basis-p (contract basis)
   "Does CONTRACT admit BASIS?  THREE conjuncts, and the third is the one that
@@ -1065,6 +1289,39 @@ relation membership are necessary; neither is provenance (R-ADMISSION-0.1)."
          (member (%source-basis-relation-kind basis) (getf (rest clause) :relations)
                  :test #'eq)
          (source-basis-established-in-current-image-p basis)
+         t)))
+
+(defun %admits-derivation-basis-p (contract basis claim)
+  "Does CONTRACT admit BASIS as the derivation-basis route for CLAIM?
+
+Slice /2 owns four of the ten conjuncts the work order lists; the other six
+arrived already decided and are read rather than recomputed.
+
+  1  the contract is version 1 AND explicitly names (:DERIVATION-BASIS)
+  2  the basis is established in THIS image
+  3  its underlying claim is the EXACT claim projected into Slice /1
+  7  receiver reachability — applied by the caller, not here
+
+  4  Slice /1 discharged that claim under CATENA
+  5  the proposition matched through the existing normalized machinery
+  6  Slice /1's accessibility, refutation, binding and ambiguity answers
+     permitted the positive support
+        ↑ all three are what CLAIM's presence in the participating set MEANS
+
+  8  the receipt decision is :GRANTED
+  9  receipt conclusion and claim proposition agree
+ 10  the fixed truth ceiling is intact
+        ↑ all three live in %DERIVATION-BASIS-COHERENT-P, which conjunct 2 calls
+
+Conjunct 1 checks the version explicitly even though a version-0 contract
+CANNOT hold the clause (it refuses at construction).  The redundancy is
+deliberate: the conjunct is a stated law, and a law that is only enforced as a
+side effect of another mechanism is one silent refactor from being gone."
+  (let ((clause (%contract-clause contract :derivation-basis)))
+    (and clause
+         (eql (%support-admission-contract-contract-version contract) 1)
+         (eq (%derivation-basis-claim basis) claim)
+         (derivation-basis-established-in-current-image-p basis)
          t)))
 
 (defun %admits-witness-p (contract witness)
@@ -1102,7 +1359,7 @@ records, never a copy and never a name."
      claims)))
 
 (defun %admit (index premise-pattern contract assessment
-               bases witnesses claims carrier->basis receiver)
+               bases witnesses claims all-claims carrier->basis dbases receiver)
   "Apply ONE premise's admission contract over ONE base premise assessment.
 Returns a PREMISE-ADMISSION.  This is steps 6 and 8 of the evaluation order;
 steps 3, 4, 5, 7 and 9 arrived already decided inside ASSESSMENT and are read
@@ -1115,9 +1372,12 @@ rather than recomputed."
          ;; The positive participants Slice /1 actually counted at this premise.
          (participating-witnesses
            (lisp-plus-slice1:premise-assessment-matching-accessible-supports assessment))
-         (participating-claims (%discharging-claims assessment claims))
+         ;; Discharge is asked over ALL-CLAIMS — the naked ones plus every
+         ;; derivation basis's underlying claim — because a claim that reached
+         ;; Slice /1 only through a basis is still a claim Slice /1 judged.
+         (participating-claims (%discharging-claims assessment all-claims))
          (admitted '()) (not-admitted '()) (admitted-bases '())
-         (ceilings '()) (reasons '()))
+         (admitted-dbases '()) (ceilings '()) (reasons '()))
     (flet ((note (r) (pushnew r reasons :test #'equal)))
       ;; RECEIVER ACCESSIBILITY as a contract requirement.  Slice /1 treats a
       ;; NULL receiver context as universal reach; a premise whose contract
@@ -1157,18 +1417,56 @@ rather than recomputed."
                (note (list :witness-not-admitted
                            :mode (lisp-plus-slice0:witness-mode w)
                            :kind (lisp-plus-slice0:witness-kind w)))))))
+        ;; ROUTES, NOT OBJECTS.  One claim may arrive by two roads: offered
+        ;; NAKED, and offered THROUGH an established derivation basis.  The
+        ;; work order forbids collapsing them, and the reason is exact — a
+        ;; contract that accepts only (:DERIVATION-BASIS) must refuse the naked
+        ;; road and admit the governed one IN THE SAME DERIVATION, and a
+        ;; receipt that recorded one verdict per claim could not say so.
+        ;;
+        ;; So each road is evaluated on its own terms and both are recorded.
+        ;; The PROJECTION into Slice /1 is deduplicated (a claim object handed
+        ;; twice would be counted twice and could manufacture an ambiguity that
+        ;; the caller never created); the ADMISSION RECORD is not.
         (dolist (c participating-claims)
-          (cond ((and receiver-ok (%admits-claim-p contract c))
-                 (push c admitted)
-                 (pushnew (cons :verified-judged-claim +judged-claim-truth-ceiling+)
-                          ceilings :test #'equal))
-                (t
-                 (push c not-admitted)
-                 (note (list :judged-claim-not-admitted
-                             :claim (%key (lisp-plus-slice0:claim-id c)))))))))
+          (let ((offered-naked (member c claims :test #'eq))
+                (routes (remove-if-not
+                         (lambda (b) (eq (%derivation-basis-claim b) c))
+                         dbases)))
+            ;; ROAD 1 — the naked claim, judged on the :VERIFIED-JUDGED-CLAIM
+            ;; clause exactly as in Candidate /0.
+            (when offered-naked
+              (cond ((and receiver-ok (%admits-claim-p contract c))
+                     (push c admitted)
+                     (pushnew (cons :verified-judged-claim
+                                    +judged-claim-truth-ceiling+)
+                              ceilings :test #'equal))
+                    (t
+                     (push c not-admitted)
+                     (note (list :judged-claim-not-admitted
+                                 :claim (%key (lisp-plus-slice0:claim-id c))
+                                 :route :naked)))))
+            ;; ROAD 2 — one road per established basis over this same claim.
+            (dolist (b routes)
+              (cond ((and receiver-ok (%admits-derivation-basis-p contract b c))
+                     (push b admitted-dbases)
+                     (push b admitted)
+                     (pushnew (cons :derivation-basis
+                                    +derivation-basis-truth-ceiling+)
+                              ceilings :test #'equal))
+                    (t
+                     (push b not-admitted)
+                     (note (list :derivation-basis-not-admitted
+                                 :claim (%key (%derivation-basis-identity b))
+                                 :established
+                                 (derivation-basis-established-in-current-image-p b)
+                                 :contract-version
+                                 (%support-admission-contract-contract-version
+                                  contract))))))))))
     (setf admitted (nreverse admitted)
           not-admitted (nreverse not-admitted)
-          admitted-bases (nreverse admitted-bases))
+          admitted-bases (nreverse admitted-bases)
+          admitted-dbases (nreverse admitted-dbases))
     (let ((disposition
             (cond
               ;; REFUTATION PRECEDENCE IS NEVER NARROWED.  Refuting evidence
@@ -1196,6 +1494,7 @@ rather than recomputed."
        :admitted-supports admitted
        :recognized-not-admitted not-admitted
        :source-bases admitted-bases
+       :derivation-bases admitted-dbases
        :judged-claims (lisp-plus-slice1:premise-assessment-judged-claims assessment)
        :refuting-supports refuting
        :refuting-witnesses refuting-witnesses
@@ -1217,7 +1516,9 @@ must still be registered under its own name and version, because `derive`
 resolves it there; DERIVE/2 checks that the registered schema is the very one
 the Slice /2 schema was built over and refuses otherwise.
 
-Returns (values GRANTED-CLAIM SLICE2-RECEIPT) on a grant.  On refusal it
+Returns (values GRANTED-CLAIM SLICE2-RECEIPT DERIVATION-BASIS) on a grant —
+the third value ADDITIVE as of Candidate /1, the first two unchanged.  On
+refusal it
 SIGNALS a typed SLICE2-DERIVATION-REFUSED carrying the Slice /2 receipt — the
 same shape Slice /1's DERIVATION-REFUSED has, so a caller that already wrote a
 `consider`-style wrapper writes the same one here.
@@ -1253,7 +1554,7 @@ whose anatomy it cannot confirm: a contract attached to premise 2 of one ~
 anatomy governs nothing in another" name version))
     ;; Step 1/2 — classify, in caller order, and keep the residue at the
     ;; CALLER's indices.
-    (multiple-value-bind (bases witnesses refutations claims residue)
+    (multiple-value-bind (bases dbases witnesses refutations claims residue)
         (%classify-supports/2 supports)
       ;; Every premise must have a contract.  MAKE-SLICE2-SCHEMA already
       ;; guarantees it; this re-checks against the schema in hand rather than
@@ -1280,10 +1581,27 @@ anatomy governs nothing in another" name version))
         ;; precisely what Slice /1 would have done and what admission took away.
         (let* ((carrier->basis
                  (mapcar (lambda (b) (cons (%source-basis-carrier b) b)) bases))
+               ;; A derivation basis carries its own claim into Slice /1.  The
+               ;; claim object is projected EXACTLY — not a copy — because the
+               ;; admission conjunct that matters compares it by EQ against
+               ;; what Slice /1 judged.
+               ;;
+               ;; The projection is DEDUPLICATED and the admission record is
+               ;; not, and the asymmetry is deliberate: handing Slice /1 one
+               ;; claim object twice would let it count twice and could
+               ;; manufacture an ambiguity the caller never created, while
+               ;; collapsing the two ROADS would erase the distinction the
+               ;; whole species exists to draw.
+               (dbasis-claims
+                 (remove-duplicates (mapcar #'%derivation-basis-claim dbases)
+                                    :test #'eq :from-end t))
+               (all-claims
+                 (append claims (remove-if (lambda (c) (member c claims :test #'eq))
+                                           dbasis-claims)))
                ;; Refutations pass through UNNARROWED: admission may refuse
                ;; positive support, never suppress refutation.
                (effective (append refutations (mapcar #'car carrier->basis)
-                                  witnesses claims))
+                                  witnesses all-claims))
                (granted-claim nil)
                (base-receipt nil))
           (handler-case
@@ -1306,8 +1624,8 @@ anatomy governs nothing in another" name version))
                                          (lisp-plus-slice1:proposition-pattern-normal-form
                                           premise)
                                          contract assessment
-                                         bases witnesses claims
-                                         carrier->basis receiver)))
+                                         bases witnesses claims all-claims
+                                         carrier->basis dbases receiver)))
                  (granted-p
                    (and granted-claim
                         admissions
@@ -1331,7 +1649,19 @@ anatomy governs nothing in another" name version))
                     (lisp-plus-slice1:derivation-receipt-origin-context base-receipt)
                     :ordinal (%next-ordinal))))
             (if granted-p
-                (values granted-claim receipt)
+                ;; THE THIRD VALUE IS ADDITIVE.  The first two are exactly what
+                ;; Candidate /0 returned, so a caller written against that
+                ;; surface — taking one value or two — behaves unchanged; a
+                ;; caller that wants the admission account to travel takes the
+                ;; third.  No second claim is minted: the granted claim remains
+                ;; the Slice /1 grant, and the basis is a distinct support
+                ;; object carrying the account of how it was admitted.
+                ;;
+                ;; Minted only HERE, only after a genuine Slice /2 grant.  On
+                ;; refusal the function signals below and this line is never
+                ;; reached, so nothing is minted and nothing is registered.
+                (values granted-claim receipt
+                        (%mint-derivation-basis granted-claim receipt))
                 (signal-slice2
                  'slice2-derivation-refused
                  :failed-invariant
@@ -1380,6 +1710,17 @@ boolean."
            :account-status (%source-basis-account-status object)
            :account-outcome (%source-basis-account-outcome object)
            :truth-ceiling (%source-basis-truth-ceiling object)))
+    (derivation-basis
+     (list :derivation-basis
+           :identity (%key (%derivation-basis-identity object))
+           :species (%derivation-basis-species object)
+           :schema (list (%derivation-basis-schema-id object)
+                         (%derivation-basis-schema-version object))
+           :prior-receipt (%key (%slice2-receipt-identity
+                                 (%derivation-basis-receipt object)))
+           :proposition (derivation-basis-proposition object)
+           :established (derivation-basis-established-in-current-image-p object)
+           :truth-ceiling (%derivation-basis-truth-ceiling object)))
     (support-admission-contract
      (list :support-admission-contract
            :contract-id (%support-admission-contract-contract-id object)
@@ -1401,6 +1742,34 @@ boolean."
             (:core0-account-reports-outcome (%source-basis-account-outcome b))))
   (format stream "            ceiling      ~S~%" (%source-basis-truth-ceiling b)))
 
+(defun %slice2-receipt-derivation-bases-used-p (r)
+  (some (lambda (a) (%premise-admission-derivation-bases a))
+        (%slice2-receipt-admissions r)))
+
+(defun %render-derivation-basis (b stream)
+  (format stream "          derivation basis ~A~%" (%key (%derivation-basis-identity b)))
+  (format stream "            prior receipt  ~A  (reachable directly — no resolver)~%"
+          (%key (%slice2-receipt-identity (%derivation-basis-receipt b))))
+  (format stream "            prior schema   ~S v~S~%"
+          (%derivation-basis-schema-id b) (%derivation-basis-schema-version b))
+  (format stream "            proposition    ~S~%" (%derivation-basis-proposition b))
+  (format stream "            ceiling        ~S~%" (%derivation-basis-truth-ceiling b))
+  (format stream "            reads          a PRIOR EXPLICIT ADMISSION ~
+JUDGMENT — this exact claim~%")
+  (format stream "                           was granted by DERIVE/2 under ~
+explicit per-premise~%")
+  (format stream "                           admission contracts, whose record ~
+is in that receipt.~%")
+  ;; The disclaimer is worded to avoid the exact phrases the renderer is
+  ;; forbidden to print.  That is not squeamishness: the selftest checks this
+  ;; by BLUNT SUBSTRING SEARCH, which cannot tell an assertion from its denial,
+  ;; and a check that cannot be gamed is worth more than one clever enough to
+  ;; parse the difference.
+  (format stream "            does NOT read  that every premise was ~
+source-bound, that anything was~%")
+  (format stream "                           checked outside this image, or ~
+that a deed took place.~%"))
+
 (defun render-slice2-why (receipt &optional (stream t))
   "Render a Slice /2 receipt as text.
 
@@ -1410,7 +1779,14 @@ eight cases below is the whole point of the rendering:
 
   unsupported species · recognized species not admitted by contract ·
   admitted asserted witness · admitted judged claim · admitted source basis ·
-  refuting evidence · inaccessible support · proposition mismatch"
+  admitted derivation basis · a derivation basis recognized but not admitted ·
+  a basis-shaped value with no usable carrier · a basis this image did not
+  establish · refuting evidence · inaccessible support · proposition mismatch
+
+AND IT NEVER PRINTS 'proved', 'externally verified' or 'settled' because a
+derivation basis was admitted.  A derivation basis is rendered as what it is —
+a PRIOR EXPLICIT ADMISSION JUDGMENT — and the distance between that and 'the
+conclusion is true' is the entire reason the species has a fixed ceiling."
   (format stream "~&slice /2 receipt ~A~%" (%key (%slice2-receipt-identity receipt)))
   (format stream "  schema     ~S v~S~%"
           (%slice2-receipt-schema-id receipt) (%slice2-receipt-schema-version receipt))
@@ -1431,8 +1807,12 @@ eight cases below is the whole point of the rendering:
       (dolist (b (%premise-admission-source-bases a))
         (format stream "    ADMITTED — a source basis:~%")
         (%render-source-basis b stream))
+      (dolist (b (%premise-admission-derivation-bases a))
+        (format stream "    ADMITTED — a derivation basis:~%")
+        (%render-derivation-basis b stream))
       (dolist (s (%premise-admission-admitted-supports a))
         (cond ((source-basis-p s))              ; already rendered above
+              ((derivation-basis-p s))          ; already rendered above
               ((lisp-plus-slice0:claim-p s)
                (format stream "    ADMITTED — a judged claim ~A (ceiling ~S)~%"
                        (%key (lisp-plus-slice0:claim-id s))
@@ -1446,6 +1826,20 @@ ceiling :ASSERTED~%"
         (cond ((source-basis-p s)
                (format stream "    RECOGNIZED, NOT ADMITTED — a source basis on ~
 relation ~S~%" (%source-basis-relation-kind s)))
+              ((derivation-basis-p s)
+               ;; TWO DISTINCT REASONS, never collapsed: a basis this image did
+               ;; not establish is a different fact from a basis this contract
+               ;; does not accept, and a reader deciding what to fix needs to
+               ;; know which one happened.
+               (if (derivation-basis-established-in-current-image-p s)
+                   (format stream "    RECOGNIZED, NOT ADMITTED — an ESTABLISHED ~
+derivation basis ~A;~%                          this contract (v~D) does not ~
+accept the derivation-basis route~%"
+                           (%key (%derivation-basis-identity s))
+                           (%support-admission-contract-contract-version contract))
+                   (format stream "    RECOGNIZED, NOT ADMITTED — a derivation ~
+basis this image did NOT~%                          establish (shape is not ~
+provenance)~%")))
               ((lisp-plus-slice0:claim-p s)
                (format stream "    RECOGNIZED, NOT ADMITTED — a judged claim ~A~%"
                        (%key (lisp-plus-slice0:claim-id s))))
@@ -1475,9 +1869,20 @@ conflicted~%"))
   (let ((residue (%slice2-receipt-unsupported-supports receipt)))
     (when residue
       (format stream "~%  unsupported supply (visible, never admissible): ~S~%"
-              residue)))
+              residue)
+      (when (find :derivation-basis-without-carrier residue
+                  :key (lambda (r) (getf r :reason)))
+        (format stream "    — one entry is a DERIVATION-BASIS-SHAPED value whose ~
+claim slot holds no~%      claim: it has no usable carrier, so it could not ~
+reach a premise at all.~%"))))
   (format stream "~%  ceiling: every source basis above establishes AT MOST that ~
 the Core /0 runtime~%           minted that exact account content in THIS image ~
 for THAT request, and~%           that the account REPORTS the stated field.  ~
 Not that the deed occurred.~%")
+  (when (%slice2-receipt-derivation-bases-used-p receipt)
+    (format stream "           every derivation basis above establishes AT MOST ~
+that this image~%           granted that exact claim under explicit per-premise ~
+admission~%           contracts.  Not that any premise was source-bound, not ~
+that anything~%           was checked outside this image, and not that a deed ~
+took place or a~%           matter closed.~%"))
   receipt)

@@ -29,19 +29,21 @@ WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 
 # ── Expectation table — the ONLY place to edit when a floor legitimately moves.
-#    Measured live 2026-07-25, SBCL 2.4.6, all green. The three counts that
-#    ROSE (issuance 59->73, bibliotheca 97->108, codice 89->101) did so when
-#    Slice /2 Candidate /0 landed; the five that must NOT move did not.
+#    Measured live 2026-07-25, SBCL 2.4.6, all green.
+#      Candidate /0 raised: issuance 59->73, bibliotheca 97->108, codice 89->101
+#      Candidate /1 raised: slice2 75->108, bibliotheca 108->116
+#    Everything else has not moved and must not. A count that rises is a
+#    deliberate line-edit in a commit; a count that falls is a regression.
 EXPECT_CORE0=29                 # "== Core /0 substrate teeth: N passed / 0 failed =="
 EXPECT_CORE0_ISSUANCE=73        # "== Core /0 issuance teeth: N passed / 0 failed =="
 EXPECT_SLICE1=123               # "slice1 selftest: N passed, 0 failed"
 EXPECT_SMOKE1=9                 # "slice1 public smoke: N/N, 0 failed"
-EXPECT_BIBLIOTHECA=108           # "de-bibliotheca-peregrina: N checks passed / 0 failed"
+EXPECT_BIBLIOTHECA=116           # "de-bibliotheca-peregrina: N checks passed / 0 failed"
 EXPECT_CODICE=101                # "de-codice-restaurando: N checks passed / 0 failed"
 EXPECT_CURSORE=23               # "de-cursore-aereo: N checks passed / 0 failed"
 EXPECT_PONTE=17                 # "de-ponte-usto: N checks passed / 0 failed"
 
-EXPECT_SLICE2=75                # "== Language Slice /2 teeth: N passed / 0 failed =="
+EXPECT_SLICE2=108                # "== Language Slice /2 teeth: N passed / 0 failed =="
 EXPECT_SMOKE2=10                # "slice2 public smoke: N/N, 0 failed"
 
 FAILURES=()

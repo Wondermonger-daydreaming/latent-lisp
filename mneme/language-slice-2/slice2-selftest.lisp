@@ -93,6 +93,7 @@ reachable."
    :accessible-supports
    (mapcan (lambda (s)
              (cond ((source-basis-p s) (list (source-basis-identity s)))
+                   ((derivation-basis-p s) (list (derivation-basis-identity s)))
                    ((lisp-plus-slice0:witness-p s) (list (lisp-plus-slice0:witness-id s)))
                    ((lisp-plus-slice0:claim-p s) (list (lisp-plus-slice0:claim-id s)))))
            supports)))
@@ -974,6 +975,429 @@ issuance (R-ISSUANCE-0.1)."
         "the tooth is measuring the contract, not the weather")
   (s2ok "NC2 with the cure RESTORED, the same tooth is green again"
         restored-refused))
+
+
+;;; ==================================================================
+;;; C1 — CANDIDATE /1: COMPOSITIONAL ADMISSION.
+;;;
+;;; Governed by LANGUAGE-SLICE-2-WORK-ORDER-1.md.  Closes [IX-10] one layer up:
+;;; a claim granted by DERIVE/2 can now travel WITH the admission record that
+;;; governed its grant, as a species a later premise may explicitly accept.
+;;;
+;;; Every negative control below asserts the TYPED CONDITION, the DISPOSITION,
+;;; the RECEIPT FIELD or the RENDERED REASON — never merely "did it fail?".
+;;; The work order says so in as many words, and the reason is on the record:
+;;; a probe earlier in this lane observed three failures and would have
+;;; reported a gate fired, when the failures came from somewhere else entirely.
+
+(format t "~%-- C1: compositional admission (Candidate /1) --~%")
+
+;;; A downstream schema whose ONE premise wants the conclusion the FIRST
+;;; derivation produced.  This is the composition joint, and it is deliberately
+;;; the dullest possible one.
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :composed-standing :version 1
+  :conclusion (pp '(:predicate :composed-standing (:volume (:var :volume))))
+  :premises (list (pp '(:predicate :dispatch-account-acknowledged
+                        (:volume (:var :volume)))))))
+
+(defun dbasis-contract (&key (id :derivation-bound) (version 1))
+  (make-support-admission-contract
+   :contract-id id :contract-version version
+   :accepted-clauses '((:derivation-basis))))
+
+(defun composed-schema (contract &key (id :composed-standing/2))
+  (make-slice2-schema
+   :schema-id id
+   :base-schema (lisp-plus-slice1:resolve-schema :composed-standing 1)
+   :premise-contracts (list (list 0 contract))))
+
+(defun composed-conclusion (&optional (volume "codex-9"))
+  (np `(:predicate :composed-standing (:volume ,volume))))
+
+(defun run/2* (schema conclusion supports &key (receiver :auto))
+  "DERIVE/2 keeping ALL THREE values.  (RUN/2 above keeps two and is left
+exactly as it was — it is the standing proof that a Candidate /0 caller taking
+two values is unaffected by the additive third.)"
+  (let ((rcv (if (eq receiver :auto) (apply #'ctx supports) receiver)))
+    (handler-case
+        (multiple-value-bind (claim receipt dbasis)
+            (derive/2 :schema schema :conclusion conclusion
+                      :supports supports :receiver rcv)
+          (values receipt claim :granted dbasis))
+      (slice2-derivation-refused (c)
+        (values (slice2-condition-receipt c) nil :refused nil)))))
+
+;;; --- C1.1  contract versioning ------------------------------------
+
+(s2fires "C1a a VERSION-0 contract REFUSES (:derivation-basis) at construction"
+         unknown-admission-clause
+  (make-support-admission-contract
+   :contract-id :v0-cannot :contract-version 0
+   :accepted-clauses '((:derivation-basis))))
+
+(let ((c (dbasis-contract)))
+  (s2ok "C1b a VERSION-1 contract accepts it, with NO caller-selectable options"
+        (and (support-admission-contract-p c)
+             (eql 1 (support-admission-contract-contract-version c))
+             (equal '((:derivation-basis))
+                    (support-admission-contract-accepted-clauses c))
+             (support-admission-contract-admits-species-p c :derivation-basis))))
+
+(s2fires "C1c an UNKNOWN contract version refuses at construction"
+         admission-contract-error
+  (make-support-admission-contract
+   :contract-id :from-the-future :contract-version 2
+   :accepted-clauses '((:verified-judged-claim))))
+
+(let ((c (dbasis-contract)))
+  (s2ok "C1d the derivation-basis ceiling is FIXED and is NOT the source-basis ceiling"
+        (and (eq :prior-explicit-admission-judgment
+                 (cdr (assoc :derivation-basis
+                             (support-admission-contract-truth-ceilings c))))
+             (not (eq :prior-explicit-admission-judgment
+                      +source-basis-truth-ceiling+)))
+        "two distinct keywords, so no reader can confuse a prior judgment with an account report"))
+
+;;; --- C1.2  DERIVE/2 mints on grant, and only on grant ---------------
+
+(defparameter *c1-ev* (genuine-account :label "s2/c1"))
+(defparameter *c1-basis*
+  (establish-core0-source-basis
+   :evidence *c1-ev* :request +req+
+   :relation :core0-account-reports-acknowledgment
+   :expected-outcome :acknowledged))
+
+(defparameter *c1-claim* nil)
+(defparameter *c1-receipt* nil)
+(defparameter *c1-dbasis* nil)
+
+(multiple-value-bind (r claim decision dbasis)
+    (run/2* (account-schema (source-bound-contract)) (account-conclusion)
+            (list *c1-basis*))
+  (setf *c1-claim* claim *c1-receipt* r *c1-dbasis* dbasis)
+  (s2ok "C1e a GRANT returns a THIRD value, and it is a derivation basis"
+        (and (eq decision :granted) (derivation-basis-p dbasis)))
+  (s2ok "C1f it binds the EXACT claim and the EXACT receipt — by object, not by name"
+        (and (eq (derivation-basis-claim dbasis) claim)
+             (eq (derivation-basis-receipt dbasis) r)))
+  (s2ok "C1g it is established in this image, and carries the fixed ceiling"
+        (and (derivation-basis-established-in-current-image-p dbasis)
+             (eq :prior-explicit-admission-judgment
+                 (derivation-basis-truth-ceiling dbasis))
+             (eq :slice2-derivation (derivation-basis-species dbasis))))
+  (s2ok "C1h ONE durable identity, not two: the basis identity IS the claim's"
+        (lisp-plus-kernel0:identity= (derivation-basis-identity dbasis)
+                                     (lisp-plus-slice0:claim-id claim)))
+  (s2ok "C1i a derivation basis is NOT a claim, witness, refutation or source basis"
+        (and (not (lisp-plus-slice0:claim-p dbasis))
+             (not (lisp-plus-slice0:witness-p dbasis))
+             (not (lisp-plus-slice1:refutation-p dbasis))
+             (not (source-basis-p dbasis)))))
+
+(let ((before (hash-table-count *established-derivation-bases*)))
+  (multiple-value-bind (r claim decision dbasis)
+      ;; A source-bound premise offered a bare raised claim: refused.
+      (run/2* (account-schema (source-bound-contract)) (account-conclusion)
+              (list *lawful-claim*))
+    (declare (ignore claim))
+    (s2ok "C1j a REFUSED derive/2 mints NO basis and registers NOTHING"
+          (and (eq decision :refused)
+               (null dbasis)
+               (= before (hash-table-count *established-derivation-bases*))
+               (eq :not-admitted (premise-admission-disposition (admission-0 r))))
+          (format nil "registry ~D before, ~D after; premise ~S"
+                  before (hash-table-count *established-derivation-bases*)
+                  (premise-admission-disposition (admission-0 r))))))
+
+;;; --- C1.3  the closure of [IX-10] -----------------------------------
+
+(multiple-value-bind (r claim decision)
+    (run/2 (composed-schema (dbasis-contract)) (composed-conclusion)
+           (list *c1-dbasis*))
+  (declare (ignore claim))
+  (s2ok "C1k an ESTABLISHED derivation basis DISCHARGES a derivation-bound premise"
+        (and (eq decision :granted)
+             (eq :satisfied (premise-admission-disposition (admission-0 r)))
+             (= 1 (length (premise-admission-derivation-bases (admission-0 r))))))
+  (s2ok "C1l the downstream receipt reaches the EXACT prior receipt — NO resolver"
+        (let ((used (slice2-receipt-derivation-bases-used r)))
+          (and (= 1 (length used))
+               (eq *c1-receipt* (derivation-basis-receipt (first used)))
+               ;; and through it, the prior admission record itself
+               (eq :granted (slice2-receipt-decision
+                             (derivation-basis-receipt (first used))))
+               (source-basis-p (first (slice2-receipt-source-bases-used
+                                       (derivation-basis-receipt (first used)))))))
+        "the prior claim, prior receipt, applied contracts and prior source bases are all in hand")
+  (s2ok "C1m the premise's recorded ceiling is the PRIOR-JUDGMENT one, not the account one"
+        (equal '((:derivation-basis . :prior-explicit-admission-judgment))
+               (premise-admission-truth-ceilings (admission-0 r))))
+  (let ((text (with-output-to-string (out) (render-slice2-why r out))))
+    (s2ok "C1n the rendering says PRIOR EXPLICIT ADMISSION JUDGMENT"
+          (search "PRIOR EXPLICIT ADMISSION" text))
+    ;; BLUNT SUBSTRING SEARCH, deliberately.  It cannot tell an assertion from
+    ;; a denial — so the renderer's own disclaimer is worded to avoid these
+    ;; exact phrases rather than the check being taught to parse around them.
+    ;; This check FIRED during construction, on the renderer's disclaimer, and
+    ;; the renderer was reworded rather than the check softened.
+    (s2ok "C1o and NEVER says proved / effect occurred / externally verified / settled"
+          (notany (lambda (w) (search w text))
+                  '("proved" "effect occurred" "externally verified" "settled"))
+          "the ceiling survives the trip to the printer")))
+
+;;; --- C1.4  what must NOT discharge it -------------------------------
+
+(multiple-value-bind (r claim decision)
+    (run/2 (composed-schema (dbasis-contract)) (composed-conclusion)
+           (list *c1-claim*))
+  (declare (ignore claim))
+  (s2ok "C1p the NAKED granted claim is recognized and NOT ADMITTED"
+        (and (eq decision :refused)
+             (eq :not-admitted (premise-admission-disposition (admission-0 r)))
+             (eq :satisfied (premise-admission-base-disposition (admission-0 r)))
+             (member *c1-claim* (premise-admission-recognized-not-admitted
+                                 (admission-0 r))))
+        "slice /1 satisfied it; slice /2 refused the ROUTE — visible, not vanished")
+  (s2ok "C1q and the reason names the NAKED route explicitly"
+        (find-if (lambda (rn) (and (eq (first rn) :judged-claim-not-admitted)
+                                   (eq (getf (rest rn) :route) :naked)))
+                 (premise-admission-reasons (admission-0 r)))))
+
+(defparameter *c1-impostor*
+  (lisp-plus-slice0:raise
+   (lisp-plus-slice0:claim :proposition (account-conclusion) :by :desk)
+   :to :verified :per *ledger-reading*
+   :considering (list (lisp-plus-slice0:witness
+                       :for (account-conclusion) :mode :direct :kind :courier-ledger
+                       :source :desk))
+   :receiver :s2-desk))
+
+(multiple-value-bind (r claim decision)
+    (run/2 (composed-schema (dbasis-contract)) (composed-conclusion)
+           (list *c1-impostor*))
+  (declare (ignore claim))
+  (s2ok "C1r an ORDINARILY RAISED claim with the SAME proposition is NOT ADMITTED"
+        (and (eq decision :refused)
+             (eq :not-admitted (premise-admission-disposition (admission-0 r))))
+        "a :VERIFIED standing is not an admission record (R-ADMISSION-0.2, one layer up)"))
+
+(let ((fabricated (%make-derivation-basis
+                   :identity (lisp-plus-slice0:claim-id *c1-claim*)
+                   :version 0 :species :slice2-derivation
+                   :claim *c1-claim* :receipt *c1-receipt*
+                   :proposition (lisp-plus-slice0:claim-proposition *c1-claim*)
+                   :schema-id (slice2-receipt-schema-id *c1-receipt*)
+                   :schema-version (slice2-receipt-schema-version *c1-receipt*)
+                   :origin-context (slice2-receipt-origin-context *c1-receipt*)
+                   :truth-ceiling +derivation-basis-truth-ceiling+)))
+  ;; Every field agrees with a real grant.  It is COHERENT — and it was not
+  ;; minted by DERIVE/2, which is the only thing that matters.
+  (s2ok "C1s a fully COHERENT basis this image did not mint answers FALSE"
+        (and (derivation-basis-p fabricated)
+             (%derivation-basis-coherent-p fabricated)
+             (not (derivation-basis-established-in-current-image-p fabricated)))
+        "coherence is a property of the object; establishment is a property of its history")
+  (multiple-value-bind (r claim decision)
+      (run/2 (composed-schema (dbasis-contract)) (composed-conclusion)
+             (list fabricated))
+    (declare (ignore claim))
+    (s2ok "C1t and offering it is REFUSED — recognized, not admitted, and VISIBLE"
+          (and (eq decision :refused)
+               (eq :not-admitted (premise-admission-disposition (admission-0 r)))
+               (member fabricated (premise-admission-recognized-not-admitted
+                                   (admission-0 r))))))
+  (let ((copy (copy-structure *c1-dbasis*)))
+    (s2ok "C1u a STRUCTURAL COPY of a real basis fails establishment"
+          (and (derivation-basis-p copy)
+               (not (eq copy *c1-dbasis*))
+               (not (derivation-basis-established-in-current-image-p copy)))
+          "EQ registry, stated plainly: Slice /2 does not pretend copies are safe")))
+
+;;; A basis whose internal conjunction is inconsistent — REGISTERED, and still
+;;; false.  This is the one case registry membership alone could not catch.
+(let ((inconsistent (%register-derivation-basis
+                     (%make-derivation-basis
+                      :identity (lisp-plus-slice0:claim-id *c1-claim*)
+                      :version 0 :species :slice2-derivation
+                      :claim *c1-claim*
+                      :receipt *c1-receipt*
+                      :proposition (lisp-plus-slice0:claim-proposition *c1-claim*)
+                      :schema-id :a-schema-this-receipt-is-not-about
+                      :schema-version 99
+                      :origin-context nil
+                      :truth-ceiling +derivation-basis-truth-ceiling+))))
+  (s2ok "C1v a REGISTERED basis whose claim/receipt conjunction is inconsistent answers FALSE"
+        (and (gethash inconsistent *established-derivation-bases*)
+             (not (%derivation-basis-coherent-p inconsistent))
+             (not (derivation-basis-established-in-current-image-p inconsistent)))
+        "the object answers for itself as well; the registry is not the only authority")
+  (remhash inconsistent *established-derivation-bases*))
+
+(let ((shaped (%make-derivation-basis
+               :identity (lisp-plus-slice0:claim-id *c1-claim*)
+               :version 0 :species :slice2-derivation
+               :claim :not-a-claim :receipt *c1-receipt*
+               :proposition (lisp-plus-slice0:claim-proposition *c1-claim*)
+               :schema-id nil :schema-version nil :origin-context nil
+               :truth-ceiling +derivation-basis-truth-ceiling+)))
+  (multiple-value-bind (r claim decision)
+      (run/2 (composed-schema (dbasis-contract)) (composed-conclusion) (list shaped))
+    (declare (ignore claim decision))
+    (s2ok "C1w a basis-SHAPED value with no usable carrier is RESIDUE at the caller's index"
+          (equal '((:index 0 :reason :derivation-basis-without-carrier))
+                 (slice2-receipt-unsupported-supports r))
+          "visible, never admissible — the shape is not the thing")))
+
+;;; --- C1.5  the two roads stay distinct ------------------------------
+
+(multiple-value-bind (r claim decision)
+    (run/2 (composed-schema (dbasis-contract)) (composed-conclusion)
+           (list *c1-claim* *c1-dbasis*))
+  (declare (ignore claim))
+  (let ((a (admission-0 r)))
+    (s2ok "C1x the SAME claim offered NAKED and THROUGH a basis stays ROUTE-DISTINCT"
+          (and (eq decision :granted)
+               (eq :satisfied (premise-admission-disposition a))
+               ;; the basis road was admitted...
+               (= 1 (length (premise-admission-derivation-bases a)))
+               (eq *c1-dbasis* (first (premise-admission-derivation-bases a)))
+               ;; ...and the naked road was refused, in the same derivation
+               (member *c1-claim* (premise-admission-recognized-not-admitted a))
+               (find-if (lambda (rn)
+                          (and (eq (first rn) :judged-claim-not-admitted)
+                               (eq (getf (rest rn) :route) :naked)))
+                        (premise-admission-reasons a)))
+          "one derivation, one claim, two roads, two verdicts — not deduplicated")))
+
+;;; --- C1.6  Slice /1 still owns what Slice /1 owns --------------------
+
+(multiple-value-bind (r claim decision)
+    (run/2 (composed-schema (dbasis-contract))
+           (np '(:predicate :composed-standing (:volume "a-different-volume")))
+           (list *c1-dbasis*))
+  (declare (ignore claim))
+  (s2ok "C1y a MISMATCHED proposition fails through SLICE /1, not through admission"
+        (and (eq decision :refused)
+             (member (premise-admission-base-disposition (admission-0 r))
+                     '(:missing :mismatched)))
+        (format nil "slice /1 said ~S" (premise-admission-base-disposition (admission-0 r)))))
+
+(multiple-value-bind (r claim decision)
+    (run/2 (composed-schema (dbasis-contract)) (composed-conclusion)
+           (list *c1-dbasis*)
+           :receiver (lisp-plus-slice0:receiver-context
+                      :context-id :s2-desk :accessible-supports '()))
+  (declare (ignore claim))
+  (s2ok "C1z an INACCESSIBLE derivation basis stays inaccessible — admission cannot reach past it"
+        (and (eq decision :refused)
+             (not (eq :satisfied (premise-admission-disposition (admission-0 r)))))
+        (format nil "slice /1 ~S ; slice /2 ~S"
+                (premise-admission-base-disposition (admission-0 r))
+                (premise-admission-disposition (admission-0 r)))))
+
+(multiple-value-bind (r claim decision)
+    (run/2 (composed-schema (dbasis-contract)) (composed-conclusion)
+           (list *c1-dbasis*
+                 (lisp-plus-slice0:witness
+                  :for (account-conclusion) :mode :direct :kind :courier-ledger
+                  :source :desk :polarity :refutes)))
+  (declare (ignore claim))
+  (s2ok "C1aa REFUTATION retains precedence over an admitted derivation basis"
+        (and (eq decision :refused)
+             (eq :refuted (premise-admission-disposition (admission-0 r))))
+        "a contract can refuse to let something HELP, never let something stop HURTING"))
+
+;;; --- C1.7  finite composition: three stages -------------------------
+
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :twice-composed :version 1
+  :conclusion (pp '(:predicate :twice-composed (:volume (:var :volume))))
+  :premises (list (pp '(:predicate :composed-standing (:volume (:var :volume)))))))
+
+(multiple-value-bind (r2 claim2 decision2 dbasis-b)
+    (run/2* (composed-schema (dbasis-contract)) (composed-conclusion)
+            (list *c1-dbasis*))
+  (declare (ignore r2 claim2))
+  (multiple-value-bind (r3 claim3 decision3)
+      (run/2 (make-slice2-schema
+              :schema-id :twice-composed/2
+              :base-schema (lisp-plus-slice1:resolve-schema :twice-composed 1)
+              :premise-contracts (list (list 0 (dbasis-contract :id :hop-3))))
+             (np '(:predicate :twice-composed (:volume "codex-9")))
+             (list dbasis-b))
+    (declare (ignore claim3))
+    (s2ok "C1ab THREE STAGES COMPOSE — source basis -> claim+A -> claim+B -> a premise taking B"
+          (and (eq decision2 :granted) (derivation-basis-p dbasis-b)
+               (eq decision3 :granted)
+               (eq :satisfied (premise-admission-disposition (admission-0 r3))))
+          "finite composition, demonstrated — not a generic proof-graph framework")
+    (s2ok "C1ac and the chain is walkable to the ORIGINAL source basis without a resolver"
+          (let* ((b3 (first (slice2-receipt-derivation-bases-used r3)))
+                 (r2* (derivation-basis-receipt b3))
+                 (b2 (first (slice2-receipt-derivation-bases-used r2*)))
+                 (r1* (derivation-basis-receipt b2))
+                 (sb (first (slice2-receipt-source-bases-used r1*))))
+            (and (source-basis-p sb) (eq sb *c1-basis*)))
+          "hop 3 -> hop 2 -> hop 1 -> the Core /0 account report, by object")))
+
+;;; --- C1.8  TWO PLANTED FAULTS.  A tooth that has never bitten is a docstring.
+
+(format t "~%-- C1 negative controls: two planted faults --~%")
+
+(let ((real-fn #'derivation-basis-established-in-current-image-p)
+      (fabricated (%make-derivation-basis
+                   :identity (lisp-plus-slice0:claim-id *c1-claim*)
+                   :version 0 :species :slice2-derivation
+                   :claim *c1-claim* :receipt *c1-receipt*
+                   :proposition (lisp-plus-slice0:claim-proposition *c1-claim*)
+                   :schema-id (slice2-receipt-schema-id *c1-receipt*)
+                   :schema-version (slice2-receipt-schema-version *c1-receipt*)
+                   :origin-context (slice2-receipt-origin-context *c1-receipt*)
+                   :truth-ceiling +derivation-basis-truth-ceiling+))
+      (blinded nil) (restored nil))
+  ;; FAULT 1 — remove the current-image establishment conjunct.
+  (setf (fdefinition 'derivation-basis-established-in-current-image-p)
+        (lambda (b) (and (derivation-basis-p b) t)))
+  (multiple-value-bind (r claim decision)
+      (run/2 (composed-schema (dbasis-contract)) (composed-conclusion) (list fabricated))
+    (declare (ignore claim r))
+    (setf blinded (eq decision :granted)))
+  (setf (fdefinition 'derivation-basis-established-in-current-image-p) real-fn)
+  (multiple-value-bind (r claim decision)
+      (run/2 (composed-schema (dbasis-contract)) (composed-conclusion) (list fabricated))
+    (declare (ignore claim))
+    (setf restored (and (eq decision :refused)
+                        (eq :not-admitted
+                            (premise-admission-disposition (admission-0 r))))))
+  (s2ok "NC3 with the ESTABLISHMENT conjunct removed, a coherent unminted basis is ADMITTED"
+        blinded
+        "the tooth is measuring provenance, not coherence")
+  (s2ok "NC4 with the conjunct restored, the same basis is REFUSED :NOT-ADMITTED"
+        restored))
+
+(let ((real-fn #'%admits-claim-p) (blinded nil) (restored nil))
+  ;; FAULT 2 — let the carrier be accepted as a naked judged claim.
+  (setf (fdefinition '%admits-claim-p) (lambda (contract claim)
+                                         (declare (ignore contract claim)) t))
+  (multiple-value-bind (r claim decision)
+      (run/2 (composed-schema (dbasis-contract)) (composed-conclusion) (list *c1-claim*))
+    (declare (ignore claim r))
+    (setf blinded (eq decision :granted)))
+  (setf (fdefinition '%admits-claim-p) real-fn)
+  (multiple-value-bind (r claim decision)
+      (run/2 (composed-schema (dbasis-contract)) (composed-conclusion) (list *c1-claim*))
+    (declare (ignore claim))
+    (setf restored (and (eq decision :refused)
+                        (eq :not-admitted
+                            (premise-admission-disposition (admission-0 r))))))
+  (s2ok "NC5 with the NAKED-CLAIM road opened, the bare granted claim discharges a derivation-bound premise"
+        blinded
+        "which is exactly the impersonation [IX-10] left possible")
+  (s2ok "NC6 with the road closed again, the bare claim is REFUSED :NOT-ADMITTED"
+        restored))
 
 ;;; ==================================================================
 ;;; Tally + exit.

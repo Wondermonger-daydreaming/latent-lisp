@@ -1,7 +1,14 @@
-# LANGUAGE SLICE /2 — API, CANDIDATE /0
+# LANGUAGE SLICE /2 — API, CANDIDATES /0 AND /1
 
 *The public surface of `lisp-plus-slice2`. Candidate, not frozen. Companion to
-`LANGUAGE-SLICE-2-SPEC-0.md`, which is authoritative for semantics.*
+`LANGUAGE-SLICE-2-SPEC-0.md` and `-SPEC-1.md`, which are authoritative for
+semantics.*
+
+**Exported symbols: 100** — enumerated live by `do-external-symbols` over the
+loaded package, not by arithmetic and not by counting export forms. Candidate /1
+added 15 (twelve derivation-basis readers, two aggregate readers, one
+condition). **Count it live; do not derive it from this sentence** — the Slice /1
+API doc printed a stale figure twice, and the habit is what caused it.
 
 Load: `(load "slice2.lisp")` — it loads Core /0, which loads Slice /1, Slice /0,
 Kernel /0 and CD/0.
@@ -18,7 +25,7 @@ field, so an unevaluable contract cannot exist.
 | key | default | notes |
 |---|---|---|
 | `:contract-id` | — | **required**; keyword or string. A receipt must be able to name it. |
-| `:contract-version` | `0` | integer |
+| `:contract-version` | `0` | `0` or `1`; an unknown version **refuses at construction** |
 | `:accepted-clauses` | — | **required**, non-empty; each species at most once |
 | `:proposition-relation` | `:exact-normalized-equality` | the only value Candidate /0 defines |
 | `:receiver-accessibility` | `:required` | `:required` \| `:optional` |
@@ -155,9 +162,69 @@ Produced propositions, all in Slice /1 normal form:
 
 ---
 
+## Derivation bases (Candidate /1)
+
+A **derivation basis** binds a claim granted by `derive/2` to the exact receipt
+that granted it, so the admission record can travel with the claim. It is not a
+claim, witness, refutation, source basis, judgment standing, or second
+promotion.
+
+**There is no public constructor, and that is the mechanism.** A basis exists
+only as the third value of a successful `derive/2`. An operation that paired an
+arbitrary claim with an arbitrary receipt would let a caller assemble a
+*coherent* basis for a grant that never happened.
+
+| reader | returns |
+|---|---|
+| `(derivation-basis-p x)` | type predicate — **not** an authenticity predicate |
+| `(derivation-basis-established-in-current-image-p b)` | the real question; **answers false, never signals** |
+| `(derivation-basis-identity b)` | the **underlying claim's** durable identity — one name, not two |
+| `(derivation-basis-version b)` | `0` |
+| `(derivation-basis-species b)` | `:slice2-derivation` |
+| `(derivation-basis-claim b)` | the **exact** granted claim object |
+| `(derivation-basis-receipt b)` | the **exact** prior Slice /2 receipt |
+| `(derivation-basis-proposition b)` | the claim proposition (defensive copy) |
+| `(derivation-basis-schema-id b)` / `-schema-version` | the prior receipt's schema |
+| `(derivation-basis-origin-context b)` | the prior receipt's origin context |
+| `(derivation-basis-truth-ceiling b)` | always `:prior-explicit-admission-judgment` |
+
+`derivation-basis-established-in-current-image-p` answers **false** for: a
+non-basis value · a basis-shaped value built through the host object model · a
+structural reconstruction or copy · a basis not minted by the successful
+`derive/2` path · **a basis whose internal claim/receipt conjunction is
+inconsistent** (checked separately from registry membership — the object answers
+for itself, and the registry is not the only authority).
+
+**Exact ceiling.** A true answer establishes *at most* that **this exact object
+was minted in this image for this exact claim and this exact granted receipt.**
+Not domain truth, external-world occurrence, adapter or provider honesty,
+cross-image standing, durability, serialization or cryptographic authenticity.
+
+### The clause
+
+```lisp
+(make-support-admission-contract
+  :contract-id :… :contract-version 1
+  :accepted-clauses '((:derivation-basis)))
+```
+
+Version **1** only — a version-0 contract refuses the clause at construction. No
+caller-selectable options. Fixed ceiling `:PRIOR-EXPLICIT-ADMISSION-JUDGMENT`,
+which reads: *this exact claim was granted by `derive/2` under explicit
+per-premise admission contracts whose admission record is in the attached
+receipt.* **It does not mean any premise behind it was source-bound.** An
+effect-sensitive premise must still require a `(:source-basis …)` clause.
+
 ## Derivation
 
-### `(derive/2 &key schema conclusion supports receiver by)` → `(values GRANTED-CLAIM SLICE2-RECEIPT)`
+### `(derive/2 &key schema conclusion supports receiver by)` → `(values GRANTED-CLAIM SLICE2-RECEIPT DERIVATION-BASIS)`
+
+> **Candidate /1 changed this line and nothing else about the call.** The third
+> value is **additive**: the first two are exactly what Candidate /0 returned, so
+> a caller binding one or two values behaves unchanged. On refusal it is not
+> returned at all — the function signals, **no basis is minted and nothing is
+> registered.** No second claim is minted either: the granted claim remains the
+> Slice /1 grant.
 
 `:schema` is a `slice2-schema` **value** — Slice /2 keeps no schema registry.
 The base Slice /1 schema must be registered under its own name and version, and
@@ -196,6 +263,18 @@ context.
 ---
 
 ## Receipts
+
+### `(slice2-receipt-derivation-bases-used r)` → list *(Candidate /1)*
+
+Every derivation basis **admitted** anywhere in this derivation, in premise
+order — the basis **objects**, so a reader reaches the prior claim, the prior
+receipt, its applied contracts, its source bases and its real per-premise
+ceilings **without a resolver**.
+
+### `(premise-admission-derivation-bases a)` → list *(Candidate /1)*
+
+The derivation bases admitted at one premise, in caller order.
+
 
 ```
 slice2-receipt-p

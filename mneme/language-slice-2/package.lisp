@@ -5,6 +5,11 @@
 ;;;; LANGUAGE-SLICE-2-DESIGN-RULING-1.md.  Nothing here is frozen:
 ;;;; `specification-frozen: no` is load-bearing and this is a candidate surface.
 ;;;;
+;;;; CANDIDATE /1 (LANGUAGE-SLICE-2-WORK-ORDER-1.md, owner-issued 2026-07-25)
+;;;; adds ONE further support species — a DERIVATION BASIS — and the readers to
+;;;; inspect it.  It adds no second consequential act: DERIVE/2 gains an
+;;;; ADDITIVE third return value and its first two are unchanged.
+;;;;
 ;;;; The whole export list is small on purpose.  Slice /2 adds ONE new
 ;;;; consequential act (DERIVE/2), ONE new support species (a source basis),
 ;;;; TWO first-class values (a contract and a schema), and the readers needed to
@@ -50,6 +55,19 @@
    #:source-basis-truth-ceiling
    #:source-basis-issuance-basis
    #:source-basis-account-snapshot
+   ;; ---- the derivation basis (Candidate /1, Work Order /1) ----
+   #:derivation-basis-p
+   #:derivation-basis-established-in-current-image-p
+   #:derivation-basis-identity
+   #:derivation-basis-version
+   #:derivation-basis-species
+   #:derivation-basis-claim
+   #:derivation-basis-receipt
+   #:derivation-basis-proposition
+   #:derivation-basis-schema-id
+   #:derivation-basis-schema-version
+   #:derivation-basis-origin-context
+   #:derivation-basis-truth-ceiling
    ;; ---- the relation vocabulary (D2-0.6): EXACTLY three ----
    #:core0-source-relations
    #:core0-source-relation-p
@@ -66,6 +84,7 @@
    #:slice2-receipt-origin-context
    #:slice2-receipt-admissions
    #:slice2-receipt-source-bases-used
+   #:slice2-receipt-derivation-bases-used
    #:slice2-receipt-judged-claims-used
    #:slice2-receipt-unsupported-supports
    #:slice2-receipt-complete-binding-environments
@@ -81,6 +100,7 @@
    #:premise-admission-admitted-supports
    #:premise-admission-recognized-not-admitted
    #:premise-admission-source-bases
+   #:premise-admission-derivation-bases
    #:premise-admission-judged-claims
    #:premise-admission-refuting-supports
    #:premise-admission-refuting-witnesses
@@ -105,5 +125,6 @@
    #:premise-contract-unknown-premise
    #:source-basis-refused
    #:unissued-core0-account
+   #:derivation-basis-refused
    #:slice2-derivation-refused
    #:signal-slice2))
