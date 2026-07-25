@@ -19,9 +19,9 @@
 ;;;;   II  STANDING            `derive` turns separately-witnessed evidence into a
 ;;;;                           granted :MAY-BORROW claim — and refuses three
 ;;;;                           different ways, which the desk says out loud.
-;;;;   III THE WALL            the granted claim CANNOT be a premise of the next
-;;;;                           derivation.  Demonstrated, not routed around; the
-;;;;                           workaround is shown together with what it costs.
+;;;;   III THE LAWFUL ROAD     the granted claim IS a premise of the next
+;;;;                           derivation, by judgment-identity chaining.  What
+;;;;                           the road costs, and what is still open at its edge.
 ;;;;   IV  THE CROSSING        `perform` hands a volume to the courier.  One
 ;;;;                           dispatch commits; one is interrupted with the
 ;;;;                           ledger WITHHOLDING its answer.
@@ -170,12 +170,23 @@
   (lisp-plus-slice1:refutation :refutes form :source source))
 
 (defun at-the-desk (&rest supports)
-  "The receiver position: who is judging, and which supports they can reach."
+  "The receiver position: who is judging, and which supports they can reach.
+
+A witness is reached by its WITNESS-ID; a judged claim by its CLAIM-ID — the same
+id-membership rule, read against a different durable identity.  The desk used to
+collect witness ids only, which is why a perfectly good granted claim arrived
+:INACCESSIBLE: the desk was handing itself evidence it had not given itself the
+right to read.  Access to a judged claim is granted HERE, explicitly, by naming
+it — there is no ambient reachability and the language will not assume one."
   (lisp-plus-slice0:receiver-context
    :context-id :peregrina
    :accessible-supports
-   (mapcar #'lisp-plus-slice0:witness-id
-           (remove-if-not #'lisp-plus-slice0:witness-p supports))))
+   (mapcan (lambda (s)
+             (cond ((lisp-plus-slice0:witness-p s)
+                    (list (lisp-plus-slice0:witness-id s)))
+                   ((lisp-plus-slice0:claim-p s)
+                    (list (lisp-plus-slice0:claim-id s)))))
+           supports)))
 
 (lisp-plus-slice1:clear-schema-registry)
 
@@ -237,7 +248,8 @@ for a lending desk refusal is not exceptional — it is Tuesday.  (FIELD-REPORT 
     ((:membership-attested . :missing) . "the register does not show your membership; bring the warden")
     ((:volume-unreserved . :refuted)  . "no — that volume is out on loan; I can enter you for a hold")
     ((:volume-unreserved . :missing)  . "I cannot say where that volume is; it is in transit, unconfirmed")
-    ((:may-borrow        . :missing)  . "I have granted you nothing I can hand onward (see Movement III)")))
+    ((:may-borrow        . :missing)  . "I have granted you no borrowing standing I could hand onward")
+    ((:may-borrow        . :inaccessible) . "a standing exists, but this desk was not given the right to read it")))
 
 (defun say-the-verdict (receipt)
   (let ((v (verdict receipt)))
@@ -338,123 +350,241 @@ in the receipt."
 
 
 ;;;; ==================================================================
-;;;; MOVEMENT III — THE WALL
+;;;; MOVEMENT III — THE LAWFUL ROAD
 ;;;;
-;;;; The desk now holds a GRANTED :MAY-BORROW claim for Ferrand.  The dispatch
-;;;; schema declares :MAY-BORROW as its first premise.  The obvious program is:
-;;;; hand the granted claim to the next `derive` as a support.
+;;;; The desk holds a GRANTED :MAY-BORROW claim for Ferrand.  The dispatch schema
+;;;; declares :MAY-BORROW as its first premise.  The obvious program is: hand the
+;;;; granted claim to the next `derive` as a support.
 ;;;;
-;;;; That does not work.  `derive` filters its supports into witnesses and
-;;;; refutations and silently discards anything else, so the claim is not
-;;;; REJECTED — it is NOT SEEN.  The premise lands :MISSING with every evidential
-;;;; field empty.  This is a known, adjudicated gap (SLICE1-ERRATUM-1 §E3:
-;;;; judged-claim premise discharge, `:not-earned`, docketed for the owner).
+;;;; THAT IS NOW THE PROGRAM.  A judged claim is a support kind, and it discharges
+;;;; a premise by JUDGMENT-IDENTITY CHAINING — this exact accessible claim, under
+;;;; this exact :VERIFIED judgment, whose judged proposition matches the ground
+;;;; premise, with the claim's identity and its judgment basis written into the
+;;;; receiving receipt, and the original judgment never converted into a witness.
 ;;;;
-;;;; This movement does three things, in order: shows the failure; shows that the
-;;;; ONE in-language transport route (`transported-testimony`) also dead-ends;
-;;;; and then implements the workaround that exists today — together with a
-;;;; demonstration of exactly what the workaround costs.
+;;;; The previous version of this movement demonstrated the absence of that road
+;;;; and then dug a hole around it: it minted a :DIRECT witness restating a
+;;;; conclusion nobody observed, and guarded that forgery with an ordinary hash
+;;;; table of the desk's own — *DESK-GRANTS*, my discipline, unreceipted.  Both
+;;;; the hash table and the restatement helper are GONE from the lawful path, and
+;;;; [III-k] checks the table's absence mechanically, in the program's own bytes.
+;;;;
+;;;; Five arms: the road (3a); what receiver access costs when you forget it (3b);
+;;;; the transport door, which still — correctly — does not lead here (3c); the
+;;;; refused patron, who now stays refused with nothing of mine holding the line
+;;;; (3d); and the one door still open at the edge, and its new price (3e).
 ;;;; ==================================================================
 
-(format t "~%── MOVEMENT III: the wall (a granted claim cannot be a premise today) ──~%")
+(format t "~%── MOVEMENT III: the lawful road (a judged claim discharges a premise) ──~%")
 
 (defparameter *insurance*
   (attest '(:predicate :courier-insured (:courier :brass-courier) (:policy "pol-1204"))
           :kind :certificate :source :insurers))
 
-(defun consider-dispatch (patron volume-id standing-support)
-  (let ((sup (list standing-support *insurance*)))
+(defun consider-dispatch (patron volume-id standing-support &key receiver)
+  "STANDING-SUPPORT is whatever the desk actually holds for this patron — a
+granted claim, or NIL when it holds nothing.  RECEIVER overrides the desk's own
+reach, which arm 3b needs and nothing else does."
+  (let ((sup (remove nil (list standing-support *insurance*))))
     (consider :schema :dispatch-standing :version 1
               :conclusion (np `(:predicate :may-dispatch (:patron ,patron)
                                 (:volume ,volume-id) (:courier :brass-courier)))
               :supports sup
-              :receiver (apply #'at-the-desk sup))))
+              :receiver (or receiver (apply #'at-the-desk sup)))))
 
-;;; --- 3a. the obvious program, and its silent failure -----------------
+(defun roster-for (receipt predicate)
+  "The judged-claim roster the receipt kept for PREDICATE: one plist per claim
+offered in `supports` and considered for that premise, whatever became of it."
+  (let ((a (find predicate (lisp-plus-slice1:derivation-receipt-assessments receipt)
+                 :key (lambda (a) (second (lisp-plus-slice1:premise-assessment-premise-pattern a))))))
+    (and a (lisp-plus-slice1:premise-assessment-judged-claims a))))
+
+(defun assessment-for (receipt predicate)
+  (find predicate (lisp-plus-slice1:derivation-receipt-assessments receipt)
+        :key (lambda (a) (second (lisp-plus-slice1:premise-assessment-premise-pattern a)))))
+
+(defun repair-for (receipt predicate)
+  (cdr (assoc predicate (lisp-plus-slice1:derivation-receipt-repair-options receipt)
+              :key (lambda (p) (second p)))))
+
+;;; The judgment record as it stands BEFORE the claim is spent as support.  Ruling
+;;; condition 7 says the original judgment is never converted into a newly minted
+;;; witness; [III-e] reads this same object back afterwards and finds it untouched.
+(defparameter *ferrand-judgment-before*
+  (lisp-plus-slice0:claim-judgment *ferrand-claim*))
+
+;;; --- 3a. the obvious program, which is now the correct program -------
 (format t "~%   3a. hand the granted claim straight to the next derivation:~%")
+(defparameter *dispatch-claim* nil)
+(defparameter *lawful-dispatch-receipt* nil)
 (multiple-value-bind (claim receipt)
     (consider-dispatch :ferrand "ms-Aleph-7" *ferrand-claim*)
+  (setf *dispatch-claim* claim *lawful-dispatch-receipt* receipt)
   (say-the-verdict receipt)
-  (let ((a (find :may-borrow (lisp-plus-slice1:derivation-receipt-assessments receipt)
-                 :key (lambda (a) (second (lisp-plus-slice1:premise-assessment-premise-pattern a))))))
-    (ok "[III-a] the granted claim does NOT discharge the premise (refused, :MISSING)"
-        (and (null claim) (eq :missing (disposition-of receipt :may-borrow))))
-    (ok "[III-b] and it was not REJECTED — it was NOT SEEN: every evidential field is empty"
+  (let* ((a (assessment-for receipt :may-borrow))
+         (entry (find :discharged (roster-for receipt :may-borrow)
+                      :key (lambda (r) (getf r :outcome)))))
+    (ok "[III-a] the verified judged claim DISCHARGES the premise — no witness minted"
+        (and claim
+             (eq :granted (lisp-plus-slice1:derivation-receipt-decision receipt))
+             (eq :satisfied (disposition-of receipt :may-borrow))))
+    ;; This check is the old [III-b] with its label repaired.  The four
+    ;; witness-side fields are still empty and that is still worth asserting —
+    ;; but the old label said "no field of the receipt mentions the claim at
+    ;; all", and that sentence is now FALSE: the claim is on the record in
+    ;; PREMISE-ASSESSMENT-JUDGED-CLAIMS.  Emptiness here no longer means
+    ;; invisibility; it means the discharge came from the claim, not a witness.
+    (ok "[III-b] the discharge came from the CLAIM, not a witness: the four witness-side fields are empty and the claim is on the record in PREMISE-ASSESSMENT-JUDGED-CLAIMS"
         (and (null (lisp-plus-slice1:premise-assessment-matching-accessible-supports a))
              (null (lisp-plus-slice1:premise-assessment-matching-inaccessible-supports a))
              (null (lisp-plus-slice1:premise-assessment-mismatched-candidates a))
-             (null (lisp-plus-slice1:premise-assessment-refuting-supports a)))
-        "no field of the receipt mentions the claim at all")
-    (ok "[III-c] the OTHER premise was satisfied — so the schema and bindings are fine"
-        (eq :satisfied (disposition-of receipt :courier-insured)))))
+             (null (lisp-plus-slice1:premise-assessment-refuting-supports a))
+             (not (null entry)))
+        "witness-side empty, judged-claim roster occupied")
+    (ok "[III-c] the receipt records the supporting claim IDENTITY and its JUDGMENT BASIS"
+        (and entry
+             (equal (lisp-plus-kernel0:identity-key (getf entry :claim-id))
+                    (lisp-plus-kernel0:identity-key
+                     (lisp-plus-slice0:claim-id *ferrand-claim*)))
+             (eq :verified (getf entry :judgment))
+             (lisp-plus-kernel0:durable-identity-p (getf entry :procedure-id))))
+    (format t "     inherited basis, read from the receipt:~%")
+    (format t "       claim      ~A~%" (lisp-plus-kernel0:identity-key (getf entry :claim-id)))
+    (format t "       judgment   ~S~%" (getf entry :judgment))
+    (format t "       procedure  ~A  v~D~%"
+            (lisp-plus-kernel0:identity-key (getf entry :procedure-id))
+            (getf entry :procedure-version))
+    (format t "       supports   ~S~%"
+            (mapcar #'lisp-plus-kernel0:identity-key (getf entry :support-ids)))
+    (ok "[III-d] the OTHER premise was satisfied — so the schema and bindings are fine"
+        (eq :satisfied (disposition-of receipt :courier-insured)))
+    (ok "[III-e] the original judgment was NOT converted into a witness: the same record is still on the claim, still :VERIFIED, still inspectable"
+        (and (eq *ferrand-judgment-before*
+                 (lisp-plus-slice0:claim-judgment *ferrand-claim*))
+             (eq :verified (lisp-plus-slice0:judgment-record-judgment
+                            *ferrand-judgment-before*))))))
 
-;;; --- 3b. the one in-language transport route also dead-ends ----------
-(format t "~%   3b. try the transport door (`transported-testimony`):~%")
+;;; --- 3b. the road's toll: the receiver must be given the claim -------
+(format t "~%   3b. the same claim, offered to a desk not given the right to read it:~%")
+(multiple-value-bind (claim receipt)
+    (consider-dispatch :ferrand "ms-Aleph-7" *ferrand-claim*
+                       :receiver (at-the-desk *insurance*))
+  (say-the-verdict receipt)
+  (let ((entry (first (roster-for receipt :may-borrow)))
+        (repair (repair-for receipt :may-borrow)))
+    (ok "[III-f] a claim the receiver cannot reach does NOT discharge — :INACCESSIBLE, and it is SEEN"
+        (and (null claim)
+             (eq :inaccessible (disposition-of receipt :may-borrow))
+             (eq :inaccessible-to-receiver (getf entry :outcome))))
+    (ok "[III-g] the repair names the claim by DURABLE IDENTITY — the desk is told exactly what to grant itself"
+        (equal (mapcar #'lisp-plus-kernel0:identity-key
+                       (getf repair :grant-receiver-access-to-judged-claims))
+               (list (lisp-plus-kernel0:identity-key
+                      (lisp-plus-slice0:claim-id *ferrand-claim*))))
+        "this is the whole of the fix in AT-THE-DESK, stated by the receipt itself")))
+
+;;; --- 3c. the transport door still does not lead here (correctly) -----
+(format t "~%   3c. the transport door (`transported-testimony`) — unchanged:~%")
 (multiple-value-bind (claim receipt)
     (consider-dispatch :ferrand "ms-Aleph-7"
                        (lisp-plus-slice1:transported-testimony
                         *ferrand-receipt* :context-a :peregrina))
   (declare (ignore claim))
-  (desk "also :~A — and CORRECTLY so: a transported receipt is testimony that a"
+  (desk ":~A — and CORRECTLY so: a transported receipt is testimony that a"
         (disposition-of receipt :may-borrow))
   (desk "derivation HAPPENED, whose proposition is an attribution, not :MAY-BORROW.")
-  (ok "[III-d] `transported-testimony` cannot discharge it either (lawfully so)"
+  (ok "[III-h] `transported-testimony` still does not discharge (lawfully so)"
       (eq :missing (disposition-of receipt :may-borrow))
-      "no in-language route from a granted claim to a premise exists today"))
+      "the lawful road is the CLAIM's identity, not a re-narration of its receipt"))
 
-;;; --- 3c. the workaround, and its price -------------------------------
-(format t "~%   3c. the workaround that exists today — and what it costs:~%")
+;;; --- 3d. the refused patron, with nothing of mine holding the line ---
+(format t "~%   3d. Quillon — refused in Movement II — asks for a dispatch anyway:~%")
 
-(defparameter *desk-grants* (make-hash-table :test #'equal)
-  "The desk's OWN record of what it has granted: proposition -> receipt id.
-This table is the guard on RESTATE-STANDING below.  Note what it is: an ordinary
-Common Lisp promise, of exactly the kind Lisp+ exists to stop me from making.")
+(defparameter *quillon-standing* (consider-borrowing :quillon "in-Gimel-11")
+  "What the desk HOLDS for Quillon.  Movement II refused him, so `consider`
+returned no claim, so this is NIL — and NIL is the whole guard.  The desk cannot
+offer a standing it was never given, because the thing it would offer does not
+exist as an object.  No table of mine is consulted anywhere in this arm.")
 
-(defun remember-grant (claim receipt)
-  (setf (gethash (lisp-plus-slice0:claim-proposition claim) *desk-grants*)
-        (lisp-plus-kernel0:identity-key
-         (lisp-plus-slice1:derivation-receipt-identity receipt)))
-  claim)
+(ok "[III-i] the desk holds NO claim for Quillon — there is nothing to hand onward"
+    (null *quillon-standing*))
 
-(defun restate-standing (proposition receipt-id)
-  "Mint a FRESH DIRECT witness for PROPOSITION so a later derivation can use it.
+(multiple-value-bind (claim receipt)
+    (consider-dispatch :quillon "in-Gimel-11" *quillon-standing*)
+  (say-the-verdict receipt)
+  (ok "[III-j] so the dispatch refuses, :MISSING — the refusal is the language's, not my bookkeeping's"
+      (and (null claim) (eq :missing (disposition-of receipt :may-borrow)))))
 
-Read that sentence again.  The desk is minting a :DIRECT witness — the mode
-reserved for what it observed with its own eyes — for a proposition it did not
-observe but DERIVED.  The :CONTENT breadcrumb naming RECEIPT-ID is decoration:
-nothing in the language reads it, and [III-g] below proves it."
+(ok "[III-k] and the desk's private grants table is GONE from the program: the symbol is not even interned"
+    (null (find-symbol "*DESK-GRANTS*"))
+    "the previous version's guard was a hash table and my discipline; there is now no such variable to consult")
+
+;;; The nearest thing to the old forgery that still lives inside the lawful road:
+;;; mint a CLAIM for the refused proposition and offer it.  It is seen, named, and
+;;; refused — because a claim without a governed judgment discharges nothing.
+(format t "~%   the desk mints itself a claim for the standing it was refused:~%")
+(let ((self-minted
+        (lisp-plus-slice0:claim
+         :proposition (np '(:predicate :may-borrow (:patron :quillon)
+                            (:volume "in-Gimel-11")))
+         :by :peregrina)))
+  (multiple-value-bind (claim receipt)
+      (consider-dispatch :quillon "in-Gimel-11" self-minted)
+    (let ((entry (first (roster-for receipt :may-borrow)))
+          (repair (repair-for receipt :may-borrow)))
+      (ok "[III-l] a claim the desk mints for itself is SEEN and REFUSED — :UNJUDGED, by identity"
+          (and (null claim)
+               (eq :missing (disposition-of receipt :may-borrow))
+               (eq :unjudged (getf entry :outcome))
+               (equal (lisp-plus-kernel0:identity-key (getf entry :claim-id))
+                      (lisp-plus-kernel0:identity-key
+                       (lisp-plus-slice0:claim-id self-minted)))))
+      (ok "[III-m] the repair no longer tells the desk to supply what it just supplied — it names the offered claim and why it failed"
+          (equal (getf repair :judged-claims-seen-but-not-discharging)
+                 (list (list (lisp-plus-kernel0:identity-key
+                              (lisp-plus-slice0:claim-id self-minted))
+                             :unjudged)))
+          (format nil "~S" (getf repair :judged-claims-seen-but-not-discharging))))))
+
+;;; --- 3e. the one door still open, and its new price ------------------
+(format t "~%   3e. the door still open at the edge of the road:~%")
+
+(defun fabricate-standing (proposition receipt-id)
+  "Mint a DIRECT witness for PROPOSITION — the mode reserved for what the desk
+observed with its own eyes — naming RECEIPT-ID as a breadcrumb nothing reads.
+
+THIS IS ON NO LAWFUL PATH IN THIS PROGRAM ANY MORE.  It survives as one thing
+only: the counterexample of arm 3e, kept so the comparison can be made in the
+program's own output rather than in prose.  Its previous name was
+RESTATE-STANDING, which was a euphemism, and the euphemism is retired with the
+workaround it dressed."
   (lisp-plus-slice0:witness
    :for proposition :mode :direct :kind :standing-restated :source :peregrina
    :content (list :restated-from receipt-id)))
 
-(remember-grant *ferrand-claim* *ferrand-receipt*)
-
-(multiple-value-bind (claim receipt)
-    (consider-dispatch :ferrand "ms-Aleph-7"
-                       (restate-standing (lisp-plus-slice0:claim-proposition *ferrand-claim*)
-                                         (gethash (lisp-plus-slice0:claim-proposition *ferrand-claim*)
-                                                  *desk-grants*)))
-  (say-the-verdict receipt)
-  (defparameter *dispatch-claim* claim)
-  (ok "[III-e] the workaround works: restated standing + insurance grants :MAY-DISPATCH"
-      (and claim (eq :granted (lisp-plus-slice1:derivation-receipt-decision receipt)))))
-
-;;; ...and here is the bill.
-(format t "~%   the price, stated in the program's own bytes:~%")
-(let* ((never-granted (np '(:predicate :may-borrow (:patron :quillon)
-                            (:volume "in-Gimel-11"))))
-       (forged (restate-standing never-granted "receipt:no-such-thing")))
+(let ((forged (fabricate-standing
+               (np '(:predicate :may-borrow (:patron :quillon)
+                     (:volume "in-Gimel-11")))
+               "receipt:no-such-thing")))
   (multiple-value-bind (claim receipt)
       (consider-dispatch :quillon "in-Gimel-11" forged)
-    (ok "[III-f] a restatement of a standing that was REFUSED grants just the same"
+    (ok "[III-n] a FABRICATED direct witness still grants — the language cannot stop a program from asserting what it did not observe"
         (and claim (eq :granted (lisp-plus-slice1:derivation-receipt-decision receipt)))
-        "Quillon owes 14 crowns and was refused in Movement II")
-    (ok "[III-g] the :CONTENT provenance breadcrumb is never read — the forged id passed"
-        (and claim (null (gethash never-granted *desk-grants*))))
-    (desk "the language cannot tell a restated grant from a fabricated one.")
-    (desk "the only thing standing between them is *DESK-GRANTS* — my hash table,")
-    (desk "my discipline, unreceipted. That is the S3 species this slice exists to")
-    (desk "make refusable, reintroduced by hand, at the one joint that needs it.")))
+        "this door was never Movement III's to close; it is the price of :DIRECT existing at all")
+    (ok "[III-o] but the two grants are now told apart FROM THE RECEIPTS ALONE: the lawful one carries a judged-claim record with a judgment basis, this one carries none"
+        (let ((lawful (find :discharged (roster-for *lawful-dispatch-receipt* :may-borrow)
+                            :key (lambda (r) (getf r :outcome))))
+              (forged-roster (roster-for receipt :may-borrow))
+              (forged-witnesses (lisp-plus-slice1:premise-assessment-matching-accessible-supports
+                                 (assessment-for receipt :may-borrow))))
+          (and lawful (getf lawful :procedure-id)
+               (null forged-roster)
+               forged-witnesses))
+        "no hash table was consulted to tell them apart; the difference is in the receipts")
+    (desk "the desk no longer restates a single grant, so the two shapes never mix:")
+    (desk "an inherited standing arrives as a claim and leaves its judgment basis in")
+    (desk "the receipt; an asserted one arrives as a witness and leaves a witness.")
+    (desk "a reader of the receipt can tell which happened. I could not, before.")))
 
 
 ;;;; ==================================================================
@@ -525,12 +655,8 @@ nothing in the language reads it, and [III-g] below proves it."
 (format t "       courier's ledger WITHHOLDS its answer:~%")
 
 ;; Beth-3 needs its own standing first (ordinary desk work, movements II+III).
-(defparameter *beth-standing*
-  (multiple-value-bind (claim receipt) (consider-borrowing :ferrand "ms-Beth-3")
-    (remember-grant claim receipt)
-    (restate-standing (lisp-plus-slice0:claim-proposition claim)
-                      (lisp-plus-kernel0:identity-key
-                       (lisp-plus-slice1:derivation-receipt-identity receipt)))))
+;; It travels the lawful road: the granted claim itself, handed onward.
+(defparameter *beth-standing* (consider-borrowing :ferrand "ms-Beth-3"))
 (multiple-value-bind (claim receipt) (consider-dispatch :ferrand "ms-Beth-3" *beth-standing*)
   (declare (ignore receipt))
   (ok "[IV-d] Beth-3 has its own dispatch standing before anything crosses"
@@ -719,8 +845,11 @@ nothing in the language reads it, and [III-g] below proves it."
 (format t "   Nothing here demonstrates crash survival: the interrupted dispatch's~%")
 (format t "   evidence survived because the IMAGE did. The courier is the labelled~%")
 (format t "   scripted fake, never AP0-conformant; no result above licenses any~%")
-(format t "   conformance language. And the Movement III workaround is a hole the~%")
-(format t "   desk digs itself — see FIELD-REPORT.md §3.~%")
+(format t "   conformance language. And Movement III closes ONE door, not every~%")
+(format t "   door: [III-n] shows a fabricated :DIRECT witness still granting. What~%")
+(format t "   changed is that the desk no longer HAS to fabricate one, and that a~%")
+(format t "   receipt now distinguishes an inherited judgment from an assertion —~%")
+(format t "   see FIELD-REPORT.md §3.~%")
 
 (format t "~%de-bibliotheca-peregrina: ~D checks passed / ~D failed~%" *pass* *fail*)
 (format t "(a desk that can say \"no\", \"not yet\", and \"I do not know\" in three~%")
