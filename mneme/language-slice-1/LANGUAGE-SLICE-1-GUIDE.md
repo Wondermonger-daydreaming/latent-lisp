@@ -10,7 +10,13 @@
 > `:not-earned`), the undefined term "admissible" (E4), the D-forge's stratum
 > placement (E5 — reachable from the public surface, not via `::`), and
 > order-independence granularity (E6). Read the erratum before citing anything
-> here. Original text left unaltered on purpose.
+> here. Original prose left unaltered on purpose.
+>
+> **One exception, added 2026-07-25:** the shared `ctx` fixture in *Setup* **has
+> been corrected in place**, because it is code a reader is told to paste and it
+> had come to favour an unsafe path over the lawful one. The superseded version is
+> preserved verbatim in the note beneath that fixture. It is the only altered code
+> in this document.
 
 *For a competent Common Lisp programmer who knows Slice /0's guide. No project
 history required. Twenty minutes. Everything here runs: load `slice1.lisp`
@@ -46,11 +52,20 @@ same shapes). Paste them once.
 (defun dw (form &key (kind :observation) (source :desk))       ; a direct ground witness
   (lisp-plus-slice0:witness :for (np form) :mode :direct :kind kind :source source))
 
-(defun ctx (id &rest witnesses)                                ; a receiver position
+(defun ctx (id &rest supports)                                 ; a receiver position
+  ;; A witness is reached by its WITNESS-ID; a judged claim by its CLAIM-ID —
+  ;; ONE id-membership rule, read against two durable identities. Collect BOTH.
+  ;; A desk that names only witness ids refuses the lawful path (a genuinely
+  ;; granted claim arrives :INACCESSIBLE) while still accepting a hand-built
+  ;; witness asserting the same proposition. Refutations are matched by
+  ;; proposition and carry no accessibility check, so they need no id here.
   (lisp-plus-slice0:receiver-context
    :context-id id
-   :accessible-supports (mapcar #'lisp-plus-slice0:witness-id
-                                (remove-if-not #'lisp-plus-slice0:witness-p witnesses))))
+   :accessible-supports
+   (mapcan (lambda (s)
+             (cond ((lisp-plus-slice0:witness-p s) (list (lisp-plus-slice0:witness-id s)))
+                   ((lisp-plus-slice0:claim-p s)   (list (lisp-plus-slice0:claim-id s)))))
+           supports)))
 
 (defun assess (receipt predicate)                              ; the assessment for one premise
   (find predicate (lisp-plus-slice1:derivation-receipt-assessments receipt)
@@ -58,6 +73,38 @@ same shapes). Paste them once.
 (defun disposition (receipt predicate)                         ; its one-of-six disposition
   (lisp-plus-slice1:premise-assessment-disposition (assess receipt predicate)))
 ```
+
+> **⚠ FIXTURE CORRECTION — `ctx`, 2026-07-25. The only altered code in this
+> document; everything else remains as originally written.**
+>
+> As first published (2026-07-23, `05dbcc19`) `ctx` read:
+>
+> ```lisp
+> :accessible-supports (mapcar #'lisp-plus-slice0:witness-id
+>                              (remove-if-not #'lisp-plus-slice0:witness-p witnesses))
+> ```
+>
+> **That was correct for the slice as it then stood** — a claim offered in
+> `:supports` was silently discarded, so naming its id would have bought nothing.
+> It stopped being correct **25 hours later**, when judged-claim premise discharge
+> was adopted (`21607ec1`, Sol Decision 1; erratum E3 discharged). From that point
+> the witness-only fixture produced a **convenience asymmetry**: pasted as
+> instructed, a genuinely judged claim lands `:INACCESSIBLE` and the lawful path
+> refuses, while a hand-built witness asserting the same proposition still grants.
+> The teaching material pointed at the unsafe door. That is a design defect in the
+> document, not a user error, and it is repaired above.
+>
+> **This is not a superseded belief** (which this lane preserves unaltered) but a
+> fixture the language outgrew, so it is corrected in place with the original kept
+> here. Every other example in this document uses witnesses only and is unaffected;
+> all executed outputs above and below still hold.
+>
+> **Scope, stated so it is not over-read:** collecting claim ids removes the
+> asymmetry. It does **not** close the stratum-3 escape — a fabricated witness
+> still grants, exactly as the third ceiling at the foot of this document says.
+> Evidence: `GUIDE-REPAIR-1-REPRO.lisp`, checks A1–C1 — the asymmetry shown under
+> the published fixture *before* the repair, the cure shown after it, and the
+> surviving escape shown last so the repair cannot be read as a gate.
 
 ## Mistake 1 — something is present, therefore the conclusion holds
 
@@ -137,18 +184,33 @@ and drives the frozen `raise` on the conclusion claim, keyed to
 naming the gap — `derive` **signals** `derivation-refused`, carrying the receipt:
 
 ```lisp
-(handler-case
-    (lisp-plus-slice1:derive :schema-name :notebook-signoff :schema-version 1
-      :conclusion (np '(:predicate :entry-signed-off (:entry "e-88") (:reviewer :alice) (:purpose :archival)))
-      :supports (list (dw '(:predicate :entry-complete (:entry "e-88") (:checklist "CL-full")))
-                      (dw '(:predicate :reviewer-qualified (:reviewer :alice) (:competency :radiochem)))
-                      (dw '(:predicate :purpose-permitted (:entry "e-88") (:reviewer :alice) (:purpose :archival))))
-      :receiver (ctx :alice))
-  (lisp-plus-slice1:derivation-refused (c)
-    (let ((r (lisp-plus-slice1:slice1-condition-receipt c)))
-      (list (lisp-plus-slice1:derivation-receipt-decision r)                    ; => :REFUSED
-            (lisp-plus-slice1:derivation-receipt-strongest-lawful-result r))))) ; => (:BLOCKED-ON :RESULTS-REPRODUCED :MISSING)
+(let ((sup (list (dw '(:predicate :entry-complete (:entry "e-88") (:checklist "CL-full")))
+                 (dw '(:predicate :reviewer-qualified (:reviewer :alice) (:competency :radiochem)))
+                 (dw '(:predicate :purpose-permitted (:entry "e-88") (:reviewer :alice) (:purpose :archival))))))
+  (handler-case
+      (lisp-plus-slice1:derive :schema-name :notebook-signoff :schema-version 1
+        :conclusion (np '(:predicate :entry-signed-off (:entry "e-88") (:reviewer :alice) (:purpose :archival)))
+        :supports sup
+        :receiver (apply #'ctx :alice sup))   ; the desk must be able to REACH them
+    (lisp-plus-slice1:derivation-refused (c)
+      (let ((r (lisp-plus-slice1:slice1-condition-receipt c)))
+        (list (lisp-plus-slice1:derivation-receipt-decision r)                    ; => :REFUSED
+              (lisp-plus-slice1:derivation-receipt-strongest-lawful-result r)))))) ; => (:BLOCKED-ON :RESULTS-REPRODUCED :MISSING)
 ```
+
+> **⚠ EXAMPLE CORRECTION — the refusal above, 2026-07-25. Pre-existing; unrelated
+> to the fixture correction.** As first published the receiver argument read
+> `:receiver (ctx :alice)` — the fixture called with **no supports**, so the desk
+> could reach nothing and the *first* premise blocked
+> `(:BLOCKED-ON :ENTRY-COMPLETE :INACCESSIBLE)`, never reaching the
+> `:RESULTS-REPRODUCED :MISSING` result printed above. The printed value was
+> right; the receiver argument was wrong, and `apply` restores it. Verified against
+> **both** the original and the corrected `ctx` — they agree here, so this was not
+> introduced by that repair. Evidence: `GUIDE-REPAIR-1-REPRO.lisp`, D1–D2.
+> Consequence for this document's closing provenance line: that line cannot hold
+> for *this* example, which as written could not have produced the output beneath
+> it. Every other documented value was re-executed on 2026-07-25 and all hold
+> (`GUIDE-WALK-1.lisp`, 18/18).
 
 **`:missing` is not `false`.** The premise blocks the conclusion; it does not
 refute it. A wrong-*role* support is different again — a `:teaching` permission
@@ -310,9 +372,24 @@ collapsed to a boolean.
 ---
 *Companion documents: `LANGUAGE-SLICE-1-API.md` (every exported symbol, dull and
 exact) · `LANGUAGE-SLICE-1-ARCHITECTURE.md` (the design record and the designs it
-killed) · `SMOKE-1.lisp` (nine runnable demonstrations on exported symbols only).*
+killed) · `SMOKE-1.lisp` (nine runnable demonstrations on exported symbols only) ·
+`GUIDE-WALK-1.lisp` (this document's own documented values, re-executed through the
+pasted Setup block — the standing guard) · `GUIDE-REPAIR-1-REPRO.lisp` (the
+bite-before-cure evidence for the two 2026-07-25 corrections).*
 
 *Every code example above was executed under SBCL 2.4.6 on 2026-07-23 before being
 written down; the refused-render block is verbatim harness output.*
 
+> **⚠ THAT PROVENANCE CLAIM IS CORRECTED, 2026-07-25.** It does not hold for the
+> refusal example under *Mistake 1*: as first published, that example could not
+> have produced the output printed beneath it (see the correction note there). The
+> claim is therefore **narrowed** — it holds for the other examples, not for all of
+> them. On 2026-07-25 the whole document was re-walked as a reader would: the Setup
+> block was pasted and **eighteen** documented values were executed under SBCL
+> 2.4.6 (operation-checked through the wrapper), all passing, in
+> **`GUIDE-WALK-1.lisp`** — which is committed beside this document as a **standing
+> guard**, so the next time the language grows a capability, the teaching material
+> cannot rot silently the way it did here. Cite that file, not this line.
+
 — Claude Opus 4.8 (1M context), SCRIBA-II
+— fixture + refusal-example corrections and 2026-07-25 re-walk: Claude Opus 5 (1M context)

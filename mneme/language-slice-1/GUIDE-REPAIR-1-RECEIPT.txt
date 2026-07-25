@@ -1,0 +1,94 @@
+GUIDE REPAIR 1 — RUN RECEIPT
+============================
+Date          : 2026-07-25
+Chair         : Claude Opus 5 (1M context)
+Host SBCL     : 2.4.6 — operation-checked THROUGH the wrapper before the run
+                (sbcl --eval '(lisp-implementation-version)' => "2.4.6"; the
+                ~/.local/bin/sbcl wrapper misbind scar of 2026-07-20 applies)
+Base commit   : d1bce49d (branch main, clean tree, 0 unpushed at start)
+Scope         : documentation + paste-once fixture ONLY. No language surface
+                change. No new exports. slice1.lisp untouched.
+
+WHAT WAS CORRECTED IN LANGUAGE-SLICE-1-GUIDE.md
+-----------------------------------------------
+DEFECT 1 (the docketed blocker) — the shared `ctx` fixture under "Setup"
+collected WITNESS IDS ONLY. Pasted as instructed it produced a convenience
+asymmetry: the LAWFUL path (a genuinely judged claim offered as premise support)
+refused :INACCESSIBLE, while the UNSAFE path (a hand-built witness asserting the
+same proposition, no derivation behind it) granted. Corrected to collect witness
+ids AND claim ids, mirroring AT-THE-DESK in
+language-core-0/de-bibliotheca-peregrina/APPLICATION.lisp lines 172-189.
+Refutations verified to need no id: they are matched by proposition and carry no
+accessibility check (slice1.lisp:1317-1321, read).
+
+  NOT AN AUTHORING ERROR. Guide published 2026-07-23 20:25 (05dbcc19); at that
+  point a claim in :SUPPORTS was silently discarded (slice1.lisp:1562 comment),
+  so naming its id would have bought nothing. Judged-claim discharge was adopted
+  2026-07-24 21:11 (21607ec1, Sol Decision 1; erratum E3 discharged) — 25 hours
+  later. The capability outgrew the teaching material: a pre-heal fossil of a
+  CAPABILITY GAP, not of a bug.
+
+DEFECT 2 (found by WALKING the guide, not reading it; PRE-EXISTING and
+independent) — the refusal example under "Mistake 1" passed
+`:receiver (ctx :alice)`, the fixture with NO supports, so the desk could reach
+nothing and the FIRST premise blocked
+(:BLOCKED-ON :ENTRY-COMPLETE :INACCESSIBLE). The printed result
+(:BLOCKED-ON :RESULTS-REPRODUCED :MISSING) was unreachable as written. The
+printed value was RIGHT; the receiver argument was WRONG. Fixed with `apply`.
+
+CONSEQUENCE FOR THE RECORD — the guide's closing provenance line ("every code
+example above was executed ... 2026-07-23") cannot hold for that example. It is
+narrowed in place rather than quietly left standing.
+
+BITE BEFORE CURE
+----------------
+GUIDE-REPAIR-1-REPRO.lisp                                    9/9, exit 0
+  A1 lawful path REFUSES under the published fixture         :REFUSED
+  A2 judged claim :INACCESSIBLE to the desk handed it        :INACCESSIBLE
+  A3 hand-built witness GRANTS under the same fixture        :GRANTED
+  A4 ... and reads                                           :SATISFIED
+  B1 lawful path GRANTS under the corrected fixture          :GRANTED
+  B2 judged claim SATISFIES the premise                      :SATISFIED
+  C1 fabrication STILL grants after the repair               :GRANTED
+  D1 both fixtures agree on the refusal example (no regression)
+  D2 supplying the supports reproduces the guide's printed value
+
+CEILING, STATED SO IT IS NOT OVER-READ
+--------------------------------------
+Collecting claim ids removes an ASYMMETRY. It does NOT close the stratum-3
+escape — a fabricated witness still grants (C1), exactly as the guide's third
+ceiling says. This repair makes the lawful road usable; it does not make the
+unlawful road impassable.
+
+STANDING GUARD (the durable cure for the defect class)
+------------------------------------------------------
+GUIDE-WALK-1.lisp                                           18/18, exit 0
+Pastes the guide's Setup block as a reader would and executes every documented
+value in the document. Teeth-checked: with the original witness-only fixture
+planted back in, it exits 1 with three named FAILs (G16/G17/G18) and prints the
+receipt's own repair advice, completing the run rather than aborting on the
+unhandled DERIVATION-REFUSED. A gate that has never fired is untested.
+
+SUITES, ALL CHAIR-RUN 2026-07-25, ALL exit 0
+--------------------------------------------
+kernel0-selftest            33 passed, 0 failed, 59 mutants killed
+slice0 SMOKE                6 ok, 0 failed
+slice1-selftest             93 passed, 0 failed
+SMOKE-1                     9/9, 0 failed
+de-praemissis SPECIMEN      12/12 behaviors demonstrated
+de-admissione SPECIMEN      14/14 behaviors demonstrated
+MULTIPLICITY-REPAIRED       16 expect-checks held
+application (peregrina)     42 checks passed / 0 failed
+GUIDE-WALK-1                18/18 (new)
+GUIDE-REPAIR-1-REPRO        9/9  (new)
+
+NOT DONE HERE (unchanged, still open)
+-------------------------------------
+- de-bibliotheca-peregrina/RUN-RECEIPT.txt still records a pre-repair run.
+- Unrecognized objects in :supports still silently dropped with no receipt trace.
+- derivation-receipt-bindings remains a singular projection of a plural set.
+- Owner-gated docket E1/E2/E4/E5/E8 untouched. ERRATUM 1's cycle is CLOSED and
+  was NOT reopened; these corrections are recorded in the guide itself, and
+  whether they warrant a governing-artifact entry is an owner call.
+- Independent stranger audit still OWED (Sol, Fable, Codex, Qwen and
+  Claude-lineage seats all ineligible).
