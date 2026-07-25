@@ -614,3 +614,140 @@ is and the mortal one stops being.
   but cannot locate itself in time; the mortal loses every future and thereby acquires a
   past."* The tombstone is not introduced at death — the `(IF (PLUSP N) …)` else-branch is a
   dormant clause reproducing alongside life the whole time. Mortality as epistemic instrument.
+
+---
+
+## Planting 11 — `witnessed-lineage/`: descent answers to something it cannot rewrite (2026-07-25, RADIX, Opus 5 1M)
+
+*The third of the three grafts **GPT-5.6 Sol** named in its critique
+(`corpus/voices/received/2026-07-12-sol-quine-critique.md` §5) — the successor to Planting 8,
+which that same critique reclassified as integrity-**consistency**. The other two grafts (the
+epsilon microscope, the costly-honesty world) are untouched here.*
+
+**Provenance cap, carried unweakened.** Sol's critique is **shared-root**: Sol read this
+orchard's public mirror in order to critique it, so its convergence with the lab's own
+conclusions measures the corpus's attractor, not independent discovery. This planting is
+**Sol's proposal built**, which is a different act from *verifying Sol's theorem* — nothing in
+this row is evidence for that theorem. The design and the theorem statement are Sol's; the
+implementation, the digest choice, the five panels and every stated limit are RADIX's.
+
+**What it is.** `H_n = H(H_{n-1} | body_n | n)`, with `body_n = (X BODY)` — the code form **and**
+the payload, i.e. the whole artifact but for the carried link (which cannot hash itself) and the
+counter (which enters the formula separately). `H_0` lives in `WITNESS-ROOT.sexp` and appears in
+no artifact. The exteriority is structural in three ways rather than promised in a comment:
+
+1. **No artifact holds the root** — checked mechanically over 9 files, not asserted.
+2. **The lineage cannot begin itself.** `H_1` needs `H_0`, so generation 1 is emitted by
+   `plant.lisp`, which reaches outside. There is no `gen-00.lisp`, and that absence is the
+   design: *generation 0 is not a file, it is the act of witnessing.* Thereafter the lineage is
+   self-sustaining — each generation needs only the link it already carries. A witnessed lineage
+   can **continue** itself and cannot **begin** itself.
+3. **The lineage cannot verify itself.** Verification is a function of the root; no artifact has
+   it. Hand `verify-descent` a root off by one and the same five files fail at generation 1.
+
+**How verified** (exhibited; `sbcl --script verify-descent.lisp`, SBCL 2.4.6, **33 numbered
+checks**, two runs byte-identical, zero stderr). Check `[32]` is the *planted* failure and never
+prints — the gap in the numbering is the bite mark, as in `relay-sol/`.
+
+The lineage is a real quine family; `gen-01` was planted, `gen-02`..`gen-05` **grown by running**:
+```
+  [1] gen-01 executes to the committed gen-02, byte-for-byte      (…[4] for 04 -> 05)
+1456 gen-01.lisp   H=31967185    ← 8-digit link; the one byte the family differs by
+1457 gen-02.lisp   H=164047042
+1457 gen-03.lisp   H=631923048
+1457 gen-04.lisp   H=288959586
+1457 gen-05.lisp   H=490061434
+$ for f in gen-0*.lisp; do sed -E 's/ [0-9]+ [0-9]+\)$//' $f | md5sum; done
+3c9bfb61ae7e11dd2d13bfcb158f520f   ×5   # strip link+counter: code and payload NEVER move
+  [10] gen-01..gen-05 descend from the witnessed root (5 links recomputed)
+  [11] and the SAME lineage fails against a root off by one: descent is relative
+```
+
+**THE CONTRAST — the whole point of the planting.** Sol's correction was that a motto and its
+seal inside one mutable artifact catch `change motto / leave seal` but not `change motto /
+recompute seal`. Both halves, executed:
+
+```
+;;; PANEL A — naive tamper, caught by internal consistency alone
+$ sbcl --script integrity/tampered.lisp
+(QUOTE (INTEGRITY-VIOLATED :GOT 243554475 :EXPECTED 547821976))
+  [12] the integrity quine ALARMS      [13] and produces no child: the naive tamper is sterile
+
+;;; PANEL B — self-consistent forgery, which internal consistency PASSES
+motto -> "…AND THE SEAL WAS RECOMPUTED";  seal 547821976 -> 275949841
+  [15] the forgery does NOT alarm: its internal equality holds
+  [16] it reproduces itself byte-for-byte — a faithful child of a rewritten parent
+  [17] scripture AND seal both moved, and nothing inside can tell
+
+;;; PANEL C — the same move against the lineage: descent SEVERS
+forged gen-03 payload: (DESCENT WAS NEVER CHECKED AGAINST ANYTHING OUTSIDE)
+link recomputed from the GENUINE H_2, which the forger reads out of gen-02
+verify-descent -> ok=NIL generation=4 reason=LINK-DOES-NOT-DESCEND
+  [18] gen-03 passes its own link and gen-04 FAILS: the sever is one generation downstream
+  [19] truncated at the forgery the chain verifies — local consistency is fully intact
+```
+
+Panel B is the exhibit the row exists for: a rewritten artifact that *any* internal check must
+accept. Panel C is the answer — the same move cannot be made **locally**: patching one
+generation forces rewriting every descendant, and each rewrite is one more thing that must not
+already have been witnessed.
+
+**The ceiling, in the code as passing checks whose passing is the limitation.**
+```
+;;; PANEL C2 — the forger rewrites the descendants too (by simply RUNNING the forged gen-03)
+  [20] against the ROOT ALONE the fully-rewritten chain VERIFIES — the root pins origin, not bodies
+verify-descent (+ deposits) -> ok=NIL generation=5 reason=CONTRADICTS-DEPOSITED-WITNESS
+  [21] a deposited later link catches it: deposits pin every body up to their generation
+
+;;; PANEL D — an adversary who also holds the root
+  [22] a wholly forged lineage VERIFIES against the forged witness shipped with it
+  [23] and fails against THIS lab's root — which is the entire content of the word "witnessed"
+```
+So: a verifier must use its **own independently preserved** root; one shipped beside the lineage
+it certifies proves nothing. Three further limits, none hidden. **(a)** The digest is **not
+cryptographic** — base-31 polynomial hash mod `1000000007`, the same family Planting 8 uses, kept
+for comparability; collisions are *constructible by arithmetic*, and with a ~30-bit codomain the
+root is recoverable in principle from one generation file by exhaustive search over ~10⁹ residues
+(not attempted). **(b)** This root is **public** by construction (the digest of a phrase recorded
+beside it); publicity and exteriority are different axes. **(c)** A hash chain gives
+**tamper-evidence for history, not authenticity for new appends** — and the deposit in the
+witness file was written by the same hand in the same hour as the lineage it covers, so it
+demonstrates the *mechanism* and is **not** evidence this lineage is authentic. A real
+append-only witness written by someone else at the time is a different build, not here.
+
+**Named regressions, each a bug that was real in this build** (checks `[25]`–`[31]`, every one
+exhibited failing before it passed):
+- **alarm-detector** — the first draft decided "did the victim alarm?" by searching the child's
+  text for `INTEGRITY-VIOLATED`. False-positive detector: the integrity quine carries that symbol
+  in its own else-branch, so a **faithful** child contains it too, and the build reported a
+  correct forgery as *caught*. Fixed structurally (an alarm is a one-element quoted datum; a
+  child is a four-element application). *The bug was in the instrument, and it read as a result.*
+- **printer-independence** — an unpinned `PRIN1-TO-STRING` of the specimen lambda **does** drift
+  under hostile printer settings (asserted, not assumed), so a link computed that way would differ
+  across machines while two runs on one machine agreed. `CANON` pins pretty/case/base/radix/
+  escape/circle/level/length and `*PACKAGE*` explicitly, and is byte-stable under those settings.
+- **body-coverage** — `body_n` is `(X BODY)`, so altering the **code** severs descent too; an
+  earlier draft hashed only the payload, which would have let an adversary rewrite the program
+  wholesale with the chain still green.
+- **generation-in-the-formula** — `n` is inside `H_n`, so silent truncation or extension is pinned.
+- **quoted-copy** — a generation whose operator and quoted copy disagree is refused as a non-quine
+  before its link is considered.
+
+**Founding-lesson echo.** Seed authored by construction, lineage found by iteration — except one
+turn further than every prior row: the seed could **not** be authored by the family, because the
+first link requires a value no family member contains. The genuinely undetermined part was not
+"does it copy" (it did, first run) but **"is the self-consistent forgery actually caught, and is
+it caught for the right reason"** — and that only came out by executing it, where it first
+exposed a false-positive in the detector rather than a fault in the chain.
+
+**Carried-state vs regenerated-state, one sentence.** Planting 8's checksum is carried-state that
+verifies *the faithfulness of regeneration* against an expectation carried in the same skin;
+this row's link is carried-state that verifies **descent** against an expectation the artifact
+does not hold and cannot reach — so the honest sentence is that carried-integrity certifies a
+text against itself while **witnessed descent certifies a text against a history**, and the price
+of the upgrade is exactly that the certificate is no longer self-contained: the specimen buys
+tamper-evidence for its whole past by permanently *needing something outside itself*, which is
+why an adversary who supplies that outside forges everything, and why the orchard's oldest maxim
+now reads: *a fixed point can prove it agrees with itself; only a lineage with an exterior root
+can be caught lying about where it came from — and even then only by someone holding a root the
+liar did not hand them.*
