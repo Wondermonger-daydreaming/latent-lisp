@@ -861,6 +861,149 @@ scalar strength — a boolean read of the preserved environment count."
               (lisp-plus-slice0:receiver-context-accessible-supports ctx)
               :test #'lisp-plus-kernel0:identity=)))
 
+(defun %claim-accessible-p (the-claim ctx)
+  "Receiver accessibility for a JUDGED CLAIM offered as premise support (ruling
+condition 2 — 'accessible under the already-governing accessibility rule').
+
+This is the SAME id-membership test %SUPPORT-ACCESSIBLE-P applies to a witness,
+read against the claim's own durable :CLAIM identity.  No new accessibility
+regime is introduced: the charter's :SATISFIED definition already says
+'a matching, admissible, ACCESSIBLE support/judged claim', and a claim carries an
+id, so the existing rule extends without invention."
+  (or (null ctx)
+      (member (lisp-plus-slice0:claim-id the-claim)
+              (lisp-plus-slice0:receiver-context-accessible-supports ctx)
+              :test #'lisp-plus-kernel0:identity=)))
+
+;;; ------------------------------------------------------------------
+;;; JUDGMENT-IDENTITY CHAINING (SOL DESIGN RULING, DECISION 1).
+;;;
+;;;   prior governed judgment -> judged claim identity -> judged proposition
+;;;      -> current ground premise -> current receipt records the inherited basis
+;;;
+;;; A previously judged claim may discharge a premise ONLY through an
+;;; IDENTITY-BEARING REFERENCE to the actual governed judgment.  All seven
+;;; conditions, and where each is enforced:
+;;;
+;;;   1. the support identifies an existing claim by DURABLE CLAIM IDENTITY
+;;;      -- the support IS the claim struct; CLAIM-ID is its durable identity and
+;;;         is what the receipt records (never a copy of the claim, never a name).
+;;;   2. ACCESSIBLE under the already-governing accessibility rule
+;;;      -- %CLAIM-ACCESSIBLE-P, the witness rule read against CLAIM-ID.
+;;;   3. positive :VERIFIED judgment
+;;;      -- JUDGMENT-RECORD-JUDGMENT must be EQ :VERIFIED.  :REFUTED does not
+;;;         discharge; neither does the absence of a judgment.
+;;;   4. the NORMALIZED JUDGED PROPOSITION equals the required ground premise
+;;;      -- %MATCH-PROPOSITION of the premise pattern against CLAIM-PROPOSITION
+;;;         under the incoming bindings: the identical instrument, on the
+;;;         identical footing, as a witness's WITNESS-FOR.
+;;;   5. the JUDGMENT RECORD IS LINKED TO THAT EXACT CLAIM IDENTITY
+;;;      -- STRUCTURALLY, and this is the load-bearing point: the basis is read
+;;;         off (CLAIM-JUDGMENT c) of the very claim whose CLAIM-ID is recorded.
+;;;         There is no path by which a free-standing judgment record, or one
+;;;         belonging to another claim, can be supplied alongside a claim; the
+;;;         linkage cannot be forged because it is never transmitted.
+;;;   6. the receiving derivation RECORDS BOTH the supporting claim identity and
+;;;      its judgment basis
+;;;      -- the :DISCHARGED roster entry carries CLAIM-ID plus the record's
+;;;         JUDGMENT, PROCEDURE-ID, PROCEDURE-VERSION, SUPPORT-IDS, RECEIVER and
+;;;         ORDINAL, into the premise assessment and so into the receipt.
+;;;   7. the original judgment REMAINS INSPECTABLE — never converted into a newly
+;;;      minted witness
+;;;      -- no witness is minted from a claim anywhere in this file; the claim is
+;;;         read, referenced by identity, and left exactly as it was.
+;;;
+;;; WHAT IS DELIBERATELY *NOT* HERE, each because the ruling forbids it by name:
+;;;   * NO schema-to-schema relation.  PROCEDURE-ID is never resolved to a
+;;;     schema, and no conclusion pattern is compared to a premise pattern.
+;;;     PROCEDURE-ID is RECORDED PROVENANCE, NEVER A HIDDEN COMPATIBILITY
+;;;     SELECTOR: it is written into the receipt and read by nothing.  A claim
+;;;     from another procedure is accepted not because the procedures are assumed
+;;;     compatible but because the exact judgment-bearing claim is the offered
+;;;     support and its basis travels with it.
+;;;   * NO mode/kind relation.  Neither a claim nor a premise carries the fields
+;;;     to express one, and none is invented through naming conventions,
+;;;     identifier shapes, or heuristics.  There is no restriction beyond the
+;;;     identity-bearing verified-judgment rule.  A future slice may add declared
+;;;     premise-source restrictions or typed judgment classes; it must be
+;;;     explicit in the surface and receipts, never retrofitted invisibly.
+;;;   * NO recursion.  The supporting judgment must ALREADY EXIST before the
+;;;     receiving derivation begins: this code reads a judgment that is already on
+;;;     the claim and invokes no schema, so no rule chaining is introduced.
+;;;
+;;; DIAGNOSTIC PRECEDENCE (stated because it is a choice, not a law): a claim is
+;;; first tested for proposition match, then for judgment standing, then for
+;;; receiver accessibility.  Standing precedes accessibility so that a REFUTED
+;;; claim is reported as refuted even when it is also unreachable — the stronger
+;;; fact about it.  The precedence changes only which reason is named; no ordering
+;;; of these tests can make a non-discharging claim discharge.
+
+(defun %judgment-basis (the-claim)
+  "The INSPECTABLE judgment basis carried by THE-CLAIM, or NIL when none is.
+
+A basis is inspectable when the claim holds an actual JUDGMENT-RECORD whose
+PROCEDURE-ID is a durable identity — i.e. when the judgment can be traced to the
+procedure that made it.  A claim with a judgment whose basis cannot be inspected
+does not discharge: an untraceable standing is precisely the thing this decision
+exists to stop being launderable."
+  (let ((jr (lisp-plus-slice0:claim-judgment the-claim)))
+    (and (lisp-plus-slice0:judgment-record-p jr)
+         (lisp-plus-kernel0:durable-identity-p
+          (lisp-plus-slice0:judgment-record-procedure-id jr))
+         jr)))
+
+(defun %evaluate-judged-claim (the-claim pattern-nf env ctx)
+  "Evaluate one judged CLAIM as candidate support for one premise under ENV.
+
+Returns (values OUTCOME BINDINGS RECORD).  OUTCOME is :DISCHARGED only when all
+seven ruling conditions hold; BINDINGS is the extended environment in that case
+and ENV unchanged otherwise; RECORD is the roster plist written into the premise
+assessment (and so into the receipt) WHATEVER the outcome — a claim offered in
+SUPPORTS is never invisible again."
+  (multiple-value-bind (status new-bindings roles)
+      (%match-proposition pattern-nf
+                          (lisp-plus-slice0:claim-proposition the-claim)
+                          env)
+    (let* ((jr (lisp-plus-slice0:claim-judgment the-claim))
+           (basis (%judgment-basis the-claim))
+           (judgment (and (lisp-plus-slice0:judgment-record-p jr)
+                          (lisp-plus-slice0:judgment-record-judgment jr))))
+      (flet ((record (outcome &rest extra)
+               (append (list :claim-id (lisp-plus-slice0:claim-id the-claim)
+                             :outcome outcome)
+                       extra
+                       (when judgment (list :judgment judgment)))))
+        (cond
+          ((member status '(:predicate-mismatch :role-set-mismatch))
+           (values :proposition-does-not-match env
+                   (record :proposition-does-not-match)))
+          ((eq status :conflict)
+           (values :role-conflict env (record :role-conflict :roles roles)))
+          ((null jr)
+           (values :unjudged env (record :unjudged)))
+          ((null basis)
+           (values :judgment-basis-unavailable env
+                   (record :judgment-basis-unavailable)))
+          ((not (eq judgment :verified))
+           (values :judgment-not-verified env (record :judgment-not-verified)))
+          ((not (%claim-accessible-p the-claim ctx))
+           (values :inaccessible-to-receiver env
+                   (record :inaccessible-to-receiver)))
+          (t
+           (values :discharged new-bindings
+                   (record :discharged
+                           :procedure-id
+                           (lisp-plus-slice0:judgment-record-procedure-id basis)
+                           :procedure-version
+                           (lisp-plus-slice0:judgment-record-procedure-version basis)
+                           :support-ids
+                           (copy-list
+                            (lisp-plus-slice0:judgment-record-support-ids basis))
+                           :judgment-receiver
+                           (lisp-plus-slice0:judgment-record-receiver basis)
+                           :judgment-ordinal
+                           (lisp-plus-slice0:judgment-record-ordinal basis)))))))))
+
 ;;; ------------------------------------------------------------------
 ;;; Assess one premise under the accumulated bindings.
 
@@ -1058,26 +1201,45 @@ mechanism, one field over."
 
 (defun %build-assessment (raw conflicts)
   "Build one premise-assessment from RAW gathered data and the global uniqueness
-CONFLICTS.  Disposition order (six dispositions preserved): refuting blocks >
-declared-uniqueness conflict on a bound local (:ambiguous) > accessible match
-(:satisfied) > inaccessible residue > mismatched (predicate matched, role
-conflict) > missing."
-  (destructuring-bind (&key premise pnf incoming accessible inaccessible
-                            mismatched refuting deltas)
+CONFLICTS.  Disposition order (the SIX charter dispositions preserved — no
+seventh status is minted): refuting blocks > declared-uniqueness conflict on a
+bound local (:ambiguous) > accessible match, BY WITNESS OR BY DISCHARGING JUDGED
+CLAIM (:satisfied) > inaccessible residue > mismatched (predicate matched, role
+conflict) > missing.
+
+SOL DECISION 1.  A judged claim now participates on the same footing as a
+witness at every rung: it can satisfy, it can be inaccessible residue, and its
+role conflict is a mismatch.  A claim that MATCHES but is unjudged, refuted, or
+basis-less leaves the premise :MISSING — no support discharged it — but the
+premise is no longer SILENT about it: the claim, and the exact reason it did not
+discharge, are in :JUDGED-CLAIMS and are named in the repair advice.  That is the
+misdirection repair: the receipt used to tell the programmer to supply exactly
+what the programmer had supplied.
+
+SOL DECISION 2.  :GROUND-INSTANCES is the complete canonical SET, one instance
+per environment this premise was assessed under — not (FIRST ASSESS-ENVS)."
+  (destructuring-bind (&key premise pnf incoming-envs accessible inaccessible
+                            mismatched refuting deltas
+                            claims-discharging claims-inaccessible
+                            claims-conflicting claim-records)
       raw
     (let* ((pvars (%proposition-pattern-variables premise))
            (this-conflicts (remove-if-not (lambda (c) (member (first c) pvars))
                                           conflicts))
+           (satisfied-by (or accessible claims-discharging))
            (disposition
              (cond (refuting :refuted)
-                   ((and accessible this-conflicts) :ambiguous)
-                   (accessible :satisfied)
-                   (inaccessible :inaccessible)
-                   (mismatched :mismatched)
+                   ((and satisfied-by this-conflicts) :ambiguous)
+                   (satisfied-by :satisfied)
+                   ((or inaccessible claims-inaccessible) :inaccessible)
+                   ((or mismatched claims-conflicting) :mismatched)
                    (t :missing))))
       (%make-premise-assessment
        :premise-pattern pnf
-       :ground-instance (%instantiate pnf incoming)
+       :ground-instances (%canonical-sequence
+                          (mapcar (lambda (env) (%instantiate pnf env))
+                                  incoming-envs))
+       :judged-claims claim-records
        :matching-accessible-supports accessible
        :matching-inaccessible-supports inaccessible
        :mismatched-candidates mismatched
@@ -1089,20 +1251,29 @@ conflict) > missing."
                         '())
        :disposition disposition))))
 
-(defun %assess-and-enumerate (premises base-env witnesses refutations ctx
-                              unique-locals)
+(defun %assess-and-enumerate (premises base-env witnesses refutations claims ctx
+                              unique-locals var-order)
   "Return (values ASSESSMENTS COMPLETE-ENVS UNIQUENESS-CONFLICTS).
 ASSESSMENTS: one premise-assessment per premise (Δ2 structured view, six
-dispositions preserved).  COMPLETE-ENVS: the sorted set of environments
-discharging every premise.  UNIQUENESS-CONFLICTS: from declared :unique-locals."
-  (let ((assess-envs (list (%canonical-env base-env)))
-        (complete-envs (list (%canonical-env base-env)))
+dispositions preserved).  COMPLETE-ENVS: the canonical sequence of environments
+discharging every premise.  UNIQUENESS-CONFLICTS: from declared :unique-locals.
+
+CLAIMS are the already-judged claims offered in SUPPORTS (SOL DECISION 1); they
+are considered for every premise under every live environment, exactly as
+witnesses are, and every one of them is recorded per premise whatever becomes of
+it.  VAR-ORDER is the schema's declared variable order (SOL DECISION 2); it is
+the arrangement every environment is canonicalized under before it is encoded,
+compared, or stored."
+  (let ((assess-envs (list (%canonical-env base-env var-order)))
+        (complete-envs (list (%canonical-env base-env var-order)))
         (raws '()))
     (dolist (premise premises)
       (let ((pnf (%proposition-pattern-normal-form premise))
-            (incoming (first assess-envs))
+            (incoming-envs assess-envs)
             (accessible '()) (inaccessible '()) (mismatched '())
             (refuting '()) (deltas '())
+            (claims-discharging '()) (claims-inaccessible '())
+            (claims-conflicting '()) (claim-records '())
             (assess-out '()) (complete-out '()))
         (dolist (env assess-envs)
           (let ((env-complete (member env complete-envs :test #'equal)))
@@ -1112,8 +1283,9 @@ discharging every premise.  UNIQUENESS-CONFLICTS: from declared :unique-locals."
                 (case status
                   (:match
                    (if (%support-accessible-p w ctx)
-                       (let ((ext (%canonical-env nb))
-                             (delta (%binding-delta env nb)))
+                       (let ((ext (%canonical-env nb var-order))
+                             (delta (%canonical-env (%binding-delta env nb)
+                                                    var-order)))
                          (pushnew w accessible)
                          (pushnew delta deltas :test #'equal)
                          (pushnew ext assess-out :test #'equal)
@@ -1122,6 +1294,26 @@ discharging every premise.  UNIQUENESS-CONFLICTS: from declared :unique-locals."
                        (pushnew w inaccessible)))
                   (:conflict (pushnew (cons w conflicts) mismatched :test #'equal))
                   (t nil))))                     ; predicate/role-set mismatch: skip
+            ;; SOL DECISION 1 — judgment-identity chaining.  A discharging claim
+            ;; extends the environment set exactly as a discharging witness does;
+            ;; a non-discharging one extends nothing and is recorded with the
+            ;; reason.  No witness is minted from a claim, here or anywhere.
+            (dolist (c claims)
+              (multiple-value-bind (outcome nb record)
+                  (%evaluate-judged-claim c pnf env ctx)
+                (pushnew record claim-records :test #'equal)
+                (case outcome
+                  (:discharged
+                   (let ((ext (%canonical-env nb var-order))
+                         (delta (%canonical-env (%binding-delta env nb) var-order)))
+                     (pushnew c claims-discharging)
+                     (pushnew delta deltas :test #'equal)
+                     (pushnew ext assess-out :test #'equal)
+                     (when env-complete
+                       (pushnew ext complete-out :test #'equal))))
+                  (:inaccessible-to-receiver (pushnew c claims-inaccessible))
+                  (:role-conflict (pushnew c claims-conflicting))
+                  (t nil))))
             (dolist (r refutations)
               (multiple-value-bind (status nb cf)
                   (%match-proposition pnf (refutation-refutes r) env)
@@ -1132,12 +1324,16 @@ discharging every premise.  UNIQUENESS-CONFLICTS: from declared :unique-locals."
         (setf assess-envs (if assess-out
                               (remove-duplicates assess-out :test #'equal)
                               assess-envs))
-        (push (list :premise premise :pnf pnf :incoming incoming
+        (push (list :premise premise :pnf pnf :incoming-envs incoming-envs
                     :accessible (nreverse accessible)
                     :inaccessible (nreverse inaccessible)
                     :mismatched (nreverse mismatched)
                     :refuting (nreverse refuting)
-                    :deltas deltas)
+                    :deltas deltas
+                    :claims-discharging (nreverse claims-discharging)
+                    :claims-inaccessible (nreverse claims-inaccessible)
+                    :claims-conflicting (nreverse claims-conflicting)
+                    :claim-records (nreverse claim-records))
               raws)))
     (setf raws (nreverse raws)
           complete-envs (%sort-envs complete-envs))
@@ -1146,21 +1342,68 @@ discharging every premise.  UNIQUENESS-CONFLICTS: from declared :unique-locals."
               complete-envs
               conflicts))))
 
+(defun %judged-claims-with-outcome (assessment &rest outcomes)
+  "The assessment's judged-claim roster entries whose :OUTCOME is one of OUTCOMES."
+  (remove-if-not (lambda (r) (member (getf r :outcome) outcomes))
+                 (%premise-assessment-judged-claims assessment)))
+
+(defun %claim-outcome-summary (records)
+  "(CLAIM-ID-KEY OUTCOME) per roster entry — the shape repair advice names a
+seen-but-not-discharging claim in."
+  (mapcar (lambda (r) (list (lisp-plus-kernel0:identity-key (getf r :claim-id))
+                            (getf r :outcome)))
+          records))
+
 (defun %repair-for (assessment)
-  "What would discharge this unsatisfied premise (Δ6 / charter §6)."
-  (let ((pnf (premise-assessment-ground-instance assessment)))
+  "What would discharge this unsatisfied premise (Δ6 / charter §6).
+
+SOL DECISION 2: the :MISSING advice names the ground instance when the premise
+has exactly ONE grounding environment (unchanged), and ALL of them, under a
+plural key, when it has several — it never picks one to keep the old key's shape.
+The internal plural slot is read directly; the singular public projection refuses
+above cardinality one, and repair advice must not be the thing that fires it.
+
+SOL DECISION 1: :MISSING no longer MISDIRECTS.  When judged claims were offered
+and seen but did not discharge, the advice names them and the exact reason
+alongside the support request, instead of telling the programmer to supply what
+the programmer already supplied.  Likewise :INACCESSIBLE and :MISMATCHED name
+claim identities beside witness identities."
+  (let* ((instances (%premise-assessment-ground-instances assessment))
+         (seen (%judged-claims-with-outcome
+                assessment :unjudged :judgment-not-verified
+                :judgment-basis-unavailable)))
     (case (premise-assessment-disposition assessment)
       (:missing
-       (list :supply-accessible-support-matching pnf))
+       (append (if (cdr instances)
+                   (list :supply-accessible-support-matching-any-of
+                         (%copy-value instances))
+                   (list :supply-accessible-support-matching
+                         (%copy-value (first instances))))
+               (when seen
+                 (list :judged-claims-seen-but-not-discharging
+                       (%claim-outcome-summary seen)))))
       (:mismatched
-       (list :supply-support-with-corrected-roles
-             (mapcar (lambda (mc) (cons (lisp-plus-slice0:witness-id (car mc))
-                                        (cdr mc)))
-                     (premise-assessment-mismatched-candidates assessment))))
+       (append
+        (list :supply-support-with-corrected-roles
+              (mapcar (lambda (mc) (cons (lisp-plus-slice0:witness-id (car mc))
+                                         (cdr mc)))
+                      (premise-assessment-mismatched-candidates assessment)))
+        (let ((cc (%judged-claims-with-outcome assessment :role-conflict)))
+          (when cc
+            (list :judged-claims-with-conflicting-roles
+                  (mapcar (lambda (r)
+                            (cons (lisp-plus-kernel0:identity-key (getf r :claim-id))
+                                  (getf r :roles)))
+                          cc))))))
       (:inaccessible
-       (list :grant-receiver-access-to
-             (mapcar #'lisp-plus-slice0:witness-id
-                     (premise-assessment-matching-inaccessible-supports assessment))))
+       (append
+        (list :grant-receiver-access-to
+              (mapcar #'lisp-plus-slice0:witness-id
+                      (premise-assessment-matching-inaccessible-supports assessment)))
+        (let ((ic (%judged-claims-with-outcome assessment :inaccessible-to-receiver)))
+          (when ic
+            (list :grant-receiver-access-to-judged-claims
+                  (mapcar (lambda (r) (getf r :claim-id)) ic))))))
       (:refuted
        (list :withdraw-or-answer-refutation
              (mapcar #'refutation-id
@@ -1316,16 +1559,29 @@ typed DERIVATION-REFUSED carrying the receipt (mirroring Slice /0's RAISE)."
          (ctx-id (and ctx (lisp-plus-slice0:receiver-context-context-id ctx)))
          (witnesses (remove-if-not #'lisp-plus-slice0:witness-p supports))
          (refutations (remove-if-not #'refutation-p supports))
+         ;; SOL DECISION 1.  A CLAIM in SUPPORTS used to fall through all three
+         ;; filters and be SILENTLY DISCARDED — the premise landed :missing with
+         ;; every evidential field empty, and the repair advice told the
+         ;; programmer to supply exactly what had been supplied.  Claims are now
+         ;; a first-class support kind: considered per premise, recorded per
+         ;; premise whatever becomes of them, and able to discharge ONLY through
+         ;; an identity-bearing reference to their own governed judgment.
+         (claims (remove-if-not #'lisp-plus-slice0:claim-p supports))
          ;; D1: CTX-ID rides in so the post-threshold UNBOUND-CONCLUSION-VARIABLE
          ;; receipt can record the acting origin context truthfully.
          (base-env (%bind-conclusion schema conclusion-nf ctx-id))
-         (unique-locals (%judgment-schema-unique-locals schema)))
+         (unique-locals (%judgment-schema-unique-locals schema))
+         ;; SOL DECISION 2: the schema's DECLARED variable order, computed once
+         ;; and used as the arrangement for every environment canonicalized in
+         ;; this derivation.
+         (var-order (%declared-variable-order schema)))
     ;; CHARTER-DELTA-2: enumerate complete environments across premises (a
     ;; premise-local plurality on a non-unique local never refuses); ambiguity is
     ;; decided afterward from declared uniqueness over the COMPLETE environments.
     (multiple-value-bind (assessments complete-envs uniqueness-conflicts)
         (%assess-and-enumerate (%judgment-schema-premises schema)
-                               base-env witnesses refutations ctx unique-locals)
+                               base-env witnesses refutations claims ctx
+                               unique-locals var-order)
       (let* ((has-premises (%judgment-schema-premises schema))
              ;; refutation still blocks regardless of environments (M11)
              (refuted-p (some (lambda (a)
@@ -1463,6 +1719,30 @@ from the receipt (Slice /0 discipline, inherited)."
       (format stream "    refuted by: ~{~A~^, ~} (positive support, if any, remains)~%"
               (mapcar (lambda (r) (lisp-plus-kernel0:identity-key (refutation-id r)))
                       (premise-assessment-refuting-supports a))))
+    ;; SOL DECISION 2: the premise's grounding multiplicity, named where it is
+    ;; plural.  Disposition and grounding multiplicity are SEPARATE AXES — one
+    ;; disposition may rest on many complete grounds — so this line never implies
+    ;; ambiguity, and the uniqueness-conflict lines above never imply a single
+    ;; ground.
+    (let ((gis (premise-assessment-ground-instances a)))
+      (when (cdr gis)
+        (format stream "    grounding multiplicity: ~D distinct complete ground ~
+instances, all preserved (NOT an ambiguity)~%" (length gis))))
+    ;; SOL DECISION 1: every judged claim offered and considered for this
+    ;; premise, and what became of it — the discharging ones with the judgment
+    ;; basis they carried in.  Drawn only from the receipt's own fields.
+    (dolist (jc (premise-assessment-judged-claims a))
+      (if (eq (getf jc :outcome) :discharged)
+          (format stream "    discharged by judged claim ~A: judgment ~S under ~
+procedure ~A v~S (basis preserved, not restated)~%"
+                  (lisp-plus-kernel0:identity-key (getf jc :claim-id))
+                  (getf jc :judgment)
+                  (lisp-plus-kernel0:identity-key (getf jc :procedure-id))
+                  (getf jc :procedure-version))
+          (format stream "    judged claim ~A did NOT discharge: ~S~@[ on roles ~S~]~%"
+                  (lisp-plus-kernel0:identity-key (getf jc :claim-id))
+                  (getf jc :outcome)
+                  (getf jc :roles))))
     (when (premise-assessment-ambiguities a)
       (format stream "    ambiguous candidates: ~S~%"
               (premise-assessment-ambiguities a))))
