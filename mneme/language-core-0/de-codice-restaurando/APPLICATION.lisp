@@ -599,6 +599,7 @@ program is read out of it.")
     ("codex:umbra-17" :substrate-humidification :responded "ASY-4413")
     ("codex:umbra-17" :substrate-humidification :responded "ASY-4419")
     ("codex:umbra-17" :substrate-flattening     :responded "ASY-4421")
+    ("codex:vetus-4"  :substrate-humidification :responded "ASY-4603")
     ("chart:hydro-2"  :solubility :bled        "ASY-4501")
     ("chart:hydro-2"  :binder     :identified  "ASY-4502")
     ("chart:hydro-2"  :substrate-humidification :responded "ASY-4503"))
@@ -923,9 +924,14 @@ in the same folder as the first. Nobody at the bench can adjudicate this.")
 (format t "~%   4c. THE IMPERSONATION ATTEMPTS. Neither branch may stand for the other.~%")
 
 (format t "~%       (i) the material claim alone:~%")
+(defparameter *material-only-receipt* nil
+  "Arm 4c(i)'s receipt: the SAME premise of the SAME schema, refused :MISSING
+because no authority branch was ever derived. Movement V arm D compares its own
+:INACCESSIBLE against this one, so the comparison is between two real receipts
+this program produced and not between one receipt and a remembered adjective.")
 (multiple-value-bind (claim receipt)
     (authorize :controlled-humidification *material-humid* nil)
-  (record-receipt receipt)
+  (setf *material-only-receipt* (record-receipt receipt))
   (say-the-verdict receipt)
   (ok "[IV-e] a material conclusion alone does NOT authorize: the authority premise is :MISSING"
       (and (null claim)
@@ -971,8 +977,7 @@ in the same folder as the first. Nobody at the bench can adjudicate this.")
                                  (:medium :carbon) (:assay "ASY-4601"))
                                :kind :assay :source :laboratory)
                        (attest '(:predicate :binder-identified (:manuscript "codex:vetus-4")
-                                 (:medium :carbon) (:assay-analysis "ASY-4602")
-                                 (:analysis "ASY-4602"))
+                                 (:medium :carbon) (:analysis "ASY-4602"))
                                :kind :analysis :source :laboratory))))
         (consider :schema :ink-stability
                   :conclusion (np '(:predicate :ink-stability-established
@@ -1004,17 +1009,31 @@ rule would look at is identical.")
     (authorize :controlled-humidification *vetus-material* *authority-humid*)
   (record-receipt receipt)
   (say-the-verdict receipt)
-  (let ((a (assessment-for receipt :treatment-materially-suitable)))
+  (let* ((a (assessment-for receipt :treatment-materially-suitable))
+         (entry (roster-entry-for receipt :treatment-materially-suitable *vetus-material*))
+         (repair (repair-for receipt :treatment-materially-suitable)))
     (ok "[IV-j] it lands :MISMATCHED, and the receipt names the conflicting ROLE — so matching is by proposition under bindings, not by any name"
         (and (null claim)
              (eq :mismatched (disposition-of receipt :treatment-materially-suitable))
-             (equal '(:manuscript)
-                    (remove-duplicates
-                     (reduce #'append
-                             (mapcar #'cdr (lisp-plus-slice1:premise-assessment-mismatched-candidates a))
-                             :initial-value '())))))
-    (format t "     the conflicting role, verbatim from the receipt: ~A~%"
-            (fmt (mapcar #'cdr (lisp-plus-slice1:premise-assessment-mismatched-candidates a))))))
+             entry (eq :role-conflict (getf entry :outcome))
+             (equal '(:manuscript) (getf entry :roles))))
+    (format t "     the roster entry, decoded: claim ~A  outcome ~A  roles ~A~%"
+            (lisp-plus-kernel0:identity-key (getf entry :claim-id))
+            (fmt (getf entry :outcome)) (fmt (getf entry :roles)))
+    (format t "     the repair, verbatim from the receipt: ~A~%" (fmt repair))
+    ;; And a distinction worth having in the program rather than in prose: for a
+    ;; CLAIM the conflicting roles live in the judged-claim roster, and the
+    ;; witness-side MISMATCHED-CANDIDATES field is empty. The two support species
+    ;; have two record shapes, and a reader who checks only the witness field
+    ;; would see an unexplained :MISMATCHED.
+    (ok "[IV-k] and the conflict is recorded on the CLAIM side: the witness-side mismatched-candidates field is empty, while the judged-claim roster carries the role"
+        (and (null (lisp-plus-slice1:premise-assessment-mismatched-candidates a))
+             (equal '(:manuscript) (getf entry :roles))
+             (equal (list (list (lisp-plus-kernel0:identity-key
+                                 (lisp-plus-slice0:claim-id *vetus-material*))
+                                :manuscript))
+                    (getf repair :judged-claims-with-conflicting-roles)))
+        "the repair names the claim by identity key and the exact role, which is enough to fix the call without reading the schema")))
 
 
 ;;;; ==================================================================
@@ -1119,10 +1138,11 @@ the answer."
 ;;; --- D. the branch the receiving bench cannot read -------------------
 (format t "~%   D. THE INACCESSIBLE BRANCH. Both claims exist and both are verified.~%")
 (format t "      The receiving bench was given only the material one:~%")
+(defparameter *inaccessible-receipt* nil)
 (multiple-value-bind (claim receipt)
     (authorize :controlled-humidification *material-humid* *authority-humid*
                :receiver (at-the-bench *material-humid*))
-  (record-receipt receipt)
+  (setf *inaccessible-receipt* (record-receipt receipt))
   (say-the-verdict receipt)
   (let ((entry (roster-entry-for receipt :treatment-institutionally-authorized
                                  *authority-humid*))
@@ -1134,13 +1154,20 @@ the answer."
         "the bench is not told to go find an authorization; it is told it may not read the one it has")
     (ok "[V-d2] the roster says exactly which claim and exactly why"
         (and entry (eq :inaccessible-to-receiver (getf entry :outcome))))
-    (ok "[V-d3] :INACCESSIBLE and :MISSING are different sentences, and the same schema produced both in this movement"
+    (ok "[V-d3] :INACCESSIBLE and :MISSING are different sentences, and the ONE schema produced both — compared against arm 4c(i)'s stored receipt for the identical premise"
         (and (eq :inaccessible (disposition-of receipt :treatment-institutionally-authorized))
-             (eq :missing (disposition-of *authorized-humid-receipt*
+             (eq :missing (disposition-of *material-only-receipt*
                                           :treatment-institutionally-authorized))
-             t)
-        "compared against arm 4c(i)'s receipt, which is :MISSING for the identical premise of the identical schema")
+             (eq (lisp-plus-slice1:derivation-receipt-schema-name receipt)
+                 (lisp-plus-slice1:derivation-receipt-schema-name *material-only-receipt*))
+             (= (lisp-plus-slice1:derivation-receipt-schema-version receipt)
+                (lisp-plus-slice1:derivation-receipt-schema-version *material-only-receipt*)))
+        "same schema name and version on both receipts, read off both receipts")
     (format t "     the repair, verbatim and complete:~%       ~A~%" (fmt repair))
+    (format t "     and the same repair with its identities decoded, for a reader:~%")
+    (format t "       grant-receiver-access-to-judged-claims: ~A~%"
+            (fmt (mapcar #'lisp-plus-kernel0:identity-key
+                         (getf repair :grant-receiver-access-to-judged-claims))))
     (ok "[V-d4] the repair names the claim by DURABLE IDENTITY, so the fix is mechanical and not a guess"
         (equal (mapcar #'lisp-plus-kernel0:identity-key
                        (getf repair :grant-receiver-access-to-judged-claims))
@@ -1150,20 +1177,24 @@ the answer."
         (eq :reconciliation-required (wo-state wo))
         "a gap sends you back to the laboratory; a locked door sends you to the registrar")))
 
-;;; The [IV-e] receipt was the :MISSING comparison used by [V-d3]; it is the same
-;;; premise of the same schema, refused for a different reason. Re-derived here so
-;;; the comparison above reads against a receipt this program still holds.
-(defparameter *missing-authority-receipt*
-  (multiple-value-bind (claim receipt)
-      (authorize :controlled-humidification *material-humid* nil)
-    (declare (ignore claim))
-    (record-receipt receipt)))
-(ok "[V-d6] the two refusals of ONE premise, side by side: :MISSING when no branch was derived, :INACCESSIBLE when one was and could not be read"
-    (and (eq :missing (disposition-of *missing-authority-receipt*
-                                      :treatment-institutionally-authorized))
-         (null (lisp-plus-slice1:premise-assessment-matching-inaccessible-supports
-                (assessment-for *missing-authority-receipt*
-                                :treatment-institutionally-authorized)))))
+;;; And the structural difference between the two refusals, not merely the two
+;;; keywords: :MISSING leaves the inaccessible-support residue EMPTY, because
+;;; there was nothing to be locked out of; :INACCESSIBLE fills it.
+(ok "[V-d6] the two refusals differ in STRUCTURE and not only in name: the :MISSING receipt's roster holds no inaccessible entry at all, and the :INACCESSIBLE one holds exactly one, naming exactly the claim it could not read"
+    (and (zerop (count :inaccessible-to-receiver
+                       (roster-for *material-only-receipt*
+                                   :treatment-institutionally-authorized)
+                       :key (lambda (e) (getf e :outcome))))
+         (= 1 (count :inaccessible-to-receiver
+                     (roster-for *inaccessible-receipt*
+                                 :treatment-institutionally-authorized)
+                     :key (lambda (e) (getf e :outcome))))
+         (eq :inaccessible-to-receiver
+             (getf (roster-entry-for *inaccessible-receipt*
+                                     :treatment-institutionally-authorized
+                                     *authority-humid*)
+                   :outcome)))
+    "a gap and a locked door are different objects in the receipt, not two words for one")
 
 
 ;;;; ==================================================================
@@ -1219,24 +1250,27 @@ the program reads when it must branch, never the account it stores."
   (format t "     the treatment account, whole:~%")
   (format t "       view (outcome-kind)   ~A~%" (fmt (lisp-plus-core0:outcome-kind outcome)))
   (dolist (name '(:execution :manifestation :effects :interpretation))
-    (let ((ax (lisp-plus-kernel0:outcome-axis outcome name)))
-      (format t "       axis ~-13A ~-16A determinacy ~A~%"
+    (let* ((ax (lisp-plus-kernel0:outcome-axis outcome name))
+           (v (lisp-plus-kernel0:axis-value ax)))
+      (format t "       axis ~13A ~24A determinacy ~A~%"
               (string-downcase (symbol-name name))
-              (if (eq name :manifestation)
-                  ;; the manifestation axis's value IS a manifestation record;
-                  ;; its STATUS is the scalar, and printing the record itself
-                  ;; through the printer is exactly the margin hazard the header
-                  ;; note is about
-                  (fmt (lisp-plus-kernel0:manifestation-status
-                        (lisp-plus-kernel0:axis-value ax)))
-                  (fmt (lisp-plus-kernel0:axis-value ax)))
+              ;; the manifestation axis's value is a manifestation RECORD when the
+              ;; local record landed, and an absence PLIST when it did not; the
+              ;; record's scalar STATUS is what belongs on a fixed-width line, and
+              ;; printing the record itself through the printer is exactly the
+              ;; margin hazard the header note is about
+              (fmt (if (lisp-plus-kernel0:manifestation-p v)
+                       (lisp-plus-kernel0:manifestation-status v)
+                       v))
               (fmt (lisp-plus-kernel0:determinacy-mode
                     (lisp-plus-kernel0:axis-determinacy ax))))))
   (let ((m (lisp-plus-core0:core0-evidence-manifestation evidence)))
-    (format t "       manifestation         status ~A  kind ~A  boundary ~A~%"
-            (fmt (lisp-plus-kernel0:manifestation-status m))
-            (fmt (lisp-plus-kernel0:manifestation-kind m))
-            (fmt (lisp-plus-kernel0:manifestation-source-boundary m))))
+    (if m
+        (format t "       manifestation         status ~A  kind ~A  boundary ~A~%"
+                (fmt (lisp-plus-kernel0:manifestation-status m))
+                (fmt (lisp-plus-kernel0:manifestation-kind m))
+                (fmt (lisp-plus-kernel0:manifestation-source-boundary m)))
+        (format t "       manifestation         NONE — no local manifestation record landed~%")))
   (format t "       attempt               ~A~%"
           (lisp-plus-kernel0:identity-key (lisp-plus-core0:core0-evidence-attempt-id evidence)))
   (format t "       seat                  ~A~%"
@@ -1962,12 +1996,12 @@ which holds the witness objects themselves and is compared separately below.")
   (let ((mat (roster-entry-for receipt :treatment-materially-suitable material-claim))
         (aut (roster-entry-for receipt :treatment-institutionally-authorized authority-claim)))
     (format t "     MATERIAL BRANCH                     AUTHORITY BRANCH~%")
-    (format t "       ~-32A  ~A~%"
+    (format t "       ~32A  ~A~%"
             (lisp-plus-kernel0:identity-key (getf mat :claim-id))
             (lisp-plus-kernel0:identity-key (getf aut :claim-id)))
-    (format t "       judged ~-25A judged ~A~%"
+    (format t "       judged ~25A judged ~A~%"
             (fmt (getf mat :judgment)) (fmt (getf aut :judgment)))
-    (format t "       by ~-29A by ~A~%"
+    (format t "       by ~29A by ~A~%"
             (lisp-plus-kernel0:identity-key (getf mat :procedure-id))
             (lisp-plus-kernel0:identity-key (getf aut :procedure-id)))
     (format t "                     \\             /~%")
@@ -1995,20 +2029,50 @@ which holds the witness objects themselves and is compared separately below.")
     "the missing public convenience is an identity-to-object resolver; it is named here and not invented here")
 
 ;;; --- 9b. grounding cardinalities, counted -----------------------------
-(format t "~%   9b. grounding multiplicity — counted across every receipt, not asserted:~%")
-(let* ((cardinalities
+(format t "~%   9b. grounding multiplicity — counted across every receipt, not asserted.~%")
+(format t "       THREE quantities are counted, because they are three different~%")
+(format t "       things and the first draft of this arm conflated two of them:~%")
+(let* ((env-counts
+         (loop for r in *all-receipts*
+               collect (length (lisp-plus-slice1:derivation-receipt-complete-binding-environments r))))
+       (gi-counts
          (loop for r in *all-receipts*
                append (loop for a in (lisp-plus-slice1:derivation-receipt-assessments r)
                             collect (length (lisp-plus-slice1:premise-assessment-ground-instances a)))))
-       (maximum (reduce #'max cardinalities :initial-value 0))
-       (plural (count-if (lambda (n) (> n 1)) cardinalities)))
-  (format t "     ~D receipt~:P, ~D premise assessment~:P; cardinalities ~A; maximum ~D; plural ~D~%"
-          (length *all-receipts*) (length cardinalities)
-          (fmt (sort (remove-duplicates cardinalities) #'<)) maximum plural)
-  (ok "[IX-c] plural grounding AROSE NATURALLY and was not staged: two independent laboratory assays, and two authorized treatments under one custody log"
-      (and (= 2 maximum) (>= plural 2))
-      "the normative plural reader did the counting; the singular projection was never read above cardinality one")
-  (ok "[IX-d] every complete ground environment was preserved wherever plurality occurred — no representative was ever selected"
+       (be-counts
+         (loop for r in *all-receipts*
+               append (loop for a in (lisp-plus-slice1:derivation-receipt-assessments r)
+                            collect (length (lisp-plus-slice1:premise-assessment-binding-environments a)))))
+       (env-max (reduce #'max env-counts :initial-value 0))
+       (gi-max (reduce #'max gi-counts :initial-value 0))
+       (be-max (reduce #'max be-counts :initial-value 0))
+       (plural-receipts (count-if (lambda (n) (> n 1)) env-counts)))
+  (format t "     ~D receipt~:P, ~D premise assessment~:P~%"
+          (length *all-receipts*) (length gi-counts))
+  (format t "     complete binding environments per receipt   values ~A  max ~D  plural ~D~%"
+          (fmt (sort (remove-duplicates env-counts) #'<)) env-max plural-receipts)
+  (format t "     premise binding environments per assessment values ~A  max ~D~%"
+          (fmt (sort (remove-duplicates be-counts) #'<)) be-max)
+  (format t "     ground instances per assessment             values ~A  max ~D~%"
+          (fmt (sort (remove-duplicates gi-counts) #'<)) gi-max)
+  (bench "PLURALITY AROSE, and it arose where the domain put it: two independent")
+  (bench "humidification assays, and two authorized treatments under one custody log.")
+  (bench "It is visible in the ENVIRONMENTS and not in the ground instances, and the")
+  (bench "reason is exact: a ground instance substitutes the CONCLUSION bindings and")
+  (bench "leaves a schema-local as a variable, so two environments differing only in")
+  (bench "a local encode to the same bytes and deduplicate to one. In this workshop")
+  (bench "every plurality lives in a local -- :ASSAY, and :METHOD -- so every ground")
+  (bench "instance is singular while the environments are not.")
+  (ok "[IX-c] plural grounding AROSE NATURALLY and was not staged: two receipts carry two complete binding environments each, and no representative was selected"
+      (and (= 2 env-max) (= 2 plural-receipts) (= 2 be-max))
+      "counted with the normative plural readers, over every receipt this program produced")
+  (ok "[IX-d] and the ground-instance cardinality is 1 everywhere, for the stated structural reason — so the singular projection was lawful wherever it could have been read, and this program never read it above cardinality one"
+      (and (= 1 gi-max)
+           ;; demonstrated rather than asserted: the projection answers here
+           (lisp-plus-slice1:premise-assessment-ground-instance
+            (assessment-for *material-humid-receipt* :substrate-response-tested)))
+      "the plural reader did all the counting above; the singular projection is exercised on exactly one assessment, to show it answers rather than refuses at this cardinality")
+  (ok "[IX-e] every complete ground environment was preserved where plurality occurred, and neither plural receipt carries a declared uniqueness conflict"
       (and (= 2 (length (lisp-plus-slice1:derivation-receipt-complete-binding-environments
                          *material-humid-receipt*)))
            (= 2 (length (lisp-plus-slice1:derivation-receipt-complete-binding-environments
@@ -2016,7 +2080,8 @@ which holds the witness objects themselves and is compared separately below.")
            (null (lisp-plus-slice1:derivation-receipt-uniqueness-conflicts
                   *material-humid-receipt*))
            (null (lisp-plus-slice1:derivation-receipt-uniqueness-conflicts
-                  *documented-receipt*)))))
+                  *documented-receipt*)))
+      "and the ONE place uniqueness WAS declared -- :PRINCIPAL -- refused instead, in Movement III arm 3a"))
 
 ;;; --- 9c. the two planted controls ------------------------------------
 (format t "~%   9c. the two planted controls — a check that has never failed is untested:~%")
