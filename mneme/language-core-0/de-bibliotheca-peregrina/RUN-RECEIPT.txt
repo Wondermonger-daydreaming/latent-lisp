@@ -1,9 +1,14 @@
 RUN-RECEIPT — de-bibliotheca-peregrina
 command: sbcl --non-interactive --load APPLICATION.lisp
-sbcl:    SBCL 2.4.6
-date:    2026-07-24T23:24:33Z (UTC, read from the clock, not asserted)
+cwd:     experiments/latent-lisp/mneme/language-core-0/de-bibliotheca-peregrina
+sbcl:    SBCL 2.4.6 (operation-checked through the wrapper via
+         (lisp-implementation-version), not read off a banner)
+date:    2026-07-25T02:00:06Z (UTC, read from the clock, not asserted)
 exit:    0
 
+Everything below this line is the program's own verbatim standard output.
+Everything above it is a claim ABOUT that output, made by the runner.
+-------------------------------------------------------------------------
 This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
 More information about SBCL is available at <http://www.sbcl.org/>.
 
@@ -60,34 +65,64 @@ kernel0 records+folds smoke: PASS
   ok   [II-f] represented counter-evidence lands :REFUTED — a different refusal entirely
   ok   [II-g] :MISSING and :REFUTED are distinct verdicts the desk answers differently
 
-── MOVEMENT III: the wall (a granted claim cannot be a premise today) ──
+── MOVEMENT III: the lawful road (a judged claim discharges a premise) ──
 
    3a. hand the granted claim straight to the next derivation:
-   ▸ refused — :MAY-BORROW is :MISSING: I have granted you nothing I can hand onward (see Movement III)
+   ▸ granted.
+  ok   [III-a] the verified judged claim DISCHARGES the premise — no witness minted
+  ok   [III-b] the discharge came from the CLAIM, not a witness: the four witness-side fields are empty and the claim is on the record in PREMISE-ASSESSMENT-JUDGED-CLAIMS — witness-side empty, judged-claim roster occupied
+  ok   [III-c] the receipt records the supporting claim IDENTITY and its JUDGMENT BASIS
+     inherited basis, read from the receipt:
+       claim      claim:claim-6
+       judgment   :VERIFIED
+       procedure  procedure:derive/BORROWING-STANDING/1  v1
+       supports   ("receipt:witness-4")
+     the receipt in its own words:
+[derivation GRANTED] schema :DISPATCH-STANDING v1
+  bindings: :COURIER=:BRASS-COURIER, :VOLUME="ms-Aleph-7", :PATRON=:FERRAND, :POLICY="pol-1204"
+  premise :MAY-BORROW: SATISFIED
+    discharged by judged claim claim:claim-6: judgment :VERIFIED under procedure procedure:derive/BORROWING-STANDING/1 v1 (basis preserved, not restated)
+  premise :COURIER-INSURED: SATISFIED
+    judged claim claim:claim-6 did NOT discharge: :PROPOSITION-DOES-NOT-MATCH
+  ok   [III-d] the OTHER premise was satisfied — so the schema and bindings are fine
+  ok   [III-e] the original judgment was NOT converted into a witness: the same record is still on the claim, still :VERIFIED, still inspectable
+
+   3b. the same claim, offered to a desk not given the right to read it:
+   ▸ refused — :MAY-BORROW is :INACCESSIBLE: a standing exists, but this desk was not given the right to read it
+     repair (verbatim from the receipt): (:GRANT-RECEIVER-ACCESS-TO NIL
+                                          :GRANT-RECEIVER-ACCESS-TO-JUDGED-CLAIMS
+                                          (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY
+                                              :DOMAIN :CLAIM
+                                              :NAME "claim-6")))
+  ok   [III-f] a claim the receiver cannot reach does NOT discharge — :INACCESSIBLE, and it is SEEN
+  ok   [III-g] the repair names the claim by DURABLE IDENTITY — the desk is told exactly what to grant itself — this is the whole of the fix in AT-THE-DESK, stated by the receipt itself
+
+   3c. the transport door (`transported-testimony`) — unchanged:
+   ▸ :MISSING — and CORRECTLY so: a transported receipt is testimony that a
+   ▸ derivation HAPPENED, whose proposition is an attribution, not :MAY-BORROW.
+  ok   [III-h] `transported-testimony` still does not discharge (lawfully so) — the lawful road is the CLAIM's identity, not a re-narration of its receipt
+
+   3d. Quillon — refused in Movement II — asks for a dispatch anyway:
+  ok   [III-i] the desk holds NO claim for Quillon — there is nothing to hand onward
+   ▸ refused — :MAY-BORROW is :MISSING: I have granted you no borrowing standing I could hand onward
      repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING
                                           (:PREDICATE :MAY-BORROW
-                                           (:PATRON :FERRAND)
-                                           (:VOLUME "ms-Aleph-7")))
-  ok   [III-a] the granted claim does NOT discharge the premise (refused, :MISSING)
-  ok   [III-b] and it was not REJECTED — it was NOT SEEN: every evidential field is empty — no field of the receipt mentions the claim at all
-  ok   [III-c] the OTHER premise was satisfied — so the schema and bindings are fine
+                                           (:PATRON :QUILLON)
+                                           (:VOLUME "in-Gimel-11")))
+  ok   [III-j] so the dispatch refuses, :MISSING — the refusal is the language's, not my bookkeeping's
+  ok   [III-k] and the desk's private grants table is GONE from the program: the symbol is not even interned — the previous version's guard was a hash table and my discipline; there is now no such variable to consult
 
-   3b. try the transport door (`transported-testimony`):
-   ▸ also :MISSING — and CORRECTLY so: a transported receipt is testimony that a
-   ▸ derivation HAPPENED, whose proposition is an attribution, not :MAY-BORROW.
-  ok   [III-d] `transported-testimony` cannot discharge it either (lawfully so) — no in-language route from a granted claim to a premise exists today
+   the desk mints itself a claim for the standing it was refused:
+  ok   [III-l] a claim the desk mints for itself is SEEN and REFUSED — :UNJUDGED, by identity
+  ok   [III-m] the repair no longer tells the desk to supply what it just supplied — it names the offered claim and why it failed — (("claim:claim-20" :UNJUDGED))
 
-   3c. the workaround that exists today — and what it costs:
-   ▸ granted.
-  ok   [III-e] the workaround works: restated standing + insurance grants :MAY-DISPATCH
-
-   the price, stated in the program's own bytes:
-  ok   [III-f] a restatement of a standing that was REFUSED grants just the same — Quillon owes 14 crowns and was refused in Movement II
-  ok   [III-g] the :CONTENT provenance breadcrumb is never read — the forged id passed
-   ▸ the language cannot tell a restated grant from a fabricated one.
-   ▸ the only thing standing between them is *DESK-GRANTS* — my hash table,
-   ▸ my discipline, unreceipted. That is the S3 species this slice exists to
-   ▸ make refusable, reintroduced by hand, at the one joint that needs it.
+   3e. the door still open at the edge of the road:
+  ok   [III-n] a FABRICATED direct witness still grants — the language cannot stop a program from asserting what it did not observe — this door was never Movement III's to close; it is the price of :DIRECT existing at all
+  ok   [III-o] but the two grants are now told apart FROM THE RECEIPTS ALONE: the lawful one carries a judged-claim record with a judgment basis, this one carries none — no hash table was consulted to tell them apart; the difference is in the receipts
+   ▸ the desk no longer restates a single grant, so the two shapes never mix:
+   ▸ an inherited standing arrives as a claim and leaves its judgment basis in
+   ▸ the receipt; an asserted one arrives as a witness and leaves a witness.
+   ▸ a reader of the receipt can tell which happened. I could not, before.
 
 ── MOVEMENT IV: the crossing (perform hands the volume to the courier) ──
 
@@ -139,7 +174,7 @@ kernel0 records+folds smoke: PASS
      repair (verbatim from the receipt): (:WITHDRAW-OR-ANSWER-REFUTATION
                                           (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY
                                               :DOMAIN :RECEIPT
-                                              :NAME "refutation-20")))
+                                              :NAME "refutation-26")))
    ▸ → entered on the hold queue behind the current loan.
 
    Dambroise asks for ms-Beth-3 (in transit, unconfirmed):
@@ -165,9 +200,12 @@ kernel0 records+folds smoke: PASS
    Nothing here demonstrates crash survival: the interrupted dispatch's
    evidence survived because the IMAGE did. The courier is the labelled
    scripted fake, never AP0-conformant; no result above licenses any
-   conformance language. And the Movement III workaround is a hole the
-   desk digs itself — see FIELD-REPORT.md §3.
+   conformance language. And Movement III closes ONE door, not every
+   door: [III-n] shows a fabricated :DIRECT witness still granting. What
+   changed is that the desk no longer HAS to fabricate one, and that a
+   receipt now distinguishes an inherited judgment from an assertion —
+   see FIELD-REPORT.md §3.
 
-de-bibliotheca-peregrina: 34 checks passed / 0 failed
+de-bibliotheca-peregrina: 42 checks passed / 0 failed
 (a desk that can say "no", "not yet", and "I do not know" in three
  different voices, and cannot accidentally send the same book twice)
