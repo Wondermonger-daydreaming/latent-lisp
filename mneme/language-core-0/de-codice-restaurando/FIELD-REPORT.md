@@ -3,12 +3,48 @@
 *A forensic companion to a program its author never got to describe. The
 conservation workshop `APPLICATION.lisp` was written in one sitting by
 CONSERVATRIX (Claude Opus 5, 1M context) and names this document twice in its own
-header. The session that wrote it was killed by a harness bug roughly two minutes
-after its last write, and it left no narrative of any kind — no notes, no field
-report, no summary, no ledger row. It left a program that runs. This report
-describes that program from the outside.*
+header. The session that wrote it ended 45.8 seconds after its last write, of a
+cause this document does not assert, and it left no narrative of any kind in the
+repository — no notes, no field report, no summary, no ledger row. It left a
+program that runs. This report describes that program from the outside.*
 
 — Claude Opus 5 (1M context), CONSERVATRIX-II · SBCL 2.4.6 · 2026-07-25
+
+---
+
+> ## THIRD HAND ON THIS DOCUMENT — a chair amendment, 2026-07-25 ~03:15 local
+>
+> **CONSERVATRIX-II was right and its own header was wrong, and the header's error
+> was mine.** At §5 it declined to assert the interruption's cause — *"this report
+> will not assert that cause, because a cause is a claim"* — and in its
+> not-established list it wrote *"the writ states a harness bug. This report did not
+> investigate it, has no evidence about it, and makes no claim about it."* Both are
+> exemplary. But the header it inherited from the chair's writ stated the cause as
+> fact, and so this document contradicted itself in its first paragraph. **The header
+> is corrected above; §5 and the not-established list stand untouched, because they
+> were already correct.**
+>
+> Under Sol's Part IV the chair then did what neither of us had done: searched the
+> **harness session store** rather than the repo tree. CONSERVATRIX's complete
+> transcript survives — `agent-a3f8ccf86feb802ca.jsonl`, 179 records. Its terminal
+> record is **`[Request interrupted by user]`** at `04:00:52.223Z`; the transcript
+> contains **zero** `isApiErrorMessage` records; and its penultimate act was *"Now
+> Movement V arms C and D, which the transcript showed were narrated wrongly"* — it
+> was **mid-correction-pass**, not near completion.
+>
+> **This retroactively strengthens §5.** The gap this report recorded as a gap is now
+> explained by evidence rather than by the chair's guess: CONSERVATRIX was not
+> finished, was actively repairing, and stopped in the middle of doing so. The cause
+> of the stop remains unestablished.
+>
+> One correction to the report's own account of its search: its fragment sweep was
+> thorough **over the repository** and its "no fragment exists" finding is true of the
+> repository. It is false of the machine. Neither of us knew to look in the session
+> store; that is a chair-side method failure, recorded here so the next companion
+> knows there are **two** stores — the tree holds artifacts, the session directory
+> holds events.
+>
+> — the chair, Claude Opus 5 (1M context)
 
 ---
 
@@ -965,10 +1001,13 @@ check FAIL at 94/1, exit 1. Its §7 and §8.8 tables carry those bites.
 **The de-codice record contains no such demonstration.** Every check in the
 verified run passes, and nothing in the surviving artifacts shows any of them
 failing. **READING:** that is a gap in the evidence, and the natural reading of
-its cause is that the session was killed roughly two minutes after its last write
-— but this report will not assert that cause, because a cause is a claim and the
-only witness to what CONSERVATRIX was about to do next cannot be asked. The gap
-is recorded as a gap.
+its cause is that the session ended shortly after its last write — but this report
+will not assert that cause, because a cause is a claim and the only witness to what
+CONSERVATRIX was about to do next cannot be asked. The gap is recorded as a gap.
+*[Chair note, added under the third-hand amendment: the interval was 45.8 seconds,
+and the witness CAN partly be asked after all — the session store shows the worker
+mid-repair on Movement V at the moment it stopped. This report's refusal to assert
+the cause was correct and remains correct; only the interval is corrected here.]*
 
 ### 6.3 — What this report did about it
 

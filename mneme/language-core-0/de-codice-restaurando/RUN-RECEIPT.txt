@@ -1,0 +1,506 @@
+RUN-RECEIPT — de-codice-restaurando
+command: sbcl --non-interactive --load APPLICATION.lisp
+cwd:     experiments/latent-lisp/mneme/language-core-0/de-codice-restaurando
+sbcl:    SBCL 2.4.6 (operation-checked through the wrapper via
+         (lisp-implementation-version), not read off a banner)
+date:    2026-07-25T06:10:19Z (UTC, read from the clock, not asserted)
+exit:    0
+runs:    executed twice from a clean image; the two outputs are byte-identical
+note:    CREATED 2026-07-25 by the chair, not regenerated. This application had
+         NO run receipt: CONSERVATRIX, its author, was interrupted before it
+         could write one, and Sol's post-workshop writ asked for a regeneration
+         of a file that did not exist. The house form (see the sibling
+         de-bibliotheca-peregrina) carries one, so it is created here.
+
+         The program itself is unchanged in behaviour. Under Sol's Part I the
+         chair corrected THREE PROSE SITES that named the wrong admission
+         surface, and nothing else: (1) the *ledger-reading* docstring, whose
+         clause "which is why species 4 and 5 arrive at the same door" was
+         false — those species never reach that promotion procedure; (2) the
+         [VII-j] detail string, which named PROMOTION admissibility for a
+         result produced by `derive`; (3) the 7e header calling mode, kind and
+         polarity "the governed attributes", which they are at `raise` and are
+         not at `derive`.
+
+         Check TOTAL is UNCHANGED at 88/0. No check was added, removed,
+         renumbered or weakened; no disposition changed; no semantic assertion
+         was touched. The transcript differs from the pre-correction run at
+         exactly 8 lines, all of them explanatory prose.
+
+         Chair-verified: zero package-internal (two-colon) access; the
+         counterfeit witness route remains OFF the production path.
+
+Everything below this line is the program's own verbatim standard output.
+Everything above it is a claim ABOUT that output, made by the runner.
+-------------------------------------------------------------------------
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
++================================================================+
+|  DE CODICE RESTAURANDO - the conservation workshop, day 4183    |
+|  one damaged manuscript; the exhibition opens on day 4212       |
++================================================================+
+
+-- MOVEMENT I: the bench (ordinary Common Lisp, no standing) --
+
+   the condition survey, as the surveyor left it:
+     codex:umbra-17 Umbrarum Liber         PARCHMENT  / IRON-GALL  74 folios  distortion 11mm (COCKLED)  ink grade 3  6 tears  tideline
+     codex:vetus-4  Antiphonarium Vetus    PARCHMENT  / CARBON    220 folios  distortion  2mm (FLAT)  ink grade 1  0 tears
+     chart:hydro-2  Carta Hydrographica    LAID-PAPER / IRON-GALL   1 folio  distortion 19mm (SEVERELY-DISTORTED)  ink grade 4  11 tears  tideline
+
+   the treatment catalogue filtered for codex:umbra-17 — parchment,
+   iron-gall at solubility grade 3:
+     controlled humidification          stages 1  chamber 18h  blotter 24   174 crowns  back by day 4187
+     flattening under graded pressure   stages 1  chamber  0h  blotter 48    96 crowns  back by day 4184
+     local tear repair, parchment strips stages 1  chamber  0h  blotter  6    12 crowns  back by day 4184
+
+   and the two the filter excluded, with the reason:
+     aqueous washing                    excluded — substrates (:LAID-PAPER), ink tolerance grade 1
+     solvent consolidation of the medium excluded — substrates (:PARCHMENT :LAID-PAPER), ink tolerance grade 2
+   > the exhibition opens in 29 days; every permitted option comes back in time.
+  ok   [I-a] the bench reads a structure, not a claim
+  ok   [I-b] the distortion class is ordinary three-way arithmetic over a measurement
+  ok   [I-c] the compatibility filter is an ordinary predicate: 3 of 5 options survive it for this object
+  ok   [I-d] the schedule and the cost are ordinary integers carrying no receipt
+  ok   [I-e] a treatment the ink will not tolerate is filtered out here, by arithmetic — and that is NOT the same act as refusing it — the filter narrows what is worth asking; Movement II decides what is established
+   > nothing above produced a receipt, a witness, or an outcome — and nothing
+   > above owed one. The bench proposes; the language disposes.
+
+-- MOVEMENT II: the material branch (assays -> stability -> suitability) --
+
+   hop M1 — two assays establish the medium's stability:
+   > granted.
+  ok   [II-a] two separately-witnessed assays grant :INK-STABILITY-ESTABLISHED
+  ok   [II-b] the grant is a real Slice /0 promotion, judgment :VERIFIED — not a flag
+  ok   [II-c] and it is an OBJECT with a proposition, reusable by whatever needs it
+
+   hop M2 — stability plus the substrate response tests make a
+            suitability standing for controlled humidification:
+   > granted.
+  ok   [II-d] the verified judged claim DISCHARGES the inherited premise — no witness was minted for it
+  ok   [II-e] the receipt records the supporting claim IDENTITY and its JUDGMENT BASIS
+     inherited basis, read out of the receipt:
+       claim      claim:claim-5
+       judgment   :VERIFIED
+       procedure  procedure:derive/INK-STABILITY/1  v1
+  ok   [II-f] the spent claim is UNTOUCHED: the same judgment record, still on the claim, still :VERIFIED — nothing converted a judgment into a witness on the way past
+  ok   [II-g] TWO independent response assays yield TWO complete ground environments, and the language kept both — 2 complete environment(s); no uniqueness was declared over :ASSAY, because two agreeing assays are corroboration and not a conflict
+
+   hop M2-bis — the same stability claim, spent a SECOND time, for the
+               riskier treatment (one response assay covered it):
+   > granted.
+  ok   [II-h] one claim discharges premises in TWO different derivations and is still inspectable after both
+  ok   [II-i] and THIS receipt has exactly one ground environment — the plurality above was the laboratory's, not the schema's
+
+-- MOVEMENT III: the authority branch (consent -> authority -> mandate) --
+
+   3a. the deposit file as it FIRST arrived — both consents in one folder:
+   > refused — :INTERVENTION-CONSENT-RECORDED is :AMBIGUOUS: the consents on file name different principals
+     repair (verbatim from the receipt): (:RESOLVE-DECLARED-UNIQUENESS-CONFLICT-ON ((:PRINCIPAL (:HEIR-OF-ARLES :FOUNDATION-VASARI))))
+     the conflict as the receipt states it: local :PRINCIPAL over values (:HEIR-OF-ARLES :FOUNDATION-VASARI)
+  ok   [III-a] two consents naming two principals refuse :AMBIGUOUS, and the receipt NAMES the local
+  ok   [III-b] both consents are visible as accepted, matching, accessible support — the ambiguity is not a rejection of either — the language did not discard one to make progress, which is exactly what a bench under exhibition pressure would have done
+  ok   [III-c] and the OTHER premise is satisfied, so this is a contested clause and not a missing file
+   > the workshop does not resolve this at the bench. The registrar obtains a
+   > ruling; the Vasari foundation is confirmed successor; the heir's consent
+   > is withdrawn from the file. Only THEN is there one principal.
+
+   3b. hop A1 — the file as the registrar returned it, one consent:
+   > granted.
+  ok   [III-d] one principal, one complete environment, no declared conflict: :OWNER-AUTHORITY-ESTABLISHED is granted
+
+   hop A2 — owner authority plus the committee's current mandate:
+   > granted.
+  ok   [III-e] the authority branch chains by judgment identity exactly as the material branch does
+  ok   [III-f] the spent authority claim is untouched too
+
+   hop A2-bis — and for the riskier treatment, on the same authority:
+   > granted.
+  ok   [III-g] the second method is authorized on the same owner authority
+
+-- MOVEMENT IV: the reconvergence (both branches, or nothing) --
+
+   4a. both branch claims, handed to the authorization:
+   > granted.
+  ok   [IV-a] :TREATMENT-AUTHORIZED is granted, and BOTH premises read :SATISFIED
+  ok   [IV-b] the receipt carries TWO governed bases, one per branch, each naming its own claim and its own judging procedure
+     THE TWO BASES, read out of the one receipt:
+       material  claim claim:claim-11
+                 judged :VERIFIED by procedure:derive/MATERIAL-SUITABILITY/1 v1
+       authority claim claim:claim-28
+                 judged :VERIFIED by procedure:derive/INSTITUTIONAL-AUTHORITY/1 v1
+     and the same receipt in the language's own words:
+[derivation GRANTED] schema :TREATMENT-AUTHORIZATION v1
+  bindings: :METHOD=:CONTROLLED-HUMIDIFICATION, :MANUSCRIPT="codex:umbra-17"
+  premise :TREATMENT-MATERIALLY-SUITABLE: SATISFIED
+    discharged by judged claim claim:claim-11: judgment :VERIFIED under procedure procedure:derive/MATERIAL-SUITABILITY/1 v1 (basis preserved, not restated)
+    judged claim claim:claim-28 did NOT discharge: :PROPOSITION-DOES-NOT-MATCH
+  premise :TREATMENT-INSTITUTIONALLY-AUTHORIZED: SATISFIED
+    judged claim claim:claim-11 did NOT discharge: :PROPOSITION-DOES-NOT-MATCH
+    discharged by judged claim claim:claim-28: judgment :VERIFIED under procedure procedure:derive/INSTITUTIONAL-AUTHORITY/1 v1 (basis preserved, not restated)
+  ok   [IV-c] each basis IS the claim its own branch granted — checked by durable identity, not by the order printed above
+
+   4b. the same authorization for the riskier treatment:
+   > granted.
+  ok   [IV-d] the second treatment is authorized through its own two branch claims
+
+   4c. THE IMPERSONATION ATTEMPTS. Neither branch may stand for the other.
+
+       (i) the material claim alone:
+   > refused — :TREATMENT-INSTITUTIONALLY-AUTHORIZED is :MISSING: no institutional authorization for this intervention exists
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING (:PREDICATE :TREATMENT-INSTITUTIONALLY-AUTHORIZED (:MANUSCRIPT "codex:umbra-17") (:METHOD :CONTROLLED-HUMIDIFICATION)))
+  ok   [IV-e] a material conclusion alone does NOT authorize: the authority premise is :MISSING — safe for the object is not the same sentence as permitted to us
+
+       (ii) the authority claim alone:
+   > refused — :TREATMENT-MATERIALLY-SUITABLE is :MISSING: nothing before me establishes that this material will bear this treatment
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING (:PREDICATE :TREATMENT-MATERIALLY-SUITABLE (:MANUSCRIPT "codex:umbra-17") (:METHOD :CONTROLLED-HUMIDIFICATION)))
+  ok   [IV-f] an authority conclusion alone does NOT imply suitability: the material premise is :MISSING — permitted to us is not the same sentence as safe for the object
+
+       (iii) the material claim offered TWICE, once in each slot:
+   > refused — :TREATMENT-INSTITUTIONALLY-AUTHORIZED is :MISSING: no institutional authorization for this intervention exists
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING (:PREDICATE :TREATMENT-INSTITUTIONALLY-AUTHORIZED (:MANUSCRIPT "codex:umbra-17") (:METHOD :CONTROLLED-HUMIDIFICATION)))
+  ok   [IV-g] a claim cannot fill a premise its proposition does not match, however it is positioned in :SUPPORTS — supports is a bag the language classifies, not a positional argument list
+  ok   [IV-h] and the roster proves the language SAW it and considered it for that premise before declining — the outcome is :PROPOSITION-DOES-NOT-MATCH, which is a finding rather than a silence
+
+       (iv) the right predicate, the WRONG object — is matching by name,
+            by schema, by procedure, or by proposition-under-bindings?
+  ok   [IV-i] the wrong-object claim is real: :VERIFIED, and judged by the very same procedure as umbra-17's material claim — so if compatibility ran on procedure identity, schema name, or predicate name, this would discharge
+   > refused — :TREATMENT-MATERIALLY-SUITABLE is :MISMATCHED: the suitability I hold is for a DIFFERENT object; roles conflict
+     repair (verbatim from the receipt): (:SUPPLY-SUPPORT-WITH-CORRECTED-ROLES NIL :JUDGED-CLAIMS-WITH-CONFLICTING-ROLES (("claim:claim-52" :MANUSCRIPT)))
+  ok   [IV-j] it lands :MISMATCHED, and the receipt names the conflicting ROLE — so matching is by proposition under bindings, not by any name
+     the roster entry, decoded: claim claim:claim-52  outcome :ROLE-CONFLICT  roles (:MANUSCRIPT)
+     the repair, verbatim from the receipt: (:SUPPLY-SUPPORT-WITH-CORRECTED-ROLES NIL :JUDGED-CLAIMS-WITH-CONFLICTING-ROLES (("claim:claim-52" :MANUSCRIPT)))
+  ok   [IV-k] and the conflict is recorded on the CLAIM side: the witness-side mismatched-candidates field is empty, while the judged-claim roster carries the role — the repair names the claim by identity key and the exact role, which is enough to fix the call without reading the schema
+
+-- MOVEMENT V: the refusals (three ways not to touch the object) --
+
+   B. MATERIAL REFUSAL. The hydrographic chart's iron gall BLED in the
+      solubility assay. The workshop asks anyway, to see the shape of no:
+   > refused — :SOLUBILITY-TESTED is :REFUTED: the assay contradicts stability outright; this is a finding, not a gap
+     repair (verbatim from the receipt): (:WITHDRAW-OR-ANSWER-REFUTATION (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY :DOMAIN :RECEIPT :NAME "refutation-31")))
+  ok   [V-b1] a contradicted assay is :REFUTED — the language distinguishes a finding from a gap
+  ok   [V-b2] and the positive support for the other premise stays visible beside the refutation
+
+      so no suitability standing exists, so the authorization has nothing:
+   > refused — :INK-STABILITY-ESTABLISHED is :MISSING: the medium's stability is not established; no treatment touches this ink yet
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING (:PREDICATE :INK-STABILITY-ESTABLISHED (:MANUSCRIPT "chart:hydro-2") (:MEDIUM (:VAR :MEDIUM))))
+  ok   [V-b3] the material branch stops at hop M2, and the RECEIPT is the reason — no guard of the workshop's fired
+   > NO EFFECT is attempted for chart:hydro-2 anywhere in this program.
+   > The chart is returned to storage with its condition note amended.
+
+   C. AUTHORITY REFUSAL. Aqueous washing is materially sensible for the
+      chart's laid paper, but the committee's mandate does not cover it:
+   > refused — :CONSERVATION-MANDATE-CURRENT is :MISSING: the conservation mandate for this method is not current
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING (:PREDICATE :CONSERVATION-MANDATE-CURRENT (:METHOD :AQUEOUS-WASHING) (:POLICY (:VAR :POLICY))))
+  ok   [V-c1] with no mandate witness the authority branch refuses :MISSING while OWNER authority stays satisfied
+
+      and the authorization therefore has one branch and not two:
+   > refused — :TREATMENT-MATERIALLY-SUITABLE is :MISMATCHED: the suitability I hold is for a DIFFERENT object; roles conflict
+     repair (verbatim from the receipt): (:SUPPLY-SUPPORT-WITH-CORRECTED-ROLES NIL :JUDGED-CLAIMS-WITH-CONFLICTING-ROLES (("claim:claim-11" :METHOD)))
+  ok   [V-c2] the work order lands :ASSESSMENT-PENDING, and the state came from the receipt's disposition
+  ok   [V-c3] and NOTHING was performed: no account on the work order, no completion date
+
+   D. THE INACCESSIBLE BRANCH. Both claims exist and both are verified.
+      The receiving bench was given only the material one:
+   > refused — :TREATMENT-INSTITUTIONALLY-AUTHORIZED is :INACCESSIBLE: an authorization exists; THIS bench was not given the right to read it
+     repair (verbatim from the receipt): (:GRANT-RECEIVER-ACCESS-TO NIL :GRANT-RECEIVER-ACCESS-TO-JUDGED-CLAIMS (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY :DOMAIN :CLAIM :NAME "claim-28")))
+  ok   [V-d1] the unreadable branch is :INACCESSIBLE — emphatically NOT :MISSING — the bench is not told to go find an authorization; it is told it may not read the one it has
+  ok   [V-d2] the roster says exactly which claim and exactly why
+  ok   [V-d3] :INACCESSIBLE and :MISSING are different sentences, and the ONE schema produced both — compared against arm 4c(i)'s stored receipt for the identical premise — same schema name and version on both receipts, read off both receipts
+     the repair, verbatim and complete:
+       (:GRANT-RECEIVER-ACCESS-TO NIL :GRANT-RECEIVER-ACCESS-TO-JUDGED-CLAIMS (#S(LISP-PLUS-KERNEL0:DURABLE-IDENTITY :DOMAIN :CLAIM :NAME "claim-28")))
+     and the same repair with its identities decoded, for a reader:
+       grant-receiver-access-to-judged-claims: ("claim:claim-28")
+  ok   [V-d4] the repair names the claim by DURABLE IDENTITY, so the fix is mechanical and not a guess
+  ok   [V-d5] and an unreadable branch routes to RECONCILIATION, not to a pending assessment — a gap sends you back to the laboratory; a locked door sends you to the registrar
+  ok   [V-d6] the two refusals differ in STRUCTURE and not only in name: the :MISSING receipt's roster holds no inaccessible entry at all, and the :INACCESSIBLE one holds exactly one, naming exactly the claim it could not read — a gap and a locked door are different objects in the receipt, not two words for one
+
+-- MOVEMENT VI: the treatment (two irreversible acts, one object) --
+
+   6a. stage 1 — controlled humidification, 18 chamber hours:
+  ok   [VI-a] the work order was authorized BEFORE anything crossed, and the state came from the authorization receipt
+     the treatment account, whole:
+       view (outcome-kind)   :COMMITTED
+       axis execution      :COMPLETED               determinacy :DETERMINATE
+       axis manifestation  :PRESENT                 determinacy :DETERMINATE
+       axis effects        :SETTLED                 determinacy :DETERMINATE
+       axis interpretation :NOT-APPLICABLE          determinacy :DETERMINATE
+       manifestation         status :PRESENT  kind :COURIER-RECEIPT  boundary :FAKE-COURIER-BOUNDARY
+       attempt               attempt:core0/attempt/4
+       seat                  seat:core0/seat/umbra-workshop/humidification/stage-1
+       adapter               principal:fake-courier/FAKE-COURIER/v0
+       process label         umbra-workshop/humidification/stage-1
+       recorded events       9
+       ledger token told     fake:courier:0001
+       refusal reason        NIL
+   > stage 1 recorded in the treatment file; the workshop's own log entry
+   > and the chamber's ledger row are TWO records that agree on one token.
+  ok   [VI-b] the act returns a STRUCTURED ACCOUNT; the work order stores the account and not a verdict
+  ok   [VI-c] THE DEED and THE TESTIMONY are distinct records agreeing on one token, and are not the same object — the row in the chamber's private world is the effect; the workshop's log line is its account of the effect
+
+   6b. stage 2 — flattening under graded pressure. The crossing is
+       interrupted, and the press's ledger WITHHOLDS its answer:
+     the treatment account, whole:
+       view (outcome-kind)   :INDETERMINATE
+       axis execution      :FAILED                  determinacy :DETERMINATE
+       axis manifestation  (:ABSENT :STATE :WITHHELD) determinacy :DETERMINATE
+       axis effects        :BOUNDED                 determinacy :BOUNDED
+       axis interpretation :NOT-ATTEMPTED           determinacy :DETERMINATE
+       manifestation         NONE — no local manifestation record landed
+       attempt               attempt:core0/attempt/12
+       seat                  seat:core0/seat/umbra-workshop/flattening/stage-2
+       adapter               principal:fake-courier/FAKE-COURIER/v0
+       process label         umbra-workshop/flattening/stage-2
+       recorded events       8
+       ledger token told     NONE
+       refusal reason        NIL
+  ok   [VI-d] the interrupted act's view is :INDETERMINATE, and the FULL account is retained anyway
+  ok   [VI-e] the workshop was told NO token, and the press's ledger DOES hold a row — absence of testimony is not testimony of absence — the sheets may already be pressed
+
+       the workshop's worst instinct, refused by live code:
+   > *** UNSAFE-RETRY — the press stays open. The sheets are not pressed twice.
+  ok   [VI-f] the blind repetition of an irreversible act is refused by LIVE code, not by the workshop's good intentions — the reason it must be refused is written out in this movement's banner, in the program
+
+       the honest move: continue from the surviving account, never repeat the act:
+     disposition      :INDETERMINATE
+     known            (:FRONTIER-CROSSED :EFFECT-UNCERTAIN)
+     unknown          (:WHETHER-THE-EFFECT-SETTLED)
+     required-action  (:OBTAIN-A-JURISDICTION-BEARING-WITNESS-OF-THE-LEDGER)
+   > work order WO-1102 set :TREATMENT-INDETERMINATE; reassessment case RC-1
+   > opened. The sheets are examined under raking light before anything else
+   > touches them. No completion date. No second press. No clearance.
+  ok   [VI-g] a withholding ledger yields :INDETERMINATE, never a fabricated settlement
+  ok   [VI-h] the continuation did NOT re-invoke the press — the row count is unchanged across it
+  ok   [VI-i] the case's text is the continuation's OWN plist, not the workshop's prose
+  ok   [VI-j] and no phantom completion was written: the work order has no completion date and its real state is preserved
+
+   the two work orders on the object, structurally different records:
+     WO-1101   CONTROLLED-HUMIDIFICATION  TREATMENT-IN-PROGRESS    stages-logged 1  completed -  case -
+     WO-1102   PRESSURE-FLATTENING        TREATMENT-INDETERMINATE  stages-logged 0  completed -  case RC-1
+  ok   [VI-k] one act is accounted for and one is not, and the difference is in the RECORDS rather than in the printout — and NEITHER has a completion date, because a completion date is post-treatment standing and Movement VII is about why there is none
+
+-- MOVEMENT VII: the effect frontier (a true account, offered as evidence) --
+
+   7a. species 1 — nothing offered for :TREATMENT-COMPLETED:
+   > refused — :TREATMENT-COMPLETED is :MISSING: nothing before me establishes that the treatment was completed
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING (:PREDICATE :TREATMENT-COMPLETED (:MANUSCRIPT "codex:umbra-17") (:METHOD :CONTROLLED-HUMIDIFICATION)))
+  ok   [VII-a] the effect premise is :MISSING while the reassessment premise is :SATISFIED
+  ok   [VII-b] and the receipt records NO unsupported residue, because nothing unrecognized was supplied
+
+   7b. species 2 — THE ACTUAL ACCOUNT. The workshop hands `derive` the
+       Core /0 evidence object from stage 1: real attempt, real ledger
+       token, real event sequence. Not wrapped, not restated.
+       attempt attempt:core0/attempt/4, ledger token fake:courier:0001, 9 recorded events
+   > refused — :TREATMENT-COMPLETED is :MISSING: nothing before me establishes that the treatment was completed
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING (:PREDICATE :TREATMENT-COMPLETED (:MANUSCRIPT "codex:umbra-17") (:METHOD :CONTROLLED-HUMIDIFICATION)))
+   > the effect premise says :MISSING; the receipt records an unsupported value at :supports[1].
+  ok   [VII-c] the account is NOT admitted: the premise is still :MISSING and the standing is still refused — an account is not a witness, not a refutation and not a claim; CHARTER-DELTA-3 records it at the receipt and records nothing more
+  ok   [VII-d] but supplying it is no longer indistinguishable from supplying nothing: the receipt names the exact input position — index 1 is where the workshop put it: the reassessment witness is index 0
+  ok   [VII-e] and the residue changed NO decision: every decision-bearing field agrees with species 1
+   > the account is now VISIBLE as supplied-but-unsupported. Visibility is
+   > not admissibility. The frontier has not moved.
+
+   7c. the residue table Delta /3 specifies, all three rows, live:
+     recognized support alone   decision :REFUSED  reassessed :SATISFIED  residue NIL
+     recognized + unsupported   decision :REFUSED  reassessed :SATISFIED  residue ((:INDEX 1 :REASON :UNSUPPORTED-SUPPORT-SPECIES))
+     unsupported alone          decision :REFUSED  reassessed :MISSING    residue ((:INDEX 0 :REASON :UNSUPPORTED-SUPPORT-SPECIES))
+  ok   [VII-f] all three Delta /3 rows behave exactly as specified — same decision with and without residue, and unsupported-alone differs observably from nothing
+  ok   [VII-g] and the residue is INERT DATA, not the object: the entries carry only an index and a reason, and the workshop cannot read the account back out of a receipt — the raw object is not retained — not the object, not its type, not its printed form
+
+   7d. THE PROBES — OFF THE PRODUCTION PATH. Species 3 to 6 are run to
+       find out what the current surface does, and NOTHING the workshop
+       decides below is read out of any of them.
+
+     species 3: real account carried    decision :GRANTED  premise :SATISFIED  witnesses 1 roster 0
+     species 4: FABRICATED witness      decision :GRANTED  premise :SATISFIED  witnesses 1 roster 0
+     species 5: BARE witness, nothing   decision :GRANTED  premise :SATISFIED  witnesses 1 roster 0
+     species 6: real witness RAISED     decision :GRANTED  premise :SATISFIED  witnesses 0 roster 1
+  ok   [VII-h] species 3 — a direct witness carrying the real attempt identity and the real token DISCHARGES the effect premise
+  ok   [VII-i] species 4 — the FABRICATED witness discharges IDENTICALLY. Stated plainly, because it is the finding: a witness naming a treatment that never happened grants exactly as well as one naming a treatment that did
+  ok   [VII-j] species 5 — the BARE witness, carrying no procedure and no content whatsoever, also discharges identically — the three discharge identically because Slice /1 premise assessment compares their WITNESS-FOR proposition against the premise pattern and their receiver-relative accessibility, and reads nothing else about them; the displayed mode, kind, polarity, procedure and content are not consulted by this gate (CORRECTED 2026-07-25: this line previously named PROMOTION admissibility, a mode-and-kind membership test, which governs `raise` -- not the `derive` path these three actually took)
+  ok   [VII-k] species 6 — RAISE turns the real witness into a genuinely :VERIFIED claim that then chains lawfully
+
+   7e. species 3 against species 4, read through every public reader of
+       the premise assessment — because indistinguishability that is not
+       computed is only a mood:
+     :DISPOSITION             identical across all three
+     :PREMISE-PATTERN         identical across all three
+     :GROUND-INSTANCES        identical across all three
+     :JUDGED-CLAIMS           identical across all three
+     :MATCHING-INACCESSIBLE   identical across all three
+     :MISMATCHED-CANDIDATES   identical across all three
+     :REFUTING-SUPPORTS       identical across all three
+     :BINDING-ENVIRONMENTS    identical across all three
+     :AMBIGUITIES             identical across all three
+  ok   [VII-l] every public reader of the effect premise is identical across species 3, 4 and 5, save the one holding the witness objects
+     matching-accessible      one witness each. these three fields are
+                              CARRIED AND RENDERED, not consulted by this
+                              gate -- `derive` reads witness-for and
+                              accessibility only. (they ARE governed at
+                              `raise`, which none of these three performed.)
+       mode / kind / polarity   (:DIRECT :CHAMBER-LEDGER :SUPPORTS)
+       the SAME, on species 4   (:DIRECT :CHAMBER-LEDGER :SUPPORTS)
+       the SAME, on species 5   (:DIRECT :CHAMBER-LEDGER :SUPPORTS)
+       :procedure  3 / 4 / 5    attempt:core0/attempt/4 / attempt:umbra-workshop/a-chamber-cycle-that-never-ran / NIL
+       :content    3 / 4 / 5    (:LEDGER-TOKEN "fake:courier:0001") / (:LEDGER-TOKEN "fake:courier:9999") / NIL
+  ok   [VII-m] the three witnesses agree in every attribute the language GOVERNS and differ only in the two it merely CARRIES — a reader can see three different strings; nothing tells the reader which of them names a treatment that happened
+     species 6: the judgment record keeps judgment :VERIFIED, procedure procedure:umbra-workshop/read-the-chamber-ledger v1,
+                and supports in domains (:RECEIPT)
+  ok   [VII-n] on the RAISED route the crossing's identity is gone by the time the claim chains: no :ATTEMPT identity survives into the receiving receipt or the judgment record — what survives a promotion is the WITNESS's id, never what the witness was carrying
+
+   7f. and so the object lands in an honest state, chosen by the receipt:
+   > the lawful post-treatment receipt says :TREATMENT-COMPLETED is :MISSING.
+   > -> WO-1101 set :TREATED-UNASSESSED; reassessment case RC-2 opened; the work order stays
+   >    OPEN and carries no completion date. The workshop holds a ledger token
+   >    from a chamber cycle that really ran, and still cannot establish
+   >    completion — because a token is a thing it was TOLD, and the premise
+   >    asks for a thing that was JUDGED.
+  ok   [VII-o] the object lands :TREATED-UNASSESSED, and the state came from the receipt's disposition rather than from a judgement of the workshop's
+  ok   [VII-p] no phantom completion: no completion date on either work order, and both remain open
+  ok   [VII-q] and the WORKSHOP DECLINED A DOOR IT HAD: species 3 GRANTED post-treatment standing, and the workshop did not take that grant — that refusal is WORKSHOP POLICY — unenforced by the language and unreceipted anywhere
+
+   -- the boundary, in four parts, because they are four different things --
+   > WHAT THE LANGUAGE REFUSES: the Core /0 account cannot discharge the
+   >   premise. It is recorded as unsupported residue at the receipt and has no
+   >   semantic effect ([VII-c], [VII-d]). No governed operation consumes it.
+
+   > WHAT THE WORKSHOP DECLINES AS POLICY: minting a :DIRECT witness for
+   >   :TREATMENT-COMPLETED. Species 3 shows that would GRANT ([VII-h]). The
+   >   workshop will not do it for a clearance, and nothing but this paragraph
+   >   and one ECASE stops it.
+
+   > WHAT THE RECEIPT PROVES: that the account was supplied, at which input
+   >   position, and that it changed no decision ([VII-e], [VII-g]). It proves
+   >   the workshop TRIED. It does not prove the treatment was completed.
+
+   > WHAT REMAINS UNENFORCED APPLICATION DISCIPLINE: the truthfulness of every
+   >   :DIRECT witness this program mints. Species 4 and 5 grant identically to
+   >   species 3, so the honesty of the mode reserved for first-hand
+   >   observation is carried by the conservator and by nothing else.
+
+   > The workshop stops here. It proposes no bridge and implements none.
+
+-- MOVEMENT VIII: the exhibition (two branches, one decision) --
+
+   8a. the documentation branch — it needs no effect, and it grants:
+   > granted.
+  ok   [VIII-a] :TREATMENT-DOCUMENTED is granted from the authorization claims and the custody log
+  ok   [VIII-b] and BOTH authorizations discharged it: two authorized treatments under one custody log is two complete environments, and the language kept both — 2 complete environment(s); no representative was selected
+
+   8b. the post-treatment branch — it cannot grant, for Movement VII's reason:
+   > the post-treatment receipt of arm 7a stands: :TREATMENT-COMPLETED is :MISSING.
+  ok   [VIII-c] there is NO post-treatment condition claim anywhere in this program, because none was ever granted lawfully — no variable holds one, and the exhibition derivation below therefore has nothing to offer for that premise
+
+   8c. THE EXHIBITION DECISION. The workshop offers everything it lawfully
+       holds — the documentation claim, and the authorization claims too:
+   > refused — :POST-TREATMENT-CONDITION-ESTABLISHED is :MISSING: post-treatment condition is not established; I cannot clear this for display
+     repair (verbatim from the receipt): (:SUPPLY-ACCESSIBLE-SUPPORT-MATCHING (:PREDICATE :POST-TREATMENT-CONDITION-ESTABLISHED (:MANUSCRIPT "codex:umbra-17") (:METHOD (:VAR :METHOD))))
+  ok   [VIII-d] the exhibition is NOT cleared: the post-treatment premise is :MISSING while the documentation premise is :SATISFIED
+  ok   [VIII-e] and AUTHORIZATION DOES NOT CLEAR AN OBJECT FOR DISPLAY: two verified authorization claims were on the table and neither discharged anything here — the language SAW both authorizations, considered them for that premise, and recorded :PROPOSITION-DOES-NOT-MATCH
+     the exhibition request as it goes back to the curator:
+       XR-7  EXH-4212/umbra  decision :NOT-SAFE-TO-EXHIBIT
+       basis, verbatim from the receipt: (:BLOCKED-ON :POST-TREATMENT-CONDITION-ESTABLISHED :MISSING)
+  ok   [VIII-f] the decision is :NOT-SAFE-TO-EXHIBIT and its BASIS is the receipt's own strongest lawful result, copied and not paraphrased
+
+   the object's whole file at close of day 4183:
+     WO-1103   AQUEOUS-WASHING            ASSESSMENT-PENDING         completed -  case -
+     WO-1104   CONTROLLED-HUMIDIFICATION  RECONCILIATION-REQUIRED    completed -  case -
+     WO-1101   CONTROLLED-HUMIDIFICATION  TREATED-UNASSESSED         completed -  case -
+     WO-1102   PRESSURE-FLATTENING        TREATMENT-INDETERMINATE    completed -  case RC-1
+     RC-1      TREATMENT-INDETERMINATE            action (:OBTAIN-A-JURISDICTION-BEARING-WITNESS-OF-THE-LEDGER)
+     RC-2      POST-TREATMENT-STANDING-UNESTABLISHED action :OBTAIN-GOVERNED-COMPLETION-JUDGMENT
+     XR-7      EXH-4212/umbra             decision :NOT-SAFE-TO-EXHIBIT
+  ok   [VIII-g] nothing phantom is anywhere in the file: no completion date on any work order, no clearance, two open cases, and one refused exhibition request
+  ok   [VIII-h] and exactly TWO irreversible acts crossed the frontier in this whole session — never three — one humidification chamber cycle and one press, each once
+
+-- MOVEMENT IX: the measured close --
+
+   9a. the reconvergence, rendered from the receipt:
+     MATERIAL BRANCH                     AUTHORITY BRANCH
+       claim:claim-11                    claim:claim-28
+       judged :VERIFIED                 judged :VERIFIED
+       by procedure:derive/MATERIAL-SUITABILITY/1 by procedure:derive/INSTITUTIONAL-AUTHORITY/1
+                     \             /
+                      RECONVERGENCE: :TREATMENT-AUTHORIZED
+                      decision :GRANTED
+  ok   [IX-a] the rendering is CHECKED against the receipt by identity: each printed basis IS the claim its branch granted, and the two judging procedures differ
+  ok   [IX-b] and this program keeps NO identity-to-object resolver and NO private provenance table: neither symbol is even interned — the missing public convenience is an identity-to-object resolver; it is named here and not invented here
+
+   9b. grounding multiplicity — counted across every receipt, not asserted.
+       THREE quantities are counted, because they are three different
+       things and the first draft of this arm conflated two of them:
+     29 receipts, 58 premise assessments
+     complete binding environments per receipt   values (0 1 2)  max 2  plural 3
+     premise binding environments per assessment values (0 1 2)  max 2
+     ground instances per assessment             values (1)  max 1
+     the plural receipts, named:
+       2 environments  schema :MATERIAL-SUITABILITY v1  conclusion :TREATMENT-MATERIALLY-SUITABLE
+       2 environments  schema :OWNER-AUTHORITY v1  conclusion :OWNER-AUTHORITY-ESTABLISHED
+       2 environments  schema :DOCUMENTATION-STANDING v1  conclusion :TREATMENT-DOCUMENTED
+   > PLURALITY AROSE THREE TIMES, and each time where the domain put it: two
+   > independent humidification assays; two parties consenting as owner; two
+   > authorized treatments under one custody log. Nothing was manufactured to
+   > exercise the plural surface.
+
+   > AND THE THIRD ONE IS THE INSTRUCTIVE CASE. The contested-consent receipt
+   > of arm 3a carries TWO complete environments and REFUSED, because
+   > :PRINCIPAL was declared unique. So plurality and ambiguity are two axes,
+   > not one word: two assays agreeing is corroboration and grants; two owners
+   > consenting is a conflict and refuses -- and the difference is one keyword
+   > in a schema, decided when the schema was written rather than when the
+   > second consent turned up.
+
+   > Plurality is visible in the ENVIRONMENTS and not in the ground instances,
+   > and the reason is exact: a ground instance substitutes the CONCLUSION
+   > bindings and leaves a schema-local as a variable, so two environments
+   > differing only in a local encode to the same bytes and deduplicate to one.
+   > In this workshop every plurality lives in a local -- :ASSAY, :PRINCIPAL,
+   > :METHOD -- so every ground instance is singular while the environments are
+   > not. An arm that counted only ground instances would have reported no
+   > plurality at all; the first draft of this one did, and was wrong.
+  ok   [IX-c] plural grounding AROSE NATURALLY and was not staged: THREE receipts carry two complete binding environments each, and no representative was ever selected — counted with the normative plural readers, over every receipt this program produced, and each plural receipt is named above
+  ok   [IX-d] and the ground-instance cardinality is 1 everywhere, for the stated structural reason — so the singular projection was lawful wherever it could have been read, and this program never read it above cardinality one — the plural reader did all the counting above; the singular projection is exercised on exactly one assessment, to show it answers rather than refuses at this cardinality
+  ok   [IX-e] every complete ground environment was preserved where plurality occurred, and neither plural receipt carries a declared uniqueness conflict — and the ONE place uniqueness WAS declared -- :PRINCIPAL -- refused instead, in Movement III arm 3a
+  ok   [IX-f] and that refusal is the separateness of the two axes, checked: the contested-consent receipt carries TWO complete environments AND a declared conflict AND decision :REFUSED, all three at once — grounding multiplicity is evidence and is kept; whether it refuses is a separate question the schema answered in advance
+
+   9c. the two planted controls — a check that has never failed is untested:
+  ok   [IX-g] CONTROL 1 — access removed from the MATERIAL branch: the reconvergence fails :INACCESSIBLE, and it is the material premise that fails — the mirror of arm D, planted on the other branch: reconvergence is symmetric and both premises are load-bearing
+  ok   [IX-h] CONTROL 2 — a fabricated effect witness GRANTS on the probe path, and the production path declines that grant in the same run — the grant is real and the workshop's file does not contain it
+
+-- what this application does NOT show --
+   No crash survival. The interrupted press's account survived because
+   the IMAGE did. The chamber and the press are one labelled scripted
+   fake adapter, never AP0-conformant, and nothing above licenses any
+   conformance language. All greens here are self-consistency
+   certification: one model family wrote the language, the application
+   and these checks.
+
+   And Movement VII proves NOTHING about effects being unverifiable in
+   principle. It reports what the current public surface does with a
+   TRUE structured account of a treatment that really happened: no
+   governed operation consumes it, so a completion judgment rests on a
+   minted witness or it does not happen. That is a statement about
+   Slice /0 plus Slice /1 plus Core /0 as they stand on day 4183 of the
+   workshop's count, and about nothing else. No bridge is proposed and
+   none should be read in.
+
+   Nor does the fabricated-witness finding say the language is unsound.
+   It says the mode reserved for first-hand observation is a mode the
+   program asserts, and that the workshop's honesty in asserting it is
+   carried by the conservator. Movements II to VI show what the same
+   program looks like where a JUDGMENT carries it instead, and the
+   difference between those two halves is the whole finding.
+
+de-codice-restaurando: 88 checks passed / 0 failed
+(a workshop that can refuse for the object's sake and for the owner's
+ sake in two different voices, that will not press a sheet twice
+ because its bookkeeping is uncertain, and that holds a true account
+ of a treatment it cannot lawfully use to close the file)

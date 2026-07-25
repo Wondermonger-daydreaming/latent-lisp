@@ -1677,8 +1677,16 @@ treatment. It names a method that was never applied to this object.")
                 :result-vocabulary '(:verified :refuted))
    :admits '((:direct :chamber-ledger)))
   "A promotion procedure admitting exactly one shape of support: a direct
-chamber-ledger reading. Admissibility is a mode-and-kind membership test and
-nothing else — which is why species 4 and 5 arrive at the same door.")
+chamber-ledger reading. Its `:admits` list IS a mode-and-kind membership test and
+nothing else — and that test governs THIS object's operation, `raise`, which
+only species 6 below performs.
+
+CORRECTED 2026-07-25 (chair). This docstring previously continued: `which is why
+species 4 and 5 arrive at the same door.` That was FALSE. Species 3, 4 and 5
+never reach this procedure at all — they are supplied to `derive` as premise
+supports and never pass through `raise`. Their identical discharge has a
+different cause, stated at [VII-j]. The first sentence is true of `raise`; the
+struck clause silently applied it to `derive`.")
 
 (defparameter *raised-claim*
   (lisp-plus-slice0:raise
@@ -1711,7 +1719,7 @@ nothing else — which is why species 4 and 5 arrive at the same door.")
          (eq :satisfied (disposition-of *bare-probe-receipt* :treatment-completed))
          (null (lisp-plus-slice0:witness-procedure *bare-witness*))
          (null (lisp-plus-slice0:witness-content *bare-witness*)))
-    "promotion admissibility is a mode-and-kind membership test; it never reads :PROCEDURE or :CONTENT")
+    "the three discharge identically because Slice /1 premise assessment compares their WITNESS-FOR proposition against the premise pattern and their receiver-relative accessibility, and reads nothing else about them; the displayed mode, kind, polarity, procedure and content are not consulted by this gate (CORRECTED 2026-07-25: this line previously named PROMOTION admissibility, a mode-and-kind membership test, which governs `raise` -- not the `derive` path these three actually took)")
 (ok "[VII-k] species 6 — RAISE turns the real witness into a genuinely :VERIFIED claim that then chains lawfully"
     (and (eq :verified (lisp-plus-slice0:judgment-record-judgment
                         (lisp-plus-slice0:claim-judgment *raised-claim*)))
@@ -1751,7 +1759,11 @@ which holds the witness objects themselves and is compared separately below.")
   (let ((tw (first (lisp-plus-slice1:premise-assessment-matching-accessible-supports true-a)))
         (fw (first (lisp-plus-slice1:premise-assessment-matching-accessible-supports fake-a)))
         (bw (first (lisp-plus-slice1:premise-assessment-matching-accessible-supports bare-a))))
-    (format t "     matching-accessible      one witness each; the governed attributes:~%")
+    (format t "     matching-accessible      one witness each. these three fields are~%")
+    (format t "                              CARRIED AND RENDERED, not consulted by this~%")
+    (format t "                              gate -- `derive` reads witness-for and~%")
+    (format t "                              accessibility only. (they ARE governed at~%")
+    (format t "                              `raise`, which none of these three performed.)~%")
     (format t "       mode / kind / polarity   ~A~%"
             (fmt (list (lisp-plus-slice0:witness-mode tw)
                        (lisp-plus-slice0:witness-kind tw)
