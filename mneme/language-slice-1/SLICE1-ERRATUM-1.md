@@ -197,6 +197,30 @@ wording as well.
 
 ## E6 — Order-independence: the promise is narrowed to the granularity it was earned at
 
+> **⚠ E6's DEFECT IS REPAIRED (2026-07-24), UNDER `SLICE1-SOL-DESIGN-RULING-FORKS.md`
+> DECISION 2 — adopted by the owner. The description below is a PRE-HEAL FOSSIL.**
+>
+> The text that follows describes `ground-instance` as instantiated from the first
+> environment of an unsorted accumulation list, and estimates the cure as "a one-line
+> change." **Both statements are now false.** The estimate was wrong twice over: the
+> ruling itself held that selecting a *different* representative does not reach the
+> defect at all.
+>
+> **What was actually built:** the complete canonical set of distinct complete
+> grounding environments is preserved. Bindings are arranged by the schema's declared
+> variable order **within** an environment; environments are ordered **among
+> themselves** by **CD/0 canonical encoded bytes** (`require-canonical` →
+> `encode-exact`, compared octet-wise) — never by printed representation, host symbol
+> order, or traversal. The old `%sort-envs`, which keyed on `(format nil "~S" e)`,
+> is gone; chair-verified zero remaining occurrences. Plural is normative including at
+> cardinality one; the singular reader survives only as a projection that **refuses**
+> above cardinality one rather than selecting arbitrarily. New public readers:
+> `premise-assessment-ground-instances`, `premise-assessment-judged-claims`.
+> Teeth T30a–h; a byte-vs-print **inversion** is pinned as T30f so the ordering cannot
+> silently revert to the forbidden one.
+>
+> Docket row **D6** below is likewise spent.
+
 **Superseded:** `ARCHITECTURE` §6's unqualified sentence *"no environment is
 ever selected by traversal order."*
 
@@ -253,10 +277,10 @@ constitutional call. DOCKETED.**
 |---|---|---|
 | D1 | Should `schema-not-found` / `unbound-conclusion-variable` carry receipts? | capability |
 | D2 | Restrict `(:quoted-datum …)` payloads to boundary-lawful values? | constructor semantics |
-| D3 | Implement judged-claim premise discharge — and under which judgment states? | language design |
+| ~~D3~~ | ~~Implement judged-claim premise discharge~~ — **DISCHARGED**, Sol Decision 1, judgment-identity chaining | *spent* |
 | D4 | Define or enforce premise-level "admissible" (mode/kind matching)? | language design |
 | D5 | Retire, exercise, or ratify the `signal-slice1` export? | surface warrant |
-| D6 | Canonicalize `ground-instance` environment selection? | one-line determinism |
+| ~~D6~~ | ~~Canonicalize `ground-instance` environment selection?~~ — **DISCHARGED**, Sol Decision 2, complete canonical set by CD/0 bytes (never a "one-line" change) | *spent* |
 | D7 | Add a cycle/depth guard, or declare the admitted input domain? | constitutional |
 
 ## Standing
