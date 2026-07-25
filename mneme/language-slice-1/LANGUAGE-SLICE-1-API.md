@@ -54,8 +54,13 @@
 frozen `../language-slice-0/slice0-transmissibility.lisp` (which pulls in
 `slice0.lisp` → `slice0-projection.lisp` → `../kernel0/load.lisp`) if Slice /0 is
 not already present.
-**Exported symbols documented:** 69 (authoritative list obtained by
-`do-external-symbols` over the live package, not by reading the export forms).
+**Exported symbols:** **72** — re-enumerated live 2026-07-25 by
+`do-external-symbols` over the loaded package, not by arithmetic and not by
+counting export forms. *The figure previously printed here, 69, was stale before
+`CHARTER-DELTA-3` touched anything: the live package already exported 71 (the
+Sol Decision 1 and 2 readers landed without this line being updated). Delta /3
+adds exactly one — `derivation-receipt-unsupported-supports` — for 72. Count it
+live; do not derive it from this sentence.*
 
 This brief is deliberately dull. Every signature below was proven by executing it
 in SBCL 2.4.6, not inferred from reading. A stranger should be able to write a
@@ -470,9 +475,11 @@ Readers: `refutation-p`, `refutation-refutes` (normal-form ground proposition),
 
 - **Act:** Resolve the schema by exact `(schema-name, schema-version)`; bind the
   conclusion variables from the **ground** `conclusion`; assess each declared
-  premise over `supports` (Slice /0 `witness`es, Slice /1 `refutation`s, **and
-  Slice /0 already-judged `claim`s** — SOL DECISION 1, §6 below)
-  relative to the acting `receiver` context; **issue a derivation receipt once the
+  premise over `supports` — whose **three recognized species** are Slice /0
+  `witness`es, Slice /1 `refutation`s, **and Slice /0 already-judged `claim`s**
+  (SOL DECISION 1, §6 below); **any other element is unsupported residue,
+  recorded at the receipt and assessed against nothing** (CHARTER-DELTA-3, §6
+  below) — relative to the acting `receiver` context; **issue a derivation receipt once the
   invocation is a constructible derivation attempt** — i.e. on every assessed
   path, granted or refused, and on the post-threshold `unbound-conclusion-variable`
   refusal. The three pre-threshold exits carry none (D1; see the receipt-scope
@@ -562,7 +569,10 @@ receipt is issued for:
    conclusion, the acting origin context, `decision` ⇒ `:REFUSED`, and **empty
    assessment structure** (`assessments`, `bindings`,
    `complete-binding-environments`, `uniqueness-conflicts`,
-   `strongest-lawful-result`, `repair-options` all `nil`). Nothing is invented.
+   `strongest-lawful-result`, `repair-options` all `nil` — and, since Δ3,
+   `unsupported-supports` too: `:supports` is not classified on this path, so an
+   unsupported value there does not give this receipt a field it did not earn).
+   Nothing is invented.
 
 A receipt is **not** issued for the three **pre-threshold** exits —
 `pattern-used-as-ground`, `schema-not-found`, `malformed-structured-proposition`.
@@ -587,6 +597,7 @@ conclusion); they are lawful typed pre-derivation failures and `nil` on
 | `derivation-receipt-decision` | `:granted` \| `:refused` | scalar |
 | `derivation-receipt-strongest-lawful-result` | `:verified`, or `(:blocked-on <pred> <disposition>)` | copy-tree |
 | `derivation-receipt-repair-options` | `(premise-pattern . repair-form)` per unsatisfied premise | copy-tree |
+| `derivation-receipt-unsupported-supports` | `(:index N :reason :unsupported-support-species)…`, or `nil` (Δ3) | copy-tree |
 | `derivation-receipt-identity` | fresh `:receipt` identity per attempt (distinct across re-derivations) | struct |
 | `derivation-receipt-origin-context` | the deriving context-id, or `nil` | scalar |
 
@@ -633,6 +644,12 @@ Slice /0 CLAIMS.** A claim used to fall through all filters and be silently
 discarded; it is now considered for every premise and **recorded in
 `premise-assessment-judged-claims` per premise whatever becomes of it.**
 
+> **Extended by `CHARTER-DELTA-3`.** These three remain the only **recognized**
+> species — the delta admits nothing new. What it fixes is the *rest* of
+> `:supports`: an element outside the three was still silently discarded after
+> this decision landed, and is now recorded at the receipt as inert residue. See
+> the Delta /3 section below. **Visibility is not admissibility.**
+
 A claim **discharges** a premise only through an *identity-bearing reference to
 its own governed judgment* — all seven ruling conditions: durable claim identity ·
 receiver-accessible (the same id-membership rule as a witness, read against
@@ -652,6 +669,70 @@ minted) **and is named in the roster and in the repair advice**, which no longer
 tells the programmer to supply what the programmer supplied. An inaccessible
 matching claim is `:INACCESSIBLE` residue; one with conflicting roles is
 `:MISMATCHED`.
+
+### CHARTER-DELTA-3 — an unrecognized `:supports` element is recorded, not discarded
+
+**Superseded here:** any statement in this document or the charter that describes
+`:supports` handling without naming the residue. **Governing text:
+`CHARTER-DELTA-3.md`.**
+
+`:supports` has exactly **three recognized species** — Slice /0 witness · Slice /1
+refutation · Slice /0 claim. Every element is classified **exactly once**; anything
+outside the three is **unsupported residue**. Before Delta /3 such an element fell
+through three independent filters and was **silently discarded**: through every
+public reader, supplying it was indistinguishable from supplying nothing. It is now
+recorded at the **invocation-level receipt** — never per premise, because an
+unrecognized object cannot be meaningfully matched against an individual premise.
+
+```
+(derivation-receipt-unsupported-supports RECEIPT)
+  => nil, or ((:index N :reason :unsupported-support-species) …)
+```
+
+- **Index base:** `N` is **zero-based** in the caller's own `:supports` list.
+- **Order and duplicates:** caller input order, **duplicates preserved** — the
+  receipt records what was supplied, not a set.
+- **No raw object retained.** Not the object, not `type-of`, not the printed
+  representation, not `sxhash`, not an address-like identity, not implementation
+  class metadata, not a host pointer. An arbitrary host object may be mutable,
+  circular, unreadable, noncanonical or identity-bearing; the slice does not
+  pretend to durably snapshot one.
+- **Copy behaviour:** the reader returns a **defensive structural copy**
+  (`copy-tree` + `copy-seq` at string leaves, the AUDIT-1 repair-2 discipline).
+  Mutating a returned list **or any plist inside it** cannot revise the stored
+  receipt; two reads are structurally `equal` and need not be `eq`. The slot is
+  read-only and **no public constructor is added.**
+- **The exact ceiling:** *the receipt proves an unsupported value was supplied,
+  where it appeared, and that it had no semantic effect. It does not preserve or
+  identify arbitrary unsupported host data after the call.*
+
+**Decision non-effect — observational, not dispositive.** Residue cannot discharge
+a premise, refute one, bind a variable, create or resolve ambiguity, or authorize a
+grant, and it is **never** silently converted into `:missing`:
+
+| supplied | outcome |
+|---|---|
+| recognized support alone | the existing decision |
+| recognized support + unsupported | the **same** decision and dispositions, residue additionally recorded |
+| unsupported alone | premise stays `:MISSING`, but the receipt differs **observably** from supplying nothing |
+
+An unsupported object does **not** become a "mismatched candidate" (that means a
+recognized proposition-bearing candidate with conflicting roles), does **not**
+become "inaccessible" (that applies to recognized identity-bearing species), and
+does **not** enter `premise-assessment-judged-claims`. **No seventh premise
+disposition; no new condition family.** The **pre-assessment** exits are unchanged
+— and the post-threshold `unbound-conclusion-variable` receipt, issued before
+`:supports` is classified at all, carries **no** residue.
+
+`render-derivation-why` names receipt-level residue on **granted and refused**
+receipts alike; **the structured reader, not the prose, is authoritative.**
+
+VERIFIED live: `(list 17 W)` with `W` a matching accessible witness ⇒ decision
+unchanged from `W` alone and `derivation-receipt-unsupported-supports` ⇒
+`((:INDEX 0 :REASON :UNSUPPORTED-SUPPORT-SPECIES))`; `(list uA W uB uA)` ⇒ indices
+`(0 2 3)`, no deduplication. Teeth: **U1–U12** in `slice1-selftest.lisp`, U12
+restoring the pre-Delta-3 three-filter implementation and showing the cluster fail
+on the exact disappearance defect.
 
 ### SOL DECISION 2 — grounding multiplicity is preserved, never selected
 

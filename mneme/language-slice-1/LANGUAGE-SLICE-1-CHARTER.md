@@ -12,6 +12,18 @@
 > order-independence granularity (E6). Read the erratum before citing anything
 > here. Original text left unaltered on purpose.
 
+> **⚠ ALSO SUPERSEDED IN PART — `CHARTER-DELTA-3.md` (2026-07-25) GOVERNS
+> `:supports` CLASSIFICATION.** §7 item 3 ("matches supports / already-judged
+> premise claims") is now exact: `:supports` has **three recognized species**
+> (Slice /0 witness · Slice /1 refutation · Slice /0 claim), every element is
+> classified **exactly once**, and anything outside the three is **unsupported
+> residue recorded at the derivation receipt** — where it was previously
+> *silently discarded*, making a supplied object indistinguishable from an
+> omission through every public reader. Residue is inert: no premise discharge,
+> no refutation, no binding, no ambiguity, no grant, **no seventh disposition**
+> (§5's six stand) and **no new condition family**. Visibility is not
+> admissibility. Original text left unaltered on purpose.
+
 *2026-07-23, first sitting. Authorized by owner ruling; constituted from
 INVENTORY-1 evidence. Slice /0 is a frozen dependency. Every normative
 "must/cannot/never" below either names its live enforcement path or carries

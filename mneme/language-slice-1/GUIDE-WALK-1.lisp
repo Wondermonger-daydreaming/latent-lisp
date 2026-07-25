@@ -206,5 +206,35 @@
         (format t "~&        own repair advice: ~S~%"
                 (lisp-plus-slice1:derivation-receipt-repair-options r))))))
 
-(format t "~&~%walk-the-recipe: ~D of 18 check(s) FAILED~%" *failures*)
+;;; == guide: "Mistake 5 — supplying something the slice does not recognize" ==
+;;; CHARTER-DELTA-3.  The guide's example is executed here verbatim, including
+;;; the printed `=>` value and the rendered residue line, because a capability
+;;; the guide TEACHES and the walk never RUNS is exactly the rot this file
+;;; exists to catch.  NB the schema is :NOTEBOOK-SIGNOFF, re-registered by the
+;;; Mistake-3 block above — same fixture, so the walk reads what a reader reads.
+(format t "~&~%== guide: unsupported support residue (Mistake 5) ==~%")
+(let* ((sup (list (dw '(:predicate :entry-complete    (:entry "e-88") (:checklist "CL-full")))
+                  (dw '(:predicate :results-reproduced (:entry "e-88") (:replicate "rep-1")))
+                  17
+                  (dw '(:predicate :reviewer-qualified (:reviewer :alice) (:competency :radiochem)))
+                  (dw '(:predicate :purpose-permitted  (:entry "e-88") (:reviewer :alice) (:purpose :archival))))))
+  (multiple-value-bind (claim receipt)
+      (lisp-plus-slice1:derive :schema-name :notebook-signoff :schema-version 1
+        :conclusion (np '(:predicate :entry-signed-off (:entry "e-88") (:reviewer :alice) (:purpose :archival)))
+        :supports sup :receiver (apply #'ctx :alice sup))
+    (declare (ignore claim))
+    (ok "[G19] the documented (decision residue) pair"
+        (list (lisp-plus-slice1:derivation-receipt-decision receipt)
+              (lisp-plus-slice1:derivation-receipt-unsupported-supports receipt))
+        '(:granted ((:index 2 :reason :unsupported-support-species))))
+    (ok "[G20] the documented rendered residue line, verbatim"
+        (let ((text (with-output-to-string (s)
+                      (lisp-plus-slice1:render-derivation-why receipt s))))
+          (and (search "  unsupported supplied values: 1" text)
+               (search "    :supports[2] — unsupported support species; not assessed; no effect on decision"
+                       text)
+               t))
+        t)))
+
+(format t "~&~%walk-the-recipe: ~D of 20 check(s) FAILED~%" *failures*)
 (sb-ext:exit :code (if (zerop *failures*) 0 1))

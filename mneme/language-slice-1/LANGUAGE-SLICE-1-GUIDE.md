@@ -315,6 +315,66 @@ and the **frozen Slice /0 gate refuses it** — its `:for` is the attribution
 a `derive` at Bob's position over Bob's premises. Receipt-transport laundering is
 closed by the same mechanism that closes S3.
 
+## Mistake 5 — supplying something the slice does not recognize
+
+`:supports` has exactly **three recognized species**:
+
+| species | constructed by | reaches a premise by |
+|---|---|---|
+| a Slice /0 **witness** | `lisp-plus-slice0:witness` | matching the premise, accessibly |
+| a Slice /1 **refutation** | `lisp-plus-slice1:refutation` | naming the premise it refutes |
+| a Slice /0 **claim** | `lisp-plus-slice0:claim` (already judged) | an identity-bearing reference to its own governed judgment |
+
+Anything else is **unsupported residue**. Reach for a plausible-looking object
+that is none of the three — a Core /0 effect account, a bare proposition, a plain
+number — and the premise it was meant for stays `:MISSING`.
+
+It used to stay `:MISSING` *silently*: through every public reader, supplying such
+an object was indistinguishable from supplying nothing at all. Since
+**`CHARTER-DELTA-3.md`** the receipt records it:
+
+```lisp
+;; Mistake 1's four supports, in order — with one unrecognized object dropped
+;; among them at position 2.  The four still grant; the intruder is recorded.
+(let* ((sup (list (dw '(:predicate :entry-complete    (:entry "e-88") (:checklist "CL-full")))
+                  (dw '(:predicate :results-reproduced (:entry "e-88") (:replicate "rep-1")))
+                  17                                            ; <- not a support species
+                  (dw '(:predicate :reviewer-qualified (:reviewer :alice) (:competency :radiochem)))
+                  (dw '(:predicate :purpose-permitted  (:entry "e-88") (:reviewer :alice) (:purpose :archival))))))
+  (multiple-value-bind (claim receipt)
+      (lisp-plus-slice1:derive :schema-name :notebook-signoff :schema-version 1
+        :conclusion (np '(:predicate :entry-signed-off (:entry "e-88") (:reviewer :alice) (:purpose :archival)))
+        :supports sup :receiver (apply #'ctx :alice sup))
+    (declare (ignore claim))
+    (list (lisp-plus-slice1:derivation-receipt-decision receipt)
+          (lisp-plus-slice1:derivation-receipt-unsupported-supports receipt))))
+;; => (:GRANTED ((:INDEX 2 :REASON :UNSUPPORTED-SUPPORT-SPECIES)))
+```
+
+The index is **zero-based, in your own `:supports` order**; duplicates are kept,
+because the receipt records what you supplied rather than a set. `render-derivation-why`
+names it too, on granted and refused receipts alike:
+
+```
+  unsupported supplied values: 1
+    :supports[2] — unsupported support species; not assessed; no effect on decision
+```
+
+**Read this exactly. Visibility is not admissibility.** The residue is inert
+diagnostic data. It cannot discharge a premise, refute one, bind a variable,
+create or resolve ambiguity, or authorize a grant, and it is never turned into a
+seventh disposition — the six stand. A derivation supplied a witness *and* junk
+reaches precisely the decision it would have reached on the witness alone; what
+changed is only that the junk is no longer invisible.
+
+And the receipt does **not** keep the object. Not the value, not its type, not
+its printed form, not any handle on it — an arbitrary host object may be mutable,
+circular or unreadable, and the slice does not pretend to snapshot one. **The
+exact ceiling: the receipt proves an unsupported value was supplied, where it
+appeared, and that it had no effect. It does not tell you what it was.** If you
+need to know what you passed, look at your own call site; the receipt's job here
+is to stop the call from looking like a call you never made.
+
 ## End to end, in one sitting
 
 ```lisp
@@ -390,6 +450,12 @@ written down; the refused-render block is verbatim harness output.*
 > **`GUIDE-WALK-1.lisp`** — which is committed beside this document as a **standing
 > guard**, so the next time the language grows a capability, the teaching material
 > cannot rot silently the way it did here. Cite that file, not this line.
+>
+> **The guard was then used as designed.** The language grew a capability the same
+> day (`CHARTER-DELTA-3` — *Mistake 5* above), and its two documented values were
+> added to the walk rather than written down unexecuted: **twenty** now, `[G1]`–`[G20]`,
+> `0` failed. Anything this document teaches that the walk does not run is exactly
+> the rot the guard exists to catch.
 
 — Claude Opus 4.8 (1M context), SCRIBA-II
 — fixture + refusal-example corrections and 2026-07-25 re-walk: Claude Opus 5 (1M context)

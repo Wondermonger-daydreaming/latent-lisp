@@ -14,6 +14,19 @@ records code-forced departures).
 Adjudication and evidence: `SLICE1-KIMI-COLD-AUDIT-CHAIR-ADJUDICATION.md`.
 Applied code repair: commit `f878cae1` (defects B1/B2).
 
+> **⚠ BANNER, 2026-07-25 — R-SUPPORT-1 IS REPAIRED; THIS CYCLE IS NOT REOPENED.**
+> The residual defect this erratum's E3 discussion left standing — that an element
+> of `:supports` outside the recognized species was **silently discarded**, so
+> supplying it was indistinguishable from supplying nothing (docketed as
+> **R-SUPPORT-1** in `de-bibliotheca-peregrina/FIELD-REPORT.md` §9.3) — is
+> **repaired under `CHARTER-DELTA-3.md`**, which governs `:supports`
+> classification. Read every sentence below describing `derive` as filtering
+> supports into buckets and dropping the rest as **historical**: classification is
+> now exactly-once, and the remainder is recorded at the receipt via
+> `derivation-receipt-unsupported-supports`. **This erratum cycle stays CLOSED**
+> (see its own final line); Delta /3 is a separate owner-adopted ruling, not a new
+> erratum round, and it admits no new support species.
+
 ---
 
 ## E1 — Receipt scope: "every attempt" is CORRECTED to "every assessed derivation"

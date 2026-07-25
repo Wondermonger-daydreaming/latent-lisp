@@ -1448,6 +1448,328 @@ missing reader or a missing behaviour fails as loudly as a wrong value."
           (format nil "decisions=~S/~S" d-a d-b)))))
 
 ;;; ==================================================================
+;;; T31 — CHARTER-DELTA-3: the unsupported-support residue (R-SUPPORT-1).
+;;;
+;;; The defect these teeth kill: an element of :SUPPORTS that was none of the
+;;; three recognized species fell through all three filters and VANISHED —
+;;; through every public reader, supplying it was indistinguishable from
+;;; supplying nothing, while a failed CLAIM was at least recorded.
+;;;
+;;; The line these teeth hold: the residue is VISIBLE and still INADMISSIBLE.
+;;; Every arm asserts BOTH halves — the decision/disposition is exactly what the
+;;; recognized species alone produce, AND the receipt says something was
+;;; supplied.  NB: the real Core /0 effect account is exercised in
+;;; de-bibliotheca-peregrina, NOT here — this suite must not acquire a
+;;; dependency on Language Core /0, and the classifier must not have one either.
+
+(install-judged-claim-schemas)          ; keeps :j-source / :j-target available
+(register-schema
+ (judgment-schema
+  :name :u-residue :version 1
+  :conclusion (proposition-pattern '(:predicate :concluded (:subject (:var :s))))
+  :premises (list (proposition-pattern
+                   '(:predicate :happened (:subject (:var :s)))))))
+
+(defparameter *u-want* '(:predicate :happened (:subject :thing)))
+(defparameter *u-goal* '(:predicate :concluded (:subject :thing)))
+
+(defun u-run (supports &optional ctx)
+  "(values RECEIPT DECISION DISPOSITION RESIDUE) for the one-premise schema."
+  (multiple-value-bind (receipt claim decision)
+      (c-attempt :u-residue 1 *u-goal* supports ctx)
+    (declare (ignore claim))
+    (values receipt decision
+            (premise-assessment-disposition (assessment-for receipt :happened))
+            (derivation-receipt-unsupported-supports receipt))))
+
+(defun u-descriptors (&rest indices)
+  (loop for i in indices
+        collect (list :index i :reason :unsupported-support-species)))
+
+(defun u-holds-p (tree object)
+  "Does TREE hold OBJECT anywhere, by identity or by equality?  Used to prove the
+receipt keeps NO handle on, and NO transcription of, an unsupported value."
+  (cond ((eq tree object) t)
+        ((equalp tree object) t)
+        ((consp tree) (or (u-holds-p (car tree) object)
+                          (u-holds-p (cdr tree) object)))
+        (t nil)))
+
+(defun u-render (receipt)
+  (with-output-to-string (s) (render-derivation-why receipt s)))
+
+;;; ---- U1 no supports at all: no residue, and nothing is invented ----
+(c-guarded "U1 :supports NIL yields NO residue"
+  (multiple-value-bind (r d disp res) (u-run '())
+    (declare (ignore r))
+    (ok "U1 :supports NIL yields NO residue"
+        (and (null res) (eq d :refused) (eq disp :missing))
+        (format nil "decision=~S disposition=~S residue=~S" d disp res))))
+
+;;; ---- U2 one unsupported value ALONE: same disposition, residue at index 0.
+;;;      This is the exact pair the defect made indistinguishable ----
+(c-guarded "U2 an unsupported value alone: disposition still :MISSING, residue at index 0"
+  (multiple-value-bind (r2 d2 disp2 res2) (u-run (list 17))
+    (multiple-value-bind (r0 d0 disp0 res0) (u-run '())
+      (ok "U2 an unsupported value alone: disposition still :MISSING, residue at index 0"
+          (and (eq d2 :refused) (eq disp2 :missing)
+               (equal res2 (u-descriptors 0))
+               ;; the decision half is IDENTICAL to supplying nothing …
+               (eq d2 d0) (eq disp2 disp0)
+               ;; … and the receipts are no longer indistinguishable
+               (not (equal res2 res0))
+               ;; and no premise-level field acquired it
+               (null (premise-assessment-judged-claims (assessment-for r2 :happened)))
+               (null (premise-assessment-matching-accessible-supports
+                      (assessment-for r2 :happened)))
+               (null (premise-assessment-matching-inaccessible-supports
+                      (assessment-for r2 :happened)))
+               (null (premise-assessment-mismatched-candidates
+                      (assessment-for r2 :happened)))
+               (null (premise-assessment-refuting-supports
+                      (assessment-for r2 :happened)))
+               (equal (derivation-receipt-repair-options r2)
+                      (derivation-receipt-repair-options r0)))
+          (format nil "residue=~S vs nothing-supplied residue=~S" res2 res0)))))
+
+;;; ---- U3 the classifier has NO species knowledge beyond the three admitted
+;;;      ones.  Two unrelated unsupported values — a host integer and a Slice /1
+;;;      JUDGMENT-SCHEMA, which is a first-class object of this very slice —
+;;;      produce the SAME descriptor.  A value is residue because it is not one
+;;;      of the three, never because the classifier recognized what it is.
+;;;      (The real Core /0 effect account is exercised in the application, not
+;;;      here: this suite takes no Core /0 dependency, and neither does the
+;;;      classifier — there is no blacklist to test.) ----
+(c-guarded "U3 unsupported species are not discriminated: unrelated values give the SAME descriptor"
+  (let ((schema-object (resolve-schema :u-residue 1)))
+    (multiple-value-bind (r-a d-a disp-a res-a) (u-run (list 17))
+      (declare (ignore r-a))
+      (multiple-value-bind (r-b d-b disp-b res-b) (u-run (list schema-object))
+        (ok "U3 unsupported species are not discriminated: unrelated values give the SAME descriptor"
+            (and (equal res-a res-b) (equal res-a (u-descriptors 0))
+                 (eq d-a d-b) (eq disp-a disp-b)
+                 ;; and the residue transcribes nothing about the object
+                 (not (u-holds-p res-b schema-object))
+                 (not (u-holds-p (derivation-receipt-unsupported-supports r-b)
+                                 schema-object)))
+            (format nil "integer=>~S schema-object=>~S" res-a res-b))))))
+
+;;; ---- U4 a matching lawful witness + an unsupported value: the decision is
+;;;      IDENTICAL to the witness alone, and the residue is visible ----
+(c-guarded "U4 lawful witness + unsupported: identical decision, residue visible"
+  (let* ((w (sw *u-want*))
+         (ctx (ctx-of :u-ctx w)))
+    (multiple-value-bind (r-w d-w disp-w res-w) (u-run (list w) ctx)
+      (multiple-value-bind (r-b d-b disp-b res-b) (u-run (list w 17) ctx)
+        (ok "U4 lawful witness + unsupported: identical decision, residue visible"
+            (and (eq d-w :granted) (eq d-b :granted)
+                 (eq disp-w :satisfied) (eq disp-b :satisfied)
+                 (null res-w) (equal res-b (u-descriptors 1))
+                 (equal (derivation-receipt-bindings r-w)
+                        (derivation-receipt-bindings r-b))
+                 (equal (derivation-receipt-complete-binding-environments r-w)
+                        (derivation-receipt-complete-binding-environments r-b))
+                 (eq (derivation-receipt-strongest-lawful-result r-w)
+                     (derivation-receipt-strongest-lawful-result r-b))
+                 (= (length (premise-assessment-matching-accessible-supports
+                             (assessment-for r-b :happened)))
+                    1))
+            (format nil "~S/~S vs ~S/~S residue=~S" d-w disp-w d-b disp-b res-b))))))
+
+;;; ---- U5 a matching VERIFIED judged claim + an unsupported value: the claim
+;;;      still discharges, its identity and judgment basis are still inspectable,
+;;;      and the residue is visible.  (Two-premise :J-TARGET, as T29a.) ----
+(c-guarded "U5 judged claim + unsupported: still discharges, basis inspectable, residue visible"
+  (let* ((c (granted-standing "ann" :warden))
+         (g (sw '(:predicate :in-good-order (:who "ann"))))
+         (ctx (c-ctx :u-ctx-5 (lisp-plus-slice0:claim-id c)
+                     (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r-a claim-a d-a)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "ann"))
+                   (list c g) ctx)
+      (declare (ignore claim-a))
+      (multiple-value-bind (r-b claim-b d-b)
+          (c-attempt :j-target 1 '(:predicate :may-act (:who "ann"))
+                     (list c 17 g) ctx)
+        (declare (ignore claim-b))
+        (let* ((a-b (assessment-for r-b :standing))
+               (jc (first (premise-assessment-judged-claims a-b))))
+          (ok "U5 judged claim + unsupported: still discharges, basis inspectable, residue visible"
+              (and (eq d-a :granted) (eq d-b :granted)
+                   (eq :satisfied (premise-assessment-disposition a-b))
+                   (null (derivation-receipt-unsupported-supports r-a))
+                   (equal (derivation-receipt-unsupported-supports r-b)
+                          (u-descriptors 1))
+                   ;; identity AND judgment basis still on the roster
+                   jc (eq :discharged (getf jc :outcome))
+                   (lisp-plus-kernel0:identity= (getf jc :claim-id)
+                                                (lisp-plus-slice0:claim-id c))
+                   (eq :verified (getf jc :judgment))
+                   (getf jc :procedure-id)
+                   ;; and the two receipts agree on everything but the residue
+                   (equal (derivation-receipt-bindings r-a)
+                          (derivation-receipt-bindings r-b)))
+              (format nil "~S/~S outcome=~S residue=~S" d-a d-b
+                      (and jc (getf jc :outcome))
+                      (derivation-receipt-unsupported-supports r-b))))))))
+
+;;; ---- U6 a matching refutation + an unsupported value: still :REFUTED, the
+;;;      refuting support is still named, residue visible ----
+(c-guarded "U6 refutation + unsupported: still :REFUTED, refuting support named, residue visible"
+  (let ((ref (refutation :refutes *u-want* :source :auditor)))
+    (multiple-value-bind (r-a d-a disp-a res-a) (u-run (list ref))
+      (multiple-value-bind (r-b d-b disp-b res-b) (u-run (list ref 17))
+        (ok "U6 refutation + unsupported: still :REFUTED, refuting support named, residue visible"
+            (and (eq d-a :refused) (eq d-b :refused)
+                 (eq disp-a :refuted) (eq disp-b :refuted)
+                 (null res-a) (equal res-b (u-descriptors 1))
+                 (= 1 (length (premise-assessment-refuting-supports
+                               (assessment-for r-b :happened))))
+                 (equal (derivation-receipt-strongest-lawful-result r-a)
+                        (derivation-receipt-strongest-lawful-result r-b)))
+            (format nil "~S/~S vs ~S/~S residue=~S" d-a disp-a d-b disp-b res-b))))))
+
+;;; ---- U7 input order and duplicates: (uA witness uB uA) records 0, 2, 3 —
+;;;      NO deduplication, NO reordering, and the witness's index is skipped ----
+(c-guarded "U7 caller order preserved, duplicates NOT deduplicated"
+  (let* ((w (sw *u-want*))
+         (ctx (ctx-of :u-ctx-7 w))
+         (u-a 17)
+         (u-b :not-a-support))
+    (multiple-value-bind (r d disp res) (u-run (list u-a w u-b u-a) ctx)
+      (declare (ignore r))
+      (ok "U7 caller order preserved, duplicates NOT deduplicated"
+          (and (equal res (u-descriptors 0 2 3))
+               (= 3 (length res))
+               (eq d :granted) (eq disp :satisfied))
+          (format nil "residue=~S (indices ~S)" res
+                  (mapcar (lambda (u) (getf u :index)) res))))))
+
+;;; ---- U8 NO RAW-OBJECT ALIAS.  Supply a MUTABLE unsupported object; mutate the
+;;;      caller's own handle afterwards; the descriptors are unchanged, and the
+;;;      receipt holds neither the object nor a transcription of it ----
+(c-guarded "U8 no raw-object alias: mutating the supplied object cannot touch the receipt"
+  (let* ((mutable (list :payload "before"))
+         (receipt (u-run (list mutable)))
+         (before (derivation-receipt-unsupported-supports receipt))
+         (held-before (u-holds-p before mutable)))
+    (setf (second mutable) "AFTER-MUTATION")
+    (setf (car mutable) :clobbered)
+    (let ((after (derivation-receipt-unsupported-supports receipt)))
+      (ok "U8 no raw-object alias: mutating the supplied object cannot touch the receipt"
+          (and (equal before (u-descriptors 0))
+               (equal after before)
+               (not held-before)
+               (not (u-holds-p after mutable))
+               (not (u-holds-p after "AFTER-MUTATION"))
+               ;; the descriptor is EXACTLY the two declared keys, nothing else
+               (= 4 (length (first after)))
+               (eq :unsupported-support-species (getf (first after) :reason))
+               (integerp (getf (first after) :index)))
+          (format nil "before=~S after=~S" before after)))))
+
+;;; ---- U9 DEFENSIVE EGRESS.  Clobber the returned list AND a returned plist; a
+;;;      second read still returns the stored descriptors ----
+(c-guarded "U9 defensive egress: a clobbered read cannot revise the stored receipt"
+  (let* ((receipt (u-run (list 17 :also-unsupported)))
+         (first-read (derivation-receipt-unsupported-supports receipt))
+         (expected (u-descriptors 0 1)))
+    (setf (getf (first first-read) :reason) :clobbered)
+    (setf (getf (second first-read) :index) 999)
+    (setf (cdr first-read) nil)
+    (let ((second-read (derivation-receipt-unsupported-supports receipt)))
+      (ok "U9 defensive egress: a clobbered read cannot revise the stored receipt"
+          (and (equal second-read expected)
+               (not (equal first-read second-read))
+               ;; structurally equal across reads, and NOT the same conses
+               (equal second-read (derivation-receipt-unsupported-supports receipt))
+               (not (eq second-read (derivation-receipt-unsupported-supports receipt))))
+          (format nil "clobbered=~S stored=~S" first-read second-read)))))
+
+;;; ---- U10 recognized species are NEVER double-recorded as residue ----
+(c-guarded "U10 recognized species are never double-recorded as residue"
+  (let* ((w (sw *u-want*))
+         (c (granted-standing "bo" :warden))
+         (ref (refutation :refutes '(:predicate :unrelated (:subject :other))
+                          :source :auditor))
+         (ctx (ctx-of :u-ctx-10 w)))
+    (multiple-value-bind (r d disp res) (u-run (list w ref c) ctx)
+      (declare (ignore r))
+      (ok "U10 recognized species are never double-recorded as residue"
+          (and (null res) (eq d :granted) (eq disp :satisfied))
+          (format nil "three recognized supports, residue=~S decision=~S" res d)))))
+
+;;; ---- U11 the renderer reports indices ONLY when the stored reader is
+;;;      nonempty — and reports them on GRANTED and REFUSED receipts alike ----
+(c-guarded "U11 the renderer reports residue exactly when the stored reader is nonempty"
+  (let* ((w (sw *u-want*))
+         (ctx (ctx-of :u-ctx-11 w))
+         (clean-refused (u-render (u-run '())))
+         (clean-granted (u-render (u-run (list w) ctx)))
+         (dirty-refused (u-render (u-run (list 17))))
+         (dirty-granted (u-render (u-run (list w 17 :x) ctx))))
+    (flet ((has (s sub) (search sub s)))
+      (ok "U11 the renderer reports residue exactly when the stored reader is nonempty"
+          (and (not (has clean-refused "unsupported supplied values"))
+               (not (has clean-granted "unsupported supplied values"))
+               (has dirty-refused "unsupported supplied values: 1")
+               (has dirty-refused ":supports[0] — unsupported support species")
+               ;; present on a GRANTED receipt too, with the caller's indices
+               (has dirty-granted "unsupported supplied values: 2")
+               (has dirty-granted ":supports[1] — unsupported support species")
+               (has dirty-granted ":supports[2] — unsupported support species")
+               ;; and it never prints the value or a host type
+               (not (has dirty-refused "17")))
+          (format nil "clean-granted-len=~D dirty-granted-len=~D"
+                  (length clean-granted) (length dirty-granted))))))
+
+;;; ---- U12 THE OLD BEHAVIOUR IS KILLED.  Simulate the pre-Delta-3
+;;;      implementation exactly — the three independent filters, whose union was
+;;;      a PROPER SUBSET of :SUPPORTS, and no residue — and show this cluster
+;;;      FAILS on the exact disappearance defect: the unsupported-only arm
+;;;      becomes indistinguishable from the nothing-supplied arm again.  Then
+;;;      restore and show green.  A gate that has never fired is untested. ----
+(c-guarded "U12 the pre-Delta-3 three-filter implementation FAILS these teeth (then restores green)"
+  (let ((cured (symbol-function '%classify-supports))
+        (disappeared nil) (restored nil))
+    (unwind-protect
+         (progn
+           (setf (symbol-function '%classify-supports)
+                 (lambda (supports)
+                   ;; verbatim the old shape: three filters, everything outside
+                   ;; their union silently dropped
+                   (values (remove-if-not #'lisp-plus-slice0:witness-p supports)
+                           (remove-if-not #'refutation-p supports)
+                           (remove-if-not #'lisp-plus-slice0:claim-p supports)
+                           nil)))
+           (multiple-value-bind (r-u d-u disp-u res-u) (u-run (list 17))
+             (multiple-value-bind (r-n d-n disp-n res-n) (u-run '())
+               (setf disappeared
+                     (list :residue-gone (null res-u)
+                           :u2-would-fail (not (equal res-u (u-descriptors 0)))
+                           :indistinguishable
+                           (and (eq d-u d-n) (eq disp-u disp-n)
+                                (equal res-u res-n)
+                                (equal (derivation-receipt-repair-options r-u)
+                                       (derivation-receipt-repair-options r-n))
+                                (equal (u-render r-u) (u-render r-n)))
+                           :u11-would-fail
+                           (not (search "unsupported supplied values"
+                                        (u-render r-u))))))))
+      (setf (symbol-function '%classify-supports) cured))
+    (multiple-value-bind (r-u d-u disp-u res-u) (u-run (list 17))
+      (declare (ignore r-u))
+      (setf restored (and (equal res-u (u-descriptors 0))
+                          (eq d-u :refused) (eq disp-u :missing))))
+    (ok "U12 the pre-Delta-3 three-filter implementation FAILS these teeth (then restores green)"
+        (and (getf disappeared :residue-gone)
+             (getf disappeared :u2-would-fail)
+             (getf disappeared :indistinguishable)
+             (getf disappeared :u11-would-fail)
+             restored)
+        (format nil "old=~S ; restored-green=~S" disappeared restored))))
+
+;;; ==================================================================
 (format t "~%slice1 selftest: ~D passed, ~D failed~%" *pass* *fail*)
 (finish-output)
 (sb-ext:exit :code (if (zerop *fail*) 0 1))

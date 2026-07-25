@@ -85,6 +85,12 @@
    #:derivation-receipt-complete-binding-environments
    #:derivation-receipt-uniqueness-conflicts
    #:derivation-receipt-multiply-supported-p
+   ;; CHARTER-DELTA-3 — the unsupported-support residue.  An element of
+   ;; :SUPPORTS that is none of the three recognized species used to be SILENTLY
+   ;; DISCARDED: supplying it was indistinguishable, through every public reader,
+   ;; from supplying nothing.  It is now recorded AT THE RECEIPT, inert, with the
+   ;; caller's own index — visible without becoming admissible.
+   #:derivation-receipt-unsupported-supports
    ;; the governed act + transport
    #:derive #:transported-testimony
    #:why #:render-derivation-why
@@ -810,6 +816,10 @@ inherited standing auditable instead of restated."
   (decision nil :read-only t)                 ; :granted | :refused
   (strongest-lawful-result nil :read-only t)
   (repair-options nil :read-only t)           ; per unsatisfied premise
+  ;; CHARTER-DELTA-3: inert descriptors for the :SUPPORTS elements that were
+  ;; none of the three recognized species.  Caller input order, duplicates
+  ;; preserved, zero-based index, NO raw object retained.  Diagnostic only.
+  (unsupported-supports nil :read-only t)
   (identity nil :read-only t)                 ; fresh :receipt identity per attempt
   (origin-context nil :read-only t)
   (ordinal nil :read-only t))
@@ -845,6 +855,37 @@ inherited standing auditable instead of restated."
   (%copy-value (%derivation-receipt-complete-binding-environments r)))
 (defun derivation-receipt-uniqueness-conflicts (r)
   (%copy-value (%derivation-receipt-uniqueness-conflicts r)))
+(defun derivation-receipt-unsupported-supports (r)
+  "CHARTER-DELTA-3.  The inert record of every :SUPPORTS element that was NONE
+of the three recognized species (Slice /0 witness · Slice /1 refutation ·
+Slice /0 claim).  NIL when there were none; otherwise a proper list of
+
+    (:INDEX N :REASON :UNSUPPORTED-SUPPORT-SPECIES)
+
+with N the ZERO-BASED position of the element in the caller's own :SUPPORTS
+list, in caller input order, DUPLICATES PRESERVED (the receipt records what the
+caller supplied, not a set).
+
+THE EXACT CEILING, stated rather than implied: this proves an unsupported value
+WAS supplied, WHERE it appeared, and that it had NO semantic effect.  It does
+NOT preserve or identify the value.  The raw object is deliberately not
+retained — not the object, not its TYPE-OF, not its printed form, not its
+SXHASH, not any address-like identity, not implementation class metadata, not a
+host pointer.  An arbitrary host object may be mutable, circular, unreadable,
+noncanonical or identity-bearing, and Slice /1 must not pretend to durably
+snapshot one.
+
+VISIBILITY IS NOT ADMISSIBILITY.  Residue cannot discharge a premise, refute
+one, bind a variable, create or resolve ambiguity, or authorize a grant, and it
+is never silently converted into :MISSING.  Two calls differing only in
+unsupported supply reach the SAME decision and the SAME dispositions — and are
+no longer indistinguishable through the public readers.
+
+Copy discipline (AUDIT-1 repair 2): the returned list is a defensive structural
+copy, so mutating it — or any plist inside it — cannot revise the stored
+receipt.  Two reads are structurally EQUAL and need not be EQ."
+  (%copy-value (%derivation-receipt-unsupported-supports r)))
+
 (defun derivation-receipt-multiply-supported-p (r)
   "Derived VIEW (CHARTER-DELTA-2): true when MORE THAN ONE complete coherent
 binding environment discharges the conclusion.  NOT a premise status, NOT a
@@ -1435,7 +1476,9 @@ receipt records ONLY what is actually known here: the resolved schema's name and
 version, the lawful conclusion normal form, the acting origin context, a
 :REFUSED decision, and EMPTY assessment structure — no premise was assessed, and
 none is invented (no bindings, no complete environments, no uniqueness
-conflicts, no strongest-lawful-result, no repair options).
+conflicts, no strongest-lawful-result, no repair options, and — CHARTER-DELTA-3
+clause 12 — no unsupported-support residue, because :SUPPORTS is not classified
+on this path at all).
 
 The three PRE-threshold exits — PATTERN-USED-AS-GROUND (before schema
 resolution), SCHEMA-NOT-FOUND (schema resolution failed), and
@@ -1471,6 +1514,13 @@ every conclusion variable of schema (~S ~S)~@[; unbound: ~S~]~@[; match status: 
                           :decision :refused
                           :strongest-lawful-result nil
                           :repair-options nil
+                          ;; CHARTER-DELTA-3, clause 12: this exit is
+                          ;; PRE-ASSESSMENT.  :SUPPORTS was never classified
+                          ;; here, so there is no residue to report and none is
+                          ;; manufactured — an unsupported value in :SUPPORTS
+                          ;; does not give this receipt a field it did not earn,
+                          ;; exactly as it does not give it premises.
+                          :unsupported-supports nil
                           :identity (lisp-plus-kernel0:make-identity
                                      :receipt (format nil "derivation-receipt-~D"
                                                       (%next-ordinal)))
@@ -1544,12 +1594,54 @@ witness: ~A" (type-of c))
                        :offending-value (type-of c)
                        :receipt receipt)))))
 
+(defun %classify-supports (supports)
+  "CHARTER-DELTA-3.  ONE classification step over :SUPPORTS.  Every element is
+visited exactly once, in caller order, and lands in exactly one of four places:
+
+  (values WITNESSES REFUTATIONS CLAIMS UNSUPPORTED-DESCRIPTORS)
+
+This replaces three independent REMOVE-IF-NOT filters whose union was a PROPER
+SUBSET of SUPPORTS — everything outside that union fell through all three and
+was silently discarded, which is exactly the defect this delta repairs.
+
+EXACTLY-ONCE IS PROVABLE, NOT ASSUMED.  WITNESS, CLAIM and REFUTATION are three
+DEFSTRUCTs with no :INCLUDE — three sibling structure classes directly under
+STRUCTURE-OBJECT — so the three predicates are pairwise disjoint and the COND's
+order is not a silent precedence rule: no object can satisfy two of them, and
+the branch an element takes does not depend on the order they are tested in.
+(Shown, not claimed: all six SUBTYPEP pairs answer NIL with certainty T.)
+
+ORDER.  The three recognized buckets come back in caller-relative order, which
+is precisely what the REMOVE-IF-NOT filters produced — the downstream evaluator
+sees the same three lists it saw before, element for element.
+
+NO CORE /0 KNOWLEDGE.  An element is unsupported because it is NOT one of the
+three admitted species — never because Slice /1 recognized it as something else.
+There is no blacklist here and no dependency on Language Core /0; a core0
+effect account is residue for exactly the reason the integer 17 is."
+  (let ((witnesses '()) (refutations '()) (claims '()) (unsupported '()))
+    (loop for element in supports
+          for index from 0
+          do (cond ((lisp-plus-slice0:witness-p element) (push element witnesses))
+                   ((refutation-p element) (push element refutations))
+                   ((lisp-plus-slice0:claim-p element) (push element claims))
+                   ;; The residue.  Canonical inert data — an index and a
+                   ;; reason.  The object itself is NOT captured, in any form.
+                   (t (push (list :index index
+                                  :reason :unsupported-support-species)
+                            unsupported))))
+    (values (nreverse witnesses) (nreverse refutations) (nreverse claims)
+            (nreverse unsupported))))
+
 (defun derive (&key schema-name schema-version conclusion supports receiver by)
   "The governed derived-judgment act.  Resolve schema (SCHEMA-NAME,
 SCHEMA-VERSION) by exact key; bind conclusion variables from the ground
-CONCLUSION; assess each premise over SUPPORTS (Slice /0 witnesses and Slice /1
-refutations) relative to the acting RECEIVER context; ALWAYS issue a derivation
-receipt.  On full coherent discharge, mint a derivation witness and drive the
+CONCLUSION; assess each premise over SUPPORTS — whose three RECOGNIZED species
+are Slice /0 witnesses, Slice /1 refutations and Slice /0 claims (SOL DECISION
+1), any other element being unsupported residue recorded at the receipt and
+assessed against nothing (CHARTER-DELTA-3) — relative to the acting RECEIVER
+context; ALWAYS issue a derivation receipt.  On full coherent discharge, mint a
+derivation witness and drive the
 frozen RAISE — returning (values granted-claim receipt).  On refusal, SIGNAL a
 typed DERIVATION-REFUSED carrying the receipt (mirroring Slice /0's RAISE)."
   (%require-ground conclusion :conclusion)
@@ -1557,8 +1649,16 @@ typed DERIVATION-REFUSED carrying the receipt (mirroring Slice /0's RAISE)."
          (conclusion-nf (proposition conclusion))
          (ctx receiver)
          (ctx-id (and ctx (lisp-plus-slice0:receiver-context-context-id ctx)))
-         (witnesses (remove-if-not #'lisp-plus-slice0:witness-p supports))
-         (refutations (remove-if-not #'refutation-p supports))
+         ;; CHARTER-DELTA-3.  ONE classification step replaces the three
+         ;; independent REMOVE-IF-NOT filters that stood here.  Their union was
+         ;; a PROPER SUBSET of SUPPORTS, so anything outside the three species
+         ;; fell through all three and VANISHED — supplying it was, through
+         ;; every public reader, indistinguishable from supplying nothing.  It
+         ;; is now classified exactly once and, when unrecognized, recorded on
+         ;; the receipt as inert residue.  VISIBLE, still NOT ADMISSIBLE.
+         (classified (multiple-value-list (%classify-supports supports)))
+         (witnesses (first classified))
+         (refutations (second classified))
          ;; SOL DECISION 1.  A CLAIM in SUPPORTS used to fall through all three
          ;; filters and be SILENTLY DISCARDED — the premise landed :missing with
          ;; every evidential field empty, and the repair advice told the
@@ -1566,7 +1666,11 @@ typed DERIVATION-REFUSED carrying the receipt (mirroring Slice /0's RAISE)."
          ;; a first-class support kind: considered per premise, recorded per
          ;; premise whatever becomes of them, and able to discharge ONLY through
          ;; an identity-bearing reference to their own governed judgment.
-         (claims (remove-if-not #'lisp-plus-slice0:claim-p supports))
+         (claims (third classified))
+         ;; The residue itself — descriptors only, never the objects.  It rides
+         ;; to the receipt and NOWHERE ELSE: it is passed to no assessment, no
+         ;; environment, no disposition, no repair advice, no grant path.
+         (unsupported-supports (fourth classified))
          ;; D1: CTX-ID rides in so the post-threshold UNBOUND-CONCLUSION-VARIABLE
          ;; receipt can record the acting origin context truthfully.
          (base-env (%bind-conclusion schema conclusion-nf ctx-id))
@@ -1608,6 +1712,14 @@ typed DERIVATION-REFUSED carrying the receipt (mirroring Slice /0's RAISE)."
                            unless (eq (premise-assessment-disposition a) :satisfied)
                              collect (cons (premise-assessment-premise-pattern a)
                                            (%repair-for a)))
+                     ;; CHARTER-DELTA-3.  Recorded at the INVOCATION level, not
+                     ;; per premise: an unrecognized object cannot be
+                     ;; meaningfully matched against an individual premise, so
+                     ;; attributing it to one would be an invention.  It reaches
+                     ;; the receipt AFTER the decision has been computed above
+                     ;; from the recognized species alone — the residue changes
+                     ;; nothing it can see.
+                     :unsupported-supports unsupported-supports
                      :identity (lisp-plus-kernel0:make-identity
                                 :receipt (format nil "derivation-receipt-~D"
                                                  (%next-ordinal)))
@@ -1702,6 +1814,18 @@ from the receipt (Slice /0 discipline, inherited)."
   (dolist (uc (derivation-receipt-uniqueness-conflicts receipt))
     (format stream "  uniqueness conflict on ~S: surviving values ~S~%"
             (first uc) (second uc)))
+  ;; CHARTER-DELTA-3.  Receipt-level residue, named at the caller's own index.
+  ;; Printed on GRANTED and REFUSED receipts alike, and drawn — like every other
+  ;; line here — ONLY from the receipt's own stored field: the prose says a value
+  ;; WAS supplied and had NO effect; it never prints the value, never names its
+  ;; host type, never calls it absent, mismatched, evaluated, rejected-as-false,
+  ;; or admitted.  The structured reader, not this prose, is authoritative.
+  (let ((residue (derivation-receipt-unsupported-supports receipt)))
+    (when residue
+      (format stream "  unsupported supplied values: ~D~%" (length residue))
+      (dolist (u residue)
+        (format stream "    :supports[~D] — unsupported support species; not ~
+assessed; no effect on decision~%" (getf u :index)))))
   (dolist (a (derivation-receipt-assessments receipt))
     (format stream "  premise ~S: ~A~%"
             (second (premise-assessment-premise-pattern a))

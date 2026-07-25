@@ -903,8 +903,14 @@ bridge is proposed, and nominating this as Slice /2 pressure is a separate act
 reserved to the owner.**
 
 ### 9.3 — R-SUPPORT-1: silent supplied-support disappearance is a CORRECTNESS DEFECT
-**Docketed, deliberately not repaired** — it is a shared-semantics change to
-slice1's support classification and requires owner authorisation.
+**~~Docketed, deliberately not repaired~~ — REPAIRED 2026-07-25 under
+`CHARTER-DELTA-3.md`; see §10 below for the before/after/still-missing account and
+the fresh run that licenses this line.** The text under this heading is left
+unaltered on purpose: it is the diagnosis, and the diagnosis was right.
+
+*Original disposition:* docketed, deliberately not repaired — it is a
+shared-semantics change to slice1's support classification and requires owner
+authorisation.
 
 Smallest reproducer, from an independent chair scratch run (six species through
 one one-premise schema), verbatim:
@@ -949,6 +955,118 @@ charged higher than the evidence supports.
   against the tree instead, and they hold.
 
 *— chair rulings: Claude Opus 5 (1M context), 2026-07-25*
+
+---
+
+## 10. R-SUPPORT-1 repaired — 2026-07-25, `CHARTER-DELTA-3` (ADSCRIPTA)
+
+*Owner-authorised, bounded to this one repair. Written after fresh execution, not
+before it.*
+
+### 10.1 — BEFORE: unsupported ≡ nothing
+
+The docket's finding, re-reproduced from a clean image before any edit was made
+(five arms through one one-premise schema, reading **every** public
+derivation-receipt and premise-assessment reader into one plist and comparing the
+plists):
+
+```
+B  one generic unsupported value (17)   ==  A  nothing supplied   → T
+C  Core /0 effect-evidence object       ==  A  nothing supplied   → T
+D  self-minted claim                    → visible, roster length 1
+E  lawful accessible witness            → visible, 1 matching accessible support
+A / B / C dispositions                  → :MISSING  :MISSING  :MISSING
+```
+
+Rows B and C were **identical to supplying nothing across every reader.** A failed
+*claim* was recorded; a supplied object of any other species left no trace at all.
+
+### 10.2 — AFTER: the same disposition, an observably different receipt
+
+Same arms, same schema, post-repair:
+
+```
+B == A → NIL          C == A → NIL
+A / B / C dispositions → :MISSING  :MISSING  :MISSING   (unchanged)
+```
+
+**Both halves matter.** The disposition did not move — the effect account is not
+admissible and nothing here made it so. What moved is that the *receipt* now
+distinguishes an offering from an omission:
+`derivation-receipt-unsupported-supports` returns
+`((:INDEX 0 :REASON :UNSUPPORTED-SUPPORT-SPECIES))` where before it had nothing to
+return, and `render-derivation-why` names the position on granted and refused
+receipts alike.
+
+In this application, at Movement IX's new probe `9d-bis`:
+
+```
+   9d-bis. the account itself, handed straight to derive:
+   ▸ the desk offers the crossing's own account — attempt attempt:core0/attempt/35, ledger fake:courier:0001 —
+   ▸ not wrapped in a witness, not restated as a claim: the account itself.
+   ▸ the effect premise says :MISSING; the receipt records an unsupported value at :supports[1].
+  ok   [IX-15] the Core /0 effect account is NOT admitted: the premise is still :MISSING and settlement is still refused
+  ok   [IX-16] and supplying it is no longer indistinguishable from supplying nothing: the receipt names the exact input position
+```
+
+Index **1** is where the desk put it: the lawful dispatch claim is index 0. The
+receipt records **the caller's own position**, zero-based, duplicates preserved.
+
+**It does not record the object.** Not the value, not its type, not its printed
+form, not a handle. The exact ceiling, quoted from the delta: *the receipt proves
+an unsupported value was supplied, where it appeared, and that it had no semantic
+effect; it does not preserve or identify arbitrary unsupported host data after the
+call.*
+
+### 10.3 — STILL MISSING: the governed effect-to-evidence relation
+
+**The frontier has not moved.** §9.2's `R-EFFECT-2` stands entire: no public
+governed operation admits a Core /0 effect account as premise support, and the
+missing thing is still the **governed relation binding an execution witness to a
+real attempt.** Delta /3 changed the *observability* of an inadmissible offering,
+not its admissibility.
+
+Everything §8 and §9 established is unchanged and re-asserted by the suite: the
+real direct witness grants; the fabricated one grants identically; a bare one
+carrying no account grants identically; a raised direct witness chains;
+`:procedure`/`:content` remain non-load-bearing; the desk still refuses the
+counterfeit route as **policy, not as a guarantee**; the loan still lands
+`:DISPATCH-UNACKNOWLEDGED` with tracer T-3 open; no phantom settlement or closure
+was written; and **Slice /2 is not opened.** The desk can now prove it tried. It
+still cannot prove the dispatch was acknowledged.
+
+### 10.4 — Verification for this repair (all chair-run, all exit 0)
+
+| suite | before | after |
+|---|---|---|
+| `de-bibliotheca-peregrina` | 95 / 0 | **97 / 0** (+`[IX-15]`, `[IX-16]`) |
+| Slice /1 substrate selftest | 93 / 0 | **105 / 0** (+U1–U12) |
+| `GUIDE-WALK-1` | 18 / 0 | **20 / 0** (+G19, G20) |
+| SMOKE-1 · GUIDE-REPAIR-1-REPRO | 9/9 · 9/0 | **9/9 · 9/0** |
+| kernel0 selftest (+ mutant floor) | 33 / 0, 59 killed | **33 / 0, 59 killed, 0 survived** |
+| Core /0 selftest · slice0 SMOKE | — | **29 / 0 · 6 / 0** |
+| de-cursore-aereo · de-ponte-usto · de-abaco | 23/0 · 17/0 · 9/0 | **23/0 · 17/0 · 9/0** |
+| de-praemissis (3 programs) · de-admissione-datorum (4 programs) | — | **SPECIMEN 12/12; all seven exit 0** |
+| `mneme/verify-all.sh` | — | **6/6 floors green** |
+| Slice /1 exported symbols (live `do-external-symbols`) | 71 | **72** (exactly one added) |
+
+SBCL **2.4.6**, operation-checked *through the wrapper* via
+`(lisp-implementation-version)` — the 2026-07-20 wrapper-misbind scar applies.
+Application: **two clean runs byte-identical.** Double-colon package access in
+this directory: **0** (this report spells the digraph out in words for the same
+reason `APPLICATION.lisp` does — a sentence *about* the check must not break it,
+and the first draft of this line did). New double-colon access introduced
+anywhere by this repair: **0**. No Core /0 dependency introduced into Slice /1 — the
+classifier cannot tell a `core0-evidence` from the integer 17, and that is the
+point: an element is residue because it is not one of the three admitted species,
+never because Slice /1 keeps a blacklist.
+
+**Teeth, and the one that matters:** U12 restores the pre-Delta-3 three-filter
+implementation live and shows the new cluster fail on the exact disappearance
+defect (`:residue-gone T :indistinguishable T`), then restores green. A gate that
+has never fired is untested.
+
+*— ADSCRIPTA, Claude Opus 5 (1M context), 2026-07-25*
 
 ---
 

@@ -44,8 +44,10 @@
 ;;;;                           given, and the direct-witness door in its side —
 ;;;;                           open, labelled, and not closed here.
 ;;;;   IX  THE EFFECT FRONTIER settlement wants a premise meaning "this actually
-;;;;                           happened".  Five species of support are tried and
-;;;;                           the outcome of each is recorded.  Two discharge,
+;;;;                           happened".  Six species of support are tried —
+;;;;                           including, since CHARTER-DELTA-3, the Core /0
+;;;;                           effect account handed straight across — and the
+;;;;                           outcome of each is recorded.  Two discharge,
 ;;;;                           and BOTH rest on a witness the desk minted with
 ;;;;                           its own hand — a fabricated one discharges
 ;;;;                           identically, and so does a witness carrying no
@@ -1804,6 +1806,79 @@ leaves are not descended into; the caller asserts separately that there are none
                    (lisp-plus-slice0:judgment-record-support-ids jr)))
       "the judgment record keeps the WITNESS's id, never what the witness was carrying"))
 
+;;; --- 9d-bis. the sixth species: the effect account ITSELF ------------
+;;;
+;;; Every probe so far handed `derive` something the language RECOGNIZES — a
+;;; claim, a testimony witness, a direct witness — and probe 4 only carried the
+;;; crossing INSIDE a witness the desk minted.  The one species never tried is
+;;; the account itself: the Core /0 evidence object, handed straight across.
+;;;
+;;; This probe was added when CHARTER-DELTA-3 landed, and it is worth being
+;;; exact about what changed and what did not.  BEFORE the delta, this call was
+;;; observationally identical to probe 1 — supplying the account and supplying
+;;; NOTHING produced the same receipt through every public reader, so the desk
+;;; could not tell an offering from an omission.  AFTER it, the disposition is
+;;; the SAME (:MISSING — the account is not admissible and nothing here makes it
+;;; so) but the receipt now RECORDS that something was supplied, and where.
+;;;
+;;; Visibility is not admissibility.  The frontier has not moved.
+;;;
+;;; NB on numbering: the check names below continue past the movement's highest
+;;; existing name rather than being inserted into the sequence.  Names in this
+;;; file are quoted verbatim in FIELD-REPORT.md and RUN-RECEIPT.txt, so they are
+;;; append-only.
+(format t "~%   9d-bis. the account itself, handed straight to derive:~%")
+(multiple-value-bind (claim receipt) (consider-settlement *deliver-evidence*)
+  (let ((residue (lisp-plus-slice1:derivation-receipt-unsupported-supports receipt))
+        (none (lisp-plus-slice1:derivation-receipt-unsupported-supports
+               *lawful-settlement-receipt*)))
+    (desk "the desk offers the crossing's own account — attempt ~A, ledger ~A —"
+          (lisp-plus-kernel0:identity-key
+           (lisp-plus-core0:core0-evidence-attempt-id *deliver-evidence*))
+          (lisp-plus-core0:core0-evidence-ledger-token *deliver-evidence*))
+    (desk "not wrapped in a witness, not restated as a claim: the account itself.")
+    ;; the indices only, formatted as a fixed-width line: a bare ~S of the
+    ;; descriptors would let the pretty-printer's right margin decide where this
+    ;; line breaks, and a receipt that must be byte-identical across runs cannot
+    ;; afford a field whose shape depends on the printer's idea of a margin.
+    (desk "the effect premise says ~S; the receipt records an unsupported ~
+value at :supports[~{~D~^, ~}]."
+          (disposition-of receipt :dispatch-acknowledged)
+          (mapcar (lambda (u) (getf u :index)) residue))
+    (ok "[IX-15] the Core /0 effect account is NOT admitted: the premise is still :MISSING and settlement is still refused"
+        (and (null claim)
+             (eq :missing (disposition-of receipt :dispatch-acknowledged))
+             (let ((a (effect-premise-of receipt))
+                   (b (effect-premise-of *lawful-settlement-receipt*)))
+               (and (null (lisp-plus-slice1:premise-assessment-matching-accessible-supports a))
+                    (null (lisp-plus-slice1:premise-assessment-matching-inaccessible-supports a))
+                    (null (lisp-plus-slice1:premise-assessment-mismatched-candidates a))
+                    (null (lisp-plus-slice1:premise-assessment-refuting-supports a))
+                    ;; and it did NOT slip into the judged-claim roster: the
+                    ;; roster is EXACTLY what it is when only the lawful
+                    ;; dispatch claim is offered.  (The roster is not empty —
+                    ;; it holds that claim, considered here and not
+                    ;; discharging, which is Sol Decision 1 working as
+                    ;; designed.  The point is that the account added nothing
+                    ;; to it, because an account is not a claim.)
+                    (equal (lisp-plus-slice1:premise-assessment-judged-claims a)
+                           (lisp-plus-slice1:premise-assessment-judged-claims b))
+                    (notany (lambda (e) (eq :discharged (getf e :outcome)))
+                            (lisp-plus-slice1:premise-assessment-judged-claims a)))))
+        "an effect account is not a witness, not a refutation and not a claim — Delta /3 records it at the receipt, and records nothing more")
+    (ok "[IX-16] and supplying it is no longer indistinguishable from supplying nothing: the receipt names the exact input position"
+        (and (equal residue '((:index 1 :reason :unsupported-support-species)))
+             (null none)
+             ;; the two receipts still agree on every decision-bearing field —
+             ;; the residue is a record, not an effect
+             (eq (lisp-plus-slice1:derivation-receipt-decision receipt)
+                 (lisp-plus-slice1:derivation-receipt-decision *lawful-settlement-receipt*))
+             (eq (disposition-of receipt :dispatch-acknowledged)
+                 (disposition-of *lawful-settlement-receipt* :dispatch-acknowledged))
+             (eq (disposition-of receipt :may-dispatch)
+                 (disposition-of *lawful-settlement-receipt* :may-dispatch)))
+        "index 1 is where the desk put it: the dispatch claim is index 0, the account index 1")))
+
 (format t "~%   ── where the road ends, stated exactly ──~%")
 (desk "The effect account can be CARRIED. A kernel0 attempt identity fits in")
 (desk ":PROCEDURE, a ledger token fits in :CONTENT, and a reader can read both")
@@ -1813,6 +1888,15 @@ leaves are not descended into; the caller asserts separately that there are none
 (desk "discharging exactly as well. The judgment record does not preserve them")
 (desk "([IX-10]), so what survives a promotion is the witness's id and nothing")
 (desk "the witness was holding.")
+(format t "~%")
+(desk "One thing here DID change, and it is smaller than it sounds. Handing the")
+(desk "account itself to `derive` used to be indistinguishable from handing over")
+(desk "nothing: same disposition, same receipt, no trace. CHARTER-DELTA-3 makes")
+(desk "the offering visible — the receipt now records an unsupported value at")
+(desk "the exact position the desk put it ([IX-16]). It records that something")
+(desk "was offered and had no effect. It does not make it evidence: the premise")
+(desk "is still :MISSING and settlement is still refused ([IX-15]). The desk can")
+(desk "now prove it tried. It still cannot prove the dispatch was acknowledged.")
 (format t "~%")   ; a blank line, not an empty desk utterance (which would emit
                   ; a bullet followed by trailing whitespace into the receipt)
 (desk "So the frontier is not a wall the desk was refused at. It is a place where")
