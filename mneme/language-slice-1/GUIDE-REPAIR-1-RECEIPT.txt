@@ -1,6 +1,10 @@
 GUIDE REPAIR 1 — RUN RECEIPT
 ============================
-Date          : 2026-07-25
+Date          : 2026-07-25 UTC — read from the clock, not assumed. NOTE for a
+                future reader diffing this against git: the host runs -03, so the
+                commit timestamps for this work read 2026-07-24 ~22:2x local. Both
+                are the same moment. This session's artifacts are dated in UTC,
+                following the naming already set by notes/2026-07-25-*.
 Chair         : Claude Opus 5 (1M context)
 Host SBCL     : 2.4.6 — operation-checked THROUGH the wrapper before the run
                 (sbcl --eval '(lisp-implementation-version)' => "2.4.6"; the
