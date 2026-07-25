@@ -21,10 +21,10 @@ Slice /2 design progression:  HELD ON CORE /0 ISSUANCE QUESTION
 ## 1. What was executed
 
 A paper specimen built *beside* the language: zero package-internal access, no
-monkey-patching, no exports, no repository writes. Sixteen traces, eight killed designs
-instantiated and **run**, five fabrication vectors. **The chair ran it twice from clean
-images: exit 0 both times, byte-identical to the builder's transcript, 93 checks /
-0 failed.**
+monkey-patching, no exports, no repository writes. Sixteen traces, eight candidate
+designs instantiated and **run to refutation**, five construction vectors. **The chair
+ran it twice from clean images: exit 0 both times, byte-identical to the builder's
+transcript, 93 checks / 0 failed.**
 
 ```
 package   slice2-source-basis-paper-0-2026-07-25.zip
@@ -52,17 +52,17 @@ ISSUANCE AUTHENTICITY   Did this record actually arise from the       NOT REPRES
 ```
 
 The first two were **built and executed**. The eight binding clauses are real checks:
-they kill empty shells, incoherent splices, copied identifiers, mismatched
-manifestations, forged tokens, resolver-only schemes and payload-copy theatre, and
-they blocked all eleven status-laundering routes. Semantic projection is genuinely
-independent — binding passes while projection refuses, at five distinct clauses, and
-the refusals are contingent in both directions.
+they reject empty records, incoherent splices, copied identifiers, mismatched
+manifestations, tokens inconsistent with the recorded manifestation, resolver-only
+designs and payload-copy designs, and they blocked all eleven promotion routes.
+Semantic projection is genuinely independent — binding passes while projection
+refuses, at five distinct clauses, and the refusals are contingent in both directions.
 
-**A coherent total forgery passes all of them.** The killer trace:
+**A fully coherent caller-constructed record passes all of them.** The refuting trace:
 
 ```
 a chamber cycle that never ran
-    → the application constructs a complete coherent Core /0 account for it
+    → an application constructs a complete, coherent Core /0 account for it
     → the kernel event sequence VALIDATES
     → the attempt folds to :COMPLETED
     → source binding reports COHERENT
@@ -138,9 +138,9 @@ fabricate a coherent source record
   → produce an admitted source-bound judgment
 ```
 
-Classified as **forged issuance history**, not status laundering. *The counterfeit can
-no longer walk in carrying only a promoted claim; it must now manufacture an entire
-coherent source record — and that record is publicly manufacturable.*
+Classified as **forged issuance history**, not status laundering. *A record whose
+standing was obtained by promotion alone no longer suffices; a complete coherent source
+record is now required — and such a record is constructible from the public surface.*
 
 ### R-SOURCE-1.6 — authenticity cannot be inferred from type membership
 
@@ -149,10 +149,10 @@ the exported structure-class name satisfies it.
 
 ### R-SOURCE-1.7 — authenticity cannot be inferred from coherent content
 
-The total forgery uses a fresh attempt identity, constructs a complete event sequence,
-an attempt payload and a manifestation, **validates under Kernel /0**, folds to
-`:COMPLETED`, shares no content with a genuine account — and passes every coherence
-clause.
+A caller-constructed record with a fresh attempt identity, a complete event sequence,
+an attempt payload and a manifestation **validates under Kernel /0**, folds to
+`:COMPLETED`, shares no content with an account returned by `perform` — and satisfies
+every coherence clause.
 
 ### R-SOURCE-1.8 — source binding and semantic projection remain useful
 
@@ -229,14 +229,15 @@ held.
 inhabited applications, every ruling that opened these doors, the specimen and this
 text.
 
-**Authenticity is shown non-public TODAY, not non-constructible.** No verifier, replay,
+**Authenticity is shown to be unavailable through the public surface TODAY, not shown
+to be unconstructible in principle.** No verifier, replay,
 registry or attempt-resolution is exported; that is not proof none could exist.
 
-**The reflective (MOP) forgery routes are SBCL-specific. The public-Kernel-/0-
-constructors route is NOT** — and that is the route that matters.
+**The reflective (MOP) construction routes are SBCL-specific. The public-Kernel-/0-
+constructors route is not** — and that is the route that matters.
 
-**Three attack surfaces on the specimen's own operations were named by its builder and
-NOT audited by the chair:** the binding clauses report only the first firing clause and
+**Three unaudited areas in the specimen's own operations were named by its builder and
+not reviewed by the chair:** the binding clauses report only the first firing clause and
 clause masking was untested; the relation-target function both derives and tests the
 target, so exactly one trace breaks that loop; and whether four semantic relations are
 the right *set* is untested. A reviewer should start there.
