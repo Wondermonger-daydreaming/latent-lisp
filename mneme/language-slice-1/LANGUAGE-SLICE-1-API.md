@@ -601,7 +601,9 @@ premise unless noted):
 | Accessor | Returns | Copy |
 |---|---|---|
 | `premise-assessment-premise-pattern` | the premise pattern's normal form | copy-tree |
-| `premise-assessment-ground-instance` | the pattern under accepted bindings (unbound vars kept) | copy-tree |
+| `premise-assessment-ground-instances` | **(SOL DECISION 2 — the normative plural)** the COMPLETE CANONICAL SET of ground instances: one per environment this premise was assessed under, deduplicated only on byte-identical canonical encodings and ordered lexicographically by canonical encoded bytes. A one-element sequence when there is exactly one — never a bare instance | copy-tree |
+| `premise-assessment-ground-instance` | **compatibility projection only.** The sole instance when the canonical set has exactly one; `NIL` when it is empty; **REFUSES (typed `slice1-condition`) above cardinality one** — there is no "the" ground instance when several complete environments support the premise, and it will not select one. It never returns sometimes-one-sometimes-a-sequence | copy-tree |
+| `premise-assessment-judged-claims` | **(SOL DECISION 1)** the per-premise judged-claim roster: one plist per judged claim offered in `supports` and considered for this premise — `(:CLAIM-ID id :OUTCOME kw [:ROLES …] [:JUDGMENT kw] [:PROCEDURE-ID id :PROCEDURE-VERSION v :SUPPORT-IDS … :JUDGMENT-RECEIVER … :JUDGMENT-ORDINAL …])`. `OUTCOME` ∈ `:DISCHARGED` · `:PROPOSITION-DOES-NOT-MATCH` · `:ROLE-CONFLICT` · `:UNJUDGED` · `:JUDGMENT-NOT-VERIFIED` · `:JUDGMENT-BASIS-UNAVAILABLE` · `:INACCESSIBLE-TO-RECEIVER`. The judgment-basis fields appear exactly on `:DISCHARGED` entries | copy-tree |
 | `premise-assessment-matching-accessible-supports` | witnesses that matched the premise pattern **and** passed the accessibility check (their `witness-id` is in the acting `receiver-context`'s `accessible-supports`, or `receiver` was `nil`) | copy-list |
 | `premise-assessment-matching-inaccessible-supports` | matched witnesses the receiver cannot reach (residue) | copy-list |
 | `premise-assessment-mismatched-candidates` | `(witness . conflicting-roles)` conses | copy-tree |
@@ -612,9 +614,56 @@ premise unless noted):
 
 VERIFIED (missing case): `premise-pattern` ⇒
 `(:PREDICATE :RESULTS-REPRODUCED (:ENTRY (:VAR :ENTRY)) (:REPLICATE (:VAR :REPLICATE)))`;
-`ground-instance` ⇒ `(:PREDICATE :RESULTS-REPRODUCED (:ENTRY "e-88") (:REPLICATE (:VAR :REPLICATE)))`
+`ground-instances` ⇒ a ONE-element sequence whose sole element is
+`(:PREDICATE :RESULTS-REPRODUCED (:ENTRY "e-88") (:REPLICATE (:VAR :REPLICATE)))`
 (the conclusion-bound `:entry` is substituted, the schema-local `:replicate` is
-not); `disposition` ⇒ `:MISSING`; the four support lists ⇒ `NIL`.
+not), and `ground-instance` therefore still returns that instance;
+`disposition` ⇒ `:MISSING`; the four support lists ⇒ `NIL`.
+
+### SOL DECISION 1 — a judged claim is a first-class support kind
+
+`derive`'s `:supports` accepts **Slice /0 witnesses, Slice /1 refutations, and
+Slice /0 CLAIMS.** A claim used to fall through all filters and be silently
+discarded; it is now considered for every premise and **recorded in
+`premise-assessment-judged-claims` per premise whatever becomes of it.**
+
+A claim **discharges** a premise only through an *identity-bearing reference to
+its own governed judgment* — all seven ruling conditions: durable claim identity ·
+receiver-accessible (the same id-membership rule as a witness, read against
+`claim-id`) · a positive `:verified` judgment · normalized judged proposition
+matching the required ground premise under the incoming bindings · the judgment
+record read off *that exact claim* (the linkage is structural, so it cannot be
+forged) · claim identity **and** judgment basis recorded in the receipt · the
+original judgment left inspectable and never converted into a minted witness.
+
+There is **no schema, `procedure-id`, mode, or kind compatibility rule.**
+`procedure-id` is *recorded provenance, never a hidden compatibility selector*.
+No recursion is introduced: the supporting judgment must already exist.
+
+A claim that matches but is unjudged, `:refuted`, or basis-less leaves the
+premise `:MISSING` (the six §5 dispositions are unchanged — no seventh status is
+minted) **and is named in the roster and in the repair advice**, which no longer
+tells the programmer to supply what the programmer supplied. An inaccessible
+matching claim is `:INACCESSIBLE` residue; one with conflicting roles is
+`:MISMATCHED`.
+
+### SOL DECISION 2 — grounding multiplicity is preserved, never selected
+
+**Disposition and grounding multiplicity are separate axes.** Several complete
+environments may support one disposition; that plurality is evidence and is kept.
+Canonical form: bindings arranged by the schema's **declared variable order**
+(conclusion variables as recorded at construction, then declared `:locals`) ·
+each bound value crossing the governing CD/0 boundary · the whole environment
+encoded through the canonical datum codec (`lisp-plus-kernel0:require-canonical`
+→ `lisp-plus-cd0:encode-exact`) · environments ordered lexicographically by those
+**canonical encoded bytes** · deduplicated **only** on byte-identical encodings.
+Printed representation, host hash-table iteration, support traversal order, host
+symbol order, object identity, and implementation-specific comparison are all
+excluded — the ordering is read off the codec's octets directly.
+
+This also governs `derivation-receipt-complete-binding-environments`,
+`premise-assessment-binding-environments`, and the surviving-value sequence in
+`derivation-receipt-uniqueness-conflicts`.
 
 ---
 

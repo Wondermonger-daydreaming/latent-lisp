@@ -1030,6 +1030,424 @@ bindings=~S envs=~S conflicts=~S strongest=~S repairs=~S origin=~S"
       (format nil "stored = ~S" q)))
 
 ;;; ==================================================================
+;;; T29 / T30 — the two SOL DESIGN RULING decisions (SLICE1-SOL-DESIGN-RULING-
+;;; FORKS.md, adopted by the owner).  Every tooth below was run against the
+;;; pre-patch slice1.lisp FIRST and reported a failure there; the verbatim
+;;; bite-and-cure transcript is `_staging/catena-teeth-evidence.txt`.
+;;;
+;;;   DECISION 1 (T29a-j) — do not erase the identity of the conclusion when it
+;;;                         becomes evidence.
+;;;   DECISION 2 (T30a-h) — do not erase the plurality of the evidence when it
+;;;                         becomes a conclusion.
+;;; ==================================================================
+
+(defmacro c-guarded (name &body body)
+  "Run BODY; any escaping condition is a FAILURE reported with its type — so a
+missing reader or a missing behaviour fails as loudly as a wrong value."
+  (let ((c (gensym)))
+    `(handler-case (progn ,@body)
+       (error (,c) (ok ,name nil (format nil "~A: ~A" (type-of ,c) ,c))))))
+
+(defun c-ctx (id &rest ids)
+  "A receiver context over explicit durable ids (witness ids AND claim ids)."
+  (lisp-plus-slice0:receiver-context :context-id id :accessible-supports ids))
+
+(defun c-attempt (name version conclusion supports receiver)
+  "(values RECEIPT CLAIM DECISION) — a derivation attempt that never escapes."
+  (handler-case
+      (multiple-value-bind (claim receipt)
+          (derive :schema-name name :schema-version version
+                  :conclusion conclusion :supports supports
+                  :receiver receiver :by :registrar)
+        (values receipt claim :granted))
+    (derivation-refused (c) (values (slice1-condition-receipt c) nil :refused))))
+
+(defun install-judged-claim-schemas ()
+  (clear-schema-registry)
+  ;; source: mints a governed :verified judgment on (:predicate :standing …)
+  (register-schema
+   (judgment-schema
+    :name :j-source :version 1
+    :conclusion (proposition-pattern
+                 '(:predicate :standing (:who (:var :w)) (:authority (:var :a))))
+    :premises (list (proposition-pattern
+                     '(:predicate :dues-clear (:who (:var :w))
+                       (:authority (:var :a)))))))
+  ;; target: consumes the judged claim as premise support
+  (register-schema
+   (judgment-schema
+    :name :j-target :version 1
+    :conclusion (proposition-pattern '(:predicate :may-act (:who (:var :w))))
+    :premises (list (proposition-pattern
+                     '(:predicate :standing (:who (:var :w))
+                       (:authority (:var :auth))))
+                    (proposition-pattern
+                     '(:predicate :in-good-order (:who (:var :w)))))
+    :locals '(:auth)))
+  ;; target-unique: same, with the authority local DECLARED UNIQUE
+  (register-schema
+   (judgment-schema
+    :name :j-target-unique :version 1
+    :conclusion (proposition-pattern '(:predicate :may-act (:who (:var :w))))
+    :premises (list (proposition-pattern
+                     '(:predicate :standing (:who (:var :w))
+                       (:authority (:var :auth))))
+                    (proposition-pattern
+                     '(:predicate :in-good-order (:who (:var :w)))))
+    :locals '(:auth) :unique-locals '(:auth))))
+
+(defun granted-standing (who authority)
+  "A REAL governed :verified judgment: derive it, hand back the raised claim."
+  (let* ((w (sw `(:predicate :dues-clear (:who ,who) (:authority ,authority))))
+         (ctx (c-ctx :ctx-source (lisp-plus-slice0:witness-id w))))
+    (values (derive :schema-name :j-source :schema-version 1
+                    :conclusion `(:predicate :standing (:who ,who)
+                                  (:authority ,authority))
+                    :supports (list w) :receiver ctx :by :registrar))))
+
+(defun refuted-standing (who authority)
+  "A REAL governed :refuted judgment through the frozen RAISE."
+  (let* ((p (proposition `(:predicate :standing (:who ,who) (:authority ,authority))))
+         (c (lisp-plus-slice0:claim :proposition p :by :registrar))
+         (w (lisp-plus-slice0:witness :for p :mode :direct :kind :observation
+                                      :source :auditor :polarity :refutes))
+         (proc (lisp-plus-slice0:promotion-procedure
+                :descriptor (lisp-plus-kernel0:make-procedure-descriptor
+                             :procedure-id (lisp-plus-kernel0:make-identity
+                                            :procedure "teeth/standing-audit")
+                             :version 1 :judgment-class :semantic
+                             :result-vocabulary '(:verified :refuted))
+                :admits '((:direct :observation)))))
+    (values (lisp-plus-slice0:raise c :to :refuted :per proc
+                                    :considering (list w) :receiver :ctx-source))))
+
+(install-judged-claim-schemas)
+
+;;; ---- T29a a VERIFIED judged claim DISCHARGES a matching ground premise ----
+(c-guarded "T29a verified judged claim DISCHARGES a matching ground premise"
+  (let* ((c (granted-standing "ann" :warden))
+         (g (sw '(:predicate :in-good-order (:who "ann"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:claim-id c)
+                     (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "ann")) (list c g) ctx)
+      (declare (ignore claim))
+      (ok "T29a verified judged claim DISCHARGES a matching ground premise"
+          (and (eq decision :granted)
+               (eq (premise-assessment-disposition (assessment-for r :standing))
+                   :satisfied))
+          (format nil "decision=~S standing=~S" decision
+                  (premise-assessment-disposition (assessment-for r :standing)))))))
+
+;;; ---- T29b a :REFUTED judged claim does NOT discharge, and is NAMED ----
+(c-guarded "T29b a :REFUTED judged claim does NOT discharge (and is NAMED)"
+  (let* ((c (refuted-standing "bea" :warden))
+         (g (sw '(:predicate :in-good-order (:who "bea"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:claim-id c)
+                     (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "bea")) (list c g) ctx)
+      (declare (ignore claim))
+      (let* ((a (assessment-for r :standing))
+             (roster (premise-assessment-judged-claims a))
+             (entry (first roster)))
+        (ok "T29b a :REFUTED judged claim does NOT discharge (and is NAMED)"
+            (and (eq decision :refused)
+                 (eq (premise-assessment-disposition a) :missing)
+                 (= 1 (length roster))
+                 (eq (getf entry :outcome) :judgment-not-verified)
+                 (eq (getf entry :judgment) :refuted))
+            (format nil "decision=~S disposition=~S roster=~S" decision
+                    (premise-assessment-disposition a)
+                    (mapcar (lambda (e) (list (getf e :outcome) (getf e :judgment)))
+                            roster)))))))
+
+;;; ---- T29c an UNJUDGED claim does not discharge ----
+(c-guarded "T29c an UNJUDGED claim does not discharge; roster says :UNJUDGED"
+  (let* ((c (lisp-plus-slice0:claim
+             :proposition (proposition '(:predicate :standing (:who "cyd")
+                                         (:authority :warden)))
+             :by :registrar))
+         (g (sw '(:predicate :in-good-order (:who "cyd"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:claim-id c)
+                     (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "cyd")) (list c g) ctx)
+      (declare (ignore claim))
+      (let* ((a (assessment-for r :standing))
+             (entry (first (premise-assessment-judged-claims a))))
+        (ok "T29c an UNJUDGED claim does not discharge; roster says :UNJUDGED"
+            (and (eq decision :refused)
+                 (eq (premise-assessment-disposition a) :missing)
+                 (eq (getf entry :outcome) :unjudged))
+            (format nil "decision=~S disposition=~S outcome=~S" decision
+                    (premise-assessment-disposition a) (getf entry :outcome)))))))
+
+;;; ---- T29d a claim whose JUDGMENT BASIS is not inspectable does not discharge.
+;;;      PLANTED with the frozen internal constructors ON PURPOSE: the public
+;;;      surface cannot mint a basis-less judgment (every RAISE stamps a
+;;;      procedure-id), so without a plant this guard would never fire and would
+;;;      be untested rather than passing ----
+(c-guarded "T29d a claim with an UNINSPECTABLE judgment basis does not discharge"
+  (let* ((p (proposition '(:predicate :standing (:who "dee") (:authority :warden))))
+         (jr (lisp-plus-slice0::%make-judgment-record
+              :judgment :verified :procedure-id nil :procedure-version 1
+              :support-ids '() :receiver :ctx-t :ordinal 1))
+         (c (lisp-plus-slice0::%make-claim
+             :id (lisp-plus-kernel0:make-identity :claim "claim-basisless")
+             :proposition p :commitment :asserted :asserted-by :registrar
+             :judgment jr :lineage nil :ordinal 1))
+         (g (sw '(:predicate :in-good-order (:who "dee"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:claim-id c)
+                     (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "dee")) (list c g) ctx)
+      (declare (ignore claim))
+      (let* ((a (assessment-for r :standing))
+             (entry (first (premise-assessment-judged-claims a))))
+        (ok "T29d a claim with an UNINSPECTABLE judgment basis does not discharge"
+            (and (eq decision :refused)
+                 (eq (getf entry :outcome) :judgment-basis-unavailable))
+            (format nil "decision=~S outcome=~S" decision (getf entry :outcome)))))))
+
+;;; ---- T29e the receipt RECORDS the claim identity AND the judgment basis
+;;;      (ruling condition 6) ----
+(c-guarded "T29e the receipt RECORDS the supporting claim identity and judgment basis"
+  (let* ((c (granted-standing "eve" :warden))
+         (g (sw '(:predicate :in-good-order (:who "eve"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:claim-id c)
+                     (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "eve")) (list c g) ctx)
+      (declare (ignore claim decision))
+      (let* ((a (assessment-for r :standing))
+             (e (find :discharged (premise-assessment-judged-claims a)
+                      :key (lambda (x) (getf x :outcome)))))
+        (ok "T29e the receipt RECORDS the supporting claim identity and judgment basis"
+            (and e
+                 (lisp-plus-kernel0:identity= (getf e :claim-id)
+                                              (lisp-plus-slice0:claim-id c))
+                 (eq (getf e :judgment) :verified)
+                 (lisp-plus-kernel0:durable-identity-p (getf e :procedure-id))
+                 (getf e :procedure-version)
+                 (getf e :support-ids))
+            (format nil "claim-id=~A procedure=~A v~S supports=~D"
+                    (and e (lisp-plus-kernel0:identity-key (getf e :claim-id)))
+                    (and e (lisp-plus-kernel0:identity-key (getf e :procedure-id)))
+                    (and e (getf e :procedure-version))
+                    (length (and e (getf e :support-ids)))))))))
+
+;;; ---- T29f a FABRICATED :direct witness restating the proposition inherits NO
+;;;      judgment standing — the receipt distinguishes the two routes ----
+(c-guarded "T29f a FABRICATED :direct witness inherits NO judgment standing"
+  (let* ((fake (sw '(:predicate :standing (:who "fay") (:authority :warden))))
+         (g (sw '(:predicate :in-good-order (:who "fay"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:witness-id fake)
+                     (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "fay")) (list fake g) ctx)
+      (declare (ignore claim))
+      (let ((a (assessment-for r :standing)))
+        (ok "T29f a FABRICATED :direct witness inherits NO judgment standing"
+            (and (eq decision :granted)
+                 (null (premise-assessment-judged-claims a))
+                 (premise-assessment-matching-accessible-supports a))
+            (format nil "granted by witness; judged-claim basis recorded=~S"
+                    (premise-assessment-judged-claims a)))))))
+
+;;; ---- T29g a verified claim the RECEIVER cannot reach is residue, not absence ----
+(c-guarded "T29g a verified claim INACCESSIBLE to the receiver is residue, and is NAMED"
+  (let* ((c (granted-standing "gus" :warden))
+         (g (sw '(:predicate :in-good-order (:who "gus"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:witness-id g)))) ; claim id omitted
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "gus")) (list c g) ctx)
+      (declare (ignore claim))
+      (let* ((a (assessment-for r :standing))
+             (entry (first (premise-assessment-judged-claims a))))
+        (ok "T29g a verified claim INACCESSIBLE to the receiver is residue, and is NAMED"
+            (and (eq decision :refused)
+                 (eq (premise-assessment-disposition a) :inaccessible)
+                 (eq (getf entry :outcome) :inaccessible-to-receiver))
+            (format nil "disposition=~S outcome=~S"
+                    (premise-assessment-disposition a) (getf entry :outcome)))))))
+
+;;; ---- T29h a BARE PROPOSITION that merely unifies does not discharge ----
+(c-guarded "T29h a BARE PROPOSITION that merely unifies does not discharge"
+  (let* ((bare (proposition '(:predicate :standing (:who "hal") (:authority :warden))))
+         (g (sw '(:predicate :in-good-order (:who "hal"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "hal")) (list bare g) ctx)
+      (declare (ignore claim))
+      (let ((a (assessment-for r :standing)))
+        (ok "T29h a BARE PROPOSITION that merely unifies does not discharge"
+            (and (eq decision :refused)
+                 (eq (premise-assessment-disposition a) :missing)
+                 (null (premise-assessment-judged-claims a)))
+            (format nil "decision=~S disposition=~S" decision
+                    (premise-assessment-disposition a)))))))
+
+;;; ---- T29i declared uniqueness still governs a claim-discharged premise:
+;;;      two verified claims disagreeing on a declared-unique local are
+;;;      :AMBIGUOUS, never a grant ----
+(c-guarded "T29i two verified claims conflicting on a DECLARED-UNIQUE local are :AMBIGUOUS"
+  (let* ((c1 (granted-standing "ivy" :warden))
+         (c2 (granted-standing "ivy" :treasurer))
+         (g (sw '(:predicate :in-good-order (:who "ivy"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:claim-id c1)
+                     (lisp-plus-slice0:claim-id c2)
+                     (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target-unique 1 '(:predicate :may-act (:who "ivy"))
+                   (list c1 c2 g) ctx)
+      (declare (ignore claim))
+      (let ((a (assessment-for r :standing)))
+        (ok "T29i two verified claims conflicting on a DECLARED-UNIQUE local are :AMBIGUOUS"
+            (and (eq decision :refused)
+                 (eq (premise-assessment-disposition a) :ambiguous)
+                 (equal (mapcar #'first (derivation-receipt-uniqueness-conflicts r))
+                        '(:auth)))
+            (format nil "decision=~S disposition=~S conflicts=~S" decision
+                    (premise-assessment-disposition a)
+                    (mapcar #'first (derivation-receipt-uniqueness-conflicts r))))))))
+
+;;; ---- T29j THE MISDIRECTION IS GONE.  The repair advice used to tell the
+;;;      programmer to supply exactly what the programmer had supplied; it now
+;;;      names the claim it saw and the reason it did not discharge ----
+(c-guarded "T29j repair advice NAMES the seen-but-not-discharging claim"
+  (let* ((c (refuted-standing "jan" :warden))
+         (g (sw '(:predicate :in-good-order (:who "jan"))))
+         (ctx (c-ctx :ctx-t (lisp-plus-slice0:claim-id c)
+                     (lisp-plus-slice0:witness-id g))))
+    (multiple-value-bind (r claim decision)
+        (c-attempt :j-target 1 '(:predicate :may-act (:who "jan")) (list c g) ctx)
+      (declare (ignore claim decision))
+      (let* ((ro (derivation-receipt-repair-options r))
+             (repair (cdr (find :standing ro :key (lambda (e) (second (car e)))))))
+        (ok "T29j repair advice NAMES the seen-but-not-discharging claim"
+            (and repair (getf repair :judged-claims-seen-but-not-discharging))
+            (format nil "repair=~S" repair))))))
+
+;;; ==================================================================
+;;; T30 — DECISION 2: the complete canonical set of grounding environments.
+;;; TWO premises: the first MULTIPLIES the environment set on a non-unique
+;;; local, so the SECOND is assessed under several complete environments — the
+;;; exact site where the singular ground-instance was a traversal accident.
+;;; :ZZZ is a conclusion variable and :AAA a declared local, so the DECLARED
+;;; order (:ZZZ :AAA) is the REVERSE of host symbol-name order.
+;;; ==================================================================
+
+(defun install-g-mult ()
+  (clear-schema-registry)
+  (register-schema
+   (judgment-schema
+    :name :g-mult :version 1
+    :conclusion (proposition-pattern '(:predicate :ok (:who (:var :zzz))))
+    :premises (list (proposition-pattern
+                     '(:predicate :tagged (:who (:var :zzz)) (:tag (:var :aaa))))
+                    (proposition-pattern
+                     '(:predicate :countersigned (:who (:var :zzz))
+                       (:tag (:var :aaa)))))
+    :locals '(:aaa))))
+
+(defun g-run (tags &key (who "ann") (order :forward))
+  (let* ((ws (append
+              (mapcar (lambda (tg) (sw `(:predicate :tagged (:who ,who) (:tag ,tg))))
+                      tags)
+              (mapcar (lambda (tg) (sw `(:predicate :countersigned (:who ,who)
+                                         (:tag ,tg))))
+                      tags)))
+         (sup (if (eq order :reverse) (reverse ws) ws))
+         (ctx (apply #'c-ctx :ctx-g (mapcar #'lisp-plus-slice0:witness-id ws))))
+    (c-attempt :g-mult 1 `(:predicate :ok (:who ,who)) sup ctx)))
+
+(defun g-tags (receipt)
+  (mapcar (lambda (i) (second (assoc :tag (cddr i))))
+          (premise-assessment-ground-instances
+           (assessment-for receipt :countersigned))))
+
+(install-g-mult)
+
+;;; ---- T30a two traversal orders produce the SAME canonical sequence ----
+(c-guarded "T30a two support traversal orders produce the SAME canonical ground-instance sequence"
+  (let ((ga (premise-assessment-ground-instances
+             (assessment-for (g-run '("b" "ab")) :countersigned)))
+        (gb (premise-assessment-ground-instances
+             (assessment-for (g-run '("b" "ab") :order :reverse) :countersigned))))
+    (ok "T30a two support traversal orders produce the SAME canonical ground-instance sequence"
+        (and (equal ga gb) (= 2 (length ga)))
+        (format nil "n=~D equal=~A" (length ga) (equal ga gb)))))
+
+;;; ---- T30b two DISTINCT complete environments BOTH remain recorded ----
+(c-guarded "T30b both distinct complete grounding environments REMAIN RECORDED"
+  (let ((tags (g-tags (g-run '("b" "ab")))))
+    (ok "T30b both distinct complete grounding environments REMAIN RECORDED"
+        (and (= 2 (length tags))
+             (member "b" tags :test #'equal)
+             (member "ab" tags :test #'equal))
+        (format nil "tags=~S" tags))))
+
+;;; ---- T30c byte-identical environments DEDUPLICATE ----
+(c-guarded "T30c byte-identical environments deduplicate to ONE canonical instance"
+  (let ((tags (g-tags (g-run '("b" "b")))))
+    (ok "T30c byte-identical environments deduplicate to ONE canonical instance"
+        (equal tags '("b")) (format nil "tags=~S" tags))))
+
+;;; ---- T30d the single-environment case stays straightforward ----
+(c-guarded "T30d single environment: a plural set of ONE, and the singular projection returns it"
+  (let* ((a (assessment-for (g-run '("b")) :countersigned))
+         (g (premise-assessment-ground-instances a)))
+    (ok "T30d single environment: a plural set of ONE, and the singular projection returns it"
+        (and (= 1 (length g))
+             (equal (premise-assessment-ground-instance a) (first g)))
+        (format nil "n=~D singular=~S" (length g)
+                (premise-assessment-ground-instance a)))))
+
+;;; ---- T30e the singular projection NEVER selects from a plural set ----
+(c-guarded "T30e the singular projection REFUSES above cardinality one (never selects)"
+  (let ((a (assessment-for (g-run '("b" "ab")) :countersigned)))
+    (handler-case
+        (ok "T30e the singular projection REFUSES above cardinality one (never selects)"
+            nil (format nil "it SELECTED ~S from a plural set"
+                        (premise-assessment-ground-instance a)))
+      (slice1-condition (c)
+        (ok "T30e the singular projection REFUSES above cardinality one (never selects)"
+            t (format nil "caught ~A" (type-of c)))))))
+
+;;; ---- T30f the ordering is CANONICAL BYTES, not printed representation.
+;;;      With tags "b" and "ab": PRINTED, ((:TAG . "ab")) sorts before
+;;;      ((:TAG . "b")); by CANONICAL BYTES the string length varint decides and
+;;;      "b" comes first.  The recorded order is the byte order ----
+(c-guarded "T30f environments are ordered by CANONICAL BYTES, not printed representation"
+  (let ((tags (g-tags (g-run '("ab" "b")))))
+    (ok "T30f environments are ordered by CANONICAL BYTES, not printed representation"
+        (equal tags '("b" "ab"))
+        (format nil "byte order=~S ; printed order would be ~S" tags '("ab" "b")))))
+
+;;; ---- T30g bindings WITHIN an environment follow DECLARED variable order ----
+(c-guarded "T30g bindings within an environment follow DECLARED variable order"
+  (let ((env (first (derivation-receipt-complete-binding-environments (g-run '("b"))))))
+    (ok "T30g bindings within an environment follow DECLARED variable order"
+        (equal (mapcar #'car env) '(:zzz :aaa))
+        (format nil "order=~S (host symbol order would be ~S)"
+                (mapcar #'car env) '(:aaa :zzz)))))
+
+;;; ---- T30h decision AND the complete-environment set stay invariant under
+;;;      traversal order (the Delta-2 M3 guarantee, re-pinned over the new
+;;;      canonical ordering) ----
+(c-guarded "T30h decision and complete-environment set stay invariant under traversal order"
+  (multiple-value-bind (r-a claim-a d-a) (g-run '("b" "ab"))
+    (declare (ignore claim-a))
+    (multiple-value-bind (r-b claim-b d-b) (g-run '("b" "ab") :order :reverse)
+      (declare (ignore claim-b))
+      (ok "T30h decision and complete-environment set stay invariant under traversal order"
+          (and (eq d-a d-b)
+               (equal (derivation-receipt-complete-binding-environments r-a)
+                      (derivation-receipt-complete-binding-environments r-b)))
+          (format nil "decisions=~S/~S" d-a d-b)))))
+
+;;; ==================================================================
 (format t "~%slice1 selftest: ~D passed, ~D failed~%" *pass* *fail*)
 (finish-output)
 (sb-ext:exit :code (if (zerop *fail*) 0 1))
