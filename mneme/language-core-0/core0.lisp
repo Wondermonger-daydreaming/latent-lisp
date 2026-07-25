@@ -57,6 +57,12 @@
    ;; the ONE public issuance check (Evidence Issuance Erratum /0, R-ISSUANCE-0.7).
    ;; core0-evidence-p is a TYPE predicate; this is the ISSUANCE predicate.
    #:core0-evidence-current-image-issued-p
+   ;; Language Slice /2 Work Order /0, D2-0.7 — the ONE additional public
+   ;; operation that movement authorises.  It CONFIRMS a request the caller
+   ;; already holds; it does not READ the request out of the account, so
+   ;; R-SOURCE-1.10 and R-ISSUANCE-0.11 stand and core0-evidence-request stays
+   ;; internal.
+   #:core0-evidence-current-image-issued-for-request-p
    #:core0-evidence-process #:core0-evidence-attempt-id #:core0-evidence-seat-id
    #:core0-evidence-adapter-identity #:core0-evidence-events
    #:core0-evidence-manifestation #:core0-evidence-ledger-token
@@ -878,6 +884,54 @@ adapter identity, not from a ledger token, not from a procedure identity.
 Answers false — never signals — for a value that is not a core0-evidence, and
 for an account whose content has no canonical representation at all."
   (handler-case (%core0-issued-content-p evidence)
+    (error () nil)))
+
+(defun core0-evidence-current-image-issued-for-request-p (evidence canonical-request)
+  "Is EVIDENCE's current canonical account content registered as issued by the
+Core /0 runtime in THIS Lisp image, AND is the canonical request bound inside
+that content equal to CANONICAL-REQUEST?
+
+The CONJUNCTION is the whole operation (Language Slice /2 Work Order /0,
+D2-0.7).  Either half alone is weaker than this predicate: issuance without the
+request binding says an account was minted here but not WHICH act it belongs
+to; a request comparison without issuance compares two pieces of caller data.
+
+CANONICAL-REQUEST is a Slice /1 ground structured proposition, in normal form
+or in any form the public PROPOSITION constructor normalises to one — the same
+vocabulary PERFORM's own :REQUEST is stated in.  Comparison is
+STRUCTURED-PROPOSITION= on normal forms, so role order does not matter and no
+host equality leaks in.
+
+THIS IS A CONFIRMATION, NOT A READER (R-ISSUANCE-0.11, R-SOURCE-1.10).  The
+caller must already hold the request; this answers yes or no about a request it
+brought.  CORE0-EVIDENCE-REQUEST remains internal and unexported: no public
+operation extracts the request from an account, and this one does not become
+such an operation by being asked repeatedly — each call still requires the
+caller to supply a complete candidate request, and the answer is one bit.
+Nothing here repairs the subject-readability blocker and this must not be cited
+as repairing it.
+
+EXACT CEILING — the issuance ceiling (R-ISSUANCE-0.10) UNCHANGED, plus the
+binding.  A true answer establishes AT MOST:
+
+    this exact canonical account content was minted by the Core /0 runtime in
+    this Lisp image, and the act it was minted for was this request.
+
+It does NOT establish that the external-world deed occurred, that the provider
+told the truth, that the adapter is honest, that the account's semantic
+interpretation is correct, that the downstream domain proposition holds, or
+that the effect is settled.  A request is what Core /0 was ASKED to do — never
+evidence of what happened.  No cryptographic-security claim is made or implied.
+
+It CONSULTS the private registry and does not mutate it, consults no ledger,
+and answers false — never signals — for a non-evidence value, for content with
+no canonical representation, and for a malformed or non-ground request."
+  (handler-case
+      (and (%core0-issued-content-p evidence)
+           (lisp-plus-slice1:structured-proposition=
+            (lisp-plus-slice1:proposition canonical-request)
+            (%core0-evidence-request evidence))
+           t)
     (error () nil)))
 
 ;;; ==================================================================

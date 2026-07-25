@@ -97,6 +97,11 @@
 (unless (find-package :lisp-plus-slice1)
   (handler-bind ((style-warning (lambda (w) (muffle-warning w))))
     (load (merge-pathnames "../../language-slice-1/slice1.lisp" *load-truename*))))
+;; MOVEMENT X (2026-07-25) -- Language Slice /2, Candidate /0.  Movements I-IX
+;; are unchanged and do not use it.
+(unless (find-package :lisp-plus-slice2)
+  (handler-bind ((style-warning (lambda (w) (muffle-warning w))))
+    (load (merge-pathnames "../../language-slice-2/slice2.lisp" *load-truename*))))
 
 (defpackage #:de-codice-restaurando (:use #:cl))
 (in-package #:de-codice-restaurando)
@@ -347,7 +352,12 @@ here unless it is named here.  Movement V arm D is what forgetting that costs."
              (cond ((lisp-plus-slice0:witness-p s)
                     (list (lisp-plus-slice0:witness-id s)))
                    ((lisp-plus-slice0:claim-p s)
-                    (list (lisp-plus-slice0:claim-id s)))))
+                    (list (lisp-plus-slice0:claim-id s)))
+                   ;; MOVEMENT X: a Slice /2 source basis is reached by its
+                   ;; SOURCE-BASIS IDENTITY -- the same membership rule read
+                   ;; against a third durable identity.  Still nothing ambient.
+                   ((lisp-plus-slice2:source-basis-p s)
+                    (list (lisp-plus-slice2:source-basis-identity s)))))
            supports)))
 
 (lisp-plus-slice1:clear-schema-registry)
@@ -2224,6 +2234,333 @@ which holds the witness objects themselves and is compared separately below.")
 
 
 ;;;; ==================================================================
+;;;; MOVEMENT X -- CONTRACTS PER PREMISE (Language Slice /2, Candidate /0)
+;;;;
+;;;; This workshop is WHY admission contracts attach to PREMISE POSITIONS and
+;;;; not to schemas.  The post-treatment standing has two premises and they are
+;;;; not the same kind of thing:
+;;;;
+;;;;   treatment completion   the chamber ran.  An EFFECT.  The workshop must
+;;;;                          not be able to assert this; it must come from an
+;;;;                          issued account bound to the exact request.
+;;;;   condition reassessed   the conservator looked at the object under raking
+;;;;                          light.  AN ASSERTION, and legitimately so -- the
+;;;;                          floor here really is a first-hand survey, and
+;;;;                          pretending otherwise would be theatre.
+;;;;
+;;;; A schema-wide policy would have to be wrong about one of them.  So the two
+;;;; premises carry DIFFERENT contracts, in the same schema, at the same time.
+;;;;
+;;;; Movement VII stands and is not rewritten: on the surface it measured, the
+;;;; true account was inert residue and a fabricated witness discharged exactly
+;;;; as well as a true one.  Movement X walks a road that did not exist then.
+;;;; ==================================================================
+
+(format t "~%-- MOVEMENT X: contracts per premise (Slice /2, Candidate /0) --~%")
+
+;;; --- 10a. the treatment account, bound to its exact request ----------
+
+(defparameter *humid-request* (treatment-request :controlled-humidification 1))
+
+(defparameter *humid-basis*
+  (lisp-plus-slice2:establish-core0-source-basis
+   :evidence (wo-account *wo-humid*) :request *humid-request*
+   :relation :core0-account-reports-outcome
+   :expected-outcome :completed)
+  "The stage-1 humidification account, read through one governed relation.  It
+reports a COMPLETED attempt -- a fold over the account's own events, never a
+self-reported field.")
+
+(format t "~%   10a. the treatment account reports its own outcome:~%")
+(format t "     ~A~%" (fmt (lisp-plus-slice2:source-basis-proposition *humid-basis*)))
+(ok "[X-1] the humidification account is issued FOR ITS EXACT REQUEST, and reports :COMPLETED"
+    (and (lisp-plus-core0:core0-evidence-current-image-issued-for-request-p
+          (wo-account *wo-humid*) *humid-request*)
+         (eq :completed (lisp-plus-slice2:source-basis-account-outcome *humid-basis*))
+         (eq :core0-account-reports-outcome
+             (second (lisp-plus-slice2:source-basis-proposition *humid-basis*))))
+    "the proposition names the ACCOUNT; :TREATMENT-COMPLETED is a different sentence with a different basis")
+
+(ok "[X-2] the SAME account is refused a basis for the FLATTENING request it does not belong to"
+    (handler-case
+        (progn (lisp-plus-slice2:establish-core0-source-basis
+                :evidence (wo-account *wo-humid*)
+                :request (treatment-request :pressure-flattening 2)
+                :relation :core0-account-reports-outcome)
+               nil)
+      (lisp-plus-slice2:unissued-core0-account (c) (declare (ignore c)) t))
+    "an account is bound to ONE act, and the binding is checked rather than assumed")
+
+;;; The INTERRUPTED press, for contrast: also genuinely issued, and it reports
+;;; what it truthfully has, which is not completion.
+(ok "[X-3] the interrupted flattening account is ALSO issued -- it is uncertain, not unauthentic -- and reports :FAILED"
+    (let ((b (lisp-plus-slice2:establish-core0-source-basis
+              :evidence *flatten-account*
+              :request (treatment-request :pressure-flattening 2)
+              :relation :core0-account-reports-outcome)))
+      (and (lisp-plus-core0:core0-evidence-current-image-issued-for-request-p
+            *flatten-account* (treatment-request :pressure-flattening 2))
+           (eq :failed (lisp-plus-slice2:source-basis-account-outcome b))))
+    "an indeterminate account produces ONLY the generic proposition it truthfully reports")
+
+(ok "[X-4] and asking the interrupted account to report :COMPLETED is REFUSED"
+    (handler-case
+        (progn (lisp-plus-slice2:establish-core0-source-basis
+                :evidence *flatten-account*
+                :request (treatment-request :pressure-flattening 2)
+                :relation :core0-account-reports-outcome
+                :expected-outcome :completed)
+               nil)
+      (lisp-plus-slice2:source-basis-refused (c) (declare (ignore c)) t))
+    "no relation will report a status the account does not have")
+
+;;; --- 10b. the two-contract schema ------------------------------------
+
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :post-treatment-standing :version 2
+  :conclusion (pp '(:predicate :post-treatment-condition-established
+                    (:manuscript (:var :manuscript)) (:method (:var :method))))
+  :premises
+  ;; premise 0 -- the EFFECT.  Source-bound, and nothing else will do.
+  (list (pp '(:predicate :core0-account-reports-outcome
+              (:attempt (:var :attempt)) (:request (:var :request))
+              (:outcome :completed)))
+        ;; premise 1 -- the ASSERTION, named as one.
+        (pp '(:predicate :condition-reassessed (:manuscript (:var :manuscript))
+              (:assay (:var :assay)))))
+  :locals '(:attempt :request :assay)))
+
+(defparameter *treatment-source-bound*
+  (lisp-plus-slice2:make-support-admission-contract
+   :contract-id :treatment-completion-source-bound
+   :accepted-clauses
+   '((:source-basis :relations (:core0-account-reports-outcome))))
+  "Premise 0's contract.  It accepts a source basis on ONE relation, and accepts
+no witness and no judged claim -- because Movement VII showed exactly what a
+witness and a raised claim are worth at this premise.")
+
+(defparameter *survey-asserted*
+  (lisp-plus-slice2:make-support-admission-contract
+   :contract-id :condition-survey-asserted
+   ;; The conservator's own kind is :SURVEY -- this accepts the workshop's REAL
+   ;; witness from Movement VII, not a parallel one minted to fit a contract.
+   :accepted-clauses '((:asserted-witness :mode :direct :kind :survey
+                        :truth-ceiling :asserted)))
+  "Premise 1's contract.  It accepts a first-hand survey and SAYS SO: the
+ceiling is written :ASSERTED, so the contract cannot pretend the survey is
+source-bound or externally verified.  This is not a complete authenticity
+mechanism and is not to be cited as one.")
+
+(defparameter *post-treatment/2*
+  (lisp-plus-slice2:make-slice2-schema
+   :schema-id :post-treatment-standing/2
+   :base-schema (lisp-plus-slice1:resolve-schema :post-treatment-standing 2)
+   :premise-contracts (list (list 0 *treatment-source-bound*)
+                            (list 1 *survey-asserted*))))
+
+(defun consider/2 (schema conclusion supports)
+  "DERIVE/2 with the receipt recovered either way -- the Slice /2 twin of
+`consider`, and needed for exactly the same reason."
+  (handler-case
+      (multiple-value-bind (claim receipt)
+          (lisp-plus-slice2:derive/2 :schema schema :conclusion conclusion
+                                     :supports supports
+                                     :receiver (apply #'at-the-bench supports))
+        (values claim receipt))
+    (lisp-plus-slice2:slice2-derivation-refused (c)
+      (values nil (lisp-plus-slice2:slice2-condition-receipt c)))))
+
+(defun admission-of (receipt predicate)
+  (find predicate (lisp-plus-slice2:slice2-receipt-admissions receipt)
+        :key (lambda (a)
+               (second (lisp-plus-slice2:premise-admission-premise-pattern a)))))
+
+(defun disposition/2 (receipt predicate)
+  (lisp-plus-slice2:premise-admission-disposition (admission-of receipt predicate)))
+
+(defparameter *post-treatment-conclusion*
+  (np `(:predicate :post-treatment-condition-established (:manuscript ,*umbra*)
+        (:method :controlled-humidification))))
+
+(format t "~%   10b. one schema, two premises, two different contracts:~%")
+(bench "premise 0 ~A -> ~A" (fmt :core0-account-reports-outcome)
+       (fmt (lisp-plus-slice2:support-admission-contract-contract-id
+             (lisp-plus-slice2:slice2-schema-contract-for-premise *post-treatment/2* 0))))
+(bench "premise 1 ~A -> ~A" (fmt :condition-reassessed)
+       (fmt (lisp-plus-slice2:support-admission-contract-contract-id
+             (lisp-plus-slice2:slice2-schema-contract-for-premise *post-treatment/2* 1))))
+
+(defparameter *post-treatment-claim* nil)
+(multiple-value-bind (claim receipt)
+    (consider/2 *post-treatment/2* *post-treatment-conclusion*
+                (list *humid-basis* *reassessment-witness*))
+  (setf *post-treatment-claim* claim)
+  (ok "[X-5] BOTH premises discharge -- one on a source basis, one on the conservator's own survey"
+      (and claim
+           (eq :granted (lisp-plus-slice2:slice2-receipt-decision receipt))
+           (eq :satisfied (disposition/2 receipt :core0-account-reports-outcome))
+           (eq :satisfied (disposition/2 receipt :condition-reassessed))))
+  (ok "[X-6] and the receipt records a DIFFERENT truth ceiling for each -- the whole reason contracts attach per premise"
+      (equal (mapcar #'lisp-plus-slice2:premise-admission-truth-ceilings
+                     (lisp-plus-slice2:slice2-receipt-admissions receipt))
+             '(((:source-basis . :current-image-issued-account-report))
+               ((:asserted-witness . :asserted))))
+      "a schema-wide policy would have had to be wrong about one of the two"))
+
+;;; --- 10c. the crossed probes -----------------------------------------
+;;;
+;;; The workshop offers a support at the WRONG premise.  It is lawful where it
+;;; belongs and refused where it does not, and the receipt says which -- that is
+;;; the per-premise claim, tested rather than asserted.
+
+(format t "~%   10c. the same species, offered at the WRONG premise:~%")
+
+(defparameter *survey-shaped-completion*
+  (attest `(:predicate :core0-account-reports-outcome
+            (:attempt ,(lisp-plus-kernel0:identity-key
+                        (lisp-plus-core0:core0-evidence-attempt-id
+                         (wo-account *wo-humid*))))
+            (:request (:quoted-datum ,(np *humid-request*)))
+            (:outcome :completed))
+          :kind :survey :source :workshop)
+  "A conservator's :SURVEY witness asserting the ACCOUNT-REPORT proposition
+verbatim.  Premise 1's contract accepts this witness's mode and kind exactly.
+Premise 0's does not, and premise 0 is where it is offered.")
+
+(multiple-value-bind (claim receipt)
+    (consider/2 *post-treatment/2* *post-treatment-conclusion*
+                (list *survey-shaped-completion* *reassessment-witness*))
+  (let ((a (admission-of receipt :core0-account-reports-outcome)))
+    (bench "the survey at premise 0: slice /1 says ~A; slice /2 says ~A"
+           (fmt (lisp-plus-slice2:premise-admission-base-disposition a))
+           (fmt (lisp-plus-slice2:premise-admission-disposition a)))
+    (ok "[X-7] a :SURVEY witness -- admissible at premise 1 -- is RECOGNIZED and NOT ADMITTED at premise 0"
+        (and (null claim)
+             (eq :not-admitted (lisp-plus-slice2:premise-admission-disposition a))
+             (equal (list *survey-shaped-completion*)
+                    (lisp-plus-slice2:premise-admission-recognized-not-admitted a))
+             ;; Slice /1 would have discharged it: the narrowing IS the difference
+             (eq :satisfied (lisp-plus-slice2:premise-admission-base-disposition a))
+             ;; and premise 1 is still satisfied by the witness that belongs there
+             (eq :satisfied (disposition/2 receipt :condition-reassessed)))
+        "the SAME mode and kind, admitted at one premise and refused at the other, inside ONE derivation")))
+
+;;; Movement VII's fabrications, at the source-bound premise.
+(dolist (probe (list (cons "the fabricated chamber-ledger witness" *fabricated-witness*)
+                     (cons "the bare witness carrying nothing" *bare-witness*)))
+  (let ((w (lisp-plus-slice0:witness
+            :for (lisp-plus-slice2:source-basis-proposition *humid-basis*)
+            :mode (lisp-plus-slice0:witness-mode (cdr probe))
+            :kind (lisp-plus-slice0:witness-kind (cdr probe))
+            :source (lisp-plus-slice0:witness-source (cdr probe))
+            :procedure (lisp-plus-slice0:witness-procedure (cdr probe))
+            :content (lisp-plus-slice0:witness-content (cdr probe)))))
+    (multiple-value-bind (claim receipt)
+        (consider/2 *post-treatment/2* *post-treatment-conclusion*
+                    (list w *reassessment-witness*))
+      (ok (format nil "[X-8~:[b~;a~]] ~A is NOT ADMITTED at the source-bound premise"
+                  (eq (cdr probe) *fabricated-witness*) (car probe))
+          (and (null claim)
+               (eq :not-admitted (disposition/2 receipt :core0-account-reports-outcome)))
+          "Movement VII's finding, met at the one premise where it could be met"))))
+
+;;; --- 10d. the overreach, refused -------------------------------------
+;;;
+;;; The treatment account alone CANNOT establish safe-to-exhibit.  The workshop
+;;; does not merely decline to try: it tries, under the most permissive contract
+;;; the language allows, and is refused.
+
+(format t "~%   10d. the treatment account, offered directly at :SAFE-TO-EXHIBIT:~%")
+
+(defparameter *exhibition/2*
+  (lisp-plus-slice2:make-slice2-schema
+   :schema-id :exhibition-standing/2
+   :base-schema (lisp-plus-slice1:resolve-schema :exhibition-standing 1)
+   :premise-contracts
+   ;; DELIBERATELY THE MOST PERMISSIVE CONTRACTS THE LANGUAGE ALLOWS: every
+   ;; relation, plus judged claims.  If the refusal below still fires, it is not
+   ;; the contract doing the work -- it is the fact that no source relation
+   ;; produces a post-treatment condition or a documentation standing.
+   (list (list 0 (lisp-plus-slice2:make-support-admission-contract
+                  :contract-id :exhibition-premise-wide-open
+                  :accepted-clauses
+                  (list (list :source-basis
+                              :relations (lisp-plus-slice2:core0-source-relations))
+                        '(:verified-judged-claim))))
+         (list 1 (lisp-plus-slice2:make-support-admission-contract
+                  :contract-id :documentation-wide-open
+                  :accepted-clauses
+                  (list (list :source-basis
+                              :relations (lisp-plus-slice2:core0-source-relations))
+                        '(:verified-judged-claim)))))))
+
+(defparameter *exhibition-conclusion*
+  (np `(:predicate :safe-to-exhibit (:manuscript ,*umbra*)
+        (:exhibition "EXH-4212/umbra"))))
+
+(multiple-value-bind (claim receipt)
+    (consider/2 *exhibition/2* *exhibition-conclusion* (list *humid-basis*))
+  (bench ":POST-TREATMENT-CONDITION-ESTABLISHED is ~A"
+         (fmt (disposition/2 receipt :post-treatment-condition-established)))
+  (bench ":TREATMENT-DOCUMENTED is ~A"
+         (fmt (disposition/2 receipt :treatment-documented)))
+  (ok "[X-9] a COMPLETED treatment account CANNOT establish :SAFE-TO-EXHIBIT -- even under the widest contract the language allows"
+      (and (null claim)
+           (eq :refused (lisp-plus-slice2:slice2-receipt-decision receipt))
+           (eq :missing (disposition/2 receipt :post-treatment-condition-established))
+           (eq :missing (disposition/2 receipt :treatment-documented)))
+      "R-ADMISSION-0.8 in code: the account reports an ACCOUNT fact, and exhibition safety is a different proposition with a different basis"))
+
+;;; And the lawful road to exhibition runs through the post-treatment standing
+;;; the workshop actually derived, plus the documentation branch it already had.
+(multiple-value-bind (claim receipt)
+    (consider/2 *exhibition/2* *exhibition-conclusion*
+                (list *post-treatment-claim* *documented*))
+  (bench "with BOTH standings offered: ~A"
+         (fmt (lisp-plus-slice2:slice2-receipt-decision receipt)))
+  (ok "[X-10] and the lawful road grants -- through the two standings, each derived under its own named contract"
+      (and claim
+           (eq :granted (lisp-plus-slice2:slice2-receipt-decision receipt))
+           (eq :satisfied (disposition/2 receipt :post-treatment-condition-established))
+           (eq :satisfied (disposition/2 receipt :treatment-documented)))
+      "four stages stayed distinct: the chamber ran, the account reported, the workshop judged, and only then did exhibition follow"))
+
+;;; --- 10e. what the workshop still cannot say -------------------------
+
+(format t "~%   -- the new road's ceiling, stated exactly --~%")
+(bench "The post-treatment standing now rests on an ISSUED ACCOUNT plus a")
+(bench "conservator's survey, and the receipt names which premise rests on")
+(bench "which. What it does NOT rest on is any verification that the chamber")
+(bench "physically humidified anything. The chamber is a labelled scripted")
+(bench "fake. If it lied to Core /0, every reader above returns what it")
+(bench "returns now.")
+(format t "~%")
+(bench "The honest gain is narrow: the completion premise can no longer be")
+(bench "discharged by a witness the workshop minted, and the survey premise")
+(bench "still can -- because a survey is what that premise actually accepts,")
+(bench "and its ceiling reads :ASSERTED in the receipt where a reader will")
+(bench "find it. Two premises, two bases, two ceilings, one schema. That is")
+(bench "the whole of Movement X.")
+(format t "~%")
+(bench "One thing Movement X deliberately does NOT do: it does not reach back")
+(bench "and rewrite the workshop's file. WO-1101 still reads :TREATED-UNASSESSED")
+(bench "and exhibition request XR-7 still reads :NOT-SAFE-TO-EXHIBIT, because")
+(bench "those were the decisions actually taken, under the schemas actually in")
+(bench "force, on the day they were taken. A post-treatment standing derived")
+(bench "afterwards under a NEW schema version is a new fact with a new date, not")
+(bench "a correction to an old record. Recorded, never erased -- and that law")
+(bench "does not stop applying because the later answer is the nicer one.")
+
+(ok "[X-11] Movement VIII's recorded decisions are NOT retroactively rewritten by Movement X"
+    (and (eq :treated-unassessed (wo-state *wo-humid*))
+         (eq :not-safe-to-exhibit (xr-decision *exhibition*))
+         (null (wo-completed-on *wo-humid*))
+         ;; and yet the lawful Slice /2 standing really was derived
+         (lisp-plus-slice0:claim-p *post-treatment-claim*))
+    "a standing derived later is a new fact with a new date, never a correction to an old record")
+
+;;;; ==================================================================
 ;;;; CLOSING
 
 (format t "~%-- what this application does NOT show --~%")
@@ -2238,9 +2575,19 @@ which holds the witness objects themselves and is compared separately below.")
 (format t "   TRUE structured account of a treatment that really happened: no~%")
 (format t "   governed operation consumes it, so a completion judgment rests on a~%")
 (format t "   minted witness or it does not happen. That is a statement about~%")
-(format t "   Slice /0 plus Slice /1 plus Core /0 as they stand on day 4183 of the~%")
-(format t "   workshop's count, and about nothing else. No bridge is proposed and~%")
-(format t "   none should be read in.~%")
+(format t "   Slice /0 plus Slice /1 plus Core /0 as they stood when Movement VII~%")
+(format t "   was written, and about nothing else. That measurement is why~%")
+(format t "   Slice /2 exists, and Movement X does not rewrite it as mistaken.~%")
+(format t "~%   AMENDED 2026-07-25. Movement VII used to end \"No bridge is proposed~%")
+(format t "   and none should be read in.\" A bridge was subsequently built and~%")
+(format t "   Movement X walks it, so that sentence is withdrawn rather than left~%")
+(format t "   standing as a promise the file no longer keeps. What replaces it is~%")
+(format t "   narrower: Movement X does not verify that the chamber humidified~%")
+(format t "   anything. It moves ONE premise's basis from \"the workshop asserted~%")
+(format t "   it\" to \"the Core /0 runtime issued this exact account content in~%")
+(format t "   THIS image for THAT request, and the account reports :COMPLETED\" --~%")
+(format t "   and it leaves the sibling premise resting on an assertion, labelled~%")
+(format t "   as one. The chamber is still the labelled scripted fake.~%")
 (format t "~%   Nor does the fabricated-witness finding say the language is unsound.~%")
 (format t "   It says the mode reserved for first-hand observation is a mode the~%")
 (format t "   program asserts, and that the workshop's honesty in asserting it is~%")

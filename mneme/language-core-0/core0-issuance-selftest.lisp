@@ -476,6 +476,107 @@
      (subtypep 'unissued-evidence 'core0-refused))
 
 ;;; ==================================================================
+;;; I8 — the REQUEST-BOUND companion predicate (Slice /2 Work Order /0, D2-0.7).
+;;;
+;;;   core0-evidence-current-image-issued-for-request-p
+;;;
+;;; It is the CONJUNCTION of the I1–I7 issuance question and an exact request
+;;; comparison.  These checks exercise BOTH halves independently — an issued
+;;; account against the wrong request, and the right request against an account
+;;; that was never issued — because a conjunction whose halves are never tested
+;;; apart is a conjunction only in the docstring.
+
+(format t "~%-- I8: the request-bound companion (D2-0.7) --~%")
+
+(defparameter +other-req+ '(:predicate :deliver (:payload "A different errand.")))
+
+(multiple-value-bind (e0 adapter) (genuine-commit "issuance/i8")
+  (declare (ignore adapter))
+  (iok "I8a a genuine account answers TRUE for the request it was performed for"
+       (core0-evidence-current-image-issued-for-request-p e0 +req+))
+  (iok "I8b role order does not matter — comparison is on NORMAL FORMS"
+       (core0-evidence-current-image-issued-for-request-p
+        e0 (lisp-plus-slice1:proposition +req+)))
+  ;; HALF ONE ALONE: issued, wrong request.
+  (iok "I8c an ISSUED account answers FALSE for a different request"
+       (and (core0-evidence-current-image-issued-p e0)
+            (not (core0-evidence-current-image-issued-for-request-p e0 +other-req+))))
+  (iok "I8d a request differing only in its PAYLOAD STRING answers FALSE"
+       (not (core0-evidence-current-image-issued-for-request-p
+             e0 '(:predicate :deliver (:payload "The orchard remembers")))))
+  (iok "I8e a request differing only in its PREDICATE answers FALSE"
+       (not (core0-evidence-current-image-issued-for-request-p
+             e0 '(:predicate :reserve (:payload "The orchard remembers.")))))
+  ;; HALF TWO ALONE: right request, never issued.
+  (let ((built (built-account
+                :attempt (core0-evidence-attempt-id e0)   ; a GENUINE attempt id
+                :label "issuance/i8-built")))
+    (iok "I8f a caller-built account carrying the RIGHT request and a GENUINE attempt identity answers FALSE"
+         (and (core0-evidence-p built)
+              (not (core0-evidence-current-image-issued-p built))
+              (not (core0-evidence-current-image-issued-for-request-p built +req+))))))
+
+;;; The exact-copy sensitivity R-ISSUANCE-0.7 requires, carried onto the
+;;; request-bound form: authenticity is a property of CONTENT (R-ISSUANCE-0.2),
+;;; so a copy answers exactly as the original does — on BOTH questions.
+(multiple-value-bind (e0 adapter) (genuine-commit "issuance/i8-copy")
+  (declare (ignore adapter))
+  (let ((copy (%make-core0-evidence
+               :process (%core0-evidence-process e0)
+               :attempt-id (%core0-evidence-attempt-id e0)
+               :seat-id (%core0-evidence-seat-id e0)
+               :adapter-identity (%core0-evidence-adapter-identity e0)
+               :adapter (%core0-evidence-adapter e0)
+               :request (%core0-evidence-request e0)
+               :events (%core0-evidence-events e0)
+               :manifestation (%core0-evidence-manifestation e0)
+               :ledger-token (%core0-evidence-ledger-token e0)
+               :reconciliation-receipts (%core0-evidence-reconciliation-receipts e0)
+               :refusal-reason (%core0-evidence-refusal-reason e0))))
+    (iok "I8g an EXACT CONTENT COPY answers TRUE for the same request (R-ISSUANCE-0.2)"
+         (and (not (eq copy e0))
+              (core0-evidence-current-image-issued-for-request-p copy +req+)))
+    (iok "I8h and the copy answers FALSE for a different request, exactly as the original does"
+         (not (core0-evidence-current-image-issued-for-request-p copy +other-req+)))))
+
+;;; It ANSWERS rather than signals for junk, and it does not mutate the registry.
+(multiple-value-bind (e0 adapter) (genuine-commit "issuance/i8-total")
+  (declare (ignore adapter))
+  (iok "I8i a non-evidence value answers FALSE, never signals"
+       (and (not (core0-evidence-current-image-issued-for-request-p 17 +req+))
+            (not (core0-evidence-current-image-issued-for-request-p nil +req+))
+            (not (core0-evidence-current-image-issued-for-request-p "x" +req+))))
+  (iok "I8j a MALFORMED or non-ground request answers FALSE, never signals"
+       (and (not (core0-evidence-current-image-issued-for-request-p e0 :not-a-proposition))
+            (not (core0-evidence-current-image-issued-for-request-p e0 nil))
+            ;; a raw (:var …) is not ground and PROPOSITION refuses it
+            (not (core0-evidence-current-image-issued-for-request-p
+                  e0 '(:predicate :deliver (:payload (:var :x)))))))
+  (iok "I8k it CONSULTS and does not mutate: repeated calls, and a false one, leave the answer unchanged"
+       (let ((before (hash-table-count *core0-issuance-registry*)))
+         (core0-evidence-current-image-issued-for-request-p e0 +req+)
+         (core0-evidence-current-image-issued-for-request-p e0 +other-req+)
+         (core0-evidence-current-image-issued-for-request-p e0 +req+)
+         (and (= before (hash-table-count *core0-issuance-registry*))
+              (core0-evidence-current-image-issued-for-request-p e0 +req+))))
+  (iok "I8l it consults NO ledger (the instrumented query counter does not move)"
+       (let ((before *ledger-queries*))
+         (core0-evidence-current-image-issued-for-request-p e0 +req+)
+         (core0-evidence-current-image-issued-for-request-p e0 +other-req+)
+         (= before *ledger-queries*))))
+
+;;; R-ISSUANCE-0.11 / R-SOURCE-1.10 — NOT repaired here, and the check is
+;;; mechanical rather than a promise in a comment.
+(iok "I8m the internal request reader is STILL NOT exported (R-ISSUANCE-0.11 intact)"
+     (eq :internal (nth-value 1 (find-symbol "CORE0-EVIDENCE-REQUEST" :lisp-plus-core0))))
+
+(iok "I8n Core /0's public surface grew by EXACTLY ONE operation for this movement"
+     (let ((n 0))
+       (do-external-symbols (s :lisp-plus-core0)
+         (when (search "ISSUED-FOR-REQUEST" (symbol-name s)) (incf n)))
+       (= 1 n)))
+
+;;; ==================================================================
 ;;; Tally + exit.
 
 (format t "~%== Core /0 issuance teeth: ~D passed / ~D failed ==~%" *ipass* *ifail*)

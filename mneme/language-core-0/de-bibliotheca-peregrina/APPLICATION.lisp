@@ -71,6 +71,11 @@
 (unless (find-package :lisp-plus-slice1)
   (handler-bind ((style-warning (lambda (w) (muffle-warning w))))
     (load (merge-pathnames "../../language-slice-1/slice1.lisp" *load-truename*))))
+;; MOVEMENT X (2026-07-25) — Language Slice /2, Candidate /0.  Movements I–IX
+;; are unchanged and do not use it.
+(unless (find-package :lisp-plus-slice2)
+  (handler-bind ((style-warning (lambda (w) (muffle-warning w))))
+    (load (merge-pathnames "../../language-slice-2/slice2.lisp" *load-truename*))))
 
 (defpackage #:de-bibliotheca-peregrina (:use #:cl))
 (in-package #:de-bibliotheca-peregrina)
@@ -215,7 +220,13 @@ it — there is no ambient reachability and the language will not assume one."
              (cond ((lisp-plus-slice0:witness-p s)
                     (list (lisp-plus-slice0:witness-id s)))
                    ((lisp-plus-slice0:claim-p s)
-                    (list (lisp-plus-slice0:claim-id s)))))
+                    (list (lisp-plus-slice0:claim-id s)))
+                   ;; MOVEMENT X: a Slice /2 source basis is reached by its
+                   ;; SOURCE-BASIS IDENTITY — the same id-membership rule, read
+                   ;; against a third durable identity.  No new accessibility
+                   ;; regime, and still nothing ambient.
+                   ((lisp-plus-slice2:source-basis-p s)
+                    (list (lisp-plus-slice2:source-basis-identity s)))))
            supports)))
 
 (lisp-plus-slice1:clear-schema-registry)
@@ -2041,6 +2052,318 @@ value at :supports[~{~D~^, ~}]."
 
 
 ;;;; ==================================================================
+;;;; MOVEMENT X — THE SOURCE-BOUND ROAD (Language Slice /2, Candidate /0)
+;;;;
+;;;; Movement IX ended with the desk declining a door it had.  Everything it
+;;;; reported there STANDS, and is not rewritten below: on the Slice /0 +
+;;;; Slice /1 + Core /0 surface as it stood, settlement rested on a witness the
+;;;; desk minted, a fabricated one discharged identically, and the account
+;;;; itself was inert residue.  Movement X does not contradict that; it walks a
+;;;; DIFFERENT road that did not exist when Movement IX was written.
+;;;;
+;;;; Four stages, kept distinct on purpose:
+;;;;
+;;;;   deed             the crossing in Movement VII — `perform`, once
+;;;;   account report   what the ISSUED account says about itself
+;;;;   acknowledgment   a domain standing the desk derives from that report
+;;;;   settlement       the loan closing, derived from acknowledgment + standing
+;;;;
+;;;; The two negative probes from Movement IX come back here — the fabricated
+;;;; ledger witness and its raised claim — and are offered to a source-bound
+;;;; premise, which is the only place the difference between them and the real
+;;;; account has ever been visible.
+;;;; ==================================================================
+
+(format t "~%── MOVEMENT X: the source-bound road (Slice /2, Candidate /0) ──~%")
+
+;;; --- 10a. the account report -----------------------------------------
+;;;
+;;; The desk holds the dispatch request because it WROTE it.  It does not read
+;;; the request back out of the account — no operation lets it — it presents the
+;;; request it holds and is told yes or no.
+
+(defparameter *he-9-request* (dispatch-request *restricted* :ferrand))
+
+(format t "~%   10a. the desk asks Core /0 whether the account it holds was issued~%")
+(format t "        in this image FOR THE EXACT REQUEST it performed:~%")
+(desk "issued-for-this-request => ~S"
+      (lisp-plus-core0:core0-evidence-current-image-issued-for-request-p
+       *deliver-evidence* *he-9-request*))
+(desk "issued-for-a-DIFFERENT-request => ~S"
+      (lisp-plus-core0:core0-evidence-current-image-issued-for-request-p
+       *deliver-evidence* (dispatch-request "ms-Aleph-7" :ferrand)))
+(ok "[X-1] the He-9 account answers TRUE for its own request and FALSE for another volume's"
+    (and (lisp-plus-core0:core0-evidence-current-image-issued-for-request-p
+          *deliver-evidence* *he-9-request*)
+         (not (lisp-plus-core0:core0-evidence-current-image-issued-for-request-p
+               *deliver-evidence* (dispatch-request "ms-Aleph-7" :ferrand))))
+    "the conjunction, not either half: minted here AND minted for this act")
+
+(defparameter *he-9-basis*
+  (lisp-plus-slice2:establish-core0-source-basis
+   :evidence *deliver-evidence* :request *he-9-request*
+   :relation :core0-account-reports-acknowledgment
+   :expected-outcome :acknowledged)
+  "The source basis. NOT a witness, NOT a claim: a governed record binding the
+issued account, the exact request, one relation, one derived proposition and one
+truth ceiling.")
+
+(format t "~%   the account report, whole:~%")
+(format t "     ~S~%" (lisp-plus-slice2:source-basis-proposition *he-9-basis*))
+(desk "ceiling: ~S" (lisp-plus-slice2:source-basis-truth-ceiling *he-9-basis*))
+(ok "[X-2] the source basis reports ACKNOWLEDGMENT — a fact about the account, not about the world"
+    (and (lisp-plus-slice2:source-basis-p *he-9-basis*)
+         (eq :acknowledged (lisp-plus-slice2:source-basis-account-status *he-9-basis*))
+         (eq :core0-account-reports-acknowledgment
+             (second (lisp-plus-slice2:source-basis-proposition *he-9-basis*)))
+         (eq :current-image-issued-account-report
+             (lisp-plus-slice2:source-basis-truth-ceiling *he-9-basis*)))
+    "the predicate says what it means: the ACCOUNT REPORTS an acknowledgment")
+
+;;; --- 10b. the acknowledgment standing --------------------------------
+;;;
+;;; A SEPARATE, EXPLICIT schema.  No relation produced :DISPATCH-ACCOUNT-
+;;; ACKNOWLEDGED and none could: the three relations produce propositions about
+;;; accounts, and a domain conclusion is the desk's own step, written down where
+;;; a reader can see it.
+
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :dispatch-account-standing :version 1
+  :conclusion (pp '(:predicate :dispatch-account-acknowledged
+                    (:volume (:var :volume)) (:courier (:var :courier))))
+  :premises (list (pp '(:predicate :core0-account-reports-acknowledgment
+                        (:attempt (:var :attempt)) (:request (:var :request))
+                        (:acknowledgment :acknowledged))))
+  :locals '(:attempt :request)))
+
+(defparameter *source-bound-only*
+  (lisp-plus-slice2:make-support-admission-contract
+   :contract-id :dispatch-account-source-bound
+   :accepted-clauses
+   '((:source-basis :relations (:core0-account-reports-acknowledgment))))
+  "The contract the effect-sensitive premise carries. It accepts ONE species,
+names the ONE relation it accepts, and accepts no judged claim — because a
+judged claim is exactly what Movement IX showed a fabrication can become.")
+
+(defparameter *dispatch-account-schema*
+  (lisp-plus-slice2:make-slice2-schema
+   :schema-id :dispatch-account-standing/2
+   :base-schema (lisp-plus-slice1:resolve-schema :dispatch-account-standing 1)
+   :premise-contracts (list (list 0 *source-bound-only*))))
+
+(defun consider/2 (schema conclusion supports)
+  "DERIVE/2 with the receipt recovered either way — the Slice /2 twin of
+`consider`, and needed for the same reason."
+  (handler-case
+      (multiple-value-bind (claim receipt)
+          (lisp-plus-slice2:derive/2 :schema schema :conclusion conclusion
+                                     :supports supports
+                                     :receiver (apply #'at-the-desk supports))
+        (values claim receipt))
+    (lisp-plus-slice2:slice2-derivation-refused (c)
+      (values nil (lisp-plus-slice2:slice2-condition-receipt c)))))
+
+(defun admission-of (receipt predicate)
+  (find predicate (lisp-plus-slice2:slice2-receipt-admissions receipt)
+        :key (lambda (a)
+               (second (lisp-plus-slice2:premise-admission-premise-pattern a)))))
+
+(defun disposition/2 (receipt predicate)
+  (lisp-plus-slice2:premise-admission-disposition (admission-of receipt predicate)))
+
+(defparameter *ack-conclusion*
+  (np `(:predicate :dispatch-account-acknowledged (:volume ,*restricted*)
+        (:courier :brass-courier))))
+
+(format t "~%   10b. the desk derives an acknowledgment standing from the report:~%")
+(defparameter *ack-claim* nil)
+(multiple-value-bind (claim receipt) (consider/2 *dispatch-account-schema*
+                                                 *ack-conclusion* (list *he-9-basis*))
+  (setf *ack-claim* claim)
+  (desk "decision => ~S" (lisp-plus-slice2:slice2-receipt-decision receipt))
+  (ok "[X-3] the source basis DISCHARGES the source-bound premise — acknowledgment standing granted"
+      (and claim
+           (eq :granted (lisp-plus-slice2:slice2-receipt-decision receipt))
+           (eq :satisfied (disposition/2 receipt :core0-account-reports-acknowledgment))))
+  (ok "[X-4] and the receipt retains the CONTRACT BY VALUE and the BASIS by snapshot — no resolver is needed to read it"
+      (let* ((a (admission-of receipt :core0-account-reports-acknowledgment))
+             (c (lisp-plus-slice2:premise-admission-contract a))
+             (b (first (lisp-plus-slice2:slice2-receipt-source-bases-used receipt))))
+        (and (lisp-plus-slice2:support-admission-contract-p c)
+             (eq :dispatch-account-source-bound
+                 (lisp-plus-slice2:support-admission-contract-contract-id c))
+             (equal (lisp-plus-slice2:support-admission-contract-accepted-clauses c)
+                    '((:source-basis
+                       :relations (:core0-account-reports-acknowledgment))))
+             (equal (lisp-plus-slice2:source-basis-request b) (np *he-9-request*))
+             (equal (lisp-plus-slice2:premise-admission-truth-ceilings a)
+                    '((:source-basis . :current-image-issued-account-report)))))
+      "everything the question 'why did this discharge?' needs is IN the receipt"))
+
+;;; --- 10c. the two negative probes, at a source-bound premise ---------
+;;;
+;;; Movement IX's fabricated witness and its raised claim, offered here.  In
+;;; Movement IX they were INDISTINGUISHABLE from the real thing through every
+;;; public reader.  Here they are not admitted, and the receipt says which.
+
+(format t "~%   10c. the Movement IX fabrications, offered to the source-bound premise:~%")
+
+(defparameter *fabricated-ack-witness*
+  (lisp-plus-slice0:witness
+   :for (lisp-plus-slice2:source-basis-proposition *he-9-basis*)
+   :mode :direct :kind :courier-ledger :source :brass-courier
+   :procedure (lisp-plus-kernel0:make-identity
+               :attempt "peregrina/crossing-that-never-was")
+   :content (list :ledger-token "fake:courier:0000"))
+  "The same lie Movement IX told, retold about the account-report proposition.
+Nothing produced it. There is no such attempt and no such row.")
+
+(defparameter *fabricated-ack-claim*
+  (lisp-plus-slice0:raise
+   (lisp-plus-slice0:claim
+    :proposition (lisp-plus-slice2:source-basis-proposition *he-9-basis*)
+    :by :peregrina)
+   :to :verified :per *ledger-reading* :considering (list *fabricated-ack-witness*)
+   :receiver :peregrina)
+  "And the same laundering: RAISE turns it into a genuinely :VERIFIED claim.")
+
+(dolist (probe (list (cons "the fabricated witness, raw" *fabricated-ack-witness*)
+                     (cons "the same fabrication, RAISED to :VERIFIED"
+                           *fabricated-ack-claim*)))
+  (multiple-value-bind (claim receipt)
+      (consider/2 *dispatch-account-schema* *ack-conclusion* (list (cdr probe)))
+    (let ((a (admission-of receipt :core0-account-reports-acknowledgment)))
+      (desk "~34A slice /1 would say ~S; slice /2 says ~S" (car probe)
+            (lisp-plus-slice2:premise-admission-base-disposition a)
+            (lisp-plus-slice2:premise-admission-disposition a))
+      (ok (format nil "[X-5~:[b~;a~]] ~A is RECOGNIZED and NOT ADMITTED at the source-bound premise"
+                  (eq (cdr probe) *fabricated-ack-witness*) (car probe))
+          (and (null claim)
+               (eq :refused (lisp-plus-slice2:slice2-receipt-decision receipt))
+               (eq :not-admitted (lisp-plus-slice2:premise-admission-disposition a))
+               (equal (list (cdr probe))
+                      (lisp-plus-slice2:premise-admission-recognized-not-admitted a))
+               ;; the narrowing is the WHOLE difference: Slice /1 still grants
+               (eq :satisfied (lisp-plus-slice2:premise-admission-base-disposition a)))
+          "Slice /1 is unchanged and still discharges it; the receipt shows both answers side by side"))))
+
+(ok "[X-6] the claim really WAS :VERIFIED — it was refused for its species, not for its standing"
+    (eq :verified (lisp-plus-slice0:judgment-record-judgment
+                   (lisp-plus-slice0:claim-judgment *fabricated-ack-claim*)))
+    "R-ADMISSION-0.2 answered in code: standing is not origin")
+
+;;; --- 10d. settlement, through a domain schema ------------------------
+;;;
+;;; The acknowledgment standing is now an ordinary judged claim, and it chains
+;;; the ordinary way.  The settlement schema is the desk's own domain step: it
+;;; says what the desk means by a settled loan, and it says it out loud.
+
+(lisp-plus-slice1:register-schema
+ (lisp-plus-slice1:judgment-schema
+  :name :settlement-standing :version 2
+  :conclusion (pp '(:predicate :loan-settled (:patron (:var :patron))
+                    (:volume (:var :volume))))
+  :premises
+  (list (pp '(:predicate :may-dispatch (:patron (:var :patron))
+              (:volume (:var :volume)) (:courier (:var :courier))))
+        (pp '(:predicate :dispatch-account-acknowledged (:volume (:var :volume))
+              (:courier (:var :courier)))))
+  :locals '(:courier)))
+
+(defparameter *settlement-schema/2*
+  (lisp-plus-slice2:make-slice2-schema
+   :schema-id :settlement-standing/2
+   :base-schema (lisp-plus-slice1:resolve-schema :settlement-standing 2)
+   :premise-contracts
+   (list (list 0 (lisp-plus-slice2:make-support-admission-contract
+                  :contract-id :dispatch-standing-by-judgment
+                  :accepted-clauses '((:verified-judged-claim))))
+         (list 1 (lisp-plus-slice2:make-support-admission-contract
+                  :contract-id :acknowledgment-standing-by-judgment
+                  :accepted-clauses '((:verified-judged-claim)))))))
+
+(format t "~%   10d. settlement — the domain step, with both premises named:~%")
+(defparameter *settled-claim* nil)
+(defparameter *settlement-receipt/2* nil)
+(multiple-value-bind (claim receipt)
+    (consider/2 *settlement-schema/2*
+                (np `(:predicate :loan-settled (:patron :ferrand)
+                      (:volume ,*restricted*)))
+                (list *hop-4* *ack-claim*))
+  (setf *settled-claim* claim *settlement-receipt/2* receipt)
+  (desk "decision => ~S" (lisp-plus-slice2:slice2-receipt-decision receipt))
+  (ok "[X-7] settlement is GRANTED — and every premise discharged on a judged claim whose own basis is inspectable"
+      (and claim
+           (eq :granted (lisp-plus-slice2:slice2-receipt-decision receipt))
+           (eq :satisfied (disposition/2 receipt :may-dispatch))
+           (eq :satisfied (disposition/2 receipt :dispatch-account-acknowledged)))))
+
+;;; --- 10e. and so the loan on ms-He-9 closes --------------------------
+;;;
+;;; The state comes from the receipt's own disposition, exactly as it did in
+;;; 9e.  The desk chooses nothing.  What changed is not the desk's discipline —
+;;; it is that the disposition is now reached without minting a witness.
+
+(format t "~%   10e. the loan on ~A, revisited:~%" *restricted*)
+(defparameter *he-9-disposition/2* nil)
+(let* ((d (disposition/2 *settlement-receipt/2* :dispatch-account-acknowledged))
+       (loan (find *restricted* *loans* :key #'loan-volume :test #'string=)))
+  (desk "the settlement receipt says :DISPATCH-ACCOUNT-ACKNOWLEDGED is ~S." d)
+  (setf *he-9-disposition/2*
+        (ecase d
+          (:satisfied     :settled)
+          (:not-admitted  :dispatch-unacknowledged)
+          (:refuted       :settlement-refused)
+          (:inaccessible  :reconciliation-required)
+          (:ambiguous     :reconciliation-required)
+          (:mismatched    :dispatch-unacknowledged)
+          (:missing       :dispatch-unacknowledged)))
+  (setf (loan-status loan) *he-9-disposition/2*)
+  (setf *tracers* (remove "T-3" *tracers* :key #'tracer-id :test #'string=))
+  (desk "→ loan status set to ~S; tracer T-3 closed." *he-9-disposition/2*)
+  (ok "[X-8] the loan lands :SETTLED, and the state came from the receipt's disposition — not from a desk-side guess"
+      (and (eq :settled *he-9-disposition/2*)
+           (eq *he-9-disposition/2* (loan-status loan))
+           (eq :satisfied d)
+           (null (find "T-3" *tracers* :key #'tracer-id :test #'string=))))
+  (ok "[X-9] and the desk STILL will not walk the Movement IX door: no witness was minted for the acknowledgment on this road"
+      (let* ((a (admission-of *settlement-receipt/2* :dispatch-account-acknowledged))
+             (supports (lisp-plus-slice2:premise-admission-admitted-supports a)))
+        (and (= 1 (length supports))
+             (lisp-plus-slice0:claim-p (first supports))
+             (notany #'lisp-plus-slice0:witness-p supports)))
+      "the road from deed to settlement passes through an issued account, not through the desk's own hand"))
+
+;;; --- 10f. what the desk still cannot say -----------------------------
+
+(format t "~%   ── the new road's ceiling, stated exactly ──~%")
+(desk "The loan is settled. What that rests on is NOT that the volume arrived.")
+(desk "It rests on: the Core /0 runtime minted that exact account content in")
+(desk "THIS image, for THAT request, and the account REPORTS an acknowledgment.")
+(desk "The courier is a labelled scripted fake. If it lied to Core /0, every")
+(desk "reader above returns exactly what it returns now.")
+(format t "~%")
+(desk "What DID change is narrow and real: on the Movement IX road the desk's")
+(desk "own fabrication was indistinguishable from the truth through every public")
+(desk "reader ([IX-7]). On this road it is refused, the refusal is recorded")
+(desk "against a named contract, and the desk can show which support discharged")
+(desk "which premise and under what ceiling. The frontier did not vanish. It")
+(desk "moved from 'the desk asserted it' to 'the runtime issued it', and the")
+(desk "distance from there to the world is unchanged.")
+
+(ok "[X-10] the ceiling is carried in the artifact, not only in this narration"
+    (let ((b (first (lisp-plus-slice2:slice2-receipt-source-bases-used
+                     (nth-value 1 (consider/2 *dispatch-account-schema*
+                                              *ack-conclusion* (list *he-9-basis*)))))))
+      (and (eq :current-image-issued-account-report
+               (lisp-plus-slice2:source-basis-truth-ceiling b))
+           ;; the basis claims nothing across image death, and says so
+           (null (getf (lisp-plus-slice2:source-basis-issuance-basis b) :persistence))
+           (getf (lisp-plus-slice2:source-basis-issuance-basis b) :image-local)))
+    "a ceiling a program prints but does not carry is a ceiling the next reader loses")
+
+;;;; ==================================================================
 ;;;; CLOSING
 
 (format t "~%── what this application does NOT show ──~%")
@@ -2053,11 +2376,22 @@ value at :supports[~{~D~^, ~}]."
 (format t "   receipt now distinguishes an inherited judgment from an assertion —~%")
 (format t "   see FIELD-REPORT.md §3.~%")
 (format t "~%   And Movement IX proves NOTHING about effects being unverifiable in~%")
-(format t "   principle. It reports what the CURRENT public surface does: no~%")
-(format t "   governed operation consumes an effect account, so settlement rests~%")
-(format t "   on a minted witness or it does not happen. That is a statement about~%")
-(format t "   Slice /0 + Slice /1 + Core /0 as they stand today, and about nothing~%")
-(format t "   else. No bridge is proposed here, and none should be read in.~%")
+(format t "   principle. It reports what the Slice /0 + Slice /1 + Core /0 surface~%")
+(format t "   did as it stood when Movement IX was written: no governed operation~%")
+(format t "   consumed an effect account, so settlement rested on a minted witness~%")
+(format t "   or it did not happen. That measurement is why Slice /2 exists, and~%")
+(format t "   it is not rewritten as mistaken by Movement X.~%")
+(format t "~%   AMENDED 2026-07-25. Movement IX used to end \"No bridge is proposed~%")
+(format t "   here, and none should be read in.\" A bridge was subsequently built~%")
+(format t "   and Movement X walks it, so that sentence is withdrawn rather than~%")
+(format t "   left standing as a promise the file no longer keeps. What replaces~%")
+(format t "   it is narrower: Movement X does not verify the dispatch. It moves~%")
+(format t "   the premise's basis from \"the desk asserted it\" to \"the Core /0~%")
+(format t "   runtime issued this exact account content in THIS image for THAT~%")
+(format t "   request, and the account reports an acknowledgment\". The courier is~%")
+(format t "   still the labelled scripted fake; a lying adapter produces the same~%")
+(format t "   readers throughout. The distance from an issued account to the world~%")
+(format t "   is exactly what it was, and nothing in Movement X shortens it.~%")
 
 (format t "~%de-bibliotheca-peregrina: ~D checks passed / ~D failed~%" *pass* *fail*)
 (format t "(a desk that can say \"no\", \"not yet\", and \"I do not know\" in three~%")
