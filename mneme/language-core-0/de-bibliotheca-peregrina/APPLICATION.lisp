@@ -73,6 +73,12 @@
 ;;;;                           at that premise.  Nothing was re-derived: the
 ;;;;                           basis is the third value of the grant Movement X
 ;;;;                           already made.
+;;;;   XII THE SAME ROAD,       Language Surface /0.  No new semantics at all:
+;;;;       SPOKEN AS LISP+      the same chain, declared through macros that
+;;;;                           MACROEXPAND-1 into the same public constructors.
+;;;;                           Every standing-relevant choice is still written
+;;;;                           in the source, and PERFORM, DERIVE and DERIVE/2
+;;;;                           are still spelled out where they happen.
 ;;;;
 ;;;; FRONT-DOOR DISCIPLINE: single-colon public surface only.  Zero double-colon
 ;;;; package access in this directory — grep-verified: the digraph does not occur
@@ -91,9 +97,15 @@
     (load (merge-pathnames "../../language-slice-1/slice1.lisp" *load-truename*))))
 ;; MOVEMENTS X and XI (2026-07-25) — Language Slice /2, Candidates /0 and /1.
 ;; Movements I–IX are unchanged and do not use either.
+;; MOVEMENT XII (2026-07-25) — Language Surface /0.  Movements I–XI are
+;; BYTE-IDENTICAL and do not use it; XII speaks the same road as Lisp+.
 (unless (find-package :lisp-plus-slice2)
   (handler-bind ((style-warning (lambda (w) (muffle-warning w))))
     (load (merge-pathnames "../../language-slice-2/slice2.lisp" *load-truename*))))
+
+(unless (find-package :lisp-plus-surface0)
+  (handler-bind ((style-warning (lambda (w) (muffle-warning w))))
+    (load (merge-pathnames "../../language-surface-0/surface0.lisp" *load-truename*))))
 
 (defpackage #:de-bibliotheca-peregrina (:use #:cl))
 (in-package #:de-bibliotheca-peregrina)
@@ -2554,6 +2566,171 @@ ordinary way. Movement IX's finding, aimed one layer up.")
     "a derivation basis never establishes a domain conclusion automatically (Work Order /1 §8)")
 
 ;;;; ==================================================================
+;;;; MOVEMENT XII — THE SAME ROAD, SPOKEN AS LISP+ (Language Surface /0)
+;;;;
+;;;; Movements I–XI are BYTE-IDENTICAL.  Nothing below changes what the language
+;;;; does; it changes only how a program says it.
+;;;;
+;;;; Movement XI is readable, and it is readable the way a deposition is
+;;;; readable — every constructor summoned by hand, every keyword spelled out,
+;;;; the shape of the thought buried under the ceremony of building it.  The
+;;;; question Surface /0 exists to answer is not "can the language express
+;;;; this" (Movement XI settled that) but:
+;;;;
+;;;;     can a person bear to WRITE it?
+;;;;
+;;;; The answer below is a declaration that reads like a declaration and
+;;;; MACROEXPAND-1s into exactly the public constructors Movement XI called by
+;;;; hand.  The pleasant form and the bones stay mutually visible, which is the
+;;;; only kind of sugar this project is willing to eat.
+;;;;
+;;;; WHAT DID NOT GET SHORTER, ON PURPOSE: `perform`, `derive`, `derive/2` and
+;;;; `establish-core0-source-basis` are still spelled out where they happen.
+;;;; Those are the verbs where the program does something consequential, and
+;;;; they should clang when struck.
+;;;; ==================================================================
+
+(format t "~%── MOVEMENT XII: the same road, spoken as Lisp+ (Surface /0) ──~%")
+
+;;; The daybook entry the desk wants: a modest, explicitly-application judgment.
+;;; NOT an external-world claim — nothing here says the volume arrived, only
+;;; that the desk may record the closure it already authorised in Movement XI.
+
+(lisp-plus-surface0:define-judgment-schema *daybook-schema*
+  :name :closure-daybook-standing :version 1
+  :conclusion (:predicate :closure-recorded-in-daybook
+               (:volume (:var :volume)) (:courier (:var :courier)))
+  :premises ((:predicate :dispatch-account-acknowledged
+              (:volume (:var :volume)) (:courier (:var :courier))))
+  :locals ()
+  :unique-locals ())
+
+(lisp-plus-surface0:define-admission-contract *daybook-contract*
+  :contract-id :daybook-by-prior-admission
+  :contract-version 1
+  :accepted-clauses ((:derivation-basis))
+  :proposition-relation :exact-normalized-equality
+  :receiver-accessibility :required
+  :retain (:contract-snapshot :support-identity :support-basis :source-basis))
+
+(lisp-plus-surface0:define-slice2-schema *daybook-schema/2*
+  :schema-id :closure-daybook-standing/2
+  :schema-version 0
+  :base-schema *daybook-schema*
+  :premise-contracts ((0 *daybook-contract*)))
+
+(defparameter *daybook-conclusion*
+  (np `(:predicate :closure-recorded-in-daybook (:volume ,*restricted*)
+        (:courier :brass-courier))))
+
+(defparameter *daybook-claim* nil)
+(defparameter *daybook-receipt* nil)
+(defparameter *daybook-basis* nil)
+
+(format t "~%   12a. the desk derives its daybook standing, through DERIVE/2-CASE:~%")
+
+;;; The consequential verb is written out.  A reader looking for "where does
+;;; this program derive something" finds DERIVE/2 by looking for DERIVE/2.
+(lisp-plus-surface0:derive/2-case (claim receipt basis)
+    (lisp-plus-slice2:derive/2
+     :schema *daybook-schema/2*
+     :conclusion *daybook-conclusion*
+     :supports (list *ack-dbasis*)
+     :receiver (at-the-desk *ack-dbasis*))
+  (:granted
+   (setf *daybook-claim* claim *daybook-receipt* receipt *daybook-basis* basis)
+   (desk "granted; ceiling => ~S"
+         (lisp-plus-slice2:premise-admission-truth-ceilings
+          (admission-of receipt :dispatch-account-acknowledged))))
+  (:refused (c)
+   (desk "refused: ~A" (lisp-plus-slice2:slice2-condition-failed-invariant c))
+   (setf *daybook-receipt* receipt)))
+
+(ok "[XII-1] a Surface /0 declaration derives the same way the hand-built one does — granted"
+    (and *daybook-claim*
+         (eq :granted (lisp-plus-slice2:slice2-receipt-decision *daybook-receipt*))
+         (eq :satisfied (disposition/2 *daybook-receipt* :dispatch-account-acknowledged)))
+    "the macros are a front end; the answer is the language's, unchanged")
+
+(ok "[XII-2] it CONSUMED the derivation basis Movement X established and Movement XI used"
+    (and (lisp-plus-slice2:derivation-basis-established-in-current-image-p *ack-dbasis*)
+         (= 1 (length (lisp-plus-slice2:slice2-receipt-derivation-bases-used
+                       *daybook-receipt*)))
+         (eq *ack-dbasis*
+             (first (lisp-plus-slice2:slice2-receipt-derivation-bases-used
+                     *daybook-receipt*))))
+    "no new basis was manufactured to make the syntax look good")
+
+(ok "[XII-3] DERIVE/2-CASE bound the exact THIRD value, and it is established"
+    (and (lisp-plus-slice2:derivation-basis-p *daybook-basis*)
+         (lisp-plus-slice2:derivation-basis-established-in-current-image-p *daybook-basis*)
+         (eq *daybook-claim* (lisp-plus-slice2:derivation-basis-claim *daybook-basis*))
+         (eq *daybook-receipt* (lisp-plus-slice2:derivation-basis-receipt *daybook-basis*)))
+    "the control form binds a basis; it never constructs one")
+
+(ok "[XII-4] the PRIOR Slice /2 receipt is still reachable, by object, from the surface-built one"
+    (let* ((b (first (lisp-plus-slice2:slice2-receipt-derivation-bases-used
+                      *daybook-receipt*)))
+           (prior (lisp-plus-slice2:derivation-basis-receipt b)))
+      (and (eq prior *ack-receipt*)
+           (eq *he-9-basis*
+               (first (lisp-plus-slice2:slice2-receipt-source-bases-used prior)))))
+    "surface syntax did not cost the chain")
+
+(ok "[XII-5] the modest ceiling survives — a prior explicit admission judgment, and nothing larger"
+    (let ((text (with-output-to-string (out)
+                  (lisp-plus-slice2:render-slice2-why *daybook-receipt* out))))
+      (and (equal '((:derivation-basis . :prior-explicit-admission-judgment))
+                  (lisp-plus-slice2:premise-admission-truth-ceilings
+                   (admission-of *daybook-receipt* :dispatch-account-acknowledged)))
+           (search "PRIOR EXPLICIT ADMISSION" text)
+           (notany (lambda (w) (search w text))
+                   '("proved" "effect occurred" "externally verified" "settled")))))
+
+(ok "[XII-6] NO courier script, adapter outcome, Core /0 event or source relation was altered for Movement XII"
+    (and (lisp-plus-core0:core0-evidence-current-image-issued-for-request-p
+          *deliver-evidence* *he-9-request*)
+         (eq :core0-account-reports-acknowledgment
+             (lisp-plus-slice2:source-basis-relation-kind *he-9-basis*))
+         (eq :acknowledged (lisp-plus-slice2:source-basis-account-status *he-9-basis*)))
+    "Movement XII adds a way of speaking, not a fact")
+
+;;; --- 12b. the specimen: what the pleasant form actually compiles into -------
+
+(format t "~%   12b. MACROEXPAND-1 of the contract declaration above — the~%")
+(format t "        pleasant form is the public constructor, wearing a hat:~%~%")
+(let ((*print-right-margin* 76) (*print-case* :downcase))
+  (format t "~S~%" (macroexpand-1
+                    '(lisp-plus-surface0:define-admission-contract *daybook-contract*
+                      :contract-id :daybook-by-prior-admission
+                      :contract-version 1
+                      :accepted-clauses ((:derivation-basis))
+                      :proposition-relation :exact-normalized-equality
+                      :receiver-accessibility :required
+                      :retain (:contract-snapshot)))))
+
+(ok "[XII-7] the expansion names the PUBLIC constructor and contains no internal symbol"
+    (let* ((x (macroexpand-1
+               '(lisp-plus-surface0:define-slice2-schema *z*
+                 :schema-id :z :schema-version 0
+                 :base-schema *daybook-schema*
+                 :premise-contracts ((0 *daybook-contract*)))))
+           (syms '()))
+      (labels ((walk (f) (cond ((symbolp f) (push f syms))
+                               ((consp f) (walk (car f)) (walk (cdr f))))))
+        (walk x))
+      (and (member 'lisp-plus-slice2:make-slice2-schema syms)
+           (notany (lambda (s)
+                     (let ((pk (symbol-package s)))
+                       (and pk (member (package-name pk)
+                                       '("LISP-PLUS-SLICE1" "LISP-PLUS-SLICE2"
+                                         "LISP-PLUS-CORE0" "LISP-PLUS-SLICE0")
+                                       :test #'string=)
+                            (not (eq :external (nth-value 1 (find-symbol (symbol-name s) pk)))))))
+                   syms)))
+    "a reader can check the substrate without trusting the macro")
+
+;;;; ==================================================================
 ;;;; CLOSING
 
 (format t "~%── what this application does NOT show ──~%")
@@ -2592,6 +2769,15 @@ ordinary way. Movement IX's finding, aimed one layer up.")
 (format t "   outside this image, or that a deed took place. The closure standing~%")
 (format t "   in 11c is authorized by a schema the DESK wrote — no basis makes a~%")
 (format t "   domain conclusion on its own, and [XI-8] is the check that says so.~%")
+
+(format t "~%   AND MOVEMENT XII CHANGES NOTHING AT ALL about what is true. It is the~%")
+(format t "   same road, declared instead of assembled. Every standing-relevant~%")
+(format t "   choice is still written down — schema identity and version, contract~%")
+(format t "   identity and version, the premise index, the accepted clause, the~%")
+(format t "   proposition relation, the accessibility requirement, the retention~%")
+(format t "   list — and PERFORM, DERIVE and DERIVE/2 are still spelled out where~%")
+(format t "   they happen. What disappeared is ceremony, not judgment. 12b prints~%")
+(format t "   the expansion so the claim is checkable rather than asserted.~%")
 
 (format t "~%de-bibliotheca-peregrina: ~D checks passed / ~D failed~%" *pass* *fail*)
 (format t "(a desk that can say \"no\", \"not yet\", and \"I do not know\" in three~%")
