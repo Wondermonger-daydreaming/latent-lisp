@@ -31,13 +31,26 @@ field, so an unevaluable contract cannot exist.
 | `:receiver-accessibility` | `:required` | `:required` \| `:optional` |
 | `:retain` | all four items | subset of `:contract-snapshot :support-identity :support-basis :source-basis` |
 
-**Clause families — exactly three.**
+**Clause families — three at contract version 0, four at version 1.**
+
+A **version-0** contract accepts exactly these three, and **refuses**
+`(:derivation-basis)` at construction:
 
 ```lisp
 (:verified-judged-claim)
 (:source-basis :relations (<one or more of the three relations>))
 (:asserted-witness :mode M :kind K :truth-ceiling :asserted)
 ```
+
+A **version-1** contract accepts those three plus exactly one more:
+
+```lisp
+(:derivation-basis)                    ; Candidate /1; no options; fixed ceiling
+```
+
+An **unknown version refuses at construction** — a contract whose meaning this
+image cannot compute must not exist, rather than be discovered unevaluable at a
+premise.
 
 `:mode` is `:direct` or `:testimony`. `:derivation` is refused — it is the mode
 Slice /1 grants wear and the mode a source-basis carrier wears.
@@ -230,15 +243,20 @@ effect-sensitive premise must still require a `(:source-basis …)` clause.
 The base Slice /1 schema must be registered under its own name and version, and
 must be the very object the contracts were attached to.
 
-Recognized `:supports` species — four, pairwise disjoint:
+Recognized `:supports` species — **five** as of Candidate /1, pairwise disjoint
+structure classes with no `:INCLUDE`, so the classification order is not a
+silent precedence rule. In classification order:
 
 ```
-a Slice /2 source basis · a Slice /0 witness · a Slice /1 refutation · a Slice /0 claim
+a Slice /2 source basis · a Slice /2 DERIVATION BASIS · a Slice /0 witness ·
+a Slice /1 refutation · a Slice /0 claim
 ```
 
 Anything else is inert residue recorded at the receipt with the **caller's**
-zero-based index. A source-basis-shaped value with no usable carrier is residue
-too, with reason `:source-basis-without-carrier`.
+zero-based index. Two shape-without-carrier cases are residue too, each with its
+own reason: `:source-basis-without-carrier`, and
+`:derivation-basis-without-carrier` for a basis whose claim slot holds no
+claim.
 
 On refusal it signals `slice2-derivation-refused` carrying the Slice /2
 receipt — the shape Slice /1's `derivation-refused` has, so a `consider`-style
@@ -342,8 +360,23 @@ slice2-condition                      base; -failed-invariant -offending-field
     premise-contract-unknown-premise
   source-basis-refused
     unissued-core0-account
+  derivation-basis-refused            Candidate /1 — DEFINED AND EXPORTED,
+                                      CURRENTLY NEVER SIGNALLED (see below)
   slice2-derivation-refused           carries the Slice /2 receipt
 ```
+
+**`derivation-basis-refused` is a false affordance today, and is documented as
+one rather than quietly listed.** It is exported and a caller can write a
+handler for it, but nothing in Candidate /1 signals it: every derivation-basis
+refusal is expressed as a *disposition* (`:not-admitted`, recorded in the
+receipt), never as a condition — which is the correct behaviour, because a
+support the contract does not accept is not an error. The condition was minted
+alongside the species and then never needed.
+
+By this lane's own rule — **a gate that has never fired is untested, not
+passing** — it should be either signalled somewhere real or removed. Both are
+executable changes and neither belongs in a documentation-truth commit.
+**Docketed**, and recorded here so nobody writes a handler that can never run.
 
 ---
 

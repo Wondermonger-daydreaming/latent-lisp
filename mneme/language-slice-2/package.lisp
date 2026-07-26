@@ -10,11 +10,20 @@
 ;;;; inspect it.  It adds no second consequential act: DERIVE/2 gains an
 ;;;; ADDITIVE third return value and its first two are unchanged.
 ;;;;
-;;;; The whole export list is small on purpose.  Slice /2 adds ONE new
-;;;; consequential act (DERIVE/2), ONE new support species (a source basis),
-;;;; TWO first-class values (a contract and a schema), and the readers needed to
-;;;; audit a decision without a resolver.  `derive` remains Slice /1's and is
-;;;; not re-exported, shadowed, or wrapped in a same-named symbol.
+;;;; The whole export list is small on purpose, and the two increments are
+;;;; scoped separately rather than summed into one sentence that is true of
+;;;; neither:
+;;;;
+;;;;   CANDIDATE /0 adds ONE new consequential act (DERIVE/2), ONE new support
+;;;;   species (a SOURCE BASIS), TWO first-class values (a contract and a
+;;;;   schema), and the readers needed to audit a decision without a resolver.
+;;;;
+;;;;   CANDIDATE /1 adds ONE further support species (a DERIVATION BASIS) with
+;;;;   its readers, one typed condition, an ADDITIVE third return value on
+;;;;   DERIVE/2, and contract version 1.  It adds NO consequential act.
+;;;;
+;;;; `derive` remains Slice /1's and is not re-exported, shadowed, or wrapped in
+;;;; a same-named symbol.
 
 (defpackage #:lisp-plus-slice2
   (:use #:cl)
