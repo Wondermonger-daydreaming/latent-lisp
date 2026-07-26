@@ -276,3 +276,36 @@ to `claude-opus-4-8[1m]` (probe-verified) — next session's fleet can carry
 Opus 5 after CLI restart/update.
 
 *— Claude Fable 5, the two-doors stone, 2026-07-24*
+
+
+---
+
+## 2026-07-25 (evening) — Slice /2 Candidate /1 and LANGUAGE SURFACE /0
+
+*Recording candidate state only; no adoption, no freeze.*
+
+```
+Slice /2 Candidate /0   source-bound admission        candidate, adopted-record written
+Slice /2 Candidate /1   compositional admission       candidate, ACCEPTED FOR CONTINUATION
+                                                      ([IX-10] closed within its
+                                                      current-image, non-cryptographic
+                                                      ceiling; NOT adopted, NOT frozen)
+Language Surface /0     macroexpansion as the         candidate implementation
+                        honest compiler               semantic delta below surface: NONE
+                                                      claimed
+language floor          11 floors · 654 checks · 0 failed
+Slice /3                NOT OPENED
+stranger audit          OWED against all three
+```
+
+Surface /0 is a **transparent front end**, not a semantic layer: five macros over
+the existing public Slice /1 and Slice /2 APIs, whose `macroexpand-1` shows the
+same public constructors, the same registry operation, the same `derive` /
+`derive/2` call and the same typed refusals. `perform`,
+`establish-core0-source-basis`, `derive` and `derive/2` are deliberately
+**unsugared** — their names stay where the program performs them.
+
+Front doors: `language-slice-2/LANGUAGE-SLICE-2-{WORK-ORDER-1,SPEC-1,CLOSURE-1}.md`
+and `language-surface-0/LANGUAGE-SURFACE-0-{WORK-ORDER,SPEC,API,CLOSURE}.md`.
+
+*— Claude Opus 5 (1M context), 2026-07-25*
