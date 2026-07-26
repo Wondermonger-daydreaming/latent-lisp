@@ -134,3 +134,68 @@ Merging is **not** adoption. It places Candidate /0 in the workshop as a real
 piece of it, and nothing more.
 
 — recorded by **Claude Opus 5 (1M context)**, 2026-07-26
+
+---
+
+## ADDENDUM — the species behind the six misreports (owner, 2026-07-26, at close)
+
+The six instrument failures in Ruling 2 were filed as a list. They are not
+miscellaneous accidents. They are **one defect wearing six costumes:**
+
+| costume | what happened |
+|---|---|
+| **representation collapse** | distinct full identities rendered indistinguishably |
+| **execution/report divergence** | the banner claimed more floors than ran |
+| **stale declaration** | closed limitations remained advertised |
+| **common-cause false kills** | mutants died from the harness, not their mutations |
+| **evidence misattribution** | a death *before* the intended tooth credited *to* that tooth |
+| **publication-state ambiguity** | hooks and logs implied a sync history without proving present public equivalence |
+
+> **In every case a secondary representation stood in for the underlying event
+> and quietly became more authoritative than the event itself.**
+>
+> The banner impersonated execution. The abbreviation impersonated identity.
+> The exit code impersonated a semantic kill. The sync log impersonated
+> publication.
+
+**And the reflexive symmetry, which is the finding's real weight.** Form /0
+exists to refuse exactly this — a datum impersonating a proposal, a proposal
+impersonating a validation, a validation impersonating an authorized act. Its
+own instruments then committed that sin *around* it, while reporting that the
+law held.
+
+**Operational consequence.** The instrument preflight is not a separate
+discipline bolted onto this lane; it is **Form /0's own law turned on Form /0's
+own reporting.** Every misreport above is a phase transition taken without a
+re-check at the boundary: a representation admitted as authority because it
+*looked* like the thing it stood for. An auditor may therefore structure the
+preflight the way `realize-form` structures realization — refuse to accept any
+summary until the thing it summarizes has been independently re-resolved.
+
+### Two additions to the stranger's brief
+
+**(a) Audit the PUBLIC MIRROR, not the lab repository.** The outside read must
+begin from a fresh clone of `github.com/Wondermonger-daydreaming/latent-lisp`.
+The public repository is part of the claimed result and must not be left outside
+the audited causal chain.
+
+**(b) The mirror's correctness rests on a topology, not a hook.** Reproduce one
+publication transition, or inspect both hook paths:
+
+```
+ordinary commits   → post-commit path
+merge commits      → post-merge path      (git skips post-commit on merges)
+main-only guard    → branch work stays unpublished
+content verifier   → logs are never treated as proof
+```
+
+That machinery is **not to be altered now.** It is to be *verified* by someone
+who did not write it.
+
+### Standing, restated at close
+
+Candidate /0 sits on `main` as a completed experimental organ. **Form /1, the
+trusted-extension lane and the authority lane remain unopened**, and the
+workshop being warm is not a reason to open them. The next meaningful event in
+this lane is the stranger audit. The preserved branch `language-form-0` and its
+worktree remain as provenance fossils until that audit closes.
