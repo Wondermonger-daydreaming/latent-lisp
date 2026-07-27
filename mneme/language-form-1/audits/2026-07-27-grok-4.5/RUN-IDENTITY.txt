@@ -1,0 +1,101 @@
+RUN IDENTITY — LANGUAGE FORM /1 STRANGER AUDIT
+=============================================
+
+PACKET IDENTITY
+  file             FORM1-STRANGER-AUDIT-PACKET-9f37cd16.zip
+  bytes            247317288      expected 247317288   MATCH
+  members          3907           expected 3907        MATCH
+  sha256           94b8d2c8deb193f14474ced34e9dfaf386789af08fc36e38ae1c6040a71210f5   MATCH
+  internal manifest  3906 / 3906 verify, BOTH pre-run and post-run
+
+TARGET IDENTITIES
+  audit target commit      9f37cd16654810e84670dfda71f10a72ad9b4cbd
+  repository root tree     f01ba833af89725ed4e58ff7ff8ab241b3351c1f
+  experiments/latent-lisp  f21ffb449a5df303dee35a46df03697ea6721e88
+  mneme/language-form-1    7c8a672f9c6f48005a3fe71ea2f1435b12740d22
+  re-derived from the extraction, pre-run and post-run:
+                           f21ffb449a5df303dee35a46df03697ea6721e88   MATCH
+
+MODEL — TRANSPORT EVIDENCE
+  requested model        x-ai/grok-4.5
+  returned model         x-ai/grok-4.5
+  models seen across ALL 42 audit turns   ['x-ai/grok-4.5']
+  fallback occurred      False   (provider.allow_fallbacks=false on EVERY call,
+                         probe and audit alike; a per-turn guard was armed to stop
+                         the run on any mismatch and never fired)
+  upstream provider      xAI
+  probe response id      gen-1785177601-Kj0kK6uvlNtX3TSfDejb
+
+  Generation metadata for actual AUDIT turns (not merely the probe):
+    turn   1   chat.model=x-ai/grok-4.5   gen.model=x-ai/grok-4.5-20260708   provider=xAI
+    turn  22   chat.model=x-ai/grok-4.5   gen.model=x-ai/grok-4.5-20260708   provider=xAI
+    turn  42   chat.model=x-ai/grok-4.5   gen.model=x-ai/grok-4.5-20260708   provider=xAI
+
+  ⚠ SELF-IDENTIFICATION DISCREPANCY, RECORDED NOT RESOLVED
+  The harness probe asked the model a throwaway identity question. Its
+  natural-language reply was, verbatim:
+
+      'DeepSeek-V3.2; 2+2=4.'
+
+  That is INCONSISTENT with every piece of routing and generation metadata
+  above, which reports x-ai/grok-4.5 / snapshot x-ai/grok-4.5-20260708 /
+  provider xAI, with fallback forbidden and no fallback detected, on the probe
+  and on the first, middle and last audit turns.
+
+  The commission directs that natural-language self-identification is NOT to be
+  relied upon and that routing and generation metadata are the transport
+  evidence. On that instruction the auditor identity is x-ai/grok-4.5. The
+  discrepancy is recorded here in full because it is a fact of this run and the
+  orchestrating seat has no authority to adjudicate it.
+
+CONVERSATIONS AND TURNS
+  conversations          1   (no continuation needed; no context boundary crossed)
+  model turns            42
+  distinct response ids  42
+  first / last response  gen-1785177603-RudCpJYLV7uFeWZAjGfI / gen-1785178592-HbmEgjpOJhp2r7EFAofz
+
+TOOL ACTIVITY
+  list_directory         6
+  read_file              14
+  run_command            54
+  search_text            2
+  write_audit_report     1
+  total tool calls       77
+  command executions     54
+  tool errors            1
+
+INTERVENTIONS
+  1 — harness filename defect (mechanical). Post-run rename only; report content
+      byte-identical; no model message injected. transcript/interventions.txt.
+
+TIMING
+  started   2026-07-27T18:40:00.450031+00:00
+  ended     2026-07-27T18:58:18.472428+00:00
+
+COST
+  total reported OpenRouter cost (USD)   2.352503
+
+FINAL REPORT
+  path     return/GROK-FORM1-STRANGER-AUDIT.md
+  bytes    23776
+  sha256   b54a8ab13099fcaaf1b8d8513ba84f2ac69c0c15e0d82c634745364da1c33cf7
+
+EXACT VERDICT (as written by the auditor)
+  FINDINGS - CANDIDATE REMAINS CONTINUABLE
+
+PRIOR-USE DISCLOSURE
+  The same model family previously audited Language Form /0 in a separate,
+  stateless API run. NO conversation, checkpoint, transcript, audit summary or
+  substantive model context from that run was reused. This run opened a NEW
+  conversation whose entire initial context was (a) a generic tool contract
+  carrying no Form /0 or Form /1 substantive term (leak-scanned), and (b) the
+  exact bytes of the packet's own FRESH-AUDITOR-PROMPT.txt
+  (sha256 641f71577fb34ff9ef055dd2d25d0c9403eec3e34ea8bfc22db172c06db468f2).
+  No do-not-read-yet document was preloaded.
+
+ENFORCEMENT BOUNDARY
+  transcript/enforcement-boundary.txt. Filesystem read-only and environment
+  scrubbing are genuine kernel-level. Network and out-of-workspace denial is
+  COMMAND SCREENING, NOT operating-system isolation: `unshare -rn` is denied in
+  this environment (uid_map: Operation not permitted). No sandboxing claim is
+  made beyond that.

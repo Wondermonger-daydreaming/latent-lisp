@@ -1,0 +1,380 @@
+============================================================================
+ VERDICT-LIVENESS-SWEEP  --  form1-selftest.lisp        (TITHE, 2026-07-27)
+============================================================================
+
+ WHAT THIS SWEEP ESTABLISHES, AND IT IS ONE SENTENCE:
+
+     every rendered verdict is connected to the suite's failure result.
+
+ WHAT IT DOES NOT ESTABLISH:
+
+     It does NOT establish that a check's predicate correctly measures its
+     label.  A check whose predicate is a tautology -- (check (or x t) "...")
+     -- is forced red by this instrument exactly as easily as a sound one, and
+     still tells you nothing whatever about the world.  BOTH HOLLOW CHECKS
+     THIS SUITE HAS ALREADY SHIPPED WOULD HAVE BEEN FORCED RED SUCCESSFULLY
+     BY THIS INSTRUMENT.  The sweep catches DISCONNECTED verdicts.  It does
+     not catch VACUOUS ones.  Semantic mutation evidence -- the five
+     claim-directed planted faults in the suite's Section M -- remains the
+     only thing that speaks to whether a tooth measures its label, and this
+     sweep does not replace it, does not reduce the need for it, and does not
+     stand in for it.  A reader who takes a clean sweep for a proof of
+     soundness has been misled.
+
+----------------------------------------------------------------------------
+ run started: 2026-07-27 17:10:01 UTC
+
+[0] SBCL operation-check, through the wrapper actually on PATH: 2.4.6
+    sbcl   : /home/gauss/.local/bin/sbcl
+    subject: /home/gauss/Desktop/wt-form1-candidate-0/experiments/latent-lisp/mneme/language-form-1/form1-selftest.lisp
+    sha256 : bd2be307078d23dfa6ed979f0a89a3cfec1894f4d928eba4c00538a70e484a39
+
+[1] PRISTINE BASELINE -- the unmodified suite, run as the chair runs it.
+    exit=0   == form1-selftest: 210 checks passed / 0 failed ==
+    verdict lines rendered: 210
+
+[2] INJECTED COPIES built: sweep-live.lisp, sweep-deaf.lisp, sweep-decoy.lisp.
+    The live instrument in FULL -- shown, not described:
+
+      --- /home/gauss/Desktop/wt-form1-candidate-0/experiments/latent-lisp/mneme/language-form-1/form1-selftest.lisp	2026-07-27 13:58:42.950817931 -0300
+      +++ /tmp/tithe-sweep-CGMXXs/rig/sweep-live.lisp	2026-07-27 14:10:03.387507202 -0300
+      @@ -75,8 +75,21 @@
+       (defparameter *failed* 0)
+       (defparameter *failed-labels* '())
+       
+      +;;; ---- TITHE LIVENESS-SWEEP INJECTION (generated; NOT part of the suite) ----
+      +;;; MODE: live
+      +;;; Reads TITHE_FORCE_INDEX from the environment.  When it is unset or empty
+      +;;; this file is behaviourally identical to form1-selftest.lisp -- an identity
+      +;;; the CONTROL run proves by byte-comparison before any sweep row is believed.
+      +(defparameter *tithe-force-index*
+      +  (let ((raw (sb-ext:posix-getenv "TITHE_FORCE_INDEX")))
+      +    (and raw (plusp (length raw)) (parse-integer raw))))
+      +
+       (defun check (condition label)
+         (incf *checks*)
+      +  ;; TITHE injection: flip the REPORTED VERDICT only.  CONDITION was already
+      +  ;; evaluated by the caller, so the fixture ran in full and unaltered.
+      +  (when (and *tithe-force-index* (= *checks* *tithe-force-index*))
+      +    (setf condition nil))
+         (if condition
+             (format t "  [~2,'0D] ok   ~A~%" *checks* label)
+             (progn (incf *failed*)
+
+    The two negative controls differ from it in ONE token each:
+      NC-A(deaf)  79c79
+      NC-A(deaf)  < ;;; MODE: live
+      NC-A(deaf)  ---
+      NC-A(deaf)  > ;;; MODE: deaf
+      NC-A(deaf)  91c91
+      NC-A(deaf)  <   (when (and *tithe-force-index* (= *checks* *tithe-force-index*))
+      NC-A(deaf)  ---
+      NC-A(deaf)  >   (when (and *tithe-force-index* (= *checks* -1))
+      NC-B(decoy) 79c79
+      NC-B(decoy) < ;;; MODE: live
+      NC-B(decoy) ---
+      NC-B(decoy) > ;;; MODE: decoy
+      NC-B(decoy) 91c91
+      NC-B(decoy) <   (when (and *tithe-force-index* (= *checks* *tithe-force-index*))
+      NC-B(decoy) ---
+      NC-B(decoy) >   (when (and *tithe-force-index* (= *checks* (if (= *tithe-force-index* 1) 2 1)))
+
+[3] CONTROL -- the live injected copy, with NO index forced.
+    If the harness changes the subject, every sweep row below would be
+    measuring the instrument instead of the suite.  So this is proved.
+    exit=0   == form1-selftest: 210 checks passed / 0 failed ==
+    verdict lines rendered: 210
+    BYTE-IDENTICAL to the pristine baseline (diff empty).
+      pristine sha256: 1210c499f3e8e7f167a3f2f31731accbb6c5639475f6a2b6e8117e4f1f9745f1
+      control  sha256: 1210c499f3e8e7f167a3f2f31731accbb6c5639475f6a2b6e8117e4f1f9745f1
+    CONTROL PASSED: exit 0, 210 checks, 0 failed, byte-identical
+    to the pristine suite.  The instrument is transparent to the subject.
+
+[3b] NEGATIVE CONTROLS -- planted faults the adjudicator MUST call SURVIVED.
+     A sweep reporting no survivors has never once rendered that verdict,
+     and an unfired gate is untested, not passing.  Sample indices: 1,105,210
+
+     NC-A (deaf)  -- injection blind; forced index stays green, exit 0
+      [001] SURVIVED  -- exit=0, index 1 reported ok
+      [105] SURVIVED  -- exit=0, index 105 reported ok
+      [210] SURVIVED  -- exit=0, index 210 reported ok
+     ==> CONTROL FIRED: 3/3 classified SURVIVED, as required.
+
+     NC-B (decoy) -- a DIFFERENT index forced red; exit nonzero while the
+                     requested index still prints ok.  This is the limb that
+                     stops a nonzero exit alone from reading as a bite.
+      [001] SURVIVED  -- exit=1, index 1 reported ok, run went red at 2 instead
+      [105] SURVIVED  -- exit=1, index 105 reported ok, run went red at 1 instead
+      [210] SURVIVED  -- exit=1, index 210 reported ok, run went red at 1 instead
+     ==> CONTROL FIRED: 3/3 classified SURVIVED, as required.
+
+     Both negative controls fired.  The SURVIVED verdict is REACHABLE, so a
+     sweep that reports zero survivors is reporting an observation, not a
+     gate that never ran.
+
+[4] SWEEP -- indices 1..210, one FRESH SBCL process each, 8 concurrent.
+    80s wall for 210 independent processes.
+
+[5] ADJUDICATION
+
+    verdict count                 210
+    verdicts successfully forced  210
+    exact expected tooth reached  210
+    died elsewhere                0
+    sweep harness failure         0
+    survived                      0
+
+    ------------------------------------------------------------------------
+    SURVIVED  (0)
+    A verdict that cannot be forced red is NOT CONNECTED to the suite's
+    failure result.  This is the finding this instrument exists to produce.
+
+      (none)
+
+    ------------------------------------------------------------------------
+    DIED ELSEWHERE  (0)
+    The run failed, but not cleanly at the forced index.  NOT folded into
+    success.
+
+      (none)
+
+    ------------------------------------------------------------------------
+    SWEEP HARNESS FAILURE  (0)
+    The instrument broke on these indices.  Reported, not hidden.
+
+      (none)
+
+    ------------------------------------------------------------------------
+    FULL TABLE -- every index, its outcome, its label
+
+      [001] EXACT             PROPOSE of a host integer → code is EXACTLY :NOT-A-DATUM
+      [002] EXACT             …and its phase reader returns :PROPOSE (SYMBOL-NAME compared, phase is a keyword)
+      [003] EXACT             PROPOSE of a string datum → code is EXACTLY :PETITION-NODE-NOT-A-SEQUENCE
+      [004] EXACT             PROPOSE of a 1-element sequence → code is EXACTLY :PETITION-NODE-ARITY
+      [005] EXACT             PROPOSE of [integer, integer] → code is EXACTLY :HEAD-NOT-IDENTIFIER
+      [006] EXACT             NC-1: an ordinary DERIVE/2-shaped head → code is EXACTLY :NOT-A-DERIVATION-PETITION
+      [007] EXACT             NC-3: an unsupported governed operation is an unsupported HEAD → EXACTLY :NOT-A-DERIVATION-PETITION
+      [008] EXACT             PROPOSE of [petition-head, string] → code is EXACTLY :PETITION-BODY-NOT-A-RECORD
+      [009] EXACT             ANTI-ROT: the four keys PETITION-DATUM writes EQUAL-DATUM the four this suite reconstructs
+      [010] EXACT             PROPOSE of a body missing `receiver' → code is EXACTLY :PETITION-FIELD-MISSING
+      [011] EXACT             NC-27: a petition carrying a `by' field → code is EXACTLY :PETITION-FIELD-UNKNOWN
+      [012] EXACT             PROPOSE with a string in `supports' → code is EXACTLY :SUPPORTS-NOT-A-SEQUENCE
+      [013] EXACT             PROPOSE with a string where the schema reference goes → code is EXACTLY :MALFORMED-REFERENCE
+      [014] EXACT             PROPOSE with a CONCLUSION reference in the schema slot → code is EXACTLY :REFERENCE-ROLE-MISMATCH
+      [015] EXACT             …and it names EXPECTED-ROLE :SCHEMA at path (1 :SCHEMA)
+      [016] EXACT             PROPOSE with 17 support references (ceiling 16) → code is EXACTLY :SUPPORT-COUNT-EXCEEDED
+      [017] EXACT             PROPOSE of a ~32KB petition (ceiling 16384 octets) → code is EXACTLY :PETITION-OCTETS-EXCEEDED
+      [018] EXACT             MATERIALIZE with an 80000-character occurrence tag → code is EXACTLY :IDENTITY-OCTETS-EXCEEDED
+      [019] EXACT             SUBMIT whose occurrence identity + reserved tail overflows the envelope → code is EXACTLY :SUBMISSION-ENV...
+      [020] EXACT             …and DERIVE/2 was invoked 0 times: the envelope gate is a BUILD gate, not a post-act refusal
+      [021] EXACT             VALIDATE of a keyword → code is EXACTLY :NOT-A-PROPOSED-PETITION-FORM
+      [022] EXACT             MATERIALIZE of a keyword → code is EXACTLY :NOT-A-VALIDATED-PETITION-FORM (THIRD value)
+      [023] EXACT             MATERIALIZE with a keyword occurrence tag → code is EXACTLY :OCCURRENCE-TAG-REQUIRED
+      [024] EXACT             SUBMIT of a keyword petition → code is EXACTLY :NOT-A-DERIVATION-PETITION (:SUBMIT/:SPECIES)
+      [025] EXACT             …and it is phase :SUBMIT category :SPECIES — one code, two phases, distinguished by the phase field
+      [026] EXACT             SUBMIT with a keyword context → code is EXACTLY :NOT-A-RESOLUTION-CONTEXT
+      [027] EXACT             SUBMIT with :BY NIL → code is EXACTLY :BY-REQUIRED (DERIVE/2's NIL->:DERIVER default is NOT inherited)
+      [028] EXACT             SUBMIT with a non-datum :BY-ID → code is EXACTLY :BY-ID-REQUIRED
+      [029] EXACT             SUBMIT with a non-datum :ACT-ID → code is EXACTLY :ACT-ID-REQUIRED
+      [030] EXACT             SUBMIT with an UNSEALED context → code is EXACTLY :CONTEXT-NOT-SEALED
+      [031] EXACT             BIND-SCHEMA-REFERENCE on a keyword → code is EXACTLY :NOT-A-RESOLUTION-CONTEXT
+      [032] EXACT             BIND-SCHEMA-REFERENCE with a string key → code is EXACTLY :MALFORMED-REFERENCE (:CONTEXT phase)
+      [033] EXACT             BIND-SCHEMA-REFERENCE with a SUPPORT-role reference → code is EXACTLY :BINDING-ROLE-MISMATCH
+      [034] EXACT             BIND-SCHEMA-REFERENCE twice on the same reference → code is EXACTLY :DUPLICATE-BINDING
+      [035] EXACT             NC-37: binding into a SEALED context → code is EXACTLY :BINDING-AFTER-SEAL
+      [036] EXACT             SEAL with a non-datum occurrence tag → code is EXACTLY :CONTEXT-OCCURRENCE-TAG-REQUIRED
+      [037] EXACT             BIND-SCHEMA-REFERENCE to a keyword → code is EXACTLY :WRONG-SCHEMA-SPECIES
+      [038] EXACT             BIND-RECEIVER-REFERENCE to a keyword → code is EXACTLY :WRONG-RECEIVER-SPECIES
+      [039] EXACT             CONTEXT-DECLARATIONS of a keyword → code is EXACTLY :NOT-A-RESOLUTION-CONTEXT
+      [040] EXACT             LIVE-ANCHOR of a keyword → code is EXACTLY :NOT-A-RESOLUTION-CONTEXT
+      [041] EXACT             NC-BIND-DECL-01: a binder called with a NON-DATUM denotation → code is EXACTLY :DENOTATION-DECLARATION-RE...
+      [042] EXACT             NC-BIND-DECL-02: NIL is not a declaration either — a value-UNTYPED binder still requires the datum
+      [043] EXACT             NC-BIND-DECL-03: a receiver bound to NIL described by an ARBITRARY identifier → code is EXACTLY :RECEIVER...
+      [044] EXACT             NC-BIND-DECL-04: the receiver-absence declaration supplied for a LIVE receiver → code is EXACTLY :RECEIVE...
+      [045] EXACT             …and NIL WITH the sanctioned declaration binds cleanly — explicit receiver absence remains a legal, decla...
+      [046] EXACT             NC-ANCHOR-01: LIVE-ANCHOR with a role that is none of the four → code is EXACTLY :UNKNOWN-BINDING-ROLE
+      [047] EXACT             NC-ANCHOR-02: LIVE-ANCHOR asking :SCHEMA with a SUPPORT-role reference → code is EXACTLY :BINDING-ROLE-MI...
+      [048] EXACT             NC-ANCHOR-03: LIVE-ANCHOR with a string key → code is EXACTLY :MALFORMED-REFERENCE
+      [049] EXACT             BIND-CONCLUSION-REFERENCE accepts an arbitrary host value (value-unchecked BY DESIGN — §6.2)
+      [050] EXACT             BIND-SUPPORT-REFERENCE accepts an arbitrary host value (DERIVE/2 owns support classification)
+      [051] EXACT             BIND-RECEIVER-REFERENCE accepts NIL — explicit receiver ABSENCE is a legal binding
+      [052] EXACT             VALIDATE when the proposed form stops recomputing → code is EXACTLY :PROPOSED-IDENTITY-DRIFT
+      [053] EXACT             MATERIALIZE when the validated form stops recomputing → code is EXACTLY :VALIDATED-IDENTITY-DRIFT
+      [054] EXACT             SUBMIT when the petition stops recomputing → code is EXACTLY :PETITION-IDENTITY-DRIFT
+      [055] EXACT             CEILING ON THE DRIFT GUARDS: filling BYTES-DATUM-VALUE's return leaves the STORE intact — no public calle...
+      [056] EXACT             NC-6: unresolved SCHEMA reference → code is EXACTLY :UNRESOLVED-SCHEMA-REFERENCE
+      [057] EXACT             NC-6: …and the DERIVE/2 invocation counter reads EXACTLY 0
+      [058] EXACT             unresolved CONCLUSION reference → code is EXACTLY :UNRESOLVED-CONCLUSION-REFERENCE
+      [059] EXACT             …and the DERIVE/2 invocation counter reads EXACTLY 0
+      [060] EXACT             NC-7: unresolved SUPPORT reference → code is EXACTLY :UNRESOLVED-SUPPORT-REFERENCE
+      [061] EXACT             NC-7: …and the DERIVE/2 invocation counter reads EXACTLY 0
+      [062] EXACT             NC-8: unresolved RECEIVER reference → code is EXACTLY :UNRESOLVED-RECEIVER-REFERENCE
+      [063] EXACT             NC-8: …and the DERIVE/2 invocation counter reads EXACTLY 0
+      [064] EXACT             NC-28 step 3: Door 1 (PROPOSE → VALIDATE → MATERIALIZE) leaves the DERIVE/2 counter at EXACTLY 0
+      [065] EXACT             NC-28 step 5 POSITIVE CONTROL: Door 2 on the SAME instrument drives the counter to EXACTLY 1
+      [066] EXACT             NC-28 hygiene: the real DERIVE/2 fdefinition is restored after every shimmed run
+      [067] EXACT             :GRANTED fixture: outcome kind is EXACTLY :GRANTED and no Form /1 refusal was returned
+      [068] EXACT             :GRANTED fixture: DERIVE/2 invoked EXACTLY once
+      [069] EXACT             :GRANTED fixture: the outcome carries the Slice /2 claim AND the Slice /2 receipt
+      [070] EXACT             :GRANTED fixture: DERIVE/2 received the resolved supports EQ-identical and in order (nothing filtered)
+      [071] EXACT             NC-10: wrong-subject support resolves, reaches DERIVE/2 exactly once UNFILTERED, and yields :GOVERNED-REF...
+      [072] EXACT             NC-19: before a grant, NO claim and NO derivation basis exist anywhere in the outcome
+      [073] EXACT             NC-9: a STALE Slice /2 schema wrapper → outcome kind is EXACTLY :DOOR-REFUSAL
+      [074] EXACT             NC-9: …DERIVE/2 was invoked EXACTLY once — the refusal is ITS door, not a Form /1 copy of its rule
+      [075] EXACT             NC-9: …and the receipt's Slice /2 identity datum is NIL — no Slice /2 receipt exists on this path
+      [076] EXACT             NC-36: a receiver bound to NIL is FOUND — DERIVE/2 IS invoked (count EXACTLY 1) and a classified outcome ...
+      [077] EXACT             NC-36: …and the outcome is whatever the CONTRACT makes it — here :GOVERNED-REFUSAL (accessibility :REQUIRED)
+      [078] EXACT             NC-35: a receiver object bound through the SUPPORT binder under key `r' does NOT satisfy (RECEIVER-REFERE...
+      [079] EXACT             NC-35 structural half: (SUPPORT-REFERENCE "r") and (RECEIVER-REFERENCE "r") are NOT EQUAL-DATUM — the rol...
+      [080] EXACT             REFERENCE-ROLE returns the exact role for each of the four constructors and NIL for a non-reference
+      [081] EXACT             GRAVESTONE PRECONDITION: at least 5 logged submissions actually reached DERIVE/2 (5 of 11 did) — an impli...
+      [082] EXACT             POLICY v2 GRAVESTONE: across ALL 11 logged submissions, invocations=1 ⇒ an OUTCOME and a RECEIPT both exi...
+      [083] EXACT             …stated the other way round: NO logged submission has invocations=1 AND a returned refusal
+      [084] EXACT             …and its mirror: every submission with invocations=0 produced NO outcome object at all
+      [085] EXACT             all 11 identities in reach (7 phase + predecessor + validation receipt + materialization receipt + refusa...
+      [086] EXACT             NO identity is a Common Lisp string — hex is produced only by RENDER-IDENTITY-HEX and never stored
+      [087] EXACT             the genealogy of one submitted petition has EXACTLY 7 identities: subject, proposed, validated, content, ...
+      [088] EXACT             …and those 7 are PAIRWISE DISTINCT under EQUAL-DATUM (21 comparisons)
+      [089] EXACT             RENDER-IDENTITY-HEX is DIAGNOSTIC: its length is EXACTLY 2 × (IDENTITY-OCTETS identity) for all 7
+      [090] EXACT             NC-22: the 7 hex renderings are pairwise distinct as whole strings (no abbreviation is compared)
+      [091] EXACT             the submission receipt's PETITION-OCCURRENCE-IDENTITY EQUAL-DATUMs the petition's own
+      [092] EXACT             §9.3: the SUBMISSION OCCURRENCE identity and the SUBMISSION RECEIPT identity are DIFFERENT — the act and ...
+      [093] EXACT             CONSEQUENTIAL ANCESTRY: one changed support key ("w1"→"w2") changes ALL FIVE descendant identities — subj...
+      [094] EXACT             …and the SUBMISSION OCCURRENCE identity moves with them, under an otherwise identical submission
+      [095] EXACT             NC-25: same content, DIFFERENT occurrence tag → DIFFERENT occurrence identities
+      [096] EXACT             NC-25: …while the CONTENT identity is unchanged — the tag enters at exactly one link
+      [097] EXACT             NC-26: same content, SAME occurrence tag → IDENTICAL identities. DOCUMENTED UNDETECTED HOST ERROR — Form ...
+      [098] EXACT             the max-policy petition's VALIDATED identity fits the envelope
+      [099] EXACT             ENVELOPE FIXTURE: all THREE classified outcome kinds reached on the 16-long-key petition
+      [100] EXACT             the measured outcome tail (receipt octets − submission-occurrence octets) is ≤ 4096 for ALL THREE classif...
+      [101] EXACT             the maximum terminal identity (46514 octets) fits (PETITION-POLICY-MAX-IDENTITY-OCTETS) = 65536
+      [102] EXACT             NC-20 (a): mutating the LIST returned by DERIVATION-PETITION-SUPPORT-REFERENCES leaves the stored refs, t...
+      [103] EXACT             NC-20 (b): mutating BOTH the outer list AND splicing a fabricated entry onto the tail of CONTEXT-DECLARAT...
+      [104] EXACT             LIVE-ANCHOR returns the EXACT image-local object (EQ), which is what an anchor is — and it is reachable O...
+      [105] EXACT             LIVE-ANCHOR of an unbound reference returns (values NIL NIL) — not-found is a value, not a refusal
+      [106] EXACT             LIVE-ANCHOR of a receiver BOUND TO NIL returns (values NIL T) — a bound NIL is FOUND, and is a different ...
+      [107] EXACT             PETITION-REFUSAL-PATH returns the exact path (1 :SCHEMA)
+      [108] EXACT             NC-20 (c): mutating the LIST returned by PETITION-REFUSAL-PATH leaves the stored path (1 :SCHEMA) unchanged
+      [109] EXACT             the :NOT-A-PROPOSED-PETITION-FORM refusal carries a non-empty DETAIL and HOST-TYPE
+      [110] EXACT             NC-20 (d): FILLing the STRING returned by PETITION-REFUSAL-DETAIL with #\Z leaves the stored detail uncha...
+      [111] EXACT             NC-20 (e): FILLing the STRING returned by PETITION-REFUSAL-HOST-TYPE with #\Z leaves the stored host type...
+      [112] EXACT             …and that host type is the BOUNDED descriptor "COMMON-LISP:KEYWORD", not PRIN1-TO-STRING output
+      [113] EXACT             the governed-refusal receipt's SLICE2-CONDITION-CLASS is EXACTLY "LISP-PLUS-SLICE2:SLICE2-DERIVATION-REFU...
+      [114] EXACT             NC-20 (f): FILLing the STRING returned by SLICE2-CONDITION-CLASS leaves the stored class unchanged
+      [115] EXACT             NC-20 (g): mutating the LIST returned by PETITION-PROTOCOL-REFUSAL-CODES (car AND a spliced tail) leaves ...
+      [116] EXACT             NC-20 (g2): the same for PETITION-INTEGRITY-ALARM-CODES
+      [117] EXACT             NC-20 (g3): mutating the catalogue list AND filling an entry's NOTE string leaves the catalogue intact — ...
+      [118] EXACT             both budget-id readers return EXACTLY "cd0-conformance-default"
+      [119] EXACT             NC-20 (h): FILLing the STRINGS returned by VALIDATED-PETITION-FORM-BUDGET-ID and PETITION-VALIDATION-RECE...
+      [120] EXACT             DOCUMENTED IMAGE-LOCAL ANCHORS: RECEIPT-BY and RECEIPT-CONTEXT return the EXACT objects (EQ) — a contract...
+      [121] EXACT             TRY-PROPOSE-PETITION success returns EXACTLY 2 values: (PROPOSED, NIL)
+      [122] EXACT             TRY-PROPOSE-PETITION refusal returns EXACTLY 2 values: (NIL, REFUSAL)
+      [123] EXACT             TRY-VALIDATE-PETITION success returns EXACTLY 2 values: (VALIDATED, NIL)
+      [124] EXACT             TRY-VALIDATE-PETITION refusal returns EXACTLY 2 values: (NIL, REFUSAL)
+      [125] EXACT             TRY-MATERIALIZE-PETITION success returns EXACTLY 3 values: (PETITION, MATERIALIZATION-RECEIPT, NIL)
+      [126] EXACT             TRY-MATERIALIZE-PETITION refusal returns EXACTLY 3 values: (NIL, NIL, REFUSAL)
+      [127] EXACT             TRY-MATERIALIZE-PETITION returns the EXACT (EQ) petition and receipt objects MATERIALIZE-PETITION produce...
+      [128] EXACT             …and across TWO SEPARATE calls the objects are NOT EQ (each call allocates) while their identities ARE EQ...
+      [129] EXACT             TRY-SUBMIT-PETITION success returns EXACTLY 2 values: (OUTCOME, NIL)
+      [130] EXACT             TRY-SUBMIT-PETITION refusal returns EXACTLY 2 values: (NIL, REFUSAL)
+      [131] EXACT             NC-16: substituting the CONTEXT (same petition, same act id) changes the SUBMISSION OCCURRENCE identity
+      [132] EXACT             NC-31A setup: the two contexts carry the IDENTICAL host-supplied occurrence TAG — the tag is held fixed o...
+      [133] EXACT             NC-31A (1): DIFFERENT context DECLARATION identities — the declaration identity commits to every binding'...
+      [134] EXACT             NC-31A (2): DIFFERENT context OCCURRENCE identities — despite the identical host tag, because the occurre...
+      [135] EXACT             NC-31A (3): DIFFERENT SUBMISSION OCCURRENCE identities — the v2 defect is gone: two governed acts declari...
+      [136] EXACT             NC-31A: …and the outcomes still differ (:GRANTED vs :GOVERNED-REFUSAL) — the same fixture that used to de...
+      [137] EXACT             NC-31A (4): the submission receipt binds the EXACT context occurrence identity and the EXACT declaration ...
+      [138] EXACT             NC-31B (1): declaration identities remain EQUAL — the two contexts declare the same thing, and the layer ...
+      [139] EXACT             NC-31B (2): context occurrence identities remain EQUAL
+      [140] EXACT             NC-31B (3): submission occurrence identities remain EQUAL — this is NOT the v2 defect, it is the DECLARED...
+      [141] EXACT             NC-31B (4): opposite governed outcomes remain possible under equal declared identities — a false host dec...
+      [142] EXACT             NC-31B (5): the exact CONTEXT ANCHORS reached through the two receipts are DIFFERENT objects — the in-ima...
+      [143] EXACT             NC-31B (6): the exact SLICE /2 RECEIPT identities differ — the governed layer minted two different receip...
+      [144] EXACT             NC-31C: the SAME declarations inserted in DIFFERENT orders (across roles and within the support role) yie...
+      [145] EXACT             NC-31C: …and therefore the identical context OCCURRENCE identity
+      [146] EXACT             NC-31C: …and the DECLARATIONS reader reports them in the same canonical order from both
+      [147] EXACT             NC-BY-A setup: the EXACT SAME live :BY object was submitted twice (EQ), so the live anchor cannot be what...
+      [148] EXACT             NC-BY-A setup: …under two DIFFERENT :BY-ID declarations
+      [149] EXACT             NC-BY-A: DIFFERENT :BY-ID under an identical live :BY yields DIFFERENT SUBMISSION OCCURRENCE IDENTITIES —...
+      [150] EXACT             NC-BY-B setup: TWO DIFFERENT live :BY values were submitted
+      [151] EXACT             NC-BY-B setup: …under the SAME :BY-ID declaration
+      [152] EXACT             NC-BY-B: an IDENTICAL DECLARED SUBMISSION IDENTITY results from two different live principals — recorded ...
+      [153] EXACT             NC-BY-B: …and the divergence IS in-image observable — the two granted claims are asserted by different pr...
+      [154] EXACT             NC-BY-C: the submission receipt exposes BOTH the EXACT live :BY anchor and the IMMUTABLE :BY-ID declarati...
+      [155] EXACT             NC-33: the SAME submission act id reused yields an IDENTICAL submission occurrence identity — the same do...
+      [156] EXACT             NC-17 setup: a submission against an empty sealed context refuses EXACTLY :UNRESOLVED-SCHEMA-REFERENCE wi...
+      [157] EXACT             NC-17: after a REFUSED submission the petition is BYTE-IDENTICAL (full canonical fingerprint over all nin...
+      [158] EXACT             NC-18: the petition submits again after a refused submission — the refusal left no residue
+      [159] EXACT             NC-18: re-submission under a fresh act id produces a SECOND DISTINCT submission occurrence
+      [160] EXACT             NC-18: …and the petition is STILL byte-identical after two successful submissions — no chaining, no accum...
+      [161] EXACT             NC-15: petition A's receipt does NOT match petition B — the occurrence identities differ
+      [162] EXACT             NC-21/NC-30: a malformed conclusion binding drives a SLICE1-CONDITION out through TRY-SUBMIT-PETITION — i...
+      [163] EXACT             NC-34: the escaping path returned NO VALUES AT ALL — control never reached a point where an outcome or a ...
+      [164] EXACT             NC-11/12: a DERIVATION-PETITION offered as a support is INERT RESIDUE — recorded as (:INDEX 1 :REASON :UN...
+      [165] EXACT             NC-13: a MATERIALIZATION RECEIPT offered as standing is INERT RESIDUE, recorded identically
+      [166] EXACT             NC-14: a VALIDATION RECEIPT offered as evidence is INERT RESIDUE, recorded identically
+      [167] EXACT             NC-14: a PROPOSED-PETITION-FORM offered as evidence is INERT RESIDUE, recorded identically
+      [168] EXACT             NC-14: a SUBMISSION RECEIPT offered as truth evidence is INERT RESIDUE, recorded identically
+      [169] EXACT             NC-4: a host FUNCTION is not a CD/0 datum and cannot enter — PROPOSE refuses it EXACTLY :NOT-A-DATUM; no ...
+      [170] EXACT             T-SCAN-01 planted fault: the scanner FINDS `eval' in live code
+      [171] EXACT             T-SCAN-02: the scanner IGNORES a banned name inside a ;-comment
+      [172] EXACT             T-SCAN-03: the scanner IGNORES a banned name inside a string literal
+      [173] EXACT             T-SCAN-04: the scanner does NOT read `load' out of `payload' — token matching, not substring
+      [174] EXACT             T-SCAN-05 planted fault: the scanner FINDS a blanket (ERROR () …) handler in live code
+      [175] EXACT             T-SCAN-06: the scanner does NOT flag (ERROR 'PETITION-REFUSED …) — signalling a typed condition is not a ...
+      [176] EXACT             T-NO-HOST-ESCAPE: the code below the marker contains NO `eval' token
+      [177] EXACT             T-NO-HOST-ESCAPE: the code below the marker contains NO `compile' token
+      [178] EXACT             T-NO-HOST-ESCAPE: the code below the marker contains NO `load' token
+      [179] EXACT             T-NO-HOST-ESCAPE: the code below the marker contains NO `intern' token
+      [180] EXACT             T-NO-HOST-ESCAPE: the code below the marker contains NO `find-symbol' token
+      [181] EXACT             T-NO-HOST-ESCAPE: the code below the marker contains NO `read-from-string' token
+      [182] EXACT             T-NO-HOST-ESCAPE: the code below the marker contains NO `perform' token
+      [183] EXACT             T-NO-BROAD-HANDLER: the code below the marker contains no `(ERROR () …)' clause
+      [184] EXACT             T-NO-BROAD-HANDLER (stronger): it contains no `(ERROR (…) …)' handler clause AT ALL, however the variable...
+      [185] EXACT             T-NO-FORM0: the code below the marker names LISP-PLUS-FORM0 not once, single- or double-colon
+      [186] EXACT             §12 forbidden snapshot / compile-time escape: no `prin1-to-string' token below the marker
+      [187] EXACT             §12 forbidden snapshot / compile-time escape: no `sxhash' token below the marker
+      [188] EXACT             §12 forbidden snapshot / compile-time escape: no `print-object' token below the marker
+      [189] EXACT             §12 forbidden snapshot / compile-time escape: no `eval-when' token below the marker
+      [190] EXACT             §12 forbidden snapshot / compile-time escape: no `compile-file' token below the marker
+      [191] EXACT             §12 forbidden snapshot / compile-time escape: no `load-time-value' token below the marker
+      [192] EXACT             §12 forbidden snapshot / compile-time escape: no `macroexpand' token below the marker
+      [193] EXACT             NC-2: PERFORM is unavailable — no Form /1 path below the marker reaches it
+      [194] EXACT             PF-1 (MATERIALIZE-PETITION can invoke DERIVE/2) DIES at NC-28 step 3: the Door 1 counter reads 1, not 0
+      [195] EXACT             PF-2 (Form /1 pre-filters resolved supports) DIES at NC-10: the captured DERIVE/2 :SUPPORTS argument no l...
+      [196] EXACT             PF-3 (the support table satisfies a receiver reference of the same host key) DIES at NC-35: the receiver ...
+      [197] EXACT             PF-4 (DERIVATION-PETITION-SUPPORT-REFERENCES aliases the stored list) DIES at NC-20 (a): the caller's mut...
+      [198] EXACT             PF-5 (the submission path wrapped in a blanket handler) DIES at NC-21: nothing escapes any more — the Sli...
+      [199] EXACT             POST-FAULT RESTORATION: all five teeth pass again with the honest fdefinitions restored
+      [200] EXACT             NC-32A (→): every one of the 37 DECLARED PROTOCOL codes was produced BY A PUBLIC-API FIXTURE in this run ...
+      [201] EXACT             NC-32A (←): every one of the 37 codes produced through the public API is DECLARED AS A PROTOCOL REFUSAL —...
+      [202] EXACT             NC-32B (→): every one of the 3 DECLARED INTEGRITY ALARMS was produced UNDER AN INTERNAL PLANTED FAULT — t...
+      [203] EXACT             NC-32B (←): everything produced under induction is declared as an integrity alarm — the shim provoked not...
+      [204] EXACT             NC-32C: the two DECLARED sets are DISJOINT — no code is published as both publicly reachable and internal...
+      [205] EXACT             NC-32C (produced): the two PRODUCED sets are DISJOINT — no code was reached both by a caller and only by ...
+      [206] EXACT             NC-32D: the UNION of the two published lists EQUALS the complete catalogue (40 = 37 + 3), set-difference ...
+      [207] EXACT             NC-32E: EVERY catalogue entry states a class, a REACHABILITY and a non-empty note — a host author can tel...
+      [208] EXACT             NC-32E: …and class and reachability agree entry by entry — the two columns are not independently maintain...
+      [209] EXACT             NC-32 hygiene: no set contains a duplicate, so every set-difference above is over true sets
+      [210] EXACT             NC-32F: there is NO PETITION-REFUSAL-CODES symbol in the package at all — the flat list whose count could...
+
+    ------------------------------------------------------------------------
+    SWEEP RESULT: each of the 210 rendered verdicts was forced red at its
+    own index, with nonzero process exit, with no collateral red, and with
+    every other verdict still printed under contiguous numbering.
+
+    THIS LICENSES EXACTLY ONE SENTENCE: every rendered verdict is connected
+    to the suite's failure result.
+
+    IT LICENSES NOTHING ABOUT WHETHER ANY PREDICATE MEASURES ITS LABEL.  A
+    tautological check -- (check (or x t) "...") -- is forced red by this
+    instrument exactly as easily as a sound one.  Both hollow checks this
+    suite already shipped would have been forced red successfully here.  The
+    sweep catches DISCONNECTED verdicts; it does not catch VACUOUS ones.
+    Semantic mutation evidence -- the five claim-directed planted faults in
+    Section M -- remains the only thing that speaks to whether a tooth
+    measures its label, and this sweep does not replace it.
+
+============================================================================
+ END VERDICT-LIVENESS-SWEEP   (adjudication exit 0: 0 = clean sweep)
+============================================================================

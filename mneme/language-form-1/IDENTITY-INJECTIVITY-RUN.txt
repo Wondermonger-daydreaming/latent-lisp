@@ -1,0 +1,653 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+██████████████████████████████████████████████████████████████████████████████
+FORM /1 IDENTITY INJECTIVITY — the census the sensitivity suite never ran
+██████████████████████████████████████████████████████████████████████████████
+
+THE CLAIM
+  Form /1 identity values are injective over their declared CD/0 phase
+  payloads, assuming Canonical Datum /0 exact encoding.
+
+WHAT IS NOT CLAIMED
+  Injectivity over unrecorded live host facts.  Two contexts with identical
+  declarations and different live anchors produce the SAME identity by
+  design; that is the declared residual (NC-31B), not a collision.  This
+  census generates such pairs on purpose and counts them separately.
+
+NO HASH IS ADDED.  CD/0 supplies no digest.  An identity here is a LOSSLESS
+  CANONICAL ENCODING that contains its payload, which is why the round trip
+  in PART A is a proof of injectivity over the population it covers, and
+  why PART B searches the one thing the round trip cannot settle: whether
+  two DIFFERENT declared configurations can reach the SAME payload.
+
+══════════════════════════════════════════════════════════════════════════════
+PART A — STRUCTURAL ROUND TRIP (12 identity species)
+══════════════════════════════════════════════════════════════════════════════
+
+For each species: extract the identity's byte-string value, DECODE-EXACT it,
+compare the result against a payload built INDEPENDENTLY in this file from
+public readers and public CD/0 constructors, then WALK the decoded sequence
+asserting every phase tag and declared field is present at its position.
+
+A.1  subject identity
+──────────────────────────────────────────────────────────────────────────────
+  The SUBJECT payload is the canonical petition datum ITSELF — it carries no
+  phase tag, by design, because it is the thing the phases are about.  The
+  walk therefore checks the production head and the four declared fields.
+
+     identity value: 337 octets
+  [PASS] subject: decoded payload EQUAL-DATUM the petition datum built independently
+  [PASS] subject: decoded payload is a 2-element sequence [head, body]
+  [PASS] subject: element 0 is THE production head id(ns=["lisp-plus-form1"],path=["petition","derive","2"])
+  [PASS] subject: element 1 is a record datum
+  [PASS] subject: body holds exactly 4 fields (found 4)
+  [PASS] subject: field schema present at canonical position 0 and exact
+  [PASS] subject: field conclusion present at canonical position 3 and exact
+  [PASS] subject: field supports present at canonical position 2 and exact
+  [PASS] subject: field receiver present at canonical position 1 and exact
+
+A.2  proposed-petition-form identity
+──────────────────────────────────────────────────────────────────────────────
+
+  ── proposed
+     identity value: 421 octets
+  [PASS] proposed: decoded payload is a SEQUENCE datum
+  [PASS] proposed: decoded arity 4 = expected arity 4
+  [PASS] proposed: decoded payload EQUAL-DATUM the independently built payload
+  [PASS] proposed: element 0 (phase tag) present and exact
+  [PASS] proposed: element 1 (grammar identity) present and exact
+  [PASS] proposed: element 2 (grammar version) present and exact
+  [PASS] proposed: element 3 (subject identity) present and exact
+
+A.3  validated-petition-form identity
+──────────────────────────────────────────────────────────────────────────────
+
+  ── validated
+     identity value: 531 octets
+  [PASS] validated: decoded payload is a SEQUENCE datum
+  [PASS] validated: decoded arity 5 = expected arity 5
+  [PASS] validated: decoded payload EQUAL-DATUM the independently built payload
+  [PASS] validated: element 0 (phase tag) present and exact
+  [PASS] validated: element 1 (proposed identity) present and exact
+  [PASS] validated: element 2 (policy identity) present and exact
+  [PASS] validated: element 3 (policy version) present and exact
+  [PASS] validated: element 4 (budget id) present and exact
+
+A.4  petition-validation-receipt identity
+──────────────────────────────────────────────────────────────────────────────
+
+  ── validation-receipt
+     identity value: 585 octets
+  [PASS] validation-receipt: decoded payload is a SEQUENCE datum
+  [PASS] validation-receipt: decoded arity 2 = expected arity 2
+  [PASS] validation-receipt: decoded payload EQUAL-DATUM the independently built payload
+  [PASS] validation-receipt: element 0 (phase tag) present and exact
+  [PASS] validation-receipt: element 1 (validated identity) present and exact
+
+A.5  derivation-petition CONTENT identity
+──────────────────────────────────────────────────────────────────────────────
+
+  ── petition-content
+     identity value: 583 octets
+  [PASS] petition-content: decoded payload is a SEQUENCE datum
+  [PASS] petition-content: decoded arity 2 = expected arity 2
+  [PASS] petition-content: decoded payload EQUAL-DATUM the independently built payload
+  [PASS] petition-content: element 0 (phase tag) present and exact
+  [PASS] petition-content: element 1 (validated identity) present and exact
+
+     NOTE — the validation-receipt payload and the petition-content payload
+     have the SAME predecessor and differ ONLY in the phase tag.  The tag is
+     therefore load-bearing, not decorative: strip it and A.4 and A.5 collide.
+  [PASS] phase tag separates two identities over one identical predecessor
+
+A.6  derivation-petition OCCURRENCE identity
+──────────────────────────────────────────────────────────────────────────────
+
+  ── petition-occurrence
+     identity value: 670 octets
+  [PASS] petition-occurrence: decoded payload is a SEQUENCE datum
+  [PASS] petition-occurrence: decoded arity 3 = expected arity 3
+  [PASS] petition-occurrence: decoded payload EQUAL-DATUM the independently built payload
+  [PASS] petition-occurrence: element 0 (phase tag) present and exact
+  [PASS] petition-occurrence: element 1 (content identity) present and exact
+  [PASS] petition-occurrence: element 2 (occurrence tag) present and exact
+
+A.7  petition-materialization-receipt identity
+──────────────────────────────────────────────────────────────────────────────
+
+  ── materialization-receipt
+     identity value: 729 octets
+  [PASS] materialization-receipt: decoded payload is a SEQUENCE datum
+  [PASS] materialization-receipt: decoded arity 2 = expected arity 2
+  [PASS] materialization-receipt: decoded payload EQUAL-DATUM the independently built payload
+  [PASS] materialization-receipt: element 0 (phase tag) present and exact
+  [PASS] materialization-receipt: element 1 (petition occurrence identity) present and exact
+
+A.8  context DECLARATION identity  (NEW in policy v3)
+──────────────────────────────────────────────────────────────────────────────
+
+  ── context-declaration
+     identity value: 379 octets
+  [PASS] context-declaration: decoded payload is a SEQUENCE datum
+  [PASS] context-declaration: decoded arity 2 = expected arity 2
+  [PASS] context-declaration: decoded payload EQUAL-DATUM the independently built payload
+  [PASS] context-declaration: element 0 (phase tag) present and exact
+  [PASS] context-declaration: element 1 (canonical role/reference/denotation mapping) present and exact
+  [PASS] context-declaration: mapping holds 4 triples, one per public declaration
+  [PASS] context-declaration: triple 0 = (SCHEMA, id(ns=["lisp-plus-form1"],path=["ref","schema","sch"]), id(ns=["census"],path=["denotes","schema","sch"])) exact
+  [PASS] context-declaration: triple 1 = (CONCLUSION, id(ns=["lisp-plus-form1"],path=["ref","conclusion","con"]), id(ns=["census"],path=["denotes","conclusion","con"])) exact
+  [PASS] context-declaration: triple 2 = (SUPPORT, id(ns=["lisp-plus-form1"],path=["ref","support","sup-1"]), id(ns=["census"],path=["denotes","support","sup-1"])) exact
+  [PASS] context-declaration: triple 3 = (RECEIVER, id(ns=["lisp-plus-form1"],path=["ref","receiver","rcv"]), id(ns=["census"],path=["denotes","receiver","rcv"])) exact
+
+A.9  context OCCURRENCE identity  (NEW in policy v3)
+──────────────────────────────────────────────────────────────────────────────
+
+  ── context-occurrence
+     identity value: 504 octets
+  [PASS] context-occurrence: decoded payload is a SEQUENCE datum
+  [PASS] context-occurrence: decoded arity 5 = expected arity 5
+  [PASS] context-occurrence: decoded payload EQUAL-DATUM the independently built payload
+  [PASS] context-occurrence: element 0 (phase tag) present and exact
+  [PASS] context-occurrence: element 1 (context occurrence tag) present and exact
+  [PASS] context-occurrence: element 2 (context declaration identity) present and exact
+  [PASS] context-occurrence: element 3 (policy identity) present and exact
+  [PASS] context-occurrence: element 4 (policy version) present and exact
+
+A.10  submission OCCURRENCE identity
+──────────────────────────────────────────────────────────────────────────────
+
+  ── submission-occurrence
+     identity value: 1308 octets
+  [PASS] submission-occurrence: decoded payload is a SEQUENCE datum
+  [PASS] submission-occurrence: decoded arity 7 = expected arity 7
+  [PASS] submission-occurrence: decoded payload EQUAL-DATUM the independently built payload
+  [PASS] submission-occurrence: element 0 (phase tag) present and exact
+  [PASS] submission-occurrence: element 1 (petition occurrence identity) present and exact
+  [PASS] submission-occurrence: element 2 (context occurrence identity) present and exact
+  [PASS] submission-occurrence: element 3 (act id) present and exact
+  [PASS] submission-occurrence: element 4 (by id) present and exact
+  [PASS] submission-occurrence: element 5 (procedure identity) present and exact
+  [PASS] submission-occurrence: element 6 (procedure version) present and exact
+
+A.11  submission RECEIPT identity  (both branches)
+──────────────────────────────────────────────────────────────────────────────
+
+  ── submission-receipt (slice2 receipt PRESENT)
+     identity value: 1452 octets
+  [PASS] submission-receipt (slice2 receipt PRESENT): decoded payload is a SEQUENCE datum
+  [PASS] submission-receipt (slice2 receipt PRESENT): decoded arity 5 = expected arity 5
+  [PASS] submission-receipt (slice2 receipt PRESENT): decoded payload EQUAL-DATUM the independently built payload
+  [PASS] submission-receipt (slice2 receipt PRESENT): element 0 (phase tag) present and exact
+  [PASS] submission-receipt (slice2 receipt PRESENT): element 1 (submission occurrence identity) present and exact
+  [PASS] submission-receipt (slice2 receipt PRESENT): element 2 (outcome kind) present and exact
+  [PASS] submission-receipt (slice2 receipt PRESENT): element 3 (slice2 receipt identity datum) present and exact
+  [PASS] submission-receipt (slice2 receipt PRESENT): element 4 (slice2 condition class) present and exact
+  [PASS] submission-receipt: the PRESENT branch really carried a Slice /2 receipt datum
+
+  ── submission-receipt (slice2 receipt ABSENT — door refusal)
+     identity value: 1450 octets
+  [PASS] submission-receipt (slice2 receipt ABSENT — door refusal): decoded payload is a SEQUENCE datum
+  [PASS] submission-receipt (slice2 receipt ABSENT — door refusal): decoded arity 5 = expected arity 5
+  [PASS] submission-receipt (slice2 receipt ABSENT — door refusal): decoded payload EQUAL-DATUM the independently built payload
+  [PASS] submission-receipt (slice2 receipt ABSENT — door refusal): element 0 (phase tag) present and exact
+  [PASS] submission-receipt (slice2 receipt ABSENT — door refusal): element 1 (submission occurrence identity) present and exact
+  [PASS] submission-receipt (slice2 receipt ABSENT — door refusal): element 2 (outcome kind) present and exact
+  [PASS] submission-receipt (slice2 receipt ABSENT — door refusal): element 3 (slice2 receipt identity datum (ABSENT marker)) present and exact
+  [PASS] submission-receipt (slice2 receipt ABSENT — door refusal): element 4 (slice2 condition class) present and exact
+  [PASS] submission-receipt: the ABSENT branch really had no Slice /2 receipt (:DOOR-REFUSAL)
+
+A.12  petition-refusal identity  (both shapes)
+──────────────────────────────────────────────────────────────────────────────
+
+  ── refusal (with path + reference)
+     identity value: 227 octets
+  [PASS] refusal (with path + reference): decoded payload is a SEQUENCE datum
+  [PASS] refusal (with path + reference): decoded arity 9 = expected arity 9
+  [PASS] refusal (with path + reference): decoded payload EQUAL-DATUM the independently built payload
+  [PASS] refusal (with path + reference): element 0 (phase tag) present and exact
+  [PASS] refusal (with path + reference): element 1 (phase) present and exact
+  [PASS] refusal (with path + reference): element 2 (category) present and exact
+  [PASS] refusal (with path + reference): element 3 (code) present and exact
+  [PASS] refusal (with path + reference): element 4 (path) present and exact
+  [PASS] refusal (with path + reference): element 5 (offending) present and exact
+  [PASS] refusal (with path + reference): element 6 (reference) present and exact
+  [PASS] refusal (with path + reference): element 7 (expected role) present and exact
+  [PASS] refusal (with path + reference): element 8 (host type) present and exact
+     code=:REFERENCE-ROLE-MISMATCH path=(1 :SCHEMA) expected-role=:SCHEMA
+
+  ── refusal (with host-type, no path)
+     identity value: 180 octets
+  [PASS] refusal (with host-type, no path): decoded payload is a SEQUENCE datum
+  [PASS] refusal (with host-type, no path): decoded arity 9 = expected arity 9
+  [PASS] refusal (with host-type, no path): decoded payload EQUAL-DATUM the independently built payload
+  [PASS] refusal (with host-type, no path): element 0 (phase tag) present and exact
+  [PASS] refusal (with host-type, no path): element 1 (phase) present and exact
+  [PASS] refusal (with host-type, no path): element 2 (category) present and exact
+  [PASS] refusal (with host-type, no path): element 3 (code) present and exact
+  [PASS] refusal (with host-type, no path): element 4 (path) present and exact
+  [PASS] refusal (with host-type, no path): element 5 (offending) present and exact
+  [PASS] refusal (with host-type, no path): element 6 (reference) present and exact
+  [PASS] refusal (with host-type, no path): element 7 (expected role) present and exact
+  [PASS] refusal (with host-type, no path): element 8 (host type) present and exact
+     code=:NOT-A-DATUM host-type="COMPOUND-HOST-TYPE"
+
+  SPECIES COVERAGE — 12 of 12 phase identity species round-tripped:
+    · subject
+    · proposed
+    · validated
+    · validation receipt
+    · petition content
+    · petition occurrence
+    · materialization receipt
+    · context declaration (v3)
+    · context occurrence (v3)
+    · submission occurrence
+    · submission receipt
+    · refusal
+
+══════════════════════════════════════════════════════════════════════════════
+PART B — FINITE COLLISION CENSUS
+══════════════════════════════════════════════════════════════════════════════
+
+A finite cross-product over the declared axes, submitted end to end through
+the public surface.  For every pair of DISTINCT declared payloads the
+identity values MUST differ.
+
+B.0  AXIS PROVENANCE — how each axis was varied, and how strong that is
+──────────────────────────────────────────────────────────────────────────────
+  Axis                          varied by             strength
+──────────────────────────────────────────────────────────────────────────────
+  petition subject (ref keys)   PUBLIC CALL           caller-varied
+  petition subject (supports)   PUBLIC CALL           caller-varied
+  petition occurrence tag       PUBLIC CALL           caller-varied
+  context DECLARATION           PUBLIC CALL           caller-varied
+  context occurrence tag        PUBLIC CALL           caller-varied
+  submission act id             PUBLIC CALL           caller-varied
+  by-id                         PUBLIC CALL           caller-varied
+  outcome kind                  PUBLIC CALL (anchors) caller-varied
+  Slice /2 receipt presence     PUBLIC CALL (anchors) caller-varied
+  PROCEDURE VERSION             INTERNAL SHIM         *** WEAKER ***
+──────────────────────────────────────────────────────────────────────────────
+  *** PROCEDURE VERSION HAS NO PUBLIC SETTER.  It is a constant function.
+      It is varied here by rebinding (FDEFINITION
+      'LISP-PLUS-FORM1::PETITION-SUBMISSION-PROCEDURE-VERSION), which is a
+      legitimate way to reach the axis and a WEAKER form of evidence than a
+      caller-varied axis: it demonstrates the identity composition responds
+      to the field, not that any caller can move it.  The shim is installed
+      for one arm and restored immediately after, and the restoration is
+      asserted.
+
+  Every other axis above was moved by an ordinary public call with no shim,
+  no internal symbol and no rebinding of any kind.
+
+B.1  the cross-product, procedure version 1 (no shim anywhere)
+──────────────────────────────────────────────────────────────────────────────
+  axes: subject(4) x petition-tag(3) x declaration(4) x context-tag(3)
+        x act-id(3) x by-id(3) x live-anchor-family(3)
+  submissions executed: 3888
+  outcome kinds observed:  :GRANTED=1296  :GOVERNED-REFUSAL=1296  :DOOR-REFUSAL=1296
+  [PASS] all three outcome kinds are present in the population
+
+B.2  the shim arm — procedure version 2 (INTERNAL SHIM, labelled)
+──────────────────────────────────────────────────────────────────────────────
+  [PASS] SHIM INSTALLED: procedure version now reads 2 (varied by internal shim, NOT by a public call)
+  [PASS] SHIM REMOVED: procedure version reads 1 again
+  submissions executed under shim: 3888
+
+B.3  SUBMISSION OCCURRENCE IDENTITY — the load-bearing arm
+──────────────────────────────────────────────────────────────────────────────
+  The submission occurrence identity is fixed BEFORE DERIVE/2 is invoked and
+  contains NO image-local ordinal.  It is therefore the arm where a collision
+  would be a real defect rather than an artefact of Slice /2's counter.
+  It commits to: petition occurrence identity, context OCCURRENCE identity,
+  act id, by id, procedure identity and procedure version.  It does NOT
+  commit to the outcome, and MUST NOT: the act and its later account are
+  different facts.
+
+  submission occurrence identity — full census
+    population size .................. 7776
+    distinct declared payloads ....... 2592
+    distinct identity values ......... 2592
+    COLLISIONS ....................... 0
+    declared-residual groups        2592  (7776 pair(s))
+      each group is one declared configuration submitted against 3 DIFFERENT
+      LIVE-ANCHOR families.  Same declaration, different anchor, same identity —
+      NOT a collision.  This is Form /1's own declared residual (NC-31B), and it
+      is exhibited here rather than hidden.
+  [PASS] submission occurrence identity — full census: zero collisions
+  [PASS] submission occurrence identity — full census: no declared payload produced two different identities
+  [PASS] declared configuration count matches the cross-product arithmetic (2592)
+  [PASS] distinct submission occurrence identities equals distinct declared configurations (2592)
+
+B.4  the DECLARED RESIDUAL, stated as a positive finding
+──────────────────────────────────────────────────────────────────────────────
+  2592 group(s) of points share ONE declared configuration and produce ONE
+  submission occurrence identity while producing DIFFERENT governed outcomes.
+
+  EXHIBIT — one declared configuration, 3 live-anchor variants:
+    S0/one-support|P0|D0/baseline|X0|A0|B0|GRANT|pv1 outcome=:GRANTED           occurrence-identity=4c5043440021900a4c504344...
+    S0/one-support|P0|D0/baseline|X0|A0|B0|REFUSE|pv1 outcome=:GOVERNED-REFUSAL  occurrence-identity=4c5043440021900a4c504344...
+    S0/one-support|P0|D0/baseline|X0|A0|B0|DOOR|pv1  outcome=:DOOR-REFUSAL      occurrence-identity=4c5043440021900a4c504344...
+
+    All 3 share ONE submission occurrence identity.  THIS IS NOT A
+    COLLISION.  Their DECLARATIONS are identical — only the live anchors
+    differ, and no live anchor enters any identity, by design and by the
+    layer's own statement.  A census that counted this as a collision
+    would be reporting the design as a defect.
+
+    Note what DOES separate them: their submission RECEIPT identities,
+    which commit to the outcome kind.  The act and its later account are
+    different facts, and only the second one knows what happened:
+      :GRANTED           receipt-identity=4c5043440021a00b4c504344...
+      :GOVERNED-REFUSAL  receipt-identity=4c5043440021bb0b4c504344...
+      :DOOR-REFUSAL      receipt-identity=4c5043440021940b4c504344...
+  [PASS] the census DID generate declared-residual pairs (they are reported, not hidden)
+
+B.5  SUBMISSION RECEIPT IDENTITY — full census
+──────────────────────────────────────────────────────────────────────────────
+  CAVEAT, stated before the numbers: on the granted and governed-refusal
+  paths the receipt payload embeds the Slice /2 receipt identity, which is
+  an IMAGE-LOCAL ORDINAL and is therefore fresh at every act.  Distinctness
+  on those paths is partly carried by that counter and is WEAK evidence.
+  The door-refusal sub-census below has NO ordinal and is the honest arm.
+
+  submission receipt identity — full census
+    population size .................. 7776
+    distinct declared payloads ....... 7776
+    distinct identity values ......... 7776
+    COLLISIONS ....................... 0
+  [PASS] submission receipt identity — full census: zero collisions
+  [PASS] submission receipt identity — full census: no declared payload produced two different identities
+
+B.6  SUBMISSION RECEIPT IDENTITY — door-refusal only (ORDINAL-FREE)
+──────────────────────────────────────────────────────────────────────────────
+  Every point here carries NO Slice /2 receipt: the payload's receipt slot
+  holds the sanctioned ABSENCE marker.  Any distinctness in this arm comes
+  from the declared configuration alone.
+  [PASS] door-refusal sub-census is non-empty (2592 points)
+
+  submission receipt identity — door-refusal only
+    population size .................. 2592
+    distinct declared payloads ....... 2592
+    distinct identity values ......... 2592
+    COLLISIONS ....................... 0
+  [PASS] submission receipt identity — door-refusal only: zero collisions
+  [PASS] submission receipt identity — door-refusal only: no declared payload produced two different identities
+
+B.7  INTERMEDIATE IDENTITIES, each keyed on ITS OWN declared scope
+──────────────────────────────────────────────────────────────────────────────
+  METHOD NOTE, and it is load-bearing: an intermediate identity must be
+  keyed on the scope it DECLARES it commits to, never on the whole
+  configuration.  Key too WIDE and correct scoping reads as a collision — a
+  context identity is not supposed to move when the act-id moves, and a
+  census that demanded it would be reporting the design as a defect.  Key
+  too NARROW and a genuinely dropped axis hides inside a residual group.
+  Each arm below therefore carries its own key.
+
+  B.7a  petition occurrence identity — declared scope: (subject datum,
+        petition occurrence tag).  Not the context, not the act.
+
+  petition occurrence identity
+    population size .................. 7776
+    distinct declared payloads ....... 12
+    distinct identity values ......... 12
+    COLLISIONS ....................... 0
+    out-of-scope grouping           12  (2515536 pair(s))
+      groups are configurations sharing one petition and differing only in
+      context, act or principal — the petition identity correctly does not move.
+  [PASS] petition occurrence identity: zero collisions
+  [PASS] petition occurrence identity: no declared payload produced two different identities
+
+  B.7b  context DECLARATION identity — declared scope: the role /
+        reference / denotation mapping alone.  Not the context tag.
+        This is the v3 repair's own question: can two DIFFERENT declared
+        mappings reach ONE declaration identity?
+
+  context declaration identity
+    population size .................. 7776
+    distinct declared payloads ....... 16
+    distinct identity values ......... 16
+    COLLISIONS ....................... 0
+    out-of-scope grouping           16  (1885680 pair(s))
+      groups are configurations sharing one declared mapping and differing
+      elsewhere — including under a DIFFERENT context occurrence tag, which the
+      declaration identity correctly ignores.
+  [PASS] context declaration identity: zero collisions
+  [PASS] context declaration identity: no declared payload produced two different identities
+
+  B.7c  context OCCURRENCE identity — declared scope: (mapping, context
+        occurrence tag).  Under policy v2 this position held the bare tag
+        alone, and NC-31 exhibited two submissions with identical
+        submission occurrence identities and OPPOSITE governed outcomes.
+
+  context occurrence identity
+    population size .................. 7776
+    distinct declared payloads ....... 48
+    distinct identity values ......... 48
+    COLLISIONS ....................... 0
+    out-of-scope grouping           48  (625968 pair(s))
+      groups are configurations sharing one declared context and differing in
+      petition, act or principal — the context identity correctly does not move.
+  [PASS] context occurrence identity: zero collisions
+  [PASS] context occurrence identity: no declared payload produced two different identities
+
+  B.7d  the v2 defect, checked directly: does a shared context TAG still
+        collapse two different declared mappings?
+  [PASS] B.7d both contexts carry the IDENTICAL host-supplied occurrence tag
+  [PASS] B.7d their DECLARATION identities differ (the mappings differ)
+  [PASS] B.7d their OCCURRENCE identities differ despite the shared tag — the v2 collapse is gone
+
+B.8  ADVERSARIAL ARM — designed near-collisions
+──────────────────────────────────────────────────────────────────────────────
+  A cross-product varies axes independently and can miss the one failure mode
+  that actually threatens a concatenation-built identity: a BOUNDARY MOVED
+  BETWEEN TWO ADJACENT FIELDS, leaving the composition unchanged.  These
+  pairs are built by hand to collide IF such an ambiguity exists.  Each pair
+  is two DISTINCT declared configurations that a naive delimiter-free
+  encoding would run together.
+
+  ADV-1 petition tag segment boundary
+    path ("occ" "a" "b") vs ("occ" "ab") — one path segment split in two
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-1 petition tag segment boundary
+
+  ADV-2 tag namespace/path boundary
+    ns ("adv" "x") path ("occ") vs ns ("adv") path ("x" "occ")
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-2 tag namespace/path boundary
+
+  ADV-3 context tag segment boundary
+    ctx path ("c" "a" "b") vs ("c" "ab")
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-3 context tag segment boundary
+
+  ADV-4 act-id/by-id cross-field boundary
+    act ("x") + by ("y" "z") vs act ("x" "y") + by ("z") — adjacent fields
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-4 act-id/by-id cross-field boundary
+
+  ADV-5 act-id/by-id content swap
+    act ("p") + by ("q") vs act ("q") + by ("p") — same multiset, swapped positions
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-5 act-id/by-id content swap
+
+  ADV-6 petition-tag/context-tag content swap
+    pet ("m") + ctx ("n") vs pet ("n") + ctx ("m")
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-6 petition-tag/context-tag content swap
+
+  ADV-7 reference-key/denotation boundary
+    support ref "a" declared ("bc") vs support ref "ab" declared ("c") — chosen so
+    that key||denotation is "abc" on BOTH sides, i.e. a flat concatenation of the
+    two adjacent fields could not tell them apart
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-7 reference-key/denotation boundary
+
+  ADV-8 support key split
+    supports ("w" "1") vs supports ("w1") — one key vs two adjacent keys
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-8 support key split
+
+  ADV-9 support order in the petition
+    supports ("s-1" "s-2") vs ("s-2" "s-1") — the context declaration is
+    canonically sorted and is EQUAL for both, so only the petition distinguishes them
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-9 support order in the petition
+
+  ADV-10 denotation swap across roles
+    conclusion declared D1 / support declared D2 vs conclusion D2 / support D1
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-10 denotation swap across roles
+
+  ADV-11 unreferenced extra binding
+    identical petition, identical outcome, one extra support binding the petition
+    never names — a pure declaration difference with no governed consequence
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-11 unreferenced extra binding
+
+  ADV-12 live receiver vs sanctioned absence
+    receiver bound to a live receiver-context vs bound to NIL with the package-owned
+    RECEIVER-ABSENCE-DECLARATION
+    declared payloads DIFFER  ; identity values DIFFER  ; expected DIFFER
+  [PASS] adversarial ADV-12 live receiver vs sanctioned absence
+
+  ADV-13 canonical declaration order
+    the SAME mapping, bindings inserted in OPPOSITE order.  This pair MUST
+    be EQUAL: insertion order is not semantically consequential and the
+    layer canonicalizes it away before minting.  A census that hunted only
+    for equality would misread a correct canonicalization as a collision.
+  [PASS] ADV-13 declaration identity is insertion-order invariant
+  [PASS] ADV-13 context occurrence identity is insertion-order invariant
+  [PASS] ADV-13 the public declarations reader reports the same canonical order
+
+  adversarial pairs run: 12 differ-pairs + 1 canonicalization pair
+  adversarial failures : 0
+
+B.9  TEETH — the detector, checked against PLANTED faults
+──────────────────────────────────────────────────────────────────────────────
+  A GATE THAT HAS NEVER FIRED IS UNTESTED, NOT PASSING.  Everything above
+  reports zero collisions, and a reader is entitled to ask whether this
+  instrument could have found one at all.  So two faults of exactly the two
+  classes this file exists to catch are PLANTED into the layer, and the
+  detector is required to fire on both — with the witness printed — before
+  the clean result above is worth anything.
+
+  The plant point is LISP-PLUS-FORM1::%DECLARATION-PAYLOAD, rebound by
+  FDEFINITION.  This is an INTERNAL SHIM, labelled as such, and it is
+  restored after each plant with the restoration ASSERTED — the same
+  discipline the procedure-version axis carries.
+
+  ── DROP
+     PLANTED FAULT 1 — a DROPPED DECLARED AXIS (the NC-31 defect class, re-planted)
+  [PASS] DROP: BEFORE the plant, the two declarations carry DIFFERENT identities
+  [PASS] DROP: UNDER the plant, the two declarations COLLAPSE into ONE identity
+     PLANTED COLLISION WITNESS — two distinct declarations, one identity:
+       shared identity (first 48 hex): 4c5043440021f6014c50434400300222020f6c6973702d70...
+       identity value: 254 octets
+  [PASS] DROP: ANALYSE — the same function that reported 0 above — reports 1 collision(s) here
+  [PASS] DROP: 2 distinct declared payloads collapsed to 1 distinct identity value(s)
+  [PASS] DROP: PLANT REMOVED — both identities recompute to their pre-plant values
+  [PASS] DROP: PLANT REMOVED — the two declarations separate again
+
+  ── FLATTEN
+     PLANTED FAULT 2 — a MERGED FIELD BOUNDARY, fired on the ADV-7 pair itself
+  [PASS] FLATTEN: BEFORE the plant, the two declarations carry DIFFERENT identities
+  [PASS] FLATTEN: UNDER the plant, the two declarations COLLAPSE into ONE identity
+     PLANTED COLLISION WITNESS — two distinct declarations, one identity:
+       shared identity (first 48 hex): 4c50434400219f014c50434400300222020f6c6973702d70...
+       identity value: 167 octets
+  [PASS] FLATTEN: ANALYSE — the same function that reported 0 above — reports 1 collision(s) here
+  [PASS] FLATTEN: 2 distinct declared payloads collapsed to 1 distinct identity value(s)
+  [PASS] FLATTEN: PLANT REMOVED — both identities recompute to their pre-plant values
+  [PASS] FLATTEN: PLANT REMOVED — the two declarations separate again
+  [PASS] TEETH: every plant removed; the layer is back to its own implementation
+
+  ── B.9 EXHIBIT — why SENSITIVITY could not have caught PLANT 2
+     Under the merged-boundary plant, hold the plant installed and move
+     ONE axis at a time, exactly as a sensitivity test does.  Then move
+     BOTH.  Everything below is measured under the SAME planted layer.
+
+       baseline            ref "a"  denotation ("bc")
+  [PASS] B.9 EXHIBIT: move the DENOTATION alone ("bc"->"zz") — identity MOVES  [sensitivity: PASS]
+  [PASS] B.9 EXHIBIT: move the REFERENCE KEY alone ("a"->"ab") — identity MOVES  [sensitivity: PASS]
+  [PASS] B.9 EXHIBIT: move BOTH ("a"/"bc" -> "ab"/"c") — identity DOES NOT MOVE  [COLLISION]
+
+       So under PLANT 2 every axis is individually sensitive and the
+       layer still collides.  A one-axis-at-a-time suite reports a clean
+       sheet on a broken layer.  That gap is not hypothetical — it is
+       measured, three lines above, on this machine, in this run.
+  [PASS] TEETH: plant removed after the exhibit as well
+
+  Both planted faults fired, and the detector caught both.  PLANT 2 is the
+  one that matters: under it every declared field was still PRESENT and
+  every axis was still individually SENSITIVE — only the BOUNDARIES between
+  adjacent fields were gone.  That is the defect class a sensitivity suite
+  structurally cannot see, and it is the reason this census varies axes
+  simultaneously rather than one at a time.
+
+  Planted collisions are NOT counted in the census totals: 0 real collision(s).
+
+══════════════════════════════════════════════════════════════════════════════
+SUMMARY
+══════════════════════════════════════════════════════════════════════════════
+
+  PART A — structural round trip
+    identity species covered ......... 12 of 12
+    both branches covered where the payload branches:
+      submission receipt ............. Slice /2 receipt PRESENT and ABSENT
+      refusal ........................ with PATH+REFERENCE and with HOST-TYPE
+
+  PART B — finite collision census
+    population size .................. 7776 submissions
+    distinct declared payloads ....... 2592
+    distinct identity values ......... 2592  (submission occurrence identity)
+    collision count .................. 0
+    declared-residual groups ......... 2592  (NOT collisions — see B.4)
+    adversarial pairs ................ 12 designed near-collisions + 1 canonicalization
+    planted faults (teeth) ........... 2, BOTH FIRED and both caught by the
+                                       same ANALYSE that reports 0 above; both
+                                       plants removed and the removal asserted
+
+  AXES
+    varied by PUBLIC CALL ............ subject reference keys, support keys and
+                                       count, petition occurrence tag, context
+                                       denotation declarations, unreferenced
+                                       bindings, context occurrence tag, act id,
+                                       by-id, outcome kind, Slice /2 receipt
+                                       presence/absence
+    varied by INTERNAL SHIM .......... procedure version  *** WEAKER EVIDENCE ***
+                                       (no public setter exists; constant function)
+
+  CHECKS
+    checks run ....................... 170
+    failures ......................... 0
+
+  THE CLAIM, RESTATED AT ITS SIZE
+    Form /1 identity values are injective over their declared CD/0 phase
+    payloads, assuming Canonical Datum /0 exact encoding.
+
+    NOT CLAIMED: injectivity over unrecorded live host facts.  Two contexts
+    with identical declarations and different live anchors produce the same
+    identity by design; 2592 group(s) of exactly that shape are in this
+    population and are reported as the declared residual, not as collisions.
+
+    NOT CLAIMED: that this finite census is a proof over all inputs.  It is a
+    finite search that found what it found.  The general argument is PART A's:
+    the identity is a LOSSLESS encoding, so round trip implies injectivity
+    over every payload that round-trips, and CD/0 exactness is the assumption
+    that carries it — an assumption this file states rather than proves.
+
+══════════════════════════════════════════════════════════════════════════════
+NO COLLISION FOUND — 170 checks, 7776 submissions, 0 failures.
+Injectivity holds over the declared payloads of this census, at the size
+stated above and no larger.
+══════════════════════════════════════════════════════════════════════════════

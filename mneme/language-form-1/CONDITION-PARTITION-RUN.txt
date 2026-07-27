@@ -1,0 +1,338 @@
+CONDITION-PARTITION-RUN.txt — raw capture
+=========================================
+
+host       : Linux 7.0.0-28-generic
+date       : 2026-07-27T14:12:38-03:00
+worktree   : language-form-1-candidate-0 @ 7db2da94
+sbcl       : 2.4.6
+cwd        : /home/gauss/Desktop/wt-form1-candidate-0/experiments/latent-lisp/mneme/language-form-1
+command    : sbcl --non-interactive --load CONDITION-PARTITION.lisp
+
+SUBJECT UNDER TEST — the exact bytes this run measured:
+  form1.lisp   md5 542de94b50bcccd74f0e2fb88a10234d  mtime 2026-07-27T13:48:47-03:00
+  package.lisp md5 ee51853499ee60d9d3e71c46b80d406c  mtime 2026-07-27T13:49:21-03:00
+  ../language-slice-1/slice1.lisp  md5 e7a5741e5ddd37ffcc317ba6c8e4eae9
+  ../language-slice-2/slice2.lisp  md5 592da3297a24c314fcf172461827a374
+  ../language-slice-2/package.lisp md5 65a715e1bcfd46f2dcdb0902d7eb3cec
+
+  NOTE, because it is load-bearing: form1-selftest.lisp and
+  de-forma-petente/APPLICATION.lisp were being edited by the chair DURING
+  this work and moved AFTER form1.lisp's mtime above.  Neither is on this
+  measurement's path -- neither is loaded, read or written by this checker --
+  but a later edit to SUBMIT-PETITION's handler set would move rows between
+  ESCAPES and a caught class WITHOUT tripping the inventory gate.  Re-run.
+
+==========================================================================
+RUN A — THE HONEST RUN (this is the deliverable run)
+==========================================================================
+
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+════════════════════════════════════════════════════════════════
+  CONDITION-PARTITION — Language Form /1, Candidate /0
+  SBCL 2.4.6
+════════════════════════════════════════════════════════════════
+
+── 1. LIVE CONDITION INVENTORY (walked from the running image)
+       LISP-PLUS-SLICE1 — 8 exported condition classes
+           LISP-PLUS-SLICE1:DERIVATION-REFUSED
+           LISP-PLUS-SLICE1:MALFORMED-STRUCTURED-PROPOSITION
+           LISP-PLUS-SLICE1:PATTERN-USED-AS-GROUND
+           LISP-PLUS-SLICE1:SCHEMA-CONSTRUCTION-ERROR
+           LISP-PLUS-SLICE1:SCHEMA-NOT-FOUND
+           LISP-PLUS-SLICE1:SCHEMA-REGISTRATION-CONFLICT
+           LISP-PLUS-SLICE1:SLICE1-CONDITION
+           LISP-PLUS-SLICE1:UNBOUND-CONCLUSION-VARIABLE
+       LISP-PLUS-SLICE2 — 11 exported condition classes
+           LISP-PLUS-SLICE2:ADMISSION-CONTRACT-ERROR
+           LISP-PLUS-SLICE2:DERIVATION-BASIS-REFUSED
+           LISP-PLUS-SLICE2:PREMISE-CONTRACT-DUPLICATE
+           LISP-PLUS-SLICE2:PREMISE-CONTRACT-MISSING
+           LISP-PLUS-SLICE2:PREMISE-CONTRACT-UNKNOWN-PREMISE
+           LISP-PLUS-SLICE2:SLICE2-CONDITION
+           LISP-PLUS-SLICE2:SLICE2-DERIVATION-REFUSED
+           LISP-PLUS-SLICE2:SLICE2-SCHEMA-ERROR
+           LISP-PLUS-SLICE2:SOURCE-BASIS-REFUSED
+           LISP-PLUS-SLICE2:UNISSUED-CORE0-ACCOUNT
+           LISP-PLUS-SLICE2:UNKNOWN-ADMISSION-CLAUSE
+       LISP-PLUS-FORM1 — 1 exported condition class
+           LISP-PLUS-FORM1:PETITION-REFUSED
+       LIVE TOTAL: 20
+
+── 2. DOCUMENT TABLE (parsed from CONDITION-PARTITION.md)
+       rows parsed: 20
+       PROTOCOL-REFUSAL 1
+       GOVERNED-REFUSAL 1
+       DOOR-REFUSAL   1
+       ESCAPES        3
+       UNREACHABLE    14
+  [01] ok   the document's table parses clean: every row names an EXTERNAL symbol of a present package
+  [02] ok   the document's table is non-empty (the markers were found and rows were read)
+  [03] ok   every row's class token is one of the 5 declared classes
+  [04] ok   the document's table classifies each symbol exactly once (no duplicate rows)
+  [05] ok   PARSER TEETH: exactly ONE good row survives the planted faults — and the row AFTER the end-marker is not swept in
+  [06] ok   PARSER TEETH: and it is the right row, with its class token intact
+  [07] ok   PARSER TEETH: BOTH planted faults are REPORTED as problems, not silently dropped
+  [08] ok   PARSER TEETH: a table row OUTSIDE the markers is not parsed at all
+
+── 3. INVENTORY GATE — live inventory vs. document table, both directions
+       live 20 · tabled 20
+  [09] ok   GATE (→): every one of the 20 LIVE condition classes is classified by the document — an unclassified class is exactly the defect this file exists to prevent
+  [10] ok   GATE (←): every one of the 20 CLASSIFIED symbols is still a live exported condition class — the document names nothing that has been renamed or withdrawn
+  [11] ok   GATE hygiene: neither set contains a duplicate, so both set-differences are over true sets
+  [12] ok   GATE TEETH (→): drop ONE class from the compared set and the live∖table difference names exactly the dropped class — the forward gate fires
+  [13] ok   GATE TEETH (←): add ONE symbol that is not a live condition class and the table∖live difference names exactly it — the reverse gate fires
+       GATE TEETH: the forward gate would surface a dropped LISP-PLUS-SLICE1:DERIVATION-REFUSED
+
+── 4. T-NO-BLANKET — no broad handler anywhere in this file
+  [14] ok   T-NO-BLANKET: the blanket clause "(error () " appears 0 times — anything but 0 is a handler catching more than one named class
+  [15] ok   T-NO-BLANKET: the blanket clause "(condition () " appears 0 times — anything but 0 is a handler catching more than one named class
+  [16] ok   T-NO-BLANKET: the blanket clause "(serious-condition () " appears 0 times — anything but 0 is a handler catching more than one named class
+  [17] ok   T-NO-BLANKET: the blanket clause "(warning () " appears 0 times — anything but 0 is a handler catching more than one named class
+  [18] ok   T-NO-BLANKET: the blanket clause "(t () " appears 0 times — anything but 0 is a handler catching more than one named class
+  [19] ok   T-NO-BLANKET teeth: the scanner does find HANDLER-CASE in this file, so a null result above is a measurement and not a broken search
+  [20] ok   T-NO-BLANKET: the quiet blanket handler (IGNORE- + ERRORS) appears nowhere in this file
+
+── 5. FIXTURE 1 — PROTOCOL-REFUSAL: refused BEFORE DERIVE/2 is invoked
+  [21] ok   F1: an unsealed context signals rather than returning an outcome
+  [22] ok   F1: the condition's class is EXACTLY LISP-PLUS-FORM1:PETITION-REFUSED
+  [23] ok   F1: the code is EXACTLY :CONTEXT-NOT-SEALED
+  [24] ok   F1: the phase is EXACTLY :SUBMIT — Form /1's own, not Slice /2's
+  [25] ok   F1: the code is in the LIVE published protocol-refusal catalogue
+
+── 6. FIXTURE 2 — GOVERNED-REFUSAL: SLICE2-DERIVATION-REFUSED is caught
+  [26] ok   F2: a Form /1 outcome object exists — the condition did NOT escape
+  [27] ok   F2: the outcome kind is EXACTLY :GOVERNED-REFUSAL
+  [28] ok   F2: the retained condition's class is EXACTLY LISP-PLUS-SLICE2:SLICE2-DERIVATION-REFUSED
+  [29] ok   F2: the submission receipt records that exact class name (computed from the symbol, not transcribed)
+  [30] ok   F2: the Slice /2 receipt travelled out with the outcome — the governed account survives
+  [31] ok   F2: no claim was minted on a refusal
+
+── 7. FIXTURE 3 — DOOR-REFUSAL: SLICE2-SCHEMA-ERROR is caught (two provocations)
+  [32] ok   F3a: a Form /1 outcome object exists — the condition did NOT escape
+  [33] ok   F3a: a schema re-registered as a DIFFERENT object under the same key yields EXACTLY :DOOR-REFUSAL
+  [34] ok   F3a: the retained condition's class is EXACTLY LISP-PLUS-SLICE2:SLICE2-SCHEMA-ERROR (the family base, not a subtype)
+  [35] ok   F3a: the submission receipt records that exact class name
+  [36] ok   F3a: a door refusal carries NO Slice /2 receipt — the act never reached a governed account
+  [37] ok   F3b: an EMPTY registry also yields EXACTLY :DOOR-REFUSAL
+  [38] ok   F3b: the class is EXACTLY SLICE2-SCHEMA-ERROR — SCHEMA-NOT-FOUND does NOT escape here, which is the whole reason that row reads UNREACHABLE
+
+── 8. FIXTURE 4 — ESCAPE: PATTERN-USED-AS-GROUND
+  [39] ok   F4: a proposition-PATTERN bound as the conclusion signals — no outcome is returned
+  [40] ok   F4: the escaping class is EXACTLY LISP-PLUS-SLICE1:PATTERN-USED-AS-GROUND
+  [41] ok   F4: it names :CONCLUSION as the offending field — it came through the unchecked conclusion binder
+  [42] ok   F4: it carries NO receipt (pre-threshold), so the escape destroys nothing Slice /1 had built
+
+── 9. FIXTURE 5 — ESCAPE: MALFORMED-STRUCTURED-PROPOSITION (two malformations)
+  [43] ok   F5a: an integer conclusion signals — no outcome is returned
+  [44] ok   F5a: the escaping class is EXACTLY LISP-PLUS-SLICE1:MALFORMED-STRUCTURED-PROPOSITION
+  [45] ok   F5b: a bad-head list conclusion signals — no outcome is returned
+  [46] ok   F5b: same EXACT class from a structurally different malformation
+
+── 10. FIXTURE 6 — ESCAPE: UNBOUND-CONCLUSION-VARIABLE (and what it destroys)
+  [47] ok   F6: a lawful ground conclusion that does not ground the schema's conclusion variables signals
+  [48] ok   F6: the escaping class is EXACTLY LISP-PLUS-SLICE1:UNBOUND-CONCLUSION-VARIABLE
+  [49] ok   F6: it DOES carry a real Slice /1 derivation receipt — this is the post-threshold refusal
+  [50] ok   F6: that receipt's decision is :REFUSED — a genuine governed account exists
+       F6 — THE COST: that receipt reaches the caller only inside the escaping condition.
+       F6 — No submission receipt is minted, so nothing records that the act occurred.
+
+── 11. FIXTURE 7 — the raw host TYPE-ERROR receiver path: STILL REACHABLE?
+  [51] ok   F7a: LISP-PLUS-SLICE1:DERIVE with :RECEIVER 42 does signal — the door is real
+  [52] ok   F7a: and it is a raw host CL:TYPE-ERROR, from the RECEIVER-CONTEXT-CONTEXT-ID struct accessor
+       F7a: TYPE-ERROR
+  [53] ok   F7b: LISP-PLUS-SLICE2:DERIVE/2 with :RECEIVER 42 signals too — Slice /2 adds no guard
+  [54] ok   F7b: still a raw host CL:TYPE-ERROR at the Slice /2 surface
+  [55] ok   F7c: BIND-RECEIVER-REFERENCE refuses 42 rather than binding it
+  [56] ok   F7c: the class is EXACTLY PETITION-REFUSED for 42 — not a TYPE-ERROR
+  [57] ok   F7c: the code is EXACTLY :WRONG-RECEIVER-SPECIES for 42
+  [58] ok   F7c: BIND-RECEIVER-REFERENCE refuses "desk" rather than binding it
+  [59] ok   F7c: the class is EXACTLY PETITION-REFUSED for "desk" — not a TYPE-ERROR
+  [60] ok   F7c: the code is EXACTLY :WRONG-RECEIVER-SPECIES for "desk"
+  [61] ok   F7c: BIND-RECEIVER-REFERENCE refuses :DESK rather than binding it
+  [62] ok   F7c: the class is EXACTLY PETITION-REFUSED for :DESK — not a TYPE-ERROR
+  [63] ok   F7c: the code is EXACTLY :WRONG-RECEIVER-SPECIES for :DESK
+       F7 VERDICT: the raw TYPE-ERROR receiver path is NOT reachable through the
+       F7          Form /1 public boundary.  It is sealed by ONE species check in
+       F7          BIND-RECEIVER-REFERENCE, whose deletion reopens it silently.
+
+── 12. FIXTURE 8 — an explicitly-ABSENT receiver reaches DERIVE/2 without a host error
+  [64] ok   F8: an explicitly-absent receiver yields an ordinary Form /1 outcome — the NIL-guards in %SUPPORT-ACCESSIBLE-P hold
+  [65] ok   F8: and its kind is one of the three terminal classifications
+       F8: outcome kind :GOVERNED-REFUSAL
+
+── 13. FIXTURE 9 — the control: a clean grant leaves a full semantic object
+  [66] ok   F9: the matched-witness case grants — the fixture world is sound and the escapes above are not artefacts of a broken setup
+  [67] ok   F9: a grant retains no condition
+  [68] ok   F9: a grant carries its Slice /2 receipt
+
+── 14. COVERAGE GATE — classified-reachable vs. actually-exercised
+       claimed reachable 6 · exercised 6
+  [69] ok   COVERAGE (→): every one of the 6 classes the document calls reachable was reached by a fixture in this run
+  [70] ok   COVERAGE (←): every one of the 6 classes a fixture actually reached is classified reachable by the document
+
+── 15. THE PARTITION
+
+       PROTOCOL-REFUSAL — 1
+         LISP-PLUS-FORM1:PETITION-REFUSED   [EXERCISED]
+
+       GOVERNED-REFUSAL — 1
+         LISP-PLUS-SLICE2:SLICE2-DERIVATION-REFUSED   [EXERCISED]
+
+       DOOR-REFUSAL — 1
+         LISP-PLUS-SLICE2:SLICE2-SCHEMA-ERROR   [EXERCISED]
+
+       ESCAPES — 3
+         LISP-PLUS-SLICE1:PATTERN-USED-AS-GROUND   [EXERCISED]
+         LISP-PLUS-SLICE1:MALFORMED-STRUCTURED-PROPOSITION   [EXERCISED]
+         LISP-PLUS-SLICE1:UNBOUND-CONCLUSION-VARIABLE   [EXERCISED]
+
+       UNREACHABLE — 14
+         LISP-PLUS-SLICE1:SLICE1-CONDITION   [READ]
+         LISP-PLUS-SLICE1:DERIVATION-REFUSED   [READ]
+         LISP-PLUS-SLICE1:SCHEMA-NOT-FOUND   [READ]
+         LISP-PLUS-SLICE1:SCHEMA-CONSTRUCTION-ERROR   [READ]
+         LISP-PLUS-SLICE1:SCHEMA-REGISTRATION-CONFLICT   [READ]
+         LISP-PLUS-SLICE2:SLICE2-CONDITION   [READ]
+         LISP-PLUS-SLICE2:ADMISSION-CONTRACT-ERROR   [READ]
+         LISP-PLUS-SLICE2:UNKNOWN-ADMISSION-CLAUSE   [READ]
+         LISP-PLUS-SLICE2:PREMISE-CONTRACT-MISSING   [READ]
+         LISP-PLUS-SLICE2:PREMISE-CONTRACT-DUPLICATE   [READ]
+         LISP-PLUS-SLICE2:PREMISE-CONTRACT-UNKNOWN-PREMISE   [READ]
+         LISP-PLUS-SLICE2:SOURCE-BASIS-REFUSED   [READ]
+         LISP-PLUS-SLICE2:UNISSUED-CORE0-ACCOUNT   [READ]
+         LISP-PLUS-SLICE2:DERIVATION-BASIS-REFUSED   [READ]
+
+       CL:TYPE-ERROR (off-inventory, no package export to gate against)
+         UNREACHABLE through the Form /1 boundary — sealed at BIND-RECEIVER-REFERENCE
+         [EXERCISED: real at Slice /1 and Slice /2, refused at the Form /1 binder]
+
+── Everything else ESCAPES.  This file says which everything.  ──
+
+== CONDITION-PARTITION: 70 checks passed / 0 failed ==
+
+EXIT CODE: 0
+
+==========================================================================
+RUN B — PLANTED FAULT, so the gate is not trusted until it has FIRED
+==========================================================================
+
+A gate that has never fired is untested, not passing.  The inventory gate
+in RUN A reports clean; that is only evidence once the same gate has been
+shown able to fail on the real document, through the real pipeline.
+
+FAULT PLANTED : the CONDITION-PARTITION.md table row for
+                LISP-PLUS-SLICE2:DERIVATION-BASIS-REFUSED was DELETED,
+                simulating a condition class the document forgot to classify.
+COMMAND       : grep -v '<that row>' CONDITION-PARTITION.md > faulted.md
+                cp faulted.md CONDITION-PARTITION.md
+                sbcl --non-interactive --load CONDITION-PARTITION.lisp
+RESTORED      : the original file was copied back and verified byte-identical
+                with 'diff -q' before RUN A was captured.
+
+--- relevant excerpt of the faulted run ---
+
+── 2. DOCUMENT TABLE (parsed from CONDITION-PARTITION.md)
+       rows parsed: 19
+       PROTOCOL-REFUSAL 1
+       GOVERNED-REFUSAL 1
+       DOOR-REFUSAL   1
+       ESCAPES        3
+       UNREACHABLE    13
+  [01] ok   the document's table parses clean: every row names an EXTERNAL symbol of a present package
+  [02] ok   the document's table is non-empty (the markers were found and rows were read)
+  [03] ok   every row's class token is one of the 5 declared classes
+  [04] ok   the document's table classifies each symbol exactly once (no duplicate rows)
+  [05] ok   PARSER TEETH: exactly ONE good row survives the planted faults — and the row AFTER the end-marker is not swept in
+  [06] ok   PARSER TEETH: and it is the right row, with its class token intact
+  [07] ok   PARSER TEETH: BOTH planted faults are REPORTED as problems, not silently dropped
+  [08] ok   PARSER TEETH: a table row OUTSIDE the markers is not parsed at all
+
+── 3. INVENTORY GATE — live inventory vs. document table, both directions
+       live 20 · tabled 19
+       LIVE BUT UNCLASSIFIED: LISP-PLUS-SLICE2:DERIVATION-BASIS-REFUSED 
+  [09] FAIL GATE (→): every one of the 20 LIVE condition classes is classified by the document — an unclassified class is exactly the defect this file exists to prevent
+  [10] ok   GATE (←): every one of the 19 CLASSIFIED symbols is still a live exported condition class — the document names nothing that has been renamed or withdrawn
+  [11] ok   GATE hygiene: neither set contains a duplicate, so both set-differences are over true sets
+  [12] ok   GATE TEETH (→): drop ONE class from the compared set and the live∖table difference names exactly the dropped class — the forward gate fires
+  [13] ok   GATE TEETH (←): add ONE symbol that is not a live condition class and the table∖live difference names exactly it — the reverse gate fires
+       GATE TEETH: the forward gate would surface a dropped LISP-PLUS-SLICE1:DERIVATION-REFUSED
+
+── 4. T-NO-BLANKET — no broad handler anywhere in this file
+--- tail of the faulted run ---
+
+         [EXERCISED: real at Slice /1 and Slice /2, refused at the Form /1 binder]
+
+── Everything else ESCAPES.  This file says which everything.  ──
+
+   FAILED CHECKS:
+     [09] GATE (→): every one of the 20 LIVE condition classes is classified by the document — an unclassified class is exactly the defect this file exists to prevent
+
+== CONDITION-PARTITION: 68 checks passed / 1 failed ==
+
+FAULTED EXIT CODE: 1
+
+VERDICT: the gate fires, exits non-zero, and names the unclassified class
+         EXACTLY.  It is a measurement, not a decoration.
+
+==========================================================================
+TWO FAULTS THIS FILE CAUGHT IN ITS OWN AUTHOR, RECORDED RATHER THAN HIDDEN
+==========================================================================
+
+The first execution of CONDITION-PARTITION.lisp against the real document
+FAILED 2 of 63 checks.  Both were real defects in the checker, not in the
+layer, and both are the kind a reading audit waves through:
+
+  [01] the markdown parser swept in TWO LATER TABLES.  Prose in the
+       document's section 5 named the begin-marker token in backticks,
+       which re-opened the scan.  Rows from sections 6 and 7 were parsed
+       as partition rows.  The inventory gate itself still passed both
+       directions -- only the PARSE-PROBLEM check caught it.  Silently
+       dropping unparseable rows would have hidden this completely.
+       FIX: the delimiters are now matched as whole HTML comments,
+       assembled at runtime from two halves.
+
+  [13] the T-NO-BLANKET source scanner CONVICTED ITSELF.  Its check label
+       contained the literal it was scanning for, so the tooth reported a
+       blanket handler that did not exist.
+       FIX: every needle is assembled at runtime, so the scanner's own
+       vocabulary is not part of the corpus it scans, and the expected
+       count is exactly 0 rather than '0 plus my own declaration'.
+
+Both fixes are in the file and both teeth now carry planted-fault checks
+of their own (checks 05-08 for the parser, 12-13 for the inventory gate,
+19 for the scanner).
+
+==========================================================================
+WHAT THE RUN MEASURED
+==========================================================================
+
+  PROTOCOL-REFUSAL   1   LISP-PLUS-FORM1:PETITION-REFUSED
+  GOVERNED-REFUSAL   1   LISP-PLUS-SLICE2:SLICE2-DERIVATION-REFUSED
+  DOOR-REFUSAL       1   LISP-PLUS-SLICE2:SLICE2-SCHEMA-ERROR
+  ESCAPES            3   LISP-PLUS-SLICE1:PATTERN-USED-AS-GROUND
+                         LISP-PLUS-SLICE1:MALFORMED-STRUCTURED-PROPOSITION
+                         LISP-PLUS-SLICE1:UNBOUND-CONCLUSION-VARIABLE
+  UNREACHABLE       14   (see CONDITION-PARTITION.md section 2)
+  ------------------------------------------------------------------
+  LIVE INVENTORY    20   set-difference clean in BOTH directions
+
+  CL:TYPE-ERROR (receiver path): raw TYPE-ERROR CONFIRMED REAL at both
+  LISP-PLUS-SLICE1:DERIVE and LISP-PLUS-SLICE2:DERIVE/2 with :RECEIVER 42,
+  and CONFIRMED SEALED at LISP-PLUS-FORM1:BIND-RECEIVER-REFERENCE, which
+  refuses 42 / "desk" / :desk with EXACTLY :WRONG-RECEIVER-SPECIES.
+  NOT reachable through the Form /1 public boundary.
+
+  6 of 6 classes the document calls reachable were EXERCISED this run.
+  14 of 14 UNREACHABLE rows are classified BY READING, and say so.
+
+-- Claude Opus 5 (1M context), as LIMEN

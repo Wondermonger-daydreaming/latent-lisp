@@ -1,0 +1,312 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== Language Form /1, Candidate /0 — SELFTEST (POLICY v3) ==
+   grammar v1 · policy v3 · procedure v1
+   ceilings: 16 supports · 16384 petition octets · 65536 identity octets · 4096 tail reserve
+   declared refusal codes: 37 protocol + 3 integrity alarm = 40 catalogued
+
+── A. PROPOSE — boundary and grammar
+  [01] ok   PROPOSE of a host integer → code is EXACTLY :NOT-A-DATUM
+  [02] ok   …and its phase reader returns :PROPOSE (SYMBOL-NAME compared, phase is a keyword)
+  [03] ok   PROPOSE of a string datum → code is EXACTLY :PETITION-NODE-NOT-A-SEQUENCE
+  [04] ok   PROPOSE of a 1-element sequence → code is EXACTLY :PETITION-NODE-ARITY
+  [05] ok   PROPOSE of [integer, integer] → code is EXACTLY :HEAD-NOT-IDENTIFIER
+  [06] ok   NC-1: an ordinary DERIVE/2-shaped head → code is EXACTLY :NOT-A-DERIVATION-PETITION
+  [07] ok   NC-3: an unsupported governed operation is an unsupported HEAD → EXACTLY :NOT-A-DERIVATION-PETITION
+  [08] ok   PROPOSE of [petition-head, string] → code is EXACTLY :PETITION-BODY-NOT-A-RECORD
+  [09] ok   ANTI-ROT: the four keys PETITION-DATUM writes EQUAL-DATUM the four this suite reconstructs
+  [10] ok   PROPOSE of a body missing `receiver' → code is EXACTLY :PETITION-FIELD-MISSING
+  [11] ok   NC-27: a petition carrying a `by' field → code is EXACTLY :PETITION-FIELD-UNKNOWN
+  [12] ok   PROPOSE with a string in `supports' → code is EXACTLY :SUPPORTS-NOT-A-SEQUENCE
+  [13] ok   PROPOSE with a string where the schema reference goes → code is EXACTLY :MALFORMED-REFERENCE
+  [14] ok   PROPOSE with a CONCLUSION reference in the schema slot → code is EXACTLY :REFERENCE-ROLE-MISMATCH
+  [15] ok   …and it names EXPECTED-ROLE :SCHEMA at path (1 :SCHEMA)
+
+── B. PROPOSE / MATERIALIZE / SUBMIT — the four resource ceilings
+  [16] ok   PROPOSE with 17 support references (ceiling 16) → code is EXACTLY :SUPPORT-COUNT-EXCEEDED
+  [17] ok   PROPOSE of a ~32KB petition (ceiling 16384 octets) → code is EXACTLY :PETITION-OCTETS-EXCEEDED
+  [18] ok   MATERIALIZE with an 80000-character occurrence tag → code is EXACTLY :IDENTITY-OCTETS-EXCEEDED
+       identity value is 80663 octets; the Candidate /0 envelope is 65536 octets
+  [19] ok   SUBMIT whose occurrence identity + reserved tail overflows the envelope → code is EXACTLY :SUBMISSION-ENVELOPE-EXCEEDED
+       band located by bisection at 62500 padding characters in 4 probes
+       submission occurrence identity is 63500 octets and the reserved outcome tail is 4096; together they exceed the Candidate /0 envelope of 65536 octets. DERIVE/2 is NOT invoked.
+  [20] ok   …and DERIVE/2 was invoked 0 times: the envelope gate is a BUILD gate, not a post-act refusal
+
+── C. SPECIES, ARGUMENT AND CONTEXT-PROTOCOL REFUSALS
+  [21] ok   VALIDATE of a keyword → code is EXACTLY :NOT-A-PROPOSED-PETITION-FORM
+  [22] ok   MATERIALIZE of a keyword → code is EXACTLY :NOT-A-VALIDATED-PETITION-FORM (THIRD value)
+  [23] ok   MATERIALIZE with a keyword occurrence tag → code is EXACTLY :OCCURRENCE-TAG-REQUIRED
+  [24] ok   SUBMIT of a keyword petition → code is EXACTLY :NOT-A-DERIVATION-PETITION (:SUBMIT/:SPECIES)
+  [25] ok   …and it is phase :SUBMIT category :SPECIES — one code, two phases, distinguished by the phase field
+  [26] ok   SUBMIT with a keyword context → code is EXACTLY :NOT-A-RESOLUTION-CONTEXT
+  [27] ok   SUBMIT with :BY NIL → code is EXACTLY :BY-REQUIRED (DERIVE/2's NIL->:DERIVER default is NOT inherited)
+  [28] ok   SUBMIT with a non-datum :BY-ID → code is EXACTLY :BY-ID-REQUIRED
+  [29] ok   SUBMIT with a non-datum :ACT-ID → code is EXACTLY :ACT-ID-REQUIRED
+  [30] ok   SUBMIT with an UNSEALED context → code is EXACTLY :CONTEXT-NOT-SEALED
+  [31] ok   BIND-SCHEMA-REFERENCE on a keyword → code is EXACTLY :NOT-A-RESOLUTION-CONTEXT
+  [32] ok   BIND-SCHEMA-REFERENCE with a string key → code is EXACTLY :MALFORMED-REFERENCE (:CONTEXT phase)
+  [33] ok   BIND-SCHEMA-REFERENCE with a SUPPORT-role reference → code is EXACTLY :BINDING-ROLE-MISMATCH
+  [34] ok   BIND-SCHEMA-REFERENCE twice on the same reference → code is EXACTLY :DUPLICATE-BINDING
+  [35] ok   NC-37: binding into a SEALED context → code is EXACTLY :BINDING-AFTER-SEAL
+  [36] ok   SEAL with a non-datum occurrence tag → code is EXACTLY :CONTEXT-OCCURRENCE-TAG-REQUIRED
+  [37] ok   BIND-SCHEMA-REFERENCE to a keyword → code is EXACTLY :WRONG-SCHEMA-SPECIES
+  [38] ok   BIND-RECEIVER-REFERENCE to a keyword → code is EXACTLY :WRONG-RECEIVER-SPECIES
+  [39] ok   CONTEXT-DECLARATIONS of a keyword → code is EXACTLY :NOT-A-RESOLUTION-CONTEXT
+  [40] ok   LIVE-ANCHOR of a keyword → code is EXACTLY :NOT-A-RESOLUTION-CONTEXT
+  [41] ok   NC-BIND-DECL-01: a binder called with a NON-DATUM denotation → code is EXACTLY :DENOTATION-DECLARATION-REQUIRED (the helpers' defaults are a FIXTURE convenience; the layer has none)
+  [42] ok   NC-BIND-DECL-02: NIL is not a declaration either — a value-UNTYPED binder still requires the datum
+  [43] ok   NC-BIND-DECL-03: a receiver bound to NIL described by an ARBITRARY identifier → code is EXACTLY :RECEIVER-ABSENCE-DECLARATION-REQUIRED (absence is not the host's to name)
+  [44] ok   NC-BIND-DECL-04: the receiver-absence declaration supplied for a LIVE receiver → code is EXACTLY :RECEIVER-ABSENCE-DECLARATION-MISAPPLIED (the sanctioned marker means one thing or it means nothing)
+  [45] ok   …and NIL WITH the sanctioned declaration binds cleanly — explicit receiver absence remains a legal, declared fact
+  [46] ok   NC-ANCHOR-01: LIVE-ANCHOR with a role that is none of the four → code is EXACTLY :UNKNOWN-BINDING-ROLE
+  [47] ok   NC-ANCHOR-02: LIVE-ANCHOR asking :SCHEMA with a SUPPORT-role reference → code is EXACTLY :BINDING-ROLE-MISMATCH
+  [48] ok   NC-ANCHOR-03: LIVE-ANCHOR with a string key → code is EXACTLY :MALFORMED-REFERENCE
+  [49] ok   BIND-CONCLUSION-REFERENCE accepts an arbitrary host value (value-unchecked BY DESIGN — §6.2)
+  [50] ok   BIND-SUPPORT-REFERENCE accepts an arbitrary host value (DERIVE/2 owns support classification)
+  [51] ok   BIND-RECEIVER-REFERENCE accepts NIL — explicit receiver ABSENCE is a legal binding
+
+── D. THE THREE IDENTITY-DRIFT GUARDS (induced — see the note in §2)
+  [52] ok   VALIDATE when the proposed form stops recomputing → code is EXACTLY :PROPOSED-IDENTITY-DRIFT
+  [53] ok   MATERIALIZE when the validated form stops recomputing → code is EXACTLY :VALIDATED-IDENTITY-DRIFT
+  [54] ok   SUBMIT when the petition stops recomputing → code is EXACTLY :PETITION-IDENTITY-DRIFT
+  [55] ok   CEILING ON THE DRIFT GUARDS: filling BYTES-DATUM-VALUE's return leaves the STORE intact — no public caller can force real drift (tripwire on a CD/0 guarantee, not a Form /1 one)
+
+── E. RESOLUTION — the four unresolved references refuse BEFORE invocation
+  [56] ok   NC-6: unresolved SCHEMA reference → code is EXACTLY :UNRESOLVED-SCHEMA-REFERENCE
+  [57] ok   NC-6: …and the DERIVE/2 invocation counter reads EXACTLY 0
+  [58] ok   unresolved CONCLUSION reference → code is EXACTLY :UNRESOLVED-CONCLUSION-REFERENCE
+  [59] ok   …and the DERIVE/2 invocation counter reads EXACTLY 0
+  [60] ok   NC-7: unresolved SUPPORT reference → code is EXACTLY :UNRESOLVED-SUPPORT-REFERENCE
+  [61] ok   NC-7: …and the DERIVE/2 invocation counter reads EXACTLY 0
+  [62] ok   NC-8: unresolved RECEIVER reference → code is EXACTLY :UNRESOLVED-RECEIVER-REFERENCE
+  [63] ok   NC-8: …and the DERIVE/2 invocation counter reads EXACTLY 0
+
+── F. NC-28 — Door 1 under an invocation counter (with the positive control)
+  [64] ok   NC-28 step 3: Door 1 (PROPOSE → VALIDATE → MATERIALIZE) leaves the DERIVE/2 counter at EXACTLY 0
+  [65] ok   NC-28 step 5 POSITIVE CONTROL: Door 2 on the SAME instrument drives the counter to EXACTLY 1
+       counter readings — Door 1: 0 · Door 2: 1 · outcome :GRANTED
+  [66] ok   NC-28 hygiene: the real DERIVE/2 fdefinition is restored after every shimmed run
+
+── G. The three classified outcomes
+  [67] ok   :GRANTED fixture: outcome kind is EXACTLY :GRANTED and no Form /1 refusal was returned
+  [68] ok   :GRANTED fixture: DERIVE/2 invoked EXACTLY once
+  [69] ok   :GRANTED fixture: the outcome carries the Slice /2 claim AND the Slice /2 receipt
+  [70] ok   :GRANTED fixture: DERIVE/2 received the resolved supports EQ-identical and in order (nothing filtered)
+  [71] ok   NC-10: wrong-subject support resolves, reaches DERIVE/2 exactly once UNFILTERED, and yields :GOVERNED-REFUSAL with claim NIL, basis NIL, a Slice /2 receipt and a Form /1 submission receipt
+  [72] ok   NC-19: before a grant, NO claim and NO derivation basis exist anywhere in the outcome
+  [73] ok   NC-9: a STALE Slice /2 schema wrapper → outcome kind is EXACTLY :DOOR-REFUSAL
+  [74] ok   NC-9: …DERIVE/2 was invoked EXACTLY once — the refusal is ITS door, not a Form /1 copy of its rule
+  [75] ok   NC-9: …and the receipt's Slice /2 identity datum is NIL — no Slice /2 receipt exists on this path
+  [76] ok   NC-36: a receiver bound to NIL is FOUND — DERIVE/2 IS invoked (count EXACTLY 1) and a classified outcome exists
+  [77] ok   NC-36: …and the outcome is whatever the CONTRACT makes it — here :GOVERNED-REFUSAL (accessibility :REQUIRED)
+       unresolved receiver → refusal before invocation; NIL receiver → invocation and a governed outcome
+  [78] ok   NC-35: a receiver object bound through the SUPPORT binder under key `r' does NOT satisfy (RECEIVER-REFERENCE "r") → EXACTLY :UNRESOLVED-RECEIVER-REFERENCE, counter EXACTLY 0
+  [79] ok   NC-35 structural half: (SUPPORT-REFERENCE "r") and (RECEIVER-REFERENCE "r") are NOT EQUAL-DATUM — the role is in the identifier
+  [80] ok   REFERENCE-ROLE returns the exact role for each of the four constructors and NIL for a non-reference
+
+── G'. THE POLICY v2 REGRESSION — the permanent gravestone of policy v1
+  [81] ok   GRAVESTONE PRECONDITION: at least 5 logged submissions actually reached DERIVE/2 (5 of 11 did) — an implication over an empty set proves nothing
+  [82] ok   POLICY v2 GRAVESTONE: across ALL 11 logged submissions, invocations=1 ⇒ an OUTCOME and a RECEIPT both exist; there is NO state with invocations=1 and a Form /1 policy refusal
+  [83] ok   …stated the other way round: NO logged submission has invocations=1 AND a returned refusal
+  [84] ok   …and its mirror: every submission with invocations=0 produced NO outcome object at all
+       submission log: 11 entries · 5 reached DERIVE/2 · 6 refused before invocation
+
+── H. Identities are CD/0 BYTES DATA — compared with EQUAL-DATUM, never STRING=
+  [85] ok   all 11 identities in reach (7 phase + predecessor + validation receipt + materialization receipt + refusal) are CD0:BYTES-DATUM-P
+  [86] ok   NO identity is a Common Lisp string — hex is produced only by RENDER-IDENTITY-HEX and never stored
+  [87] ok   the genealogy of one submitted petition has EXACTLY 7 identities: subject, proposed, validated, content, petition-occurrence, submission-occurrence, submission-receipt
+  [88] ok   …and those 7 are PAIRWISE DISTINCT under EQUAL-DATUM (21 comparisons)
+  [89] ok   RENDER-IDENTITY-HEX is DIAGNOSTIC: its length is EXACTLY 2 × (IDENTITY-OCTETS identity) for all 7
+  [90] ok   NC-22: the 7 hex renderings are pairwise distinct as whole strings (no abbreviation is compared)
+  [91] ok   the submission receipt's PETITION-OCCURRENCE-IDENTITY EQUAL-DATUMs the petition's own
+  [92] ok   §9.3: the SUBMISSION OCCURRENCE identity and the SUBMISSION RECEIPT identity are DIFFERENT — the act and its later account are different facts
+  [93] ok   CONSEQUENTIAL ANCESTRY: one changed support key ("w1"→"w2") changes ALL FIVE descendant identities — subject, proposed, validated, content, occurrence
+  [94] ok   …and the SUBMISSION OCCURRENCE identity moves with them, under an otherwise identical submission
+  [95] ok   NC-25: same content, DIFFERENT occurrence tag → DIFFERENT occurrence identities
+  [96] ok   NC-25: …while the CONTENT identity is unchanged — the tag enters at exactly one link
+  [97] ok   NC-26: same content, SAME occurrence tag → IDENTICAL identities. DOCUMENTED UNDETECTED HOST ERROR — Form /1 makes no global exactly-once claim
+
+── H'. The identity envelope, measured on the largest lawful petition
+  [98] ok   the max-policy petition's VALIDATED identity fits the envelope
+  [99] ok   ENVELOPE FIXTURE: all THREE classified outcome kinds reached on the 16-long-key petition
+       outcome tail max:granted       146 octets (reserve 4096)
+       outcome tail max:governed      173 octets (reserve 4096)
+       outcome tail max:door          133 octets (reserve 4096)
+  [100] ok   the measured outcome tail (receipt octets − submission-occurrence octets) is ≤ 4096 for ALL THREE classified outcome kinds
+  [101] ok   the maximum terminal identity (46514 octets) fits (PETITION-POLICY-MAX-IDENTITY-OCTETS) = 65536
+
+── I. Reader aliasing (§7 of the ruling; the de-pignore Review 2 lesson)
+  [102] ok   NC-20 (a): mutating the LIST returned by DERIVATION-PETITION-SUPPORT-REFERENCES leaves the stored refs, the petition fingerprint and a later GRANTED submission unchanged
+  [103] ok   NC-20 (b): mutating BOTH the outer list AND splicing a fabricated entry onto the tail of CONTEXT-DECLARATIONS leaves the mapping, the record species and the DECLARATION IDENTITY intact
+  [104] ok   LIVE-ANCHOR returns the EXACT image-local object (EQ), which is what an anchor is — and it is reachable ONLY by an exact role/reference lookup, never as an aggregate
+  [105] ok   LIVE-ANCHOR of an unbound reference returns (values NIL NIL) — not-found is a value, not a refusal
+  [106] ok   LIVE-ANCHOR of a receiver BOUND TO NIL returns (values NIL T) — a bound NIL is FOUND, and is a different fact from unbound
+  [107] ok   PETITION-REFUSAL-PATH returns the exact path (1 :SCHEMA)
+  [108] ok   NC-20 (c): mutating the LIST returned by PETITION-REFUSAL-PATH leaves the stored path (1 :SCHEMA) unchanged
+  [109] ok   the :NOT-A-PROPOSED-PETITION-FORM refusal carries a non-empty DETAIL and HOST-TYPE
+  [110] ok   NC-20 (d): FILLing the STRING returned by PETITION-REFUSAL-DETAIL with #\Z leaves the stored detail unchanged
+  [111] ok   NC-20 (e): FILLing the STRING returned by PETITION-REFUSAL-HOST-TYPE with #\Z leaves the stored host type unchanged
+  [112] ok   …and that host type is the BOUNDED descriptor "COMMON-LISP:KEYWORD", not PRIN1-TO-STRING output
+  [113] ok   the governed-refusal receipt's SLICE2-CONDITION-CLASS is EXACTLY "LISP-PLUS-SLICE2:SLICE2-DERIVATION-REFUSED"
+  [114] ok   NC-20 (f): FILLing the STRING returned by SLICE2-CONDITION-CLASS leaves the stored class unchanged
+  [115] ok   NC-20 (g): mutating the LIST returned by PETITION-PROTOCOL-REFUSAL-CODES (car AND a spliced tail) leaves the declared set unchanged
+  [116] ok   NC-20 (g2): the same for PETITION-INTEGRITY-ALARM-CODES
+  [117] ok   NC-20 (g3): mutating the catalogue list AND filling an entry's NOTE string leaves the catalogue intact — every entry is a fresh record over a fresh string
+  [118] ok   both budget-id readers return EXACTLY "cd0-conformance-default"
+  [119] ok   NC-20 (h): FILLing the STRINGS returned by VALIDATED-PETITION-FORM-BUDGET-ID and PETITION-VALIDATION-RECEIPT-BUDGET-ID leaves both stored ids unchanged
+  [120] ok   DOCUMENTED IMAGE-LOCAL ANCHORS: RECEIPT-BY and RECEIPT-CONTEXT return the EXACT objects (EQ) — a contract, not an aliasing defect (no public writer exists)
+
+── J. The TRY- twins — arity, and the receipt the twin hands back
+  [121] ok   TRY-PROPOSE-PETITION success returns EXACTLY 2 values: (PROPOSED, NIL)
+  [122] ok   TRY-PROPOSE-PETITION refusal returns EXACTLY 2 values: (NIL, REFUSAL)
+  [123] ok   TRY-VALIDATE-PETITION success returns EXACTLY 2 values: (VALIDATED, NIL)
+  [124] ok   TRY-VALIDATE-PETITION refusal returns EXACTLY 2 values: (NIL, REFUSAL)
+  [125] ok   TRY-MATERIALIZE-PETITION success returns EXACTLY 3 values: (PETITION, MATERIALIZATION-RECEIPT, NIL)
+  [126] ok   TRY-MATERIALIZE-PETITION refusal returns EXACTLY 3 values: (NIL, NIL, REFUSAL)
+  [127] ok   TRY-MATERIALIZE-PETITION returns the EXACT (EQ) petition and receipt objects MATERIALIZE-PETITION produced — it delegates, it does not rebuild
+  [128] ok   …and across TWO SEPARATE calls the objects are NOT EQ (each call allocates) while their identities ARE EQUAL-DATUM — content identity, not object identity
+  [129] ok   TRY-SUBMIT-PETITION success returns EXACTLY 2 values: (OUTCOME, NIL)
+  [130] ok   TRY-SUBMIT-PETITION refusal returns EXACTLY 2 values: (NIL, REFUSAL)
+
+── K. Negative controls — occurrence, substitution, escape, residue
+  [131] ok   NC-16: substituting the CONTEXT (same petition, same act id) changes the SUBMISSION OCCURRENCE identity
+  [132] ok   NC-31A setup: the two contexts carry the IDENTICAL host-supplied occurrence TAG — the tag is held fixed on purpose, so the tag cannot be what separates them
+  [133] ok   NC-31A (1): DIFFERENT context DECLARATION identities — the declaration identity commits to every binding's role, exact reference and exact denotation declaration
+  [134] ok   NC-31A (2): DIFFERENT context OCCURRENCE identities — despite the identical host tag, because the occurrence identity commits to the declaration identity
+  [135] ok   NC-31A (3): DIFFERENT SUBMISSION OCCURRENCE identities — the v2 defect is gone: two governed acts declaring different things no longer share a durable identity
+  [136] ok   NC-31A: …and the outcomes still differ (:GRANTED vs :GOVERNED-REFUSAL) — the same fixture that used to demonstrate the defect now demonstrates the repair
+  [137] ok   NC-31A (4): the submission receipt binds the EXACT context occurrence identity and the EXACT declaration identity — a reader of the receipt alone can tell A from B
+  [138] ok   NC-31B (1): declaration identities remain EQUAL — the two contexts declare the same thing, and the layer records declarations, not truths
+  [139] ok   NC-31B (2): context occurrence identities remain EQUAL
+  [140] ok   NC-31B (3): submission occurrence identities remain EQUAL — this is NOT the v2 defect, it is the DECLARED RESIDUAL, and it is not repairable in-image
+  [141] ok   NC-31B (4): opposite governed outcomes remain possible under equal declared identities — a false host declaration is not detected by Form /1 and is not claimed to be
+  [142] ok   NC-31B (5): the exact CONTEXT ANCHORS reached through the two receipts are DIFFERENT objects — the in-image divergence is observable even though no durable field records it
+  [143] ok   NC-31B (6): the exact SLICE /2 RECEIPT identities differ — the governed layer minted two different receipts, and Form /1 recorded both exactly
+       NC-31B CLASSIFICATION — trusted-host false declaration or identifier reuse;
+         not detected by Form /1; not claimed to be detected;
+         no cross-image certification earned.
+         This is the honest residual AFTER the repair.  Its existence does
+         NOT excuse NC-31A, which was a defect of this layer and is fixed.
+  [144] ok   NC-31C: the SAME declarations inserted in DIFFERENT orders (across roles and within the support role) yield the IDENTICAL declaration identity — insertion order is canonicalized away before identity construction
+  [145] ok   NC-31C: …and therefore the identical context OCCURRENCE identity
+  [146] ok   NC-31C: …and the DECLARATIONS reader reports them in the same canonical order from both
+  [147] ok   NC-BY-A setup: the EXACT SAME live :BY object was submitted twice (EQ), so the live anchor cannot be what separates them
+  [148] ok   NC-BY-A setup: …under two DIFFERENT :BY-ID declarations
+  [149] ok   NC-BY-A: DIFFERENT :BY-ID under an identical live :BY yields DIFFERENT SUBMISSION OCCURRENCE IDENTITIES — the durable record commits to the declaration
+  [150] ok   NC-BY-B setup: TWO DIFFERENT live :BY values were submitted
+  [151] ok   NC-BY-B setup: …under the SAME :BY-ID declaration
+  [152] ok   NC-BY-B: an IDENTICAL DECLARED SUBMISSION IDENTITY results from two different live principals — recorded as a TRUSTED-HOST FALSE DECLARATION, not detected by Form /1 and not claimed to be
+  [153] ok   NC-BY-B: …and the divergence IS in-image observable — the two granted claims are asserted by different principals, so a reader holding both can see what no durable field records
+  [154] ok   NC-BY-C: the submission receipt exposes BOTH the EXACT live :BY anchor and the IMMUTABLE :BY-ID declaration — two readers, two kinds of fact, neither standing in for the other
+  [155] ok   NC-33: the SAME submission act id reused yields an IDENTICAL submission occurrence identity — the same documented honesty rule
+  [156] ok   NC-17 setup: a submission against an empty sealed context refuses EXACTLY :UNRESOLVED-SCHEMA-REFERENCE without invocation
+  [157] ok   NC-17: after a REFUSED submission the petition is BYTE-IDENTICAL (full canonical fingerprint over all nine public readers)
+  [158] ok   NC-18: the petition submits again after a refused submission — the refusal left no residue
+  [159] ok   NC-18: re-submission under a fresh act id produces a SECOND DISTINCT submission occurrence
+  [160] ok   NC-18: …and the petition is STILL byte-identical after two successful submissions — no chaining, no accumulation
+  [161] ok   NC-15: petition A's receipt does NOT match petition B — the occurrence identities differ
+  [162] ok   NC-21/NC-30: a malformed conclusion binding drives a SLICE1-CONDITION out through TRY-SUBMIT-PETITION — it ESCAPES, and is neither a PETITION-REFUSED nor either caught Slice /2 class
+       escaped condition class: S1:UNBOUND-CONCLUSION-VARIABLE
+  [163] ok   NC-34: the escaping path returned NO VALUES AT ALL — control never reached a point where an outcome or a submission receipt existed to be read
+  [164] ok   NC-11/12: a DERIVATION-PETITION offered as a support is INERT RESIDUE — recorded as (:INDEX 1 :REASON :UNSUPPORTED-SUPPORT-SPECIES) and the object itself is not retained
+  [165] ok   NC-13: a MATERIALIZATION RECEIPT offered as standing is INERT RESIDUE, recorded identically
+  [166] ok   NC-14: a VALIDATION RECEIPT offered as evidence is INERT RESIDUE, recorded identically
+  [167] ok   NC-14: a PROPOSED-PETITION-FORM offered as evidence is INERT RESIDUE, recorded identically
+  [168] ok   NC-14: a SUBMISSION RECEIPT offered as truth evidence is INERT RESIDUE, recorded identically
+  [169] ok   NC-4: a host FUNCTION is not a CD/0 datum and cannot enter — PROPOSE refuses it EXACTLY :NOT-A-DATUM; no CD/0 family carries a closure
+
+── L. Source discipline — the scanner is teeth-checked BEFORE it is believed
+  [170] ok   T-SCAN-01 planted fault: the scanner FINDS `eval' in live code
+  [171] ok   T-SCAN-02: the scanner IGNORES a banned name inside a ;-comment
+  [172] ok   T-SCAN-03: the scanner IGNORES a banned name inside a string literal
+  [173] ok   T-SCAN-04: the scanner does NOT read `load' out of `payload' — token matching, not substring
+  [174] ok   T-SCAN-05 planted fault: the scanner FINDS a blanket (ERROR () …) handler in live code
+  [175] ok   T-SCAN-06: the scanner does NOT flag (ERROR 'PETITION-REFUSED …) — signalling a typed condition is not a blanket handler
+       scanned 35966 characters of CODE below the marker (comments and string literals blanked)
+  [176] ok   T-NO-HOST-ESCAPE: the code below the marker contains NO `eval' token
+  [177] ok   T-NO-HOST-ESCAPE: the code below the marker contains NO `compile' token
+  [178] ok   T-NO-HOST-ESCAPE: the code below the marker contains NO `load' token
+  [179] ok   T-NO-HOST-ESCAPE: the code below the marker contains NO `intern' token
+  [180] ok   T-NO-HOST-ESCAPE: the code below the marker contains NO `find-symbol' token
+  [181] ok   T-NO-HOST-ESCAPE: the code below the marker contains NO `read-from-string' token
+  [182] ok   T-NO-HOST-ESCAPE: the code below the marker contains NO `perform' token
+  [183] ok   T-NO-BROAD-HANDLER: the code below the marker contains no `(ERROR () …)' clause
+  [184] ok   T-NO-BROAD-HANDLER (stronger): it contains no `(ERROR (…) …)' handler clause AT ALL, however the variable is named
+  [185] ok   T-NO-FORM0: the code below the marker names LISP-PLUS-FORM0 not once, single- or double-colon
+  [186] ok   §12 forbidden snapshot / compile-time escape: no `prin1-to-string' token below the marker
+  [187] ok   §12 forbidden snapshot / compile-time escape: no `sxhash' token below the marker
+  [188] ok   §12 forbidden snapshot / compile-time escape: no `print-object' token below the marker
+  [189] ok   §12 forbidden snapshot / compile-time escape: no `eval-when' token below the marker
+  [190] ok   §12 forbidden snapshot / compile-time escape: no `compile-file' token below the marker
+  [191] ok   §12 forbidden snapshot / compile-time escape: no `load-time-value' token below the marker
+  [192] ok   §12 forbidden snapshot / compile-time escape: no `macroexpand' token below the marker
+  [193] ok   NC-2: PERFORM is unavailable — no Form /1 path below the marker reaches it
+
+── M. Planted faults — each dies at a named tooth
+  [194] ok   PF-1 (MATERIALIZE-PETITION can invoke DERIVE/2) DIES at NC-28 step 3: the Door 1 counter reads 1, not 0
+  [195] ok   PF-2 (Form /1 pre-filters resolved supports) DIES at NC-10: the captured DERIVE/2 :SUPPORTS argument no longer EQUALs the resolved witness list
+  [196] ok   PF-3 (the support table satisfies a receiver reference of the same host key) DIES at NC-35: the receiver reference now resolves and DERIVE/2 is invoked
+  [197] ok   PF-4 (DERIVATION-PETITION-SUPPORT-REFERENCES aliases the stored list) DIES at NC-20 (a): the caller's mutation reaches the stored refs and the petition fingerprint moves
+  [198] ok   PF-5 (the submission path wrapped in a blanket handler) DIES at NC-21: nothing escapes any more — the Slice /1 condition comes back as a returned refusal
+
+       ── planted-fault ledger (nothing collapsed into "killed") ──
+       PF-1  MATERIALIZE-PETITION able to invoke DERIVE/2
+             died at: NC-28 step 3 (Door 1 counter = 0)  [INTENDED TOOTH]
+             counter went 0 → 1
+       PF-2  Form /1 pre-filters resolved supports before DERIVE/2
+             died at: NC-10 (DERIVE/2 argument capture)  [INTENDED TOOTH]
+             caught by the argument-capture half of NC-10, NOT by the outcome kind — a pre-filtered call still yields :GOVERNED-REFUSAL
+       PF-3  role-separated resolution satisfies a receiver reference from the support table
+             died at: NC-35 (role confusion)  [INTENDED TOOTH]
+             the :UNRESOLVED-RECEIVER-REFERENCE refusal disappears and the counter leaves 0
+       PF-4  aggregate reader aliases the stored value
+             died at: NC-20 (a) (mutate what the reader handed back)  [INTENDED TOOTH]
+             the fingerprint comparison moved; the mutation reached the stored list
+       PF-5  submission path wrapped in (ERROR () …) so an implementation condition becomes a petition refusal
+             died at: NC-21 (the escape tooth)  [INTENDED TOOTH]
+             NC-21 fired first; NC-34 could not fire because there was no escape left to leave nothing behind
+  [199] ok   POST-FAULT RESTORATION: all five teeth pass again with the honest fdefinitions restored
+
+── N. NC-32 — THE SPLIT CODE LEDGER, both classes, both directions
+
+       ── THE LEDGER, SPLIT ──────────────────────────────────────
+       PUBLIC PROTOCOL REFUSALS     declared 37 · produced through the public API 37
+       INDUCED INTEGRITY ALARMS     declared 3 · produced under internal fault 3
+       CATALOGUE                    40 entries
+
+       The three induced alarms, and their reachability as the catalogue states it:
+         :PROPOSED-IDENTITY-DRIFT  :INTERNAL-PLANTED-FAULT-ONLY
+         :VALIDATED-IDENTITY-DRIFT  :INTERNAL-PLANTED-FAULT-ONLY
+         :PETITION-IDENTITY-DRIFT  :INTERNAL-PLANTED-FAULT-ONLY
+
+       CD/0's copy-on-access makes these unreachable through the intended
+       public surface.  That is a GENUINE GOVERNED GUARANTEE, pinned by CD/0's
+       own suite and by the Python seed — not a current accident.  They remain
+       useful as package-internal integrity guards and planted-fault alarms,
+       and a public caller cannot naturally provoke them.
+
+  [200] ok   NC-32A (→): every one of the 37 DECLARED PROTOCOL codes was produced BY A PUBLIC-API FIXTURE in this run — no advertised protocol code lacks a fixture, and a gate that has never fired is untested, not passing
+  [201] ok   NC-32A (←): every one of the 37 codes produced through the public API is DECLARED AS A PROTOCOL REFUSAL — no public path signals a code the protocol catalogue omits, and none of the three integrity alarms leaked out through a public call
+  [202] ok   NC-32B (→): every one of the 3 DECLARED INTEGRITY ALARMS was produced UNDER AN INTERNAL PLANTED FAULT — the guards are real and they fire
+  [203] ok   NC-32B (←): everything produced under induction is declared as an integrity alarm — the shim provoked nothing the catalogue does not classify
+  [204] ok   NC-32C: the two DECLARED sets are DISJOINT — no code is published as both publicly reachable and internally unreachable
+  [205] ok   NC-32C (produced): the two PRODUCED sets are DISJOINT — no code was reached both by a caller and only by a shim, so the classification is not merely asserted but observed
+  [206] ok   NC-32D: the UNION of the two published lists EQUALS the complete catalogue (40 = 37 + 3), set-difference empty in both directions — the split cannot drift from the whole, because both lists are DERIVED from the one catalogue
+  [207] ok   NC-32E: EVERY catalogue entry states a class, a REACHABILITY and a non-empty note — a host author can tell, from the catalogue alone, whether a handler it writes is dead code
+  [208] ok   NC-32E: …and class and reachability agree entry by entry — the two columns are not independently maintainable and cannot disagree
+  [209] ok   NC-32 hygiene: no set contains a duplicate, so every set-difference above is over true sets
+  [210] ok   NC-32F: there is NO PETITION-REFUSAL-CODES symbol in the package at all — the flat list whose count could travel without the distinction was removed, not deprecated
+
+── A petition is a well-formed question, never a granted answer. ──
+── The envelope is a BUILD gate: no ceiling may erase a governed act. ──
+── The witness is the counter, never the receipt. ──
+
+== form1-selftest: 210 checks passed / 0 failed ==

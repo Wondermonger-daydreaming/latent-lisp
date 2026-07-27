@@ -1,0 +1,13 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+n=1  derive/2 invocations=1  outcome=GRANTED  refusal=NIL
+n=9  derive/2 invocations=1  outcome=NONE  refusal=:IDENTITY-LENGTH-EXCEEDED
+    >>> the governed operation ran 1 time(s) and NO submission receipt exists

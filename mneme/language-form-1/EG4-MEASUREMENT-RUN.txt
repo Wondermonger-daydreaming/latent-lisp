@@ -1,0 +1,28 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+n=7 (7 supports)
+  subject 1048 | proposed 2264 | validated 6930 | content 14798 | pet-occ 29804 | sub-occ 59856 | RECEIPT 119944
+  TERMINAL 119944 vs ceiling 131072 -> within
+n=8 (8 supports)
+  subject 1116 | proposed 2400 | validated 7338 | content 15682 | pet-occ 31572 | sub-occ 63392 | RECEIPT 127016
+  TERMINAL 127016 vs ceiling 131072 -> within
+n=9 (9 supports)
+  subject 1184 | proposed 2536 | validated 7746 | content 16566 | pet-occ 33342 | sub-occ 66932 | RECEIPT 134096
+  TERMINAL 134096 vs ceiling 131072 -> EXCEEDED
+smallest lawful (0 supports)
+  subject 572 | proposed 1312 | validated 4074 | content 8610 | pet-occ 17428 | sub-occ 35104 | RECEIPT 70440
+  TERMINAL 70440 vs ceiling 131072 -> within
+inhabited candidate D (1 supports)
+  subject 640 | proposed 1448 | validated 4482 | content 9494 | pet-occ 19196 | sub-occ 38640 | RECEIPT 77512
+  TERMINAL 77512 vs ceiling 131072 -> within
+maximum policy (16 supports)
+  subject 1674 | proposed 3516 | validated 10686 | content 22936 | pet-occ 46082 | sub-occ 92412 | RECEIPT 185056
+  TERMINAL 185056 vs ceiling 131072 -> EXCEEDED

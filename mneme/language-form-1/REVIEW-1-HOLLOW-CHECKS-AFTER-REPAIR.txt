@@ -1,0 +1,138 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+
+================================================================
+  LANGUAGE FORM /1 — REVIEW 1
+  THE BEFORE/AFTER WITNESS FOR THE TWO HOLLOW CHECKS
+================================================================
+
+  SBCL : 2.4.6
+
+
+CHECK [46] — the drift-ceiling tooth
+====================================
+
+  THE CLAIM the check's label makes:
+    "BYTES-DATUM-VALUE hands back a COPY, so no public caller can
+     force real drift."
+
+  THE SHIPPED FORM (commit 295f9fba):
+    (let ((first-read (cd0:bytes-datum-value identity)))
+      (fill first-read 0)
+      (cd0:equal-datum identity
+                       (cd0:make-bytes-datum (cd0:bytes-datum-value identity))))
+
+  THE REPAIRED FORM (commit 7db2da94):
+    (let ((first-read (cd0:bytes-datum-value identity)))
+      (fill first-read 0)
+      (notevery #'zerop (cd0:bytes-datum-value identity)))
+
+  ── the truth table ─────────────────────────────────────────────
+
+  form                    REAL     ALIASING   verdict
+                                   (faithful)
+  ────────────────────────────────────────────────────────────────
+  OLD [46] (shipped)      T        T          *** CANNOT FAIL — HOLLOW ***
+  NEW [46] (repaired)     T        NIL        DISCRIMINATES
+
+  ── the chair's own instrument, audited ─────────────────────────
+
+  form                    REAL     ALIASING   verdict
+                                   (UNFAITHFUL — return aliased,
+                                    internal store NOT aliased)
+  ────────────────────────────────────────────────────────────────
+  OLD [46] (shipped)      T        NIL        REPORTED DISCRIMINATING — WRONG
+  NEW [46] (repaired)     T        NIL        
+
+  WHAT THE SECOND TABLE RECORDS.  The chair's first aliasing harness
+  aliased the accessor's RETURN and not the datum's INTERNAL STORE.
+  Under it, the shipped [46] appeared to discriminate — which would have
+  made the entire hollow-tooth finding a false alarm.  It was caught only
+  because its answer disagreed with a report the chair had reason to trust.
+
+  A SIMULATION STANDING IN FOR THE THING SIMULATED, inside the session
+  whose subject is exactly that.  It is preserved here as a live control,
+  not as an anecdote.
+
+  WHY THE SHIPPED FORM COULD NOT FAIL.  It filled the FIRST read, then
+  compared the store against a datum rebuilt from a SECOND read.  Under
+  an aliasing accessor BOTH SIDES ARE THE SAME ZEROED VECTOR, so equality
+  holds.  It demonstrated that MAKE-BYTES-DATUM . BYTES-DATUM-VALUE round
+  trips.  Its label claimed it demonstrated defensive copying.
+
+  THE STANDING OF THE REPAIRED FORM.  It is a TRIPWIRE ON AN IMPORTED
+  GUARANTEE, not Form /1 coverage.  CD/0's copy-on-access is pinned by
+  CD/0's own suite in CD/0's own language and in the Python seed; if it
+  ever regressed, CD/0's suite is what goes red.  [46] exists so that
+  Form /1 does not keep printing green while the threat model beneath it
+  has changed.
+
+
+CHECK [129] — NC-34, the no-values-at-all tooth
+===============================================
+
+  THE CLAIM the check's label makes:
+    "the escaping path returned NO values at all — no outcome and no
+     submission receipt exist to be read."
+
+  THE SHIPPED FORM (commit 295f9fba):
+    (notany (lambda (entry) (eq :escape-should-not-log (getf entry :label)))
+            *submission-log*)
+
+  ── vacuity, first fold: TYPE ───────────────────────────────────
+
+    log as the suite actually builds it       OLD [129] -> T
+    log WITH the hunted label, as a STRING    OLD [129] -> T
+    log WITH the hunted label, as a KEYWORD   OLD [129] -> NIL
+
+    (eq :escape-should-not-log "escape-should-not-log") => NIL
+
+  The predicate compares a KEYWORD against values that are always
+  STRINGS.  EQ is NIL for every entry any fixture can produce, so
+  NOTANY is T no matter what the layer did.
+
+  ── vacuity, second fold: PROVENANCE ────────────────────────────
+
+  Even under the keyword representation, the check can only fail if some
+  call site passes :ESCAPE-SHOULD-NOT-LOG as a label.  No call site in
+  form1-selftest.lisp ever did, in any representation.  The world in which
+  the shipped [129] returns NIL was never constructible by the suite.
+
+  VERDICT ON THE SHIPPED FORM: *** CANNOT FAIL — HOLLOW, TWICE OVER ***
+
+  ── the repaired form, and the world in which it DOES fail ──────
+
+  THE REPAIRED FORM (commit 7db2da94) runs the escaping submission and
+  records whether control ever reached a point where values existed.
+  Its discriminating world is a submission that DOES return: a VALID
+  conclusion binding, where TRY-SUBMIT-PETITION comes back normally.
+
+    malformed conclusion (SHOULD escape)   NEW [129] -> T
+    valid conclusion     (SHOULD return)   NEW [129] -> NIL
+
+  VERDICT ON THE REPAIRED FORM: DISCRIMINATES
+
+
+WHAT THIS FILE IS FOR
+=====================
+
+  FANG's two findings are NOT absorbed into the final suite.  A repaired
+  tooth in a green run is indistinguishable from a tooth that was always
+  sound; the history is only preserved if the OLD FORM stays executable
+  beside the new one, in a world that tells them apart.  That is this file.
+
+  It also preserves the chair's own wrong instrument, running, giving the
+  wrong answer — because the review that finds a description standing in
+  for the thing described must be able to find its own.
+
+
+== REVIEW-1-HOLLOW-CHECKS: record complete ==

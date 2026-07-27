@@ -1,0 +1,133 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== EG-4, POLICY v2 — IDENTITY VALUE OCTETS ==
+envelope 65536 octets · outcome-tail reserve 4096 octets · max supports 16 · max petition octets 16384
+
+---- 0..16 SHORT support references ----
+
+n=0 (short keys)
+  petition canonical octets                 286
+  subject                payload    286 | encoded    294 | hex     588
+  proposed               payload    370 | encoded    378 | hex     756
+  validated              payload    480 | encoded    488 | hex     976
+  petition-content       payload    532 | encoded    540 | hex    1080
+  petition-occurrence    payload    606 | encoded    614 | hex    1228
+
+n=1 (short keys)
+  petition canonical octets                 320
+  subject                payload    320 | encoded    328 | hex     656
+  proposed               payload    404 | encoded    412 | hex     824
+  validated              payload    514 | encoded    522 | hex    1044
+  petition-content       payload    566 | encoded    574 | hex    1148
+  petition-occurrence    payload    640 | encoded    648 | hex    1296
+
+n=16 (short keys)
+  petition canonical octets                 837
+  subject                payload    837 | encoded    845 | hex    1690
+  proposed               payload    921 | encoded    929 | hex    1858
+  validated              payload   1031 | encoded   1039 | hex    2078
+  petition-content       payload   1083 | encoded   1091 | hex    2182
+  petition-occurrence    payload   1158 | encoded   1166 | hex    2332
+
+---- 16 LONG support references (near the petition octet ceiling) ----
+
+n=16 (long keys)
+  petition canonical octets               15237
+  subject                payload  15237 | encoded  15245 | hex   30490
+  proposed               payload  15321 | encoded  15329 | hex   30658
+  validated              payload  15431 | encoded  15439 | hex   30878
+  petition-content       payload  15483 | encoded  15491 | hex   30982
+  petition-occurrence    payload  15557 | encoded  15565 | hex   31130
+
+---- THREE CLASSIFIED OUTCOMES on the n=16 long-key petition ----
+  :GRANTED               kind GRANTED           
+     submission-occurrence  payload  60691 | encoded  60700 | hex  121400
+     TERMINAL receipt       payload  60836 | encoded  60845 | hex  121690
+     outcome tail (receipt encoded - occurrence encoded)    145  reserve 4096
+  :GOVERNED-REFUSAL      kind GOVERNED-REFUSAL  
+     submission-occurrence  payload  60692 | encoded  60701 | hex  121402
+     TERMINAL receipt       payload  60864 | encoded  60873 | hex  121746
+     outcome tail (receipt encoded - occurrence encoded)    172  reserve 4096
+  :DOOR-REFUSAL          kind DOOR-REFUSAL      
+     submission-occurrence  payload  60688 | encoded  60697 | hex  121394
+     TERMINAL receipt       payload  60821 | encoded  60830 | hex  121660
+     outcome tail (receipt encoded - occurrence encoded)    133  reserve 4096
+
+---- SUMMARY ----
+  maximum terminal receipt identity  60873 octets
+  produced by                        :GOVERNED-REFUSAL (n=16 long keys)
+  envelope                           65536 octets
+  verdict                            EG-4 HOLDS — every admissible classified outcome fits
+
+
+---- (a) REALISTIC declarations: governed identities ----
+  The application's own shape: a support declared with the exact
+  IDENTITY->DATUM of its Slice /0 witness id, which is short.
+
+  context declaration identity   16517 octets
+  submission occurrence          32631 octets
+  TERMINAL receipt               32776 octets  (envelope 65536)
+  headroom                       2.00x
+
+---- (c) THE CLIFF: declarations past the envelope ----
+  A host supplies ONE oversized declaration.  Three questions, all
+  answered by running it rather than by reasoning about it:
+    WHERE does it refuse · WITH WHAT CODE · was DERIVE/2 invoked?
+
+  A NOTE ON HOW THIS BLOCK WAS WRITTEN.  Its first draft asserted in
+  prose that an oversized declaration is discovered only at SUBMIT and
+  that `no earlier gate warns of it'.  Running it refuted that in one
+  line: at 70,000 octets the refusal fires at SEAL-RESOLUTION-CONTEXT.
+  The prose was a claim wearing a measurement's clothes.  The table
+  below replaced it, and the retraction is left visible on purpose.
+
+  declaration   1000 → decl-identity 1287    · ctx-occurrence 1403    · refused at :COMPLETED  :GRANTED                           · DERIVE/2 1
+  declaration  20000 → decl-identity 20289   · ctx-occurrence 20407   · refused at :COMPLETED  :GRANTED                           · DERIVE/2 1
+  declaration  55000 → decl-identity 55289   · ctx-occurrence 55407   · refused at :COMPLETED  :GRANTED                           · DERIVE/2 1
+  declaration  61000 → decl-identity 61289   · ctx-occurrence 61407   · refused at :SUBMIT     :SUBMISSION-ENVELOPE-EXCEEDED      · DERIVE/2 0
+  declaration  64000 → decl-identity 64289   · ctx-occurrence 64407   · refused at :SUBMIT     :SUBMISSION-ENVELOPE-EXCEEDED      · DERIVE/2 0
+  declaration  70000 → decl-identity —       · ctx-occurrence —       · refused at :CONTEXT    :IDENTITY-OCTETS-EXCEEDED          · DERIVE/2 0
+
+  WHAT THE TABLE SHOWS, and it is better news than the first draft claimed:
+
+  THERE ARE TWO PRE-INVOCATION GATES, NOT ONE.
+    · SEAL-RESOLUTION-CONTEXT gates the context DECLARATION and
+      OCCURRENCE identities as it mints them, refusing
+      :IDENTITY-OCTETS-EXCEEDED at phase :CONTEXT.  The context is
+      never even built, so no petition can be submitted with it.
+    · SUBMIT-PETITION gates the SUBMISSION OCCURRENCE identity PLUS the
+      reserved outcome tail, refusing :SUBMISSION-ENVELOPE-EXCEEDED.
+
+  IN EVERY REFUSING ROW, DERIVE/2 WAS INVOKED ZERO TIMES.  That is the
+  policy v2 ordering repair still holding under v3: a resource ceiling
+  refuses BEFORE the governed act, never after it, so no ceiling can
+  erase an act that already happened.
+
+  THE RESIDUAL, NAMED AT ITS TRUE (SMALLER) SIZE:
+    There is still no policy ceiling on declaration size AS SUCH — no
+    MAX-DECLARATION-OCTETS beside the four existing ceilings.  What
+    bounds it is the identity envelope, enforced at seal and again at
+    submit.  The practical consequence is narrow and worth stating: a
+    host learns its declarations are too large only when it SEALS,
+    which is after every binder has already accepted them.  The gap
+    between `the binder took it' and `the seal refuses' is one call.
+    Whether that warrants a fifth ceiling is a POLICY decision this
+    review was not authorised to take.  It is measured, named, and
+    left to the owner.
+
+  AND THE HEADROOM, WHICH THE OWNER SHOULD SEE:
+    policy v2, worst-case fixture   15882 / 65536   = 4.13x
+    policy v3, governed-identity declarations       ~2.0x
+    policy v3, worst-case fixture   60873 / 65536   = 1.08x
+    The envelope was chosen under v2 when the worst case was 3.8x below
+    it.  It is now 7 percent below it on the same fixture.  EG-4 HOLDS,
+    measured, not assumed — but the margin is no longer generous, and
+    calling it generous would be the flinch this lane is named for.
