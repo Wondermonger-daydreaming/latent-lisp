@@ -26,10 +26,22 @@ does not do. **Not an adoption record.***
 status:                   candidate implementation
 specification-frozen:     no
 adopted:                  no
-stranger audit:           OWED, non-blocking
+stranger audit:           COMPLETED 2026-07-27 against public commit 5ed23c7
+                          and subject tree a0941e74… — verdict
+                          FINDINGS — CANDIDATE REMAINS CONTINUABLE
+                          (audits/2026-07-27-grok-4.5/)
+successor dependence:     permitted EXPERIMENTALLY, named limits carried forward
+semantic repair required: no
 Slice /3:                 NOT opened
 semantic delta below:     NONE — this layer sits BESIDE the eleven, not under them
-form0 exports:            97   (86 at first return; +11 dual-identity/content-digest readers)
+form0 exports:            99   (86 at first return; +11 dual-identity/content-digest
+                               readers = 97; then option (c) at 0bbcc4a6 REMOVED
+                               MAKE-OPERATOR-DESCRIPTOR and added three externals —
+                               INSTANTIATED-FORM-TEMPLATE-SUBJECT-IDENTITY,
+                               OPERATOR-DESCRIPTOR, OPERATOR-NAMES — net +2 = 99.
+                               Derived 2026-07-27 from the loaded package
+                               (do-external-symbols = 99) and the regenerated
+                               census (99 rows), not from this line's history.)
 eleven prior floors:      654 / 0, unchanged
 pre-existing files:       byte-identical (git diff --stat HEAD -- experiments/latent-lisp: empty)
 ```

@@ -199,3 +199,64 @@ trusted-extension lane and the authority lane remain unopened**, and the
 workshop being warm is not a reason to open them. The next meaningful event in
 this lane is the stranger audit. The preserved branch `language-form-0` and its
 worktree remain as provenance fossils until that audit closes.
+
+---
+
+## RULING 3 — the stranger audit is ACCEPTED AND FILED (owner, 2026-07-27)
+
+The independent audit by `x-ai/grok-4.5` (snapshot `x-ai/grok-4.5-20260708`, via
+OpenRouter, provider xAI, no fallback) is **accepted as claim-directed stranger
+corroboration** of Candidate /0 at the exact published target:
+
+```
+public commit  5ed23c7d5f768d8e8f13c83842f572cf563270d3
+root tree      e0950634a7b0791ea58db2463928f6a4e68a6521
+subject tree   a0941e749cf0fb23de74de811ca69e1447d397c1
+```
+
+**Verdict: `FINDINGS — CANDIDATE REMAINS CONTINUABLE`.** No reproducible semantic
+finding. No reproducible public-API finding. 59 independently written probes, 0
+failures. Report `GROK-FORM0-STRANGER-AUDIT.md`, 29,719 bytes, sha256
+`226c6e435c5e6b6c0cfd3bcc84dc9eef44edbe9d60bc0a73235bb35b9619cb70`.
+
+**The stranger-audit debt is satisfied for that subject tree and no other.** Any
+later executable change to Form /0 creates a new audit delta.
+
+**What this does NOT do.** It does not adopt Form /0, does not freeze the
+specification, does not establish external-standard conformance, does not prove
+process isolation, and does not prove anything against arbitrary Common Lisp
+already executing in the image. Successor dependence is permitted
+**experimentally**, with the named limitations carried forward.
+
+**Three rulings on how to cite it.**
+
+**(a) State the epistemic class as *independent claim-directed corroboration*** —
+never as blind discovery. The commission named B1–B14 and disclosed the instrument
+history in advance. That does not weaken the corroboration; it fixes what kind of
+evidence it is, and citing it as anything wider is an inflation.
+
+**(b) B7 keeps its exact shape.** *Five components bound and rechecked; three
+publicly perturbable; two structurally non-forkable through the public API.* The
+auditor drove identity-, version- and content-drift refusals through the public
+surface; grammar identity and resource policy cannot be varied by the public
+constructor at all. **Do not round this up to five independently demonstrated
+external residual codes.**
+
+**(c) The mutation headline may not travel alone.** *"10 planted, 10 killed"* is
+numerically true and epistemically compressed. The distribution is **7** named
+failures at the intended tooth, **2** deaths through a different CD/0 marker near
+the relevant path, **1** death before its tooth — so `literal-descends` does not
+demonstrate `T-ONE-PASS` (`two-pass-substitute` does). This is an
+instrument-reporting limit on what the battery *establishes*, **not a semantic
+defect**, and it is **docketed as an optional future instrument refinement — not a
+repair gate.**
+
+**The model's contradictory self-identifications are not routing evidence.** Two
+probes claimed two different wrong identities while every routing field held
+constant. Preserved as a recorded anomaly; the OpenRouter generation record is the
+auditor-identity basis.
+
+Full standing record and the three filed artifacts:
+`audits/2026-07-27-grok-4.5/LANGUAGE-FORM-0-STRANGER-AUDIT-INTAKE.md`.
+
+— recorded by **Claude Opus 5 (1M context)**, 2026-07-27, under owner ruling

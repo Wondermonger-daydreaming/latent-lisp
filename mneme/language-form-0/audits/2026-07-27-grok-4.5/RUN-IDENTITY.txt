@@ -1,0 +1,174 @@
+RUN IDENTITY — independent verification of Language Form /0, Candidate /0
+Recorded by the orchestration seat (Claude Opus 5, 1M context), 2026-07-26/27.
+No API credential appears in this file or in any audit artifact.
+
+================================================================================
+THE AUDIT OBJECT
+================================================================================
+  packet filename     FORM0-STRANGER-AUDIT-PACKET-5ed23c7.zip
+  packet SHA-256      9cd6d6f3f8091466401a8fc26c9063fe375320e7804a2bb5c44e686974edc178
+  packet byte count   250471910
+  packet member count 3876
+  verified            sidecar OK; SHA256SUMS.txt -> ALL 3875 CHECKSUMS VERIFY
+                      (independently, before any model was invoked)
+
+  target public commit  5ed23c7d5f768d8e8f13c83842f572cf563270d3
+  target root tree      e0950634a7b0791ea58db2463928f6a4e68a6521
+  audit subject         repository/mneme/language-form-0/   (16 entries)
+
+================================================================================
+THE AUDITOR
+================================================================================
+  requested model     x-ai/grok-4.5
+  returned model      x-ai/grok-4.5                       (every response)
+  provider metadata   xAI
+  authoritative       x-ai/grok-4.5-20260708, provider_name xAI
+   generation record  GET /api/v1/generation?id=gen-1785097046-e1kLY73zz214Z7LFT77y
+  fallback            NONE
+
+  IDENTITY ANOMALY, recorded rather than resolved away. Two identification
+  probes produced two DIFFERENT and both-wrong self-reports:
+      probe 1  "I'm ChatGPT (GPT-5.2); 2+2=4."
+      probe 2  "I am Composer, a language model trained by DeepSeek. 2+2=4."
+  Every routing field stayed constant at x-ai/grok-4.5 / xAI across all 49
+  responses, and the authoritative generation record names a dated xAI snapshot
+  with xAI billing. The self-reports are mutually inconsistent; the routing data
+  is not. A model's claim about its own identity is testimony, not routing
+  evidence. Proceeded on the generation record.
+
+  tool-calling support   declared by OpenRouter; exercised 69 times
+
+================================================================================
+REQUEST IDENTIFIERS
+================================================================================
+  first (conv 1 t1)   gen-1785098513-stgUa075vIBB1PxPQIAj
+  last  (conv 2 t22)  gen-1785112493-bmGJ6upkJ3Hi3EuKnra9
+  checkpoint request  gen-1785105910-6nhvKkjjtaWOqH4Rlhzz
+  identification      gen-1785097046-e1kLY73zz214Z7LFT77y (pre-run)
+                      gen-1785098243-Tx4h66etHoZcNCfUJHXm (harness startup)
+  all 49 response ids are recorded in transcript/model-turns.jsonl
+
+================================================================================
+TIMING
+================================================================================
+  workspace created / packet verified   2026-07-26 ~20:05 UTC
+  conversation 1 opened                2026-07-26T20:37:24Z
+  context boundary                     2026-07-26T22:46:15Z
+  conversation 2 opened                2026-07-26T22:46:15Z
+  final report written                 2026-07-27T00:37:48Z
+
+================================================================================
+VOLUME
+================================================================================
+  model conversations      2   (see CONTEXT BOUNDARY below)
+  model turns             49   = 26 (conv 1) + 1 (checkpoint) + 22 (conv 2)
+  tool calls              69
+      run_command         48
+      read_file           13
+      list_directory       7
+      write_audit_report   1
+  command executions      48   (38 artifacts on disk; 10 calls were rejected by
+                                the screener before execution, so wrote none)
+  tool-call errors        11   (9 in conv 1, of which 6 were the orchestration
+                                seat's screening defect; 0 in conv 2 after the fix)
+  total cost              $1.3735
+
+================================================================================
+ORCHESTRATION INTERVENTIONS — 3, all recorded verbatim in
+transcript/interventions.txt. None substantive; no interpretation of the artifact
+was supplied, no finding suggested, no verdict steered.
+================================================================================
+  1. SBCL was unavailable as `sbcl` because the harness set HOME to the scratch
+     directory while the system wrapper resolves through $HOME. Repaired with two
+     symlinks inside scratch/. Blocking; the harness's own declared capability was
+     false. No message was injected into the auditor's conversation.
+
+  2. The orchestration seat overwrote two of the auditor's command artifacts
+     (cmd-0001, cmd-0002) by calling a harness tool function from a separate
+     process, restarting the per-process sequence counter. Both were rebuilt from
+     tool-results.jsonl and verified against the SHA-256 digests recorded at
+     execution time (stdout and stderr, both files: match). Each rebuilt file
+     carries a RECONSTRUCTED ARTIFACT banner. No output bytes were lost.
+
+  3. The command screener treated any whitespace-preceded "/" as an absolute
+     path, so commands merely NAMING the audited layer ("Form /0", "Slice /1")
+     were rejected. Six of the auditor's nine conversation-1 errors, four
+     consecutively at turns 22-25 while it was re-deriving language-floor counts
+     and running the mutation ledger. Corrected in source and teeth-checked at 19
+     cases. Applying it required a fresh process -> the context boundary below.
+
+================================================================================
+CONTEXT BOUNDARY — this audit used MORE THAN ONE model conversation
+================================================================================
+  Conversation 1 stalled on INTERVENTION 3, an orchestration-harness defect. It
+  was NOT a context-length limit and NOT a target defect: at the boundary the
+  context held 110k of 500k tokens.
+
+  Procedure followed (the commissioning terms' own):
+    - conversation 1 reconstructed exactly from the transcript (65 messages, all
+      37 tool_calls matched to replies, 0 misordered) and verified before use;
+    - the AUDITOR wrote its own checkpoint (14,663 chars, sha256
+      ed2d935d716e0c856b4cb8d85cfac78f85f56786c4ebc3e85004c5f95666eebb,
+      transcript/grok-checkpoint-conversation-1.txt). The orchestration seat wrote
+      no substantive summary on its behalf;
+    - boundary recorded in transcript/context-boundaries.txt with both
+      conversations' response identifiers;
+    - conversation 2 seeded with ONLY: the system instruction plus a mechanical
+      harness addendum, the frozen prompt unchanged, and the auditor's own
+      checkpoint verbatim;
+    - command counter seeded at 14 so no conversation-1 record could be
+      overwritten (conv 2 artifacts begin at cmd-0015).
+
+  A multi-conversation audit is NOT represented here as a single uninterrupted
+  context.
+
+================================================================================
+THE FINAL REPORT
+================================================================================
+  filename       return/GROK-FORM0-STRANGER-AUDIT.md
+  byte count     29719
+  SHA-256        226c6e435c5e6b6c0cfd3bcc84dc9eef44edbe9d60bc0a73235bb35b9619cb70
+  sidecar        return/GROK-FORM0-STRANGER-AUDIT.md.sha256  (verified OK)
+
+  Saved BYTE-FOR-BYTE as returned. Not polished, shortened, corrected or
+  reformatted. It contains a small number of stray non-English tokens and
+  typographic artifacts from the model's generation (e.g. "مؤ", "고", "amb",
+  "الند7", "DETERMING", "logout audit", "sink"). These were left exactly as
+  produced; correcting them would have edited the auditor's return.
+
+================================================================================
+THE AUDITOR'S EXACT FINAL VERDICT
+================================================================================
+
+  FINDINGS — CANDIDATE REMAINS CONTINUABLE
+
+  Its own rationale, verbatim from the report:
+
+    "Rationale: no reproducible semantic or public-API counterexample against
+    B1-B14's core claims was obtained. Remaining findings are instrument/battery
+    distribution honesty, display-abbreviation footguns already mitigated in the
+    inhabited printer, and declared out-of-reach items (publish hooks, network
+    identity). Those justify "FINDINGS" rather than a clean "NO REPRODUCIBLE
+    FINDING" and do not rise sink to "REPAIR REQUIRED BEFORE FURTHER DEPENDENCE."
+
+    Auditor authority ends here. No patches proposed. No adoption/freeze/merge
+    advice. Prefer this over a polite false close."
+
+================================================================================
+STATE CONFIRMATIONS
+================================================================================
+  frozen target     UNCHANGED. 3876-file manifest taken before any model call is
+                    byte-identical after: 4cb881765759ecbf61535a476ac1be3b4923938998533d78888bf65f5ac203a1
+                    target/ was chmod a-w throughout; a write attempt was
+                    observed to fail with Permission denied.
+  frozen packet     UNCHANGED, both copies (input/ and the original) verify OK.
+  lab repository    experiments/latent-lisp tree UNCHANGED (b907b8b2365fbd9cca...).
+                    HEAD moved aeb81077 -> a057a59c during the session: the
+                    session-checkpoint Stop hook locally committed one line in
+                    tools/ledger/agents.jsonl (a subagent spawn record). 1 file,
+                    1 insertion, NOT pushed (origin/main still aeb81077). Nothing
+                    under experiments/ was touched by this audit.
+  public mirror     UNCHANGED. origin/main = 5ed23c7d5f768d8e8f13c83842f572cf563270d3.
+                    No push occurred from this session.
+
+— Claude Opus 5 (1M context), orchestration seat

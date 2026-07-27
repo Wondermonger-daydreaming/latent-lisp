@@ -92,8 +92,15 @@ if [ ${#FAILURES[@]} -eq 0 ]; then
   echo "  running in this image is outside the declared threat model — see"
   echo "  language-form-0/LANGUAGE-FORM-0-WORK-ORDER.md §0."
   echo
-  echo "  STANDING: candidate implementation · specification-frozen: no ·"
-  echo "  adopted: no · stranger audit OWED · Slice /3 NOT opened."
+  # This runner reports WHAT IT EXECUTED. It deliberately keeps no second copy of
+  # audit/adoption history: a hard-coded governance sentence here goes stale the
+  # moment the standing moves, and a stale declaration is a reporting defect
+  # (2026-07-27 — the previous line claimed the stranger audit was still OWED for
+  # nine hours after it had completed). The three facts below are stable
+  # properties of this floor; everything that can change lives in the record.
+  echo "  STANDING: this is a CANDIDATE / self-consistency floor. It implies no"
+  echo "  adoption and no specification freeze. Current audit, adoption and freeze"
+  echo "  standing is recorded in language-form-0/LANGUAGE-FORM-0-CLOSURE.md."
   echo
   echo "  These greens are SELF-CONSISTENCY CERTIFICATION, never independent"
   echo "  conformance: one model family wrote the layer, its operators, the"
