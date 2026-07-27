@@ -1,0 +1,186 @@
+REVIEW-1-EVIDENCE — de-pignore, BEFORE repair
+=============================================
+
+Subject commit : fbace907ec63e7825ec08aadf1d6906f99344c07
+Branch         : de-pignore-obligation-specimen
+Recorded       : 2026-07-27, by Claude Opus 5 (1M context)
+Method         : the specimen's machinery (sections I-V of APPLICATION.lisp,
+                 truncated before its harness) loaded into a probe image; each
+                 counterexample run against the UNREPAIRED implementation.
+
+THIS FILE IS THE BEFORE-REPAIR WITNESS AND IS PRESERVED AS SUCH.
+It records what the specimen actually did, not what its header claimed.
+
+SUMMARY:  6 of 7 counterexamples REPRODUCED as described by the owner review.
+          R6 reproduced a different and worse failure than predicted.
+          R5 and R7 confirmed the diagnoses exactly.
+
+----------------------------------------------------------------------
+R1 — STALE ORIGINAL ANCHOR                                   REPRODUCED
+----------------------------------------------------------------------
+Form:
+  1. open an obligation under the original Slice /2 wrapper;
+  2. clear + repopulate the Slice /1 registry (install-schemas) so a same-key,
+     same-looking but DIFFERENT base object is registered;
+  3. TRY-RECONCILE-OBLIGATION with the ORIGINAL stored wrapper.
+
+Observed:
+    registry base EQ to the obligation's opening base?   NIL
+    result:                                              RECONCILED — receipt minted
+
+VERDICT: REPRODUCED.  A SEMANTIC DEFECT in the specimen's advertised
+live-addressability law.  The implementation tests only
+
+    offered-live-schema  EQ  stored-live-anchor
+
+and both are the same stale object, so the test passes while the registry beneath
+has been entirely replaced.  The claim "a same-key, same-looking, re-registered
+schema is UNADDRESSABLE" was true only for the path where the CALLER built a new
+wrapper.  A caller who hands back the ORIGINAL wrapper defeats it completely.
+NC5 tested the caller's courtesy, not the law.
+
+----------------------------------------------------------------------
+R2 — CROSS-ANCHOR IDENTITY ALIAS                             REPRODUCED
+----------------------------------------------------------------------
+Form: two obligations, same refused receipt / premise index / pledge-intent /
+scope / contract, DIFFERENT live anchors.
+
+Observed:
+    anchors EQ?                 NIL
+    identities EQUAL?           T
+    A reconciled?               T
+    does A's receipt close B?   T
+
+VERDICT: REPRODUCED.  Identity excludes the anchor (by design) and the fold
+compares only identity (by omission), so a receipt for one obligation object
+closes a DIFFERENT obligation object.  The fold's target test is a descriptive
+key collision, not an occurrence.
+
+----------------------------------------------------------------------
+R3 — RIGHT KIND, WRONG SUBJECT                               REPRODUCED
+----------------------------------------------------------------------
+Form: witness mode :DIRECT, kind :BALLAST-ASSAY — the correct instrument — but
+its proposition concerns a different vessel:
+    (:PREDICATE :BALLAST-ASSAYED (:VESSEL "DD-SOMEONE-ELSE"))
+
+Observed:
+    result:  RECONCILED — receipt minted
+
+VERDICT: REPRODUCED.  %WITNESS-ADMISSIBLE-UNDER-P inspects mode and kind and
+NOTHING ELSE.  It never consults the retained premise pattern, the proposition,
+the receiver, bindings, or Slice /1's premise assessment.  A witness about an
+entirely different subject reconciles an obligation about this one.
+
+This is the most serious finding: the specimen advertised "admissible witness for
+this exact premise" and implemented "a witness whose two keywords match".
+
+----------------------------------------------------------------------
+R4 — RECEIPT / SCHEMA MISMATCH AT PLEDGE                     REPRODUCED
+----------------------------------------------------------------------
+Form: a receipt produced under :SEAWORTHY/2, pledged with the unrelated
+:BERTH-ASSIGNED/2 wrapper as :LIVE-SCHEMA.
+
+Observed:
+    receipt schema-id:        :SEAWORTHY/2
+    result:                   ACCEPTED
+    stored anchor is liveY?   T
+
+VERDICT: REPRODUCED.  PLEDGE verifies NO relation whatsoever between the refused
+receipt and the supplied live schema.  It stores whatever object it is handed as
+the anchor.  An obligation can therefore be opened whose anchor has nothing to do
+with the derivation it claims to answer.
+
+----------------------------------------------------------------------
+R5 — TWO OPENING ACTS, ONE CONTENT                           CONFIRMED
+----------------------------------------------------------------------
+Form: PLEDGE called twice with byte-for-byte identical arguments.
+
+Observed:
+    objects EQ?                NIL   (two distinct objects)
+    identities EQUAL?          T     (indistinguishable by identity)
+    o1's receipt closes o2?    T
+
+VERDICT: CONFIRMED.  Two distinct elected acts are indistinguishable, and neither
+the code nor any document states whether this is intended as one idempotent
+election or two elections.  It is an ACCIDENTAL CONSEQUENCE of content equality,
+which is exactly what the owner ruling forbids:
+
+    intention content is not occurrence identity.
+
+----------------------------------------------------------------------
+R6 — NON-CANONICAL INTENT AND SCOPE                          REPRODUCED
+                                                             (worse than predicted)
+----------------------------------------------------------------------
+Form: values offered as pledge-intent through the
+PRIN1-TO-STRING -> READ-FROM-STRING boundary.
+
+Observed:
+    function object          PRINT-NOT-READABLE   <- NOT a typed refusal
+    package (unreadable)     PRINT-NOT-READABLE   <- NOT a typed refusal
+    CD/0 datum               PRINT-NOT-READABLE   <- NOT a typed refusal
+    mutable nested tree      ADMITTED
+    plain string             ADMITTED
+    vector                   ADMITTED
+    circular cons            NOT SAFELY TESTABLE — PRIN1-TO-STRING without
+                             *print-circle* does not terminate
+
+VERDICT: REPRODUCED, and the failure is worse than "not canonical".
+
+  (a) Three ordinary values escape as PRINT-NOT-READABLE, a PRINTER condition —
+      the boundary leaks an implementation error where it advertises a typed
+      refusal.
+  (b) A CD/0 DATUM — the system's own canonical species — is REJECTED by the
+      thing calling itself canonicalization.  That inverts the vocabulary
+      completely.
+  (c) A circular structure is not merely refused; it does not terminate.
+  (d) READ-FROM-STRING is a READER path.  Identity semantics are therefore
+      hostage to *READ-EVAL*, *PACKAGE*, *READTABLE* and any PRINT-OBJECT method
+      a caller cares to define.
+
+The word "canonical" in the unrepaired file is unearned.
+
+----------------------------------------------------------------------
+R7 — LINEAGE EVIDENCE                                        CONFIRMED
+----------------------------------------------------------------------
+Observed:
+    obligation has an identity?                 T
+    reconciliation receipt has its OWN identity? NIL
+    it only NAMES the obligation's identity      T
+    derivation receipt has its own identity?     T
+    the existing tooth establishes only NOT-EQ   T
+
+VERDICT: CONFIRMED.  The OBLIGATION-RECONCILIATION-RECEIPT has no identity of its
+own.  It carries a target-obligation-identity and content, and nothing that names
+THIS reconciliation event.  The "two distinct lineages" tooth therefore
+establishes only that two objects are not EQ — which two freshly consed structs
+of different types satisfy trivially.
+
+======================================================================
+WHAT THE UNREPAIRED SPECIMEN ACTUALLY ESTABLISHED
+======================================================================
+Its 25 green checks were TRUE for the paths they walked.  What R1-R7 show is that
+several ADVERTISED INVARIANTS were stronger than the executable checks:
+
+  claimed                                    actually implemented
+  -----------------------------------------  ----------------------------------
+  "admissible witness for this exact         witness mode and kind match two
+   premise"                                  keywords
+
+  "a re-registered schema makes the          the CALLER-SUPPLIED wrapper is not
+   obligation unaddressable"                 EQ to the stored one
+
+  "distinct obligations have distinct        content-equal obligations share one
+   identities"                               identity regardless of occurrence
+
+  "canonical" rendering                      a printer/reader round-trip that
+                                             rejects CD/0 data and leaks
+                                             PRINT-NOT-READABLE
+
+  "both lineages, neither impersonating      the two objects are not EQ
+   the other"
+
+This is the specimen's own instance of the defect the arc keeps naming: a LABEL
+standing in for the thing it names.  Recorded here before repair so the repair
+cannot quietly absorb it.
+
+— Claude Opus 5 (1M context), 2026-07-27

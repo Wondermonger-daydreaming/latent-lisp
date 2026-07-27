@@ -1,0 +1,100 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+; file: /home/gauss/Desktop/wt-de-pignore/experiments/latent-lisp/mneme/language-slice-2/de-pignore/APPLICATION.lisp
+; in: DEFUN TRY-RECONCILE-OBLIGATION
+;     (DE-PIGNORE::OBLIGATION-OPEN-P DE-PIGNORE::OBLIGATION DE-PIGNORE::HISTORY)
+; 
+; caught STYLE-WARNING:
+;   undefined function: DE-PIGNORE::OBLIGATION-OPEN-P
+; 
+; compilation unit finished
+;   Undefined function:
+;     OBLIGATION-OPEN-P
+;   caught 1 STYLE-WARNING condition
+== de-pignore — concerning the pledge (REVIEW-1 HARDENED) ==
+   application-private · no persistence · no authority · in-image only
+
+-- VI.1  the inhabited evidentiary case --
+  [ 1] ok    derive/2 without the assay refuses; premise 1 is :MISSING
+  [ 2] ok    PLEDGE with an explicit opening act elects an immutable obligation
+  [ 3] ok    openness is DERIVED: obligation + no events => open
+  [ 4] ok    two unrelated derivations intervene; the obligation survives
+  [ 5] ok    T-WRONG-KIND  a lookalike of the wrong KIND (:ballast-survey) refuses
+  [ 6] ok    T-WRONG-SUBJECT  correct mode and kind but a witness about ANOTHER VESSEL refuses (R3 repaired)
+  [ 7] ok    a refusal leaves the fold unchanged
+  [ 8] ok    the exact admissible witness reconciles via the REAL derive/2 path, residue NIL
+  [ 9] ok    the fold derives NOT open — no status slot was written
+  [10] ok    a fresh derive/2 with the admitted support is GRANTED by existing machinery
+  [11] ok    T-LINEAGE  the reconciliation receipt has its OWN identity, names the exact obligation occurrence, and cannot stand in for the derivation receipt's identity (R7 repaired)
+
+-- VI.2  the seven Review-1 counterexamples, now teeth --
+  [12] ok    R1  handing back the ORIGINAL stale wrapper after re-registration now REFUSES :base-schema-no-longer-live
+  [13] ok    R2/R5  identical content under DIFFERENT opening acts yields DISTINCT occurrence identities and IDENTICAL content identities
+  [14] ok    R2  a receipt for obligation A no longer closes obligation B
+  [15] ok    R4  pledging a :SEAWORTHY/2 receipt against the unrelated BERTH schema refuses with the EXACT reason :NO-SUCH-PREMISE (no menu of accepted reasons)
+  [16] ok    R6  a function object is a TYPED refusal, not PRINT-NOT-READABLE
+  [17] ok    R6  a circular cons is a TYPED refusal and TERMINATES
+  [18] ok    R6  a CD/0 datum is ACCEPTED (the old boundary rejected the system's own canonical species)
+  [19] ok    R6  no READ-FROM-STRING or PRIN1-TO-STRING CALL FORM exists in this file (the names appear only in the Review-1 header, describing what was removed)
+
+-- VI.3  fold conjuncts (§7), contract identity (§5), history limit (§9) --
+  [20] ok    FOLD  wrong target occurrence does not close
+  [21] ok    FOLD  wrong target content does not close
+  [22] ok    FOLD  wrong procedure version does not close
+  [23] ok    FOLD  wrong procedure identity does not close
+  [24] ok    FOLD  wrong disposition does not close
+  [25] ok    FOLD  non-NIL residue does not close
+  [26] ok    FOLD  wrong previous commitment does not close
+  [27] ok    FOLD  all conjuncts satisfied DOES close
+  [28] ok    §5  a live contract with the SAME id but DIFFERENT accepted clauses is caught as :CONTRACT-DRIFT (the old NC14 label was false)
+  [29] ok    §5  the obligation commits a COMPLETE contract snapshot, not merely CONTRACT-ID
+  [30] ok    T24 §9 LIMIT  with the prior receipt OMITTED the pure transition mints another receipt — :ALREADY-RECONCILED is relative to the supplied history; NO global exactly-once is claimed
+  [31] ok    §8  every PLEDGE refusal is a persistent OBLIGATION-REFUSAL with phase :PLEDGE and an offending snapshot
+  [32] ok    §8  PLEDGE remains the loud wrapper and signals the same refusal object
+  [33] ok    NC  :MISSING without an elected intent constructs nothing
+  [34] ok    NC  PLEDGE without an opening-act identity refuses (§2)
+  [35] ok    NC  a premise that is not :MISSING refuses — nothing is owed
+; in: SETF (%OBLIGATION-OCCURRENCE-IDENTITY *OB*)
+;     (FUNCALL #'(SETF DE-PIGNORE::%OBLIGATION-OCCURRENCE-IDENTITY) #:NEW119
+;              #:*OB*120)
+; 
+; caught STYLE-WARNING:
+;   undefined function: (COMMON-LISP:SETF DE-PIGNORE::%OBLIGATION-OCCURRENCE-IDENTITY)
+; 
+; compilation unit finished
+;   Undefined function:
+;     (SETF %OBLIGATION-OCCURRENCE-IDENTITY)
+;   caught 1 STYLE-WARNING condition
+  [36] ok    §2  immutability part 1 of 3 — NO SLOT WRITER exists and no slot is named like a status
+  [37] ok    §2  immutability part 2 of 3 — CONSTRUCTION INPUT is defensively copied (caller's own list cannot reach the stored obligation)
+  [38] ok    §2  reader tooth 1 — mutating an OCCURRENCE-IDENTITY view does not change the obligation
+  [39] ok    §2  reader tooth 2 — mutating a CONTENT-IDENTITY view does not change the obligation
+  [40] ok    §2  reader tooth 3 — mutating a SCOPE view does not change the retained scope
+  [41] ok    §2  reader tooth 4 — mutating a CONTRACT-SNAPSHOT view does not change the retained contract
+  [42] ok    §2  reader tooth 5 — mutating a RECEIPT-TARGET view does not retarget the receipt
+  [43] ok    §2  reader tooth 6 — mutating a RECEIPT-IDENTITY view does not change its identity
+  [44] ok    §2  reader tooth 7 — mutating a REFUSAL-SNAPSHOT view does not change the refusal
+  [45] ok    §2  reader tooth 8 — an already minted valid receipt STILL closes its obligation after every caller-side view mutation above
+  [46] ok    §3  an EXPECTED Slice /2 refusal is inspected normally (the probe reads the refusal's receipt)
+  [47] ok    §3  EXPECTED absence from the registry yields the intended typed obligation refusal
+  [48] ok    §3  a planted UNEXPECTED condition from the probe wrapper ESCAPES and is classified as an IMPLEMENTATION failure, not an obligation refusal
+  [49] ok    §3  no broad catch-all handler remains in the TRANSITION PATH (comments stripped; harness excluded; needle assembled at runtime)
+  [50] ok    NC  the obligation receipt offered as a Slice /2 support leaves premise 1 :MISSING, no source or derivation basis
+
+-- VI.4  generalization probes (unchanged, both negative) --
+  [51] ok    PROBE A  de-incantatione's rhyme-obligation is a retrospective closure certificate (carries closer-line/closer-word; no pledge or elect vocabulary)
+  [52] ok    PROBE B  CD/0-only incomplete program data has no elected opening act; PLEDGE cannot even be offered a subject
+
+== de-pignore: 52 checks produced / 0 failed ==
+   count DERIVED from the verdict list this run accumulated.
+   This runner reports only what it executed and asserts no project
+   adoption, freeze or audit standing.

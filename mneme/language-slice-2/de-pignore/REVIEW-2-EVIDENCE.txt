@@ -1,0 +1,151 @@
+REVIEW-2-EVIDENCE — de-pignore, BEFORE repair
+=============================================
+
+Subject commit : c0345c5edcf6eb8c987cca8ecf03c86391976b44
+Branch         : de-pignore-obligation-specimen
+Base           : 54ada6cbc11d3e5d361fa044c53fd3984e381b1f
+Recorded       : 2026-07-27, by Claude Opus 5 (1M context)
+Method         : the specimen's machinery (sections 0-IV, truncated before its
+                 harness) loaded into a disposable probe image.  Where a probe
+                 required replacing a function, it was replaced inside
+                 UNWIND-PROTECT and restored; no governed source was altered.
+
+THIS FILE IS THE BEFORE-REPAIR WITNESS AND IS PRESERVED AS SUCH.
+
+SUMMARY:  D1 REPRODUCED (all six readers alias).
+          D2 REPRODUCED TWICE (probe path AND registry path launder).
+          D3 CAUSE FOUND EXACTLY — output filtering during relay assembly, mine.
+          D4 CONFIRMED PHANTOM — no path emits :RECEIPT-SCHEMA-MISMATCH.
+
+----------------------------------------------------------------------
+D1 — READER-RESULT ALIASING                                  REPRODUCED
+----------------------------------------------------------------------
+Form: obtain a value through each non-% reader, mutate the returned cons with
+(SETF (CAR v) :TAMPERED), then re-read from the original object.
+
+Observed — every reader aliased:
+
+    OBLIGATION-OCCURRENCE-IDENTITY     ALIASED — the object changed
+    OBLIGATION-CONTENT-IDENTITY        ALIASED — the object changed
+    OBLIGATION-SCOPE-DESCRIPTION       ALIASED — the object changed
+    OBLIGATION-CONTRACT-SNAPSHOT       ALIASED — the object changed
+    ORR-IDENTITY                       ALIASED — the object changed
+    ORR-TARGET-OCCURRENCE              ALIASED — the object changed
+
+VERDICT: REPRODUCED.  The classification the owner review supplied is exactly
+right and is adopted verbatim:
+
+    read-only DEFSTRUCT slots prevent slot REPLACEMENT;
+    they do not make mutable values reachable through readers immutable.
+
+Two further observations the probe surfaced, neither anticipated:
+
+  (a) STRUCTURE SHARING BETWEEN OBJECTS.  The receipt's target-occurrence and the
+      obligation's occurrence-identity are THE SAME CONS.  Mutating either
+      mutates both, so the fold's EQUAL comparison still passed after tampering
+      and the receipt still "closed" the obligation.  The fold did not detect the
+      tampering because both sides of its comparison moved together.  A tooth
+      that only asks "does a valid receipt still close?" cannot see this.
+
+  (b) THE TAMPERING BROKE A LATER RECONCILIATION.  After the D1 mutations, a
+      fresh TRY-RECONCILE-OBLIGATION on the same obligation refused
+      :CONTRACT-DRIFT — because the caller's mutation of the contract-snapshot
+      VIEW had corrupted the obligation's own retained rule.  This masked D2 on
+      the first attempt and had to be re-run against a fresh obligation.  It is
+      also the sharpest demonstration of severity available: a caller holding
+      only a READER can invalidate an obligation it does not own.
+
+----------------------------------------------------------------------
+D2 — UNEXPECTED PROBE FAILURE                     REPRODUCED, TWO PATHS
+----------------------------------------------------------------------
+Form: in a disposable image, temporarily replace a function the semantic path
+calls so that it signals a plain SIMPLE-ERROR — a condition that is NOT a
+Slice /2 protocol outcome — then observe how the specimen classifies it.
+Each replacement was made inside UNWIND-PROTECT and restored.
+
+Observed:
+
+    baseline, nothing planted        receipt=T   refusal=NIL
+    derive/2 -> planted SIMPLE-ERROR receipt=NIL refusal=:PREMISE-NOT-SATISFIED
+    resolve-schema -> planted error   receipt=NIL refusal=:BASE-SCHEMA-NO-LONGER-LIVE
+
+VERDICT: REPRODUCED on BOTH paths.  The broad handlers
+
+    APPLICATION.lisp:283    (error () nil)      registry resolution at PLEDGE
+    APPLICATION.lisp:401    (error () nil)      %PROBE-ADMISSION / derive/2
+    APPLICATION.lisp:434    (error () nil)      registry resolution at reconcile
+
+convert an arbitrary unexpected condition into an ordinary, typed, semantic
+refusal.  An implementation failure is therefore indistinguishable from a real
+protocol outcome: the specimen reports "this witness does not satisfy the
+premise" when what actually happened is "the machinery broke".
+
+This is the same defect class as the rest: a refusal REASON standing in for an
+event that was never a refusal.
+
+----------------------------------------------------------------------
+D3 — TRANSCRIPT COUNT DISCREPANCY               CAUSE FOUND — MINE
+----------------------------------------------------------------------
+Observed in the Review-1 relay artifact:
+
+    footer count               40 checks produced / 0 failed
+    rendered verdict lines     39
+    rendered numbers           1..27, 29..40
+    missing                    28
+    contract-drift tooth       ABSENT from the transcript (grep count 0)
+
+CAUSE — determined, not guessed.  SPECIMEN-RUN.txt is NOT a tracked artifact; it
+was generated during relay assembly by piping the raw SBCL output through
+
+    grep -vE '^;|^ *$|STYLE-WARNING|caught|^This is SBCL|...'
+
+The token `caught` was in that exclusion list in order to strip SBCL's
+"caught 1 STYLE-WARNING condition" lines.  Verdict 28's label reads:
+
+    "§5  a live contract with the SAME id but DIFFERENT accepted clauses is
+     caught as :CONTRACT-DRIFT (the old NC14 label was false)"
+
+It contains the word "caught".  The filter therefore deleted a DATA line because
+it resembled NOISE.
+
+NOT a source/run mismatch.  NOT a stale transcript.  The run itself produced 40
+verdicts; the ARTIFACT rendered 39, and its footer then disagreed with its own
+body.
+
+This is the fourth instance of the day's defect inside this specimen's own tooling:
+a filter matching on SURFACE TEXT removed a verdict because the verdict's prose
+resembled the noise the filter was built to strip.  The transcript is an
+instrument, and this one misreported the run it was documenting.
+
+----------------------------------------------------------------------
+D4 — PHANTOM REFUSAL REASON                            CONFIRMED PHANTOM
+----------------------------------------------------------------------
+Search for :RECEIPT-SCHEMA-MISMATCH across the specimen:
+
+    APPLICATION.lisp:770   inside the R4 tooth's ALLOWED-RESULT LIST
+    DESIGN-NOTE.md:320     prose, listing it among "new reasons"
+
+    grep 'refuse :receipt-schema-mismatch' APPLICATION.lisp   ->  NO MATCH
+
+VERDICT: CONFIRMED PHANTOM.  No executable path can emit it.  It survived because
+the R4 tooth accepts a MENU of three reasons
+
+    '(:receipt-schema-mismatch :no-such-premise :premise-anatomy-drift)
+
+for a deterministic fixture that has exactly one outcome.  A menu-accepting tooth
+cannot notice that one of its options is unreachable — and the documentation then
+advertised the unreachable name as though it were a real guarantee.
+
+======================================================================
+WHAT REVIEW 2 FOUND, IN ONE LINE EACH
+======================================================================
+  D1  read-only slots were mistaken for immutability
+  D2  broad handlers were mistaken for refusal semantics
+  D3  a text filter was mistaken for a transcript
+  D4  a menu of accepted reasons was mistaken for a specification
+
+All four are one defect in four costumes, and it is the same one the Form /0
+audit named: a SECONDARY REPRESENTATION standing in for the underlying event.
+Recorded here before repair so the repair cannot quietly absorb it.
+
+— Claude Opus 5 (1M context), 2026-07-27
