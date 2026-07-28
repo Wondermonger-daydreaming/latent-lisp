@@ -9,7 +9,15 @@ kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
 DE EXPANSIONE TESTATA — concerning the attested expansion
-SBCL 2.4.6 · Surface /1 grammar v3 · procedure v3 · policy v1
+subject-digest  9214b59bda190327dc879186bd6d567eae8d2e7d0d162f869148fad1ad6aaf99
+                content-derived: sha256 over the 25 exact-path
+                members of errata-0.3/SUBJECT-MANIFEST.txt,
+                each bound to its path.  MEASURES the layer under
+                test; NOT the instruments, transcripts, or host.
+subject-label   (none supplied)
+                ADVISORY ONLY — a human or git label, never a
+                measurement of content (FOSSOR F6).
+SBCL 2.4.6 · Surface /1 grammar v4 · procedure v4 · policy v1
 ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
 
 ── I. THE SPECIMEN — and why it is this one
@@ -57,7 +65,7 @@ ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
                                                            :source-basis)))
      'common-lisp-user::*testata-contract*)
   occurrence identity   4c504344002182234c50…442d4f4e452d53544550 [8980]
-  receipt identity      4c5043440021c1234c50…64696461746501301002 [9106]
+  receipt identity      4c5043440021f1234c50…64696461746501301002 [9202]
   expanded-form ident.  4c5043440021d8144c50…2d434f4e54524143542a [5312]
   disposition           :MACROEXPANDED-ONE-STEP
   source term octets    1497
@@ -88,7 +96,7 @@ ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
   [13] ok   and the stored expanded datum is BYTE-IDENTICAL — nothing flowed backward
   the SECOND specimen differs from the first in ONE field: the proposition
   relation.  Surface /1's account of it is a receipt, exactly as before:
-    receipt identity    4c5043440021a5234c50…64696461746501301002 [9050]
+    receipt identity    4c5043440021d5234c50…64696461746501301002 [9146]
     disposition         :MACROEXPANDED-ONE-STEP
   [14] ok   Surface /1 accounted for the second expansion with the SAME disposition
   [15] ok   the two dispositions are identical — the layer cannot tell them apart, and must not
@@ -106,20 +114,25 @@ ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
   at 2013 the layer refuses with   : :EXPANDED-TERM-OCTETS-EXCEEDED
   [18] ok   the edge is a DECLARED ceiling of this layer, not a host accident
 
-  AND THE CEILING THAT DOES NOT FIRE, NAMED RATHER THAN HIDDEN:
-  :EXPANDED-NODES-EXCEEDED is UNREACHABLE UNDER THIS POLICY.  One term
-  costs 70 octets; the octet ceiling is 262144 and the node ceiling 20000, so
-  octets must always fire first — at about 3744 nodes, not 20000.
-  The guard STAYS.  The octet ceiling was NOT raised to make it fire.
-  [19] ok   the domination is arithmetic and exhibited, not asserted
+
+── VI-b. THE EXPANDED-SIDE NODE CEILING — REACHED, NOT ARGUED AWAY
+  an ordinary DEFINE-JUDGMENT-SCHEMA with N integer premises:
+    N=2492 -> :EXPANDED-TERM-OCTETS-EXCEEDED
+    N=2493 -> :EXPANDED-NODES-EXCEEDED
+  no fault hook, no internal symbol, no fixture — Door 1 accepts both and
+  Door 2 refuses both, one octet-side and one node-side, one apart.
+  [19] ok   ERRATA 0.3 — :EXPANDED-NODES-EXCEEDED IS REACHABLE from the public API
+  [20] ok   and one premise lower the OCTET ceiling fires — the two are adjacent, not dominated
+  catalogue reachability of :EXPANDED-NODES-EXCEEDED : :PUBLIC-API
+  [21] ok   and the catalogue now SAYS SO — the entry no longer claims unreachability
   at conclusion-nesting 42 the SOURCE passes and the EXPANSION
   exceeds the depth ceiling — the wrapper adds the levels
-  [20] ok   :EXPANDED-DEPTH-EXCEEDED is reachable, and reachable ONLY expanded-side
+  [22] ok   :EXPANDED-DEPTH-EXCEEDED is reachable, and reachable ONLY expanded-side
 
 ── VII. WHAT THE LAYER REFUSES, AND WHY THE REFUSALS ARE THE POINT
   a Surface /0 form whose ONE-STEP expansion carries a fresh gensym:
     refused with :EXPANDED-TERM-UNREPRESENTABLE
-  [21] ok   an expansion bearing an implementation-generated name is REFUSED
+  [23] ok   an expansion bearing an implementation-generated name is REFUSED
 
   THE RATIONALE, CORRECTED IN ERRATA 0.1.  Candidate /0 said a receipt for
   a non-deterministic expansion 'would be an account that could not be true
@@ -136,15 +149,18 @@ ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
   grammar limit, not an epistemic one, and it is the whole reason.
 
   SURFACE /0 IS STILL NOT MODIFIED TO MAKE THIS CONVENIENT.
-  [22] ok   and Surface /0 still expands it non-deterministically — reported, not repaired
+  [24] ok   and Surface /0 still expands it non-deterministically — reported, not repaired
 
 ── VIII. THE CENSUS — the abbreviation did not lie
-  distinct FULL identities printed above: 7
-  [23] ok   every printed identity was registered in full
-  [24] ok   the program printed enough distinct identities to be worth checking
+  distinct FULL identities printed above ..... 7
+  distinct ABBREVIATIONS they printed as ..... 7
+  [25] ok   the abbreviation DID NOT LIE: distinct identities printed as distinct abbreviations
+  [26] ok   the program printed enough distinct identities to be worth checking
 
   — an expansion leaves a receipt
   — the receipt says what form became what other form
   — and it is silent about whether that preserves meaning
 
-== de-expansione-testata: 24 checks passed / 0 failed ==
+== de-expansione-testata: 26 checks passed / 0 failed ==
+
+APPLICATION-RESULT checks=26 expected=26 failed=0 subject=9214b59bda190327

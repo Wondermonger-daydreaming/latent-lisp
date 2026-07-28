@@ -11,17 +11,42 @@
 ;;;; truthful accounts, the evidence had wandered onstage wearing the subject's
 ;;;; nametag.  The header is now derived, never asserted.
 
+;;; WHERE THIS INSTRUMENT LIVES, as distinct from WHAT IT MEASURES.  The measuring
+;;; apparatus (EVIDENCE.lisp, subject-digest.sh) comes from the instrument's own
+;;; tree; the subject comes from argv[1].  Keeping them apart is what lets this file
+;;; run unchanged against an older candidate that has no errata-0.3/ in it.
+(defparameter *repro-here* (or *load-truename* *default-pathname-defaults*))
+
 (defparameter *s1dir*
   (pathname (or (second sb-ext:*posix-argv*)
                 "/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1/")))
 (handler-bind ((style-warning #'muffle-warning))
   (load (merge-pathnames "surface1.lisp" *s1dir*))
   (load (merge-pathnames "../language-surface-0/surface0.lisp" *s1dir*)))
+(load (merge-pathnames "../errata-0.3/EVIDENCE.lisp" *repro-here*))
+
+;;; THE DECLARED COUNT, at the top: a run truncated anywhere below cannot satisfy
+;;; it, because the live verdict counter would fall short of this literal.
+(defparameter *expected-verdicts* 6)
 
 (defpackage #:repro (:use #:common-lisp))
 (in-package #:repro)
-(defmacro s1 (n &rest a) `(,(intern (string n) '#:lisp-plus-surface1) ,@a))
-(defmacro cd0 (n &rest a) `(,(intern (string n) '#:lisp-plus-cd0) ,@a))
+;;; ERRATA 0.3 / D8 F-16.  These used bare INTERN, which cannot tell a private name
+;;; from a public one and CREATES the symbol it fails to find.  Errata 0.1 repaired
+;;; the selftest's helper and stated the repair unqualified; the audit measured the
+;;; tree and found it had reached one instrument of five (`FOSSOR.md` §6, F7).
+(defmacro s1 (n &rest a)
+  (multiple-value-bind (sym status) (find-symbol (string n) '#:lisp-plus-surface1)
+    (unless (eq status :external)
+      (error "S1: ~A is ~:[absent~;~:*~A~] in LISP-PLUS-SURFACE1, not :EXTERNAL"
+             (string n) status))
+    `(,sym ,@a)))
+(defmacro cd0 (n &rest a)
+  (multiple-value-bind (sym status) (find-symbol (string n) '#:lisp-plus-cd0)
+    (unless (eq status :external)
+      (error "CD0: ~A is ~:[absent~;~:*~A~] in LISP-PLUS-CD0, not :EXTERNAL"
+             (string n) status))
+    `(,sym ,@a)))
 (defun banner (s)
   ;; The underline is INDENTED.  A row of = at column 0 is what `git diff
   ;; --check` reads as a leftover conflict marker, and a captured transcript
@@ -48,9 +73,24 @@
   (format t "  ~A  ~A — ~A~%" (if (eq state :confirmed) "CONFIRMED" "REFUTED  ") id text))
 
 (defparameter *subject-label* (or (third sb-ext:*posix-argv*) "<unlabelled subject>"))
+
+;;; ERRATA 0.3 / D6.  The ABSOLUTE path used to be printed here.  It is a property
+;;; of the machine that ran the instrument, not of the subject — and it made this
+;;; transcript and REPRODUCTION-II's the only two files in the freeze packet that
+;;; could not reproduce byte-for-byte, since the runner's own declared workaround is
+;;; a writable scratch copy at some other path.  WHICH BYTES were measured is
+;;; answered above, by the digest.  WHERE they sat is not evidence.
+(defun subject-place (dir)
+  (let ((tail (last (pathname-directory (truename dir)) 2)))
+    (format nil ".../~{~A/~}" tail)))
+
 (format t "~&REPRODUCTION I — Surface /1 pre-audit defect report (4 findings, 6 parts)~%")
-(format t "subject     ~A~%" *subject-label*)
-(format t "directory   ~A~%" (namestring (truename cl-user::*s1dir*)))
+(surface1-evidence:print-evidence-header
+ cl-user::*s1dir*
+ :label *subject-label*
+ :tools-home (merge-pathnames "../" cl-user::*repro-here*))
+(format t "place       ~A  (path-stable by design; see above)~%"
+        (subject-place cl-user::*s1dir*))
 (format t "SBCL ~A · grammar v~D · procedure v~D · policy v~D~%"
         (lisp-implementation-version)
         (s1 expansion-grammar-version) (s1 expansion-procedure-version)
@@ -263,17 +303,41 @@ Returns (values DISTINCT-CONSES MAX-REFCOUNT SHARED-CONS-COUNT)."
 ;;; ==================================================================
 (banner "FINDING 3 — NO OCCURRENCE OBJECT TYPE")
 
+;;; ERRATA 0.3 / D8 F-15.  The REFUTED text said "a first-class immutable occurrence
+;;; object exists and is THE THIRD VALUE" and the predicate tested THE PRESENCE OF
+;;; ONE SYMBOL (`TABULARIUS.md` §1, F-15).  A symbol is not an object; presence is
+;;; not typehood; and nothing in it went anywhere near the third value.  The
+;;; predicate now tests the sentence: the third value of a real PERFORM-EXPANSION
+;;; satisfies the exported recogniser AND answers an exported identity accessor with
+;;; a bytes datum.  Every conjunct is displayed, so a REFUTED verdict names what it
+;;; actually saw and a CONFIRMED one names what was missing.
+(defparameter *third* (nth-value 2 (s1 perform-expansion
+                                       (s1 request-expansion (fresh-source 1)
+                                           :macroexpand-1 (tag "f3")))))
+(defparameter *occ-p*  (multiple-value-list (find-symbol "EXPANSION-OCCURRENCE-P"
+                                                         '#:lisp-plus-surface1)))
+(defparameter *occ-id* (multiple-value-list (find-symbol "EXPANSION-OCCURRENCE-IDENTITY"
+                                                         '#:lisp-plus-surface1)))
+(defparameter *is-occ*
+  (and (first *occ-p*) (eq :external (second *occ-p*)) (fboundp (first *occ-p*))
+       (funcall (first *occ-p*) *third*) t))
+(defparameter *id-works*
+  (and (first *occ-id*) (eq :external (second *occ-id*)) (fboundp (first *occ-id*))
+       (ignore-errors (cd0 bytes-datum-p (funcall (first *occ-id*) *third*)))
+       t))
+
 (line "EXPANSION-OCCURRENCE symbol present? .......... ~A"
       (and (find-symbol "EXPANSION-OCCURRENCE" '#:lisp-plus-surface1) t))
-(line "EXPANSION-OCCURRENCE-P present? ............... ~A"
-      (and (find-symbol "EXPANSION-OCCURRENCE-P" '#:lisp-plus-surface1) t))
-(line "third value of PERFORM-EXPANSION is a ......... ~A"
-      (type-of (nth-value 2 (s1 perform-expansion
-                                (s1 request-expansion (fresh-source 1)
-                                    :macroexpand-1 (tag "f3"))))))
-(if (null (find-symbol "EXPANSION-OCCURRENCE-P" '#:lisp-plus-surface1))
-    (verdict "3" "there is NO first-class occurrence object; the occurrence exists only as an identity value returned as a third value" :confirmed)
-    (verdict "3" "a first-class immutable occurrence object exists and is the third value" :refuted))
+(line "EXPANSION-OCCURRENCE-P .......... ~:[absent~;~:*~S~]" (second *occ-p*))
+(line "EXPANSION-OCCURRENCE-IDENTITY ... ~:[absent~;~:*~S~]" (second *occ-id*))
+(line "third value of PERFORM-EXPANSION is a ......... ~A" (type-of *third*))
+(line "the recogniser accepts THAT VALUE ............. ~A" *is-occ*)
+(line "the identity accessor answers a bytes datum ... ~A" *id-works*)
+(if (and *is-occ* *id-works*)
+    (verdict "3" "a first-class occurrence OBJECT exists, the third value IS one, and its exported identity accessor answers a bytes datum" :refuted)
+    (verdict "3" (format nil "there is NO first-class occurrence object answering for the third value (exported recogniser accepts it: ~A · exported identity accessor works: ~A)"
+                         *is-occ* *id-works*)
+             :confirmed))
 
 ;;; ==================================================================
 (banner "FINDING 4 — PUBLIC CATALOGUE ACCESSOR")
@@ -284,13 +348,23 @@ Returns (values DISTINCT-CONSES MAX-REFCOUNT SHARED-CONS-COUNT)."
   (multiple-value-bind (sym status) (find-symbol n '#:lisp-plus-surface1)
     (line "~44@A  status ~12@S  fbound ~A" n status (and sym (fboundp sym) t))))
 
-(let ((sym (find-symbol "REFUSAL-CATALOG-ENTRY-REACHABILITY" '#:lisp-plus-surface1)))
-  (if (and sym (fboundp sym)
-           (not (eq :external (nth-value 1 (find-symbol
-                                            "REFUSAL-CATALOG-ENTRY-REACHABILITY"
-                                            '#:lisp-plus-surface1)))))
-      (verdict "4" "REFUSAL-CATALOG-ENTRY-REACHABILITY is live but NON-EXTERNAL while its four sibling accessors are exported; the selftest reaches it through an internal symbol because its `s1` macro uses INTERN, which cannot tell internal from external" :confirmed)
-      (verdict "4" "the accessor is exported" :refuted)))
+;;; ERRATA 0.3 / D8 F-15, second half.  The old test was FAIL-OPEN IN THE SMALL: its
+;;; REFUTED branch, "the accessor is exported," was reached whenever the CONFIRMED
+;;; conjunction failed — including the case where the symbol had VANISHED ENTIRELY
+;;; (`TABULARIUS.md` §1, F-15).  A finding about export status must be TWO-SIDED: the
+;;; symbol must EXIST, be :EXTERNAL, and be fbound before anything is called exported.
+(multiple-value-bind (sym status)
+    (find-symbol "REFUSAL-CATALOG-ENTRY-REACHABILITY" '#:lisp-plus-surface1)
+  (line "REFUSAL-CATALOG-ENTRY-REACHABILITY  status ~12@S  fbound ~A"
+        status (and sym (fboundp sym) t))
+  (cond ((null sym)
+         (verdict "4" "REFUSAL-CATALOG-ENTRY-REACHABILITY is ABSENT from LISP-PLUS-SURFACE1 altogether — the accessor its four siblings advertise does not exist" :confirmed))
+        ((not (eq status :external))
+         (verdict "4" (format nil "REFUSAL-CATALOG-ENTRY-REACHABILITY is live but ~S, not :EXTERNAL, while its four sibling accessors are exported; a suite whose `s1` macro uses INTERN reaches it without noticing" status) :confirmed))
+        ((not (fboundp sym))
+         (verdict "4" "REFUSAL-CATALOG-ENTRY-REACHABILITY is :EXTERNAL but has no function definition — an exported name that answers nothing" :confirmed))
+        (t
+         (verdict "4" "the accessor EXISTS, is :EXTERNAL and is fbound — all three, measured" :refuted))))
 
 ;;; ==================================================================
 (banner "SUMMARY")
@@ -302,5 +376,14 @@ Returns (values DISTINCT-CONSES MAX-REFCOUNT SHARED-CONS-COUNT)."
 ;;; require that ALL verdicts executed, not merely that no CONFIRMED string was
 ;;; printed — a truncated instrument, a renamed label or an early exit all
 ;;; produce zero CONFIRMED lines while proving nothing.
-(format t "~%REPRODUCTION-RESULT verdicts=~D expected=~D confirmed=~D~%"
-        (length *verdicts*) 6 (count :confirmed *verdicts* :key #'second))
+;;; ERRATA 0.3 / D6 — the line now carries the CONTENT-DERIVED subject digest, so a
+;;; transcript says WHICH BYTES it measured instead of which commit happened to be
+;;; checked out.  ERRATA 0.3 / D4 — the wrapper requires this exact shape, and this
+;;; instrument exits nonzero if its live verdict count misses the declared one.
+(format t "~%REPRODUCTION-RESULT verdicts=~D expected=~D confirmed=~D subject=~A~%"
+        (length *verdicts*) cl-user::*expected-verdicts*
+        (count :confirmed *verdicts* :key #'second)
+        (surface1-evidence:subject-short
+         cl-user::*s1dir* (merge-pathnames "../" cl-user::*repro-here*)))
+(when (/= (length *verdicts*) cl-user::*expected-verdicts*)
+  (sb-ext:exit :code 1))

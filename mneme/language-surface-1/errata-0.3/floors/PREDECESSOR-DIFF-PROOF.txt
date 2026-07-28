@@ -1,0 +1,19 @@
+PREDECESSOR DIFF PROOF — Errata 0.3
+git diff 65782d5c..HEAD, per predecessor tree, diffstat line count:
+  canonical-datum                  0
+  mneme/kernel0                    0
+  mneme/language-core-0            0
+  mneme/language-slice-0           0
+  mneme/language-slice-1           0
+  mneme/language-slice-2           0
+  mneme/language-surface-0         0
+  mneme/language-form-0            0
+  mneme/language-form-1            0
+  mneme/language-form-2            0
+
+0 = no diff whatsoever. Errata 0.3 touches only language-surface-1/.
+
+FLOORS, run post-repair:
+  form floor      199 checks / 0 failed  (exit 0)
+  language floor  654 checks / 0 failed  (exit 0)
+  both identical to the pre-session baseline recorded in Errata 0.2 §7.

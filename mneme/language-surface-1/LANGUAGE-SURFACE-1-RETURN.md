@@ -9,8 +9,23 @@
 >
 > An owner-supplied pre-audit defect report against this candidate was
 > reproduced and repaired. **Six findings were CONFIRMED against the tree this
-> document describes.** Two claims below are FALSE as written and are corrected
-> in place, marked `⚠ CORRECTED`. See `LANGUAGE-SURFACE-1-ERRATA-0.1.md`.
+> document describes.** Claims below that are false as written are corrected in
+> place, marked `⚠ CORRECTED`. See `LANGUAGE-SURFACE-1-ERRATA-0.1.md`.
+>
+> ### ⚠ THE COUNT THAT USED TO STAND HERE WAS ITSELF FALSE — ERRATA 0.3
+>
+> This banner said **"Two claims below are FALSE as written"**, and named a
+> count it did not keep. The 2026-07-28 stranger audit found further claims in
+> this document false post-errata and unmarked — §4 answer 8's citation of
+> selftest E11, §11's "the grammar unfolds shared structure", two
+> application-check citations that had drifted, and a receipt-field list
+> labelled *exhaustively* that omits a field. Each is now marked in place.
+>
+> **A banner that states a count is a claim about every claim beneath it**, and
+> it falsifies itself the moment one more is found. This one therefore no
+> longer counts; it points. Nothing has been deleted to make this document look
+> better: the original bytes are preserved in git history and in the frozen
+> audit packet, and every correction below is additive and marked.
 >
 > The most serious: **§10's non-promotion claim held, but the layer's central
 > claim did not.** Door 2 expanded a caller-owned mutable alias, so a caller who
@@ -180,8 +195,17 @@ ignored the environment or that no environment-dependent behaviour occurred — 
 CL macro environment is an opaque implementation object with no portable reader,
 and a serialization of one would be folklore wearing a language guarantee.
 
+> **⚠ CORRECTED — ERRATA 0.3 (stranger audit D9).** The citation below named
+> **selftest E11**, and Errata 0.1 finding 1c had already ruled that E11 never
+> performed the same request twice — it built a fresh equivalent request — with
+> the same-object property moved to **E11b**. This document went on citing E11
+> for the one property E11 was found not to test. Read the claim as resting on
+> **E11b**, and note the shape: the document that inventories the claims was
+> carrying a stale citation to a check whose defect it had itself recorded.
+
 **(8) Deterministic replay?** Yes, for gensym-free expansions: the same request
-performed twice yields the same occurrence identity (selftest E11), and CD/0's
+performed twice yields the same occurrence identity (selftest E11b — see the
+correction above), and CD/0's
 canonical encoding is invariant under `*readtable*`, `*print-*` and `*package*`.
 Expansions that would *not* replay are refused — see §8.
 
@@ -389,15 +413,28 @@ cannot disagree with the package that minted it.
 
 ## 10. WHAT THE RECEIPT SAYS, AND WHAT IT REFUSES TO SAY
 
-**Fields, exhaustively:** `identity` · `request-identity` · `occurrence-identity` ·
-`source-form-datum` · `source-form-identity` · `expanded-form-datum` ·
-`expanded-form-identity` · `operation` · `construct-identity` ·
-`expansion-context` · `disposition` · and `procedure-identity/version` +
-`policy-identity/version` as package constants.
+> **⚠ CORRECTED — ERRATA 0.3 (stranger audit D9 / C-5).** The list below was
+> labelled *exhaustively* and was not: it omitted **`occurrence`**, the field
+> Errata 0.1 added, whose accessor `EXPANSION-RECEIPT-OCCURRENCE` is exported.
+> The audit found it to be the one export in the tree that no document
+> inventoried. The list is corrected below, and the version fields are no
+> longer "package constants" — Errata 0.3 (D7) makes them **stored values**.
+> The check-number citation was also stale: the absence checks were 7–9 when
+> this was written and are **8–10** after Errata 0.1 inserted a check at
+> position 2.
+
+**Fields, exhaustively (corrected):** `identity` · `request-identity` ·
+`occurrence` · `occurrence-identity` · `source-form-datum` ·
+`source-form-identity` · `expanded-form-datum` · `expanded-form-identity` ·
+`operation` · `construct-identity` · `expansion-context` · `disposition` ·
+and — **stored, since Errata 0.3** — `grammar-version` · `procedure-version` ·
+`policy-version`, with `procedure-identity` and `policy-identity` remaining
+package constants.
 
 **There is no field for meaning, equality, correctness, hygiene, evaluability,
-compilability, portability, or an environment object.** Application checks 7–9
-assert the absences directly.
+compilability, portability, or an environment object.** The application's
+absence checks (7–9 as written; **8–10** in the current tree) assert the
+absences directly.
 
 **The receipt does not claim** — and the package header says this before any code,
 because this is the layer where the preservation intuition is strongest:
@@ -455,7 +492,11 @@ malformed"* a fact this layer reported, when it is a fact the layer below owns.
 here:** (a) **alpha-normalization** — a declared normal form for uninterned
 symbols would let gensym-bearing expansions be accounted for, and it is a real
 representation law requiring its own design, not a patch; (b) a **sharing/DAG
-representation**, since the grammar unfolds shared structure and refuses cycles;
+representation**, since the grammar refuses shared structure and refuses cycles
+[**⚠ CORRECTED — ERRATA 0.3 (D9)**: this read *"unfolds shared structure"*,
+which described the PRE-ERRATA-0.1 grammar. Errata 0.1 replaced silent
+unfolding with a global refusal — that was the finding, and this sentence
+survived it unchanged, still describing the behaviour the erratum removed];
 (c) a **compile-time-vs-macroexpand-time comparison**, which Surface /0's `SC22`
 does *not* provide and which nothing in the tree currently supplies.
 

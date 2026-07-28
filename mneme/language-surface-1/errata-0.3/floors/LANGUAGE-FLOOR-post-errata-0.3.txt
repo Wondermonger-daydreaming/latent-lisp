@@ -1,0 +1,26 @@
+
+  ══════════════════════════════════════════════════════════════════
+  MNEME — verify-language-floor : Core /0 · Slice /1 · Slice /2 · Surface /0
+  ══════════════════════════════════════════════════════════════════
+
+  SBCL: 2.4.6  (expected 2.4.6)
+
+  PASS  core0-substrate             29 passed / 0 failed
+  PASS  core0-issuance              73 passed / 0 failed
+  PASS  slice1-selftest             123 passed / 0 failed
+  PASS  slice1-smoke                9 passed / 0 failed
+  PASS  de-bibliotheca              123 passed / 0 failed
+  PASS  de-codice                   101 passed / 0 failed
+  PASS  de-cursore-aereo            23 passed / 0 failed
+  PASS  de-ponte-usto               17 passed / 0 failed
+  PASS  slice2-selftest             108 passed / 0 failed
+  PASS  slice2-smoke                10 passed / 0 failed
+  PASS  surface0-selftest           38 passed / 0 failed
+
+  LANGUAGE FLOOR GREEN — 11 floors, 654 checks, 0 failed.
+
+  All greens here are SELF-CONSISTENCY CERTIFICATION, never independent
+  conformance: one model family wrote the language, the applications and
+  these checks. The adapters are labelled scripted fakes — a real governed
+  in-image act, never evidence that an external deed occurred.
+

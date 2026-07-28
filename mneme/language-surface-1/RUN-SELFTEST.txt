@@ -9,15 +9,15 @@ kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
 LANGUAGE SURFACE /1 — CANDIDATE /0 — SELFTEST
-SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
+SBCL 2.4.6 · grammar v4 · procedure v4 · policy v1
 
 ── A. LOAD GRAPH AND LAYER IDENTITY
   [001] ok   A1 Surface /1 loaded with Surface /0 ABSENT — it loads CD/0 only
   [002] ok   A2 Surface /0 is present now, loaded separately as a client
   [003] ok   A3 grammar, procedure and policy identities are three DISTINCT identifiers
   [004] ok   A4 every layer identity is a CD/0 IDENTIFIER datum, never a host symbol
-  [005] ok   A5 IDENTITY-OCTETS reports the encoded octet length — the unit every
-        ceiling in this layer is denominated in
+  [005] ok   A5 IDENTITY-OCTETS reports the encoded octet length of the identity it is
+        given — the unit every ceiling in this layer is denominated in
   [006] ok   A5b a minted request identity is a CD/0 BYTES datum, not a string
   [007] ok   A6 there is NO surface-0-version anywhere in the exported surface
 
@@ -36,8 +36,9 @@ SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
         the empty list from the symbol, and the grammar does not pretend to
   [017] ok   C4 integers, strings and lists each encode
   [018] ok   C5 case is preserved exactly — |lower| and LOWER are different terms
-  [019] ok   C6 every encoded specimen term DECODES — construction is not enough,
-        because CD/0 enforces max-depth on decode and not at construction
+  [019] ok   C6 the encoding of *SPECIMEN*, the one control term this suite carries
+        throughout, DECODES — construction is not enough, because CD/0 enforces
+        max-depth on decode and not at construction
 
 ── D. DOOR 1 — describes; does not expand
   [020] ok   D1 a request mints an identity, a source datum and a source identity
@@ -68,10 +69,10 @@ SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
   [040] ok   E5 both stored identities equal the identities of their stored data
   [041] ok   E6 the receipt records the operation and the construct identity
   [042] ok   E7 the receipt carries the request and occurrence identities it was minted from
-  [043] ok   E8 procedure and policy versions come from the PACKAGE, not from a slot —
-        a receipt cannot disagree with the package that minted it
+  [043] ok   E8 a receipt reports the grammar, procedure and policy versions STORED at
+        mint; in an image that has not moved, those equal the package's
   [044] ok   E9 the expansion CONTEXT records only what was SUPPLIED, and denies capture
-  [045] ok   E10 the whole receipt's own identity is a bytes datum and is stable
+  [045] ok   E10 the whole receipt's own identity is a bytes datum
   [046] ok   E11 two SEPARATE requests with equal inputs give the SAME occurrence
         identity.  NOTE THE WORDING: Candidate /0 labelled this 'the same
         request performed twice', which it never was — it built a fresh
@@ -103,112 +104,213 @@ SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
   [057] ok   F6 the two operations genuinely differ for that form at the host level
 
 ── G. THE NON-DETERMINISM REFUSAL — the reason the boundary exists
-  [058] ok   G1 the host really does expand that form differently twice
+  [058] ok   G1 the host really does expand that form differently twice — the defect is
+        reported, not repaired, and this same datum is what would go red if the
+        suite had quietly made Surface /0 deterministic
   [059] ok   G2 Surface /1 REFUSES it at ONE-STEP expansion, not merely at full expansion
   [060] ok   G3 the refusal mints NO occurrence and NO receipt — the objects do not come
         into existence, they are not nil-valued
-  [061] ok   G4 Surface /0 IS UNMODIFIED BY THIS SUITE — the defect is reported, not repaired
 
 ── H. DISCRIMINATION — a changed source changes the account
-  [062] ok   H1 a changed source form changes the SOURCE identity
-  [063] ok   H2 ... and changes the EXPANDED identity
-  [064] ok   H3 ... and therefore changes the OCCURRENCE identity, even with the SAME tag
-  [065] ok   H4 ... and the RECEIPT identity
-  [066] ok   H5 a one-character difference in a symbol NAME is discriminated
+  [061] ok   H1 a changed source form changes the SOURCE identity
+  [062] ok   H2 ... and changes the EXPANDED identity
+  [063] ok   H3 ... and therefore changes the OCCURRENCE identity, even with the SAME tag
+  [064] ok   H4 ... and the RECEIPT identity
+  [065] ok   H5 a one-character difference in a symbol NAME is discriminated
 
 ── I. NON-PROMOTION — later handling flows nowhere backward
-  [067] ok   I1 evaluating the expansion really does produce a Slice /2 contract object
-  [068] ok   I2 the receipt identity is byte-identical after that downstream success
-  [069] ok   I3 the stored expanded datum is byte-identical after it
-  [070] ok   I4 the receipt gained NO field naming the object that evaluation produced
-  [071] ok   I5 the disposition is unchanged by downstream success
-  [072] ok   I6 a FAILING downstream evaluation leaves the receipt equally unchanged
+  [066] ok   I1 evaluating the expansion really does produce a Slice /2 contract object
+  [067] ok   I2 the receipt identity is byte-identical after that downstream success
+  [068] ok   I3 the stored expanded datum is byte-identical after it
+  [069] ok   I4 the receipt gained NO field naming the object that evaluation produced
+        — asserted over the LIVE slot census, and the census itself is pinned so
+        a new slot cannot arrive unseen
+  [070] ok   I5 the disposition is unchanged by downstream success
+  [071] ok   I6 a FAILING downstream evaluation leaves THE RECEIPT WHOSE FORM FAILED
+        equally unchanged — and the failure is asserted, by condition type, not
+        assumed
 
 ── J. SURFACE /0'S OWN REFUSAL ESCAPES, AND MINTS NOTHING HERE
-  [073] ok   J1 a malformed construct signals SURFACE /0's condition, not Surface /1's
-  [074] ok   J2 ... carrying Surface /0's OWN reason keyword, unwrapped and unreclassified
-  [075] ok   J3 TRY-PERFORM does NOT convert it either — the twin catches only this
+  [072] ok   J1 a malformed construct signals SURFACE /0's condition, not Surface /1's
+  [073] ok   J2 ... carrying Surface /0's OWN reason keyword, unwrapped and unreclassified
+  [074] ok   J3 TRY-PERFORM does NOT convert it either — the twin catches only this
         layer's refusals, never another layer's verdict
 
 ── K. PLANTED FAULTS — a gate that has never fired is untested
-  [076] ok   K1 with no fault bound, the same expansion is green (the teeth are not stuck on)
-  [077] ok   K2 a wrong stored SOURCE identity produces NO receipt
-  [078] ok   K3 a wrong stored EXPANDED identity produces NO receipt
-  [079] ok   K4 an altered procedure version produces NO receipt
-  [080] ok   K5 after the faults unwind, the layer is green again
+  [075] ok   K1 with no fault bound, the same expansion is green (the teeth are not stuck on)
+  [076] ok   K2 a wrong stored SOURCE identity produces NO receipt
+  [077] ok   K3 a wrong stored EXPANDED identity produces NO receipt
+  [078] ok   K4 an altered procedure version produces NO receipt
+  [079] ok   K5 after the faults unwind, the layer is green again
 
 ── L. IMMUTABILITY AND THE ABSENT CONSTRUCTORS
-  [081] ok   L1 no public constructor mints a request, a receipt or a refusal
-  [082] ok   L2 no copier is exported for any minted object
-  [083] ok   L3 the exported surface exposes no setter of any kind
-  [084] ok   L4 the retained host form is NOT exported — it never reaches a receipt
-  [085] ok   L5 EXPORT CENSUS — every declared export names a live function, variable
+  [080] ok   L1 no public constructor mints a request, a receipt or a refusal
+  [081] ok   L2 no copier is exported for any minted object — request, receipt, refusal
+        AND occurrence, which is all four of them
+  [082] ok   L3 no EXTERNAL SYMBOL NAME in the exported surface names a SET-style
+        mutator — a name scan, and only a name scan
+  [083] ok   L5 EXPORT CENSUS — every declared export names a live function, variable
         or condition class; nothing is a false affordance
-  [086] ok   L6 ... and the count is stated rather than left implicit
-  [087] ok   L7 ERRATA 0.1 — the catalogue accessor that was live-but-internal is now
+  [084] ok   L6 ... and the count is RECONCILED: the number of names package.lisp
+        declares in its :EXPORT clause equals the number live in the image
+  [085] ok   L6b ... and the live export count is STATED, not left implicit
+  [086] ok   L7 ERRATA 0.1 — the catalogue accessor that was live-but-internal is now
         EXPORTED, and its four siblings still are
-  [088] ok   L8 ... and the request no longer carries a caller-owned host form at all —
-        the slot is GONE, not guarded
-
-── M. REFUSAL-CODE COVERAGE — set difference, both directions
-  [089] ok   M1 every code exercised above is DECLARED in the catalogue
-  [090] ok   M2 the :PUBLIC-API codes this suite does not exercise are exactly the two
-        expanded-side ceilings the APPLICATION drives to their edges — depth and
-        term-octets.  Nothing else is left uncovered.
-  [091] ok   M3 exactly one code is declared reachable only in a stub image
-  [092] ok   M4 exactly one code is declared UNREACHABLE UNDER THIS POLICY, and it is the
-        expanded-side NODE ceiling — dominated by the octet ceiling, measured
-  [093] ok   M5 ... and its SOURCE-side twin IS reachable, because the node check runs
-        BEFORE the encode — so the pair is not symmetric, and saying so is the
-        difference between a measured claim and a tidy one
-  [094] ok   M6 the arithmetic behind M4, exhibited rather than asserted: one term costs
-        far more than 262144/20000 = 13 octets, so octets must fire first
+  [087] ok   L8 ... and the request no longer carries a caller-owned host form at all —
+        the slot is GONE, not guarded, and no name for it exists to be exported,
+        reached, or carried into a receipt
 
 ── N. ERRATA 0.1 — THE SIX PROOF OBLIGATIONS, EACH EXECUTED
-  [095] ok   N1 CALLER MUTATION AFTER DOOR 1 CANNOT CHANGE WHAT DOOR 2 EXPANDS
-  [096] ok   N2 MUTATION BY ONE MACROEXPANSION CANNOT CHANGE A LATER PERFORMANCE of the
+  [088] ok   N1 CALLER MUTATION AFTER DOOR 1 CANNOT CHANGE WHAT DOOR 2 EXPANDS
+  [089] ok   N2 MUTATION BY ONE MACROEXPANSION CANNOT CHANGE A LATER PERFORMANCE of the
         same request — each performance gets its own freshly reconstructed form
-  [097] ok   N3 MUTABLE STRING LEAVES ARE ISOLATED
-  [098] ok   N3b ... and the reconstructed string is a FRESH object each time, so a
+  [090] ok   N3 MUTABLE STRING LEAVES ARE ISOLATED
+  [091] ok   N3b ... and the reconstructed string is a FRESH object each time, so a
         caller who mutates what it received cannot reach the next performance
-  [099] ok   N4 SHARED STRUCTURE IS REFUSED GLOBALLY — a shared subtree and two distinct
+  [092] ok   N4 SHARED STRUCTURE IS REFUSED GLOBALLY — a shared subtree and two distinct
         equal copies no longer encode identically; the shared one refuses
-  [100] ok   N4b ... and a CAR-POSITION CYCLE handed to the PUBLIC encoder REFUSES
-        instead of exhausting the control stack, as it did in Candidate /0
-  [101] ok   N4c ... and a spine cycle still refuses
-  [102] ok   N5 THE STORED SOURCE DATUM IS EXACTLY THE SOURCE HANDED TO THE
+  [093] ok   N4b ... and a CAR-POSITION CYCLE handed to the PUBLIC encoder REFUSES with
+        the SHARED-OR-CIRCULAR-STRUCTURE reason, not with a control-stack death
+  [094] ok   N4c ... and a spine cycle refuses with the SAME reason — one measurement
+        covers sharing and cycles alike
+  [095] ok   N5 THE STORED SOURCE DATUM IS EXACTLY THE SOURCE HANDED TO THE
         MACROEXPANDER — re-encoding the reconstruction reproduces the datum
-  [103] ok   N5b ... and the expansion the receipt accounts for is the expansion OF THAT
+  [096] ok   N5b ... and the expansion the receipt accounts for is the expansion OF THAT
         RECONSTRUCTION, computed independently here
-  [104] ok   N6 THE SAME REQUEST OBJECT CAN BE PERFORMED REPEATEDLY WITHOUT DRIFT
-  [105] ok   N7 DECODE-TERM NEVER INTERNS — a symbol absent from the image refuses
+  [097] ok   N6 THE SAME REQUEST OBJECT CAN BE PERFORMED REPEATEDLY WITHOUT DRIFT
+  [098] ok   N7 DECODE-TERM NEVER INTERNS — a symbol absent from the image refuses
         rather than being silently re-created
-  [106] ok   N7b ... and the same absence reaches DOOR 2 as its own typed refusal
-  [107] ok   N8 THE NONDETERMINISM RATIONALE IS ABOUT REPRESENTABILITY, and the code
+  [099] ok   N7b ... and the same absence reaches DOOR 2 as its own typed refusal
+  [100] ok   N8 THE NONDETERMINISM RATIONALE IS ABOUT REPRESENTABILITY, and the code
         says so: the refusal a gensym-bearing expansion lands under names the
         TERM GRAMMAR, not determinism
 
 ── O. ERRATA 0.2 — HOME-PACKAGE IDENTITY AND THE EXECUTED ROUND TRIP
-  [108] ok   O1 an INHERITED symbol no longer substitutes for the one the datum names
-  [109] ok   O2 ... and that refusal reaches DOOR 2 with its own upstream reason,
+  [101] ok   O1 an INHERITED symbol no longer substitutes for the one the datum names
+  [102] ok   O2 ... and that refusal reaches DOOR 2 with its own upstream reason,
         minting nothing
-  [110] ok   O3 the HOME-PACKAGE conjunct does work the STATUS conjunct cannot: an
+  [103] ok   O3 the HOME-PACKAGE conjunct does work the STATUS conjunct cannot: an
         IMPORTED symbol is :INTERNAL in the importing package while its home
         package is elsewhere, so a status-only guard would pass it
-  [111] ok   O3b ... and the ENCODER writes the HOME package, which is why an imported
+  [104] ok   O3b ... and the ENCODER writes the HOME package, which is why an imported
         symbol has no hole on the encode side
-  [112] ok   O4 THE ROUND TRIP IS AN EXECUTED GATE, not a tested property — with a
+  [105] ok   O4 THE ROUND TRIP IS AN EXECUTED GATE, not a tested property — with a
         DEFECTIVE decoder planted, Door 2 refuses ROUND-TRIP-MISMATCH before
         any expansion
-  [113] ok   O4b ... and the gate is NOT stuck on: with no fault bound the same request
+  [106] ok   O4b ... and the gate is NOT stuck on: with no fault bound the same request
         performs cleanly
-  [114] ok   O5 NO PUBLIC INPUT CAN REACH THE ROUND-TRIP MISMATCH, and saying so is the
-        honest classification: with the home-package guard in place decode is
-        injective, so the earlier and more precise guard always fires first.
-        The gate is DEFENCE IN DEPTH, proved live only by planted fault.
-  [115] ok   O6 grammar and procedure versions BOTH moved, because both changed:
-        the decode relation narrowed and the reconstruction procedure now
-        enforces the round trip
+  [107] ok   O5 for the INHERITED-SYMBOL datum the EARLIER and more precise SYMBOL guard
+        fires and the round-trip guard is never reached — an ordering exhibited
+        on ONE input, which is exactly as much as this fixture can say
+  [108] ok   O6 grammar 4, procedure 4, policy 1.  GRAMMAR moved 3->4 because the
+        correspondence narrowed twice — surplus identifier segments are refused
+        instead of truncated, and the raw term functions declare a depth ceiling
+        — and because its published description was corrected.  PROCEDURE moved
+        3->4 because requests and receipts now CAPTURE the governing versions
+        and the version alarm compares two independently sourced values.  POLICY
+        stays 1 because no ceiling value moved: 48 / 20000 / 262144 are untouched
+
+── P. ERRATA 0.3 — THE STRANGER AUDIT'S DEFECTS, EACH WITH A REGRESSION
+  [109] ok   P1 the three COMPOUND-TYPE-OF objects each yield the DESIGNED
+        :SOURCE-TERM-UNREPRESENTABLE refusal through the SIGNALLING door, with
+        the NO-TERM-KIND upstream reason — never a host condition
+  [110] ok   P2 ... and through the NON-SIGNALLING door they are RETURNED as refusal
+        objects, which is that door's whole contract and the half the crash
+        broke worst
+  [111] ok   P3 ... and the refusal DETAIL names the type family and is BOUNDED — the
+        repair lives in the description helper, so it must produce a short name
+        rather than a rendering of the rejected object
+  [112] ok   P4 TERM-DEPTH-CEILING is EXPORTED and returns the declared bound — a
+        checking surface offered to a reader publishes the bound at which it
+        refuses, instead of letting the reader find it by killing an image
+  [113] ok   P5 ENCODE-TERM works at EXACTLY the ceiling and REFUSES at ceiling+1, with
+        the declared TERM-DEPTH-EXCEEDED reason
+  [114] ok   P6 DECODE-TERM reconstructs a datum at EXACTLY the ceiling and REFUSES one
+        past it — the same bound as the encoder, counted from the same place
+  [115] ok   P7 ... and the two measures COMPOSE: the deepest host term ENCODE-TERM
+        accepts encodes to a datum DECODE-TERM reads back.  An encodable term
+        that could not be read back is exactly what this layer's depth ceiling
+        exists to prevent
+  [116] ok   P8 ... and the sharing and cycle refusals are UNCHANGED by the depth
+        repair — the iterative rewrite of the sharing counter kept its verdicts
+  [117] ok   P9 a datum carrying SURPLUS namespace and path segments is REFUSED with the
+        SYMBOL-IDENTIFIER-SHAPE reason — it was never encoder output, and
+        reading segment 0 of it made two distinct data decode to one symbol
+  [118] ok   P9b ... and the one-segment datum it shadowed still decodes, so the
+        narrowing removed the surplus shape and nothing else
+  [119] ok   P10 ROUND-TRIP-MISMATCH IS PUBLICLY REACHABLE, mechanism 1: RENAME-PACKAGE
+        between the doors, keeping the old name as a NICKNAME.  FIND-PACKAGE
+        still resolves the stored namespace to the same package object, so the
+        home-package guard passes; re-encoding writes the package's new PRIMARY
+        name, which is not the stored one.  It refuses BEFORE macroexpansion and
+        MINTS NOTHING
+  [120] ok   P11 ROUND-TRIP-MISMATCH IS PUBLICLY REACHABLE, mechanism 2: a PACKAGE-LOCAL
+        NICKNAME in the caller's ambient *PACKAGE* at Door 2.  NOTHING is
+        mutated — no unintern, no rename, no deletion — so Door 2's
+        reconstruction is a function of (datum, image, DYNAMIC CONTEXT), which no
+        document before ERRATA 0.3 stated
+  [121] ok   P11b ... and the SAME request, performed from a package with no local
+        nickname, crosses the gate — so the refusal above is caused by the
+        DYNAMIC CONTEXT and by nothing else about the request
+  [122] ok   P12 DOOR 1 ACCEPTS the witness: 2491 atomic premises pass every SOURCE
+        ceiling — the form is admissible, not a hostile construction
+  [123] ok   P13 ... and DOOR 2 REFUSES IT WITH EXACTLY :EXPANDED-NODES-EXCEEDED.  This
+        is the code the catalogue called MEASURED UNREACHABLE
+  [124] ok   P14 ... and the CATALOGUE now says so: the reachability field for that code
+        reads :PUBLIC-API, and NO code anywhere in the catalogue is declared
+        :UNREACHABLE-UNDER-THIS-POLICY
+  [125] ok   P15 ... and the retracted 'octets always fire first' order is refuted by
+        one premise: at 2490 premises the OCTET ceiling fires, at 2491 the NODE
+        ceiling fires.  Neither dominates; the threshold is construct-dependent
+  [126] ok   P16 ... and the third expanded-side ceiling is driven from the public API
+        too: a source 45 levels deep (ceiling 48) expands to 49 and refuses
+        :EXPANDED-DEPTH-EXCEEDED, so no expanded-side ceiling is left standing
+        on an argument instead of a witness
+  [127] ok   P17 ... and a DOOR-1 SHARED-STRUCTURE refusal is produced rather than
+        merely listed: a source whose :ACCEPTED-CLAUSES holds ONE cons in TWO
+        positions refuses :SOURCE-TERM-SHARED-STRUCTURE.  ERRATA 0.2's coverage
+        list named this code as exercised; nothing in any instrument produced it
+  [128] ok   P18 a REQUEST carries the grammar, procedure and policy versions Door 1
+        captured, as READABLE VALUES.  They were composed into the request
+        identity's octets, where they are frozen but unreadable: an identity can
+        be COMPARED, never READ
+  [129] ok   P19 an OLD receipt keeps reporting the version that MINTED it after the
+        live version moves beneath it — 4, in an image now answering 99
+  [130] ok   P20 ... and the old receipt's IDENTITY did not move either, so the stored
+        version and the frozen octets agree instead of drifting apart
+  [131] ok   P21 :PROCEDURE-VERSION-MISMATCH now compares TWO INDEPENDENTLY SOURCED
+        VALUES — the version Door 1 captured against the version live at mint —
+        so a request minted before a version move and performed after it
+        REFUSES.  Before ERRATA 0.3 the alarm compared the package with itself
+        and no state of the world could violate it
+  [132] ok   P22 ... and with the image restored the same request performs cleanly, so
+        the alarm above is a real comparison and not a stuck gate
+
+── M. REFUSAL-CODE COVERAGE — MEASURED FROM WHAT ACTUALLY FIRED
+  observed refusal codes this run: 19
+  :PUBLIC-API codes declared: 17 · uncovered by this suite: NIL
+  [133] ok   M1 every code this run ACTUALLY PRODUCED is DECLARED in the catalogue —
+        no refusal escapes with a code the table does not name
+  [134] ok   M2 the :PUBLIC-API codes this suite leaves uncovered are EXACTLY NONE —
+        measured from the codes observed, not read off a list.  Every code the
+        catalogue declares publicly reachable was reached, in this process, by
+        this file
+  [135] ok   M2b ... and the measurement is not vacuous in the other direction either:
+        the observed set is a SUBSET of the catalogue and covers more than the
+        public codes alone, since the planted-fault alarms fire here too
+  [136] ok   M3 exactly one code is declared reachable only in a stub image, and this
+        suite does NOT observe it — manufacturing that state here would mean
+        altering Surface /0, which is forbidden; STUB-IMAGE-FIXTURE.lisp proves
+        it in a separate process
+  [137] ok   M4 NO code is declared UNREACHABLE UNDER THIS POLICY.  The one that was —
+        :EXPANDED-NODES-EXCEEDED — is now :PUBLIC-API and was OBSERVED by this
+        run, at P13.  The claim is retired by a witness, not by an edit
+  [138] ok   M5 every :INTERNAL-PLANTED-FAULT-ONLY alarm was OBSERVED — a gate that has
+        never fired is untested, not passing, and every one the catalogue still
+        classifies that way fired here
+  [139] ok   M6 ... and the source-side node ceiling is genuinely reached too, so the
+        source/expanded pair is covered on both sides by observation rather than
+        by an argument about which check runs first
 
   WHAT THESE GREENS DO NOT ESTABLISH
   Not that any source and its expansion mean the same thing.
@@ -220,4 +322,5 @@ SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
   Every green above is SELF-CONSISTENCY CERTIFICATION by the family
     that wrote the layer.  The stranger audit is OWED.
 
-== surface1-selftest: 115 checks passed / 0 failed ==
+== surface1-selftest: 139 checks passed / 0 failed ==
+SELFTEST-RESULT checks=139 expected=139 failed=0 subject=9214b59bda190327

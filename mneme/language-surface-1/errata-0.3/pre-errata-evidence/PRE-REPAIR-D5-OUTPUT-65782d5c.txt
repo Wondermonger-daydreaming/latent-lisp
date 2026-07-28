@@ -1,0 +1,22 @@
+=== D5 encode, depth 1000 (control) ===
+D5 pre-repair · encode · depth 1000 · grammar v3
+  built an acyclic form; calling the PUBLIC ENCODE-TERM…
+  RESULT: encoded (no refusal, no death)
+exit=0
+
+=== D5 encode, depth 40000 ===
+D5 pre-repair · encode · depth 40000 · grammar v3
+  built an acyclic form; calling the PUBLIC ENCODE-TERM…
+  RESULT: CONTROL STACK EXHAUSTED — CONTROL-STACK-EXHAUSTED
+exit=0
+
+=== D5 decode, depth 5000 (control) ===
+D5 pre-repair · decode · depth 5000 · grammar v3
+  built a deep well-shaped term datum; calling the PUBLIC DECODE-TERM…
+  RESULT: decoded (no refusal, no death)
+
+=== D5 decode, depth 40000 ===
+D5 pre-repair · decode · depth 40000 · grammar v3
+fatal error encountered in SBCL pid 1842816 tid 1842816:
+Control stack exhausted while pseudo-atomic, fault: 0x745f3d397ff8, PC: 0x6517a3c6a33a
+decode-40000 exit=1

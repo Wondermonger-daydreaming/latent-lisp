@@ -86,7 +86,23 @@ never a content address."
 ;;; sanctions is strictly smaller.  A grammar whose correspondence moved must
 ;;; move its version, in either direction, or two different grammars answer to
 ;;; one number.
-(defun expansion-grammar-version () 3)
+;;; ERRATA 0.3 — grammar version 3 -> 4.  THREE CHANGES TO THE CORRESPONDENCE,
+;;; each found by the 2026-07-28 stranger audit, each narrowing the sanctioned
+;;; set or correcting its published description:
+;;;   (D3) DECODE-TERM no longer accepts an identifier carrying SURPLUS
+;;;     segments.  Candidate /0 through Errata 0.2 read segment 0 and silently
+;;;     discarded the rest, so two DISTINCT admissible data decoded to ONE
+;;;     symbol — measured by the audit — beneath a published claim that decode
+;;;     was injective.  Surplus segments are now refused.
+;;;   (D5) The raw public term functions declare a TERM-DEPTH CEILING, checked
+;;;     BEFORE recursion, so a term deeper than the ceiling is refused rather
+;;;     than driven into the host's control stack.
+;;;   (D1/D3) The published description of the correspondence is corrected: the
+;;;     round-trip mismatch IS publicly reachable, and decode is NOT injective
+;;;     for every admissible datum.  Under this layer's own Errata 0.2 §5 rule —
+;;;     the grammar is the CORRESPONDENCE, and a law needs an owner — the
+;;;     correspondence moves its version with the narrowing that accompanies it.
+(defun expansion-grammar-version () 4)
 
 (defun expansion-procedure-identity ()
   (%id '("lisp-plus-surface1" "procedure") '("macroexpand" "0")))
@@ -98,7 +114,21 @@ never a content address."
 ;;; ERRATA 0.2 — procedure version 2 -> 3.  The reconstruction procedure changed
 ;;; again: it now enforces the round trip before expanding.  A procedure that
 ;;; rejects inputs its predecessor accepted is a different procedure.
-(defun expansion-procedure-version () 3)
+;;; ERRATA 0.3 — procedure version 3 -> 4.  TEMPORAL BINDING BY VALUE (D7).
+;;; The stranger audit measured an old receipt's reported procedure version
+;;; MOVE from 3 to 4 when the live package was redefined beneath it, because
+;;; the accessors were constant functions reading ambient package state and the
+;;; receipt stored no version at all.  The same absence made
+;;; :PROCEDURE-VERSION-MISMATCH a comparison of the package with itself — an
+;;; alarm with no second operand, incapable of being violated.
+;;; Now: Door 1 CAPTURES the governing versions into the request, Door 2
+;;; captures the mint-time versions into the receipt, the public accessors
+;;; return the STORED values, and the alarm compares the Door-1-captured
+;;; version against the live-at-mint version — two independently sourced
+;;; values, so a between-doors upgrade REFUSES instead of passing unseen.
+;;; A procedure that stores what its predecessor did not, and refuses what its
+;;; predecessor could not detect, is a different procedure.
+(defun expansion-procedure-version () 4)
 
 (defun expansion-policy-identity ()
   (%id '("lisp-plus-surface1" "policy") '("candidate" "0")))
@@ -194,23 +224,47 @@ to read.  FOUR upstream reasons ride this one code, and they are distinct facts:
     that package — inherited or imported — and its home package is elsewhere.
     FIND-SYMBOL answers accessibility; the grammar records home-package identity
   ROUND-TRIP-MISMATCH          (errata 0.2) the reconstruction does not re-encode
-    to the stored datum.  DEFENCE IN DEPTH: with the home-package guard in place
-    decode is injective, so NO PUBLIC INPUT REACHES THIS — the earlier and more
-    precise guard always fires first.  Proved live by planted fault only, and
-    classified honestly rather than exercised with a fixture that pretends
+    to the stored datum.  ERRATA 0.3 — THIS IS PUBLICLY REACHABLE, and Errata
+    0.2's classification of it as unreachable defence-in-depth was FALSE.  The
+    stranger audit exhibited two mechanisms, both using only standard Common
+    Lisp:
+      (1) RENAME-PACKAGE between the doors, keeping the old name as a NICKNAME.
+          FIND-PACKAGE still resolves the stored namespace to the SAME package
+          object, so the home-package guard passes; re-encoding then writes the
+          package's new PRIMARY name, which is not the stored one.
+      (2) A PACKAGE-LOCAL NICKNAME in the caller's ambient *PACKAGE* at Door 2,
+          requiring NO mutation of any package or symbol at all.  Door 2's
+          reconstruction is therefore a function of (datum, image, DYNAMIC
+          CONTEXT), which no earlier document stated.
+    The retracted argument proved the wrong property: this gate does not test
+    whether decode is injective, it tests whether decode is a SECTION of encode
+    (encode of decode = identity), and that fails whenever a namespace string's
+    package designation is non-canonical AT DECODE TIME.  Common Lisp makes that
+    designation both time-varying and context-varying.
+    WHAT ACTUALLY HAPPENS, stated so a reader may rely on it: the public
+    operation can reach this refusal; it fires BEFORE macroexpansion; NOTHING is
+    minted; and the gate is what prevents a false source->expansion edge.  A
+    reachable defensive gate is not an embarrassment — this one was vindicated
+    by the audit that reclassified it
   ROUND-TRIP-NOT-ENCODABLE     the reconstruction will not re-encode at all")
     (:expanded-depth-exceeded       :protocol-refusal :perform :public-api
      "the expanded form is nested deeper than the declared source-depth ceiling")
-    (:expanded-nodes-exceeded       :protocol-refusal :perform
-     :unreachable-under-this-policy
-     "the expanded form has more nodes than the declared node ceiling.  MEASURED
-UNREACHABLE UNDER THIS POLICY: the checks run depth -> nodes -> encode -> octets,
-and each term costs roughly 120 octets, so an expansion meets the 262144-octet
-ceiling at about 2000 nodes and can never approach 20000.  The guard is real and
-STAYS — a future policy with a larger octet ceiling would reach it.  The ceiling
-was NOT raised to make it theatrically reachable, and the handler was NOT deleted
-to make a coverage table look complete.  Its source-side twin is genuinely
-reachable, because the node check runs BEFORE encoding.")
+    (:expanded-nodes-exceeded       :protocol-refusal :perform :public-api
+     "the expanded form has more nodes than the declared node ceiling.
+ERRATA 0.3 — RECLASSIFIED FROM :UNREACHABLE-UNDER-THIS-POLICY, WHICH WAS FALSE.
+The 2026-07-28 stranger audit reached this code from the public API with an
+ordinary admissible source form: DEFINE-JUDGMENT-SCHEMA carrying ~2491 atomic
+premises passes every source ceiling (depth 4/48, nodes ~5020/20000, octets
+~153334/262144) and expands past 20000 nodes.  The retracted note argued that
+the octet ceiling 'always fires first'; it does not, and the note cited the very
+order that refutes it — %ENCODE-CHECKED runs depth -> nodes -> encode -> octets,
+so on the expanded side the NODE check runs BEFORE anything is encoded and no
+octet count can pre-empt it.  Its arithmetic was wrong as well: a term costs
+~38-70 octets here, not 'roughly 120', and the note assumed expansion ~ source
+while DEFINE-JUDGMENT-SCHEMA amplifies ~4.0x by wrapping every premise.
+AMPLIFICATION IS CONSTRUCT-DEPENDENT and no single threshold is universal: the
+measured window for this construct is roughly 2491-5120 premises.  The guard
+itself was correct throughout and is unchanged; no ceiling was moved.")
     (:expanded-term-octets-exceeded :protocol-refusal :perform :public-api
      "the encoded expanded term exceeds the declared term-octet ceiling")
     (:source-identity-projection-mismatch :integrity-alarm :receipt
@@ -221,9 +275,26 @@ the stored source-form datum")
      :internal-planted-fault-only
      "the stored expanded-form identity does not equal the identity recomputed
 from the stored expanded-form datum")
-    (:procedure-version-mismatch    :integrity-alarm :receipt
-     :internal-planted-fault-only
-     "the receipt's procedure version does not equal the package's"))
+    (:procedure-version-mismatch    :integrity-alarm :receipt :public-api
+     "the procedure version CAPTURED AT DOOR 1 does not equal the version live
+at mint.  ERRATA 0.3 — RECLASSIFIED, TWICE OVER, AND THE SECOND MOVE WAS FOUND
+IN THE REPAIR OF THE FIRST.
+  Before Errata 0.3 this alarm compared `(expansion-procedure-version)` with
+itself — the package against the package — because the receipt stored no
+version to compare.  Its old note described 'the receipt's procedure version',
+a value that did not exist.  It was catalogued :INTERNAL-PLANTED-FAULT-ONLY,
+which UNDERSTATED it: an alarm with one operand is not merely hard to reach, it
+is structurally incapable of being violated, and its fault hook did not perturb
+a gate — it manufactured the only difference a self-comparison could ever have.
+  Errata 0.3 gave it a real second operand: Door 1 captures the governing
+version, Door 2 compares that capture against the live value.  THAT MADE IT
+PUBLICLY REACHABLE, and the :INTERNAL-PLANTED-FAULT-ONLY classification, true
+of the vacuous version, became false of the repaired one.  EXPANSION-PROCEDURE-
+VERSION is EXPORTED; redefining it between the doors — an upgrade of the image
+mid-conversation, which is exactly the event this alarm exists to catch — now
+reaches this code with no internal symbol and no fault hook.  Measured.
+  Recording it as anything else would repeat, inside this erratum, the defect
+this erratum was authorized to repair."))
   "The stable refusal codes.  A reader may branch on these; they are not prose.")
 
 (defun expansion-refusal-code-catalog () (copy-tree +refusal-catalog+))
@@ -324,9 +395,31 @@ rendered, never printed into a string, and never stored as an opaque blob.")
   "A SHORT, BOUNDED type description for a refusal DETAIL.  It is deliberately
 NOT the object's printed representation and never enters a datum: a rendering of
 an object is not the object, and a receipt that stored one would be accounting
-for a rendering.  This string reaches a human in a refusal, and nowhere else."
-  (let ((tn (string (type-of object))))
-    (subseq tn 0 (min 40 (length tn)))))
+for a rendering.  This string reaches a human in a refusal, and nowhere else.
+
+ERRATA 0.3 (D2) — THIS FUNCTION USED TO CRASH THE PUBLIC API.  It read
+`(string (type-of object))`, and TYPE-OF lawfully returns a COMPOUND TYPE
+SPECIFIER — a cons — for exactly the host types the boundary law names as
+refused: `(COMPLEX (INTEGER 1 2))`, `(SIMPLE-VECTOR 3)`, `(SIMPLE-ARRAY T (2 2))`.
+STRING of a cons signals a host TYPE-ERROR, so the designed
+:SOURCE-TERM-UNREPRESENTABLE refusal was never minted and a raw host condition
+escaped both REQUEST-EXPANSION and — worse — TRY-REQUEST-EXPANSION, whose whole
+contract is that it returns refusal objects instead of signalling.  The
+stranger audit measured all three.
+
+The repair is HERE, in the helper, not a handler wrapped around the door: a
+crash inside the refusal machinery is a defect of that machinery.  A compound
+specifier is reduced to its HEAD SYMBOL, which is the only part that names the
+type family; nothing recurses, nothing prints the object, and every branch
+returns a bounded string."
+  (let* ((spec (type-of object))
+         (name (cond ((symbolp spec) (symbol-name spec))
+                     ;; a compound specifier — (COMPLEX …), (SIMPLE-VECTOR 3),
+                     ;; (SIMPLE-ARRAY T (2 2)) — is named by its head alone
+                     ((and (consp spec) (symbolp (car spec))) (symbol-name (car spec)))
+                     ;; nothing else is expected; refuse to be clever about it
+                     (t "UNNAMEABLE-TYPE"))))
+    (subseq name 0 (min 40 (length name)))))
 
 ;;; ------------------------------------------------------------------
 ;;; THE GLOBAL SHARING / CYCLE CHECK.        [ERRATA 0.1 — finding 2]
@@ -347,20 +440,116 @@ for a rendering.  This string reaches a human in a refusal, and nowhere else."
 
 (defun %shared-cons-count (form)
   "Number of conses reachable from FORM by more than one path.  Zero for a pure
-tree; positive for any sharing or any cycle."
+tree; positive for any sharing or any cycle.
+
+ERRATA 0.3 (D5) — NOW ITERATIVE.  Errata 0.1 wrote this as the repair for a
+CAR-position cycle that exhausted the control stack, and the repair recursed
+once per CAR level: guarded against REVISITING, not against DEPTH.  The stranger
+audit drove the PUBLIC ENCODE-TERM into control-stack exhaustion with a plain
+ACYCLIC nested form — bisected: fine at 25222, dead at 25375 — with this
+function as the blowing frame.  An explicit work stack removes the host
+recursion entirely, so the sharing/cycle check itself can no longer die on any
+input, of any depth or shape."
   (let ((refs (make-hash-table :test 'eq))
         (guard (make-hash-table :test 'eq))
+        (work (list form))
         (shared 0))
-    (labels ((visit (f)
+    (loop while work
+          do (let ((f (pop work)))
                (loop while (consp f)
                      do (incf (gethash f refs 0))
                         (when (gethash f guard) (return))
                         (setf (gethash f guard) t)
-                        (visit (car f))
+                        (push (car f) work)
                         (setf f (cdr f)))))
-      (visit form))
     (maphash (lambda (k v) (declare (ignore k)) (when (> v 1) (incf shared))) refs)
     shared))
+
+;;; ------------------------------------------------------------------
+;;; THE RAW-FUNCTION TERM-DEPTH CEILING.            [ERRATA 0.3 — D5]
+;;; ------------------------------------------------------------------
+;;;
+;;; ENCODE-TERM and DECODE-TERM are PUBLIC ON PURPOSE — Errata 0.1 published
+;;; DECODE-TERM precisely so that a reader can perform the reconstruction
+;;; independently rather than taking this file's word for it.  A checking
+;;; surface offered to a reader must not kill the reader's image.
+;;;
+;;; Before this erratum both died on deep ACYCLIC input: ENCODE-TERM with a
+;;; catchable CONTROL-STACK-EXHAUSTED, and DECODE-TERM with a FATAL,
+;;; UNCATCHABLE abort ("Control stack exhausted while pseudo-atomic") that no
+;;; HANDLER-CASE could reach — the process simply died.  Errata 0.1's own
+;;; indictment, "a public function turning hostile input into a host accident,"
+;;; still applied to its own repair; the accident had moved from cyclic input to
+;;; deep input, it had not been removed.
+;;;
+;;; The cure is a DECLARED, INTROSPECTABLE, SYMMETRICAL ceiling, measured
+;;; ITERATIVELY and enforced BEFORE any recursion begins, on BOTH sides of the
+;;; correspondence.  It is deliberately far above this layer's policy ceiling
+;;; (48), so no door behaviour changes: a form the doors accept was never within
+;;; a thousand levels of this bound.  It exists to make the raw functions
+;;; TOTAL — every input either encodes/decodes or is REFUSED — never to shape
+;;; what a receipt may say.
+;;;
+;;; It is a GRAMMAR-level property (it bounds what the correspondence relates),
+;;; not a policy number, and it moves under the grammar version.
+
+(defparameter +term-depth-ceiling+ 2000
+  "The deepest host term ENCODE-TERM will encode, and the deepest term datum
+DECODE-TERM will reconstruct.  Declared, not incidental.")
+
+(defun term-depth-ceiling ()
+  "The raw public term functions' declared depth ceiling.  Public so a reader
+can see the bound rather than discover it by killing an image."
+  +term-depth-ceiling+)
+
+(defun %host-term-depth-exceeds-p (form ceiling)
+  "Does FORM nest deeper than CEILING?  ITERATIVE and short-circuiting: it
+carries its own work stack, stops the moment the bound is passed, and is called
+only after the global sharing/cycle check has proved FORM a finite tree."
+  (let ((work (list (cons form 1))))
+    (loop while work
+          do (let* ((item (pop work))
+                    (f (car item))
+                    (d (cdr item)))
+               (when (consp f)
+                 (when (> d ceiling) (return-from %host-term-depth-exceeds-p t))
+                 (let ((walk f))
+                   (loop while (consp walk)
+                         do (push (cons (car walk) (1+ d)) work)
+                            (setf walk (cdr walk)))))))
+    nil))
+
+(defun %datum-term-depth-exceeds-p (datum ceiling)
+  "Does a term DATUM nest deeper than CEILING?  ITERATIVE, over the CD/0
+structure, so DECODE-TERM can refuse before it recurses.  Only the shapes the
+term grammar itself uses are descended — a term's VALUE, and a LIST value's
+elements — because anything else is refused by DECODE-TERM on its own terms.
+
+ERRATA 0.3, SECOND PASS — THE TWO MEASURES COUNT FROM THE SAME PLACE.
+The first form of this repair started the datum walk at level 1 while
+%HOST-TERM-DEPTH-EXCEEDS-P starts its conses at level 1 and never counts the
+leaf: a host form nested N levels becomes a datum of N LIST terms PLUS one leaf
+term, so the datum measure ran one ahead.  The ledger called the ceiling
+'symmetrical'; it was not.  The deepest host term the encoder accepted produced
+a datum the decoder REFUSED — an encodable term that could not be read back,
+which is the exact shape this layer's own depth-ceiling section exists to
+prevent.  Found by the checker commissioned to grade the repair, not by its
+author.  Starting at 0 makes the leaf cost nothing and the two agree exactly."
+  (let ((work (list (cons datum 0))))
+    (loop while work
+          do (let* ((item (pop work))
+                    (d (car item))
+                    (level (cdr item)))
+               (when (> level ceiling) (return-from %datum-term-depth-exceeds-p t))
+               (when (lisp-plus-cd0:record-datum-p d)
+                 (multiple-value-bind (value-d ok)
+                     (lisp-plus-cd0:record-datum-ref d (%term-key "VALUE"))
+                   (when (and ok (lisp-plus-cd0:sequence-datum-p value-d))
+                     (loop for i from 0 below (lisp-plus-cd0:sequence-datum-length value-d)
+                           do (push (cons (lisp-plus-cd0:sequence-datum-ref value-d i)
+                                          (1+ level))
+                                    work)))))))
+    nil))
 
 (defun encode-term (form)
   "Encode a host FORM under the declared term grammar, or signal
@@ -376,6 +565,16 @@ stack instead of refusing."
       (error '%term-unrepresentable
              :reason :shared-or-circular-structure
              :shown (format nil "~D cons(es) reachable by more than one path; the grammar has no DAG and no cycle" shared))))
+  ;; ERRATA 0.3 (D5).  The sharing check above has proved FORM a finite tree, so
+  ;; the depth measure below terminates; it is iterative, and it runs BEFORE the
+  ;; recursive encoder is entered.  A form deeper than the declared ceiling is
+  ;; REFUSED — it is no longer handed to the host's control stack to see what
+  ;; happens.
+  (when (%host-term-depth-exceeds-p form +term-depth-ceiling+)
+    (error '%term-unrepresentable
+           :reason :term-depth-exceeded
+           :shown (format nil "the host term nests deeper than the declared term-depth ceiling ~D"
+                          +term-depth-ceiling+)))
   (%encode-term-1 form))
 
 (defun %encode-term-1 (form)
@@ -442,10 +641,46 @@ it never re-walks and never revisits — encoding stays linear."
 (defun %seg (segments index)
   (if (< index (length segments)) (aref segments index) nil))
 
+;;; ERRATA 0.3 (D3) — SURPLUS SEGMENTS ARE REFUSED, NOT DISCARDED.
+;;;
+;;; %SEG reads one segment and says nothing about the rest, and DECODE-TERM used
+;;; it to read segment 0 of a namespace and of a path while IGNORING any further
+;;; segments.  The stranger audit built two DISTINCT admissible data —
+;;; SYMBOL{ns ("P"), path ("W")} and SYMBOL{ns ("P" "SURPLUS"), path ("W" "X")} —
+;;; and both decoded to the SAME symbol, beneath a published claim that decode
+;;; was injective.  ENCODE-TERM emits exactly one namespace segment and exactly
+;;; one path segment, always; so a datum carrying more was never encoder output
+;;; and the correspondence has no business relating it to anything.
+(defun %exactly-one-segment-p (segments)
+  (= 1 (length segments)))
+
 (defun decode-term (datum)
   "Reconstruct a FRESH host form from a term DATUM.  Public, because the claim
 that the stored datum IS what the macroexpander received is only checkable if a
-reader can perform the reconstruction independently."
+reader can perform the reconstruction independently.
+
+ERRATA 0.3 (D5).  The depth measure runs ONCE, here, iteratively, before any
+recursion — so a deep datum is REFUSED rather than killing the image.  This is
+the side that used to die FATALLY (\"Control stack exhausted while
+pseudo-atomic\"), where no handler could reach it.
+
+The recursive body is %DECODE-TERM-1, and the split is not cosmetic: an earlier
+form of this repair re-measured the whole remaining subtree at every level,
+which made decoding QUADRATIC in depth — the repair's own cost, found by the
+checker commissioned to grade it.  Measure once at the door; descend bounded."
+  (unless (lisp-plus-cd0:record-datum-p datum)
+    (error '%term-irreconstructible :reason :not-a-term-record
+                                    :shown "a term is a record of KIND and VALUE"))
+  (when (%datum-term-depth-exceeds-p datum +term-depth-ceiling+)
+    (error '%term-irreconstructible
+           :reason :term-depth-exceeded
+           :shown (format nil "the term datum nests deeper than the declared term-depth ceiling ~D"
+                          +term-depth-ceiling+)))
+  (%decode-term-1 datum))
+
+(defun %decode-term-1 (datum)
+  "The recursive body.  Assumes DECODE-TERM has already bounded the depth, so it
+never re-measures and the descent stays linear."
   (unless (lisp-plus-cd0:record-datum-p datum)
     (error '%term-irreconstructible :reason :not-a-term-record
                                     :shown "a term is a record of KIND and VALUE"))
@@ -463,6 +698,19 @@ reader can perform the reconstruction independently."
           ((string= kind "SYMBOL")
            (unless (lisp-plus-cd0:identifier-datum-p value-d)
              (error '%term-irreconstructible :reason :symbol-value-not-an-identifier :shown ""))
+           ;; ERRATA 0.3 (D3) — the encoder emits EXACTLY ONE namespace segment
+           ;; and EXACTLY ONE path segment.  A datum carrying more is not
+           ;; encoder output, and silently reading segment 0 of it made two
+           ;; distinct data decode to one symbol.  Refuse it.
+           (unless (and (%exactly-one-segment-p
+                         (lisp-plus-cd0:identifier-datum-namespace value-d))
+                        (%exactly-one-segment-p
+                         (lisp-plus-cd0:identifier-datum-path value-d)))
+             (error '%term-irreconstructible
+                    :reason :symbol-identifier-shape
+                    :shown (format nil "a SYMBOL term names exactly one package segment and one name segment; this datum carries ~D and ~D"
+                                   (length (lisp-plus-cd0:identifier-datum-namespace value-d))
+                                   (length (lisp-plus-cd0:identifier-datum-path value-d)))))
            (let* ((package-name (%seg (lisp-plus-cd0:identifier-datum-namespace value-d) 0))
                   (symbol-name (%seg (lisp-plus-cd0:identifier-datum-path value-d) 0))
                   (package (and package-name (find-package package-name))))
@@ -501,7 +749,7 @@ reader can perform the reconstruction independently."
           ((string= kind "STRING")  (copy-seq (lisp-plus-cd0:string-datum-value value-d)))
           ((string= kind "LIST")
            (loop for i from 0 below (lisp-plus-cd0:sequence-datum-length value-d)
-                 collect (decode-term (lisp-plus-cd0:sequence-datum-ref value-d i))))
+                 collect (%decode-term-1 (lisp-plus-cd0:sequence-datum-ref value-d i))))
           (t (error '%term-irreconstructible :reason :unknown-term-kind
                                              :shown (or kind "<none>"))))))))
 
@@ -673,7 +921,15 @@ to say about."
   (source-form-identity nil :read-only t)
   (operation nil :read-only t)
   (construct-identity nil :read-only t)
-  (occurrence-tag nil :read-only t))
+  (occurrence-tag nil :read-only t)
+  ;; ERRATA 0.3 (D7) — THE GOVERNING VERSIONS, CAPTURED AT DOOR 1 AS VALUES.
+  ;; These were always composed into the request IDENTITY's octets, where they
+  ;; are frozen but unreadable: an identity can be COMPARED, never READ.  A
+  ;; request that cannot say what governed it cannot let Door 2 notice that
+  ;; something changed in between.
+  (grammar-version nil :read-only t)
+  (procedure-version nil :read-only t)
+  (policy-version nil :read-only t))
 
 ;;; ERRATA 0.1 — THE `%HOST-FORM` SLOT IS GONE, AND ITS ABSENCE IS THE REPAIR.
 ;;;
@@ -737,7 +993,13 @@ THE CALLER'S TREE IS READ EXACTLY ONCE, HERE, AND NEVER CONSULTED AGAIN."
                    :source-form-identity source-id
                    :operation operation
                    :construct-identity construct-id
-                   :occurrence-tag occurrence-tag)))
+                   :occurrence-tag occurrence-tag
+                   ;; the same three integers that were just composed into
+                   ;; REQUEST-ID above — stored as values so a later reader,
+                   ;; and Door 2's gate, can actually consult them
+                   :grammar-version (expansion-grammar-version)
+                   :procedure-version (expansion-procedure-version)
+                   :policy-version (expansion-policy-version))))
 
 (defun try-request-expansion (source-form operation occurrence-tag)
   "The non-signalling twin.  Returns (values REQUEST-or-NIL REFUSAL-or-NIL).
@@ -787,29 +1049,46 @@ with it is exported."
   (operation nil :read-only t)
   (construct-identity nil :read-only t)
   (expansion-context nil :read-only t)
-  (disposition nil :read-only t))
+  (disposition nil :read-only t)
+  ;; ERRATA 0.3 (D7) — THE MINTING VERSIONS, STORED AS VALUES.
+  (grammar-version nil :read-only t)
+  (procedure-version nil :read-only t)
+  (policy-version nil :read-only t))
 
-;;; Version-binding as constant functions, not slots: a receipt cannot disagree
-;;; with the package that minted it.
+;;; ERRATA 0.3 (D7) — VERSION BINDING BY VALUE, NOT BY REFERENCE.
+;;;
+;;; These were constant functions that ignored the receipt and read the LIVE
+;;; package, under the comment "a receipt cannot disagree with the package that
+;;; minted it."  That sentence was true only vacuously — the receipt stored no
+;;; version, so it had nothing to disagree WITH — and the stranger audit
+;;; measured what it cost: after one redefinition of
+;;; EXPANSION-PROCEDURE-VERSION, an OLD receipt's reported version moved from 3
+;;; to 4, silently, while its identity octets stayed frozen at the v3 value.  A
+;;; receipt could not report the version under which it was minted; the old
+;;; number survived only as opaque bytes inside an identity that can be compared
+;;; but not read.
+;;;
+;;; Now the accessors return what the receipt STORES.  A receipt minted under
+;;; procedure 4 says 4 forever, in an image that has moved on to 5.
 (defun expansion-receipt-procedure-identity (r)
   (declare (ignore r)) (expansion-procedure-identity))
-(defun expansion-receipt-procedure-version (r)
-  (declare (ignore r)) (expansion-procedure-version))
 (defun expansion-receipt-policy-identity (r)
   (declare (ignore r)) (expansion-policy-identity))
-(defun expansion-receipt-policy-version (r)
-  (declare (ignore r)) (expansion-policy-version))
 
 ;;; ------------------------------------------------------------------
 ;;; PLANTED-FAULT HOOKS.  Reachable only from inside this package.
 ;;; A gate that has never fired is untested, not passing.
-;;; ERRATA 0.2 — a hook for the ROUND-TRIP GATE.  With the home-package guard in
-;;; place, decode is injective for every admissible datum, so NO PUBLIC INPUT CAN
-;;; REACH the round-trip mismatch: the earlier, more precise guard always catches
-;;; the case first.  That makes the gate defence-in-depth — and a gate that has
-;;; never fired is untested, not passing.  This hook substitutes a different form
-;;; for the reconstruction, exactly as a defective decoder would, so the gate can
-;;; be shown to bite.  It is reachable only from inside this package.
+;;; ERRATA 0.2 — a hook for the ROUND-TRIP GATE, so a gate that has never fired
+;;; is not mistaken for a gate that passes.  It substitutes a different form for
+;;; the reconstruction, exactly as a defective decoder would.  It is reachable
+;;; only from inside this package.
+;;; ERRATA 0.3 — THE CLAIM THAT ONCE STOOD HERE IS WITHDRAWN.  This comment
+;;; asserted that decode was injective for every admissible datum and that no
+;;; public input could reach the round-trip mismatch.  Both are false; see the
+;;; catalogue entry for :SOURCE-NOT-RECONSTRUCTIBLE.  The hook remains useful —
+;;; it drives the gate from a direction no public input takes — but it is no
+;;; longer the ONLY way the gate can be shown to bite, and the fixtures that
+;;; reach it publicly now stand beside it.
 (defparameter *%fault-decode-substitution* nil
   "When bound to a function, it is applied to the reconstructed form before the
 round-trip gate examines it.")
@@ -831,7 +1110,21 @@ world — a receipt is an ACCOUNT, not an AUTHENTICATION."
                               (expansion-request-source-form-identity request)))
         (stored-expanded-id (or *%fault-expanded-identity*
                                 (expansion-occurrence-expanded-form-identity occurrence)))
-        (version (or *%fault-procedure-version* (expansion-procedure-version))))
+        ;; ERRATA 0.3 (D7) — TWO INDEPENDENTLY SOURCED OPERANDS.
+        ;; This was `(or hook (expansion-procedure-version))` compared against
+        ;; `(expansion-procedure-version)`: with the hook nil — that is, always,
+        ;; outside this package — the package was compared with ITSELF.  The
+        ;; alarm could not be violated by any state of the world, and its
+        ;; catalogue note described a comparison against "the receipt's
+        ;; procedure version", a value the receipt did not carry.
+        ;; The first operand is now the version DOOR 1 captured; the second is
+        ;; the version live HERE, at mint.  They differ exactly when the image
+        ;; was upgraded between the doors — which used to pass unnoticed and now
+        ;; refuses.  The fault hook still replaces one side, which is what a
+        ;; fault hook is for: it now perturbs a real comparison instead of
+        ;; manufacturing the only difference in a self-comparison.
+        (version (or *%fault-procedure-version*
+                     (expansion-request-procedure-version request))))
     (unless (lisp-plus-cd0:equal-datum
              stored-source-id
              (%identity (expansion-request-source-form-datum request)))
@@ -844,10 +1137,17 @@ world — a receipt is an ACCOUNT, not an AUTHENTICATION."
                :detail "stored expanded identity does not match the stored expanded datum"))
     (unless (eql version (expansion-procedure-version))
       (%refuse :receipt :procedure-version-mismatch :occurrence-tag tag
-               :detail "receipt procedure version does not equal the package's"))
+               :detail (format nil "the procedure version captured at Door 1 (~S) is not the version live at mint (~S); the image changed between the doors"
+                               version (expansion-procedure-version))))
     (%make-receipt
+     ;; ERRATA 0.3 (D7) — the mint-time PROCEDURE binding joins the receipt's
+     ;; identity composition.  A receipt is an account OF A PERFORMANCE by a
+     ;; particular procedure; two accounts that differ in the procedure that
+     ;; produced them are different accounts and must not share an identity.
      :identity (%identity (%seq (list (%text ":receipt")
                                       (expansion-occurrence-identity occurrence)
+                                      (expansion-procedure-identity)
+                                      (%int (expansion-procedure-version))
                                       (expansion-policy-identity)
                                       (%int (expansion-policy-version)))))
      :request-identity (expansion-request-identity request)
@@ -860,7 +1160,13 @@ world — a receipt is an ACCOUNT, not an AUTHENTICATION."
      :operation (expansion-request-operation request)
      :construct-identity (expansion-request-construct-identity request)
      :expansion-context (%expansion-context)
-     :disposition (expansion-occurrence-disposition occurrence))))
+     :disposition (expansion-occurrence-disposition occurrence)
+     ;; ERRATA 0.3 (D7) — stored as VALUES, so the receipt can still answer
+     ;; after the image has moved on.  The gate above has just established that
+     ;; the Door-1 capture and the live-at-mint values agree.
+     :grammar-version (expansion-grammar-version)
+     :procedure-version (expansion-procedure-version)
+     :policy-version (expansion-policy-version))))
 
 ;;; ==================================================================
 ;;; DOOR 2 — PERFORM.  Meets the actual image.

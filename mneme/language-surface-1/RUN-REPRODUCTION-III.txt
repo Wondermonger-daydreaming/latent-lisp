@@ -1,0 +1,60 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+LANGUAGE SURFACE /1 — ERRATA 0.3 REPRODUCTION III
+  subject     9214b59bda190327dc879186bd6d567eae8d2e7d0d162f869148fad1ad6aaf99   (content digest — this is the measurement)
+  label       (none supplied)   (ADVISORY, supplied from outside; not a measurement)
+  directory   mneme/language-surface-1/  (relative, so this transcript is location-stable)
+  SBCL 2.4.6 · grammar v4 · procedure v4 · policy v1
+
+  [D1a] REFUTED    (classification)
+        the expanded-side NODE ceiling is catalogued UNREACHABLE while public input reaches it
+        catalogue reachability field reads :PUBLIC-API
+  [D1b] REFUTED    (classification)
+        the catalogue note still asserts the retracted measurement ("MEASURED UNREACHABLE" / "never approach 20000" / "roughly 120 octets")
+        retracted phrases present: no
+  [D1c] REFUTED    (behavioural)  
+        the node guard stopped firing, or a ceiling was moved to make the code unreachable (a repair must not do this)
+        Door 1 accepted T · Door 2 code :EXPANDED-NODES-EXCEEDED (the guard firing is CORRECT and expected)
+  [D2a] REFUTED    (behavioural)  
+        a complex number escapes the public API as an uncaught host TYPE-ERROR instead of the designed refusal
+        REQUEST-EXPANSION :DESIGNED-REFUSAL · TRY-REQUEST-EXPANSION :DESIGNED-REFUSAL
+  [D2b] REFUTED    (behavioural)  
+        a simple vector escapes the public API as an uncaught host TYPE-ERROR instead of the designed refusal
+        REQUEST-EXPANSION :DESIGNED-REFUSAL · TRY-REQUEST-EXPANSION :DESIGNED-REFUSAL
+  [D2c] REFUTED    (behavioural)  
+        a multidimensional array escapes the public API as an uncaught host TYPE-ERROR instead of the designed refusal
+        REQUEST-EXPANSION :DESIGNED-REFUSAL · TRY-REQUEST-EXPANSION :DESIGNED-REFUSAL
+  [D3a] REFUTED    (classification)
+        the catalogue does not tell a reader that ROUND-TRIP-MISMATCH is publicly reachable (or still asserts that no public input reaches it)
+        absolute retracted phrase present: no · states public reachability: yes
+  [D3b] REFUTED    (behavioural)  
+        a public host-state substitution stopped refusing at the round-trip gate (a repair must not do this)
+        rename+nickname upstream "ROUND-TRIP-MISMATCH" · ambient package-local nickname upstream "ROUND-TRIP-MISMATCH" (both refusing is CORRECT)
+  [D3d] REFUTED    (behavioural)  
+        two DISTINCT admissible data decode to ONE symbol — surplus identifier segments are silently discarded
+        decode(one-segment) CAR · decode(surplus-segment) :REFUSED · distinct data T
+  [D5a] REFUTED    (behavioural)  
+        the PUBLIC ENCODE-TERM exhausts the host control stack on deep ACYCLIC input instead of refusing
+        depth 40000 -> :REFUSED · at declared ceiling 2000 -> :ENCODED (must be :ENCODED)
+  [D7a] REFUTED    (behavioural)  
+        an OLD receipt's reported procedure version MOVES when the live package version changes
+        minted 4 · after a live bump the same receipt reports 4 · identity unchanged T
+  [D7b] REFUTED    (behavioural)  
+        an image upgraded BETWEEN the doors mints a receipt anyway — the version alarm has no second operand
+        outcome :PROCEDURE-VERSION-MISMATCH (:PROCEDURE-VERSION-MISMATCH is the repaired answer)
+
+  verdicts marked (classification) test A PUBLISHED CLAIM; verdicts marked
+  (behavioural) test WHAT THE CODE DOES.  D1c and D3b are written inverted on
+  purpose: they CONFIRM only if a correct guard was weakened, so a repair
+  cannot buy a green by making a reachable code unreachable.
+
+REPRODUCTION-III-RESULT verdicts=12 expected=12 confirmed=0 refuted=12 classification=3 subject=9214b59bda190327

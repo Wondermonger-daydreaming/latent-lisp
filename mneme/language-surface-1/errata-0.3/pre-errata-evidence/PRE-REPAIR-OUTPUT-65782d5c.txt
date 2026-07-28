@@ -1,0 +1,42 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+LANGUAGE SURFACE /1 — ERRATA 0.3 PRE-REPAIR REPRODUCTION
+  subject     candidate 65782d5c (Errata 0.2), unrepaired
+  directory   /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1/
+  SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
+
+  CONFIRMED  D1
+      a public source form reaches :EXPANDED-NODES-EXCEEDED, catalogued :UNREACHABLE-UNDER-THIS-POLICY
+      Door 1 ACCEPTED · Door 2 code :EXPANDED-NODES-EXCEEDED · catalogue reachability :UNREACHABLE-UNDER-THIS-POLICY
+  CONFIRMED  D2a
+      a complex number escapes TRY-REQUEST-EXPANSION as an uncaught host TYPE-ERROR instead of the designed refusal
+      outcome (:UNCAUGHT-HOST-TYPE-ERROR TYPE-ERROR)
+  CONFIRMED  D2b
+      a simple vector escapes TRY-REQUEST-EXPANSION as an uncaught host TYPE-ERROR instead of the designed refusal
+      outcome (:UNCAUGHT-HOST-TYPE-ERROR TYPE-ERROR)
+  CONFIRMED  D2c
+      a multidimensional array escapes TRY-REQUEST-EXPANSION as an uncaught host TYPE-ERROR instead of the designed refusal
+      outcome (:UNCAUGHT-HOST-TYPE-ERROR TYPE-ERROR)
+  CONFIRMED  D3a
+      RENAME-PACKAGE keeping the old name as a nickname reaches ROUND-TRIP-MISMATCH from public input
+      code :SOURCE-NOT-RECONSTRUCTIBLE · upstream "ROUND-TRIP-MISMATCH"
+  CONFIRMED  D3b
+      a package-local nickname in the caller's ambient *PACKAGE* reaches ROUND-TRIP-MISMATCH with ZERO global mutation
+      code :SOURCE-NOT-RECONSTRUCTIBLE · upstream "ROUND-TRIP-MISMATCH"
+  CONFIRMED  D3c
+      two DISTINCT admissible datums decode to ONE symbol — %SEG discards surplus identifier segments beneath an injectivity claim
+      equal-datum(a,b) NIL · decode(a) EQ decode(b) T · both EQ E03-SEG::W T
+  CONFIRMED  D7
+      an OLD receipt's reported procedure version MOVES when the live package version changes; the receipt stores none
+      minted at 3 · after live bump the same receipt reports 4 · identity bytes unchanged T
+
+PRE-REPAIR-RESULT verdicts=8 expected=8 confirmed=8

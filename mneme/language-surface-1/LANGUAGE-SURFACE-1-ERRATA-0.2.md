@@ -1,5 +1,37 @@
 # LANGUAGE SURFACE /1 — CANDIDATE /0 — ERRATA 0.2
 
+> ### ⚠ SUPERSEDED IN PART BY ERRATA 0.3 — §2's CLASSIFICATION IS FALSE
+>
+> The 2026-07-28 stranger audit refuted this document's central classification.
+> **§2 claims that "decode is injective for every admissible datum, so NO PUBLIC
+> INPUT CAN REACH the round-trip mismatch — the earlier, more precise guard
+> always fires first."** All three parts are false:
+>
+> - **Public input reaches it**, by two mechanisms using only standard Common
+>   Lisp: `RENAME-PACKAGE` between the doors while retaining the old name as a
+>   nickname, and a **package-local nickname in the caller's ambient `*PACKAGE*`
+>   at Door 2**, which requires no mutation of anything at all.
+> - **The earlier guard does not fire first** in either case — it passes, because
+>   it compares package *objects* while what drifted was the package's *name*.
+> - **Decode is not injective** on the data it accepted: identifiers carrying
+>   surplus segments decoded to the same symbol as their one-segment
+>   counterparts. Errata 0.3 refuses those data; the claim was false when made.
+>
+> The argument proved the wrong property. The gate does not test injectivity; it
+> tests whether decode is a **section** of encode, and that fails whenever a
+> namespace's package designation is non-canonical *at decode time* — which
+> Common Lisp permits both across time and across dynamic context.
+>
+> **What survives, and it is the substance of §2:** the round-trip gate itself
+> was right, it fires before macroexpansion, it mints nothing, and it is what
+> prevents a false source→expansion edge. The stranger audit vindicated the
+> mechanism while refuting the classification. Nothing below is deleted; see
+> `LANGUAGE-SURFACE-1-ERRATA-0.3.md` and the audit return.
+>
+> §7's numbers (75 exports, 115/8/24 checks, grammar v3 · procedure v3) describe
+> the tree as of this erratum and are correct **for that tree**; the current
+> tree is Errata 0.3 and reports different figures.
+
 *A narrow owner-supplied **pre-audit follow-up** against **Errata 0.1** at
 `4f5c5982`. Three surgical corrections, not another cathedral of procedure.*
 

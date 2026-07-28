@@ -7,6 +7,14 @@ BSD-style licenses.  See the CREDITS and COPYING files in the
 distribution for more information.
 SURFACE /1 — STUB-IMAGE FIXTURE
 SBCL 2.4.6
+subject-digest  9214b59bda190327dc879186bd6d567eae8d2e7d0d162f869148fad1ad6aaf99
+                content-derived: sha256 over the 25 exact-path
+                members of errata-0.3/SUBJECT-MANIFEST.txt,
+                each bound to its path.  MEASURES the layer under
+                test; NOT the instruments, transcripts, or host.
+subject-label   (none supplied)
+                ADVISORY ONLY — a human or git label, never a
+                measurement of content (FOSSOR F6).
   [01] ok   the stub package exists and exports the construct's NAME
   [02] ok   and the name has NO macro function — surface0.lisp was never loaded
   [03] ok   DOOR 1 accepts it — the head IS in the closed construct table
@@ -18,3 +26,5 @@ SBCL 2.4.6
       facts about the world stay two facts
 
 == stub-image-fixture: 8 checks passed / 0 failed ==
+
+STUB-RESULT checks=8 expected=8 failed=0 subject=9214b59bda190327

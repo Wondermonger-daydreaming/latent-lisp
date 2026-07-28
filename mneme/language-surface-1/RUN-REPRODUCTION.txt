@@ -9,9 +9,16 @@ kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
 REPRODUCTION I — Surface /1 pre-audit defect report (4 findings, 6 parts)
-subject     a1b9bd2d
-directory   /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1/
-SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
+subject-digest  9214b59bda190327dc879186bd6d567eae8d2e7d0d162f869148fad1ad6aaf99
+                content-derived: sha256 over the 25 exact-path
+                members of errata-0.3/SUBJECT-MANIFEST.txt,
+                each bound to its path.  MEASURES the layer under
+                test; NOT the instruments, transcripts, or host.
+subject-label   (none supplied)
+                ADVISORY ONLY — a human or git label, never a
+                measurement of content (FOSSOR F6).
+place       .../mneme/language-surface-1/  (path-stable by design; see above)
+SBCL 2.4.6 · grammar v4 · procedure v4 · policy v1
 
   FINDING 1 — MUTABLE SOURCE ALIAS / FALSE EDGE
   ---------------------------------------------
@@ -63,9 +70,12 @@ SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
   FINDING 3 — NO OCCURRENCE OBJECT TYPE
   -------------------------------------
     EXPANSION-OCCURRENCE symbol present? .......... T
-    EXPANSION-OCCURRENCE-P present? ............... T
+    EXPANSION-OCCURRENCE-P .......... :EXTERNAL
+    EXPANSION-OCCURRENCE-IDENTITY ... :EXTERNAL
     third value of PERFORM-EXPANSION is a ......... EXPANSION-OCCURRENCE
-  REFUTED    3 — a first-class immutable occurrence object exists and is the third value
+    the recogniser accepts THAT VALUE ............. T
+    the identity accessor answers a bytes datum ... T
+  REFUTED    3 — a first-class occurrence OBJECT exists, the third value IS one, and its exported identity accessor answers a bytes datum
 
   FINDING 4 — PUBLIC CATALOGUE ACCESSOR
   -------------------------------------
@@ -74,7 +84,8 @@ SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
                      REFUSAL-CATALOG-ENTRY-PHASE  status    :EXTERNAL  fbound T
                       REFUSAL-CATALOG-ENTRY-NOTE  status    :EXTERNAL  fbound T
               REFUSAL-CATALOG-ENTRY-REACHABILITY  status    :EXTERNAL  fbound T
-  REFUTED    4 — the accessor is exported
+    REFUSAL-CATALOG-ENTRY-REACHABILITY  status    :EXTERNAL  fbound T
+  REFUTED    4 — the accessor EXISTS, is :EXTERNAL and is fbound — all three, measured
 
   SUMMARY
   -------
@@ -87,4 +98,4 @@ SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
 
   confirmed: 0 of 6
 
-REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0 subject=9214b59bda190327

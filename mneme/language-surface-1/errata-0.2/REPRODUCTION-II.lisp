@@ -10,17 +10,39 @@
 ;;;;   C  an IMPORTED symbol — the same hole, second shape, which a status-only
 ;;;;      guard would not catch
 
+;;; WHERE THIS INSTRUMENT LIVES, as distinct from WHAT IT MEASURES: the measuring
+;;; apparatus travels from the instrument's own tree, the subject arrives as argv[1].
+(defparameter *repro-here* (or *load-truename* *default-pathname-defaults*))
+
 (defparameter *s1dir*
   (pathname (or (second sb-ext:*posix-argv*)
                 "/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1/")))
 (handler-bind ((style-warning #'muffle-warning))
   (load (merge-pathnames "surface1.lisp" *s1dir*))
   (load (merge-pathnames "../language-surface-0/surface0.lisp" *s1dir*)))
+(load (merge-pathnames "../errata-0.3/EVIDENCE.lisp" *repro-here*))
+
+;;; THE DECLARED COUNT, at the top: a run truncated anywhere below cannot satisfy it.
+(defparameter *expected-verdicts* 4)
 
 (defpackage #:repro2 (:use #:common-lisp))
 (in-package #:repro2)
-(defmacro s1 (n &rest a) `(,(find-symbol (string n) '#:lisp-plus-surface1) ,@a))
-(defmacro cd0 (n &rest a) `(,(find-symbol (string n) '#:lisp-plus-cd0) ,@a))
+;;; ERRATA 0.3 / D8 F-16.  These used FIND-SYMBOL WITHOUT demanding :EXTERNAL, so a
+;;; private name resolved silently — the same defect class as bare INTERN, one step
+;;; short (`FOSSOR.md` §6, F7).  Absence was worse than silent: FIND-SYMBOL returning
+;;; NIL produced the form `(NIL …)`, an error naming nothing.
+(defmacro s1 (n &rest a)
+  (multiple-value-bind (sym status) (find-symbol (string n) '#:lisp-plus-surface1)
+    (unless (eq status :external)
+      (error "S1: ~A is ~:[absent~;~:*~A~] in LISP-PLUS-SURFACE1, not :EXTERNAL"
+             (string n) status))
+    `(,sym ,@a)))
+(defmacro cd0 (n &rest a)
+  (multiple-value-bind (sym status) (find-symbol (string n) '#:lisp-plus-cd0)
+    (unless (eq status :external)
+      (error "CD0: ~A is ~:[absent~;~:*~A~] in LISP-PLUS-CD0, not :EXTERNAL"
+             (string n) status))
+    `(,sym ,@a)))
 (defun banner (s) (format t "~%  ~A~%  ~A~%" s (make-string (length s) :initial-element #\-)))
 (defun line (c &rest a)
   (let ((x (apply #'format nil c a))) (if (string= x "") (format t "~%") (format t "    ~A~%" x))))
@@ -33,9 +55,21 @@
   (push (list id state) *verdicts*)
   (format t "    ~A  ~A — ~A~%" (if (eq state :confirmed) "CONFIRMED" "REFUTED  ") id text))
 
+;;; ERRATA 0.3 / D6.  The ABSOLUTE path used to be printed here — a property of the
+;;; machine, not of the subject, and the reason this transcript could not reproduce
+;;; byte-for-byte from the writable scratch copy the runner itself tells an auditor
+;;; to work in.  WHICH BYTES is answered by the digest; WHERE they sat is not evidence.
+(defun subject-place (dir)
+  (let ((tail (last (pathname-directory (truename dir)) 2)))
+    (format nil ".../~{~A/~}" tail)))
+
 (format t "~&REPRODUCTION II — Surface /1 Errata 0.1 follow-up (3 findings)~%")
-(format t "subject     ~A~%" *subject-label*)
-(format t "directory   ~A~%" (namestring (truename cl-user::*s1dir*)))
+(surface1-evidence:print-evidence-header
+ cl-user::*s1dir*
+ :label *subject-label*
+ :tools-home (merge-pathnames "../" cl-user::*repro-here*))
+(format t "place       ~A  (path-stable by design; see above)~%"
+        (subject-place cl-user::*s1dir*))
 (format t "SBCL ~A · grammar v~D · procedure v~D · policy v~D~%"
         (lisp-implementation-version)
         (s1 expansion-grammar-version) (s1 expansion-procedure-version)
@@ -132,11 +166,19 @@
 (line "N5 asserts encode(decode(d)) == d for ordinary specimens.")
 (line "The question is whether %RECONSTRUCT-SOURCE ENFORCES it before expanding.")
 (line "")
-(line "WITH THE HOME-PACKAGE GUARD IN PLACE, decode is injective for every")
-(line "admissible datum, so NO PUBLIC INPUT REACHES the round-trip mismatch —")
-(line "the earlier, more precise guard always fires first.  The gate is therefore")
-(line "DEFENCE IN DEPTH, and the only honest way to show it bites is to plant a")
-(line "defective decoder, which is what the layer's own fault hook is for.")
+;;; ERRATA 0.3 / D3.  WITHDRAWN, and the withdrawn words are kept here so a reader
+;;; can see what was claimed: "WITH THE HOME-PACKAGE GUARD IN PLACE, decode is
+;;; injective for every admissible datum, so NO PUBLIC INPUT REACHES the round-trip
+;;; mismatch — the earlier, more precise guard always fires first."  The 2026-07-28
+;;; stranger audit reached ROUND-TRIP-MISMATCH from the public operation, by two
+;;; independent mechanisms.  Injectivity was never established; it was assumed.
+(line "ERRATA 0.3 — the injectivity claim that used to stand here is WITHDRAWN.")
+(line "ROUND-TRIP-MISMATCH IS publicly reachable (audit D3).  What the gate does")
+(line "is still exactly what it did: it refuses BEFORE macroexpansion, nothing is")
+(line "minted, and no false edge is written.  The gate was vindicated; the note")
+(line "about it was false.  This probe still plants a defective decoder, not")
+(line "because the public path cannot get there, but because a PLANTED fault is")
+(line "the smallest way to show THIS gate — and only this gate — doing the work.")
 (line "")
 (let* ((hook (find-symbol "*%FAULT-DECODE-SUBSTITUTION*" '#:lisp-plus-surface1))
        (clean-req (s1 request-expansion
@@ -218,5 +260,13 @@
 (format t "~%  SUMMARY~%  -------~%")
 (dolist (v (reverse *verdicts*))
   (format t "    ~9@A  ~A~%" (if (eq (second v) :confirmed) "CONFIRMED" "REFUTED") (first v)))
-(format t "~%REPRODUCTION-RESULT verdicts=~D expected=4 confirmed=~D~%"
-        (length *verdicts*) (count :confirmed *verdicts* :key #'second))
+;;; ERRATA 0.3 / D6 — the canonical line carries the CONTENT-DERIVED subject digest.
+;;; ERRATA 0.3 / D4 — the wrapper requires this exact shape, and the instrument exits
+;;; nonzero if its live verdict count misses the count declared at the top.
+(format t "~%REPRODUCTION-RESULT verdicts=~D expected=~D confirmed=~D subject=~A~%"
+        (length *verdicts*) cl-user::*expected-verdicts*
+        (count :confirmed *verdicts* :key #'second)
+        (surface1-evidence:subject-short
+         cl-user::*s1dir* (merge-pathnames "../" cl-user::*repro-here*)))
+(when (/= (length *verdicts*) cl-user::*expected-verdicts*)
+  (sb-ext:exit :code 1))

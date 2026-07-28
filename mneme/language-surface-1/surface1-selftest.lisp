@@ -40,6 +40,27 @@ so a suite can no longer silently depend on a private name."
 
 (defparameter *checks* 0)
 (defparameter *failed* 0)
+
+;;; ------------------------------------------------------------------
+;;; THE EXPECTED CHECK COUNT.                       [ERRATA 0.3 — D4]
+;;; ------------------------------------------------------------------
+;;;
+;;; The stranger audit's teeth controls (FOSSOR §4, T5-T11) truncated this file
+;;; at a clean form boundary and the evidence runner reported SUCCESS, because
+;;; the runner's only success condition was the process exit code and a
+;;; truncated run exits 0 without ever reaching the summary.  A count printed
+;;; from a live counter alone cannot detect that: a run that executed half its
+;;; checks prints half a count, in the same shape, and nothing compares it to
+;;; anything.
+;;;
+;;; So the file DECLARES, here at the top, how many checks it intends to
+;;; execute, and the canonical result line at the foot prints the DECLARED
+;;; number beside the LIVE one.  A truncated run never reaches the line at all;
+;;; a run that reaches it having executed a different number of checks prints a
+;;; line the runner will not accept.  The literal is not decoration — it is the
+;;; only part of the count a partial execution cannot forge.
+(defparameter *expected-checks* 139)
+
 (defun ok (label condition &optional detail)
   (incf *checks*)
   (if condition
@@ -50,11 +71,62 @@ so a suite can no longer silently depend on a private name."
 
 (defun tag (&rest path) (cd0 make-identifier-datum '("surface1-selftest") path))
 (defun same (a b) (cd0 equal-datum a b))
+
+;;; ------------------------------------------------------------------
+;;; THE LIVE REFUSAL-CODE REGISTRY.              [ERRATA 0.3 — D8/F-6]
+;;; ------------------------------------------------------------------
+;;;
+;;; Candidate /0 through Errata 0.2 measured refusal-code coverage against
+;;; `*EXERCISED*`, a HAND-WRITTEN list of codes the suite was BELIEVED to drive.
+;;; Nothing checked the belief.  The stranger audit found the list naming
+;;; :SOURCE-TERM-SHARED-STRUCTURE, which no check in any instrument ever
+;;; produced, and the coverage claim built on the list was therefore false while
+;;; the check reading the list stayed green — the falsehood lived inside the
+;;; thing the check consulted.
+;;;
+;;; A hand-written list cannot measure coverage.  This registry can: every
+;;; refusal object this suite obtains passes through OBSERVE, which records the
+;;; code that was ACTUALLY PRODUCED.  The coverage section at the foot of this
+;;; file then compares the OBSERVED set against the catalogue, in both
+;;; directions.  A check that stops driving a code drops it from the set.
+(defparameter *observed-codes* '())
+
+(defun observe (refusal)
+  "Record the code of a refusal object this suite actually obtained, and return
+the object unchanged so OBSERVE can be wrapped around any acquisition site."
+  (when refusal
+    (pushnew (lisp-plus-surface1:expansion-refusal-code refusal) *observed-codes*))
+  refusal)
+
 (defun refusal-of (thunk)
-  "Run THUNK; return the Surface /1 refusal object it produced, or NIL."
-  (handler-case (progn (funcall thunk) nil)
-    (lisp-plus-surface1:expansion-refused (c)
-      (lisp-plus-surface1:expansion-condition-refusal c))))
+  "Run THUNK; return the Surface /1 refusal object it produced, or NIL.
+Every refusal that passes through here is recorded in *OBSERVED-CODES*."
+  (observe
+   (handler-case (progn (funcall thunk) nil)
+     (lisp-plus-surface1:expansion-refused (c)
+       (lisp-plus-surface1:expansion-condition-refusal c)))))
+
+;;; The internal condition classes the RAW public term functions signal.  They
+;;; are not exported — ENCODE-TERM and DECODE-TERM are checking surfaces, not
+;;; refusal-minting doors — so a check that wants to name the exact reason must
+;;; reach them by an explicit internal reference, exactly as the planted-fault
+;;; checks in section K already do.  ERRATA 0.3 (F-11): five checks used to
+;;; accept "some error was signalled" as proof of a specific refusal.
+(defun term-unrepresentable-reason (thunk)
+  "Return the REASON keyword of the %TERM-UNREPRESENTABLE that THUNK signals,
+:NO-CONDITION if it returns, or a list naming whatever else was signalled."
+  (handler-case (progn (funcall thunk) :no-condition)
+    (lisp-plus-surface1::%term-unrepresentable (c)
+      (lisp-plus-surface1::%tu-reason c))
+    (condition (c) (list :other-condition (type-of c)))))
+
+(defun term-irreconstructible-reason (thunk)
+  "Return the REASON keyword of the %TERM-IRRECONSTRUCTIBLE that THUNK signals,
+:NO-CONDITION if it returns, or a list naming whatever else was signalled."
+  (handler-case (progn (funcall thunk) :no-condition)
+    (lisp-plus-surface1::%term-irreconstructible (c)
+      (lisp-plus-surface1::%ti-reason c))
+    (condition (c) (list :other-condition (type-of c)))))
 
 ;;; The one specimen, chosen because EVERY field of it is literal syntax:
 ;;; nothing in the source is evaluated, so the expansion is a pure function of
@@ -91,10 +163,24 @@ so a suite can no longer silently depend on a private name."
            (list (s1 expansion-grammar-identity)
                  (s1 expansion-procedure-identity)
                  (s1 expansion-policy-identity))))
-(ok "A5 IDENTITY-OCTETS reports the encoded octet length — the unit every
-        ceiling in this layer is denominated in"
-    (let ((n (s1 identity-octets (cd0 make-bytes-datum (cd0 canonical-octets (tag "x"))))))
-      (and (integerp n) (plusp n))))
+;;; ERRATA 0.3 (F-7).  The label states an EQUALITY; Candidate /0's code stated
+;;; non-nil-ness of a plausible shape — `(and (integerp n) (plusp n))` — which
+;;; an implementation returning 1 for every input passes.  The equality is now
+;;; asserted against a length computed WITHOUT calling IDENTITY-OCTETS, over
+;;; three data of visibly different sizes so a constant cannot satisfy it.
+(ok "A5 IDENTITY-OCTETS reports the encoded octet length of the identity it is
+        given — the unit every ceiling in this layer is denominated in"
+    (let ((data (list (cd0 make-bytes-datum (cd0 canonical-octets (tag "x")))
+                      (cd0 make-bytes-datum (cd0 canonical-octets (tag "x" "yy" "zzz")))
+                      (cd0 make-bytes-datum
+                           (cd0 canonical-octets (s1 encode-term *specimen*))))))
+      (and (every (lambda (d) (= (s1 identity-octets d)
+                                 (cd0 octets-length (cd0 canonical-octets d))))
+                  data)
+           ;; and the three answers are genuinely different numbers, so no
+           ;; constant-returning implementation could have passed the above
+           (= 3 (length (remove-duplicates (mapcar (lambda (d) (s1 identity-octets d))
+                                                   data)))))))
 (defparameter *probe-tag* (tag "identity" "probe"))
 (defparameter *probe-req*
   (s1 request-expansion *specimen* :macroexpand-1 *probe-tag*))
@@ -163,9 +249,24 @@ so a suite can no longer silently depend on a private name."
       (and (cd0 record-datum-p d)
            (same (cd0 record-datum-ref d (cd0 make-identifier-datum '("TERM") '("VALUE")))
                  (cd0 make-identifier-datum '("COMMON-LISP") '("CAR"))))))
+;;; ERRATA 0.3 (F-3).  Candidate /0 wrote `(same (encode-term 'nil)
+;;; (encode-term '()))`.  In Common Lisp 'NIL and '() READ TO THE SAME OBJECT,
+;;; so that compared a pure function's output with itself: it could not fail and
+;;; it tested nothing the label claimed.  The claim is true, and the way to
+;;; assert it is to BUILD the datum the label names and compare.
 (ok "C3 NIL encodes as the SYMBOL COMMON-LISP:NIL — the host does not separate
         the empty list from the symbol, and the grammar does not pretend to"
-    (same (s1 encode-term 'nil) (s1 encode-term '())))
+    (let ((expected (cd0 make-record-datum
+                         (list (cd0 make-record-entry
+                                    (cd0 make-identifier-datum '("TERM") '("KIND"))
+                                    (cd0 make-identifier-datum '("TERMKIND") '("SYMBOL")))
+                               (cd0 make-record-entry
+                                    (cd0 make-identifier-datum '("TERM") '("VALUE"))
+                                    (cd0 make-identifier-datum '("COMMON-LISP") '("NIL")))))))
+      (and (same (s1 encode-term 'nil) expected)
+           ;; and the empty list, which the host does not distinguish, lands on
+           ;; the SAME datum — stated as a consequence, not as the evidence
+           (same (s1 encode-term '()) expected))))
 (ok "C4 integers, strings and lists each encode"
     (and (cd0 record-datum-p (s1 encode-term 42))
          (cd0 record-datum-p (s1 encode-term "text"))
@@ -173,8 +274,11 @@ so a suite can no longer silently depend on a private name."
 (ok "C5 case is preserved exactly — |lower| and LOWER are different terms"
     (not (same (s1 encode-term (intern "lower" '#:cl-user))
                (s1 encode-term (intern "LOWER" '#:cl-user)))))
-(ok "C6 every encoded specimen term DECODES — construction is not enough,
-        because CD/0 enforces max-depth on decode and not at construction"
+;;; ERRATA 0.3 (F-13) — LABEL NARROWED.  Candidate /0 said "every encoded
+;;; specimen term", and checked ONE: *SPECIMEN*.  The label now names the one.
+(ok "C6 the encoding of *SPECIMEN*, the one control term this suite carries
+        throughout, DECODES — construction is not enough, because CD/0 enforces
+        max-depth on decode and not at construction"
     (let ((d (s1 encode-term *specimen*)))
       (same d (cd0 decode-exact (cd0 canonical-octets d)))))
 
@@ -302,9 +406,20 @@ so a suite can no longer silently depend on a private name."
     (and (same (s1 expansion-receipt-request-identity *receipt*)
                (s1 expansion-request-identity *r1*))
          (same (s1 expansion-receipt-occurrence-identity *receipt*) *occ-id*)))
-(ok "E8 procedure and policy versions come from the PACKAGE, not from a slot —
-        a receipt cannot disagree with the package that minted it"
-    (and (eql (s1 expansion-receipt-procedure-version *receipt*) (s1 expansion-procedure-version))
+;;; ERRATA 0.3 (D7) — THIS LABEL IS RETRACTED AND REPLACED.  It read: "procedure
+;;; and policy versions come from the PACKAGE, not from a slot — a receipt
+;;; cannot disagree with the package that minted it."  That was the DEFECT
+;;; described as a virtue.  The accessors were constant functions that ignored
+;;; the receipt entirely, so the receipt could not disagree only because it had
+;;; nothing to disagree WITH; the stranger audit redefined the live version and
+;;; watched an OLD receipt's reported version move beneath it.  The versions are
+;;; now STORED at mint.  In an unchanged image they equal the package's — which
+;;; is what this check asserts — and section P proves the two are no longer the
+;;; same number by moving one of them.
+(ok "E8 a receipt reports the grammar, procedure and policy versions STORED at
+        mint; in an image that has not moved, those equal the package's"
+    (and (eql (s1 expansion-receipt-grammar-version *receipt*) (s1 expansion-grammar-version))
+         (eql (s1 expansion-receipt-procedure-version *receipt*) (s1 expansion-procedure-version))
          (eql (s1 expansion-receipt-policy-version *receipt*) (s1 expansion-policy-version))))
 (ok "E9 the expansion CONTEXT records only what was SUPPLIED, and denies capture"
     (let ((ctx (s1 expansion-receipt-expansion-context *receipt*)))
@@ -314,10 +429,14 @@ so a suite can no longer silently depend on a private name."
            (same (cd0 record-datum-ref ctx (cd0 make-identifier-datum
                                             '("CONTEXT") '("ENVIRONMENT-OBJECT-CAPTURED")))
                  (cd0 make-boolean-datum nil)))))
-(ok "E10 the whole receipt's own identity is a bytes datum and is stable"
-    (and (cd0 bytes-datum-p (s1 expansion-receipt-identity *receipt*))
-         (same (s1 expansion-receipt-identity *receipt*)
-               (s1 expansion-receipt-identity *receipt*))))
+;;; ERRATA 0.3 (F-5) — LABEL NARROWED, SECOND CONJUNCT DELETED.  Candidate /0
+;;; claimed the receipt identity was "stable" and demonstrated it by reading one
+;;; READ-ONLY slot of one object twice and comparing the results — EQUAL-DATUM
+;;; on a datum and itself, which cannot fail.  "Stable across what" was never
+;;; stated.  The real stability work is in section I (I2/I3), across an
+;;; intervening downstream evaluation, and it is done properly there.
+(ok "E10 the whole receipt's own identity is a bytes datum"
+    (cd0 bytes-datum-p (s1 expansion-receipt-identity *receipt*)))
 (ok "E11 two SEPARATE requests with equal inputs give the SAME occurrence
         identity.  NOTE THE WORDING: Candidate /0 labelled this 'the same
         request performed twice', which it never was — it built a fresh
@@ -425,15 +544,38 @@ so a suite can no longer silently depend on a private name."
 ;;;
 ;;; SURFACE /1 DOES NOT REPAIR THIS.  The observer accounts for the expansion
 ;;; that exists; it must never manufacture a friendlier one and then certify its
-;;; own handiwork.  It refuses, and the refusal is the point: a receipt for a
-;;; non-deterministic expansion would be an account that could not be true twice.
+;;; own handiwork.
+;;;
+;;; ERRATA 0.3 (F-17) — A RETRACTED SENTENCE STOOD HERE AND IS DELETED.  It read:
+;;; "It refuses, and the refusal is the point: a receipt for a non-deterministic
+;;; expansion would be an account that could not be true twice."  ERRATA 0.1 §5
+;;; declares that sentence WRONG and states the replacement rationale — the
+;;; refusal is about REPRESENTABILITY, not determinism; a gensym-bearing
+;;; expansion refuses because the term grammar does not name uninterned symbols,
+;;; and it would refuse a perfectly deterministic expansion carrying one.  N8
+;;; below executes the replacement rationale.  The stranger audit found the
+;;; retracted sentence still live in this file, twenty lines above the check
+;;; that contradicts it.
 
 (defparameter *nondet-form*
   '(lisp-plus-surface0:derive-case (cl-user::c cl-user::r)
     (lisp-plus-slice1:derive :schema-name :x)
     (:granted cl-user::c) (:refused (nil) 1)))
 
-(ok "G1 the host really does expand that form differently twice"
+;;; ERRATA 0.3 (F-4) — G4 IS DELETED, MERGED INTO G1.  The two checks carried
+;;; BYTE-IDENTICAL expressions and two different labels; a mechanical scan of
+;;; every OK form in the file found exactly one such pair, and this was it.  G4's
+;;; label — "Surface /0 IS UNMODIFIED BY THIS SUITE" — is a claim about the
+;;; SUITE'S CONDUCT, and the expression under it re-ran G1.
+;;;
+;;; The suite-conduct fact is TRUE and is stated here as PROSE, at its real
+;;; size: this file loads Surface /0 as a client and never redefines anything in
+;;; it, and the surviving check below is the evidence that bears on it —
+;;; if the suite HAD made the expansion deterministic, G1 would go red.  One
+;;; datum, counted once, with the label it can carry.
+(ok "G1 the host really does expand that form differently twice — the defect is
+        reported, not repaired, and this same datum is what would go red if the
+        suite had quietly made Surface /0 deterministic"
     (not (equal (macroexpand-1 *nondet-form* nil) (macroexpand-1 *nondet-form* nil))))
 (ok "G2 Surface /1 REFUSES it at ONE-STEP expansion, not merely at full expansion"
     (let ((r (refusal-of (lambda ()
@@ -446,9 +588,7 @@ so a suite can no longer silently depend on a private name."
     (multiple-value-bind (rc ex rf)
         (s1 try-perform-expansion
             (s1 request-expansion *nondet-form* :macroexpand-1 (tag "g3")))
-      (and (null rc) (null ex) (s1 expansion-refusal-p rf))))
-(ok "G4 Surface /0 IS UNMODIFIED BY THIS SUITE — the defect is reported, not repaired"
-    (not (equal (macroexpand-1 *nondet-form* nil) (macroexpand-1 *nondet-form* nil))))
+      (and (null rc) (null ex) (s1 expansion-refusal-p (observe rf)))))
 
 ;;; ==================================================================
 (section "H. DISCRIMINATION — a changed source changes the account")
@@ -505,37 +645,80 @@ so a suite can no longer silently depend on a private name."
     (string= *expanded-octets-before*
              (cd0 octets-to-hex
                   (cd0 canonical-octets (s1 expansion-receipt-expanded-form-datum *receipt*)))))
-(ok "I4 the receipt gained NO field naming the object that evaluation produced"
-    (notany (lambda (slot) (search "CONTRACT" (symbol-name slot)))
-            '(#:identity #:request-identity #:occurrence-identity #:source-form-datum
-              #:source-form-identity #:expanded-form-datum #:expanded-form-identity
-              #:operation #:expansion-context #:disposition))
-    "CONSTRUCT-IDENTITY names the macro asked about, never a produced object")
+;;; ERRATA 0.3 (F-2) — THE SLOT LIST IS NOW MEASURED, NOT WRITTEN.
+;;;
+;;; Candidate /0 ran NOTANY over a QUOTED LIST OF TEN UNINTERNED SYMBOLS the
+;;; author had typed by hand.  It asked whether a constant contained the
+;;; substring "CONTRACT"; it could not fail unless someone edited the constant,
+;;; and it could not notice a new receipt slot however named.  It was also
+;;; already STALE by two fields — it omitted OCCURRENCE, the slot ERRATA 0.1
+;;; ADDED, and CONSTRUCT-IDENTITY — so a check written to prove a negative about
+;;; the receipt's fields did not enumerate two of them.
+;;;
+;;; The census is now read off the LIVE CLASS.  Two assertions ride it: the
+;;; negative the label states, and the full slot census, so that a slot added by
+;;; a later erratum turns this check red instead of sailing past it.
+(defparameter *receipt-slots*
+  (mapcar #'sb-mop:slot-definition-name
+          (sb-mop:class-slots (find-class 'lisp-plus-surface1::expansion-receipt))))
+
+(ok "I4 the receipt gained NO field naming the object that evaluation produced
+        — asserted over the LIVE slot census, and the census itself is pinned so
+        a new slot cannot arrive unseen"
+    (and (notany (lambda (slot) (search "CONTRACT" (symbol-name slot))) *receipt-slots*)
+         (equal (mapcar #'symbol-name *receipt-slots*)
+                '("IDENTITY" "REQUEST-IDENTITY" "OCCURRENCE" "OCCURRENCE-IDENTITY"
+                  "SOURCE-FORM-DATUM" "SOURCE-FORM-IDENTITY"
+                  "EXPANDED-FORM-DATUM" "EXPANDED-FORM-IDENTITY"
+                  "OPERATION" "CONSTRUCT-IDENTITY" "EXPANSION-CONTEXT" "DISPOSITION"
+                  ;; ERRATA 0.3 (D7) — the three the version repair added
+                  "GRAMMAR-VERSION" "PROCEDURE-VERSION" "POLICY-VERSION")))
+    (format nil "live receipt slots: ~S" (mapcar #'symbol-name *receipt-slots*)))
 (ok "I5 the disposition is unchanged by downstream success"
     (eq :macroexpanded-one-step (s1 expansion-receipt-disposition *receipt*)))
-(ok "I6 a FAILING downstream evaluation leaves the receipt equally unchanged"
-    (let* ((bad (s1 perform-expansion
-                    (s1 request-expansion
-                        '(lisp-plus-surface0:define-admission-contract cl-user::*s1-bad*
-                          :contract-id :surface1/bad :contract-version 99
-                          :accepted-clauses ((:no-such-clause-family))
-                          :proposition-relation :exact-normalized-equality
-                          :receiver-accessibility :required :retain (:contract-snapshot :support-identity :support-basis :source-basis))
-                        :macroexpand-1 (tag "i6"))))
-           (before (cd0 octets-to-hex (cd0 canonical-octets (s1 expansion-receipt-identity bad)))))
-      (handler-case (eval (nth-value 1 (s1 try-perform-expansion
-                                           (s1 request-expansion
-                                               '(lisp-plus-surface0:define-admission-contract
-                                                 cl-user::*s1-bad*
-                                                 :contract-id :surface1/bad :contract-version 99
-                                                 :accepted-clauses ((:no-such-clause-family))
-                                                 :proposition-relation :exact-normalized-equality
-                                                 :receiver-accessibility :required
-                                                 :retain (:contract-snapshot :support-identity :support-basis :source-basis))
-                                               :macroexpand-1 (tag "i6b")))))
-        (error () nil))
-      (string= before
-               (cd0 octets-to-hex (cd0 canonical-octets (s1 expansion-receipt-identity bad)))))
+;;; ERRATA 0.3 (F-12) — TWO DEFECTS REPAIRED IN ONE CHECK.
+;;;
+;;; (1) The label says "a FAILING downstream evaluation", and Candidate /0
+;;;     wrapped the evaluation in `(handler-case … (error () nil))` while
+;;;     ASSERTING NOTHING ABOUT THE FAILURE.  If Slice /2 had silently ACCEPTED
+;;;     the form, the check still passed — the very hypothesis it names would
+;;;     have been false with no effect on the verdict.  The specific Slice /2
+;;;     condition is now caught by type and its arrival is asserted.
+;;; (2) The receipt whose octets were compared was minted from the request
+;;;     tagged `i6`, while the form actually evaluated came from a SECOND,
+;;;     DISTINCT request tagged `i6b`.  The comparison was between a receipt and
+;;;     itself across an event that never touched it.  ONE receipt is minted
+;;;     here now, and the form evaluated is ITS expansion.
+(ok "I6 a FAILING downstream evaluation leaves THE RECEIPT WHOSE FORM FAILED
+        equally unchanged — and the failure is asserted, by condition type, not
+        assumed"
+    (multiple-value-bind (bad-receipt bad-expanded)
+        (s1 perform-expansion
+            (s1 request-expansion
+                '(lisp-plus-surface0:define-admission-contract cl-user::*s1-bad*
+                  :contract-id :surface1/bad :contract-version 99
+                  :accepted-clauses ((:no-such-clause-family))
+                  :proposition-relation :exact-normalized-equality
+                  :receiver-accessibility :required
+                  :retain (:contract-snapshot :support-identity :support-basis :source-basis))
+                :macroexpand-1 (tag "i6")))
+      (let* ((id-before (cd0 octets-to-hex
+                             (cd0 canonical-octets (s1 expansion-receipt-identity bad-receipt))))
+             (datum-before (cd0 octets-to-hex
+                                (cd0 canonical-octets
+                                     (s1 expansion-receipt-expanded-form-datum bad-receipt))))
+             ;; the ONE evaluation, of THIS receipt's own expansion
+             (slice2-refused (handler-case (progn (eval bad-expanded) nil)
+                               (lisp-plus-slice2:admission-contract-error () t))))
+        (and slice2-refused
+             (string= id-before
+                      (cd0 octets-to-hex
+                           (cd0 canonical-octets (s1 expansion-receipt-identity bad-receipt))))
+             (string= datum-before
+                      (cd0 octets-to-hex
+                           (cd0 canonical-octets
+                                (s1 expansion-receipt-expanded-form-datum bad-receipt))))
+             (eq :macroexpanded-one-step (s1 expansion-receipt-disposition bad-receipt)))))
     "an unknown clause family is Slice /2's refusal to make; the receipt is untouched either way")
 
 ;;; ==================================================================
@@ -600,15 +783,33 @@ so a suite can no longer silently depend on a private name."
     (notany (lambda (n) (eq :external (nth-value 1 (find-symbol n '#:lisp-plus-surface1))))
             '("MAKE-EXPANSION-REQUEST" "MAKE-EXPANSION-RECEIPT" "MAKE-EXPANSION-REFUSAL"
               "%MAKE-REQUEST" "%MAKE-RECEIPT" "%MAKE-REFUSAL")))
-(ok "L2 no copier is exported for any minted object"
+;;; ERRATA 0.3 (F-9) — THE FOURTH MINTED OBJECT JOINS THE ENUMERATION.  The
+;;; label said "any minted object" and named three: request, receipt, refusal.
+;;; The OCCURRENCE — the fourth, introduced by ERRATA 0.1 finding 3 — was not
+;;; enumerated.  It carries `(:copier nil)` like its siblings, so the claim held;
+;;; the CHECK simply did not cover the object the label promised.
+(ok "L2 no copier is exported for any minted object — request, receipt, refusal
+        AND occurrence, which is all four of them"
     (notany (lambda (n) (find-symbol n '#:lisp-plus-surface1))
-            '("COPY-EXPANSION-REQUEST" "COPY-EXPANSION-RECEIPT" "COPY-EXPANSION-REFUSAL")))
-(ok "L3 the exported surface exposes no setter of any kind"
+            '("COPY-EXPANSION-REQUEST" "COPY-EXPANSION-RECEIPT" "COPY-EXPANSION-REFUSAL"
+              "COPY-EXPANSION-OCCURRENCE")))
+
+;;; ERRATA 0.3 (F-10) — LABEL NARROWED TO WHAT THE INSTRUMENT MEASURES.
+;;; Candidate /0 claimed "no setter OF ANY KIND" and measured a SUBSTRING SCAN
+;;; over external symbol NAMES.  A `(setf foo)` function, a DEFSETF or a setf
+;;; expander carries no such name and would be invisible to it, so the
+;;; instrument could not establish the "of any kind".
+;;;
+;;; PROSE, carrying the wider claim at its real source: every slot of every
+;;; minted structure in surface1.lisp is declared `:read-only t`, and SBCL
+;;; defines no setf expander for a read-only structure slot.  That is where the
+;;; immutability actually lives.  It is a property of the DEFSTRUCT forms, read
+;;; from the source, not something this scan measures — and saying so is the
+;;; difference between a claim with an owner and a claim with a proxy.
+(ok "L3 no EXTERNAL SYMBOL NAME in the exported surface names a SET-style
+        mutator — a name scan, and only a name scan"
     (let (acc) (do-external-symbols (s '#:lisp-plus-surface1) (push (symbol-name s) acc))
          (notany (lambda (n) (or (search "SET-" n) (search "-SET" n))) acc)))
-(ok "L4 the retained host form is NOT exported — it never reaches a receipt"
-    (not (eq :external (nth-value 1 (find-symbol "EXPANSION-REQUEST-%HOST-FORM"
-                                                 '#:lisp-plus-surface1)))))
 
 ;;; EXPORT CENSUS, reconciled BOTH WAYS.  A declared export that names nothing is
 ;;; a false affordance; a live definition nobody declared is an accidental
@@ -625,8 +826,37 @@ so a suite can no longer silently depend on a private name."
 (ok "L5 EXPORT CENSUS — every declared export names a live function, variable
         or condition class; nothing is a false affordance"
     (null *dead*) (format nil "~S" *dead*))
-(ok "L6 ... and the count is stated rather than left implicit"
-    (= 75 (length *declared*))
+;;; ERRATA 0.3 — THE EXPORT COUNT IS RECONCILED AGAINST THE SOURCE, NOT TYPED.
+;;;
+;;; Candidate /0 wrote `(= 75 (length *declared*))`: a literal beside a
+;;; measurement, which is a real check but a brittle one — it says nothing about
+;;; WHERE the number should come from, and its only failure mode is "someone
+;;; changed the package and did not edit this line."  ERRATA 0.3 moved the count
+;;; to 80 and this check went red, correctly.
+;;;
+;;; The repair reads the `:export` clause out of package.lisp WITH THE HOST
+;;; READER and compares the number of names DECLARED IN THE SOURCE TEXT against
+;;; the number LIVE IN THE IMAGE.  Two independently sourced counts: a symbol
+;;; exported by some later `export` call the defpackage never mentioned, or a
+;;; declared name that failed to land, breaks the equality.  The live number is
+;;; also printed, so the evidence carries the figure instead of hiding it.
+(defparameter *source-export-count*
+  (with-open-file (in (merge-pathnames "package.lisp" cl-user::*here*))
+    (loop for form = (read in nil :eof)
+          until (eq form :eof)
+          when (and (consp form)
+                    (string= (string (first form)) "DEFPACKAGE")
+                    (string-equal (string (second form)) "LISP-PLUS-SURFACE1"))
+            do (return (length (rest (find :export (cddr form)
+                                           :key (lambda (c) (and (consp c) (first c))))))))))
+
+(ok "L6 ... and the count is RECONCILED: the number of names package.lisp
+        declares in its :EXPORT clause equals the number live in the image"
+    (and (integerp *source-export-count*)
+         (= *source-export-count* (length *declared*)))
+    (format nil "source declares ~S · live ~D" *source-export-count* (length *declared*)))
+(ok "L6b ... and the live export count is STATED, not left implicit"
+    (= 80 (length *declared*))
     (format nil "declared ~D" (length *declared*)))
 (ok "L7 ERRATA 0.1 — the catalogue accessor that was live-but-internal is now
         EXPORTED, and its four siblings still are"
@@ -634,53 +864,26 @@ so a suite can no longer silently depend on a private name."
            '("REFUSAL-CATALOG-ENTRY-CODE" "REFUSAL-CATALOG-ENTRY-CLASS"
              "REFUSAL-CATALOG-ENTRY-PHASE" "REFUSAL-CATALOG-ENTRY-NOTE"
              "REFUSAL-CATALOG-ENTRY-REACHABILITY")))
+;;; ERRATA 0.3 (F-8) — L4 IS DELETED, MERGED HERE.  L4 asserted that
+;;; EXPANSION-REQUEST-%HOST-FORM is not :EXTERNAL; this check asserts the symbol
+;;; DOES NOT EXIST.  A symbol that does not exist cannot be external, so L4 was a
+;;; logical consequence of this one — two counted checks over one fact.  L4's
+;;; label also claimed "it never reaches a receipt", which neither expression
+;;; tested; the accurate form of that claim is the ABSENCE below, and it is
+;;; stated here where the predicate can carry it: there is no accessor to reach
+;;; a receipt with, because there is no slot and no name.
 (ok "L8 ... and the request no longer carries a caller-owned host form at all —
-        the slot is GONE, not guarded"
+        the slot is GONE, not guarded, and no name for it exists to be exported,
+        reached, or carried into a receipt"
     (null (find-symbol "EXPANSION-REQUEST-%HOST-FORM" '#:lisp-plus-surface1)))
 
-;;; ==================================================================
-(section "M. REFUSAL-CODE COVERAGE — set difference, both directions")
-
-(defparameter *exercised*
-  '(:source-form-not-a-call :source-form-head-not-a-symbol :operation-not-declared
-    :occurrence-tag-not-identifier :source-term-unrepresentable :source-depth-exceeded
-    :source-nodes-exceeded :source-term-octets-exceeded :not-a-known-surface-construct
-    :expanded-term-unrepresentable
-    ;; ERRATA 0.1
-    :source-term-shared-structure :expanded-term-shared-structure
-    :source-not-reconstructible
-    :source-identity-projection-mismatch :expanded-identity-projection-mismatch
-    :procedure-version-mismatch))
-
-(defun codes-with-reachability (r)
-  (mapcar (lambda (e) (s1 refusal-catalog-entry-code e))
-          (remove-if-not (lambda (e) (eq r (s1 refusal-catalog-entry-reachability e)))
-                         *catalog*)))
-
-(defparameter *public-api-codes* (codes-with-reachability :public-api))
-
-(ok "M1 every code exercised above is DECLARED in the catalogue"
-    (null (set-difference *exercised* (mapcar (lambda (e) (s1 refusal-catalog-entry-code e))
-                                              *catalog*))))
-(ok "M2 the :PUBLIC-API codes this suite does not exercise are exactly the two
-        expanded-side ceilings the APPLICATION drives to their edges — depth and
-        term-octets.  Nothing else is left uncovered."
-    (equal (sort (copy-list (set-difference *public-api-codes* *exercised*)) #'string<)
-           '(:expanded-depth-exceeded :expanded-term-octets-exceeded)))
-(ok "M3 exactly one code is declared reachable only in a stub image"
-    (equal '(:construct-not-a-macro) (codes-with-reachability :public-api-in-a-stub-image)))
-(ok "M4 exactly one code is declared UNREACHABLE UNDER THIS POLICY, and it is the
-        expanded-side NODE ceiling — dominated by the octet ceiling, measured"
-    (equal '(:expanded-nodes-exceeded) (codes-with-reachability :unreachable-under-this-policy)))
-(ok "M5 ... and its SOURCE-side twin IS reachable, because the node check runs
-        BEFORE the encode — so the pair is not symmetric, and saying so is the
-        difference between a measured claim and a tidy one"
-    (member :source-nodes-exceeded *exercised*))
-(ok "M6 the arithmetic behind M4, exhibited rather than asserted: one term costs
-        far more than 262144/20000 = 13 octets, so octets must fire first"
-    (let ((one-term-octets (cd0 octets-length (cd0 canonical-octets (s1 encode-term 'cl:t)))))
-      (> one-term-octets (/ (s1 expansion-policy-max-term-octets)
-                            (s1 expansion-policy-max-source-nodes)))))
+;;; ERRATA 0.3 — SECTION M HAS MOVED TO THE FOOT OF THIS FILE.
+;;;
+;;; It measured refusal-code coverage HERE, before sections N and O had run —
+;;; which is to say, before roughly a third of this suite's refusals had been
+;;; produced at all.  That ordering was harmless only because the old check read
+;;; a hand-written list instead of measuring anything.  A coverage measurement
+;;; taken from live observation has to be taken LAST, and it now is.
 
 ;;; ==================================================================
 (section "N. ERRATA 0.1 — THE SIX PROOF OBLIGATIONS, EACH EXECUTED")
@@ -736,9 +939,15 @@ so a suite can no longer silently depend on a private name."
            (req (s1 request-expansion src :macroexpand-1 (tag "n3"))))
       (setf (char str 0) #\Z)
       (let* ((rc (s1 perform-expansion req))
-             (back (s1 decode-term (s1 expansion-receipt-expanded-form-datum rc))))
-        ;; the accounted expansion must still carry "alpha"
-        (search "alpha" (format nil "~S" back)))))
+             (back (s1 decode-term (s1 expansion-receipt-expanded-form-datum rc)))
+             (rendered (format nil "~S" back)))
+        ;; ERRATA 0.3 (F-14) — BOTH DIRECTIONS, the REPRODUCTION.lisp model.
+        ;; Candidate /0 asserted only that the accounted expansion still CONTAINS
+        ;; "alpha".  A leak that APPENDED rather than replaced — or one that left
+        ;; both strings in the tree — would have passed.  The mutated text must
+        ;; be ABSENT as well, and its absence is the half that bites.
+        (and (search "alpha" rendered)
+             (null (search "Zlpha" rendered))))))
 
 (ok "N3b ... and the reconstructed string is a FRESH object each time, so a
         caller who mutates what it received cannot reach the next performance"
@@ -764,18 +973,30 @@ so a suite can no longer silently depend on a private name."
       (and (handler-case (progn (s1 encode-term shared) nil) (error () t))
            (handler-case (progn (s1 encode-term copies) t) (error () nil)))))
 
-(ok "N4b ... and a CAR-POSITION CYCLE handed to the PUBLIC encoder REFUSES
-        instead of exhausting the control stack, as it did in Candidate /0"
+;;; ERRATA 0.3 (F-11) — "SOME ERROR WAS SIGNALLED" IS NOT A REFUSAL.
+;;; N4b, N4c, N7, O1 and O3 all accepted ANY error as proof of the specific
+;;; refusal their labels named.  Each now asserts the CONDITION CLASS and the
+;;; exact REASON, on the model N7b and O2 already set.  N4b keeps its
+;;; STORAGE-CONDITION exclusion, which was the point of that check and was well
+;;; made: the reason it must not be is that the refusal is designed, not that the
+;;; image survived.
+(ok "N4b ... and a CAR-POSITION CYCLE handed to the PUBLIC encoder REFUSES with
+        the SHARED-OR-CIRCULAR-STRUCTURE reason, not with a control-stack death"
     (let ((x (list :a)))
       (setf (car x) x)
-      (handler-case (progn (s1 encode-term x) nil)
-        (storage-condition () nil)
-        (error () t))))
+      (and (eq :shared-or-circular-structure
+               (term-unrepresentable-reason (lambda () (s1 encode-term x))))
+           ;; and the refusal is designed, not an exhausted image
+           (handler-case (progn (s1 encode-term x) nil)
+             (storage-condition () nil)
+             (error () t)))))
 
-(ok "N4c ... and a spine cycle still refuses"
+(ok "N4c ... and a spine cycle refuses with the SAME reason — one measurement
+        covers sharing and cycles alike"
     (let ((x (list :a)))
       (setf (cdr x) x)
-      (handler-case (progn (s1 encode-term x) nil) (error () t))))
+      (eq :shared-or-circular-structure
+          (term-unrepresentable-reason (lambda () (s1 encode-term x))))))
 
 (ok "N5 THE STORED SOURCE DATUM IS EXACTLY THE SOURCE HANDED TO THE
         MACROEXPANDER — re-encoding the reconstruction reproduces the datum"
@@ -808,7 +1029,9 @@ so a suite can no longer silently depend on a private name."
            (d (s1 encode-term (list sym 1))))
       (unintern sym pkg)
       (and (null (find-symbol "TRANSIENT" pkg))
-           (handler-case (progn (s1 decode-term d) nil) (error () t))
+           ;; ERRATA 0.3 (F-11) — the reason is named, not merely "an error"
+           (eq :symbol-absent-in-image
+               (term-irreconstructible-reason (lambda () (s1 decode-term d))))
            ;; and it did NOT create the symbol on the way out
            (null (find-symbol "TRANSIENT" pkg)))))
 
@@ -856,7 +1079,10 @@ so a suite can no longer silently depend on a private name."
       (unintern px p)
       ;; X is now reachable in P only by INHERITANCE from Q
       (and (eq :inherited (nth-value 1 (find-symbol "X" p)))
-           (handler-case (progn (s1 decode-term d) nil) (error () t)))))
+           ;; ERRATA 0.3 (F-11) — the reason is named.  "An error happened" would
+           ;; be satisfied by a decoder that died for any other cause entirely.
+           (eq :symbol-not-home-in-namespace
+               (term-irreconstructible-reason (lambda () (s1 decode-term d)))))))
 
 (ok "O2 ... and that refusal reaches DOOR 2 with its own upstream reason,
         minting nothing"
@@ -902,7 +1128,14 @@ so a suite can no longer silently depend on a private name."
                                          (cd0 make-identifier-datum '("TERM") '("VALUE"))
                                          (cd0 make-identifier-datum
                                               (list (package-name p)) '("Y")))))))
-               (handler-case (progn (s1 decode-term hand) nil) (error () t)))))))
+               ;; ERRATA 0.3 (F-11) — THIS IS THE LOAD-BEARING ONE.  The whole
+               ;; point of O3 is that the HOME-PACKAGE conjunct catches what the
+               ;; STATUS conjunct cannot; a status-only guard would pass this
+               ;; datum, and it would pass it WITHOUT ERROR.  Settling for "an
+               ;; error happened" left the one claim that distinguishes the two
+               ;; conjuncts resting on a predicate that any failure satisfies.
+               (eq :symbol-not-home-in-namespace
+                   (term-irreconstructible-reason (lambda () (s1 decode-term hand)))))))))
 
 (ok "O3b ... and the ENCODER writes the HOME package, which is why an imported
         symbol has no hole on the encode side"
@@ -936,10 +1169,28 @@ so a suite can no longer silently depend on a private name."
     (s1 expansion-receipt-p
         (s1 perform-expansion (s1 request-expansion *specimen* :macroexpand-1 (tag "o4b")))))
 
-(ok "O5 NO PUBLIC INPUT CAN REACH THE ROUND-TRIP MISMATCH, and saying so is the
-        honest classification: with the home-package guard in place decode is
-        injective, so the earlier and more precise guard always fires first.
-        The gate is DEFENCE IN DEPTH, proved live only by planted fault."
+;;; ERRATA 0.3 (D3) — O5'S LABEL IS RETRACTED AND NARROWED TO WHAT IT MEASURES.
+;;;
+;;; It read: "NO PUBLIC INPUT CAN REACH THE ROUND-TRIP MISMATCH, and saying so is
+;;; the honest classification: with the home-package guard in place decode is
+;;; injective, so the earlier and more precise guard always fires first.  The
+;;; gate is DEFENCE IN DEPTH, proved live only by planted fault."
+;;;
+;;; EVERY CLAUSE OF THAT IS FALSE except the ordering it actually exhibits.  The
+;;; stranger audit reached ROUND-TRIP-MISMATCH from the public API by two
+;;; standard-Common-Lisp routes, one of which mutates nothing at all; and decode
+;;; is not injective — the audit built two distinct admissible data that decoded
+;;; to one symbol.  Both mechanisms are executed in section P below.
+;;;
+;;; What this fixture actually establishes is an ORDERING, on ONE input: for a
+;;; datum whose symbol has gone inherited between the doors, the symbol guard
+;;; fires and the round-trip guard is never reached.  That is worth keeping and
+;;; it is all this check ever showed.  An ordering on one input is not a
+;;; statement about every input, and treating it as one is how the false claim
+;;; got published.
+(ok "O5 for the INHERITED-SYMBOL datum the EARLIER and more precise SYMBOL guard
+        fires and the round-trip guard is never reached — an ordering exhibited
+        on ONE input, which is exactly as much as this fixture can say"
     (let* ((q (or (find-package "S1-O5-Q")
                   (eval '(defpackage #:s1-o5-q (:use) (:export #:x)))))
            (p (or (find-package "S1-O5-P")
@@ -950,15 +1201,594 @@ so a suite can no longer silently depend on a private name."
       (unintern px p)
       (multiple-value-bind (rc ex rf) (s1 try-perform-expansion req)
         (declare (ignore rc ex))
+        (observe rf)
         ;; the SYMBOL guard fires, never the round-trip guard
-        (string= "SYMBOL-NOT-HOME-IN-NAMESPACE" (s1 expansion-refusal-upstream-code rf)))))
+        (and (eq :source-not-reconstructible (s1 expansion-refusal-code rf))
+             (string= "SYMBOL-NOT-HOME-IN-NAMESPACE" (s1 expansion-refusal-upstream-code rf))))))
 
-(ok "O6 grammar and procedure versions BOTH moved, because both changed:
-        the decode relation narrowed and the reconstruction procedure now
-        enforces the round trip"
-    (and (= 3 (s1 expansion-grammar-version))
-         (= 3 (s1 expansion-procedure-version))
-         (= 1 (s1 expansion-policy-version))))
+;;; ERRATA 0.3 — THE VERSION CHECK, WITH THE REASONS THIS ERRATA GIVES.
+(ok "O6 grammar 4, procedure 4, policy 1.  GRAMMAR moved 3->4 because the
+        correspondence narrowed twice — surplus identifier segments are refused
+        instead of truncated, and the raw term functions declare a depth ceiling
+        — and because its published description was corrected.  PROCEDURE moved
+        3->4 because requests and receipts now CAPTURE the governing versions
+        and the version alarm compares two independently sourced values.  POLICY
+        stays 1 because no ceiling value moved: 48 / 20000 / 262144 are untouched"
+    (and (= 4 (s1 expansion-grammar-version))
+         (= 4 (s1 expansion-procedure-version))
+         (= 1 (s1 expansion-policy-version))
+         ;; the policy numbers the ruling says did not move
+         (= 48 (s1 expansion-policy-max-source-depth))
+         (= 20000 (s1 expansion-policy-max-source-nodes))
+         (= 262144 (s1 expansion-policy-max-term-octets))))
+
+;;; ==================================================================
+(section "P. ERRATA 0.3 — THE STRANGER AUDIT'S DEFECTS, EACH WITH A REGRESSION")
+;;;
+;;; Every check in this section FAILS if its repair is reverted.  That is the
+;;; standard the audit set for this suite and the standard it did not previously
+;;; meet: a check whose predicate cannot distinguish the repaired layer from the
+;;; broken one certifies nothing, however true its label.
+;;;
+;;; Each subsection names the defect, states what the layer did BEFORE, and
+;;; drives the public surface to the behaviour that is now required.
+
+;;; ------------------------------------------------------------------
+;;; P/D2 — THE UNCAUGHT HOST TYPE-ERROR ON COMPOUND TYPE-OF SPECIFIERS.
+;;; ------------------------------------------------------------------
+;;;
+;;; TYPE-OF lawfully returns a COMPOUND SPECIFIER — a cons — for exactly the
+;;; host types the boundary law refuses: `(COMPLEX (INTEGER 1 2))`,
+;;; `(SIMPLE-VECTOR 3)`, `(SIMPLE-ARRAY T (2 2))`.  %DESCRIBE-HOST-OBJECT read
+;;; `(string (type-of object))`, so building the DETAIL of the designed refusal
+;;; signalled a host TYPE-ERROR and the refusal was never minted.  It escaped
+;;; REQUEST-EXPANSION, and — the worse half — it escaped TRY-REQUEST-EXPANSION,
+;;; whose entire contract is that it RETURNS refusals instead of signalling.
+;;; The stranger audit measured all three types through both doors.
+
+(defparameter *compound-type-objects*
+  (list (cons "COMPLEX"       #C(1 2))
+        (cons "SIMPLE-VECTOR" (vector 1 2 3))
+        (cons "SIMPLE-ARRAY"  (make-array '(2 2) :initial-element 0))))
+
+(ok "P1 the three COMPOUND-TYPE-OF objects each yield the DESIGNED
+        :SOURCE-TERM-UNREPRESENTABLE refusal through the SIGNALLING door, with
+        the NO-TERM-KIND upstream reason — never a host condition"
+    (every (lambda (pair)
+             (let ((r (refusal-of (lambda ()
+                                    (s1 request-expansion (list 'cl:quote (cdr pair))
+                                        :macroexpand-1 (tag "p1"))))))
+               (and r
+                    (eq :source-term-unrepresentable (s1 expansion-refusal-code r))
+                    (string= "NO-TERM-KIND" (s1 expansion-refusal-upstream-code r))
+                    (string= "term-encode" (s1 expansion-refusal-upstream-stage r)))))
+           *compound-type-objects*)
+    "these signalled a raw host TYPE-ERROR before ERRATA 0.3")
+
+(ok "P2 ... and through the NON-SIGNALLING door they are RETURNED as refusal
+        objects, which is that door's whole contract and the half the crash
+        broke worst"
+    (every (lambda (pair)
+             (multiple-value-bind (req rf)
+                 ;; a host condition escaping here is a failure, not a pass:
+                 ;; TRY- must not signal, so nothing is caught around it
+                 (s1 try-request-expansion (list 'cl:quote (cdr pair))
+                     :macroexpand-1 (tag "p2"))
+               (observe rf)
+               (and (null req)
+                    (s1 expansion-refusal-p rf)
+                    (eq :source-term-unrepresentable (s1 expansion-refusal-code rf))
+                    (string= "NO-TERM-KIND" (s1 expansion-refusal-upstream-code rf)))))
+           *compound-type-objects*))
+
+(ok "P3 ... and the refusal DETAIL names the type family and is BOUNDED — the
+        repair lives in the description helper, so it must produce a short name
+        rather than a rendering of the rejected object"
+    (every (lambda (pair)
+             (let* ((r (refusal-of (lambda ()
+                                     (s1 request-expansion (list 'cl:quote (cdr pair))
+                                         :macroexpand-1 (tag "p3")))))
+                    (detail (s1 expansion-refusal-detail r)))
+               (and (stringp detail)
+                    (string= (car pair) detail)
+                    (<= (length detail) 40))))
+           *compound-type-objects*)
+    "the head symbol of the compound specifier is the only part that names the family")
+
+;;; ------------------------------------------------------------------
+;;; P/D5 — THE RAW PUBLIC TERM FUNCTIONS DIED ON DEEP ACYCLIC INPUT.
+;;; ------------------------------------------------------------------
+;;;
+;;; ENCODE-TERM exhausted the control stack (catchable); DECODE-TERM aborted the
+;;; PROCESS ("Control stack exhausted while pseudo-atomic"), which no
+;;; HANDLER-CASE could reach.  Both are public on purpose — DECODE-TERM was
+;;; published by ERRATA 0.1 precisely so a reader could perform the
+;;; reconstruction independently — so a reader exercising them could lose an
+;;; image.  The repair is a declared, introspectable, iteratively-measured
+;;; ceiling checked BEFORE recursion on both sides.
+;;;
+;;; THE EDGE IS TESTED ON BOTH SIDES, AT THE SAME BOUND.
+;;;
+;;; ERRATA 0.3, SECOND PASS — THIS PARAGRAPH ONCE TAUGHT THE OPPOSITE AND IS
+;;; REWRITTEN.  It read: "those units are NOT the same object … encoding a host
+;;; form of depth D produces a datum of depth D+1 … Checks P6/P7 record that
+;;; asymmetry as measured fact rather than asserting a symmetry the numbers do
+;;; not have."  That was a true report of a DEFECTIVE repair, not a property of
+;;; the design: %DATUM-TERM-DEPTH-EXCEEDS-P began its walk one level in, so the
+;;; datum measure ran one ahead of the host measure and the deepest encodable
+;;; term decoded to nothing.  The chair repaired the off-by-one in
+;;; surface1.lisp; the two measures now count from the same place and the same
+;;; bound governs both, which is what the ledger claimed all along.
+;;;
+;;; THE PARAGRAPH IS CORRECTED RATHER THAN DELETED because the sequence is the
+;;; evidence: a check written to record a measurement honestly is what exposed
+;;; the defect, and a reader who finds only the repaired claim cannot tell that
+;;; anything was ever wrong here.  What must NOT survive is the retracted
+;;; sentence stated as current fact — that is the F-17 defect class, and this
+;;; file has now committed it once itself.
+
+(defun nest-host-term (k)
+  "A host form of exactly K cons levels: K=1 is (T), K=2 is ((T)), and so on."
+  (let ((f 'cl:t)) (dotimes (i k) (setf f (list f))) f))
+
+(defun nest-term-datum (k)
+  "A term DATUM of exactly K LIST levels, built with CD/0 constructors alone.
+Needed because a datum ONE PAST the ceiling cannot be obtained from ENCODE-TERM
+— the encoder refuses to build it, which is the point — so the decoder's
+refusal at ceiling+1 has to be driven by a datum made by hand."
+  (let ((d (s1 encode-term 'cl:t)))
+    (dotimes (i k d)
+      (setf d (cd0 make-record-datum
+                   (list (cd0 make-record-entry
+                              (cd0 make-identifier-datum '("TERM") '("KIND"))
+                              (cd0 make-identifier-datum '("TERMKIND") '("LIST")))
+                         (cd0 make-record-entry
+                              (cd0 make-identifier-datum '("TERM") '("VALUE"))
+                              (cd0 make-sequence-datum (list d)))))))))
+
+(ok "P4 TERM-DEPTH-CEILING is EXPORTED and returns the declared bound — a
+        checking surface offered to a reader publishes the bound at which it
+        refuses, instead of letting the reader find it by killing an image"
+    (and (eq :external (nth-value 1 (find-symbol "TERM-DEPTH-CEILING"
+                                                 '#:lisp-plus-surface1)))
+         (integerp (s1 term-depth-ceiling))
+         (= 2000 (s1 term-depth-ceiling))))
+
+(ok "P5 ENCODE-TERM works at EXACTLY the ceiling and REFUSES at ceiling+1, with
+        the declared TERM-DEPTH-EXCEEDED reason"
+    (let ((c (s1 term-depth-ceiling)))
+      (and (cd0 record-datum-p (s1 encode-term (nest-host-term c)))
+           (eq :term-depth-exceeded
+               (term-unrepresentable-reason
+                (lambda () (s1 encode-term (nest-host-term (1+ c)))))))))
+
+(ok "P6 DECODE-TERM reconstructs a datum at EXACTLY the ceiling and REFUSES one
+        past it — the same bound as the encoder, counted from the same place"
+    (let* ((c (s1 term-depth-ceiling))
+           (at-ceiling (s1 encode-term (nest-host-term c))))
+      (and (consp (s1 decode-term at-ceiling))
+           ;; one level past the ceiling cannot be reached through ENCODE-TERM
+           ;; (the encoder refuses it), so the over-deep datum is built by hand
+           (eq :term-depth-exceeded
+               (term-irreconstructible-reason
+                (lambda () (s1 decode-term (nest-term-datum (1+ c)))))))))
+
+;;; ERRATA 0.3, SECOND PASS.  This check used to assert the OPPOSITE — that the
+;;; two ceilings, being one number over two different units, did NOT compose,
+;;; and that the deepest host term the encoder accepted produced a datum the
+;;; decoder refused.  That was a true measurement of a defective repair, and
+;;; recording it honestly is what surfaced it: the chair repaired the off-by-one
+;;; (the datum walk counted the leaf term as a level the host walk does not) and
+;;; this check now asserts the property the ledger had claimed all along.
+;;; A suite that records a defect as a passing check is telling the truth about
+;;; the world and a lie about the design; the record stays, the assertion moves.
+(ok "P7 ... and the two measures COMPOSE: the deepest host term ENCODE-TERM
+        accepts encodes to a datum DECODE-TERM reads back.  An encodable term
+        that could not be read back is exactly what this layer's depth ceiling
+        exists to prevent"
+    (let* ((c (s1 term-depth-ceiling))
+           (deepest (s1 encode-term (nest-host-term c))))
+      (consp (s1 decode-term deepest)))
+    "the asymmetry this check once recorded was repaired in surface1.lisp, not smoothed over here")
+
+(ok "P8 ... and the sharing and cycle refusals are UNCHANGED by the depth
+        repair — the iterative rewrite of the sharing counter kept its verdicts"
+    (let ((car-cycle (list :a))
+          (spine-cycle (list :a))
+          (shared (let ((sub (list :s))) (list sub sub))))
+      (setf (car car-cycle) car-cycle)
+      (setf (cdr spine-cycle) spine-cycle)
+      (every (lambda (form)
+               (eq :shared-or-circular-structure
+                   (term-unrepresentable-reason (lambda () (s1 encode-term form)))))
+             (list car-cycle spine-cycle shared))))
+
+;;; ------------------------------------------------------------------
+;;; P/D3 — SURPLUS IDENTIFIER SEGMENTS, AND THE TWO PUBLIC ROUTES TO
+;;;        ROUND-TRIP-MISMATCH.
+;;; ------------------------------------------------------------------
+;;;
+;;; The decoder read segment 0 of a namespace and of a path and IGNORED the
+;;; rest, so SYMBOL{ns ("P"), path ("W")} and SYMBOL{ns ("P" "SURPLUS"), path
+;;; ("W" "X")} — two DISTINCT admissible data — decoded to ONE symbol, beneath a
+;;; published claim that decode was injective.
+;;;
+;;; And ROUND-TRIP-MISMATCH, published as unreachable defence-in-depth, is
+;;; reachable from the public API by two routes the audit exhibited.  Both are
+;;; executed below.  Each restores the image it perturbed, so no later check
+;;; inherits a renamed package or a lingering nickname.
+
+(ok "P9 a datum carrying SURPLUS namespace and path segments is REFUSED with the
+        SYMBOL-IDENTIFIER-SHAPE reason — it was never encoder output, and
+        reading segment 0 of it made two distinct data decode to one symbol"
+    (let ((surplus (cd0 make-record-datum
+                        (list (cd0 make-record-entry
+                                   (cd0 make-identifier-datum '("TERM") '("KIND"))
+                                   (cd0 make-identifier-datum '("TERMKIND") '("SYMBOL")))
+                              (cd0 make-record-entry
+                                   (cd0 make-identifier-datum '("TERM") '("VALUE"))
+                                   (cd0 make-identifier-datum
+                                        '("COMMON-LISP" "SURPLUS") '("CAR" "EXTRA")))))))
+      (eq :symbol-identifier-shape
+          (term-irreconstructible-reason (lambda () (s1 decode-term surplus))))))
+
+(ok "P9b ... and the one-segment datum it shadowed still decodes, so the
+        narrowing removed the surplus shape and nothing else"
+    (eq 'cl:car (s1 decode-term (s1 encode-term 'cl:car))))
+
+(ok "P10 ROUND-TRIP-MISMATCH IS PUBLICLY REACHABLE, mechanism 1: RENAME-PACKAGE
+        between the doors, keeping the old name as a NICKNAME.  FIND-PACKAGE
+        still resolves the stored namespace to the same package object, so the
+        home-package guard passes; re-encoding writes the package's new PRIMARY
+        name, which is not the stored one.  It refuses BEFORE macroexpansion and
+        MINTS NOTHING"
+    (let* ((pkg (or (find-package "S1-P-RHO") (make-package "S1-P-RHO" :use '())))
+           (x (intern "X" pkg))
+           (req (s1 request-expansion (list x 1) :macroexpand-1 (tag "p10"))))
+      (rename-package pkg "S1-P-RHO-PRIME" '("S1-P-RHO"))
+      (unwind-protect
+           (multiple-value-bind (rc ex rf) (s1 try-perform-expansion req)
+             (observe rf)
+             (and (null rc) (null ex)
+                  (s1 expansion-refusal-p rf)
+                  (eq :source-not-reconstructible (s1 expansion-refusal-code rf))
+                  (string= "ROUND-TRIP-MISMATCH" (s1 expansion-refusal-upstream-code rf))
+                  (eq :perform (s1 expansion-refusal-phase rf))))
+        (rename-package (find-package "S1-P-RHO-PRIME") "S1-P-RHO"))))
+
+(ok "P11 ROUND-TRIP-MISMATCH IS PUBLICLY REACHABLE, mechanism 2: a PACKAGE-LOCAL
+        NICKNAME in the caller's ambient *PACKAGE* at Door 2.  NOTHING is
+        mutated — no unintern, no rename, no deletion — so Door 2's
+        reconstruction is a function of (datum, image, DYNAMIC CONTEXT), which no
+        document before ERRATA 0.3 stated"
+    (let* ((delta (or (find-package "S1-P-DELTA") (make-package "S1-P-DELTA" :use '())))
+           (else (or (find-package "S1-P-ELSEWHERE")
+                     (make-package "S1-P-ELSEWHERE" :use '())))
+           (caller (or (find-package "S1-P-CALLER") (make-package "S1-P-CALLER" :use '())))
+           (x-delta (intern "X" delta))
+           (req (s1 request-expansion (list x-delta 1) :macroexpand-1 (tag "p11"))))
+      (intern "X" else)
+      (sb-ext:add-package-local-nickname "S1-P-DELTA" "S1-P-ELSEWHERE" caller)
+      (unwind-protect
+           (let ((*package* caller))
+             (multiple-value-bind (rc ex rf) (s1 try-perform-expansion req)
+               (observe rf)
+               (and (null rc) (null ex)
+                    (eq :source-not-reconstructible (s1 expansion-refusal-code rf))
+                    (string= "ROUND-TRIP-MISMATCH" (s1 expansion-refusal-upstream-code rf)))))
+        (sb-ext:remove-package-local-nickname "S1-P-DELTA" caller))))
+
+(ok "P11b ... and the SAME request, performed from a package with no local
+        nickname, crosses the gate — so the refusal above is caused by the
+        DYNAMIC CONTEXT and by nothing else about the request"
+    (let* ((delta (find-package "S1-P-DELTA"))
+           (req (s1 request-expansion (list (find-symbol "X" delta) 1)
+                    :macroexpand-1 (tag "p11b"))))
+      (multiple-value-bind (rc ex rf) (s1 try-perform-expansion req)
+        (declare (ignore rc ex))
+        (observe rf)
+        ;; the gate is crossed; the LATER refusal is the construct-table one
+        (eq :not-a-known-surface-construct (s1 expansion-refusal-code rf)))))
+
+;;; ------------------------------------------------------------------
+;;; P/D1 — :EXPANDED-NODES-EXCEEDED WAS DECLARED UNREACHABLE.  IT IS NOT.
+;;; ------------------------------------------------------------------
+;;;
+;;; The catalogue declared this code `:unreachable-under-this-policy` and
+;;; annotated it "MEASURED UNREACHABLE UNDER THIS POLICY", arguing that each
+;;; term costs roughly 120 octets so the octet ceiling always fires first.  The
+;;; order argument was BACKWARDS — %ENCODE-CHECKED runs depth -> nodes -> encode
+;;; -> octets, so on the expanded side the NODE check runs before anything is
+;;; encoded and no octet count can pre-empt it — and the arithmetic was wrong
+;;; too.  The old M4/M6 pair CERTIFIED the false claim: M4 read the catalogue
+;;; field back to itself, and M6 "exhibited the arithmetic" of an argument that
+;;; did not hold.
+;;;
+;;; Both are replaced by an EXECUTABLE PUBLIC WITNESS.  A witness is not an
+;;; opinion about a field: Door 1 accepts an ordinary admissible source form and
+;;; Door 2 refuses it with exactly this code.
+
+(defun judgment-schema-with-premises (n)
+  "A DEFINE-JUDGMENT-SCHEMA source form carrying N atomic premises.  Every field
+is literal syntax, as that construct requires."
+  `(lisp-plus-surface0:define-judgment-schema cl-user::*s1-p-schema*
+     :name :z :version 0 :conclusion (:predicate :z (:v (:var :v)))
+     :premises ,(make-list n :initial-element :a)
+     :locals () :unique-locals ()))
+
+(defparameter *nodes-witness-source* (judgment-schema-with-premises 2491))
+
+(ok "P12 DOOR 1 ACCEPTS the witness: 2491 atomic premises pass every SOURCE
+        ceiling — the form is admissible, not a hostile construction"
+    (let ((req (s1 request-expansion *nodes-witness-source* :macroexpand-1
+                   (tag "p12"))))
+      (and (s1 expansion-request-p req)
+           (<= (funcall (find-symbol "%HOST-DEPTH" '#:lisp-plus-surface1)
+                        *nodes-witness-source*)
+               (s1 expansion-policy-max-source-depth))
+           (<= (funcall (find-symbol "%HOST-NODES" '#:lisp-plus-surface1)
+                        *nodes-witness-source*)
+               (s1 expansion-policy-max-source-nodes)))))
+
+(ok "P13 ... and DOOR 2 REFUSES IT WITH EXACTLY :EXPANDED-NODES-EXCEEDED.  This
+        is the code the catalogue called MEASURED UNREACHABLE"
+    (let ((r (refusal-of (lambda ()
+                           (s1 perform-expansion
+                               (s1 request-expansion *nodes-witness-source*
+                                   :macroexpand-1 (tag "p13")))))))
+      (and r
+           (eq :expanded-nodes-exceeded (s1 expansion-refusal-code r))
+           (eq :perform (s1 expansion-refusal-phase r)))))
+
+(ok "P14 ... and the CATALOGUE now says so: the reachability field for that code
+        reads :PUBLIC-API, and NO code anywhere in the catalogue is declared
+        :UNREACHABLE-UNDER-THIS-POLICY"
+    (and (eq :public-api
+             (s1 refusal-catalog-entry-reachability
+                 (assoc :expanded-nodes-exceeded *catalog*)))
+         (null (remove-if-not
+                (lambda (e) (eq :unreachable-under-this-policy
+                                (s1 refusal-catalog-entry-reachability e)))
+                *catalog*))))
+
+(ok "P15 ... and the retracted 'octets always fire first' order is refuted by
+        one premise: at 2490 premises the OCTET ceiling fires, at 2491 the NODE
+        ceiling fires.  Neither dominates; the threshold is construct-dependent"
+    (let ((at-2490 (refusal-of (lambda ()
+                                 (s1 perform-expansion
+                                     (s1 request-expansion
+                                         (judgment-schema-with-premises 2490)
+                                         :macroexpand-1 (tag "p15"))))))
+          (at-2491 (refusal-of (lambda ()
+                                 (s1 perform-expansion
+                                     (s1 request-expansion *nodes-witness-source*
+                                         :macroexpand-1 (tag "p15b")))))))
+      (and (eq :expanded-term-octets-exceeded (s1 expansion-refusal-code at-2490))
+           (eq :expanded-nodes-exceeded (s1 expansion-refusal-code at-2491)))))
+
+(ok "P16 ... and the third expanded-side ceiling is driven from the public API
+        too: a source 45 levels deep (ceiling 48) expands to 49 and refuses
+        :EXPANDED-DEPTH-EXCEEDED, so no expanded-side ceiling is left standing
+        on an argument instead of a witness"
+    (let* ((deep-conclusion (let ((f :zz)) (dotimes (i 44) (setf f (list f))) f))
+           (src `(lisp-plus-surface0:define-judgment-schema cl-user::*s1-p-deep*
+                   :name :z :version 0 :conclusion ,deep-conclusion
+                   :premises (:a) :locals () :unique-locals ()))
+           (r (refusal-of (lambda ()
+                            (s1 perform-expansion
+                                (s1 request-expansion src :macroexpand-1 (tag "p16")))))))
+      (and (<= (funcall (find-symbol "%HOST-DEPTH" '#:lisp-plus-surface1) src)
+               (s1 expansion-policy-max-source-depth))
+           (eq :expanded-depth-exceeded (s1 expansion-refusal-code r)))))
+
+(ok "P17 ... and a DOOR-1 SHARED-STRUCTURE refusal is produced rather than
+        merely listed: a source whose :ACCEPTED-CLAUSES holds ONE cons in TWO
+        positions refuses :SOURCE-TERM-SHARED-STRUCTURE.  ERRATA 0.2's coverage
+        list named this code as exercised; nothing in any instrument produced it"
+    (let* ((sub (list :verified-judged-claim))
+           (src (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+                      (intern "*S1-P-SHARED*" '#:cl-user)
+                      :contract-id :s1/p17 :contract-version 1
+                      :accepted-clauses (list sub sub)
+                      :proposition-relation :exact-normalized-equality
+                      :receiver-accessibility :required
+                      :retain (list :contract-snapshot)))
+           (r (refusal-of (lambda ()
+                            (s1 request-expansion src :macroexpand-1 (tag "p17"))))))
+      (and r
+           (eq :source-term-shared-structure (s1 expansion-refusal-code r))
+           (eq :request (s1 expansion-refusal-phase r))
+           (string= "SHARED-OR-CIRCULAR-STRUCTURE" (s1 expansion-refusal-upstream-code r)))))
+
+;;; ------------------------------------------------------------------
+;;; P/D7 — THE VACUOUS VERSION ALARM AND THE ACCESSORS THAT READ THE
+;;;        LIVE PACKAGE.
+;;; ------------------------------------------------------------------
+;;;
+;;; EXPANSION-RECEIPT-PROCEDURE-VERSION was a constant function that ignored its
+;;; receipt.  The stranger audit redefined the live version and watched an OLD
+;;; receipt's reported version MOVE from 3 to 4 while its identity octets stayed
+;;; frozen at the v3 value — a receipt that could not report the version under
+;;; which it was minted.  The same absence made :PROCEDURE-VERSION-MISMATCH a
+;;; comparison of the package with itself.
+;;;
+;;; The checks below MOVE THE LIVE VERSION and require the old receipt not to
+;;; move with it.  The redefinition is undone by UNWIND-PROTECT so nothing
+;;; downstream — in this file or in any instrument that loads after it —
+;;; inherits a bumped image.
+
+(ok "P18 a REQUEST carries the grammar, procedure and policy versions Door 1
+        captured, as READABLE VALUES.  They were composed into the request
+        identity's octets, where they are frozen but unreadable: an identity can
+        be COMPARED, never READ"
+    (let ((req (s1 request-expansion *specimen* :macroexpand-1 (tag "p18"))))
+      (and (eql 4 (s1 expansion-request-grammar-version req))
+           (eql 4 (s1 expansion-request-procedure-version req))
+           (eql 1 (s1 expansion-request-policy-version req)))))
+
+(defparameter *d7-receipt*
+  (s1 perform-expansion (s1 request-expansion *specimen* :macroexpand-1 (tag "p" "d7"))))
+(defparameter *d7-identity-before*
+  (cd0 octets-to-hex (cd0 canonical-octets (s1 expansion-receipt-identity *d7-receipt*))))
+
+(defparameter *d7-observations*
+  (let ((saved (symbol-function 'lisp-plus-surface1::expansion-procedure-version)))
+    (unwind-protect
+         (progn
+           (setf (symbol-function 'lisp-plus-surface1::expansion-procedure-version)
+                 (lambda () 99))
+           (list :live-version (s1 expansion-procedure-version)
+                 :receipt-version (s1 expansion-receipt-procedure-version *d7-receipt*)
+                 :receipt-identity (cd0 octets-to-hex
+                                        (cd0 canonical-octets
+                                             (s1 expansion-receipt-identity *d7-receipt*)))))
+      (setf (symbol-function 'lisp-plus-surface1::expansion-procedure-version) saved))))
+
+(ok "P19 an OLD receipt keeps reporting the version that MINTED it after the
+        live version moves beneath it — 4, in an image now answering 99"
+    (and (eql 99 (getf *d7-observations* :live-version))
+         (eql 4 (getf *d7-observations* :receipt-version))
+         ;; and the image is restored: nothing downstream inherits the bump
+         (eql 4 (s1 expansion-procedure-version))
+         (eql 4 (s1 expansion-receipt-procedure-version *d7-receipt*))))
+
+(ok "P20 ... and the old receipt's IDENTITY did not move either, so the stored
+        version and the frozen octets agree instead of drifting apart"
+    (string= *d7-identity-before* (getf *d7-observations* :receipt-identity)))
+
+(ok "P21 :PROCEDURE-VERSION-MISMATCH now compares TWO INDEPENDENTLY SOURCED
+        VALUES — the version Door 1 captured against the version live at mint —
+        so a request minted before a version move and performed after it
+        REFUSES.  Before ERRATA 0.3 the alarm compared the package with itself
+        and no state of the world could violate it"
+    (let ((saved (symbol-function 'lisp-plus-surface1::expansion-procedure-version))
+          (req (s1 request-expansion *specimen* :macroexpand-1 (tag "p21"))))
+      (unwind-protect
+           (progn
+             (setf (symbol-function 'lisp-plus-surface1::expansion-procedure-version)
+                   (lambda () 99))
+             (let ((r (refusal-of (lambda () (s1 perform-expansion req)))))
+               (and r
+                    (eq :procedure-version-mismatch (s1 expansion-refusal-code r))
+                    (eq :receipt (s1 expansion-refusal-phase r))
+                    ;; ERRATA 0.3, SECOND PASS — AND THE CATALOGUE NOW AGREES.
+                    ;; This detail line used to read "an image mutation, NOT a
+                    ;; public call", hedging the classification while the
+                    ;; catalogue still called the code
+                    ;; :INTERNAL-PLANTED-FAULT-ONLY.  The hedge was wrong in the
+                    ;; direction that matters: this fixture touches no internal
+                    ;; symbol and binds no fault hook — it redefines an EXPORTED
+                    ;; function, which any client can do — so the code was
+                    ;; publicly reachable and the catalogue said otherwise.  The
+                    ;; chair reclassified it to :PUBLIC-API.  The check asserts
+                    ;; that classification here, at the one place in this suite
+                    ;; that reaches the code by the public route.
+                    (eq :public-api
+                        (s1 refusal-catalog-entry-reachability
+                            (assoc :procedure-version-mismatch *catalog*))))))
+        (setf (symbol-function 'lisp-plus-surface1::expansion-procedure-version) saved)))
+    "reached with no internal symbol and no fault hook — only a redefinition of an EXPORTED function")
+
+(ok "P22 ... and with the image restored the same request performs cleanly, so
+        the alarm above is a real comparison and not a stuck gate"
+    (and (eql 4 (s1 expansion-procedure-version))
+         (s1 expansion-receipt-p
+             (s1 perform-expansion
+                 (s1 request-expansion *specimen* :macroexpand-1 (tag "p22"))))))
+
+;;; ==================================================================
+(section "M. REFUSAL-CODE COVERAGE — MEASURED FROM WHAT ACTUALLY FIRED")
+;;;
+;;; ERRATA 0.3 (F-6).  This section used to sit in the middle of the file and
+;;; read `*EXERCISED*`, a hand-written list of codes the suite was BELIEVED to
+;;; drive.  Nothing checked the belief, and the belief was wrong: the list named
+;;; :SOURCE-TERM-SHARED-STRUCTURE, which appeared in the entire tree three times
+;;; — its catalogue entry, its argument position in REQUEST-EXPANSION, and the
+;;; list itself — and which no check in any instrument ever produced.  The
+;;; coverage claim built on it ("Nothing else is left uncovered") was therefore
+;;; false while the check reading it stayed green, because the falsehood lived
+;;; inside the thing the check consulted.
+;;;
+;;; Coverage is now MEASURED.  *OBSERVED-CODES* holds the code of every refusal
+;;; object this run actually obtained, recorded at the moment of acquisition.
+;;; This section runs LAST, after every other check has had its chance to
+;;; produce one.
+;;;
+;;; WHAT THIS MEASURES AND WHAT IT DOES NOT.  That a code FIRED is not that the
+;;; guard behind it is correct; coverage is a statement about this suite's
+;;; reach, never about the layer's soundness.
+
+(defun codes-with-reachability (r)
+  (mapcar (lambda (e) (s1 refusal-catalog-entry-code e))
+          (remove-if-not (lambda (e) (eq r (s1 refusal-catalog-entry-reachability e)))
+                         *catalog*)))
+
+(defparameter *public-api-codes* (codes-with-reachability :public-api))
+(defparameter *all-catalog-codes*
+  (mapcar (lambda (e) (s1 refusal-catalog-entry-code e)) *catalog*))
+(defparameter *uncovered*
+  (sort (copy-list (set-difference *public-api-codes* *observed-codes*)) #'string<))
+
+(format t "  observed refusal codes this run: ~D~%" (length *observed-codes*))
+(format t "  :PUBLIC-API codes declared: ~D · uncovered by this suite: ~S~%"
+        (length *public-api-codes*) *uncovered*)
+
+(ok "M1 every code this run ACTUALLY PRODUCED is DECLARED in the catalogue —
+        no refusal escapes with a code the table does not name"
+    (null (set-difference *observed-codes* *all-catalog-codes*))
+    (format nil "undeclared: ~S" (set-difference *observed-codes* *all-catalog-codes*)))
+
+(ok "M2 the :PUBLIC-API codes this suite leaves uncovered are EXACTLY NONE —
+        measured from the codes observed, not read off a list.  Every code the
+        catalogue declares publicly reachable was reached, in this process, by
+        this file"
+    (null *uncovered*)
+    (format nil "uncovered: ~S" *uncovered*))
+
+(ok "M2b ... and the measurement is not vacuous in the other direction either:
+        the observed set is a SUBSET of the catalogue and covers more than the
+        public codes alone, since the planted-fault alarms fire here too"
+    (and (>= (length *observed-codes*) (length *public-api-codes*))
+         (subsetp *observed-codes* *all-catalog-codes*)))
+
+(ok "M3 exactly one code is declared reachable only in a stub image, and this
+        suite does NOT observe it — manufacturing that state here would mean
+        altering Surface /0, which is forbidden; STUB-IMAGE-FIXTURE.lisp proves
+        it in a separate process"
+    (and (equal '(:construct-not-a-macro) (codes-with-reachability :public-api-in-a-stub-image))
+         (not (member :construct-not-a-macro *observed-codes*))))
+
+(ok "M4 NO code is declared UNREACHABLE UNDER THIS POLICY.  The one that was —
+        :EXPANDED-NODES-EXCEEDED — is now :PUBLIC-API and was OBSERVED by this
+        run, at P13.  The claim is retired by a witness, not by an edit"
+    (and (null (codes-with-reachability :unreachable-under-this-policy))
+         (member :expanded-nodes-exceeded *observed-codes*)
+         (eq :public-api (s1 refusal-catalog-entry-reachability
+                             (assoc :expanded-nodes-exceeded *catalog*)))))
+
+;;; ERRATA 0.3, SECOND PASS — THE NUMERAL IS GONE FROM THIS LABEL.
+;;; It read "…and all three fired here."  There were three
+;;; :INTERNAL-PLANTED-FAULT-ONLY codes when it was written; the chair's
+;;; reclassification of :PROCEDURE-VERSION-MISMATCH to :PUBLIC-API left two, and
+;;; the label went false while the predicate — which derives its set from the
+;;; catalogue — stayed correct and green.  A hand-typed count beside a derived
+;;; set is the same defect as a hand-written coverage list beside a live one,
+;;; one size smaller.  The count is now DERIVED and printed as detail.
+(ok "M5 every :INTERNAL-PLANTED-FAULT-ONLY alarm was OBSERVED — a gate that has
+        never fired is untested, not passing, and every one the catalogue still
+        classifies that way fired here"
+    (null (set-difference (codes-with-reachability :internal-planted-fault-only)
+                          *observed-codes*))
+    (format nil "declared ~D · unfired: ~S"
+            (length (codes-with-reachability :internal-planted-fault-only))
+            (set-difference (codes-with-reachability :internal-planted-fault-only)
+                            *observed-codes*)))
+
+(ok "M6 ... and the source-side node ceiling is genuinely reached too, so the
+        source/expanded pair is covered on both sides by observation rather than
+        by an argument about which check runs first"
+    (and (member :source-nodes-exceeded *observed-codes*)
+         (member :expanded-nodes-exceeded *observed-codes*)))
 
 ;;; ==================================================================
 (format t "~%")
@@ -973,4 +1803,43 @@ so a suite can no longer silently depend on a private name."
 (format t "    that wrote the layer.  The stranger audit is OWED.~%~%")
 (format t "== surface1-selftest: ~D checks passed / ~D failed ==~%"
         (- *checks* *failed*) *failed*)
-(when (plusp *failed*) (sb-ext:exit :code 1))
+
+;;; ------------------------------------------------------------------
+;;; THE CANONICAL RESULT LINE.                      [ERRATA 0.3 — D4]
+;;; ------------------------------------------------------------------
+;;;
+;;; ONE machine-readable line, emitted here and nowhere else — after every
+;;; intended check has executed, and only here, so a run that died earlier
+;;; cannot have produced it.
+;;;
+;;; It carries THREE numbers and the runner requires all three:
+;;;   checks=   the LIVE counter, which a truncated run cannot inflate
+;;;   expected= the literal DECLARED at the top of this file, which a truncated
+;;;             run cannot reach and a partial run cannot match
+;;;   failed=   the LIVE failure counter, so a red run prints a line the runner
+;;;             will not accept rather than a green one it will
+;;;
+;;; The stranger audit's teeth control T6 truncated this file at a clean form
+;;; boundary and the evidence runner reported SUCCESS, because a truncated
+;;; --load exits 0.  Exit code alone is not a result; this line is.
+;;; ERRATA 0.3 / D6 — and the result line says WHAT IT MEASURED.  A canonical
+;;; line that reports counts but not the subject is a gate on the run's shape
+;;; and not on its subject: the audit produced byte-identical transcripts for
+;;; two different subjects.  The digest is computed BY THIS INSTRUMENT, never
+;;; accepted from the wrapper, and it fails closed — if it cannot be computed,
+;;; this file dies before printing a result at all.
+;;; NB: `*HERE*` is defined in CL-USER, above this file's own IN-PACKAGE, so it
+;;; must be named with its home package here — an unqualified reference reads as
+;;; SURFACE1-SELFTEST::*HERE*, which is unbound.  The gate caught exactly that
+;;; when this was first written, and reported it as a run with no result line,
+;;; which is precisely what it should do.
+(handler-bind ((style-warning #'muffle-warning))
+  (load (merge-pathnames "errata-0.3/EVIDENCE.lisp" cl-user::*here*)))
+(format t "SELFTEST-RESULT checks=~D expected=~D failed=~D subject=~A~%"
+        *checks* *expected-checks* *failed*
+        (funcall (find-symbol "SUBJECT-SHORT" "SURFACE1-EVIDENCE")
+                 (make-pathname :name nil :type nil :defaults cl-user::*here*)))
+(finish-output)
+
+(when (or (plusp *failed*) (/= *checks* *expected-checks*))
+  (sb-ext:exit :code 1))

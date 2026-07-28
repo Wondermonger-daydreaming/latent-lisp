@@ -19,6 +19,32 @@
 ;;;;   this exact source form, presented to this exact named operation,
 ;;;;   produced this exact expanded form, in this image, at this moment.
 ;;;;
+;;;; ERRATA 0.3 — WHAT "EXACT" MEANS HERE, STATED BECAUSE A STRANGER ASKED.
+;;;;
+;;;;   "EXACT SOURCE FORM" MEANS THE EXACT TERM UNDER THE DECLARED GRAMMAR.
+;;;;   IT HAS NEVER MEANT HOST-OBJECT IDENTITY, AND CANNOT.
+;;;;
+;;;; The 2026-07-28 stranger audit put this precise question to the layer, and
+;;;; the layer's behaviour answered it coherently in both directions:
+;;;;
+;;;;   A symbol UNINTERNED between the doors and replaced by a fresh, non-EQ
+;;;;   symbol of the same name in the same package is reconstructed and
+;;;;   ACCEPTED — it is the same TERM.  So is a symbol in a package that was
+;;;;   renamed away and rebuilt from nothing under the same name.
+;;;;
+;;;;   An EQ-IDENTICAL symbol whose package merely acquired a new primary NAME
+;;;;   is REFUSED at the round-trip gate — it is no longer the same term.
+;;;;
+;;;; Acceptance and refusal both track the TERM, never the object.  This is not
+;;;; a concession forced by the audit; it is the same law the grammar states
+;;;; positively (SYMBOL value = identifier <package-name>/<symbol-name>), the
+;;;; same law that makes Door 2 reconstruct a fresh private form on every
+;;;; performance, and the same law under which an UNINTERNED symbol is refused
+;;;; because its identity cannot be represented injectively.  A layer that
+;;;; promised host-object identity would be promising something it structurally
+;;;; cannot keep across a canonical datum — and the reader is owed that in
+;;;; writing rather than as an inference from three separate sections.
+;;;;
 ;;;; WHAT IT DOES NOT ESTABLISH.  Read this list before the code, because it is
 ;;;; the part a reader is most likely to supply for himself if nobody says it.
 ;;;; Form /2's work order left this frontier a written warning — "macroexpansion
@@ -251,6 +277,12 @@
    #:expansion-policy-max-source-nodes
    #:expansion-policy-max-term-octets
 
+   ;; ---- ERRATA 0.3 (D5): the raw public term functions' declared ceiling ----
+   ;; Public because a checking surface offered to a reader must publish the
+   ;; bound at which it refuses, rather than letting the reader discover it by
+   ;; killing an image.
+   #:term-depth-ceiling
+
    ;; ---- DOOR 1: describe ----
    #:request-expansion
    #:try-request-expansion
@@ -261,6 +293,10 @@
    #:expansion-request-operation
    #:expansion-request-construct-identity
    #:expansion-request-occurrence-tag
+   ;; ERRATA 0.3 (D7) — the versions Door 1 CAPTURED, readable as values.
+   #:expansion-request-grammar-version
+   #:expansion-request-procedure-version
+   #:expansion-request-policy-version
 
    ;; ---- DOOR 2: perform ----
    #:perform-expansion
@@ -280,8 +316,13 @@
    #:expansion-receipt-expansion-context
    #:expansion-receipt-disposition
    #:expansion-receipt-procedure-identity
-   #:expansion-receipt-procedure-version
    #:expansion-receipt-policy-identity
+   ;; ERRATA 0.3 (D7) — these two were CONSTANT FUNCTIONS reading the live
+   ;; package; they are now readers of values the receipt stores, and a third
+   ;; joins them.  A receipt reports the versions that minted it, in an image
+   ;; that has moved on.
+   #:expansion-receipt-grammar-version
+   #:expansion-receipt-procedure-version
    #:expansion-receipt-policy-version
 
    ;; ---- refusal: retained objects, never printed conditions ----

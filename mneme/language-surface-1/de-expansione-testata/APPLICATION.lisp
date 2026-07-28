@@ -31,16 +31,46 @@
 ;;;; so the neighbour can accept or refuse in its own voice instead of Surface
 ;;;; /1 impersonating it.
 
+;;;; ERRATA 0.3 / D4.  This program used to report to its wrapper with nothing but
+;;;; an exit code, and it exited 0 while running almost nothing: the stranger audit
+;;;; gutted it to its preamble and re-appended its summary, and the runner reported
+;;;; peace (`FOSSOR.md` §4, cases T9 and T11).  A check that never ran never fails.
+;;;; It now ends with ONE canonical machine-readable line emitted from the LIVE
+;;;; counter, against a count DECLARED at the top of this file, carrying the
+;;;; content-derived subject digest.
+
 (defparameter *here* (or *load-truename* *default-pathname-defaults*))
 (handler-bind ((style-warning #'muffle-warning))
   (load (merge-pathnames "../surface1.lisp" *here*))
   (load (merge-pathnames "../../language-surface-0/surface0.lisp" *here*)))
+(load (merge-pathnames "../errata-0.3/EVIDENCE.lisp" *here*))
+
+;;; THE DECLARED COUNT.  At the top, so a file truncated anywhere below cannot
+;;; satisfy it: the live counter falls short and the canonical line does not match.
+(defparameter *expected-checks* 26)
 
 (defpackage #:de-expansione-testata (:use #:common-lisp))
 (in-package #:de-expansione-testata)
 
-(defmacro s1 (name &rest args) `(,(intern (string name) '#:lisp-plus-surface1) ,@args))
-(defmacro cd0 (name &rest args) `(,(intern (string name) '#:lisp-plus-cd0) ,@args))
+;;; ERRATA 0.3 / D8 F-16.  These helpers used bare INTERN.  Errata 0.1 repaired the
+;;; selftest's and wrote the sentence unqualified; the audit measured the tree and
+;;; found the repair had reached one instrument of five (`FOSSOR.md` §6, F7).  INTERN
+;;; cannot tell a private name from a public one, and it CREATES the symbol it fails
+;;; to find — so a typo becomes a fresh internal symbol and the error surfaces far
+;;; from its cause.  This is the artefact a reader is meant to learn the PUBLIC
+;;; surface from, so it is the last file that should be able to reach a private name.
+(defmacro s1 (name &rest args)
+  (multiple-value-bind (sym status) (find-symbol (string name) '#:lisp-plus-surface1)
+    (unless (eq status :external)
+      (error "S1: ~A is ~:[absent~;~:*~A~] in LISP-PLUS-SURFACE1, not :EXTERNAL"
+             (string name) status))
+    `(,sym ,@args)))
+(defmacro cd0 (name &rest args)
+  (multiple-value-bind (sym status) (find-symbol (string name) '#:lisp-plus-cd0)
+    (unless (eq status :external)
+      (error "CD0: ~A is ~:[absent~;~:*~A~] in LISP-PLUS-CD0, not :EXTERNAL"
+             (string name) status))
+    `(,sym ,@args)))
 
 (defparameter *checks* 0)
 (defparameter *failed* 0)
@@ -68,15 +98,24 @@
 ;;; the tail.  Every identity PRINTED here registers into *CENSUS* as a side
 ;;; effect of printing, so nothing displayed escapes the discrimination check at
 ;;; the foot of the program.
+;;; ERRATA 0.3 / D8 F-1.  The census USED to register only the full identity, and
+;;; the check at the foot of the program compared a value with its own defining
+;;; expression — it could not fail.  The abbreviation, the thing actually under
+;;; test, was never compared with anything.  Now each printed identity registers
+;;; FULL -> ABBREVIATION, and the foot of the program asserts that the two counts
+;;; agree: two distinct identities printing as one abbreviation would fail it.
 (defparameter +head+ 20)
 (defparameter +tail+ 20)
+(defun abbreviate (hex)
+  (if (<= (length hex) (+ +head+ +tail+ 3))
+      hex
+      (format nil "~A…~A [~D]" (subseq hex 0 +head+)
+              (subseq hex (- (length hex) +tail+)) (length hex))))
 (defun id! (datum)
-  (let ((hex (full-hex datum)))
-    (setf (gethash hex *census*) t)
-    (if (<= (length hex) (+ +head+ +tail+ 3))
-        hex
-        (format nil "~A…~A [~D]" (subseq hex 0 +head+)
-                (subseq hex (- (length hex) +tail+)) (length hex)))))
+  (let* ((hex (full-hex datum))
+         (short (abbreviate hex)))
+    (setf (gethash hex *census*) short)
+    short))
 
 ;;; a tiny line splitter, so the program has no dependency of any kind
 (defun uiop-split (s)
@@ -96,6 +135,8 @@
 
 
 (format t "~&DE EXPANSIONE TESTATA — concerning the attested expansion~%")
+(surface1-evidence:print-evidence-header
+ (merge-pathnames "../" cl-user::*here*))
 (format t "SBCL ~A · Surface /1 grammar v~D · procedure v~D · policy v~D~%"
         (lisp-implementation-version)
         (s1 expansion-grammar-version) (s1 expansion-procedure-version)
@@ -303,21 +344,53 @@
     (check (member code '(:source-nodes-exceeded :source-term-octets-exceeded
                           :expanded-term-octets-exceeded))
            "the edge is a DECLARED ceiling of this layer, not a host accident")
-    (desk "")
-    (desk "AND THE CEILING THAT DOES NOT FIRE, NAMED RATHER THAN HIDDEN:")
-    (desk ":EXPANDED-NODES-EXCEEDED is UNREACHABLE UNDER THIS POLICY.  One term")
-    (desk "costs ~D octets; the octet ceiling is ~D and the node ceiling ~D, so"
-          (cd0 octets-length (cd0 canonical-octets (s1 encode-term 'cl:t)))
-          (s1 expansion-policy-max-term-octets) (s1 expansion-policy-max-source-nodes))
-    (desk "octets must always fire first — at about ~D nodes, not ~D."
-          (floor (s1 expansion-policy-max-term-octets)
-                 (cd0 octets-length (cd0 canonical-octets (s1 encode-term 'cl:t))))
-          (s1 expansion-policy-max-source-nodes))
-    (desk "The guard STAYS.  The octet ceiling was NOT raised to make it fire.")
-    (check (< (floor (s1 expansion-policy-max-term-octets)
-                     (cd0 octets-length (cd0 canonical-octets (s1 encode-term 'cl:t))))
-              (s1 expansion-policy-max-source-nodes))
-           "the domination is arithmetic and exhibited, not asserted")))
+    (desk "")))
+
+;;; ==================================================================
+;;; ERRATA 0.3 / D1 — THE CEILING THIS PROGRAM SAID DOES NOT FIRE.  IT FIRES.
+;;;
+;;; What stood here was WITHDRAWN, in these words: ":EXPANDED-NODES-EXCEEDED is
+;;; UNREACHABLE UNDER THIS POLICY … octets must always fire first."  The 2026-07-28
+;;; stranger audit reached the code from the public API with an ordinary admissible
+;;; source form (`FOSSOR.md` §2, F1), and the arithmetic that stood here was
+;;; backwards: it divided the octet ceiling by the cost of ONE TERM measured on the
+;;; SOURCE side, and then compared that against the EXPANDED-side node count.  The
+;;; two sides are not the same size.  DEFINE-JUDGMENT-SCHEMA amplifies about 4.0x in
+;;; nodes and far less in octets, so at the crossing the expansion has passed 20000
+;;; nodes while its octets are still under 262144.  The amplification is
+;;; CONSTRUCT-DEPENDENT and this threshold is NOT universal.
+;;;
+;;; No ceiling was moved to make this fire.  The guard was always real; the note
+;;; about it was false.  A claim of unreachability is a claim, and this one is now
+;;; EXECUTED rather than asserted — the crossing is exhibited at n and n+1.
+(section "VI-b. THE EXPANDED-SIDE NODE CEILING — REACHED, NOT ARGUED AWAY")
+
+(defun schema-with-premises (n)
+  `(lisp-plus-surface0:define-judgment-schema cl-user::*testata-premises*
+     :name :z :version 0 :conclusion 0
+     :premises ,(loop repeat n collect 0)
+     :locals () :unique-locals ()))
+
+(multiple-value-bind (ok-lo code-lo) (accounted-p (schema-with-premises 2492))
+  (declare (ignore ok-lo))
+  (multiple-value-bind (ok-hi code-hi) (accounted-p (schema-with-premises 2493))
+    (declare (ignore ok-hi))
+    (desk "an ordinary DEFINE-JUDGMENT-SCHEMA with N integer premises:")
+    (desk "  N=2492 -> ~S" code-lo)
+    (desk "  N=2493 -> ~S" code-hi)
+    (desk "no fault hook, no internal symbol, no fixture — Door 1 accepts both and")
+    (desk "Door 2 refuses both, one octet-side and one node-side, one apart.")
+    (check (eq code-hi :expanded-nodes-exceeded)
+           "ERRATA 0.3 — :EXPANDED-NODES-EXCEEDED IS REACHABLE from the public API")
+    (check (eq code-lo :expanded-term-octets-exceeded)
+           "and one premise lower the OCTET ceiling fires — the two are adjacent, not dominated")))
+
+(let ((entry (find :expanded-nodes-exceeded (s1 expansion-refusal-code-catalog)
+                   :key (lambda (e) (s1 refusal-catalog-entry-code e)))))
+  (desk "catalogue reachability of :EXPANDED-NODES-EXCEEDED : ~S"
+        (s1 refusal-catalog-entry-reachability entry))
+  (check (eq :public-api (s1 refusal-catalog-entry-reachability entry))
+         "and the catalogue now SAYS SO — the entry no longer claims unreachability"))
 
 ;;; The depth ceiling, on the expanded side specifically.  DEFINE-JUDGMENT-SCHEMA
 ;;; wraps each premise in (PROPOSITION-PATTERN '...), so an expansion is deeper
@@ -386,10 +459,22 @@
 ;;; ==================================================================
 (section "VIII. THE CENSUS — the abbreviation did not lie")
 
-(let ((n (hash-table-count *census*)))
-  (desk "distinct FULL identities printed above: ~D" n)
-  (check (= n (hash-table-count *census*)) "every printed identity was registered in full")
-  (check (> n 6) "the program printed enough distinct identities to be worth checking"))
+;;; ERRATA 0.3 / D8 F-1.  What stood here was `(check (= n (hash-table-count
+;;; *census*)) "every printed identity was registered in full")` — `n` compared with
+;;; its own defining expression, which cannot fail, under a section heading
+;;; advertising a discrimination check that existed nowhere in the file
+;;; (`TABULARIUS.md` §1, F-1).  The advertised measurement is now performed.
+(let* ((fulls (hash-table-count *census*))
+       (shorts (let ((seen (make-hash-table :test #'equal)))
+                 (maphash (lambda (full short) (declare (ignore full))
+                            (setf (gethash short seen) t))
+                          *census*)
+                 (hash-table-count seen))))
+  (desk "distinct FULL identities printed above ..... ~D" fulls)
+  (desk "distinct ABBREVIATIONS they printed as ..... ~D" shorts)
+  (check (= shorts fulls)
+         "the abbreviation DID NOT LIE: distinct identities printed as distinct abbreviations")
+  (check (> fulls 6) "the program printed enough distinct identities to be worth checking"))
 
 ;;; ==================================================================
 (format t "~%")
@@ -399,4 +484,14 @@
 (format t "~%")
 (format t "== de-expansione-testata: ~D checks passed / ~D failed ==~%"
         (- *checks* *failed*) *failed*)
-(when (plusp *failed*) (sb-ext:exit :code 1))
+
+;;; ONE CANONICAL, MACHINE-READABLE RESULT LINE — from the LIVE counter, after every
+;;; intended check has executed, carrying the CONTENT-DERIVED subject digest.  The
+;;; wrapper requires this exact shape with checks == expected and failed = 0, so a
+;;; truncation at a clean form boundary, a gutted preamble-only run, a crash, a
+;;; renamed label and a trailing space all fail closed.
+(format t "~%APPLICATION-RESULT checks=~D expected=~D failed=~D subject=~A~%"
+        *checks* cl-user::*expected-checks* *failed*
+        (surface1-evidence:subject-short (merge-pathnames "../" cl-user::*here*)))
+(when (or (plusp *failed*) (/= *checks* cl-user::*expected-checks*))
+  (sb-ext:exit :code 1))

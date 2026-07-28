@@ -9,9 +9,16 @@ kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
 REPRODUCTION II — Surface /1 Errata 0.1 follow-up (3 findings)
-subject     a1b9bd2d
-directory   /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1/
-SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
+subject-digest  9214b59bda190327dc879186bd6d567eae8d2e7d0d162f869148fad1ad6aaf99
+                content-derived: sha256 over the 25 exact-path
+                members of errata-0.3/SUBJECT-MANIFEST.txt,
+                each bound to its path.  MEASURES the layer under
+                test; NOT the instruments, transcripts, or host.
+subject-label   (none supplied)
+                ADVISORY ONLY — a human or git label, never a
+                measurement of content (FOSSOR F6).
+place       .../mneme/language-surface-1/  (path-stable by design; see above)
+SBCL 2.4.6 · grammar v4 · procedure v4 · policy v1
 
   FINDING A — INHERITED-SYMBOL RECONSTRUCTION SUBSTITUTION
   --------------------------------------------------------
@@ -33,11 +40,13 @@ SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
     N5 asserts encode(decode(d)) == d for ordinary specimens.
     The question is whether %RECONSTRUCT-SOURCE ENFORCES it before expanding.
 
-    WITH THE HOME-PACKAGE GUARD IN PLACE, decode is injective for every
-    admissible datum, so NO PUBLIC INPUT REACHES the round-trip mismatch —
-    the earlier, more precise guard always fires first.  The gate is therefore
-    DEFENCE IN DEPTH, and the only honest way to show it bites is to plant a
-    defective decoder, which is what the layer's own fault hook is for.
+    ERRATA 0.3 — the injectivity claim that used to stand here is WITHDRAWN.
+    ROUND-TRIP-MISMATCH IS publicly reachable (audit D3).  What the gate does
+    is still exactly what it did: it refuses BEFORE macroexpansion, nothing is
+    minted, and no false edge is written.  The gate was vindicated; the note
+    about it was false.  This probe still plants a defective decoder, not
+    because the public path cannot get there, but because a PLANTED fault is
+    the smallest way to show THIS gate — and only this gate — doing the work.
 
     with NO fault bound, the request performs cleanly ... T
     with a DEFECTIVE decoder planted, the gate fires ... T
@@ -65,4 +74,4 @@ SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
       REFUTED  B
       REFUTED  C
 
-REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0 subject=9214b59bda190327

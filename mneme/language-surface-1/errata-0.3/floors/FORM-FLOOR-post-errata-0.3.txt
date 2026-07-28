@@ -1,0 +1,29 @@
+
+  ══════════════════════════════════════════════════════════════════
+  MNEME — verify-form-floor : Language Form /0, CANDIDATE /0
+  ══════════════════════════════════════════════════════════════════
+
+  SBCL: 2.4.6  (expected 2.4.6)
+
+  PASS  form0-teeth                 152 passed / 0 failed
+  PASS  de-forma-dormiente          24 passed / 0 failed
+  PASS  public-surface              23 passed / 0 failed
+
+  FORM FLOOR GREEN — 3 floors, 199 checks, 0 failed.
+  SCOPE (S-1): package-controlled operator installation is a PUBLIC-API
+  enforcement boundary, NOT process isolation. Hostile Common Lisp already
+  running in this image is outside the declared threat model — see
+  language-form-0/LANGUAGE-FORM-0-WORK-ORDER.md §0.
+
+  STANDING: this is a CANDIDATE / self-consistency floor. It implies no
+  adoption and no specification freeze. Current audit, adoption and freeze
+  standing is recorded in language-form-0/LANGUAGE-FORM-0-CLOSURE.md.
+
+  These greens are SELF-CONSISTENCY CERTIFICATION, never independent
+  conformance: one model family wrote the layer, its operators, the
+  inhabited program and these checks. The latent adapter is a labelled
+  scripted fake — no model or provider was called, and nothing here is
+  evidence that any external process emitted a form. Realization
+  computes over data and returns data: it mints no claim, source basis,
+  derivation basis, capability, authority or warrant.
+

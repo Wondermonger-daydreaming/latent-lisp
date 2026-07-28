@@ -1,0 +1,20 @@
+=== D4 PRE-REPAIR WITNESS — the runner blesses a selftest that ran nothing ===
+
+selftest truncated at a clean top-level form boundary; summary block removed
+runner exit ................ 0    <-- must be 1 after repair
+selftest summary line ...... 0 occurrence(s)
+selftest check lines run ... 35  (of 115 intended)
+runner's own record:
+    surface1-selftest      exit 0
+    stub-image-fixture     exit 0
+    de-expansione-testata  exit 0
+    reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+    reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+
+=== D6 PRE-REPAIR WITNESS — one label, two materially different subjects ===
+
+clean run   HEAD=18dc609  subject label printed: subject     18dc609
+subject behaviour CHANGED: source-depth ceiling 48 -> 40 (no version integer touched)
+dirty run   HEAD=18dc609  worktree dirty:  M RUN-APPLICATION.txt
+same git HEAD label for both runs .......... YES
+any content digest anywhere in a transcript: 1 match(es)

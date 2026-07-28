@@ -1,0 +1,68 @@
+# SUBJECT-MANIFEST.txt — the EXACT source inputs whose content the evidence measures.
+#
+# ERRATA 0.3 / D6.  `git rev-parse HEAD` answers "what was last committed in this
+# repository", never "what is in these files".  The stranger audit produced two
+# BYTE-IDENTICAL transcripts, both labelled `ff80b8f`, for two materially different
+# subjects (`FOSSOR.md` §6, F6).  This manifest is the input list of the replacement:
+# a deterministic, content-derived subject digest computed by
+# `errata-0.3/subject-digest.sh`.
+#
+# WHAT IS IN HERE.  Every file the instruments ACTUALLY LOAD, determined by
+# encapsulating `LOAD` in a live SBCL image and loading `surface1.lisp` and
+# `../language-surface-0/surface0.lisp` — the two roots between them cover every
+# instrument (STUB-IMAGE-FIXTURE loads only the first; the other four load both).
+# The closure was TRACED, not read off the load forms.
+#
+# WHAT IS NOT IN HERE, and why the omission is named rather than left to be found:
+#   * The INSTRUMENTS themselves (selftest, stub fixture, application,
+#     reproductions).  This digest identifies the SUBJECT UNDER TEST, not the
+#     apparatus that tested it.  A transcript bearing this digest says WHICH LAYER
+#     was measured; it does NOT say which instrument version measured it.
+#   * The GENERATED TRANSCRIPTS (`RUN-*.txt`).  Their exclusion is structural: this
+#     is an INCLUSION list, so nothing enters that is not named here.  The digest
+#     script additionally HARD-FAILS if any member equals one of the runner's own
+#     output paths — a digest that depended on the evidence it labels would change
+#     every time it was printed.  That guard names EXACT RELATIVE PATHS, never
+#     basenames; this lane has a scar from excluding by basename.
+#   * The HOST (SBCL 2.4.6) and the ambient image.  Printed separately, unmeasured.
+#
+# FORMAT.  One path per line, relative to the Surface /1 directory (the parent of
+# `errata-0.3/`).  `#` comments and blank lines ignored.  Order here is irrelevant:
+# the script sorts (LC_ALL=C) before rendering, so the digest depends on the SET of
+# (path, content) pairs and never on the order of these lines.  A missing member is
+# a HARD FAIL, never a silent skip.
+#
+# 25 members.
+
+# --- the layer under test -------------------------------------------------
+package.lisp
+surface1.lisp
+
+# --- CD/0, the only thing surface1.lisp itself pulls in -------------------
+../../canonical-datum/common-lisp/package.lisp
+../../canonical-datum/common-lisp/cd0.lisp
+
+# --- Surface /0, loaded as a CLIENT by four of the five instruments -------
+../language-surface-0/package.lisp
+../language-surface-0/surface0.lisp
+
+# --- the closure Surface /0 pulls in behind it ----------------------------
+../language-slice-2/package.lisp
+../language-slice-2/slice2.lisp
+../language-slice-1/slice1.lisp
+../language-slice-0/slice0.lisp
+../language-slice-0/slice0-projection.lisp
+../language-slice-0/slice0-transmissibility.lisp
+../language-core-0/core0.lisp
+../kernel0/load.lisp
+../kernel0/package.lisp
+../kernel0/boundary.lisp
+../kernel0/conditions.lisp
+../kernel0/determinacy.lisp
+../kernel0/folds.lisp
+../kernel0/identity.lisp
+../kernel0/manifestation.lisp
+../kernel0/outcome.lisp
+../kernel0/procedure.lisp
+../kernel0/records.lisp
+../kernel0/uncertain-effect.lisp
