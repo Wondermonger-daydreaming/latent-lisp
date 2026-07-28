@@ -1,0 +1,9 @@
+  suite reports 86 checks; forcing each one red in turn
+
+
+  forced 86/86 · survived 0 · collateral 0
+
+  LICENSES EXACTLY ONE SENTENCE:
+    every rendered verdict is connected to the suite's failure result.
+  It is NOT predicate soundness.  Both of Form /1's known hollow checks
+  would have passed a sweep of this shape.

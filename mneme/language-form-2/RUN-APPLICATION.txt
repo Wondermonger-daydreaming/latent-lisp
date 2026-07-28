@@ -1,0 +1,120 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+DE FORMA MUTATA — concerning the changed form
+SBCL 2.4.6 · Form /2 policy v1 · Form /1 policy v3
+
+── CANDIDATE A — STALE PRECONDITION
+  The declared expected-old is not what is actually at the path.
+  A            f2: REFUSED   EXPECTED-OLD-MISMATCH
+               f1: propose not reached · validate not reached · materialize not reached
+  [01] ok   A no successor
+  [02] ok   A NO RECEIPT EXISTS — nothing happened, so nothing is accounted
+  [03] ok   A refuses on the precondition
+  [04] ok   A the input is untouched
+
+── CANDIDATE B — STRUCTURAL SUCCESS, FORM FAILURE
+  Replace the production HEAD with a structurally lawful CD/0 value that
+  is not a lawful Form /1 petition head.  This is the layer's thesis in
+  one fixture: a receipt for a real structural event, sitting beside a
+  refusal of the thing that event produced, neither contaminating the other.
+  B            f2: REPLACED  receipt 4c5043440021fc044c504344…616e64696461746501301002 [1288]
+               f1: propose REFUSED NOT-A-DERIVATION-PETITION · validate not reached · materialize not reached
+  [05] ok   B the transformation SUCCEEDS structurally
+  [06] ok   B a receipt exists for it
+  [07] ok   B the disposition names the operation and claims nothing else
+  [08] ok   B Form /1 REFUSES the successor
+  [09] ok   B and refuses it in ITS OWN voice, with its own code
+  [10] ok   B no Form /1 proposal exists
+  the receipt does not impersonate grammar admission: it names a structural
+  event at a path, and Form /1's refusal of the result is a separate fact.
+
+── CANDIDATE C — CONSEQUENCE-CHANGING REFERENCE REWRITE
+  Replace one support reference with another that is ALSO bound in the same
+  sealed context — same species, same mode, same kind, WRONG SUBJECT.
+  Both petitions are submitted.  DERIVE/2 judges both.  Form /2 judges neither.
+  [11] ok   C the ORIGINAL petition datum independently proposes, validates and materializes
+  C            f2: REPLACED  receipt 4c5043440021f7054c504344…616e64696461746501301002 [1534]
+               f1: propose held · validate held · materialize held
+  [12] ok   C the Form /2 replacement succeeds
+  [13] ok   C the SUCCESSOR independently proposes, validates and materializes under Form /1
+  no validation was inherited: Form /1 received a bare datum and owed it nothing.
+  [14] ok   C the production head is untouched
+  [15] ok   C the schema field is untouched — only the support reference moved
+  [16] ok   C the conclusion field is untouched — only the support reference moved
+  [17] ok   C the receiver field is untouched — only the support reference moved
+  [18] ok   C DERIVE/2 was invoked TWICE — once for each petition
+  original  outcome GRANTED
+  successor outcome GOVERNED-REFUSAL
+  [19] ok   C the ORIGINAL is :GRANTED — its support concerns the right subject
+  [20] ok   C the SUCCESSOR is :GOVERNED-REFUSAL — right species, WRONG SUBJECT
+  [21] ok   C THE TWO GOVERNED OUTCOMES DIFFER, because the resolved evidence differs
+  [22] ok   C the wrong-subject evidence REACHED DERIVE/2 rather than being filtered out
+  [23] ok   C both exact Slice /2 receipts are retained
+  [24] ok   C the original's Slice /2 receipt decides :GRANTED
+  [25] ok   C the successor's Slice /2 receipt decides :REFUSED
+  [26] ok   C no claim exists on the governed-refusal path
+  [27] ok   C a claim exists on the granted path
+  [28] ok   C Form /2's receipt says only :REPLACED-AT-PATH
+  [29] ok   C it asserts nothing about change, improvement or preservation
+  
+  Form /2 established that a reference changed.
+  Form /1 established that both datums are lawful petitions.
+  Slice /2 ALONE established the two governed outcomes.
+
+── CANDIDATE D — RESOLVABLE-REFERENCE REWRITE
+  Not 'repair'.  'Repair' asserts the successor is BETTER, which this layer
+  may never say.  What happens is exact: a reference absent from the sealed
+  context is replaced by one present in it, and submission then resolves.
+  [30] ok   D the ORIGINAL validates and materializes — the reference is well-formed
+  [31] ok   D the ORIGINAL submission refuses BEFORE DERIVE/2 — zero invocations
+  [32] ok   D and the refusal is retained as an object
+  [33] ok   D the reason is exact: the support reference does not resolve
+  [34] ok   D no outcome, hence no claim and no derivation basis
+  D            f2: REPLACED  receipt 4c504344002187064c504344…616e64696461746501301002 [1566]
+               f1: propose held · validate held · materialize held
+  [35] ok   D the Form /2 replacement succeeds
+  [36] ok   D the successor independently re-enters Form /1 and materializes
+  [37] ok   D the SUCCESSOR submission resolves every reference and INVOKES DERIVE/2
+  [38] ok   D no Form /1 submission refusal
+  successor outcome GRANTED
+  [39] ok   D DERIVE/2 returns the ordinary governed result
+
+── D — THE FULL LINEAGE, AND WHICH WAY IT FLOWS
+  original inert datum      4c5043440021d1024c504344…636f6e636c7573696f6e0163 [690]
+    Form /2 proposal        4c5043440021a2054c504344…616e64696461746501301002 [1364]
+    Form /2 occurrence      4c5043440021cb054c504344…616365642d61742d70617468 [1446]
+    Form /2 receipt         4c504344002187064c504344…616e64696461746501301002 [1566]
+  successor inert datum     4c5043440021c7024c504344…636f6e636c7573696f6e0163 [670]
+    Form /1 proposed        4c50434400219b034c504344…636f6e636c7573696f6e0163 [838]
+    Form /1 validated       4c504344002189044c504344…616e63652d64656661756c74 [1058]
+    derivation petition     4c50434400218d054c504344…757461746102036f63630164 [1322]
+    Form /1 submission rcpt 4c5043440021fe0c4c504344…6f726d310106616273656e74 [3340]
+  [40] ok   D the Form /1 submission receipt is DISTINCT from the Form /2 receipt
+    Slice /2 receipt        image-local ordinal 5 · decision GRANTED
+  [41] ok   D the exact Slice /2 receipt is retained
+  [42] ok   D the transformation receipt is byte-identical after all downstream activity
+
+── THE ABBREVIATION DISCRIMINATES
+  identities printed: 11 distinct full · 11 distinct abbreviated
+  [43] ok   every abbreviation printed above discriminates every full identity
+
+── WHAT THIS PROGRAM DOES NOT ESTABLISH
+  Not semantic preservation, equivalence, correctness or improvement.
+  Not that a receipt set is complete, ordered, unique or authentic.
+  Not that DERIVE/2 would judge any of these differently — no submission ran.
+  Not that Form /2 is adopted, frozen, or on any governing floor.
+  Every green here is SELF-CONSISTENCY CERTIFICATION.  The stranger audit is OWED.
+
+— a rewrite remembers what changed
+— it does not decide what the change means
+— and the receipt for a refusal is that there is none
+
+== de-forma-mutata: 43 checks passed / 0 failed ==

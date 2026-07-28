@@ -1,0 +1,18 @@
+
+  FORM /2 TRANSCRIPT RECONCILIATION
+  counts are derived from RENDERED VERDICT LINES, never from a footer alone
+
+  form2-selftest
+    rendered verdict lines : 86 ok · 0 FAIL · 86 total
+    footer claims          : 86 passed · 0 failed
+    reconciled
+  de-forma-mutata
+    rendered verdict lines : 43 ok · 0 FAIL · 43 total
+    footer claims          : 43 passed · 0 failed
+    reconciled
+
+    form2-selftest        exit 0
+    de-forma-mutata       exit 0
+
+  RECONCILIATION CLEAN
+

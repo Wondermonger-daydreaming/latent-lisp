@@ -1,0 +1,150 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+LANGUAGE FORM /2 — CANDIDATE /0 — SELFTEST
+SBCL 2.4.6
+grammar 4c5043440022020f6c6973702d706c75732d666f726d32076772616d6d6172020963616e6469646174650130 v1 · policy 4c5043440022020f6c6973702d706c75732d666f726d3206706f6c696379020963616e6469646174650130 v1
+
+── I. THE TWO DOORS — a proposal is a description, not a promise
+  [001] ok   door 1 admits a well-formed proposal
+  [002] ok   door 1 returns a proposal object
+  [003] ok   door 2 applies it
+  [004] ok   disposition is :REPLACED-AT-PATH — names the operation, not its character
+  [005] ok   the successor carries the replacement at the declared path
+  [006] ok   NC-36 door 1 admits a proposal whose path cannot resolve
+  [007] ok   NC-36 door 2 refuses it
+  [008] ok   NC-36 the refusal is a PATH refusal, not a grammar one
+  [009] ok   NC-35 successful application returns exactly three values
+  [010] ok   NC-35 refused application returns exactly three values
+  [011] ok   NC-37 door 2 refuses a raw datum
+  [012] ok   NC-37 with the species code
+  [013] ok   NC-34 PROPOSE-REPLACEMENT signals, carrying the same refusal object
+  [014] ok   NC-34 APPLY-REPLACEMENT signals, carrying the same refusal object
+
+── II. THE PRECONDITION, AND WHY IT PRECEDES THE NO-OP TEST
+  [015] ok   NC-2 expected-old mismatch refuses
+  [016] ok   NC-29 a true no-op refuses, named for what was OBSERVED
+  [017] ok   NC-44 stale proposal with expected==replacement refuses MISMATCH, not no-op
+
+── III. THE INPUT IS NEVER TOUCHED — true by substrate, tested anyway
+  [018] ok   NC-5 the input datum is byte-identical after a successful replacement
+  [019] ok   NC-6 the successor differs from the input
+  [020] ok   NC-6 element 0 is untouched
+  [021] ok   NC-6 element 2 is untouched — the output differs ONLY at the declared path
+  [022] ok   NC-3/4 mutating the caller's host string cannot alter the retained proposal
+
+── IV. PATHS — tagged steps, identifier keys, and the empty root
+  [023] ok   NC-23 empty path (root) replacement succeeds
+  [024] ok   NC-23 the successor IS the replacement
+  [025] ok   a key step descends a record
+  [026] ok   the keyed field carries the replacement
+  [027] ok   NC-31 an index step meeting a record refuses — no positional record access
+  [028] ok   a key step meeting a sequence refuses with the same family code
+  [029] ok   NC-1 an absent key refuses
+  [030] ok   NC-30 a key step operand that is not an identifier refuses
+  [031] ok   NC-24 an INTEGER in a key step refuses — tags discriminate, nothing is inferred
+  [032] ok   an index step operand that is not an integer refuses
+  [033] ok   a negative index refuses
+  [034] ok   an unknown step tag refuses
+  [035] ok   a non-sequence step refuses
+  [036] ok   a step that is not [kind, operand] refuses
+  [037] ok   a non-sequence path refuses
+  [038] ok   a path deeper than 32 refuses
+
+── V. THE PROPOSAL GRAMMAR
+  [039] ok   a non-datum argument refuses at the boundary
+  [040] ok   a non-sequence proposal node refuses
+  [041] ok   a proposal node that is not [head, body] refuses
+  [042] ok   a non-identifier head refuses
+  [043] ok   a head naming no Form /2 production refuses
+  [044] ok   a non-record body refuses
+  [045] ok   a missing required field refuses — INCLUDING the occurrence tag
+  [046] ok   an unknown field refuses
+
+── VI. POLICY CEILINGS — and why the two non-datum ones exist
+  input 16384 · output 16384 · path 4096 · tag 1024 · depth 32 · envelope 65536 · reserve 4096
+  [047] ok   an over-ceiling input refuses
+  [048] ok   NC-46 an over-ceiling occurrence tag refuses
+  [049] ok   NC-46 an over-ceiling encoded path refuses
+  [050] ok   NC-28 an over-ceiling successor refuses and is never returned
+  [051] ok   an over-envelope proposal identity refuses at door 1
+  [052] ok   a CD/0 rebuild budget failure produces no successor
+  [053] ok   it is reclassified under a Form /2 code, not left as a raw CD/0 failure
+  [054] ok   and CD/0's own stage label 'host-import' is PRESERVED, not corrected away
+  [055] ok   the upstream category is retained
+  [056] ok   the upstream code is retained
+
+── VII. THREE IDENTITIES — a tag is not an occurrence
+  [057] ok   NC-39 two identical proposals with distinct tags have distinct proposal identities
+  [058] ok   NC-40 identical tags give identical identities — an UNDETECTED HOST ERROR, declared
+  [059] ok   NC-38 a refused application produces no receipt, hence no occurrence identity
+  [060] ok   occurrence identity and receipt identity are distinct
+  [061] ok   proposal identity and occurrence identity are distinct
+  [062] ok   input and output datum identities are distinct
+
+── VIII. THE DERIVED PROJECTIONS — and their three planted faults
+  [063] ok   the stored output identity IS the identity of the returned successor
+  [064] ok   on a lawful transition observed-old equals expected-old, by precondition
+  [065] ok   NC-41 planted wrong observed-old produces NO receipt
+  [066] ok   NC-41 with the integrity code
+  [067] ok   NC-42 planted wrong output identity produces NO receipt
+  [068] ok   NC-42 with the integrity code
+  [069] ok   NC-43 a misversioned procedure produces NO receipt
+  [070] ok   NC-43 with the integrity code
+  [071] ok   with no planted fault the same transformation is green
+
+── IX. IDENTITY CENSUS — MULTI-AXIS, with a merged-field boundary fault
+  [072] ok   merged-field fixtures both propose
+  [073] ok   NC-45 adjacent-field boundary shift changes the identity — fields are NOT merged
+  census population 81 · distinct proposal identities 81 · collisions 0
+  [074] ok   multi-axis census: 0 collisions over the enumerated domain
+  [075] ok   an identity value survives a CD/0 encode/decode round trip
+
+── X. READER ALIASING AND MUTABILITY
+  [076] ok   NC-17 repeated reads of an aggregate reader agree
+  [077] ok   NC-17 the refusal detail reader returns a FRESH string each time
+  [078] ok   NC-17 mutating a returned detail cannot edit the retained refusal
+  [079] ok   NC-17 catalogue notes are fresh copies
+
+── XI. THE CATALOGUE — every advertised code has a fixture
+  catalogue 30 · protocol 27 · integrity alarms 3
+  [080] ok   the two derived lists partition the catalogue exactly
+  [081] ok   the two classes are disjoint
+  [082] ok   the integrity-alarm class is POPULATED — not promised and left empty
+  [083] ok   NC-19 every declared code was produced by a fixture
+  [084] ok   NC-19 every produced code is declared
+
+── XII. THE ESCAPE — an unexpected condition is NOT a refusal
+  [085] ok   NC-18 a CD/0 host failure ESCAPES as itself; it does not become a Form /2 refusal
+
+── XIII. RESOURCE MEASUREMENT — reported, never rolled up
+  all octet counts are of the identity VALUE, never of a hex rendering
+  smallest lawful          datum     13  path    41  tag     8 | prop    173  occ    214  receipt    274
+  inhabited-ish            datum     61  path    41  tag    15 | prop    236  occ    277  receipt    337
+  root path, max lawful    datum  16370  path     7  tag     8 | prop  49222  occ  49264  receipt  49325
+  root child, max lawful   datum  16370  path    41  tag     8 | prop  49252  occ  49294  receipt  49355
+  max lawful tag           datum     61  path    41  tag   908 | prop   1129  occ   1170  receipt   1230
+  max depth (30)           datum     68  path  1027  tag     8 | prop   1214  occ   1255  receipt   1315
+  replacement > removed    datum     61  path    41  tag     8 | prop   4225  occ   4266  receipt   4326
+  wide record (200)        datum   3100  path    81  tag     8 | prop   3304  occ   3345  receipt   3405
+  deep record (20)         datum    251  path   807  tag     8 | prop   1184  occ   1225  receipt   1285
+  LARGEST RECEIPT IDENTITY MEASURED over the enumerated fixtures: 49,355 octets
+  envelope 65,536 · reserve 4,096 · ceiling 61,440 · margin 1.24x
+  NOT a global maximum: the admissible domain has not been bounded and searched.
+  [086] ok   every measured receipt identity fits envelope minus reserve
+
+── XIV. WHAT THIS SUITE DOES NOT ESTABLISH
+  It does not establish semantic preservation, equivalence or correctness.
+  It does not establish that any predicate here measures its English label.
+  It does not establish completeness, order, unique lineage or authenticity
+    of any receipt SET — a receipt is an edge, and an account, not an
+    authentication (work order §8.2).
+  It does not establish that a global maximum was found (§9.4c).
+  Every green above is SELF-CONSISTENCY CERTIFICATION by the family that
+    wrote the layer.  The stranger audit is OWED.
+
+== form2-selftest: 86 checks passed / 0 failed ==

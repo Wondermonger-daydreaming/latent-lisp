@@ -1,0 +1,2 @@
+form2-selftest        exit 0
+de-forma-mutata       exit 0
