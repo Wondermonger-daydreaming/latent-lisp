@@ -1,0 +1,36 @@
+
+  LANGUAGE SURFACE /1 — CANDIDATE /0
+  SBCL: 2.4.6
+
+  EXECUTED (raw stdout+stderr captured, unfiltered):
+    surface1-selftest.lisp                    exit 0    ->  RUN-SELFTEST.txt
+    STUB-IMAGE-FIXTURE.lisp                   exit 0    ->  RUN-STUB-IMAGE.txt
+    de-expansione-testata/APPLICATION.lisp    exit 0    ->  RUN-APPLICATION.txt
+    errata-0.1/REPRODUCTION.lisp               exit 0 · summary matched 0
+                                              ->  RUN-REPRODUCTION.txt
+    errata-0.2/REPRODUCTION-II.lisp           exit 0 · summary matched 1
+                                              ->  RUN-REPRODUCTION-II.txt
+
+  THE BEFORE CAPTURES, where these findings were CONFIRMED, are preserved at
+    errata-0.1/pre-errata-evidence/REPRODUCTION-OUTPUT-2e21f367.txt
+    errata-0.2/pre-errata-evidence/REPRODUCTION-II-OUTPUT-4f5c5982.txt
+    exit codes retained in                    RUN-EXITCODES.txt
+
+  THE STUB-IMAGE FIXTURE IS A SEPARATE PROCESS ON PURPOSE.  One refusal code is
+  reachable only where Surface /0's package exists WITHOUT its macros.  Producing
+  that state inside the selftest's image would mean unbinding a Surface /0 macro
+  function — altering the layer under observation — so it gets its own image,
+  which never loads surface0.lisp at all.
+
+  WHAT THESE RUNS ESTABLISH: that the checks written in these files executed and
+  reported what the transcripts show.  WHAT THEY DO NOT ESTABLISH: that any
+  source form and its expansion mean the same thing; that any expansion is
+  correct, evaluable, compilable, hygienic, or portable to another Common Lisp;
+  that any lexical environment was captured (none ever is); or that any later
+  success reaches backward to validate an expansion.  A receipt is an ACCOUNT,
+  not an AUTHENTICATION.
+
+  Every green is SELF-CONSISTENCY CERTIFICATION by the family that wrote the
+  layer.  Standing — candidate, unaudited, unadopted, unfrozen, on no governing
+  floor — is recorded in LANGUAGE-SURFACE-1-RETURN.md, not here.
+

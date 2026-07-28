@@ -1,0 +1,14 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+F0: Door 1 accepted the malformed-for-surface0 form (request minted): T
+F1: escaped condition type = SURFACE-SYNTAX-REFUSED
+F1: is it surface0's own condition class? T
+F1 verdict: ESCAPED UNWRAPPED in the neighbour's voice — nothing minted by Surface /1

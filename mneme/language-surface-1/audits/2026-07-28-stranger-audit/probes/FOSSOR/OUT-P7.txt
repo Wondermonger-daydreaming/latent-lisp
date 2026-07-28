@@ -1,0 +1,18 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+  P7 — WHICH INSTRUMENTS STILL REACH THROUGH INTERN, AND DO THEY BITE?
+  --------------------------------------------------------------------
+    STUB-IMAGE-FIXTURE.lisp: 7 distinct (s1 …) names · NON-EXTERNAL: NIL
+    de-expansione-testata/APPLICATION.lisp: 25 distinct (s1 …) names · NON-EXTERNAL: NIL
+    errata-0.1/REPRODUCTION.lisp: 11 distinct (s1 …) names · NON-EXTERNAL: NIL
+    errata-0.2/REPRODUCTION-II.lisp: 10 distinct (s1 …) names · NON-EXTERNAL: NIL
+    surface1-selftest.lisp: 51 distinct (s1 …) names · NON-EXTERNAL: NIL

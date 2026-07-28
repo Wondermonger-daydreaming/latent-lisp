@@ -1,0 +1,79 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+FOSSOR — REFUSAL REACHABILITY BATTERY · SBCL 2.4.6 · grammar v3 procedure v3 policy v1
+    subject dir /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/extract/target/tree/mneme/language-surface-1/
+
+  A. REQUEST-PHASE :PUBLIC-API CODES
+  ----------------------------------
+  [01]  MATCH   :SOURCE-FORM-NOT-A-CALL — source form 42, an atom
+       want :SOURCE-FORM-NOT-A-CALL  got :SOURCE-FORM-NOT-A-CALL · phase :REQUEST (catalog :REQUEST) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+  [02]  MATCH   :SOURCE-FORM-HEAD-NOT-A-SYMBOL — head is a cons
+       want :SOURCE-FORM-HEAD-NOT-A-SYMBOL  got :SOURCE-FORM-HEAD-NOT-A-SYMBOL · phase :REQUEST (catalog :REQUEST) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+  [03]  MATCH   :OPERATION-NOT-DECLARED — :MACROEXPAND-ALL is not declared
+       want :OPERATION-NOT-DECLARED  got :OPERATION-NOT-DECLARED · phase :REQUEST (catalog :REQUEST) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+  [04]  MATCH   :OCCURRENCE-TAG-NOT-IDENTIFIER — tag NIL, and there is no default
+       want :OCCURRENCE-TAG-NOT-IDENTIFIER  got :OCCURRENCE-TAG-NOT-IDENTIFIER · phase :REQUEST (catalog :REQUEST) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+  [05]  MATCH   :SOURCE-TERM-UNREPRESENTABLE — a CHARACTER leaf
+       want :SOURCE-TERM-UNREPRESENTABLE  got :SOURCE-TERM-UNREPRESENTABLE · phase :REQUEST (catalog :REQUEST) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL) · upstream "NO-TERM-KIND"
+  [06]  MATCH   :SOURCE-TERM-SHARED-STRUCTURE — one subtree reachable by two paths
+       want :SOURCE-TERM-SHARED-STRUCTURE  got :SOURCE-TERM-SHARED-STRUCTURE · phase :REQUEST (catalog :REQUEST) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL) · upstream "SHARED-OR-CIRCULAR-STRUCTURE"
+  [07]  MATCH   :SOURCE-DEPTH-EXCEEDED — 60 host levels, ceiling 48
+       want :SOURCE-DEPTH-EXCEEDED  got :SOURCE-DEPTH-EXCEEDED · phase :REQUEST (catalog :REQUEST) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+  [08]  MATCH   :SOURCE-NODES-EXCEEDED — 20001 elements, depth 3
+       want :SOURCE-NODES-EXCEEDED  got :SOURCE-NODES-EXCEEDED · phase :REQUEST (catalog :REQUEST) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+  [09]  MATCH   :SOURCE-TERM-OCTETS-EXCEEDED — one 262145-char string leaf
+       want :SOURCE-TERM-OCTETS-EXCEEDED  got :SOURCE-TERM-OCTETS-EXCEEDED · phase :REQUEST (catalog :REQUEST) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+
+  B. PERFORM-PHASE :PUBLIC-API CODES
+  ----------------------------------
+  [10]  MATCH   :NOT-A-KNOWN-SURFACE-CONSTRUCT — head is CL-USER::FROBNICATE
+       want :NOT-A-KNOWN-SURFACE-CONSTRUCT  got :NOT-A-KNOWN-SURFACE-CONSTRUCT · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+  [11]  MATCH   :EXPANDED-TERM-UNREPRESENTABLE — a gensym-bearing expansion with no sharing
+       want :EXPANDED-TERM-UNREPRESENTABLE  got :EXPANDED-TERM-UNREPRESENTABLE · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL) · upstream "UNINTERNED-SYMBOL"
+  [12]  MATCH   :EXPANDED-TERM-SHARED-STRUCTURE — full expansion of DERIVE-CASE
+       want :EXPANDED-TERM-SHARED-STRUCTURE  got :EXPANDED-TERM-SHARED-STRUCTURE · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL) · upstream "SHARED-OR-CIRCULAR-STRUCTURE"
+  [13]  MATCH   :EXPANDED-DEPTH-EXCEEDED — source depth 46, expansion depth 50, ceiling 48
+       want :EXPANDED-DEPTH-EXCEEDED  got :EXPANDED-DEPTH-EXCEEDED · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+  [14]  MATCH   :EXPANDED-TERM-OCTETS-EXCEEDED — 2000 integer premises
+       want :EXPANDED-TERM-OCTETS-EXCEEDED  got :EXPANDED-TERM-OCTETS-EXCEEDED · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+      (source depth 46 / expanded depth 50 for the depth witness)
+
+  B2. :SOURCE-NOT-RECONSTRUCTIBLE — its FOUR public upstream reasons
+  ------------------------------------------------------------------
+  [15]  MATCH   :SOURCE-NOT-RECONSTRUCTIBLE / SYMBOL-ABSENT-IN-IMAGE
+       want :SOURCE-NOT-RECONSTRUCTIBLE  got :SOURCE-NOT-RECONSTRUCTIBLE · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL) · upstream "SYMBOL-ABSENT-IN-IMAGE"
+  [16]  MATCH   :SOURCE-NOT-RECONSTRUCTIBLE / PACKAGE-ABSENT-IN-IMAGE
+       want :SOURCE-NOT-RECONSTRUCTIBLE  got :SOURCE-NOT-RECONSTRUCTIBLE · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL) · upstream "PACKAGE-ABSENT-IN-IMAGE"
+    before unintern: (find-symbol "X" P) home FOSSOR-P status :INTERNAL
+    after  unintern: (find-symbol "X" P) home FOSSOR-Q status :INHERITED
+  [17]  MATCH   :SOURCE-NOT-RECONSTRUCTIBLE / SYMBOL-NOT-HOME-IN-NAMESPACE
+       want :SOURCE-NOT-RECONSTRUCTIBLE  got :SOURCE-NOT-RECONSTRUCTIBLE · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL) · upstream "SYMBOL-NOT-HOME-IN-NAMESPACE"
+
+  C. :INTERNAL-PLANTED-FAULT-ONLY — the three integrity alarms + the round-trip gate
+  ----------------------------------------------------------------------------------
+    control: the same source WITHOUT any fault -> receipt? T
+  [18]  MATCH   :SOURCE-IDENTITY-PROJECTION-MISMATCH via *%FAULT-SOURCE-IDENTITY*
+       want :SOURCE-IDENTITY-PROJECTION-MISMATCH  got :SOURCE-IDENTITY-PROJECTION-MISMATCH · phase :RECEIPT (catalog :RECEIPT) · class :INTEGRITY-ALARM (catalog :INTEGRITY-ALARM)
+  [19]  MATCH   :EXPANDED-IDENTITY-PROJECTION-MISMATCH via *%FAULT-EXPANDED-IDENTITY*
+       want :EXPANDED-IDENTITY-PROJECTION-MISMATCH  got :EXPANDED-IDENTITY-PROJECTION-MISMATCH · phase :RECEIPT (catalog :RECEIPT) · class :INTEGRITY-ALARM (catalog :INTEGRITY-ALARM)
+  [20]  MATCH   :PROCEDURE-VERSION-MISMATCH via *%FAULT-PROCEDURE-VERSION*
+       want :PROCEDURE-VERSION-MISMATCH  got :PROCEDURE-VERSION-MISMATCH · phase :RECEIPT (catalog :RECEIPT) · class :INTEGRITY-ALARM (catalog :INTEGRITY-ALARM)
+  [21]  MATCH   :SOURCE-NOT-RECONSTRUCTIBLE / ROUND-TRIP-MISMATCH via *%FAULT-DECODE-SUBSTITUTION*
+       want :SOURCE-NOT-RECONSTRUCTIBLE  got :SOURCE-NOT-RECONSTRUCTIBLE · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL) · upstream "ROUND-TRIP-MISMATCH"
+  [22]  MATCH   :SOURCE-NOT-RECONSTRUCTIBLE / ROUND-TRIP-NOT-ENCODABLE via the same hook
+       want :SOURCE-NOT-RECONSTRUCTIBLE  got :SOURCE-NOT-RECONSTRUCTIBLE · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL) · upstream "ROUND-TRIP-NOT-ENCODABLE"
+
+  D. THE CODE CLASSIFIED :UNREACHABLE-UNDER-THIS-POLICY
+  -----------------------------------------------------
+  [23]  MATCH   :EXPANDED-NODES-EXCEEDED — 2500 integer premises, PUBLIC API ONLY
+       want :EXPANDED-NODES-EXCEEDED  got :EXPANDED-NODES-EXCEEDED · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+
+  CATALOGUE MISMATCHES: 0 of 23 witnesses

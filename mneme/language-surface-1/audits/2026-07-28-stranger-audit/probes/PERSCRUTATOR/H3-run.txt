@@ -1,0 +1,4 @@
+Door1 minted: T  y1=AUDIT-SIGMA::Y home=#<PACKAGE "AUDIT-SIGMA">
+old pkg obj = #<PACKAGE "AUDIT-SIGMA-OLD">  new pkg obj = #<PACKAGE "AUDIT-SIGMA">  (eq old-y new-y)=NIL
+decoded head = AUDIT-SIGMA::Y  home=#<PACKAGE "AUDIT-SIGMA">  (eq y1)=NIL (eq y2)=T
+DOOR2 refusal code=:NOT-A-KNOWN-SURFACE-CONSTRUCT upstream-code=NIL

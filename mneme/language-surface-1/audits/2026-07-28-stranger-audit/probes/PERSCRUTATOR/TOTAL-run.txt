@@ -1,0 +1,11 @@
+character-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+float-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+ratio-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+complex-arg: *** UNCAUGHT HOST ERROR: TYPE-ERROR: The value
+vector-arg: *** UNCAUGHT HOST ERROR: TYPE-ERROR: The value
+pathname-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+hashtable-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+function-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+dotted-list: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="IMPROPER-LIST"
+keyword-arg: REQUEST MINTED (no refusal) req-p=T
+uninterned-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="UNINTERNED-SYMBOL"

@@ -1,0 +1,31 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+  P2c — FIRING :EXPANDED-NODES-EXCEEDED THROUGH THE PUBLIC API ONLY
+  -----------------------------------------------------------------
+    catalog says :EXPANDED-NODES-EXCEEDED reachability = :UNREACHABLE-UNDER-THIS-POLICY
+    N=2400  src-nodes  4827 src-octets 123384  exp-nodes 19263  -> :EXPANDED-TERM-OCTETS-EXCEEDED (upstream NIL)
+    N=2490  src-nodes  5007 src-octets 127974  exp-nodes 19983  -> :EXPANDED-TERM-OCTETS-EXCEEDED (upstream NIL)
+    N=2500  src-nodes  5027 src-octets 128484  exp-nodes 20063  -> :EXPANDED-NODES-EXCEEDED (upstream NIL)
+    N=2600  src-nodes  5227 src-octets 133584  exp-nodes 20863  -> :EXPANDED-NODES-EXCEEDED (upstream NIL)
+    N=5000  src-nodes 10027 src-octets 255984  exp-nodes 40063  -> :EXPANDED-NODES-EXCEEDED (upstream NIL)
+
+  P2c — the MINIMAL witness, checked against the catalogue
+  --------------------------------------------------------
+  [01]  MATCH   :EXPANDED-NODES-EXCEEDED via DEFINE-JUDGMENT-SCHEMA with 2500 integer premises
+       want :EXPANDED-NODES-EXCEEDED  got :EXPANDED-NODES-EXCEEDED · phase :PERFORM (catalog :PERFORM) · class :PROTOCOL-REFUSAL (catalog :PROTOCOL-REFUSAL)
+    refusal detail: host nodes 20063 exceeds ceiling 20000
+
+  P2c — and the OCTET argument tested on its own terms
+  ----------------------------------------------------
+    N=2000: expanded nodes 16063 (<=20000), expanded octets 610412 -> :EXPANDED-TERM-OCTETS-EXCEEDED
+
+  MISMATCHES: 0 of 1

@@ -1,0 +1,6 @@
+A: Door1 minted: T
+A: find-package AUDIT-RHO -> #<PACKAGE "AUDIT-RHO-PRIME">
+A: symbol home now -> #<PACKAGE "AUDIT-RHO-PRIME">  package-name="AUDIT-RHO-PRIME"
+A: DOOR2 refusal code=:SOURCE-NOT-RECONSTRUCTIBLE upstream-cat="TermGrammar" upstream-code="ROUND-TRIP-MISMATCH" upstream-stage="term-decode"
+B: find-package AUDIT-SIG-B -> NIL
+B: DOOR2 refusal code=:SOURCE-NOT-RECONSTRUCTIBLE upstream-code="PACKAGE-ABSENT-IN-IMAGE"

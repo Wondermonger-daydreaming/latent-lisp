@@ -1,0 +1,61 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+PREAMBLE-OK surface0-absent-after-s1-load=NIL
+character-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+float-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+ratio-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+complex-arg: *** UNCAUGHT HOST ERROR: TYPE-ERROR: The value
+                                                    (COMPLEX (INTEGER 1 2))
+                                                  is not of type
+                                                    (OR STRING SYMBOL CHARACTER)
+vector-arg: *** UNCAUGHT HOST ERROR: TYPE-ERROR: The value
+                                                   (SIMPLE-VECTOR 3)
+                                                 is not of type
+                                                   (OR STRING SYMBOL CHARACTER)
+pathname-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+hashtable-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+function-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"
+dotted-list: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="IMPROPER-LIST"
+keyword-arg: REQUEST MINTED (no refusal) req-p=T
+uninterned-arg: REFUSED code=:SOURCE-TERM-UNREPRESENTABLE upstream="UNINTERNED-SYMBOL"
+While evaluating the form starting at line 26, column 0
+  of #P"/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/probes/PERSCRUTATOR/TOTAL.lisp":
+Unhandled SB-EXT:PACKAGE-DOES-NOT-EXIST in thread #<SB-THREAD:THREAD tid=1797606 "main thread" RUNNING
+                                                     {1000AC0273}>:
+  The name "AUDIT-EMPTY" does not designate any package.
+
+Backtrace for: #<SB-THREAD:THREAD tid=1797606 "main thread" RUNNING {1000AC0273}>
+0: (SB-DEBUG::DEBUGGER-DISABLED-HOOK #<SB-EXT:PACKAGE-DOES-NOT-EXIST "The name ~S does not designate any package." {100194E223}> #<unused argument> :QUIT T)
+1: (SB-DEBUG::RUN-HOOK SB-EXT:*INVOKE-DEBUGGER-HOOK* #<SB-EXT:PACKAGE-DOES-NOT-EXIST "The name ~S does not designate any package." {100194E223}>)
+2: (INVOKE-DEBUGGER #<SB-EXT:PACKAGE-DOES-NOT-EXIST "The name ~S does not designate any package." {100194E223}>)
+3: (ERROR #<SB-EXT:PACKAGE-DOES-NOT-EXIST "The name ~S does not designate any package." {100194E223}>)
+4: (SB-KERNEL:WITH-SIMPLE-CONDITION-RESTARTS ERROR NIL SB-EXT:PACKAGE-DOES-NOT-EXIST :PACKAGE "AUDIT-EMPTY" :FORMAT-CONTROL "The name ~S does not designate any package." :FORMAT-ARGUMENTS ("AUDIT-EMPTY"))
+5: (SB-INT:%FIND-PACKAGE-OR-LOSE "AUDIT-EMPTY")
+6: (SB-INT:FIND-UNDELETED-PACKAGE-OR-LOSE "AUDIT-EMPTY")
+7: (SB-IMPL::CACHED-FIND-UNDELETED-PACKAGE ("AUDIT-EMPTY" . #(NIL NIL NIL)))
+8: (SB-IMPL::INTERN2 "" ("AUDIT-EMPTY" . #(NIL NIL NIL)))
+9: ((LAMBDA NIL :IN "/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/probes/PERSCRUTATOR/TOTAL.lisp"))
+10: (SB-INT:SIMPLE-EVAL-IN-LEXENV (LET ((EMPTY (INTERN "" (QUOTE #:AUDIT-EMPTY)))) (TRY "empty-name-sym" (LIST (QUOTE COMMON-LISP-USER::FOO) EMPTY))) #<NULL-LEXENV>)
+11: (SB-EXT:EVAL-TLF (LET ((EMPTY (INTERN "" (QUOTE #:AUDIT-EMPTY)))) (TRY "empty-name-sym" (LIST (QUOTE COMMON-LISP-USER::FOO) EMPTY))) 15 NIL)
+12: ((LABELS SB-FASL::EVAL-FORM :IN SB-INT:LOAD-AS-SOURCE) (LET ((EMPTY (INTERN "" (QUOTE #:AUDIT-EMPTY)))) (TRY "empty-name-sym" (LIST (QUOTE COMMON-LISP-USER::FOO) EMPTY))) 15)
+13: ((LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) (LET ((EMPTY (INTERN "" (QUOTE #:AUDIT-EMPTY)))) (TRY "empty-name-sym" (LIST (QUOTE COMMON-LISP-USER::FOO) EMPTY))) :CURRENT-INDEX 15)
+14: (SB-C::%DO-FORMS-FROM-INFO #<FUNCTION (LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) {7BF4F4D874CB}> #<SB-C::SOURCE-INFO {1000AAC893}> SB-C::INPUT-ERROR-IN-LOAD)
+15: (SB-INT:LOAD-AS-SOURCE #<SB-INT:FORM-TRACKING-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/probes/PERSCRUTATOR/TOTAL.lisp" {1000166193}> :VERBOSE NIL :PRINT NIL :CONTEXT "loading")
+16: ((LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) #<SB-INT:FORM-TRACKING-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/probes/PERSCRUTATOR/TOTAL.lisp" {1000166193}> NIL)
+17: (SB-FASL::CALL-WITH-LOAD-BINDINGS #<FUNCTION (LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) {7BF4F4D8788B}> #<SB-INT:FORM-TRACKING-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/probes/PERSCRUTATOR/TOTAL.lisp" {1000166193}> NIL #<SB-INT:FORM-TRACKING-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/probes/PERSCRUTATOR/TOTAL.lisp" {1000166193}>)
+18: (LOAD #P"TOTAL.lisp" :VERBOSE NIL :PRINT NIL :IF-DOES-NOT-EXIST :ERROR :EXTERNAL-FORMAT :DEFAULT)
+19: (SB-IMPL::PROCESS-EVAL/LOAD-OPTIONS ((:LOAD . "TOTAL.lisp") (:QUIT)))
+20: (SB-IMPL::TOPLEVEL-INIT)
+21: ((FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP))
+22: ((FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP))
+23: (SB-IMPL::%START-LISP)
+
+unhandled condition in --disable-debugger mode, quitting

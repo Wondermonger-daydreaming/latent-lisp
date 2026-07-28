@@ -1,0 +1,7 @@
+S1 = AUDIT-P::REINCARNATE  home=#<PACKAGE "AUDIT-P">
+Door1 minted request: T
+S2 = AUDIT-P::REINCARNATE  home=#<PACKAGE "AUDIT-P">   (eq S1 S2)=NIL
+decoded form = (AUDIT-P::REINCARNATE 1)
+(eq (car decoded) S1) = NIL
+(eq (car decoded) S2) = T
+DOOR2: refusal code = :NOT-A-KNOWN-SURFACE-CONSTRUCT  upstream = NIL

@@ -1,0 +1,15 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+FOSSOR STUB-IMAGE VARIANT · SBCL 2.4.6
+surface0 file loaded in this image? NO
+head symbol LISP-PLUS-SURFACE0::DERIVE-CASE · status in its package :INTERNAL · macro-function NIL
+DOOR 1 minted a request with construct identity? T
+receipt minted? NIL
+refusal code :CONSTRUCT-NOT-A-MACRO · phase :PERFORM · category :PROTOCOL-REFUSAL
+catalogue says phase :PERFORM class :PROTOCOL-REFUSAL reachability :PUBLIC-API-IN-A-STUB-IMAGE
+MATCH? T

@@ -1,0 +1,7 @@
+EDGE source round-trips: T
+EDGE receipt-expanded == independent macroexpand of receipt-source: T
+EDGE actual-returned-expansion encodes == receipt-expanded: T
+-- surface0 refusal escape --
+EDGE: escaped condition type=SB-KERNEL::ARG-COUNT-ERROR pkg="SB-KERNEL"
+-- source string mutation after Door 1 --
+EDGE stored source datum unchanged by caller mutation: T

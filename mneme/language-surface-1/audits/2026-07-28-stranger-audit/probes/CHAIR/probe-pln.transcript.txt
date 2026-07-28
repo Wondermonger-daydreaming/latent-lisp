@@ -1,0 +1,23 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+
+; file: /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/probes/CHAIR/../../extract/target/tree/mneme/language-surface-1/surface1.lisp
+; in: DEFUN ENCODE-TERM
+;     (LISP-PLUS-SURFACE1::%ENCODE-TERM-1 LISP-PLUS-SURFACE1::FORM)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LISP-PLUS-SURFACE1::%ENCODE-TERM-1
+; 
+; compilation unit finished
+;   Undefined function:
+;     %ENCODE-TERM-1
+;   caught 1 STYLE-WARNING condition
+D1: refusal code=:SOURCE-NOT-RECONSTRUCTIBLE upstream="ROUND-TRIP-MISMATCH"
+D1 verdict: ROUND-TRIP-MISMATCH reached via ambient *PACKAGE* alone — zero mutation
+D2 control: code=:NOT-A-KNOWN-SURFACE-CONSTRUCT (expect :NOT-A-KNOWN-SURFACE-CONSTRUCT — gate passes)
+D3: decode under PLN context resolved head to home package AUDIT-ELSEWHERE

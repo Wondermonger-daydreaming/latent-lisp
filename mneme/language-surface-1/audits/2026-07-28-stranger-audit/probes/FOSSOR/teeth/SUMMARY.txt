@@ -1,0 +1,162 @@
+T0-control                                 runner exit = 0
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T1a-repro-truncated-mid-form               runner exit = 1
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 0 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T1b-repro-truncated-clean-boundary         runner exit = 1
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 0 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T2-repro-crashes-before-printing           runner exit = 1
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 1 · canonical summary matched 0 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+
+T3a-canonical-line-trailing-space          runner exit = 0
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T3b-canonical-line-renamed-label           runner exit = 1
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 0 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULTS verdicts=4 expected=4 confirmed=0
+
+T3c-canonical-line-hardcoded-but-confirmed runner exit = 0
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T4-selftest-check-fails                    runner exit = 1
+        surface1-selftest      exit 1
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 114 checks passed / 1 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T5-selftest-truncated-clean-boundary       runner exit = 0
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 35 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T6-selftest-truncated-no-summary           runner exit = 0
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T7-selftest-gutted                         runner exit = 0
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 50 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T8-stub-fixture-gutted                     runner exit = 1
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 1
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T9-application-gutted                      runner exit = 0
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+
+T10-canonical-line-then-nonzero-exit       runner exit = 1
+        surface1-selftest      exit 0
+        stub-image-fixture     exit 0
+        de-expansione-testata  exit 0
+        reproduction I         exit 3 · canonical summary matched 1 (must be 1)
+        reproduction II        exit 0 · canonical summary matched 1 (must be 1)
+        == surface1-selftest: 115 checks passed / 0 failed ==
+        == stub-image-fixture: 8 checks passed / 0 failed ==
+        == de-expansione-testata: 24 checks passed / 0 failed ==
+        REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0
+        REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0
+

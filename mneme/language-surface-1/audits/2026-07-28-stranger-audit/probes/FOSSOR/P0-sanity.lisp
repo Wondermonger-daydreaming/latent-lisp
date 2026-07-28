@@ -1,0 +1,17 @@
+(load "/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/probes/FOSSOR/prelude.lisp")
+(in-package #:fossor)
+(banner "P0 — image up, octet census")
+(line "grammar v~D procedure v~D policy v~D"
+      (s1 expansion-grammar-version) (s1 expansion-procedure-version) (s1 expansion-policy-version))
+(line "ceilings: depth ~D nodes ~D octets ~D"
+      (s1 expansion-policy-max-source-depth) (s1 expansion-policy-max-source-nodes)
+      (s1 expansion-policy-max-term-octets))
+(line "octets of ONE term  T ............ ~D" (octets-of (s1 encode-term 'cl:t)))
+(line "octets of ONE term  0 ............ ~D" (octets-of (s1 encode-term 0)))
+(line "octets of ONE term  \"\" .......... ~D" (octets-of (s1 encode-term "")))
+(line "octets of (0) .................... ~D" (octets-of (s1 encode-term '(0))))
+(line "octets of (0 0) .................. ~D" (octets-of (s1 encode-term '(0 0))))
+(line "octets of 1000 zeros ............. ~D" (octets-of (s1 encode-term (make-list 1000 :initial-element 0))))
+(line "octets of 4000 zeros ............. ~D" (octets-of (s1 encode-term (make-list 4000 :initial-element 0))))
+(line "%host-nodes of 1000 zeros ........ ~D" (s1i %host-nodes (make-list 1000 :initial-element 0)))
+(line "%host-depth of 1000 zeros ........ ~D" (s1i %host-depth (make-list 1000 :initial-element 0)))

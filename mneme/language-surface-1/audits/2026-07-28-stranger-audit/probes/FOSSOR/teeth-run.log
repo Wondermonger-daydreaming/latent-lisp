@@ -1,0 +1,14 @@
+T0-control                                 runner exit = 0
+T1a-repro-truncated-mid-form               runner exit = 1
+T1b-repro-truncated-clean-boundary         runner exit = 1
+T2-repro-crashes-before-printing           runner exit = 1
+T3a-canonical-line-trailing-space          runner exit = 0
+T3b-canonical-line-renamed-label           runner exit = 1
+T3c-canonical-line-hardcoded-but-confirmed runner exit = 0
+T4-selftest-check-fails                    runner exit = 1
+T5-selftest-truncated-clean-boundary       runner exit = 0
+T6-selftest-truncated-no-summary           runner exit = 0
+T7-selftest-gutted                         runner exit = 0
+T8-stub-fixture-gutted                     runner exit = 1
+T9-application-gutted                      runner exit = 0
+T10-canonical-line-then-nonzero-exit       runner exit = 1

@@ -1,0 +1,27 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+  P2 — CAN AN ADMISSIBLE SOURCE EXPAND TO >20000 NODES?
+  -----------------------------------------------------
+      N   src-nodes   src-octets   exp-nodes   exp-octets   ratio
+    100         227         6083         863        32811   3.80
+   1000        2027        51984        8063       306412   3.98
+   2000        4027       102984       16063       610412   3.99
+   2500        5027       128484       20063       762412   3.99
+   3000        6027       153984       24063       914412   3.99
+   4000        8027       204984       32063           -1   3.99
+   5000       10027       255984       40063           -1   4.00
+
+  P2b — THE PUBLIC-API DRIVE: largest N that passes DOOR 1
+  --------------------------------------------------------
+    largest N passing DOOR 1 ............. 5120
+    N=5121 refuses at door 1 with .......... :SOURCE-TERM-OCTETS-EXCEEDED
+    at N=5120  source octets 262104 · expanded host nodes 41023

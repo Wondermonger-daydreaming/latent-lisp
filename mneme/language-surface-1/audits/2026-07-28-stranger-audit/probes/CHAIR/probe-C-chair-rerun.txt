@@ -1,0 +1,27 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+=== MINIMAL N REACHING :EXPANDED-NODES-EXCEEDED (bisection) ===
+minimal N .......... 2491
+
+N=2490
+  SOURCE   depth 4 (ceiling 48) · nodes 5018 (ceiling 20000) · octets 153273 (ceiling 262144)
+  Door 1 .......... ACCEPTED
+  EXPANDED depth 8 · nodes 19994 · octets 784663
+  verdict ......... (:DOOR2 :EXPANDED-TERM-OCTETS-EXCEEDED)
+
+N=2491
+  SOURCE   depth 4 (ceiling 48) · nodes 5020 (ceiling 20000) · octets 153334 (ceiling 262144)
+  Door 1 .......... ACCEPTED
+  EXPANDED depth 8 · nodes 20002 · octets 784977
+  verdict ......... (:DOOR2 :EXPANDED-NODES-EXCEEDED)
+
+gensyms in the expansion? 0
+catalogue says this code is: :UNREACHABLE-UNDER-THIS-POLICY

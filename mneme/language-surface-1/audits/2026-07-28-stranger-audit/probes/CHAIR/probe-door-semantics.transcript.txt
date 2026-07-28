@@ -1,0 +1,37 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+
+; file: /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/d214ea40-d602-4f0d-b684-e6f5fddf4447/scratchpad/surface1-audit/probes/CHAIR/../../extract/target/tree/mneme/language-surface-1/surface1.lisp
+; in: DEFUN ENCODE-TERM
+;     (LISP-PLUS-SURFACE1::%ENCODE-TERM-1 LISP-PLUS-SURFACE1::FORM)
+; 
+; caught STYLE-WARNING:
+;   undefined function: LISP-PLUS-SURFACE1::%ENCODE-TERM-1
+; 
+; compilation unit finished
+;   Undefined function:
+;     %ENCODE-TERM-1
+;   caught 1 STYLE-WARNING condition
+
+=== PROBE A: symbol reincarnation between the doors ===
+  [OBSERVED] A0-non-eq — s1 and s2 are distinct host objects: T
+  [OBSERVED] A1-decode-resolves-to-s2 — decode-term returned head EQ to the REINCARNATED s2 (T), non-EQ to the original s1 (T)
+  [OBSERVED] A2-gate-crossed-with-s2 — Door 2 refusal code = :NOT-A-KNOWN-SURFACE-CONSTRUCT (reconstruction and round-trip gate PASSED; the reincarnated symbol reached construct resolution)
+
+=== PROBE B: rename-package (nickname kept) -> ROUND-TRIP-MISMATCH ===
+  [OBSERVED] B1-round-trip-mismatch-reached — code=:SOURCE-NOT-RECONSTRUCTIBLE upstream-code="ROUND-TRIP-MISMATCH" upstream-stage="term-decode" detail="re-encoding the reconstruction does not reproduce the stored source datum; the form that would have been expanded is NOT the form the account names"
+
+=== PROBE B2: rename-package (no nickname) -> PACKAGE-ABSENT ===
+  [OBSERVED] B2-package-absent — code=:SOURCE-NOT-RECONSTRUCTIBLE upstream-code="PACKAGE-ABSENT-IN-IMAGE"
+
+=== PROBE C: whole-package reincarnation crosses silently ===
+  [OBSERVED] C0-distinct — y2 and its package are BOTH new host objects, unrelated to Door 1's
+  [OBSERVED] C1-decode-resolves-to-stranger — decode-term resolved to the fresh package's fresh symbol
+  [OBSERVED] C2-gate-crossed-with-stranger — Door 2 code = :NOT-A-KNOWN-SURFACE-CONSTRUCT — the round-trip gate PASSED on a symbol whose package did not exist at Door 1
+
+CHAIR-PROBE-RESULT observed=8 of=8

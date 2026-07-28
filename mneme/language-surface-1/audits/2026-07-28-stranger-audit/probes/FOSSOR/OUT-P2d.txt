@@ -1,0 +1,17 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+  P2d — the MINIMAL premise count that reaches :EXPANDED-NODES-EXCEEDED
+  ---------------------------------------------------------------------
+    N=2491  src-nodes 5009  src-octets 128020  exp-nodes 19991 -> :EXPANDED-TERM-OCTETS-EXCEEDED
+    N=2492  src-nodes 5011  src-octets 128071  exp-nodes 19999 -> :EXPANDED-TERM-OCTETS-EXCEEDED
+    N=2493  src-nodes 5013  src-octets 128122  exp-nodes 20007 -> :EXPANDED-NODES-EXCEEDED
+    N=2494  src-nodes 5015  src-octets 128173  exp-nodes 20015 -> :EXPANDED-NODES-EXCEEDED

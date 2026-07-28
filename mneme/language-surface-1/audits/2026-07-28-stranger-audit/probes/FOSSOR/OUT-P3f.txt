@@ -1,0 +1,28 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+  P3f — THE DETAIL STRING A SATURATED MEASUREMENT PRINTS
+  ------------------------------------------------------
+    CAR-cycle form: code :SOURCE-DEPTH-EXCEEDED
+      detail ...... "host depth 51 exceeds ceiling 48"
+      upstream .... code NIL category NIL
+    spine-cycle form: code :SOURCE-TERM-SHARED-STRUCTURE
+      detail ...... "1 cons(es) reachable by more than one path; the grammar has no DAG and no cycle"
+
+  P3f2 — ENCODE-TERM CONTROL-STACK THRESHOLD (SBCL default 2MB stack)
+  -------------------------------------------------------------------
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+INFO: Control stack guard page reprotected
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+INFO: Control stack guard page reprotected
+    ENCODE-TERM: ok at depth 25222 · CONTROL STACK EXHAUSTED at depth 25375

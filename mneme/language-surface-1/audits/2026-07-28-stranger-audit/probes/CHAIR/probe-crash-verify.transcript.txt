@@ -1,0 +1,48 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+vector arg: *** UNCAUGHT HOST TYPE-ERROR through TRY-REQUEST-EXPANSION: The
+                                                                        value
+                                                                          (SIMPLE-VECTOR
+                                                                           3)
+
+                                                                        is not
+                                                                        of type
+                                                                          (OR
+                                                                           STRING
+                                                                           SYMBOL
+                                                                           CHARACTER)
+complex arg: *** UNCAUGHT HOST TYPE-ERROR through TRY-REQUEST-EXPANSION: The
+                                                                         value
+                                                                           (COMPLEX
+                                                                            (INTEGER
+                                                                             1
+                                                                             2))
+
+                                                                         is not
+                                                                         of
+                                                                         type
+                                                                           (OR
+                                                                            STRING
+                                                                            SYMBOL
+                                                                            CHARACTER)
+2d array arg: *** UNCAUGHT HOST TYPE-ERROR through TRY-REQUEST-EXPANSION: The
+                                                                          value
+                                                                            (SIMPLE-ARRAY
+                                                                             T
+                                                                             (2
+                                                                              2))
+
+                                                                          is
+                                                                          not
+                                                                          of
+                                                                          type
+                                                                            (OR
+                                                                             STRING
+                                                                             SYMBOL
+                                                                             CHARACTER)
+character arg (control — should refuse cleanly): DESIGNED REFUSAL code=:SOURCE-TERM-UNREPRESENTABLE upstream="NO-TERM-KIND"

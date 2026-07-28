@@ -1,0 +1,25 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+minted: receipt-p=T occurrence-p=T
+  [ok] E1a source identity == recomputed bytes(canonical-octets(source datum))
+  [ok] E1b expanded identity == recomputed from stored expanded datum
+  [ok] E2a receipt.request-identity == request.identity
+  [ok] E2b receipt.occurrence-identity == occurrence.identity
+  [ok] E2c occurrence.request-identity == request.identity
+  [ok] E2d receipt carries THE occurrence object
+  [ok] E3 encode-term(returned expanded host form) == stored expanded datum
+  [ok] E4a context is a record
+  [ok] E4b ENVIRONMENT-OBJECT-CAPTURED = false
+  [ok] E5a receipt procedure version == package's CURRENT version (ambient)
+  E5 note: accessors are constant functions over ambient package state;
+  the receipt STORES no version; identity hashes bound versions at mint.
+  identity octet counts: source=1423 expanded=2840 receipt=4631
+CHAIR-RECEIPT-RESULT ok=10 fail=0

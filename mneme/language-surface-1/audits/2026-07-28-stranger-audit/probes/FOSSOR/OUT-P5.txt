@@ -1,0 +1,68 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+  P5 — TEMPORAL BINDING OF PROCEDURE / POLICY VERSION TO A RECEIPT
+  ----------------------------------------------------------------
+    the claim under test (surface1.lisp:792-793):
+      "Version-binding as constant functions, not slots: a receipt cannot
+       disagree with the package that minted it."
+
+    MINTED at package procedure version 3, policy version 1
+    receipt says procedure-version 3 · policy-version 1
+    receipt identity (hex, first 24) ..... 4c5043440021bf1d4c504344
+
+  P5b — IS THERE A STORED VERSION AT ALL?  The struct's slots.
+  ------------------------------------------------------------
+    EXPANSION-RECEIPT slot names: (IDENTITY LISP-PLUS-SURFACE1::REQUEST-IDENTITY
+                                        LISP-PLUS-SURFACE1::OCCURRENCE
+                                        LISP-PLUS-SURFACE1::OCCURRENCE-IDENTITY
+                                        LISP-PLUS-SURFACE1::SOURCE-FORM-DATUM
+                                        LISP-PLUS-SURFACE1::SOURCE-FORM-IDENTITY
+                                        LISP-PLUS-SURFACE1::EXPANDED-FORM-DATUM
+                                        LISP-PLUS-SURFACE1::EXPANDED-FORM-IDENTITY
+                                        LISP-PLUS-SURFACE1::OPERATION
+                                        LISP-PLUS-SURFACE1::CONSTRUCT-IDENTITY
+                                        LISP-PLUS-SURFACE1::EXPANSION-CONTEXT
+                                        LISP-PLUS-SURFACE1::DISPOSITION)
+    any slot named *VERSION*? NO — the receipt stores no version anywhere
+
+  P5c — THE :PROCEDURE-VERSION-MISMATCH TEST, READ AS CODE
+  --------------------------------------------------------
+    in %MINT-RECEIPT:  (version (or *%fault-procedure-version* (expansion-procedure-version)))
+                       (unless (eql version (expansion-procedure-version)) ... refuse)
+    with the fault hook NIL the test is  (eql (EPV) (EPV))  -> T, always
+    so in production the alarm compares the package to ITSELF: there is no
+    stored operand.  It is not merely internal-only; it is VACUOUS.
+
+  P5d — SIMULATED IMAGE UPGRADE.  EXACTLY WHAT I DID:
+  ---------------------------------------------------
+      (defun lisp-plus-surface1::expansion-procedure-version () 4)
+      — one minimal redefinition of the constant function, in-image, AFTER the
+        receipt above was minted.  Nothing else is touched; the receipt object
+        is the same object.  This is what loading a bumped surface1.lisp does.
+WARNING: redefining LISP-PLUS-SURFACE1:EXPANSION-PROCEDURE-VERSION in DEFUN
+
+    package now reports procedure version ......... 4
+    THE OLD RECEIPT now reports procedure version . 4  <-- it MOVED
+    the old receipt's IDENTITY is unchanged ....... T
+    the old receipt's REQUEST identity unchanged .. T
+    a NEW receipt for the SAME source now has a DIFFERENT identity T
+      (so identity-level binding HOLDS; accessor-level binding does NOT)
+
+  P5e — IS THERE ANY POST-MINT DETECTOR?
+  --------------------------------------
+    exported symbols matching VERIFY/CHECK/AUDIT/RECHECK: NIL
+    exported symbols matching VERSION: ("EXPANSION-GRAMMAR-VERSION"
+                                    "EXPANSION-POLICY-VERSION"
+                                    "EXPANSION-PROCEDURE-VERSION"
+                                    "EXPANSION-RECEIPT-POLICY-VERSION"
+                                    "EXPANSION-RECEIPT-PROCEDURE-VERSION")
+    the old receipt, re-read after the bump, signals nothing: no alarm

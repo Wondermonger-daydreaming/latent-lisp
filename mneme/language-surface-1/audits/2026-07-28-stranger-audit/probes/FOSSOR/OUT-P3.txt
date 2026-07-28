@@ -1,0 +1,51 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+  P3 — HOSTILE STRUCTURE SURVIVAL, through the PUBLIC API
+  -------------------------------------------------------
+  spine cycle  (a b c . <back to head>)        REFUSAL :SOURCE-TERM-SHARED-STRUCTURE / upstream "SHARED-OR-CIRCULAR-STRUCTURE" / phase :REQUEST   [0.004s]
+  CAR cycle    (quote X) where (car X) = X     REFUSAL :SOURCE-DEPTH-EXCEEDED / upstream NIL / phase :REQUEST   [0.000s]
+  cons whose CAR is itself, directly under head REFUSAL :SOURCE-DEPTH-EXCEEDED / upstream NIL / phase :REQUEST   [0.000s]
+  dotted list  (quote (1 . 2))                 REFUSAL :SOURCE-TERM-UNREPRESENTABLE / upstream "IMPROPER-LIST" / phase :REQUEST   [0.003s]
+  dotted TAIL on the source form itself        REFUSAL :SOURCE-TERM-UNREPRESENTABLE / upstream "IMPROPER-LIST" / phase :REQUEST   [0.000s]
+  shared subtree, two paths                    REFUSAL :SOURCE-TERM-SHARED-STRUCTURE / upstream "SHARED-OR-CIRCULAR-STRUCTURE" / phase :REQUEST   [0.000s]
+  deep CAR chain, 500 levels                   REFUSAL :SOURCE-DEPTH-EXCEEDED / upstream NIL / phase :REQUEST   [0.000s]
+  deep CAR chain, 50 levels (just over ceiling 48) REFUSAL :SOURCE-DEPTH-EXCEEDED / upstream NIL / phase :REQUEST   [0.000s]
+  MIXED: spine cycle whose CAR is also a cycle REFUSAL :SOURCE-DEPTH-EXCEEDED / upstream NIL / phase :REQUEST   [0.000s]
+  long proper list, 100000 elements (not hostile, just long) REFUSAL :SOURCE-NODES-EXCEEDED / upstream NIL / phase :REQUEST   [0.019s]
+  cycle in the OPERATION position is impossible; cycle in the TAG? REFUSAL :NOT-A-KNOWN-SURFACE-CONSTRUCT / upstream NIL / phase :PERFORM   [0.000s]
+
+  P3b — THE SAME STRUCTURES HANDED TO THE PUBLIC ENCODE-TERM DIRECTLY
+  -------------------------------------------------------------------
+  CAR cycle                                    LISP-PLUS-SURFACE1::%TERM-UNREPRESENTABLE / SHARED-OR-CIRCULAR-STRUCTURE   [0.000s]
+  spine cycle                                  LISP-PLUS-SURFACE1::%TERM-UNREPRESENTABLE / SHARED-OR-CIRCULAR-STRUCTURE   [0.000s]
+  self-CAR cons                                LISP-PLUS-SURFACE1::%TERM-UNREPRESENTABLE / SHARED-OR-CIRCULAR-STRUCTURE   [0.000s]
+  dotted                                       LISP-PLUS-SURFACE1::%TERM-UNREPRESENTABLE / IMPROPER-LIST   [0.000s]
+  500-deep CAR chain                           ENCODED  <-- NOT A REFUSAL   [0.003s]
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+  200000-deep CAR chain                        CONTROL STACK EXHAUSTED  <-- HOST ACCIDENT   [0.009s]
+
+  P3c — WHICH CODE DOES A CAR-POSITION CYCLE LAND UNDER, AND WHY
+  --------------------------------------------------------------
+    %host-depth of the CAR-cycle form ..... 51  (ceiling 48)
+    %host-nodes of the CAR-cycle form ..... 53
+    %shared-cons-count of it .............. 1
+    the code it actually lands under ...... :SOURCE-DEPTH-EXCEEDED
+    the code ENCODE-TERM alone would give . :SHARED-OR-CIRCULAR-STRUCTURE
+
+  P3d — THE MEASURED DEPTH EDGE: 63 encodes+decodes, 64 refuses?
+  --------------------------------------------------------------
+    largest host depth that ENCODES *and* DECODES ... 63
+    d=63 survives T · d=64 survives NIL
+    policy ceiling 48 · headroom in host levels ...... 15
+    a form at EXACTLY the ceiling (48) mints a receipt? T
+    host form at depth 47 through DOOR 1: :ACCEPTED

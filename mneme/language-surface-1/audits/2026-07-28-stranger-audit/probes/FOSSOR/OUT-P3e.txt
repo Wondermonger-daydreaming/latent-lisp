@@ -1,0 +1,156 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+  P3e — THE PUBLIC ENCODE-TERM AND A DEEP-BUT-ACYCLIC CAR CHAIN
+  -------------------------------------------------------------
+    the claim under test (surface1.lisp:365-373, ENCODE-TERM docstring):
+      "Doing it here rather than in the caller is what makes this PUBLIC
+       function safe: in Candidate /0 a CAR-position cycle handed straight to
+       ENCODE-TERM exhausted the control stack instead of refusing."
+
+    depth    1000 -> encoded
+    depth   10000 -> encoded
+    depth   20000 -> encoded
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+    depth   30000 -> CONTROL STACK EXHAUSTED
+INFO: Control stack guard page reprotected
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+    depth   40000 -> CONTROL STACK EXHAUSTED
+INFO: Control stack guard page reprotected
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+    depth   60000 -> CONTROL STACK EXHAUSTED
+INFO: Control stack guard page reprotected
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+    depth  100000 -> CONTROL STACK EXHAUSTED
+
+  P3e2 — WHICH FUNCTION BLOWS: %SHARED-CONS-COUNT, the check itself
+  -----------------------------------------------------------------
+    %shared-cons-count at depth  20000 -> 0
+INFO: Control stack guard page reprotected
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+    %shared-cons-count at depth  40000 -> CONTROL STACK EXHAUSTED
+INFO: Control stack guard page reprotected
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+    %shared-cons-count at depth 100000 -> CONTROL STACK EXHAUSTED
+
+  P3e3 — and the PUBLIC DECODE-TERM on a deep datum built with CD/0 alone
+  -----------------------------------------------------------------------
+    decode-term on a    100-deep datum -> decoded
+    decode-term on a   5000-deep datum -> decoded
+INFO: Control stack guard page reprotected
+fatal error encountered in SBCL pid 1801391 tid 1801391:
+Control stack exhausted while pseudo-atomic, fault: 0x71edc5c97e38, PC: 0x5460055c
+
+   0: fp=0x71edc5c98218 pc=0x5460055c 100
+   1: fp=0x71edc5c98290 pc=0x54a12c6d (FLET SB-IMPL::REALLOC :IN SB-IMPL::GROW-HASH-TABLE)
+   2: fp=0x71edc5c98300 pc=0x54a12328 SB-IMPL::GROW-HASH-TABLE
+   3: fp=0x71edc5c98370 pc=0x5486d79e (FLET SB-IMPL::INSERT-AT :IN "SYS:SRC;CODE;TARGET-HASH-TABLE.LISP")
+   4: fp=0x71edc5c983e0 pc=0x5486d10f SB-IMPL::PUTHASH/EQ
+   5: fp=0x71edc5c98408 pc=0x5461a586 SB-KERNEL::%PUTHASH
+   6: fp=0x71edc5c984b8 pc=0x551a6d9b LISP-PLUS-CD0::%PROPER-SEQUENCE-VECTOR
+   7: fp=0x71edc5c98538 pc=0x551a89d5 LISP-PLUS-CD0::%SEGMENTS-FROM-HOST
+   8: fp=0x71edc5c985a0 pc=0x551a8e55 LISP-PLUS-CD0::MAKE-IDENTIFIER-DATUM
+   9: fp=0x71edc5c985f0 pc=0x55194d4b LISP-PLUS-SURFACE1::DECODE-TERM
+  10: fp=0x71edc5c98648 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  11: fp=0x71edc5c986a0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  12: fp=0x71edc5c986f8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  13: fp=0x71edc5c98750 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  14: fp=0x71edc5c987a8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  15: fp=0x71edc5c98800 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  16: fp=0x71edc5c98858 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  17: fp=0x71edc5c988b0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  18: fp=0x71edc5c98908 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  19: fp=0x71edc5c98960 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  20: fp=0x71edc5c989b8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  21: fp=0x71edc5c98a10 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  22: fp=0x71edc5c98a68 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  23: fp=0x71edc5c98ac0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  24: fp=0x71edc5c98b18 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  25: fp=0x71edc5c98b70 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  26: fp=0x71edc5c98bc8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  27: fp=0x71edc5c98c20 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  28: fp=0x71edc5c98c78 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  29: fp=0x71edc5c98cd0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  30: fp=0x71edc5c98d28 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  31: fp=0x71edc5c98d80 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  32: fp=0x71edc5c98dd8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  33: fp=0x71edc5c98e30 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  34: fp=0x71edc5c98e88 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  35: fp=0x71edc5c98ee0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  36: fp=0x71edc5c98f38 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  37: fp=0x71edc5c98f90 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  38: fp=0x71edc5c98fe8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  39: fp=0x71edc5c99040 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  40: fp=0x71edc5c99098 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  41: fp=0x71edc5c990f0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  42: fp=0x71edc5c99148 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  43: fp=0x71edc5c991a0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  44: fp=0x71edc5c991f8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  45: fp=0x71edc5c99250 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  46: fp=0x71edc5c992a8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  47: fp=0x71edc5c99300 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  48: fp=0x71edc5c99358 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  49: fp=0x71edc5c993b0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  50: fp=0x71edc5c99408 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  51: fp=0x71edc5c99460 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  52: fp=0x71edc5c994b8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  53: fp=0x71edc5c99510 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  54: fp=0x71edc5c99568 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  55: fp=0x71edc5c995c0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  56: fp=0x71edc5c99618 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  57: fp=0x71edc5c99670 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  58: fp=0x71edc5c996c8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  59: fp=0x71edc5c99720 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  60: fp=0x71edc5c99778 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  61: fp=0x71edc5c997d0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  62: fp=0x71edc5c99828 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  63: fp=0x71edc5c99880 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  64: fp=0x71edc5c998d8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  65: fp=0x71edc5c99930 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  66: fp=0x71edc5c99988 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  67: fp=0x71edc5c999e0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  68: fp=0x71edc5c99a38 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  69: fp=0x71edc5c99a90 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  70: fp=0x71edc5c99ae8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  71: fp=0x71edc5c99b40 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  72: fp=0x71edc5c99b98 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  73: fp=0x71edc5c99bf0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  74: fp=0x71edc5c99c48 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  75: fp=0x71edc5c99ca0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  76: fp=0x71edc5c99cf8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  77: fp=0x71edc5c99d50 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  78: fp=0x71edc5c99da8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  79: fp=0x71edc5c99e00 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  80: fp=0x71edc5c99e58 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  81: fp=0x71edc5c99eb0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  82: fp=0x71edc5c99f08 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  83: fp=0x71edc5c99f60 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  84: fp=0x71edc5c99fb8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  85: fp=0x71edc5c9a010 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  86: fp=0x71edc5c9a068 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  87: fp=0x71edc5c9a0c0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  88: fp=0x71edc5c9a118 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  89: fp=0x71edc5c9a170 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  90: fp=0x71edc5c9a1c8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  91: fp=0x71edc5c9a220 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  92: fp=0x71edc5c9a278 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  93: fp=0x71edc5c9a2d0 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  94: fp=0x71edc5c9a328 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  95: fp=0x71edc5c9a380 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  96: fp=0x71edc5c9a3d8 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  97: fp=0x71edc5c9a430 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM
+  98: fp=0x71edc5c9a488 pc=0x5519533d LISP-PLUS-SURFACE1::DECODE-TERM

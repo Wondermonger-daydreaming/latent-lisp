@@ -1,0 +1,10 @@
+type-of #C(1 2) = (COMPLEX (INTEGER 1 2))  (consp it)=T
+type-of #(1 2 3) = (SIMPLE-VECTOR 3)
+-- public ENCODE-TERM on a complex --
+;     (LISP-PLUS-SURFACE1:EXPANSION-REFUSED (PROBE::C) (FORMAT T "clean refusal~%"))
+UNCAUGHT TYPE-ERROR: The value
+-- Door 1 with a vector arg --
+;      (FORMAT T "clean expansion-refused~%"))
+UNCAUGHT TYPE-ERROR: The value
+-- Door 1 with a 2D array arg --
+UNCAUGHT TYPE-ERROR: The value

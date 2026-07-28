@@ -1,0 +1,24 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+  P0 — image up, octet census
+  ---------------------------
+    grammar v3 procedure v3 policy v1
+    ceilings: depth 48 nodes 20000 octets 262144
+    octets of ONE term  T ............ 70
+    octets of ONE term  0 ............ 56
+    octets of ONE term  "" .......... 55
+    octets of (0) .................... 104
+    octets of (0 0) .................. 155
+    octets of 1000 zeros ............. 51054
+    octets of 4000 zeros ............. 204054
+    %host-nodes of 1000 zeros ........ 2000
+    %host-depth of 1000 zeros ........ 1
