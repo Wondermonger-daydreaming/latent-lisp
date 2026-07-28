@@ -1,0 +1,160 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+LANGUAGE SURFACE /1 — CANDIDATE /0 — SELFTEST
+SBCL 2.4.6 · grammar v1 · procedure v1 · policy v1
+
+── A. LOAD GRAPH AND LAYER IDENTITY
+  [001] ok   A1 Surface /1 loaded with Surface /0 ABSENT — it loads CD/0 only
+  [002] ok   A2 Surface /0 is present now, loaded separately as a client
+  [003] ok   A3 grammar, procedure and policy identities are three DISTINCT identifiers
+  [004] ok   A4 every layer identity is a CD/0 IDENTIFIER datum, never a host symbol
+  [005] ok   A5 IDENTITY-OCTETS reports the encoded octet length — the unit every
+        ceiling in this layer is denominated in
+  [006] ok   A5b a minted request identity is a CD/0 BYTES datum, not a string
+  [007] ok   A6 there is NO surface-0-version anywhere in the exported surface
+
+── B. THE REFUSAL CATALOGUE — one table, two derived lists, no flat list
+  [008] ok   B1 the two derived lists partition the catalogue exactly
+  [009] ok   B2 every catalogue code is unique
+  [010] ok   B3 every entry declares a class, a phase and a reachability
+  [011] ok   B4 the two deleted false affordances are ABSENT and stay absent
+  [012] ok   B5 no FORBIDDEN VOCABULARY word appears in any code, class or phase name
+  [013] ok   B6 the DISPOSITIONS name the operation that ran, with no adverb
+
+── C. THE TERM GRAMMAR — what it represents, and what it refuses
+  [014] ok   C1 the term inventory is exactly four kinds
+  [015] ok   C2 a symbol encodes as an identifier of package-name / symbol-name
+  [016] ok   C3 NIL encodes as the SYMBOL COMMON-LISP:NIL — the host does not separate
+        the empty list from the symbol, and the grammar does not pretend to
+  [017] ok   C4 integers, strings and lists each encode
+  [018] ok   C5 case is preserved exactly — |lower| and LOWER are different terms
+  [019] ok   C6 every encoded specimen term DECODES — construction is not enough,
+        because CD/0 enforces max-depth on decode and not at construction
+
+── D. DOOR 1 — describes; does not expand
+  [020] ok   D1 a request mints an identity, a source datum and a source identity
+  [021] ok   D2 the source-form identity is the identity OF the stored source datum
+  [022] ok   D3 DOOR 1 ACCEPTS a head that names no known construct —
+        a request that can never be performed is still a lawful request
+  [023] ok   D4 ... and its construct identity is ABSENT rather than invented
+  [024] ok   D5 a non-cons source form refuses :SOURCE-FORM-NOT-A-CALL
+  [025] ok   D6 a non-symbol head refuses :SOURCE-FORM-HEAD-NOT-A-SYMBOL
+  [026] ok   D7 an undeclared operation refuses :OPERATION-NOT-DECLARED
+        — there is no :MACROEXPAND-ALL and this layer offers no code walker
+  [027] ok   D8 a non-identifier occurrence tag refuses — there is NO default tag
+  [028] ok   D9 a gensym in the SOURCE refuses at DOOR 1, upstream reason preserved
+  [029] ok   D10 an improper list in the source refuses, upstream reason preserved
+  [030] ok   D11 a host object with no term kind refuses (a character)
+  [031] ok   D12 a float refuses too — no printed-representation escape hatch exists
+  [032] ok   D13 a source form deeper than the declared ceiling refuses
+  [033] ok   D14 a source form with more nodes than the ceiling refuses
+  [034] ok   D15 an encoded source term over the octet ceiling refuses
+  [035] ok   D16 the OPERATION is committed into the request identity, not inferred
+
+── E. DOOR 2 — meets the image, and accounts for what it found
+  [036] ok   E1 a completed expansion mints a receipt, an expanded form and an occurrence
+  [037] ok   E2 the expanded host form is EXACTLY what MACROEXPAND-1 returns
+  [038] ok   E3 the receipt's expanded datum is the encoding of that exact form
+  [039] ok   E4 the receipt's source datum is the encoding of the exact source form
+  [040] ok   E5 both stored identities equal the identities of their stored data
+  [041] ok   E6 the receipt records the operation and the construct identity
+  [042] ok   E7 the receipt carries the request and occurrence identities it was minted from
+  [043] ok   E8 procedure and policy versions come from the PACKAGE, not from a slot —
+        a receipt cannot disagree with the package that minted it
+  [044] ok   E9 the expansion CONTEXT records only what was SUPPLIED, and denies capture
+  [045] ok   E10 the whole receipt's own identity is a bytes datum and is stable
+  [046] ok   E11 the same request performed twice gives the SAME occurrence identity —
+        deterministic replay under the same declared inputs
+  [047] ok   E12 a DIFFERENT occurrence tag gives a DIFFERENT occurrence identity
+  [048] ok   E13 an unknown head reaches DOOR 2 and refuses there, minting NOTHING
+  [049] ok   E14 TRY-PERFORM returns THREE values on BOTH branches, so a refusal
+        cannot be destructured as a success
+
+── F. THE OPERATION DISTINCTION — one step vs repeated
+  [050] ok   F1 for this specimen the two operations produce the SAME expanded form,
+        because the expansion's head is PROGN, a special operator
+  [051] ok   F2 ... and the receipts are NEVERTHELESS DIFFERENT, because the operation
+        is part of the account rather than derived from the result
+  [052] ok   F3 the mechanism is checkable: the expansion's head is not a macro
+  [053] ok   F4 DERIVE-CASE's one-step expansion is accounted for cleanly
+  [054] ok   F5 ... and its FULL expansion is REFUSED, because HANDLER-CASE is a host
+        macro whose own expansion carries implementation-generated names
+  [055] ok   F6 the two operations genuinely differ for that form at the host level
+
+── G. THE NON-DETERMINISM REFUSAL — the reason the boundary exists
+  [056] ok   G1 the host really does expand that form differently twice
+  [057] ok   G2 Surface /1 REFUSES it at ONE-STEP expansion, not merely at full expansion
+  [058] ok   G3 the refusal mints NO occurrence and NO receipt — the objects do not come
+        into existence, they are not nil-valued
+  [059] ok   G4 Surface /0 IS UNMODIFIED BY THIS SUITE — the defect is reported, not repaired
+
+── H. DISCRIMINATION — a changed source changes the account
+  [060] ok   H1 a changed source form changes the SOURCE identity
+  [061] ok   H2 ... and changes the EXPANDED identity
+  [062] ok   H3 ... and therefore changes the OCCURRENCE identity, even with the SAME tag
+  [063] ok   H4 ... and the RECEIPT identity
+  [064] ok   H5 a one-character difference in a symbol NAME is discriminated
+
+── I. NON-PROMOTION — later handling flows nowhere backward
+  [065] ok   I1 evaluating the expansion really does produce a Slice /2 contract object
+  [066] ok   I2 the receipt identity is byte-identical after that downstream success
+  [067] ok   I3 the stored expanded datum is byte-identical after it
+  [068] ok   I4 the receipt gained NO field naming the object that evaluation produced
+  [069] ok   I5 the disposition is unchanged by downstream success
+  [070] ok   I6 a FAILING downstream evaluation leaves the receipt equally unchanged
+
+── J. SURFACE /0'S OWN REFUSAL ESCAPES, AND MINTS NOTHING HERE
+  [071] ok   J1 a malformed construct signals SURFACE /0's condition, not Surface /1's
+  [072] ok   J2 ... carrying Surface /0's OWN reason keyword, unwrapped and unreclassified
+  [073] ok   J3 TRY-PERFORM does NOT convert it either — the twin catches only this
+        layer's refusals, never another layer's verdict
+
+── K. PLANTED FAULTS — a gate that has never fired is untested
+  [074] ok   K1 with no fault bound, the same expansion is green (the teeth are not stuck on)
+  [075] ok   K2 a wrong stored SOURCE identity produces NO receipt
+  [076] ok   K3 a wrong stored EXPANDED identity produces NO receipt
+  [077] ok   K4 an altered procedure version produces NO receipt
+  [078] ok   K5 after the faults unwind, the layer is green again
+
+── L. IMMUTABILITY AND THE ABSENT CONSTRUCTORS
+  [079] ok   L1 no public constructor mints a request, a receipt or a refusal
+  [080] ok   L2 no copier is exported for any minted object
+  [081] ok   L3 the exported surface exposes no setter of any kind
+  [082] ok   L4 the retained host form is NOT exported — it never reaches a receipt
+  [083] ok   L5 EXPORT CENSUS — every declared export names a live function, variable
+        or condition class; nothing is a false affordance
+  [084] ok   L6 ... and the count is stated rather than left implicit
+
+── M. REFUSAL-CODE COVERAGE — set difference, both directions
+  [085] ok   M1 every code exercised above is DECLARED in the catalogue
+  [086] ok   M2 the :PUBLIC-API codes this suite does not exercise are exactly the two
+        expanded-side ceilings the APPLICATION drives to their edges — depth and
+        term-octets.  Nothing else is left uncovered.
+  [087] ok   M3 exactly one code is declared reachable only in a stub image
+  [088] ok   M4 exactly one code is declared UNREACHABLE UNDER THIS POLICY, and it is the
+        expanded-side NODE ceiling — dominated by the octet ceiling, measured
+  [089] ok   M5 ... and its SOURCE-side twin IS reachable, because the node check runs
+        BEFORE the encode — so the pair is not symmetric, and saying so is the
+        difference between a measured claim and a tidy one
+  [090] ok   M6 the arithmetic behind M4, exhibited rather than asserted: one term costs
+        far more than 262144/20000 = 13 octets, so octets must fire first
+
+  WHAT THESE GREENS DO NOT ESTABLISH
+  Not that any source and its expansion mean the same thing.
+  Not that any expansion is correct, evaluable, compilable, hygienic
+    or portable to another Common Lisp.
+  Not that any lexical environment was captured: none ever is.
+  Not that later evaluation reaches backward and validates anything.
+  A receipt is an ACCOUNT, not an AUTHENTICATION.
+  Every green above is SELF-CONSISTENCY CERTIFICATION by the family
+    that wrote the layer.  The stranger audit is OWED.
+
+== surface1-selftest: 90 checks passed / 0 failed ==

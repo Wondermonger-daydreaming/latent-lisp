@@ -1,0 +1,20 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+SURFACE /1 — STUB-IMAGE FIXTURE
+SBCL 2.4.6
+  [01] ok   the stub package exists and exports the construct's NAME
+  [02] ok   and the name has NO macro function — surface0.lisp was never loaded
+  [03] ok   DOOR 1 accepts it — the head IS in the closed construct table
+  [04] ok   DOOR 2 refuses with :CONSTRUCT-NOT-A-MACRO
+  [05] ok   the refusal's phase is :PERFORM, not :REQUEST
+  [06] ok   NO receipt is minted — the object does not come into existence
+  [07] ok   the refusal carries its own identity, a bytes datum
+  [08] ok   a head OUTSIDE the table still refuses with the OTHER code, so the two
+      facts about the world stay two facts
+
+== stub-image-fixture: 8 checks passed / 0 failed ==

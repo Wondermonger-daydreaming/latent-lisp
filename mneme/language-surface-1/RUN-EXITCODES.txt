@@ -1,0 +1,3 @@
+surface1-selftest      exit 0
+stub-image-fixture     exit 0
+de-expansione-testata  exit 0
