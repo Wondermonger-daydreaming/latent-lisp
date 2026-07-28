@@ -1,0 +1,71 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+REPRODUCTION II — Surface /1 Errata 0.1 follow-up (3 findings)
+subject     Errata 0.1 (4f5c5982)
+directory   /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/ce8ba4af-17cc-476e-8c91-64530c158c3c/scratchpad/e01/mneme/language-surface-1/
+SBCL 2.4.6 · grammar v2 · procedure v2 · policy v1
+
+  FINDING A — INHERITED-SYMBOL RECONSTRUCTION SUBSTITUTION
+  --------------------------------------------------------
+    P::X home package ......... PROBE-P
+    Q:X  home package ......... PROBE-Q
+    they are DISTINCT symbols . T
+    (find-symbol "X" P) before . #<PACKAGE "PROBE-P"> / status :INTERNAL
+
+    Door 1 accepted.  stored datum names the P-owned symbol.
+    (find-symbol "X" P) after .. PROBE-Q / status :INHERITED
+    the resolved symbol is now Q's ... T
+    DECODE-TERM reconstructed a form whose bound variable is:
+      symbol PROBE-Q:X · home package PROBE-Q
+      is it Q's symbol? T
+
+    encode-term(decode-term(stored)) == stored ... NIL
+
+    CONFIRMED  A — the decoder resolved ACCESSIBILITY IN P where the grammar records HOME-PACKAGE IDENTITY P — stored datum names P/X, reconstruction is Q:X
+    CONFIRMED  A2 — a RECEIPT WAS MINTED for a reconstruction that does not re-encode to the stored source datum
+
+  FINDING B — IS THE ROUND-TRIP INVARIANT ENFORCED AT RUNTIME?
+  ------------------------------------------------------------
+    N5 asserts encode(decode(d)) == d for ordinary specimens.
+    The question is whether %RECONSTRUCT-SOURCE ENFORCES it before expanding.
+
+    WITH THE HOME-PACKAGE GUARD IN PLACE, decode is injective for every
+    admissible datum, so NO PUBLIC INPUT REACHES the round-trip mismatch —
+    the earlier, more precise guard always fires first.  The gate is therefore
+    DEFENCE IN DEPTH, and the only honest way to show it bites is to plant a
+    defective decoder, which is what the layer's own fault hook is for.
+
+    with NO fault bound, the request performs cleanly ... T
+    CONFIRMED  B — the round trip is asserted by a test and NOT enforced at runtime — no gate and no fault hook exist
+
+  FINDING C — IMPORTED SYMBOL, THE SECOND SHAPE OF THE SAME HOLE
+  --------------------------------------------------------------
+    (find-symbol "Y" P2) ....... PROBE-Q2 / status :INTERNAL
+    status is :INTERNAL yet home package is Q2 ... T
+    => a status-only guard would NOT catch this; the home-package EQ test does.
+
+    THE ENCODER ALREADY WRITES THE HOME PACKAGE — measured — so an imported
+    symbol has no hole on the ENCODE side.  The reachable question is a DATUM
+    whose namespace names a package where the symbol is only ACCESSIBLE.  That
+    datum is built by hand here, because no encode path produces it.
+    hand-built datum names PROBE-P2/Y; Y's home package is PROBE-Q2
+    (find-symbol "Y" P2) = PROBE-Q2 / status :INTERNAL — a STATUS-ONLY guard would PASS it
+    DECODE-TERM on that datum ... Y
+    CONFIRMED  C — an accessible-but-not-home symbol reconstructs, so the encoded namespace does not pin the symbol
+
+  SUMMARY
+  -------
+    CONFIRMED  A
+    CONFIRMED  A2
+    CONFIRMED  B
+    CONFIRMED  C
+
+REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=4

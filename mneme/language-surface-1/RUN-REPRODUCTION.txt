@@ -8,8 +8,10 @@ distribution for more information.
 kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
-REPRODUCTION — Surface /1 Candidate /0 pre-audit defect report
-SBCL 2.4.6 · candidate 2e21f367, unpatched
+REPRODUCTION I — Surface /1 pre-audit defect report (4 findings, 6 parts)
+subject     a1b9bd2d
+directory   /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1/
+SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
 
   FINDING 1 — MUTABLE SOURCE ALIAS / FALSE EDGE
   ---------------------------------------------
@@ -84,3 +86,5 @@ SBCL 2.4.6 · candidate 2e21f367, unpatched
     REFUTED  4
 
   confirmed: 0 of 6
+
+REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0

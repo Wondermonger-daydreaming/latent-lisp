@@ -9,7 +9,7 @@ kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
 LANGUAGE SURFACE /1 — CANDIDATE /0 — SELFTEST
-SBCL 2.4.6 · grammar v2 · procedure v2 · policy v1
+SBCL 2.4.6 · grammar v3 · procedure v3 · policy v1
 
 ── A. LOAD GRAPH AND LAYER IDENTITY
   [001] ok   A1 Surface /1 loaded with Surface /0 ABSENT — it loads CD/0 only
@@ -188,6 +188,28 @@ SBCL 2.4.6 · grammar v2 · procedure v2 · policy v1
         says so: the refusal a gensym-bearing expansion lands under names the
         TERM GRAMMAR, not determinism
 
+── O. ERRATA 0.2 — HOME-PACKAGE IDENTITY AND THE EXECUTED ROUND TRIP
+  [108] ok   O1 an INHERITED symbol no longer substitutes for the one the datum names
+  [109] ok   O2 ... and that refusal reaches DOOR 2 with its own upstream reason,
+        minting nothing
+  [110] ok   O3 the HOME-PACKAGE conjunct does work the STATUS conjunct cannot: an
+        IMPORTED symbol is :INTERNAL in the importing package while its home
+        package is elsewhere, so a status-only guard would pass it
+  [111] ok   O3b ... and the ENCODER writes the HOME package, which is why an imported
+        symbol has no hole on the encode side
+  [112] ok   O4 THE ROUND TRIP IS AN EXECUTED GATE, not a tested property — with a
+        DEFECTIVE decoder planted, Door 2 refuses ROUND-TRIP-MISMATCH before
+        any expansion
+  [113] ok   O4b ... and the gate is NOT stuck on: with no fault bound the same request
+        performs cleanly
+  [114] ok   O5 NO PUBLIC INPUT CAN REACH THE ROUND-TRIP MISMATCH, and saying so is the
+        honest classification: with the home-package guard in place decode is
+        injective, so the earlier and more precise guard always fires first.
+        The gate is DEFENCE IN DEPTH, proved live only by planted fault.
+  [115] ok   O6 grammar and procedure versions BOTH moved, because both changed:
+        the decode relation narrowed and the reconstruction procedure now
+        enforces the round trip
+
   WHAT THESE GREENS DO NOT ESTABLISH
   Not that any source and its expansion mean the same thing.
   Not that any expansion is correct, evaluable, compilable, hygienic
@@ -198,4 +220,4 @@ SBCL 2.4.6 · grammar v2 · procedure v2 · policy v1
   Every green above is SELF-CONSISTENCY CERTIFICATION by the family
     that wrote the layer.  The stranger audit is OWED.
 
-== surface1-selftest: 107 checks passed / 0 failed ==
+== surface1-selftest: 115 checks passed / 0 failed ==

@@ -9,7 +9,7 @@ kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
 DE EXPANSIONE TESTATA — concerning the attested expansion
-SBCL 2.4.6 · Surface /1 grammar v2 · procedure v2 · policy v1
+SBCL 2.4.6 · Surface /1 grammar v3 · procedure v3 · policy v1
 ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
 
 ── I. THE SPECIMEN — and why it is this one

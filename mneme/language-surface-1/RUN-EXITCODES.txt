@@ -1,4 +1,5 @@
 surface1-selftest      exit 0
 stub-image-fixture     exit 0
 de-expansione-testata  exit 0
-reproduction           exit 0 · confirmed findings 0 (must be 0)
+reproduction I         exit 0 · canonical summary matched 1 (must be 1)
+reproduction II        exit 0 · canonical summary matched 1 (must be 1)

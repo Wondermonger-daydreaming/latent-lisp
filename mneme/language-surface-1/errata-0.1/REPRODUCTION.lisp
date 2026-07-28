@@ -1,8 +1,15 @@
 ;;;; repro.lisp — REPRODUCTION of an owner-supplied pre-audit defect report
 ;;;; against Language Surface /1 Candidate /0 at 2e21f367.
 ;;;;
-;;;; NOTHING IS PATCHED.  This file loads the PUBLISHED candidate and probes it.
-;;;; Every finding is either CONFIRMED with executed evidence or REFUTED.
+;;;; THIS INSTRUMENT IS SUBJECT-NEUTRAL.  It takes the candidate directory as
+;;;; argv[1] and an optional SUBJECT LABEL as argv[2], and it reports the
+;;;; grammar and procedure versions it actually found.  It does not patch.
+;;;;
+;;;; ERRATA 0.2 — an earlier revision hard-coded "candidate 2e21f367, unpatched"
+;;;; into its own banner, so the AFTER capture, taken against the repaired tree,
+;;;; identified itself as the unpatched candidate.  In a layer devoted to
+;;;; truthful accounts, the evidence had wandered onstage wearing the subject's
+;;;; nametag.  The header is now derived, never asserted.
 
 (defparameter *s1dir*
   (pathname (or (second sb-ext:*posix-argv*)
@@ -40,8 +47,14 @@
 (defun verdict (id text state) (push (list id state text) *verdicts*)
   (format t "  ~A  ~A — ~A~%" (if (eq state :confirmed) "CONFIRMED" "REFUTED  ") id text))
 
-(format t "~&REPRODUCTION — Surface /1 Candidate /0 pre-audit defect report~%")
-(format t "SBCL ~A · candidate 2e21f367, unpatched~%" (lisp-implementation-version))
+(defparameter *subject-label* (or (third sb-ext:*posix-argv*) "<unlabelled subject>"))
+(format t "~&REPRODUCTION I — Surface /1 pre-audit defect report (4 findings, 6 parts)~%")
+(format t "subject     ~A~%" *subject-label*)
+(format t "directory   ~A~%" (namestring (truename cl-user::*s1dir*)))
+(format t "SBCL ~A · grammar v~D · procedure v~D · policy v~D~%"
+        (lisp-implementation-version)
+        (s1 expansion-grammar-version) (s1 expansion-procedure-version)
+        (s1 expansion-policy-version))
 
 ;;; ==================================================================
 (banner "FINDING 1 — MUTABLE SOURCE ALIAS / FALSE EDGE")
@@ -285,3 +298,9 @@ Returns (values DISTINCT-CONSES MAX-REFCOUNT SHARED-CONS-COUNT)."
   (format t "  ~9@A  ~A~%" (if (eq (second v) :confirmed) "CONFIRMED" "REFUTED") (first v)))
 (format t "~%  confirmed: ~D of ~D~%"
         (count :confirmed *verdicts* :key #'second) (length *verdicts*))
+;;; ONE CANONICAL, MACHINE-READABLE RESULT LINE.  A wrapper must be able to
+;;; require that ALL verdicts executed, not merely that no CONFIRMED string was
+;;; printed — a truncated instrument, a renamed label or an early exit all
+;;; produce zero CONFIRMED lines while proving nothing.
+(format t "~%REPRODUCTION-RESULT verdicts=~D expected=~D confirmed=~D~%"
+        (length *verdicts*) 6 (count :confirmed *verdicts* :key #'second))

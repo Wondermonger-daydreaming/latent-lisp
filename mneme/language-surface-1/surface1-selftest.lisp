@@ -837,6 +837,130 @@ so a suite can no longer silently depend on a private name."
            (string= "UNINTERNED-SYMBOL" (s1 expansion-refusal-upstream-code r)))))
 
 ;;; ==================================================================
+(section "O. ERRATA 0.2 — HOME-PACKAGE IDENTITY AND THE EXECUTED ROUND TRIP")
+;;;
+;;; Errata 0.1 resolved reconstructed symbols with FIND-SYMBOL and required only
+;;; that the symbol be FOUND.  FIND-SYMBOL answers ACCESSIBILITY; the grammar
+;;; records HOME-PACKAGE IDENTITY.  Those are different questions, and asking
+;;; the wrong one re-opened the false edge one layer down: a datum naming P/X
+;;; reconstructed as Q:X, and a receipt was minted for it.
+
+(ok "O1 an INHERITED symbol no longer substitutes for the one the datum names"
+    (let* ((q (or (find-package "S1-O-Q")
+                  (eval '(defpackage #:s1-o-q (:use) (:export #:x)))))
+           (p (or (find-package "S1-O-P")
+                  (eval '(defpackage #:s1-o-p (:use #:s1-o-q) (:shadow #:x)))))
+           (px (find-symbol "X" p))
+           (d (s1 encode-term (list px 1))))
+      (declare (ignorable q))
+      (unintern px p)
+      ;; X is now reachable in P only by INHERITANCE from Q
+      (and (eq :inherited (nth-value 1 (find-symbol "X" p)))
+           (handler-case (progn (s1 decode-term d) nil) (error () t)))))
+
+(ok "O2 ... and that refusal reaches DOOR 2 with its own upstream reason,
+        minting nothing"
+    (let* ((q (or (find-package "S1-O2-Q")
+                  (eval '(defpackage #:s1-o2-q (:use) (:export #:x)))))
+           (p (or (find-package "S1-O2-P")
+                  (eval '(defpackage #:s1-o2-p (:use #:s1-o2-q) (:shadow #:x)))))
+           (px (find-symbol "X" p))
+           (req (s1 request-expansion
+                    (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+                          px :contract-id :s1/o2 :contract-version 1
+                          :accepted-clauses (list (list :verified-judged-claim))
+                          :proposition-relation :exact-normalized-equality
+                          :receiver-accessibility :required
+                          :retain (list :contract-snapshot))
+                    :macroexpand-1 (tag "o2"))))
+      (declare (ignorable q))
+      (unintern px p)
+      (multiple-value-bind (rc ex rf) (s1 try-perform-expansion req)
+        (declare (ignore ex))
+        (and (null rc)
+             (eq :source-not-reconstructible (s1 expansion-refusal-code rf))
+             (string= "SYMBOL-NOT-HOME-IN-NAMESPACE"
+                      (s1 expansion-refusal-upstream-code rf))))))
+
+(ok "O3 the HOME-PACKAGE conjunct does work the STATUS conjunct cannot: an
+        IMPORTED symbol is :INTERNAL in the importing package while its home
+        package is elsewhere, so a status-only guard would pass it"
+    (let* ((q (or (find-package "S1-O3-Q")
+                  (eval '(defpackage #:s1-o3-q (:use) (:export #:y)))))
+           (p (or (find-package "S1-O3-P") (eval '(defpackage #:s1-o3-p (:use))))))
+      (import (find-symbol "Y" q) p)
+      (multiple-value-bind (sym status) (find-symbol "Y" p)
+        (and (eq :internal status)
+             (not (eq (symbol-package sym) p))
+             ;; a hand-built datum naming P/Y must refuse — no encode path
+             ;; produces it, because the ENCODER writes the HOME package
+             (let ((hand (cd0 make-record-datum
+                              (list (cd0 make-record-entry
+                                         (cd0 make-identifier-datum '("TERM") '("KIND"))
+                                         (cd0 make-identifier-datum '("TERMKIND") '("SYMBOL")))
+                                    (cd0 make-record-entry
+                                         (cd0 make-identifier-datum '("TERM") '("VALUE"))
+                                         (cd0 make-identifier-datum
+                                              (list (package-name p)) '("Y")))))))
+               (handler-case (progn (s1 decode-term hand) nil) (error () t)))))))
+
+(ok "O3b ... and the ENCODER writes the HOME package, which is why an imported
+        symbol has no hole on the encode side"
+    (let* ((q (or (find-package "S1-O3B-Q")
+                  (eval '(defpackage #:s1-o3b-q (:use) (:export #:z)))))
+           (p (or (find-package "S1-O3B-P") (eval '(defpackage #:s1-o3b-p (:use))))))
+      (import (find-symbol "Z" q) p)
+      (let* ((imported (find-symbol "Z" p))
+             (d (s1 encode-term imported))
+             (ns (cd0 identifier-datum-namespace
+                      (cd0 record-datum-ref d (cd0 make-identifier-datum '("TERM") '("VALUE"))))))
+        (string= (aref ns 0) (package-name q)))))
+
+(ok "O4 THE ROUND TRIP IS AN EXECUTED GATE, not a tested property — with a
+        DEFECTIVE decoder planted, Door 2 refuses ROUND-TRIP-MISMATCH before
+        any expansion"
+    (let ((req (s1 request-expansion *specimen* :macroexpand-1 (tag "o4"))))
+      (let ((lisp-plus-surface1::*%fault-decode-substitution*
+              (lambda (form)
+                (let ((copy (copy-tree form)))
+                  (setf (getf (cddr copy) :contract-version) 424242)
+                  copy))))
+        (multiple-value-bind (rc ex rf) (s1 try-perform-expansion req)
+          (declare (ignore ex))
+          (and (null rc)
+               (eq :source-not-reconstructible (s1 expansion-refusal-code rf))
+               (string= "ROUND-TRIP-MISMATCH" (s1 expansion-refusal-upstream-code rf)))))))
+
+(ok "O4b ... and the gate is NOT stuck on: with no fault bound the same request
+        performs cleanly"
+    (s1 expansion-receipt-p
+        (s1 perform-expansion (s1 request-expansion *specimen* :macroexpand-1 (tag "o4b")))))
+
+(ok "O5 NO PUBLIC INPUT CAN REACH THE ROUND-TRIP MISMATCH, and saying so is the
+        honest classification: with the home-package guard in place decode is
+        injective, so the earlier and more precise guard always fires first.
+        The gate is DEFENCE IN DEPTH, proved live only by planted fault."
+    (let* ((q (or (find-package "S1-O5-Q")
+                  (eval '(defpackage #:s1-o5-q (:use) (:export #:x)))))
+           (p (or (find-package "S1-O5-P")
+                  (eval '(defpackage #:s1-o5-p (:use #:s1-o5-q) (:shadow #:x)))))
+           (px (find-symbol "X" p))
+           (req (s1 request-expansion (list px 1) :macroexpand-1 (tag "o5"))))
+      (declare (ignorable q))
+      (unintern px p)
+      (multiple-value-bind (rc ex rf) (s1 try-perform-expansion req)
+        (declare (ignore rc ex))
+        ;; the SYMBOL guard fires, never the round-trip guard
+        (string= "SYMBOL-NOT-HOME-IN-NAMESPACE" (s1 expansion-refusal-upstream-code rf)))))
+
+(ok "O6 grammar and procedure versions BOTH moved, because both changed:
+        the decode relation narrowed and the reconstruction procedure now
+        enforces the round trip"
+    (and (= 3 (s1 expansion-grammar-version))
+         (= 3 (s1 expansion-procedure-version))
+         (= 1 (s1 expansion-policy-version))))
+
+;;; ==================================================================
 (format t "~%")
 (format t "  WHAT THESE GREENS DO NOT ESTABLISH~%")
 (format t "  Not that any source and its expansion mean the same thing.~%")

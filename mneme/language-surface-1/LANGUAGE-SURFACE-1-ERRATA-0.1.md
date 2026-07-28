@@ -3,6 +3,18 @@
 *An owner-supplied **pre-audit defect report** against the published candidate at
 `2e21f367`, reproduced against the unpatched tree, then repaired.*
 
+> ### ⚠ SUPERSEDED IN PART BY ERRATA 0.2
+>
+> A follow-up report against **this** erratum found that the repair below left
+> one route open: `DECODE-TERM` resolved symbols with `FIND-SYMBOL` and required
+> only that the symbol be *found*. **`FIND-SYMBOL` answers accessibility; the
+> grammar records home-package identity.** A datum naming `P/X` reconstructed as
+> `Q:X` when `P`'s own `X` was uninterned between the doors — **and a receipt was
+> minted for it.** The same report found the regression runner fail-open and this
+> document's own evidence transcript misidentifying its subject.
+> See `LANGUAGE-SURFACE-1-ERRATA-0.2.md`. The numbers in §7 are Errata 0.1's and
+> are superseded.
+
 **THIS IS NOT A STRANGER AUDIT.** The report came from the owner and the repair
 was made by the family that wrote the layer. The independent stranger audit
 remains **OWED**, and it is owed against the corrected target, not against

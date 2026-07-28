@@ -77,7 +77,16 @@ never a content address."
 ;;; refused GLOBALLY rather than per-spine, so the set of admissible terms is
 ;;; strictly smaller than Candidate /0's.  A grammar whose admissible set moved
 ;;; must move its version, or two different grammars answer to one number.
-(defun expansion-grammar-version () 2)
+;;; ERRATA 0.2 — grammar version 2 -> 3.  DECODE-TERM IS PART OF THE DECLARED
+;;; GRAMMAR, and this errata is what makes that explicit: the grammar is the
+;;; CORRESPONDENCE between host forms and canonical data, not merely the
+;;; encoding direction.  Errata 0.2 narrows the decode relation — a datum whose
+;;; namespace names a package where the symbol is only ACCESSIBLE, not HOME, no
+;;; longer decodes at all — so the set of (datum -> form) pairs the grammar
+;;; sanctions is strictly smaller.  A grammar whose correspondence moved must
+;;; move its version, in either direction, or two different grammars answer to
+;;; one number.
+(defun expansion-grammar-version () 3)
 
 (defun expansion-procedure-identity ()
   (%id '("lisp-plus-surface1" "procedure") '("macroexpand" "0")))
@@ -86,7 +95,10 @@ never a content address."
 ;;; stored canonical datum on every performance.  EVERY IDENTITY THIS LAYER
 ;;; MINTS THEREFORE DIFFERS FROM CANDIDATE /0'S, and that is correct: they are
 ;;; accounts of a different procedure.
-(defun expansion-procedure-version () 2)
+;;; ERRATA 0.2 — procedure version 2 -> 3.  The reconstruction procedure changed
+;;; again: it now enforces the round trip before expanding.  A procedure that
+;;; rejects inputs its predecessor accepted is a different procedure.
+(defun expansion-procedure-version () 3)
 
 (defun expansion-policy-identity ()
   (%id '("lisp-plus-surface1" "policy") '("candidate" "0")))
@@ -173,9 +185,20 @@ the code an implementation-generated name lands under")
      "a cons in the EXPANDED form is reachable by more than one path")
     (:source-not-reconstructible    :protocol-refusal :perform :public-api
      "the stored canonical source datum could not be reconstructed into a host
-form in THIS image — a package or a symbol it names is gone.  ERRATA 0.1: this
-code exists because reconstruction resolves symbols with FIND-SYMBOL and never
-INTERN; a reconstruction that interned would change the image it claims to read.")
+form in THIS image.  ERRATA 0.1: reconstruction resolves symbols with FIND-SYMBOL
+and never INTERN; a reconstruction that interned would change the image it claims
+to read.  FOUR upstream reasons ride this one code, and they are distinct facts:
+  PACKAGE-ABSENT-IN-IMAGE      the namespace names no package here
+  SYMBOL-ABSENT-IN-IMAGE       the package has no such symbol
+  SYMBOL-NOT-HOME-IN-NAMESPACE (errata 0.2) the symbol is merely ACCESSIBLE in
+    that package — inherited or imported — and its home package is elsewhere.
+    FIND-SYMBOL answers accessibility; the grammar records home-package identity
+  ROUND-TRIP-MISMATCH          (errata 0.2) the reconstruction does not re-encode
+    to the stored datum.  DEFENCE IN DEPTH: with the home-package guard in place
+    decode is injective, so NO PUBLIC INPUT REACHES THIS — the earlier and more
+    precise guard always fires first.  Proved live by planted fault only, and
+    classified honestly rather than exercised with a fixture that pretends
+  ROUND-TRIP-NOT-ENCODABLE     the reconstruction will not re-encode at all")
     (:expanded-depth-exceeded       :protocol-refusal :perform :public-api
      "the expanded form is nested deeper than the declared source-depth ceiling")
     (:expanded-nodes-exceeded       :protocol-refusal :perform
@@ -450,6 +473,29 @@ reader can perform the reconstruction independently."
                (unless status
                  (error '%term-irreconstructible :reason :symbol-absent-in-image
                                                  :shown symbol-name))
+               ;; ERRATA 0.2 — FIND-SYMBOL ANSWERS ACCESSIBILITY; THE GRAMMAR
+               ;; RECORDS HOME-PACKAGE IDENTITY.  Those are different questions,
+               ;; and Errata 0.1 asked the wrong one.
+               ;;
+               ;; Reproduced: package Q exports X; package P uses Q and shadows
+               ;; X with its own P-owned symbol.  A datum encoded from P::X, with
+               ;; P's own X uninterned between the doors, resolved to Q:X with
+               ;; status :INHERITED — and that substituted symbol reached the
+               ;; macroexpander and a receipt was minted.  A second false edge.
+               ;;
+               ;; BOTH conjuncts are load-bearing and neither implies the other:
+               ;;   the STATUS test alone misses an IMPORTED symbol, which is
+               ;;     :INTERNAL in P while its home package is Q;
+               ;;   the HOME test alone would admit :INHERITED in the degenerate
+               ;;     case, so the status is checked too and the pair is exact.
+               (unless (and (member status '(:internal :external))
+                            (eq (symbol-package symbol) package))
+                 (error '%term-irreconstructible
+                        :reason :symbol-not-home-in-namespace
+                        :shown (format nil "~A is ~A in ~A but its home package is ~A"
+                                       symbol-name status (package-name package)
+                                       (let ((h (symbol-package symbol)))
+                                         (if h (package-name h) "<none>")))))
                symbol)))
           ((string= kind "INTEGER") (lisp-plus-cd0:integer-datum-value value-d))
           ((string= kind "STRING")  (copy-seq (lisp-plus-cd0:string-datum-value value-d)))
@@ -757,6 +803,17 @@ with it is exported."
 ;;; ------------------------------------------------------------------
 ;;; PLANTED-FAULT HOOKS.  Reachable only from inside this package.
 ;;; A gate that has never fired is untested, not passing.
+;;; ERRATA 0.2 — a hook for the ROUND-TRIP GATE.  With the home-package guard in
+;;; place, decode is injective for every admissible datum, so NO PUBLIC INPUT CAN
+;;; REACH the round-trip mismatch: the earlier, more precise guard always catches
+;;; the case first.  That makes the gate defence-in-depth — and a gate that has
+;;; never fired is untested, not passing.  This hook substitutes a different form
+;;; for the reconstruction, exactly as a defective decoder would, so the gate can
+;;; be shown to bite.  It is reachable only from inside this package.
+(defparameter *%fault-decode-substitution* nil
+  "When bound to a function, it is applied to the reconstructed form before the
+round-trip gate examines it.")
+
 (defparameter *%fault-source-identity* nil)
 (defparameter *%fault-expanded-identity* nil)
 (defparameter *%fault-procedure-version* nil)
@@ -811,18 +868,43 @@ world — a receipt is an ACCOUNT, not an AUTHENTICATION."
 
 (defun %reconstruct-source (request tag)
   "ERRATA 0.1 — the stored canonical datum is the SINGLE AUTHORITY.
+ERRATA 0.2 — AND THE ROUND TRIP IS NOW AN EXECUTED GATE, NOT A TESTED PROPERTY.
 
 Returns a FRESH PRIVATE host form built from the request's immutable source
 datum.  A new one is built on EVERY performance, so nothing a caller does to
 its own tree, and nothing a macroexpander does to a form it was handed, can
-reach a later performance of the same request."
-  (handler-case (decode-term (expansion-request-source-form-datum request))
-    (%term-irreconstructible (c)
+reach a later performance of the same request.
+
+THE GATE.  Before anything is handed to the macroexpander, the reconstruction
+is RE-ENCODED and required to equal the stored datum exactly.  Errata 0.1
+asserted this invariant in a test (N5) and did not enforce it at runtime — and
+the inherited-symbol substitution walked straight through the gap.  A test
+asserting that a gate exists is not the same creature as the gate existing."
+  (let* ((stored (expansion-request-source-form-datum request))
+         (form (handler-case (decode-term stored)
+                 (%term-irreconstructible (c)
+                   (%refuse :perform :source-not-reconstructible :occurrence-tag tag
+                            :detail (%ti-shown c)
+                            :upstream-category "TermGrammar"
+                            :upstream-code (string (%ti-reason c))
+                            :upstream-stage "term-decode"))))
+         (form (if *%fault-decode-substitution*
+                   (funcall *%fault-decode-substitution* form)
+                   form))
+         (round-trip (handler-case (encode-term form)
+                       (%term-unrepresentable (c)
+                         (%refuse :perform :source-not-reconstructible :occurrence-tag tag
+                                  :detail (%tu-shown c)
+                                  :upstream-category "TermGrammar"
+                                  :upstream-code "ROUND-TRIP-NOT-ENCODABLE"
+                                  :upstream-stage "term-encode")))))
+    (unless (lisp-plus-cd0:equal-datum round-trip stored)
       (%refuse :perform :source-not-reconstructible :occurrence-tag tag
-               :detail (%ti-shown c)
+               :detail "re-encoding the reconstruction does not reproduce the stored source datum; the form that would have been expanded is NOT the form the account names"
                :upstream-category "TermGrammar"
-               :upstream-code (string (%ti-reason c))
-               :upstream-stage "term-decode"))))
+               :upstream-code "ROUND-TRIP-MISMATCH"
+               :upstream-stage "term-decode"))
+    form))
 
 (defun %resolve-macro (form tag)
   "Resolve the construct named by the RECONSTRUCTED form's head, in this image,

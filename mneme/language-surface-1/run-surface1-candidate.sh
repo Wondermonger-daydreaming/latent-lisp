@@ -19,7 +19,7 @@ cd "$HERE"
 
 REQUIRED=(package.lisp surface1.lisp surface1-selftest.lisp
           STUB-IMAGE-FIXTURE.lisp de-expansione-testata/APPLICATION.lisp
-          errata-0.1/REPRODUCTION.lisp)
+          errata-0.1/REPRODUCTION.lisp errata-0.2/REPRODUCTION-II.lisp)
 MISSING=()
 for f in "${REQUIRED[@]}"; do [ -f "$f" ] || MISSING+=("$f"); done
 if [ ${#MISSING[@]} -gt 0 ]; then
@@ -30,25 +30,52 @@ fi
 
 SBCL_VERSION="$(sbcl --non-interactive --eval '(progn (princ (lisp-implementation-version)) (terpri))' 2>/dev/null | tail -1)"
 
+# The subject label the instruments print.  Derived from the tree under test,
+# never hard-coded to a past subject: an earlier revision baked "candidate
+# 2e21f367, unpatched" into the instrument itself, so the AFTER capture
+# identified itself as the tree it had been used to convict.
+SUBJECT_LABEL="${SURFACE1_SUBJECT_LABEL:-$(git -C "$HERE" rev-parse --short HEAD 2>/dev/null || echo "working tree")}"
+
 ( sbcl --non-interactive --load surface1-selftest.lisp ) > RUN-SELFTEST.txt 2>&1
 SELFTEST_EXIT=$?
 ( sbcl --non-interactive --load STUB-IMAGE-FIXTURE.lisp ) > RUN-STUB-IMAGE.txt 2>&1
 STUB_EXIT=$?
 ( cd de-expansione-testata && sbcl --non-interactive --load APPLICATION.lisp ) > RUN-APPLICATION.txt 2>&1
 APP_EXIT=$?
-# ERRATA 0.1 — the defect-report reproduction, kept as a standing regression
-# instrument.  Against THIS tree every finding must come back REFUTED; the
-# capture against the original candidate, where all six were CONFIRMED, is
-# preserved at errata-0.1/pre-errata-evidence/.
-( sbcl --non-interactive --load errata-0.1/REPRODUCTION.lisp "$HERE/" ) > RUN-REPRODUCTION.txt 2>&1
-REPRO_RAN=$?
-REPRO_CONFIRMED="$(grep -c '^  CONFIRMED' RUN-REPRODUCTION.txt)"
+# THE REPRODUCTION INSTRUMENTS, kept as standing regression gates.  Against THIS
+# tree every finding must come back REFUTED; the captures against the earlier
+# subjects, where they were CONFIRMED, are preserved beside each errata document
+# (see the paths printed in the banner below).
+#
+# ERRATA 0.2 — THE GATE WAS FAIL-OPEN AND IS NOW FAIL-CLOSED.  It recorded the
+# instrument's exit code and then omitted it from the success condition, so a
+# reproduction that CRASHED before printing anything scored zero CONFIRMED lines
+# and the wrapper reported peace.  Counting zero of a string is not evidence that
+# the string was ever going to be printed.  Each instrument now emits ONE
+# canonical machine-readable line, and this wrapper requires the exact line —
+# so a truncated run, a renamed label, an early exit or a crash all fail.
+( sbcl --non-interactive --load errata-0.1/REPRODUCTION.lisp "$HERE/" \
+       "$SUBJECT_LABEL" ) > RUN-REPRODUCTION.txt 2>&1
+REPRO1_RAN=$?
+( sbcl --non-interactive --load errata-0.2/REPRODUCTION-II.lisp "$HERE/" \
+       "$SUBJECT_LABEL" ) > RUN-REPRODUCTION-II.txt 2>&1
+REPRO2_RAN=$?
+
+# The exact completed summaries.  Not a count of CONFIRMED lines — the count of a
+# thing that never ran is also zero.
+REPRO1_OK=0
+grep -qxF "REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0" RUN-REPRODUCTION.txt \
+  && REPRO1_OK=1
+REPRO2_OK=0
+grep -qxF "REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0" RUN-REPRODUCTION-II.txt \
+  && REPRO2_OK=1
 
 {
   echo "surface1-selftest      exit ${SELFTEST_EXIT}"
   echo "stub-image-fixture     exit ${STUB_EXIT}"
   echo "de-expansione-testata  exit ${APP_EXIT}"
-  echo "reproduction           exit ${REPRO_RAN} · confirmed findings ${REPRO_CONFIRMED} (must be 0)"
+  echo "reproduction I         exit ${REPRO1_RAN} · canonical summary matched ${REPRO1_OK} (must be 1)"
+  echo "reproduction II        exit ${REPRO2_RAN} · canonical summary matched ${REPRO2_OK} (must be 1)"
 } > RUN-EXITCODES.txt
 
 cat <<BANNER
@@ -60,8 +87,14 @@ cat <<BANNER
     surface1-selftest.lisp                    exit ${SELFTEST_EXIT}    ->  RUN-SELFTEST.txt
     STUB-IMAGE-FIXTURE.lisp                   exit ${STUB_EXIT}    ->  RUN-STUB-IMAGE.txt
     de-expansione-testata/APPLICATION.lisp    exit ${APP_EXIT}    ->  RUN-APPLICATION.txt
-    errata-0.1/REPRODUCTION.lisp               ${REPRO_CONFIRMED} findings still CONFIRMED (must be 0)
+    errata-0.1/REPRODUCTION.lisp               exit ${REPRO1_RAN} · summary matched ${REPRO1_OK}
                                               ->  RUN-REPRODUCTION.txt
+    errata-0.2/REPRODUCTION-II.lisp           exit ${REPRO2_RAN} · summary matched ${REPRO2_OK}
+                                              ->  RUN-REPRODUCTION-II.txt
+
+  THE BEFORE CAPTURES, where these findings were CONFIRMED, are preserved at
+    errata-0.1/pre-errata-evidence/REPRODUCTION-OUTPUT-2e21f367.txt
+    errata-0.2/pre-errata-evidence/REPRODUCTION-II-OUTPUT-4f5c5982.txt
     exit codes retained in                    RUN-EXITCODES.txt
 
   THE STUB-IMAGE FIXTURE IS A SEPARATE PROCESS ON PURPOSE.  One refusal code is
@@ -85,7 +118,8 @@ cat <<BANNER
 BANNER
 
 if [ "${SELFTEST_EXIT}" -eq 0 ] && [ "${STUB_EXIT}" -eq 0 ] && [ "${APP_EXIT}" -eq 0 ] \
-   && [ "${REPRO_CONFIRMED}" -eq 0 ]; then
+   && [ "${REPRO1_RAN}" -eq 0 ] && [ "${REPRO1_OK}" -eq 1 ] \
+   && [ "${REPRO2_RAN}" -eq 0 ] && [ "${REPRO2_OK}" -eq 1 ]; then
   exit 0
 else
   exit 1
