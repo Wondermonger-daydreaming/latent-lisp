@@ -1,0 +1,89 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+REPRODUCTION — Surface /1 Candidate /0 pre-audit defect report
+SBCL 2.4.6 · candidate 2e21f367, unpatched
+
+  FINDING 1 — MUTABLE SOURCE ALIAS / FALSE EDGE
+  ---------------------------------------------
+    pre-mutation :contract-version = 1
+    Door 1 stored source datum id 4c5043440031022201045445…
+    post-mutation :contract-version = 999  (request object untouched)
+
+    stored source datum  == PRISTINE source ......... T
+    stored source datum  == MUTATED  source ......... NIL
+    receipt expanded     == expansion of PRISTINE ... NIL
+    receipt expanded     == expansion of MUTATED .... T
+    the expanded form actually carries version ...... '999
+  CONFIRMED  1a — receipt asserts a FALSE EDGE: stored source is the PRE-mutation form, expanded datum is computed from the POST-mutation form
+
+    string leaf mutated in place: "Zlpha"
+    receipt expanded == expansion of the PRE-mutation string ... NIL
+    receipt expanded == expansion of the POST-mutation string .. T
+  CONFIRMED  1b — a mutable STRING leaf is NOT isolated: the receipt accounts for an expansion computed from the MUTATED string while its stored source datum holds the pre-mutation text
+
+  FINDING 1c — E11 CONSTRUCTS A FRESH REQUEST, NOT THE SAME OBJECT
+  ----------------------------------------------------------------
+    SAME request object performed twice, caller mutated in between:
+      occurrence identity #1 == #2 ... NIL
+  CONFIRMED  1c — performing the SAME request object twice yields DIFFERENT occurrence identities when the caller's tree is mutated in between — E11 never tested this, it built a fresh equivalent request
+
+  FINDING 2 — SHARED-STRUCTURE COLLAPSE
+  -------------------------------------
+    shared tree : distinct conses 3 · max refcount 2 · shared conses 1
+    copied tree : distinct conses 4 · max refcount 1 · shared conses 0
+    printed forms are EQUAL ....... T
+    trees are EQ-distinct ......... T
+    first two elements share a cons in the SHARED tree ... T
+    ... and are distinct in the COPIED tree ............... T
+
+    ENCODE-TERM(shared) ... encoded
+    ENCODE-TERM(copies) ... encoded
+    the two encodings are IDENTICAL ... T
+  CONFIRMED  2 — sharing is SILENTLY UNFOLDED — a shared subtree and two distinct copies encode identically — while package.lisp claims 'a CIRCULAR OR SHARED structure — refused'
+    spine cycle -> refused
+INFO: Control stack guard page unprotected
+Control stack guard page temporarily disabled: proceed with caution
+    car cycle at ENCODE-TERM -> stack exhausted
+    car cycle through DOOR 1 -> SOURCE-DEPTH-EXCEEDED
+
+  FINDING 2b — DO REAL EXPANSIONS CONTAIN SHARING?
+  ------------------------------------------------
+     ADMISSION SOURCE    distinct   20 · max refcount 1 · SHARED 0
+     ADMISSION EXPANSION distinct   39 · max refcount 1 · SHARED 0
+      JUDGMENT SOURCE    distinct   29 · max refcount 1 · SHARED 0
+      JUDGMENT EXPANSION distinct   56 · max refcount 1 · SHARED 0
+
+  FINDING 3 — NO OCCURRENCE OBJECT TYPE
+  -------------------------------------
+    EXPANSION-OCCURRENCE symbol present? .......... NIL
+    EXPANSION-OCCURRENCE-P present? ............... NIL
+    third value of PERFORM-EXPANSION is a ......... %BYTES-DATUM
+  CONFIRMED  3 — there is NO first-class occurrence object; the occurrence exists only as an identity value returned as a third value
+
+  FINDING 4 — PUBLIC CATALOGUE ACCESSOR
+  -------------------------------------
+                      REFUSAL-CATALOG-ENTRY-CODE  status    :EXTERNAL  fbound T
+                     REFUSAL-CATALOG-ENTRY-CLASS  status    :EXTERNAL  fbound T
+                     REFUSAL-CATALOG-ENTRY-PHASE  status    :EXTERNAL  fbound T
+                      REFUSAL-CATALOG-ENTRY-NOTE  status    :EXTERNAL  fbound T
+              REFUSAL-CATALOG-ENTRY-REACHABILITY  status    :INTERNAL  fbound T
+  CONFIRMED  4 — REFUSAL-CATALOG-ENTRY-REACHABILITY is live but NON-EXTERNAL while its four sibling accessors are exported; the selftest reaches it through an internal symbol because its `s1` macro uses INTERN, which cannot tell internal from external
+
+  SUMMARY
+  -------
+  CONFIRMED  1a
+  CONFIRMED  1b
+  CONFIRMED  1c
+  CONFIRMED  2
+  CONFIRMED  3
+  CONFIRMED  4
+
+  confirmed: 6 of 6

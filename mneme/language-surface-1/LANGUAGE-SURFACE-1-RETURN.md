@@ -5,6 +5,20 @@
 > An expansion receipt says what form became what other form.
 > It is silent about whether the transformation preserves meaning.
 
+> ### ⚠ SUPERSEDED IN PART BY ERRATA 0.1 — READ THAT FIRST
+>
+> An owner-supplied pre-audit defect report against this candidate was
+> reproduced and repaired. **Six findings were CONFIRMED against the tree this
+> document describes.** Two claims below are FALSE as written and are corrected
+> in place, marked `⚠ CORRECTED`. See `LANGUAGE-SURFACE-1-ERRATA-0.1.md`.
+>
+> The most serious: **§10's non-promotion claim held, but the layer's central
+> claim did not.** Door 2 expanded a caller-owned mutable alias, so a caller who
+> mutated its tree after Door 1 received a receipt asserting that the stored
+> source datum produced an expansion computed from a different form — a FALSE
+> EDGE. Repaired: the immutable canonical datum is now the single authority and
+> Door 2 reconstructs a fresh private host form on every performance.
+
 ```
 status                          candidate constructed · candidate tested · candidate published
 audited                         NO — the stranger audit is OWED and is not
@@ -126,7 +140,11 @@ byte-identical to the top-level result.
 **(2) Uninterned or implementation-generated names?** **Zero** in all five
 one-step expansions. Present in the *full* expansion of the two control forms,
 and — see §8 — present in the *one-step* expansion of one reachable `derive-case`
-shape. Both are refused.
+shape. Both are refused. **⚠ CORRECTED by Errata 0.1:** the full `derive-case`
+expansion carries **both** 13 uninterned symbols **and** 3 conses reachable by
+more than one path, and it now refuses under
+`:EXPANDED-TERM-SHARED-STRUCTURE` — the first check that fires — not under
+`:EXPANDED-TERM-UNREPRESENTABLE` as stated here.
 
 **(3) Representable in existing CD/0 types?** Yes, under an explicit term grammar.
 CD/0's inventory is unit · boolean · integer · rational · string · bytes ·
@@ -301,11 +319,25 @@ asserts it against the live host.
 
 Surface /1 **refuses** that expansion, at **one-step**, with
 `:EXPANDED-TERM-UNREPRESENTABLE` and the upstream reason `UNINTERNED-SYMBOL`
-preserved. And the reason is stronger than "gensyms are awkward":
+preserved.
 
-> **A receipt for a non-deterministic expansion would be an account that could
-> not be true twice.** The refusal is not a limitation worked around. It is the
-> layer declining to account for something no account could be true of.
+> **⚠ CORRECTED by Errata 0.1.** This section originally continued: *"A receipt
+> for a non-deterministic expansion would be an account that could not be true
+> twice. The refusal is not a limitation worked around. It is the layer
+> declining to account for something no account could be true of."*
+>
+> **That was wrong**, and it was the most rhetorically attractive sentence in the
+> candidate, which is presumably why it survived. A receipt accounts for **one
+> occurrence**, and a nondeterministic occurrence can have a perfectly truthful
+> receipt — it says what form became what other form *on that occasion*, which is
+> what a receipt is for. Determinism is a property a reader may want; it is not a
+> precondition of truthfulness.
+>
+> **The actual reason, and the only one:** the term grammar cannot injectively
+> account for uninterned-symbol identity and binding structure. An uninterned
+> symbol has no package, hence no namespace, and two distinct gensyms bearing one
+> name collapse to a single identifier datum because CD/0 compares identifier
+> segments bytewise. **A grammar limit, not an epistemic one.**
 
 **THIS DEFECT IS REPORTED, NOT REPAIRED.** Selftest **G4** and application check
 20 both re-assert, at the end of their runs, that Surface /0 *still* expands it
@@ -448,6 +480,10 @@ repository, or committed as a hash with the plaintext published after the run.**
 *A prereg in the tree is a published prereg.*
 
 ---
+
+*This document describes the tree at `2e21f367`. For what changed and why, read
+`LANGUAGE-SURFACE-1-ERRATA-0.1.md`; the numbers in §2 are Candidate /0's and are
+superseded by the errata's §7.*
 
 *— Claude Opus 5 (1M context), 2026-07-28. Built against lab `0595c68e`.
 SBCL 2.4.6 operation-checked through the wrapper. 121 checks / 0 failed across

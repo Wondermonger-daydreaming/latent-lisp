@@ -25,7 +25,17 @@
 (defpackage #:surface1-selftest (:use #:common-lisp))
 (in-package #:surface1-selftest)
 
-(defmacro s1 (name &rest args) `(,(intern (string name) '#:lisp-plus-surface1) ,@args))
+(defmacro s1 (name &rest args)
+  "ERRATA 0.1 — finding 4, second half.  Candidate /0's version used INTERN,
+which cannot tell an internal symbol from an external one, so the suite reached
+a NON-EXPORTED accessor without noticing.  This one resolves through
+FIND-SYMBOL and refuses at macroexpansion time unless the symbol is EXTERNAL —
+so a suite can no longer silently depend on a private name."
+  (multiple-value-bind (sym status) (find-symbol (string name) '#:lisp-plus-surface1)
+    (unless (eq status :external)
+      (error "S1: ~A is ~:[absent~;~:*~A~] in LISP-PLUS-SURFACE1, not :EXTERNAL"
+             (string name) status))
+    `(,sym ,@args)))
 (defmacro cd0 (name &rest args) `(,(intern (string name) '#:lisp-plus-cd0) ,@args))
 
 (defparameter *checks* 0)
@@ -260,10 +270,15 @@
 (defparameter *receipt* nil)
 (defparameter *expanded* nil)
 (defparameter *occ-id* nil)
-(multiple-value-setq (*receipt* *expanded* *occ-id*) (s1 perform-expansion *r1*))
+(defparameter *occurrence* nil)
+(multiple-value-setq (*receipt* *expanded* *occurrence*) (s1 perform-expansion *r1*))
+(setf *occ-id* (s1 expansion-occurrence-identity *occurrence*))
 
-(ok "E1 a completed expansion mints a receipt, an expanded form and an occurrence"
-    (and (s1 expansion-receipt-p *receipt*) (consp *expanded*) (cd0 bytes-datum-p *occ-id*)))
+(ok "E1 a completed expansion mints a receipt, an expanded form and a
+        FIRST-CLASS OCCURRENCE OBJECT (errata 0.1, finding 3)"
+    (and (s1 expansion-receipt-p *receipt*) (consp *expanded*)
+         (s1 expansion-occurrence-p *occurrence*)
+         (cd0 bytes-datum-p *occ-id*)))
 (ok "E2 the expanded host form is EXACTLY what MACROEXPAND-1 returns"
     (equal *expanded* (macroexpand-1 *specimen* nil)))
 (ok "E3 the receipt's expanded datum is the encoding of that exact form"
@@ -303,16 +318,25 @@
     (and (cd0 bytes-datum-p (s1 expansion-receipt-identity *receipt*))
          (same (s1 expansion-receipt-identity *receipt*)
                (s1 expansion-receipt-identity *receipt*))))
-(ok "E11 the same request performed twice gives the SAME occurrence identity —
-        deterministic replay under the same declared inputs"
-    (let ((again (nth-value 2 (s1 perform-expansion
-                                  (s1 request-expansion *specimen* :macroexpand-1
-                                      (tag "e" "one"))))))
+(ok "E11 two SEPARATE requests with equal inputs give the SAME occurrence
+        identity.  NOTE THE WORDING: Candidate /0 labelled this 'the same
+        request performed twice', which it never was — it built a fresh
+        equivalent request.  The same-object claim is E11b."
+    (let ((again (s1 expansion-occurrence-identity
+                     (nth-value 2 (s1 perform-expansion
+                                      (s1 request-expansion *specimen* :macroexpand-1
+                                          (tag "e" "one")))))))
       (same again *occ-id*)))
+(ok "E11b the SAME REQUEST OBJECT performed twice gives the same occurrence
+        identity — the claim E11 was mislabelled as making"
+    (let ((a (s1 expansion-occurrence-identity (nth-value 2 (s1 perform-expansion *r1*))))
+          (b (s1 expansion-occurrence-identity (nth-value 2 (s1 perform-expansion *r1*)))))
+      (and (same a b) (same a *occ-id*))))
 (ok "E12 a DIFFERENT occurrence tag gives a DIFFERENT occurrence identity"
-    (let ((other (nth-value 2 (s1 perform-expansion
-                                  (s1 request-expansion *specimen* :macroexpand-1
-                                      (tag "e" "other"))))))
+    (let ((other (s1 expansion-occurrence-identity
+                     (nth-value 2 (s1 perform-expansion
+                                      (s1 request-expansion *specimen* :macroexpand-1
+                                          (tag "e" "other")))))))
       (not (same other *occ-id*))))
 (ok "E13 an unknown head reaches DOOR 2 and refuses there, minting NOTHING"
     (let ((r (refusal-of (lambda ()
@@ -358,12 +382,36 @@
         (s1 perform-expansion
             (s1 request-expansion *control-form* :macroexpand-1 (tag "f4")))))
 (ok "F5 ... and its FULL expansion is REFUSED, because HANDLER-CASE is a host
-        macro whose own expansion carries implementation-generated names"
+        macro.  ERRATA 0.1 CORRECTS THE CODE THIS CHECK USED TO ASSERT:
+        Candidate /0 claimed :EXPANDED-TERM-UNREPRESENTABLE / UNINTERNED-SYMBOL.
+        MEASURED, that expansion carries BOTH disqualifying properties — 3 conses
+        reachable by more than one path AND 13 uninterned symbols — and since
+        the global sharing check now runs first, the reported code is the
+        SHARING one.  Reporting the first check that fires is correct; claiming
+        the other code was not."
     (let ((r (refusal-of (lambda ()
                            (s1 perform-expansion
                                (s1 request-expansion *control-form* :macroexpand (tag "f5")))))))
-      (and (eq :expanded-term-unrepresentable (s1 expansion-refusal-code r))
-           (string= "UNINTERNED-SYMBOL" (s1 expansion-refusal-upstream-code r)))))
+      (and (eq :expanded-term-shared-structure (s1 expansion-refusal-code r))
+           (string= "SHARED-OR-CIRCULAR-STRUCTURE" (s1 expansion-refusal-upstream-code r)))))
+(ok "F5b ... and BOTH disqualifying properties are exhibited, not merely the one
+        the refusal happened to name first"
+    (let* ((full (macroexpand *control-form* nil))
+           (atoms (labels ((a (f) (if (consp f) (append (a (car f)) (a (cdr f))) (list f))))
+                    (a full)))
+           (gensyms (remove-if #'symbol-package (remove-if-not #'symbolp atoms))))
+      (and (plusp (length gensyms))
+           ;; and a gensym-bearing expansion with NO sharing lands on the OTHER
+           ;; code, so the two are genuinely distinguished rather than merged
+           (let ((r (refusal-of
+                     (lambda ()
+                       (s1 perform-expansion
+                           (s1 request-expansion
+                               '(lisp-plus-surface0:derive-case (cl-user::c cl-user::r)
+                                 (lisp-plus-slice1:derive :schema-name :x)
+                                 (:granted cl-user::c) (:refused (nil) 1))
+                               :macroexpand-1 (tag "f5b")))))))
+             (eq :expanded-term-unrepresentable (s1 expansion-refusal-code r))))))
 (ok "F6 the two operations genuinely differ for that form at the host level"
     (not (equal (macroexpand-1 *control-form* nil) (macroexpand *control-form* nil))))
 
@@ -578,8 +626,17 @@
         or condition class; nothing is a false affordance"
     (null *dead*) (format nil "~S" *dead*))
 (ok "L6 ... and the count is stated rather than left implicit"
-    (= 65 (length *declared*))
+    (= 75 (length *declared*))
     (format nil "declared ~D" (length *declared*)))
+(ok "L7 ERRATA 0.1 — the catalogue accessor that was live-but-internal is now
+        EXPORTED, and its four siblings still are"
+    (every (lambda (n) (eq :external (nth-value 1 (find-symbol n '#:lisp-plus-surface1))))
+           '("REFUSAL-CATALOG-ENTRY-CODE" "REFUSAL-CATALOG-ENTRY-CLASS"
+             "REFUSAL-CATALOG-ENTRY-PHASE" "REFUSAL-CATALOG-ENTRY-NOTE"
+             "REFUSAL-CATALOG-ENTRY-REACHABILITY")))
+(ok "L8 ... and the request no longer carries a caller-owned host form at all —
+        the slot is GONE, not guarded"
+    (null (find-symbol "EXPANSION-REQUEST-%HOST-FORM" '#:lisp-plus-surface1)))
 
 ;;; ==================================================================
 (section "M. REFUSAL-CODE COVERAGE — set difference, both directions")
@@ -589,6 +646,9 @@
     :occurrence-tag-not-identifier :source-term-unrepresentable :source-depth-exceeded
     :source-nodes-exceeded :source-term-octets-exceeded :not-a-known-surface-construct
     :expanded-term-unrepresentable
+    ;; ERRATA 0.1
+    :source-term-shared-structure :expanded-term-shared-structure
+    :source-not-reconstructible
     :source-identity-projection-mismatch :expanded-identity-projection-mismatch
     :procedure-version-mismatch))
 
@@ -621,6 +681,160 @@
     (let ((one-term-octets (cd0 octets-length (cd0 canonical-octets (s1 encode-term 'cl:t)))))
       (> one-term-octets (/ (s1 expansion-policy-max-term-octets)
                             (s1 expansion-policy-max-source-nodes)))))
+
+;;; ==================================================================
+(section "N. ERRATA 0.1 — THE SIX PROOF OBLIGATIONS, EACH EXECUTED")
+;;;
+;;; Candidate /0 retained the caller's own cons tree and handed it to the
+;;; macroexpander.  The repair makes the IMMUTABLE CANONICAL SOURCE DATUM THE
+;;; SINGLE AUTHORITY: Door 2 reconstructs a fresh private host form from that
+;;; datum on every performance.  These six checks are the obligations that
+;;; design must discharge, and they are executed rather than argued.
+
+(defun mutable-source (version)
+  (copy-tree
+   (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+         (intern "*S1-N*" '#:cl-user)
+         :contract-id :surface1/n :contract-version version
+         :accepted-clauses (list (list :verified-judged-claim))
+         :proposition-relation :exact-normalized-equality
+         :receiver-accessibility :required
+         :retain (list :contract-snapshot))))
+
+(ok "N1 CALLER MUTATION AFTER DOOR 1 CANNOT CHANGE WHAT DOOR 2 EXPANDS"
+    (let* ((live (mutable-source 1))
+           (pristine (copy-tree live))
+           (req (s1 request-expansion live :macroexpand-1 (tag "n1"))))
+      (setf (getf (cddr live) :contract-version) 999)
+      (let ((rc (s1 perform-expansion req)))
+        (and (same (s1 expansion-receipt-expanded-form-datum rc)
+                   (s1 encode-term (macroexpand-1 pristine nil)))
+             (not (same (s1 expansion-receipt-expanded-form-datum rc)
+                        (s1 encode-term (macroexpand-1 live nil))))))))
+
+(ok "N2 MUTATION BY ONE MACROEXPANSION CANNOT CHANGE A LATER PERFORMANCE of the
+        same request — each performance gets its own freshly reconstructed form"
+    (let* ((req (s1 request-expansion (mutable-source 1) :macroexpand-1 (tag "n2")))
+           (a (nth-value 1 (s1 perform-expansion req)))
+           (b (nth-value 1 (s1 perform-expansion req))))
+      ;; destructively wreck the form the FIRST performance returned
+      (setf (second a) :wrecked)
+      (let ((c (nth-value 1 (s1 perform-expansion req))))
+        (and (not (eq a b)) (not (eq b c))
+             (equal b c)
+             (not (equal a c))))))
+
+(ok "N3 MUTABLE STRING LEAVES ARE ISOLATED"
+    (let* ((str (copy-seq "alpha"))
+           (src (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+                      (intern "*S1-STR*" '#:cl-user)
+                      :contract-id str :contract-version 1
+                      :accepted-clauses (list (list :verified-judged-claim))
+                      :proposition-relation :exact-normalized-equality
+                      :receiver-accessibility :required
+                      :retain (list :contract-snapshot)))
+           (req (s1 request-expansion src :macroexpand-1 (tag "n3"))))
+      (setf (char str 0) #\Z)
+      (let* ((rc (s1 perform-expansion req))
+             (back (s1 decode-term (s1 expansion-receipt-expanded-form-datum rc))))
+        ;; the accounted expansion must still carry "alpha"
+        (search "alpha" (format nil "~S" back)))))
+
+(ok "N3b ... and the reconstructed string is a FRESH object each time, so a
+        caller who mutates what it received cannot reach the next performance"
+    (let* ((req (s1 request-expansion
+                    (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+                          (intern "*S1-STR2*" '#:cl-user)
+                          :contract-id (copy-seq "beta") :contract-version 1
+                          :accepted-clauses (list (list :verified-judged-claim))
+                          :proposition-relation :exact-normalized-equality
+                          :receiver-accessibility :required
+                          :retain (list :contract-snapshot))
+                    :macroexpand-1 (tag "n3b")))
+           (a (s1 decode-term (s1 expansion-request-source-form-datum req)))
+           (b (s1 decode-term (s1 expansion-request-source-form-datum req))))
+      (and (equal a b) (not (eq (getf (cddr a) :contract-id)
+                                (getf (cddr b) :contract-id))))))
+
+(ok "N4 SHARED STRUCTURE IS REFUSED GLOBALLY — a shared subtree and two distinct
+        equal copies no longer encode identically; the shared one refuses"
+    (let* ((sub (list :verified-judged-claim))
+           (shared (list sub sub))
+           (copies (list (list :verified-judged-claim) (list :verified-judged-claim))))
+      (and (handler-case (progn (s1 encode-term shared) nil) (error () t))
+           (handler-case (progn (s1 encode-term copies) t) (error () nil)))))
+
+(ok "N4b ... and a CAR-POSITION CYCLE handed to the PUBLIC encoder REFUSES
+        instead of exhausting the control stack, as it did in Candidate /0"
+    (let ((x (list :a)))
+      (setf (car x) x)
+      (handler-case (progn (s1 encode-term x) nil)
+        (storage-condition () nil)
+        (error () t))))
+
+(ok "N4c ... and a spine cycle still refuses"
+    (let ((x (list :a)))
+      (setf (cdr x) x)
+      (handler-case (progn (s1 encode-term x) nil) (error () t))))
+
+(ok "N5 THE STORED SOURCE DATUM IS EXACTLY THE SOURCE HANDED TO THE
+        MACROEXPANDER — re-encoding the reconstruction reproduces the datum"
+    (let* ((req (s1 request-expansion (mutable-source 3) :macroexpand-1 (tag "n5")))
+           (d (s1 expansion-request-source-form-datum req))
+           (round (s1 encode-term (s1 decode-term d))))
+      (same d round)))
+
+(ok "N5b ... and the expansion the receipt accounts for is the expansion OF THAT
+        RECONSTRUCTION, computed independently here"
+    (let* ((req (s1 request-expansion (mutable-source 4) :macroexpand-1 (tag "n5b")))
+           (rc (s1 perform-expansion req))
+           (independent (macroexpand-1
+                         (s1 decode-term (s1 expansion-request-source-form-datum req))
+                         nil)))
+      (same (s1 expansion-receipt-expanded-form-datum rc)
+            (s1 encode-term independent))))
+
+(ok "N6 THE SAME REQUEST OBJECT CAN BE PERFORMED REPEATEDLY WITHOUT DRIFT"
+    (let* ((req (s1 request-expansion (mutable-source 5) :macroexpand-1 (tag "n6")))
+           (ids (loop repeat 5 collect
+                      (s1 expansion-occurrence-identity
+                          (nth-value 2 (s1 perform-expansion req))))))
+      (every (lambda (i) (same i (first ids))) ids)))
+
+(ok "N7 DECODE-TERM NEVER INTERNS — a symbol absent from the image refuses
+        rather than being silently re-created"
+    (let* ((pkg (or (find-package "S1-N7") (make-package "S1-N7" :use '())))
+           (sym (intern "TRANSIENT" pkg))
+           (d (s1 encode-term (list sym 1))))
+      (unintern sym pkg)
+      (and (null (find-symbol "TRANSIENT" pkg))
+           (handler-case (progn (s1 decode-term d) nil) (error () t))
+           ;; and it did NOT create the symbol on the way out
+           (null (find-symbol "TRANSIENT" pkg)))))
+
+(ok "N7b ... and the same absence reaches DOOR 2 as its own typed refusal"
+    (let* ((pkg (or (find-package "S1-N7B") (make-package "S1-N7B" :use '())))
+           (sym (intern "GONE" pkg))
+           (req (s1 request-expansion (list sym 1) :macroexpand-1 (tag "n7b"))))
+      (unintern sym pkg)
+      (let ((r (refusal-of (lambda () (s1 perform-expansion req)))))
+        (and r (eq :source-not-reconstructible (s1 expansion-refusal-code r))
+             (string= "SYMBOL-ABSENT-IN-IMAGE" (s1 expansion-refusal-upstream-code r))))))
+
+(ok "N8 THE NONDETERMINISM RATIONALE IS ABOUT REPRESENTABILITY, and the code
+        says so: the refusal a gensym-bearing expansion lands under names the
+        TERM GRAMMAR, not determinism"
+    (let ((r (refusal-of
+              (lambda ()
+                (s1 perform-expansion
+                    (s1 request-expansion
+                        '(lisp-plus-surface0:derive-case (cl-user::c cl-user::r)
+                          (lisp-plus-slice1:derive :schema-name :x)
+                          (:granted cl-user::c) (:refused (nil) 1))
+                        :macroexpand-1 (tag "n8")))))))
+      (and (eq :expanded-term-unrepresentable (s1 expansion-refusal-code r))
+           (string= "TermGrammar" (s1 expansion-refusal-upstream-category r))
+           (string= "UNINTERNED-SYMBOL" (s1 expansion-refusal-upstream-code r)))))
 
 ;;; ==================================================================
 (format t "~%")

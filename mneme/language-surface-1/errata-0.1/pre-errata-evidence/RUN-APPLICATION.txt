@@ -9,7 +9,7 @@ kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
 DE EXPANSIONE TESTATA — concerning the attested expansion
-SBCL 2.4.6 · Surface /1 grammar v2 · procedure v2 · policy v1
+SBCL 2.4.6 · Surface /1 grammar v1 · procedure v1 · policy v1
 ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
 
 ── I. THE SPECIMEN — and why it is this one
@@ -34,8 +34,7 @@ ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
   operation             :MACROEXPAND-1
   construct identity    4c504344002202126c69…6e2d636f6e7472616374 [126]
   [01] ok   Door 1 minted a request object
-  [02] ok   ERRATA 0.1 — the request holds NO caller-owned host form; the slot is gone
-  [03] ok   Door 1 EXPANDED NOTHING — the variable its expansion would bind is still UNBOUND
+  [02] ok   Door 1 EXPANDED NOTHING — the variable its expansion would bind is still UNBOUND
 
 ── III. DOOR 2 — the occurrence, and the exact expanded form
   THE EXACT EXPANDED FORM PRODUCED:
@@ -62,10 +61,10 @@ ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
   disposition           :MACROEXPANDED-ONE-STEP
   source term octets    1497
   expanded term octets  2648
-  [04] ok   the accounted expansion IS what MACROEXPAND-1 returns — nothing was manufactured
-  [05] ok   the stored expanded datum is the encoding of that exact host form
-  [06] ok   the receipt carries the request identity it was minted from
-  [07] ok   the disposition names the OPERATION THAT RAN, with no adverb
+  [03] ok   the accounted expansion IS what MACROEXPAND-1 returns — nothing was manufactured
+  [04] ok   the stored expanded datum is the encoding of that exact host form
+  [05] ok   the receipt carries the request identity it was minted from
+  [06] ok   the disposition names the OPERATION THAT RAN, with no adverb
 
 ── IV. THE ACCOUNT IS COMPLETE, AND IT IS ONLY AN ACCOUNT
   the receipt's fields, exhaustively:
@@ -77,23 +76,23 @@ ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
 
   THERE IS NO FIELD FOR: meaning, equality, correctness, hygiene,
   evaluability, compilability, portability, or an environment object.
-  [08] ok   no receipt field names MEANING
-  [09] ok   no receipt field names an ENVIRONMENT object
-  [10] ok   the context field says explicitly that NO environment object was captured
+  [07] ok   no receipt field names MEANING
+  [08] ok   no receipt field names an ENVIRONMENT object
+  [09] ok   the context field says explicitly that NO environment object was captured
 
 ── V. THE GOVERNED LAYER ALONE DECIDES WHAT THE EXPANSION WAS WORTH
   evaluating the accounted expansion produced: a real Slice /2 support-admission contract
-  [11] ok   Slice /2's OWN public constructor accepted it — Surface /1 said nothing about that
-  [12] ok   AFTER that governed success the receipt identity is BYTE-IDENTICAL
-  [13] ok   and the stored expanded datum is BYTE-IDENTICAL — nothing flowed backward
+  [10] ok   Slice /2's OWN public constructor accepted it — Surface /1 said nothing about that
+  [11] ok   AFTER that governed success the receipt identity is BYTE-IDENTICAL
+  [12] ok   and the stored expanded datum is BYTE-IDENTICAL — nothing flowed backward
   the SECOND specimen differs from the first in ONE field: the proposition
   relation.  Surface /1's account of it is a receipt, exactly as before:
     receipt identity    4c5043440021a5234c50…64696461746501301002 [9050]
     disposition         :MACROEXPANDED-ONE-STEP
-  [14] ok   Surface /1 accounted for the second expansion with the SAME disposition
-  [15] ok   the two dispositions are identical — the layer cannot tell them apart, and must not
-  [16] ok   SLICE /2 REFUSED IT — and that refusal is Slice /2's, in Slice /2's voice
-  [17] ok   the two accounts ARE distinguishable — by WHAT CHANGED, never by what it meant
+  [13] ok   Surface /1 accounted for the second expansion with the SAME disposition
+  [14] ok   the two dispositions are identical — the layer cannot tell them apart, and must not
+  [15] ok   SLICE /2 REFUSED IT — and that refusal is Slice /2's, in Slice /2's voice
+  [16] ok   the two accounts ARE distinguishable — by WHAT CHANGED, never by what it meant
 
   THIS IS THE WHOLE DEMONSTRATION.  Two expansions identical in every
   structural respect Surface /1 can see, differing in one field, and
@@ -104,47 +103,37 @@ ceilings: source-depth 48 · source-nodes 20000 · term-octets 262144
 ── VI. THE EXPANDED-SIDE CEILINGS — driven to their real edges
   largest ACCOUNTED clause count : 2012
   at 2013 the layer refuses with   : :EXPANDED-TERM-OCTETS-EXCEEDED
-  [18] ok   the edge is a DECLARED ceiling of this layer, not a host accident
+  [17] ok   the edge is a DECLARED ceiling of this layer, not a host accident
 
   AND THE CEILING THAT DOES NOT FIRE, NAMED RATHER THAN HIDDEN:
   :EXPANDED-NODES-EXCEEDED is UNREACHABLE UNDER THIS POLICY.  One term
   costs 70 octets; the octet ceiling is 262144 and the node ceiling 20000, so
   octets must always fire first — at about 3744 nodes, not 20000.
   The guard STAYS.  The octet ceiling was NOT raised to make it fire.
-  [19] ok   the domination is arithmetic and exhibited, not asserted
+  [18] ok   the domination is arithmetic and exhibited, not asserted
   at conclusion-nesting 42 the SOURCE passes and the EXPANSION
   exceeds the depth ceiling — the wrapper adds the levels
-  [20] ok   :EXPANDED-DEPTH-EXCEEDED is reachable, and reachable ONLY expanded-side
+  [19] ok   :EXPANDED-DEPTH-EXCEEDED is reachable, and reachable ONLY expanded-side
 
 ── VII. WHAT THE LAYER REFUSES, AND WHY THE REFUSALS ARE THE POINT
   a Surface /0 form whose ONE-STEP expansion carries a fresh gensym:
     refused with :EXPANDED-TERM-UNREPRESENTABLE
-  [21] ok   an expansion bearing an implementation-generated name is REFUSED
+  [20] ok   an expansion bearing an implementation-generated name is REFUSED
 
-  THE RATIONALE, CORRECTED IN ERRATA 0.1.  Candidate /0 said a receipt for
-  a non-deterministic expansion 'would be an account that could not be true
-  twice.'  THAT WAS WRONG, and the error was worth catching: a receipt
-  accounts for ONE OCCURRENCE, and a nondeterministic occurrence can have a
-  perfectly truthful receipt — it says what form became what other form ON
-  THAT OCCASION, which is what a receipt is for.
-
-  THE REAL REASON IS REPRESENTABILITY.  The term grammar cannot account for
-  uninterned-symbol identity INJECTIVELY: two distinct gensyms bearing one
-  name collapse to a single identifier datum, because CD/0 compares
-  identifier segments bytewise.  The grammar therefore cannot represent the
-  binding structure that makes such a symbol mean anything.  That is a
-  grammar limit, not an epistemic one, and it is the whole reason.
-
-  SURFACE /0 IS STILL NOT MODIFIED TO MAKE THIS CONVENIENT.
-  [22] ok   and Surface /0 still expands it non-deterministically — reported, not repaired
+  That form expands DIFFERENTLY EACH TIME — the host mints a new
+  uninterned symbol per expansion.  A receipt for it would be an account
+  that could not be true twice.  The refusal is not a limitation worked
+  around; it is the layer declining to account for what no account could
+  be true of.  SURFACE /0 IS NOT MODIFIED TO MAKE THIS CONVENIENT.
+  [21] ok   and Surface /0 still expands it non-deterministically — reported, not repaired
 
 ── VIII. THE CENSUS — the abbreviation did not lie
   distinct FULL identities printed above: 7
-  [23] ok   every printed identity was registered in full
-  [24] ok   the program printed enough distinct identities to be worth checking
+  [22] ok   every printed identity was registered in full
+  [23] ok   the program printed enough distinct identities to be worth checking
 
   — an expansion leaves a receipt
   — the receipt says what form became what other form
   — and it is silent about whether that preserves meaning
 
-== de-expansione-testata: 24 checks passed / 0 failed ==
+== de-expansione-testata: 23 checks passed / 0 failed ==

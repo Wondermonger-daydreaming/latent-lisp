@@ -128,15 +128,32 @@
 ;;;;
 ;;;; AND NOTHING ELSE IS REPRESENTABLE.  Refused, each with its own code:
 ;;;;
-;;;;   an UNINTERNED SYMBOL — it has no package, so it has no namespace, and two
-;;;;     distinct gensyms bearing one name would collapse to one datum because
-;;;;     CD/0 compares identifier segments BYTEWISE.  Encoding them would destroy
-;;;;     exactly the binding structure that makes them meaningful.  This is the
-;;;;     single largest representational obstruction in the layer and it is
-;;;;     refused, not worked around.
+;;;;   an UNINTERNED SYMBOL — REPRESENTABILITY, NOT DETERMINISM.  It has no
+;;;;     package, so it has no namespace; and two distinct gensyms bearing one
+;;;;     name collapse to one datum, because CD/0 compares identifier segments
+;;;;     BYTEWISE.  THE GRAMMAR CANNOT ACCOUNT FOR UNINTERNED-SYMBOL IDENTITY
+;;;;     INJECTIVELY, so it cannot represent the binding structure that makes
+;;;;     such a symbol mean anything.  That is the whole reason, and it is the
+;;;;     only one.
+;;;;
+;;;;     ERRATA 0.1 CORRECTS A CLAIM CANDIDATE /0 MADE HERE AND IN ITS RETURN —
+;;;;     that "a receipt for a non-deterministic expansion would be an account
+;;;;     that could not be true twice."  THAT WAS WRONG.  A receipt accounts for
+;;;;     ONE OCCURRENCE.  A nondeterministic occurrence can have a perfectly
+;;;;     truthful receipt: it says what form became what other form ON THAT
+;;;;     OCCASION, which is exactly what a receipt is for.  Determinism is a
+;;;;     property a reader may want; it is NOT a precondition of truthfulness,
+;;;;     and this layer must not confuse the two.  What this layer cannot do is
+;;;;     REPRESENT such an expansion — a grammar limit, not an epistemic one.
 ;;;;   a SYMBOL WITH AN EMPTY NAME — CD/0 refuses a zero-octet segment.
 ;;;;   an IMPROPER LIST — CD/0 refuses a dotted tail.
-;;;;   a CIRCULAR OR SHARED structure — refused; the grammar has no DAG.
+;;;;   a CIRCULAR OR SHARED structure — refused GLOBALLY; the grammar has no DAG
+;;;;     and no cycle.  ERRATA 0.1: Candidate /0 MADE THIS CLAIM AND DID NOT KEEP
+;;;;     IT.  Its check walked only each list's spine, so a subtree reachable by
+;;;;     two paths was silently UNFOLDED — a shared subtree and two distinct equal
+;;;;     copies encoded IDENTICALLY — and a CAR-position cycle exhausted the
+;;;;     control stack instead of refusing.  The check is now a GLOBAL
+;;;;     reference-count traversal, and the claim is one the code keeps.
 ;;;;   ANY OTHER HOST TYPE — character, float, ratio, complex, array, pathname,
 ;;;;     structure, function, hash table, package, readtable, stream, restart,
 ;;;;     condition, source-location object, or an implementation's private
@@ -288,10 +305,29 @@
    #:refusal-catalog-entry-code
    #:refusal-catalog-entry-class
    #:refusal-catalog-entry-phase
+   ;; ERRATA 0.1 — finding 4.  This accessor was live but NON-EXTERNAL while its
+   ;; four siblings were exported, and the selftest reached it through an
+   ;; internal symbol because its reaching macro used INTERN, which cannot tell
+   ;; internal from external.  Both are repaired.
+   #:refusal-catalog-entry-reachability
    #:refusal-catalog-entry-note
+
+   ;; ---- the occurrence (ERRATA 0.1 — finding 3) ----
+   #:expansion-occurrence-p
+   #:expansion-occurrence-identity
+   #:expansion-occurrence-request-identity
+   #:expansion-occurrence-expanded-form-datum
+   #:expansion-occurrence-expanded-form-identity
+   #:expansion-occurrence-disposition
+   #:expansion-occurrence-occurrence-tag
+   #:expansion-receipt-occurrence
 
    ;; ---- the term grammar, public because a reader must be able to check it ----
    #:encode-term
+   ;; ERRATA 0.1 — the inverse is PUBLIC on purpose: the claim that the stored
+   ;; datum IS what the macroexpander received is only checkable if a reader can
+   ;; perform the reconstruction independently.
+   #:decode-term
    #:term-kinds
    #:identity-octets
    #:render-identity-hex))

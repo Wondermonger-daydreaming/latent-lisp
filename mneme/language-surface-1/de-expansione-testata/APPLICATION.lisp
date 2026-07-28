@@ -140,6 +140,8 @@
 (desk "construct identity    ~A" (id! (s1 expansion-request-construct-identity *request*)))
 
 (check (s1 expansion-request-p *request*) "Door 1 minted a request object")
+(check (null (find-symbol "EXPANSION-REQUEST-%HOST-FORM" '#:lisp-plus-surface1))
+       "ERRATA 0.1 — the request holds NO caller-owned host form; the slot is gone")
 (check (not (boundp (intern "*TESTATA-CONTRACT*" '#:cl-user)))
        "Door 1 EXPANDED NOTHING — the variable its expansion would bind is still UNBOUND")
 
@@ -151,7 +153,7 @@
 
 (show-form "THE EXACT EXPANDED FORM PRODUCED:" *expanded*)
 
-(desk "occurrence identity   ~A" (id! *occ*))
+(desk "occurrence identity   ~A" (id! (s1 expansion-occurrence-identity *occ*)))
 (desk "receipt identity      ~A" (id! (s1 expansion-receipt-identity *receipt*)))
 (desk "expanded-form ident.  ~A" (id! (s1 expansion-receipt-expanded-form-identity *receipt*)))
 (desk "disposition           ~S" (s1 expansion-receipt-disposition *receipt*))
@@ -355,11 +357,21 @@
          "an expansion bearing an implementation-generated name is REFUSED"))
 
 (desk "")
-(desk "That form expands DIFFERENTLY EACH TIME — the host mints a new")
-(desk "uninterned symbol per expansion.  A receipt for it would be an account")
-(desk "that could not be true twice.  The refusal is not a limitation worked")
-(desk "around; it is the layer declining to account for what no account could")
-(desk "be true of.  SURFACE /0 IS NOT MODIFIED TO MAKE THIS CONVENIENT.")
+(desk "THE RATIONALE, CORRECTED IN ERRATA 0.1.  Candidate /0 said a receipt for")
+(desk "a non-deterministic expansion 'would be an account that could not be true")
+(desk "twice.'  THAT WAS WRONG, and the error was worth catching: a receipt")
+(desk "accounts for ONE OCCURRENCE, and a nondeterministic occurrence can have a")
+(desk "perfectly truthful receipt — it says what form became what other form ON")
+(desk "THAT OCCASION, which is what a receipt is for.")
+(desk "")
+(desk "THE REAL REASON IS REPRESENTABILITY.  The term grammar cannot account for")
+(desk "uninterned-symbol identity INJECTIVELY: two distinct gensyms bearing one")
+(desk "name collapse to a single identifier datum, because CD/0 compares")
+(desk "identifier segments bytewise.  The grammar therefore cannot represent the")
+(desk "binding structure that makes such a symbol mean anything.  That is a")
+(desk "grammar limit, not an epistemic one, and it is the whole reason.")
+(desk "")
+(desk "SURFACE /0 IS STILL NOT MODIFIED TO MAKE THIS CONVENIENT.")
 
 (check (not (equal (macroexpand-1 '(lisp-plus-surface0:derive-case (cl-user::c cl-user::r)
                                     (lisp-plus-slice1:derive :schema-name :x)

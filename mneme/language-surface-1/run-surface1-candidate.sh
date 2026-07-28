@@ -18,7 +18,8 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$HERE"
 
 REQUIRED=(package.lisp surface1.lisp surface1-selftest.lisp
-          STUB-IMAGE-FIXTURE.lisp de-expansione-testata/APPLICATION.lisp)
+          STUB-IMAGE-FIXTURE.lisp de-expansione-testata/APPLICATION.lisp
+          errata-0.1/REPRODUCTION.lisp)
 MISSING=()
 for f in "${REQUIRED[@]}"; do [ -f "$f" ] || MISSING+=("$f"); done
 if [ ${#MISSING[@]} -gt 0 ]; then
@@ -35,11 +36,19 @@ SELFTEST_EXIT=$?
 STUB_EXIT=$?
 ( cd de-expansione-testata && sbcl --non-interactive --load APPLICATION.lisp ) > RUN-APPLICATION.txt 2>&1
 APP_EXIT=$?
+# ERRATA 0.1 — the defect-report reproduction, kept as a standing regression
+# instrument.  Against THIS tree every finding must come back REFUTED; the
+# capture against the original candidate, where all six were CONFIRMED, is
+# preserved at errata-0.1/pre-errata-evidence/.
+( sbcl --non-interactive --load errata-0.1/REPRODUCTION.lisp "$HERE/" ) > RUN-REPRODUCTION.txt 2>&1
+REPRO_RAN=$?
+REPRO_CONFIRMED="$(grep -c '^  CONFIRMED' RUN-REPRODUCTION.txt)"
 
 {
   echo "surface1-selftest      exit ${SELFTEST_EXIT}"
   echo "stub-image-fixture     exit ${STUB_EXIT}"
   echo "de-expansione-testata  exit ${APP_EXIT}"
+  echo "reproduction           exit ${REPRO_RAN} · confirmed findings ${REPRO_CONFIRMED} (must be 0)"
 } > RUN-EXITCODES.txt
 
 cat <<BANNER
@@ -51,6 +60,8 @@ cat <<BANNER
     surface1-selftest.lisp                    exit ${SELFTEST_EXIT}    ->  RUN-SELFTEST.txt
     STUB-IMAGE-FIXTURE.lisp                   exit ${STUB_EXIT}    ->  RUN-STUB-IMAGE.txt
     de-expansione-testata/APPLICATION.lisp    exit ${APP_EXIT}    ->  RUN-APPLICATION.txt
+    errata-0.1/REPRODUCTION.lisp               ${REPRO_CONFIRMED} findings still CONFIRMED (must be 0)
+                                              ->  RUN-REPRODUCTION.txt
     exit codes retained in                    RUN-EXITCODES.txt
 
   THE STUB-IMAGE FIXTURE IS A SEPARATE PROCESS ON PURPOSE.  One refusal code is
@@ -73,7 +84,8 @@ cat <<BANNER
 
 BANNER
 
-if [ "${SELFTEST_EXIT}" -eq 0 ] && [ "${STUB_EXIT}" -eq 0 ] && [ "${APP_EXIT}" -eq 0 ]; then
+if [ "${SELFTEST_EXIT}" -eq 0 ] && [ "${STUB_EXIT}" -eq 0 ] && [ "${APP_EXIT}" -eq 0 ] \
+   && [ "${REPRO_CONFIRMED}" -eq 0 ]; then
   exit 0
 else
   exit 1

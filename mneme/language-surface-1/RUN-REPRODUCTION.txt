@@ -1,0 +1,86 @@
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+REPRODUCTION — Surface /1 Candidate /0 pre-audit defect report
+SBCL 2.4.6 · candidate 2e21f367, unpatched
+
+  FINDING 1 — MUTABLE SOURCE ALIAS / FALSE EDGE
+  ---------------------------------------------
+    pre-mutation :contract-version = 1
+    Door 1 stored source datum id 4c5043440031022201045445…
+    post-mutation :contract-version = 999  (request object untouched)
+
+    stored source datum  == PRISTINE source ......... T
+    stored source datum  == MUTATED  source ......... NIL
+    receipt expanded     == expansion of PRISTINE ... T
+    receipt expanded     == expansion of MUTATED .... NIL
+    the expanded form actually carries version ...... '999
+  REFUTED    1a — no false edge observed
+
+    string leaf mutated in place: "Zlpha"
+    receipt expanded == expansion of the PRE-mutation string ... T
+    receipt expanded == expansion of the POST-mutation string .. NIL
+  REFUTED    1b — the string leaf is isolated: the receipt accounts for the expansion of the string as it stood at Door 1
+
+  FINDING 1c — E11 CONSTRUCTS A FRESH REQUEST, NOT THE SAME OBJECT
+  ----------------------------------------------------------------
+    SAME request object performed twice, caller mutated in between:
+      occurrence identity #1 == #2 ... T
+  REFUTED    1c — the SAME request object performed twice is stable across caller mutation
+
+  FINDING 2 — SHARED-STRUCTURE COLLAPSE
+  -------------------------------------
+    shared tree : distinct conses 3 · max refcount 2 · shared conses 1
+    copied tree : distinct conses 4 · max refcount 1 · shared conses 0
+    printed forms are EQUAL ....... T
+    trees are EQ-distinct ......... T
+    first two elements share a cons in the SHARED tree ... T
+    ... and are distinct in the COPIED tree ............... T
+
+    ENCODE-TERM(shared) ... REFUSED %TERM-UNREPRESENTABLE
+    ENCODE-TERM(copies) ... encoded
+  REFUTED    2 — sharing is refused or distinguished
+    spine cycle -> refused
+    car cycle at ENCODE-TERM -> refused %TERM-UNREPRESENTABLE
+    car cycle through DOOR 1 -> SOURCE-DEPTH-EXCEEDED
+
+  FINDING 2b — DO REAL EXPANSIONS CONTAIN SHARING?
+  ------------------------------------------------
+     ADMISSION SOURCE    distinct   20 · max refcount 1 · SHARED 0
+     ADMISSION EXPANSION distinct   39 · max refcount 1 · SHARED 0
+      JUDGMENT SOURCE    distinct   29 · max refcount 1 · SHARED 0
+      JUDGMENT EXPANSION distinct   56 · max refcount 1 · SHARED 0
+
+  FINDING 3 — NO OCCURRENCE OBJECT TYPE
+  -------------------------------------
+    EXPANSION-OCCURRENCE symbol present? .......... T
+    EXPANSION-OCCURRENCE-P present? ............... T
+    third value of PERFORM-EXPANSION is a ......... EXPANSION-OCCURRENCE
+  REFUTED    3 — a first-class immutable occurrence object exists and is the third value
+
+  FINDING 4 — PUBLIC CATALOGUE ACCESSOR
+  -------------------------------------
+                      REFUSAL-CATALOG-ENTRY-CODE  status    :EXTERNAL  fbound T
+                     REFUSAL-CATALOG-ENTRY-CLASS  status    :EXTERNAL  fbound T
+                     REFUSAL-CATALOG-ENTRY-PHASE  status    :EXTERNAL  fbound T
+                      REFUSAL-CATALOG-ENTRY-NOTE  status    :EXTERNAL  fbound T
+              REFUSAL-CATALOG-ENTRY-REACHABILITY  status    :EXTERNAL  fbound T
+  REFUTED    4 — the accessor is exported
+
+  SUMMARY
+  -------
+    REFUTED  1a
+    REFUTED  1b
+    REFUTED  1c
+    REFUTED  2
+    REFUTED  3
+    REFUTED  4
+
+  confirmed: 0 of 6

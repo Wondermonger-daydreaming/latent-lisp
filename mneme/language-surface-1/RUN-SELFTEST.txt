@@ -9,7 +9,7 @@ kernel0 foundations smoke: PASS
 kernel0 algebra smoke: PASS
 kernel0 records+folds smoke: PASS
 LANGUAGE SURFACE /1 — CANDIDATE /0 — SELFTEST
-SBCL 2.4.6 · grammar v1 · procedure v1 · policy v1
+SBCL 2.4.6 · grammar v2 · procedure v2 · policy v1
 
 ── A. LOAD GRAPH AND LAYER IDENTITY
   [001] ok   A1 Surface /1 loaded with Surface /0 ABSENT — it loads CD/0 only
@@ -60,7 +60,8 @@ SBCL 2.4.6 · grammar v1 · procedure v1 · policy v1
   [035] ok   D16 the OPERATION is committed into the request identity, not inferred
 
 ── E. DOOR 2 — meets the image, and accounts for what it found
-  [036] ok   E1 a completed expansion mints a receipt, an expanded form and an occurrence
+  [036] ok   E1 a completed expansion mints a receipt, an expanded form and a
+        FIRST-CLASS OCCURRENCE OBJECT (errata 0.1, finding 3)
   [037] ok   E2 the expanded host form is EXACTLY what MACROEXPAND-1 returns
   [038] ok   E3 the receipt's expanded datum is the encoding of that exact form
   [039] ok   E4 the receipt's source datum is the encoding of the exact source form
@@ -71,81 +72,121 @@ SBCL 2.4.6 · grammar v1 · procedure v1 · policy v1
         a receipt cannot disagree with the package that minted it
   [044] ok   E9 the expansion CONTEXT records only what was SUPPLIED, and denies capture
   [045] ok   E10 the whole receipt's own identity is a bytes datum and is stable
-  [046] ok   E11 the same request performed twice gives the SAME occurrence identity —
-        deterministic replay under the same declared inputs
-  [047] ok   E12 a DIFFERENT occurrence tag gives a DIFFERENT occurrence identity
-  [048] ok   E13 an unknown head reaches DOOR 2 and refuses there, minting NOTHING
-  [049] ok   E14 TRY-PERFORM returns THREE values on BOTH branches, so a refusal
+  [046] ok   E11 two SEPARATE requests with equal inputs give the SAME occurrence
+        identity.  NOTE THE WORDING: Candidate /0 labelled this 'the same
+        request performed twice', which it never was — it built a fresh
+        equivalent request.  The same-object claim is E11b.
+  [047] ok   E11b the SAME REQUEST OBJECT performed twice gives the same occurrence
+        identity — the claim E11 was mislabelled as making
+  [048] ok   E12 a DIFFERENT occurrence tag gives a DIFFERENT occurrence identity
+  [049] ok   E13 an unknown head reaches DOOR 2 and refuses there, minting NOTHING
+  [050] ok   E14 TRY-PERFORM returns THREE values on BOTH branches, so a refusal
         cannot be destructured as a success
 
 ── F. THE OPERATION DISTINCTION — one step vs repeated
-  [050] ok   F1 for this specimen the two operations produce the SAME expanded form,
+  [051] ok   F1 for this specimen the two operations produce the SAME expanded form,
         because the expansion's head is PROGN, a special operator
-  [051] ok   F2 ... and the receipts are NEVERTHELESS DIFFERENT, because the operation
+  [052] ok   F2 ... and the receipts are NEVERTHELESS DIFFERENT, because the operation
         is part of the account rather than derived from the result
-  [052] ok   F3 the mechanism is checkable: the expansion's head is not a macro
-  [053] ok   F4 DERIVE-CASE's one-step expansion is accounted for cleanly
-  [054] ok   F5 ... and its FULL expansion is REFUSED, because HANDLER-CASE is a host
-        macro whose own expansion carries implementation-generated names
-  [055] ok   F6 the two operations genuinely differ for that form at the host level
+  [053] ok   F3 the mechanism is checkable: the expansion's head is not a macro
+  [054] ok   F4 DERIVE-CASE's one-step expansion is accounted for cleanly
+  [055] ok   F5 ... and its FULL expansion is REFUSED, because HANDLER-CASE is a host
+        macro.  ERRATA 0.1 CORRECTS THE CODE THIS CHECK USED TO ASSERT:
+        Candidate /0 claimed :EXPANDED-TERM-UNREPRESENTABLE / UNINTERNED-SYMBOL.
+        MEASURED, that expansion carries BOTH disqualifying properties — 3 conses
+        reachable by more than one path AND 13 uninterned symbols — and since
+        the global sharing check now runs first, the reported code is the
+        SHARING one.  Reporting the first check that fires is correct; claiming
+        the other code was not.
+  [056] ok   F5b ... and BOTH disqualifying properties are exhibited, not merely the one
+        the refusal happened to name first
+  [057] ok   F6 the two operations genuinely differ for that form at the host level
 
 ── G. THE NON-DETERMINISM REFUSAL — the reason the boundary exists
-  [056] ok   G1 the host really does expand that form differently twice
-  [057] ok   G2 Surface /1 REFUSES it at ONE-STEP expansion, not merely at full expansion
-  [058] ok   G3 the refusal mints NO occurrence and NO receipt — the objects do not come
+  [058] ok   G1 the host really does expand that form differently twice
+  [059] ok   G2 Surface /1 REFUSES it at ONE-STEP expansion, not merely at full expansion
+  [060] ok   G3 the refusal mints NO occurrence and NO receipt — the objects do not come
         into existence, they are not nil-valued
-  [059] ok   G4 Surface /0 IS UNMODIFIED BY THIS SUITE — the defect is reported, not repaired
+  [061] ok   G4 Surface /0 IS UNMODIFIED BY THIS SUITE — the defect is reported, not repaired
 
 ── H. DISCRIMINATION — a changed source changes the account
-  [060] ok   H1 a changed source form changes the SOURCE identity
-  [061] ok   H2 ... and changes the EXPANDED identity
-  [062] ok   H3 ... and therefore changes the OCCURRENCE identity, even with the SAME tag
-  [063] ok   H4 ... and the RECEIPT identity
-  [064] ok   H5 a one-character difference in a symbol NAME is discriminated
+  [062] ok   H1 a changed source form changes the SOURCE identity
+  [063] ok   H2 ... and changes the EXPANDED identity
+  [064] ok   H3 ... and therefore changes the OCCURRENCE identity, even with the SAME tag
+  [065] ok   H4 ... and the RECEIPT identity
+  [066] ok   H5 a one-character difference in a symbol NAME is discriminated
 
 ── I. NON-PROMOTION — later handling flows nowhere backward
-  [065] ok   I1 evaluating the expansion really does produce a Slice /2 contract object
-  [066] ok   I2 the receipt identity is byte-identical after that downstream success
-  [067] ok   I3 the stored expanded datum is byte-identical after it
-  [068] ok   I4 the receipt gained NO field naming the object that evaluation produced
-  [069] ok   I5 the disposition is unchanged by downstream success
-  [070] ok   I6 a FAILING downstream evaluation leaves the receipt equally unchanged
+  [067] ok   I1 evaluating the expansion really does produce a Slice /2 contract object
+  [068] ok   I2 the receipt identity is byte-identical after that downstream success
+  [069] ok   I3 the stored expanded datum is byte-identical after it
+  [070] ok   I4 the receipt gained NO field naming the object that evaluation produced
+  [071] ok   I5 the disposition is unchanged by downstream success
+  [072] ok   I6 a FAILING downstream evaluation leaves the receipt equally unchanged
 
 ── J. SURFACE /0'S OWN REFUSAL ESCAPES, AND MINTS NOTHING HERE
-  [071] ok   J1 a malformed construct signals SURFACE /0's condition, not Surface /1's
-  [072] ok   J2 ... carrying Surface /0's OWN reason keyword, unwrapped and unreclassified
-  [073] ok   J3 TRY-PERFORM does NOT convert it either — the twin catches only this
+  [073] ok   J1 a malformed construct signals SURFACE /0's condition, not Surface /1's
+  [074] ok   J2 ... carrying Surface /0's OWN reason keyword, unwrapped and unreclassified
+  [075] ok   J3 TRY-PERFORM does NOT convert it either — the twin catches only this
         layer's refusals, never another layer's verdict
 
 ── K. PLANTED FAULTS — a gate that has never fired is untested
-  [074] ok   K1 with no fault bound, the same expansion is green (the teeth are not stuck on)
-  [075] ok   K2 a wrong stored SOURCE identity produces NO receipt
-  [076] ok   K3 a wrong stored EXPANDED identity produces NO receipt
-  [077] ok   K4 an altered procedure version produces NO receipt
-  [078] ok   K5 after the faults unwind, the layer is green again
+  [076] ok   K1 with no fault bound, the same expansion is green (the teeth are not stuck on)
+  [077] ok   K2 a wrong stored SOURCE identity produces NO receipt
+  [078] ok   K3 a wrong stored EXPANDED identity produces NO receipt
+  [079] ok   K4 an altered procedure version produces NO receipt
+  [080] ok   K5 after the faults unwind, the layer is green again
 
 ── L. IMMUTABILITY AND THE ABSENT CONSTRUCTORS
-  [079] ok   L1 no public constructor mints a request, a receipt or a refusal
-  [080] ok   L2 no copier is exported for any minted object
-  [081] ok   L3 the exported surface exposes no setter of any kind
-  [082] ok   L4 the retained host form is NOT exported — it never reaches a receipt
-  [083] ok   L5 EXPORT CENSUS — every declared export names a live function, variable
+  [081] ok   L1 no public constructor mints a request, a receipt or a refusal
+  [082] ok   L2 no copier is exported for any minted object
+  [083] ok   L3 the exported surface exposes no setter of any kind
+  [084] ok   L4 the retained host form is NOT exported — it never reaches a receipt
+  [085] ok   L5 EXPORT CENSUS — every declared export names a live function, variable
         or condition class; nothing is a false affordance
-  [084] ok   L6 ... and the count is stated rather than left implicit
+  [086] ok   L6 ... and the count is stated rather than left implicit
+  [087] ok   L7 ERRATA 0.1 — the catalogue accessor that was live-but-internal is now
+        EXPORTED, and its four siblings still are
+  [088] ok   L8 ... and the request no longer carries a caller-owned host form at all —
+        the slot is GONE, not guarded
 
 ── M. REFUSAL-CODE COVERAGE — set difference, both directions
-  [085] ok   M1 every code exercised above is DECLARED in the catalogue
-  [086] ok   M2 the :PUBLIC-API codes this suite does not exercise are exactly the two
+  [089] ok   M1 every code exercised above is DECLARED in the catalogue
+  [090] ok   M2 the :PUBLIC-API codes this suite does not exercise are exactly the two
         expanded-side ceilings the APPLICATION drives to their edges — depth and
         term-octets.  Nothing else is left uncovered.
-  [087] ok   M3 exactly one code is declared reachable only in a stub image
-  [088] ok   M4 exactly one code is declared UNREACHABLE UNDER THIS POLICY, and it is the
+  [091] ok   M3 exactly one code is declared reachable only in a stub image
+  [092] ok   M4 exactly one code is declared UNREACHABLE UNDER THIS POLICY, and it is the
         expanded-side NODE ceiling — dominated by the octet ceiling, measured
-  [089] ok   M5 ... and its SOURCE-side twin IS reachable, because the node check runs
+  [093] ok   M5 ... and its SOURCE-side twin IS reachable, because the node check runs
         BEFORE the encode — so the pair is not symmetric, and saying so is the
         difference between a measured claim and a tidy one
-  [090] ok   M6 the arithmetic behind M4, exhibited rather than asserted: one term costs
+  [094] ok   M6 the arithmetic behind M4, exhibited rather than asserted: one term costs
         far more than 262144/20000 = 13 octets, so octets must fire first
+
+── N. ERRATA 0.1 — THE SIX PROOF OBLIGATIONS, EACH EXECUTED
+  [095] ok   N1 CALLER MUTATION AFTER DOOR 1 CANNOT CHANGE WHAT DOOR 2 EXPANDS
+  [096] ok   N2 MUTATION BY ONE MACROEXPANSION CANNOT CHANGE A LATER PERFORMANCE of the
+        same request — each performance gets its own freshly reconstructed form
+  [097] ok   N3 MUTABLE STRING LEAVES ARE ISOLATED
+  [098] ok   N3b ... and the reconstructed string is a FRESH object each time, so a
+        caller who mutates what it received cannot reach the next performance
+  [099] ok   N4 SHARED STRUCTURE IS REFUSED GLOBALLY — a shared subtree and two distinct
+        equal copies no longer encode identically; the shared one refuses
+  [100] ok   N4b ... and a CAR-POSITION CYCLE handed to the PUBLIC encoder REFUSES
+        instead of exhausting the control stack, as it did in Candidate /0
+  [101] ok   N4c ... and a spine cycle still refuses
+  [102] ok   N5 THE STORED SOURCE DATUM IS EXACTLY THE SOURCE HANDED TO THE
+        MACROEXPANDER — re-encoding the reconstruction reproduces the datum
+  [103] ok   N5b ... and the expansion the receipt accounts for is the expansion OF THAT
+        RECONSTRUCTION, computed independently here
+  [104] ok   N6 THE SAME REQUEST OBJECT CAN BE PERFORMED REPEATEDLY WITHOUT DRIFT
+  [105] ok   N7 DECODE-TERM NEVER INTERNS — a symbol absent from the image refuses
+        rather than being silently re-created
+  [106] ok   N7b ... and the same absence reaches DOOR 2 as its own typed refusal
+  [107] ok   N8 THE NONDETERMINISM RATIONALE IS ABOUT REPRESENTABILITY, and the code
+        says so: the refusal a gensym-bearing expansion lands under names the
+        TERM GRAMMAR, not determinism
 
   WHAT THESE GREENS DO NOT ESTABLISH
   Not that any source and its expansion mean the same thing.
@@ -157,4 +198,4 @@ SBCL 2.4.6 · grammar v1 · procedure v1 · policy v1
   Every green above is SELF-CONSISTENCY CERTIFICATION by the family
     that wrote the layer.  The stranger audit is OWED.
 
-== surface1-selftest: 90 checks passed / 0 failed ==
+== surface1-selftest: 107 checks passed / 0 failed ==

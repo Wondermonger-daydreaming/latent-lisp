@@ -73,11 +73,20 @@ never a content address."
 
 (defun expansion-grammar-identity ()
   (%id '("lisp-plus-surface1" "grammar") '("term" "0")))
-(defun expansion-grammar-version () 1)
+;;; ERRATA 0.1 — grammar version 1 -> 2.  Shared and circular structure are now
+;;; refused GLOBALLY rather than per-spine, so the set of admissible terms is
+;;; strictly smaller than Candidate /0's.  A grammar whose admissible set moved
+;;; must move its version, or two different grammars answer to one number.
+(defun expansion-grammar-version () 2)
 
 (defun expansion-procedure-identity ()
   (%id '("lisp-plus-surface1" "procedure") '("macroexpand" "0")))
-(defun expansion-procedure-version () 1)
+;;; ERRATA 0.1 — procedure version 1 -> 2.  Door 2 no longer expands a
+;;; caller-owned alias; it reconstructs a fresh private host form from the
+;;; stored canonical datum on every performance.  EVERY IDENTITY THIS LAYER
+;;; MINTS THEREFORE DIFFERS FROM CANDIDATE /0'S, and that is correct: they are
+;;; accounts of a different procedure.
+(defun expansion-procedure-version () 2)
 
 (defun expansion-policy-identity ()
   (%id '("lisp-plus-surface1" "policy") '("candidate" "0")))
@@ -142,6 +151,10 @@ never a content address."
      "the occurrence tag is not a CD/0 identifier datum; there is no default")
     (:source-term-unrepresentable   :protocol-refusal :request :public-api
      "the source form contains a term the grammar does not represent")
+    (:source-term-shared-structure  :protocol-refusal :request :public-api
+     "a cons in the source form is reachable by more than one path — sharing or
+a cycle.  ERRATA 0.1: Candidate /0 checked only each list's spine, so sharing
+was silently UNFOLDED and a CAR-position cycle exhausted the control stack.")
     (:source-depth-exceeded         :protocol-refusal :request :public-api
      "the source form is nested deeper than the declared source-depth ceiling")
     (:source-nodes-exceeded         :protocol-refusal :request :public-api
@@ -156,6 +169,13 @@ never a content address."
     (:expanded-term-unrepresentable :protocol-refusal :perform :public-api
      "the EXPANDED form contains a term the grammar does not represent — this is
 the code an implementation-generated name lands under")
+    (:expanded-term-shared-structure :protocol-refusal :perform :public-api
+     "a cons in the EXPANDED form is reachable by more than one path")
+    (:source-not-reconstructible    :protocol-refusal :perform :public-api
+     "the stored canonical source datum could not be reconstructed into a host
+form in THIS image — a package or a symbol it names is gone.  ERRATA 0.1: this
+code exists because reconstruction resolves symbols with FIND-SYMBOL and never
+INTERN; a reconstruction that interned would change the image it claims to read.")
     (:expanded-depth-exceeded       :protocol-refusal :perform :public-api
      "the expanded form is nested deeper than the declared source-depth ceiling")
     (:expanded-nodes-exceeded       :protocol-refusal :perform
@@ -285,10 +305,59 @@ for a rendering.  This string reaches a human in a refusal, and nowhere else."
   (let ((tn (string (type-of object))))
     (subseq tn 0 (min 40 (length tn)))))
 
+;;; ------------------------------------------------------------------
+;;; THE GLOBAL SHARING / CYCLE CHECK.        [ERRATA 0.1 — finding 2]
+;;; ------------------------------------------------------------------
+;;;
+;;; Candidate /0 checked only the SPINE of each list, with a fresh table per
+;;; call.  That check could not see a subtree reachable by two different paths,
+;;; so a shared subtree and two distinct equal copies encoded IDENTICALLY —
+;;; while package.lisp claimed shared structure was refused.  The claim was
+;;; false and the check was the wrong shape.
+;;;
+;;; This is a GLOBAL traversal counting REFERENCES to each cons.  A cons
+;;; reachable by more than one path has a reference count above one, and that
+;;; single measurement covers BOTH sharing and cycles — a cycle is just a
+;;; reference that returns.  It is guarded, so it terminates on cyclic input,
+;;; and it iterates on the spine and recurses only into CARs, so a long list
+;;; does not exhaust the stack.
+
+(defun %shared-cons-count (form)
+  "Number of conses reachable from FORM by more than one path.  Zero for a pure
+tree; positive for any sharing or any cycle."
+  (let ((refs (make-hash-table :test 'eq))
+        (guard (make-hash-table :test 'eq))
+        (shared 0))
+    (labels ((visit (f)
+               (loop while (consp f)
+                     do (incf (gethash f refs 0))
+                        (when (gethash f guard) (return))
+                        (setf (gethash f guard) t)
+                        (visit (car f))
+                        (setf f (cdr f)))))
+      (visit form))
+    (maphash (lambda (k v) (declare (ignore k)) (when (> v 1) (incf shared))) refs)
+    shared))
+
 (defun encode-term (form)
   "Encode a host FORM under the declared term grammar, or signal
 %TERM-UNREPRESENTABLE.  Public because a reader must be able to check the
-grammar without taking this file's word for it."
+grammar without taking this file's word for it.
+
+THE GLOBAL SHARING CHECK RUNS FIRST, once, before any recursion.  Doing it here
+rather than in the caller is what makes this PUBLIC function safe: in Candidate
+/0 a CAR-position cycle handed straight to ENCODE-TERM exhausted the control
+stack instead of refusing."
+  (let ((shared (%shared-cons-count form)))
+    (when (plusp shared)
+      (error '%term-unrepresentable
+             :reason :shared-or-circular-structure
+             :shown (format nil "~D cons(es) reachable by more than one path; the grammar has no DAG and no cycle" shared))))
+  (%encode-term-1 form))
+
+(defun %encode-term-1 (form)
+  "The recursive body.  Assumes the global sharing check has already passed, so
+it never re-walks and never revisits — encoding stays linear."
   (cond
     ;; SYMBOL — including NIL and T, which ARE symbols in Common Lisp.  The
     ;; empty list and the symbol NIL are one object in this host and the grammar
@@ -305,21 +374,90 @@ grammar without taking this file's word for it."
     ((integerp form) (%term "INTEGER" (%int form)))
     ((stringp form)  (%term "STRING"  (%text form)))
     ((consp form)
-     ;; Spine walk with EQ identity in a hash table: linear, not quadratic, so a
-     ;; long expansion does not pay O(n^2) for a check that almost never fires.
-     (let ((walk form) (spine (make-hash-table :test 'eq)))
-       (loop while (consp walk)
-             do (when (gethash walk spine)
-                  (error '%term-unrepresentable :reason :circular-structure
-                                                :shown "the grammar has no cycle and no sharing"))
-                (setf (gethash walk spine) t)
-                (setf walk (cdr walk)))
+     ;; Sharing and cycles are already excluded by ENCODE-TERM's global check,
+     ;; so this only has to name the one remaining shape the grammar lacks.
+     (let ((walk form))
+       (loop while (consp walk) do (setf walk (cdr walk)))
        (unless (null walk)
          (error '%term-unrepresentable :reason :improper-list
                                        :shown "a dotted tail is a term the grammar does not name")))
-     (%term "LIST" (%seq (mapcar #'encode-term form))))
+     (%term "LIST" (%seq (mapcar #'%encode-term-1 form))))
     (t (error '%term-unrepresentable :reason :no-term-kind
                                      :shown (%describe-host-object form)))))
+
+;;; ==================================================================
+;;; DECODE-TERM — THE INVERSE.                [ERRATA 0.1 — finding 1]
+;;; ==================================================================
+;;;
+;;; Candidate /0 retained the CALLER'S OWN CONS TREE and handed that to the
+;;; macroexpander at Door 2.  A caller who mutated the tree after Door 1 got a
+;;; receipt whose stored source datum was the PRE-mutation form and whose
+;;; expanded datum was computed from the POST-mutation form — a FALSE EDGE, and
+;;; a truthfulness defect rather than missing coverage.  Reproduced at
+;;; `errata-0.1/REPRODUCTION.lisp`, findings 1a/1b/1c.
+;;;
+;;; The repair makes the IMMUTABLE CANONICAL SOURCE DATUM THE SINGLE AUTHORITY.
+;;; Door 2 reconstructs a FRESH PRIVATE HOST FORM from that datum on EVERY
+;;; performance, and expands that.  The caller's tree is read exactly once, at
+;;; Door 1, and never consulted again.
+;;;
+;;; SYMBOLS ARE RESOLVED WITH FIND-SYMBOL AND NEVER INTERN.  A reconstruction
+;;; that interned would CHANGE the image it claims to be reading, and would
+;;; manufacture a symbol that the caller never wrote.  If a package or a symbol
+;;; has gone from the image between the doors, that is a refusal with its own
+;;; code, not a silent re-creation.
+;;;
+;;; STRINGS ARE COPIED.  CD/0's reader already returns a fresh string; the
+;;; explicit COPY-SEQ makes the isolation a property of THIS file rather than an
+;;; inherited one, so a future CD/0 that stopped copying could not silently
+;;; re-open finding 1b.
+
+(define-condition %term-irreconstructible (error)
+  ((reason :initarg :reason :reader %ti-reason)
+   (shown :initarg :shown :reader %ti-shown)))
+
+(defun %seg (segments index)
+  (if (< index (length segments)) (aref segments index) nil))
+
+(defun decode-term (datum)
+  "Reconstruct a FRESH host form from a term DATUM.  Public, because the claim
+that the stored datum IS what the macroexpander received is only checkable if a
+reader can perform the reconstruction independently."
+  (unless (lisp-plus-cd0:record-datum-p datum)
+    (error '%term-irreconstructible :reason :not-a-term-record
+                                    :shown "a term is a record of KIND and VALUE"))
+  (multiple-value-bind (kind-d kind-ok)
+      (lisp-plus-cd0:record-datum-ref datum (%term-key "KIND"))
+    (multiple-value-bind (value-d value-ok)
+        (lisp-plus-cd0:record-datum-ref datum (%term-key "VALUE"))
+      (unless (and kind-ok value-ok)
+        (error '%term-irreconstructible :reason :term-fields-absent
+                                        :shown "a term needs both KIND and VALUE"))
+      (unless (lisp-plus-cd0:identifier-datum-p kind-d)
+        (error '%term-irreconstructible :reason :term-kind-not-an-identifier :shown ""))
+      (let ((kind (%seg (lisp-plus-cd0:identifier-datum-path kind-d) 0)))
+        (cond
+          ((string= kind "SYMBOL")
+           (unless (lisp-plus-cd0:identifier-datum-p value-d)
+             (error '%term-irreconstructible :reason :symbol-value-not-an-identifier :shown ""))
+           (let* ((package-name (%seg (lisp-plus-cd0:identifier-datum-namespace value-d) 0))
+                  (symbol-name (%seg (lisp-plus-cd0:identifier-datum-path value-d) 0))
+                  (package (and package-name (find-package package-name))))
+             (unless package
+               (error '%term-irreconstructible :reason :package-absent-in-image
+                                               :shown (or package-name "<no namespace>")))
+             (multiple-value-bind (symbol status) (find-symbol symbol-name package)
+               (unless status
+                 (error '%term-irreconstructible :reason :symbol-absent-in-image
+                                                 :shown symbol-name))
+               symbol)))
+          ((string= kind "INTEGER") (lisp-plus-cd0:integer-datum-value value-d))
+          ((string= kind "STRING")  (copy-seq (lisp-plus-cd0:string-datum-value value-d)))
+          ((string= kind "LIST")
+           (loop for i from 0 below (lisp-plus-cd0:sequence-datum-length value-d)
+                 collect (decode-term (lisp-plus-cd0:sequence-datum-ref value-d i))))
+          (t (error '%term-irreconstructible :reason :unknown-term-kind
+                                             :shown (or kind "<none>"))))))))
 
 ;;; THE MEASUREMENTS MUST SURVIVE HOSTILE STRUCTURE.
 ;;;
@@ -355,7 +493,8 @@ grammar without taking this file's word for it."
              (when (and walk (not (consp walk))) (incf total 1))
              total))))
 
-(defun %encode-checked (form phase tag depth-code nodes-code term-code octets-code)
+(defun %encode-checked (form phase tag depth-code nodes-code term-code
+                        octets-code shared-code)
   "Encode FORM, enforcing this layer's declared ceilings BEFORE and AFTER, and
 reclassifying a term failure into a typed Surface /1 refusal with the upstream
 reason preserved."
@@ -370,7 +509,11 @@ reason preserved."
   (let ((datum
           (handler-case (encode-term form)
             (%term-unrepresentable (c)
-              (%refuse phase term-code :occurrence-tag tag
+              (%refuse phase
+                       (if (eq :shared-or-circular-structure (%tu-reason c))
+                           shared-code
+                           term-code)
+                       :occurrence-tag tag
                        :detail (%tu-shown c)
                        :upstream-category "TermGrammar"
                        :upstream-code (string (%tu-reason c))
@@ -472,6 +615,7 @@ to say about."
               (%entry (%id '("CONTEXT") '("READ-PERFORMED"))
                       (lisp-plus-cd0:make-boolean-datum nil)))))
 
+
 ;;; ==================================================================
 ;;; DOOR 1 — REQUEST.  Describes; does not expand.
 ;;; ==================================================================
@@ -483,10 +627,16 @@ to say about."
   (source-form-identity nil :read-only t)
   (operation nil :read-only t)
   (construct-identity nil :read-only t)
-  (occurrence-tag nil :read-only t)
-  ;; The host form is retained ONLY so Door 2 can hand it to the host operation.
-  ;; It is never encoded from here, never compared, and never reaches a receipt.
-  (%host-form nil :read-only t))
+  (occurrence-tag nil :read-only t))
+
+;;; ERRATA 0.1 — THE `%HOST-FORM` SLOT IS GONE, AND ITS ABSENCE IS THE REPAIR.
+;;;
+;;; Candidate /0 retained the caller's own cons tree here and handed it to the
+;;; macroexpander at Door 2.  There is now NO PATH by which a caller-owned
+;;; object reaches Door 2: the request holds an immutable CD/0 datum and
+;;; nothing else, and the host form is reconstructed from that datum on every
+;;; performance.  This is structural incapacity rather than a guarded
+;;; capability — the socket is removed, not watched.
 
 (defun request-expansion (source-form operation occurrence-tag)
   "DOOR 1.  Mint an immutable expansion request.
@@ -494,7 +644,9 @@ to say about."
 DOES NOT EXPAND.  Does not resolve the construct, does not require its package
 to be loaded, and does not require the head to name a known construct at all —
 a request that can never be performed is still a lawful request, and it refuses
-at DOOR 2, in its own phase, with its own code."
+at DOOR 2, in its own phase, with its own code.
+
+THE CALLER'S TREE IS READ EXACTLY ONCE, HERE, AND NEVER CONSULTED AGAIN."
   (unless (lisp-plus-cd0:identifier-datum-p occurrence-tag)
     (%refuse :request :occurrence-tag-not-identifier
              :detail "the occurrence tag must be a CD/0 identifier datum"))
@@ -510,7 +662,8 @@ at DOOR 2, in its own phase, with its own code."
   (let* ((datum (%encode-checked source-form :request occurrence-tag
                                  :source-depth-exceeded :source-nodes-exceeded
                                  :source-term-unrepresentable
-                                 :source-term-octets-exceeded))
+                                 :source-term-octets-exceeded
+                                 :source-term-shared-structure))
          (source-id (%identity datum))
          (head (car source-form))
          (pkg (symbol-package head))
@@ -538,8 +691,7 @@ at DOOR 2, in its own phase, with its own code."
                    :source-form-identity source-id
                    :operation operation
                    :construct-identity construct-id
-                   :occurrence-tag occurrence-tag
-                   :%host-form source-form)))
+                   :occurrence-tag occurrence-tag)))
 
 (defun try-request-expansion (source-form operation occurrence-tag)
   "The non-signalling twin.  Returns (values REQUEST-or-NIL REFUSAL-or-NIL).
@@ -549,6 +701,30 @@ with it is exported."
     (expansion-refused (c) (values nil (expansion-condition-refusal c)))))
 
 ;;; ==================================================================
+;;; THE OCCURRENCE.                          [ERRATA 0.1 — finding 3]
+;;; ==================================================================
+;;;
+;;; Candidate /0 returned an occurrence IDENTITY and defined no occurrence
+;;; OBJECT, while the governing brief required one occurrence type.  That was a
+;;; requirement variance, recorded as such in the errata, and this is the
+;;; repair rather than a ruling that identity-only representation was intended.
+;;; The two designs are NOT equated: an identity is a value that says an
+;;; occurrence happened; an occurrence is the thing that happened, and it can
+;;; be handed around, asked questions, and refused a constructor.
+;;;
+;;; MINTED ONLY ON A COMPLETED EXPANSION.  For a refusal the object does not
+;;; come into existence — not null, not absent-marked.
+
+(defstruct (expansion-occurrence (:constructor %make-occurrence) (:copier nil)
+                                 (:predicate expansion-occurrence-p))
+  (identity nil :read-only t)
+  (request-identity nil :read-only t)
+  (expanded-form-datum nil :read-only t)
+  (expanded-form-identity nil :read-only t)
+  (disposition nil :read-only t)
+  (occurrence-tag nil :read-only t))
+
+;;; ==================================================================
 ;;; THE RECEIPT.
 ;;; ==================================================================
 
@@ -556,6 +732,7 @@ with it is exported."
                               (:predicate expansion-receipt-p))
   (identity nil :read-only t)
   (request-identity nil :read-only t)
+  (occurrence nil :read-only t)
   (occurrence-identity nil :read-only t)
   (source-form-datum nil :read-only t)
   (source-form-identity nil :read-only t)
@@ -584,7 +761,7 @@ with it is exported."
 (defparameter *%fault-expanded-identity* nil)
 (defparameter *%fault-procedure-version* nil)
 
-(defun %mint-receipt (request expanded-datum expanded-id occurrence-id tag)
+(defun %mint-receipt (request occurrence tag)
   "THE ONLY PATH BY WHICH A RECEIPT COMES INTO BEING.  There is no public
 receipt constructor.
 
@@ -595,14 +772,17 @@ CONSISTENCY.  It does not, and cannot, check that the account is true of the
 world — a receipt is an ACCOUNT, not an AUTHENTICATION."
   (let ((stored-source-id (or *%fault-source-identity*
                               (expansion-request-source-form-identity request)))
-        (stored-expanded-id (or *%fault-expanded-identity* expanded-id))
+        (stored-expanded-id (or *%fault-expanded-identity*
+                                (expansion-occurrence-expanded-form-identity occurrence)))
         (version (or *%fault-procedure-version* (expansion-procedure-version))))
     (unless (lisp-plus-cd0:equal-datum
              stored-source-id
              (%identity (expansion-request-source-form-datum request)))
       (%refuse :receipt :source-identity-projection-mismatch :occurrence-tag tag
                :detail "stored source identity does not match the stored source datum"))
-    (unless (lisp-plus-cd0:equal-datum stored-expanded-id (%identity expanded-datum))
+    (unless (lisp-plus-cd0:equal-datum
+             stored-expanded-id
+             (%identity (expansion-occurrence-expanded-form-datum occurrence)))
       (%refuse :receipt :expanded-identity-projection-mismatch :occurrence-tag tag
                :detail "stored expanded identity does not match the stored expanded datum"))
     (unless (eql version (expansion-procedure-version))
@@ -610,56 +790,65 @@ world — a receipt is an ACCOUNT, not an AUTHENTICATION."
                :detail "receipt procedure version does not equal the package's"))
     (%make-receipt
      :identity (%identity (%seq (list (%text ":receipt")
-                                      occurrence-id
+                                      (expansion-occurrence-identity occurrence)
                                       (expansion-policy-identity)
                                       (%int (expansion-policy-version)))))
      :request-identity (expansion-request-identity request)
-     :occurrence-identity occurrence-id
+     :occurrence occurrence
+     :occurrence-identity (expansion-occurrence-identity occurrence)
      :source-form-datum (expansion-request-source-form-datum request)
      :source-form-identity stored-source-id
-     :expanded-form-datum expanded-datum
+     :expanded-form-datum (expansion-occurrence-expanded-form-datum occurrence)
      :expanded-form-identity stored-expanded-id
      :operation (expansion-request-operation request)
      :construct-identity (expansion-request-construct-identity request)
      :expansion-context (%expansion-context)
-     :disposition (%operation-disposition (expansion-request-operation request)))))
+     :disposition (expansion-occurrence-disposition occurrence))))
 
 ;;; ==================================================================
 ;;; DOOR 2 — PERFORM.  Meets the actual image.
 ;;; ==================================================================
 
-(defun %resolve-macro (request tag)
-  "Resolve the construct named by the request's head, in this image, through the
-CLOSED table.  Every failure is its own code — 'not in the table', 'package
-absent', 'symbol absent' and 'not a macro' are four different facts about the
-world and must not collapse into one."
-  (let* ((head (car (expansion-request-%host-form request)))
-         (pkg (symbol-package head)))
+(defun %reconstruct-source (request tag)
+  "ERRATA 0.1 — the stored canonical datum is the SINGLE AUTHORITY.
+
+Returns a FRESH PRIVATE host form built from the request's immutable source
+datum.  A new one is built on EVERY performance, so nothing a caller does to
+its own tree, and nothing a macroexpander does to a form it was handed, can
+reach a later performance of the same request."
+  (handler-case (decode-term (expansion-request-source-form-datum request))
+    (%term-irreconstructible (c)
+      (%refuse :perform :source-not-reconstructible :occurrence-tag tag
+               :detail (%ti-shown c)
+               :upstream-category "TermGrammar"
+               :upstream-code (string (%ti-reason c))
+               :upstream-stage "term-decode"))))
+
+(defun %resolve-macro (form tag)
+  "Resolve the construct named by the RECONSTRUCTED form's head, in this image,
+through the CLOSED table.  Every failure is its own code — 'not in the table',
+'not a macro' — because those are different facts about the world."
+  (let* ((head (car form))
+         (pkg (and (symbolp head) (symbol-package head))))
     (unless (and pkg (%lookup-construct (package-name pkg) (symbol-name head)))
       (%refuse :perform :not-a-known-surface-construct :occurrence-tag tag
                :detail "the head names no entry in the closed construct table"))
     (let* ((entry (%lookup-construct (package-name pkg) (symbol-name head)))
-           (target-pkg (find-package (first entry))))
-      (unless target-pkg
-        (%refuse :perform :construct-package-absent :occurrence-tag tag
-                 :detail (format nil "package ~A is not present in this image"
-                                 (first entry))))
-      (multiple-value-bind (sym status) (find-symbol (second entry) target-pkg)
-        (declare (ignore status))
-        (unless sym
-          (%refuse :perform :construct-symbol-absent :occurrence-tag tag
-                   :detail (format nil "symbol ~A is absent from ~A"
-                                   (second entry) (first entry))))
-        (unless (macro-function sym)
-          (%refuse :perform :construct-not-a-macro :occurrence-tag tag
-                   :detail (format nil "~A has no macro function in this image"
-                                   (second entry))))
-        sym))))
+           (target-pkg (find-package (first entry)))
+           (sym (and target-pkg (find-symbol (second entry) target-pkg))))
+      (unless (and sym (macro-function sym))
+        (%refuse :perform :construct-not-a-macro :occurrence-tag tag
+                 :detail (format nil "~A has no macro function in this image"
+                                 (second entry))))
+      sym)))
 
 (defun perform-expansion (request)
   "DOOR 2.  Perform the requested host macroexpansion and account for it.
 
-Returns (values RECEIPT EXPANDED-HOST-FORM OCCURRENCE-IDENTITY).
+Returns (values RECEIPT EXPANDED-HOST-FORM OCCURRENCE).
+
+ERRATA 0.1 — THE THIRD VALUE IS NOW AN OCCURRENCE OBJECT, not a bare identity.
+Its identity remains reachable through EXPANSION-OCCURRENCE-IDENTITY.
 
 THIS LAYER CATCHES NOTHING FROM THE MACRO FUNCTION.  If the construct's own
 grammar refuses the form, ITS condition escapes to the caller unwrapped, and
@@ -669,8 +858,9 @@ make its verdict a fact this layer reported."
   (unless (expansion-request-p request)
     (error "PERFORM-EXPANSION requires an expansion request object."))
   (let* ((tag (expansion-request-occurrence-tag request))
-         (form (expansion-request-%host-form request)))
-    (%resolve-macro request tag)
+         ;; A FRESH private form, every time.  No caller-owned object is read.
+         (form (%reconstruct-source request tag)))
+    (%resolve-macro form tag)
     ;; The expansion itself.  The NULL lexical environment is supplied
     ;; explicitly so that what the context field records is what actually
     ;; happened, rather than whatever the host would have defaulted to.
@@ -681,8 +871,10 @@ make its verdict a fact this layer reported."
                                             :expanded-depth-exceeded
                                             :expanded-nodes-exceeded
                                             :expanded-term-unrepresentable
-                                            :expanded-term-octets-exceeded))
+                                            :expanded-term-octets-exceeded
+                                            :expanded-term-shared-structure))
            (expanded-id (%identity expanded-datum))
+           (disposition (%operation-disposition (expansion-request-operation request)))
            ;; THE EXPANDED-FORM IDENTITY IS COMMITTED, NEVER OMITTED.  Unlike a
            ;; declared substitution, an expansion is not derivable from the
            ;; request: the construct computed it.  There is no derivability
@@ -691,12 +883,15 @@ make its verdict a fact this layer reported."
              (%identity (%seq (list (%text ":occurrence")
                                     (expansion-request-identity request)
                                     expanded-id
-                                    (%id '("DISPOSITION")
-                                         (list (string (%operation-disposition
-                                                        (expansion-request-operation request))))))))))
-      (values (%mint-receipt request expanded-datum expanded-id occurrence-id tag)
-              expanded
-              occurrence-id))))
+                                    (%id '("DISPOSITION") (list (string disposition)))))))
+           (occurrence
+             (%make-occurrence :identity occurrence-id
+                               :request-identity (expansion-request-identity request)
+                               :expanded-form-datum expanded-datum
+                               :expanded-form-identity expanded-id
+                               :disposition disposition
+                               :occurrence-tag tag)))
+      (values (%mint-receipt request occurrence tag) expanded occurrence))))
 
 (defun try-perform-expansion (request)
   "The non-signalling twin.  THREE VALUES ON BOTH BRANCHES, so a caller
@@ -704,7 +899,7 @@ destructuring the result cannot read a refusal as a success:
   success -> (values RECEIPT EXPANDED-FORM NIL)
   refusal -> (values NIL      NIL           REFUSAL)"
   (handler-case
-      (multiple-value-bind (receipt expanded id) (perform-expansion request)
-        (declare (ignore id))
+      (multiple-value-bind (receipt expanded occurrence) (perform-expansion request)
+        (declare (ignore occurrence))
         (values receipt expanded nil))
     (expansion-refused (c) (values nil nil (expansion-condition-refusal c)))))
