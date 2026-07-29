@@ -1,0 +1,53 @@
+driver        : run-helper-control.sh
+subject tree  : /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1
+scratch cwd   : (a throwaway directory; the SBCL image dies with it)
+SBCL          : 2.4.6
+This is SBCL 2.4.6, an implementation of ANSI Common Lisp.
+More information about SBCL is available at <http://www.sbcl.org/>.
+
+SBCL is free software, provided as is, with absolutely no warranty.
+It is mostly in the public domain; some portions are provided under
+BSD-style licenses.  See the CREDITS and COPYING files in the
+distribution for more information.
+
+HELPER-RESOLUTION NEGATIVE CONTROL — Evidence Addendum 0.1
+subject tree : /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1/
+CD/0 package : LISP-PLUS-CD0
+
+SHIPPED HELPER, as read from surface1-selftest.lisp:
+  (defmacro cd0 (name &rest args) ...)  body forms: 3
+  OK the shipped helper's source mentions :EXTERNAL at all
+       (a helper that never names the status cannot be demanding it)
+  OK PRECONDITION — neither probe name exists in LISP-PLUS-CD0 yet
+       NO-SUCH-CD0-OPERATION-ALPHA -> NIL · NO-SUCH-CD0-OPERATION-BETA -> NIL
+
+ARM 1 — THE REPAIRED HELPER, misspelled operation.
+  MUST refuse at macroexpansion time AND intern nothing.
+  OK macroexpanding (cd0 NO-SUCH-CD0-OPERATION-BETA 1) SIGNALLED
+       condition: CD0: NO-SUCH-CD0-OPERATION-BETA is absent in LISP-PLUS-CD0, not :EXTERNAL
+  OK and the name was NOT manufactured — still absent from LISP-PLUS-CD0
+       find-symbol status after the attempt: NIL
+
+ARM 2 — THE REPAIRED HELPER, an operation that EXISTS but is :INTERNAL.
+  MUST refuse: accessibility is not entitlement.
+  OK macroexpanding (cd0 %BOOLEAN-DATUM 1) SIGNALLED — status :INTERNAL
+       condition: CD0: %BOOLEAN-DATUM is INTERNAL in LISP-PLUS-CD0, not :EXTERNAL
+
+ARM 3 — THE PRE-REPAIR HELPER, same misspelling. THE DEFECT, EXHIBITED.
+  Expected to SUCCEED and to MUTATE the package — that is the defect.
+  OK the pre-repair helper macroexpanded WITHOUT complaint
+       expansion: (LISP-PLUS-CD0::NO-SUCH-CD0-OPERATION-ALPHA 1)
+  OK and it MANUFACTURED the name — now :INTERNAL in LISP-PLUS-CD0
+       find-symbol status after the attempt: :INTERNAL
+       The instrument mutated the package it claims to be observing, and the
+       failure was deferred to an undefined-function error far from its cause.
+
+HELPER-RESOLUTION-CONTROL checks=7 expected=7 failed=0
+CONTROL SATISFIED — the repaired helper refuses at macroexpansion time and
+interns nothing; the pre-repair helper accepts the same name and mutates the
+package.  The difference is exhibited, not asserted.
+
+CONTAINMENT — the tree's .lisp files, rolled to one digest, before and after:
+  before 38c163c1e60f5d4482b249a1f025b1acfd35333948a0f5f99183c47ccd59a492
+  after  38c163c1e60f5d4482b249a1f025b1acfd35333948a0f5f99183c47ccd59a492
+  UNCHANGED — the control mutated only its own image.

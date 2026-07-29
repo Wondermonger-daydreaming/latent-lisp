@@ -1,9 +1,9 @@
 subject-digest         9214b59bda190327dc879186bd6d567eae8d2e7d0d162f869148fad1ad6aaf99
 subject-label          (none supplied)   (ADVISORY, not a measurement)
-surface1-selftest      exit 0 · canonical line matched 1 (must be 1) · subject 9214b59bda190327
-stub-image-fixture     exit 0 · canonical line matched 1 (must be 1) · subject 9214b59bda190327
-de-expansione-testata  exit 0 · canonical line matched 1 (must be 1) · subject 9214b59bda190327
-reproduction I         exit 0 · canonical line matched 1 (must be 1) · subject 9214b59bda190327
-reproduction II        exit 0 · canonical line matched 1 (must be 1) · subject 9214b59bda190327
-reproduction III       exit 0 · canonical line matched 1 (must be 1) · subject 9214b59bda190327
-digest agreement       1 (must be 1; ABSENT bindings are reported, not counted)
+surface1-selftest      exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+stub-image-fixture     exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+de-expansione-testata  exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+reproduction I         exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+reproduction II        exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+reproduction III       exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+digest agreement       1 (must be 1; ABSENT is a FAILURE — Evidence Addendum 0.1) · all six instruments bound the digest and agree with this run's

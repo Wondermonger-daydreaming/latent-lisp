@@ -1,0 +1,161 @@
+HELPER-RESOLUTION SEARCH — Evidence Addendum 0.1
+tree: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1
+
+==========================================================================
+COMMAND 1 — every macro definition in the current executable instruments.
+  grep -n '^(defmacro' <instruments>
+==========================================================================
+surface1-selftest.lisp:28:(defmacro s1 (name &rest args)
+surface1-selftest.lisp:39:(defmacro cd0 (name &rest args)
+STUB-IMAGE-FIXTURE.lisp:47:(defmacro s1 (name &rest args)
+STUB-IMAGE-FIXTURE.lisp:53:(defmacro cd0 (name &rest args)
+de-expansione-testata/APPLICATION.lisp:62:(defmacro s1 (name &rest args)
+de-expansione-testata/APPLICATION.lisp:68:(defmacro cd0 (name &rest args)
+errata-0.1/REPRODUCTION.lisp:38:(defmacro s1 (n &rest a)
+errata-0.1/REPRODUCTION.lisp:44:(defmacro cd0 (n &rest a)
+errata-0.2/REPRODUCTION-II.lisp:34:(defmacro s1 (n &rest a)
+errata-0.2/REPRODUCTION-II.lisp:40:(defmacro cd0 (n &rest a)
+errata-0.3/REPRODUCTION-III.lisp:45:(defmacro s1 (name &rest args)
+
+==========================================================================
+COMMAND 2 — every INTERN call in the current executable instruments,
+with the two lines after it, so its purpose is legible.
+  grep -nE '\(intern ' <instruments>
+==========================================================================
+surface1-selftest.lisp:295:    (not (same (s1 encode-term (intern "lower" '#:cl-user))
+surface1-selftest.lisp:296:               (s1 encode-term (intern "LOWER" '#:cl-user)))))
+surface1-selftest.lisp:920:         (intern "*S1-N*" '#:cl-user)
+surface1-selftest.lisp:953:                      (intern "*S1-STR*" '#:cl-user)
+surface1-selftest.lisp:976:                          (intern "*S1-STR2*" '#:cl-user)
+surface1-selftest.lisp:1048:           (sym (intern "TRANSIENT" pkg))
+surface1-selftest.lisp:1060:           (sym (intern "GONE" pkg))
+surface1-selftest.lisp:1466:           (x (intern "X" pkg))
+surface1-selftest.lisp:1488:           (x-delta (intern "X" delta))
+surface1-selftest.lisp:1490:      (intern "X" else)
+surface1-selftest.lisp:1610:                      (intern "*S1-P-SHARED*" '#:cl-user)
+de-expansione-testata/APPLICATION.lisp:186:(check (not (boundp (intern "*TESTATA-CONTRACT*" '#:cl-user)))
+errata-0.1/REPRODUCTION.lisp:107:         (intern "*REPRO-C*" '#:cl-user)
+errata-0.1/REPRODUCTION.lisp:167:        (intern "*REPRO-S*" '#:cl-user)
+errata-0.1/REPRODUCTION.lisp:290:                                      (intern "*REPRO-J*" '#:cl-user)
+errata-0.2/REPRODUCTION-II.lisp:186:                            (intern "*REPRO2-B*" '#:cl-user)
+errata-0.3/REPRODUCTION-III.lisp:213:  (let* ((x (intern "X" (find-package "E03R-RHO")))
+errata-0.3/REPRODUCTION-III.lisp:223:  (let* ((x (intern "X" (find-package "E03R-DELTA"))))
+errata-0.3/REPRODUCTION-III.lisp:224:    (intern "X" (find-package "E03R-ELSE"))
+
+==========================================================================
+COMMAND 3 — every FIND-SYMBOL call, so an UNGUARDED one (a resolution that
+does not demand :EXTERNAL) can be told from a guarded one.
+  grep -nE '\(find-symbol|multiple-value-bind \(sym' <instruments>
+==========================================================================
+surface1-selftest.lisp:34:  (multiple-value-bind (sym status) (find-symbol (string name) '#:lisp-plus-surface1)
+surface1-selftest.lisp:54:  (multiple-value-bind (symbol status)
+surface1-selftest.lisp:55:      (find-symbol (string name) '#:lisp-plus-cd0)
+surface1-selftest.lisp:803:    (notany (lambda (n) (eq :external (nth-value 1 (find-symbol n '#:lisp-plus-surface1))))
+surface1-selftest.lisp:813:    (notany (lambda (n) (find-symbol n '#:lisp-plus-surface1))
+surface1-selftest.lisp:883:    (every (lambda (n) (eq :external (nth-value 1 (find-symbol n '#:lisp-plus-surface1))))
+surface1-selftest.lisp:898:    (null (find-symbol "EXPANSION-REQUEST-%HOST-FORM" '#:lisp-plus-surface1)))
+surface1-selftest.lisp:919:   (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+surface1-selftest.lisp:952:           (src (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+surface1-selftest.lisp:975:                    (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+surface1-selftest.lisp:1051:      (and (null (find-symbol "TRANSIENT" pkg))
+surface1-selftest.lisp:1056:           (null (find-symbol "TRANSIENT" pkg)))))
+surface1-selftest.lisp:1096:           (px (find-symbol "X" p))
+surface1-selftest.lisp:1101:      (and (eq :inherited (nth-value 1 (find-symbol "X" p)))
+surface1-selftest.lisp:1113:           (px (find-symbol "X" p))
+surface1-selftest.lisp:1115:                    (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+surface1-selftest.lisp:1137:      (import (find-symbol "Y" q) p)
+surface1-selftest.lisp:1138:      (multiple-value-bind (sym status) (find-symbol "Y" p)
+surface1-selftest.lisp:1165:      (import (find-symbol "Z" q) p)
+surface1-selftest.lisp:1166:      (let* ((imported (find-symbol "Z" p))
+surface1-selftest.lisp:1218:           (px (find-symbol "X" p))
+surface1-selftest.lisp:1372:    (and (eq :external (nth-value 1 (find-symbol "TERM-DEPTH-CEILING"
+surface1-selftest.lisp:1505:           (req (s1 request-expansion (list (find-symbol "X" delta) 1)
+surface1-selftest.lisp:1546:           (<= (funcall (find-symbol "%HOST-DEPTH" '#:lisp-plus-surface1)
+surface1-selftest.lisp:1549:           (<= (funcall (find-symbol "%HOST-NODES" '#:lisp-plus-surface1)
+surface1-selftest.lisp:1600:      (and (<= (funcall (find-symbol "%HOST-DEPTH" '#:lisp-plus-surface1) src)
+surface1-selftest.lisp:1609:           (src (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+surface1-selftest.lisp:1860:        (funcall (find-symbol "SUBJECT-SHORT" "SURFACE1-EVIDENCE")
+STUB-IMAGE-FIXTURE.lisp:48:  (multiple-value-bind (sym status) (find-symbol (string name) '#:lisp-plus-surface1)
+STUB-IMAGE-FIXTURE.lisp:54:  (multiple-value-bind (sym status) (find-symbol (string name) '#:lisp-plus-cd0)
+STUB-IMAGE-FIXTURE.lisp:69:(defparameter *head* (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0))
+de-expansione-testata/APPLICATION.lisp:63:  (multiple-value-bind (sym status) (find-symbol (string name) '#:lisp-plus-surface1)
+de-expansione-testata/APPLICATION.lisp:69:  (multiple-value-bind (sym status) (find-symbol (string name) '#:lisp-plus-cd0)
+de-expansione-testata/APPLICATION.lisp:184:(check (null (find-symbol "EXPANSION-REQUEST-%HOST-FORM" '#:lisp-plus-surface1))
+de-expansione-testata/APPLICATION.lisp:232:(check (null (find-symbol "EXPANSION-RECEIPT-MEANING" '#:lisp-plus-surface1))
+de-expansione-testata/APPLICATION.lisp:234:(check (null (find-symbol "EXPANSION-RECEIPT-ENVIRONMENT" '#:lisp-plus-surface1))
+de-expansione-testata/APPLICATION.lisp:245:(defparameter *object* (symbol-value (find-symbol "*TESTATA-CONTRACT*" '#:cl-user)))
+errata-0.1/REPRODUCTION.lisp:39:  (multiple-value-bind (sym status) (find-symbol (string n) '#:lisp-plus-surface1)
+errata-0.1/REPRODUCTION.lisp:45:  (multiple-value-bind (sym status) (find-symbol (string n) '#:lisp-plus-cd0)
+errata-0.1/REPRODUCTION.lisp:69:      (funcall (find-symbol "EXPANSION-OCCURRENCE-IDENTITY" '#:lisp-plus-surface1) x)))
+errata-0.1/REPRODUCTION.lisp:106:   (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+errata-0.1/REPRODUCTION.lisp:166:  (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+errata-0.1/REPRODUCTION.lisp:289:                                (list (find-symbol "DEFINE-JUDGMENT-SCHEMA" '#:lisp-plus-surface0)
+errata-0.1/REPRODUCTION.lisp:317:(defparameter *occ-p*  (multiple-value-list (find-symbol "EXPANSION-OCCURRENCE-P"
+errata-0.1/REPRODUCTION.lisp:319:(defparameter *occ-id* (multiple-value-list (find-symbol "EXPANSION-OCCURRENCE-IDENTITY"
+errata-0.1/REPRODUCTION.lisp:330:      (and (find-symbol "EXPANSION-OCCURRENCE" '#:lisp-plus-surface1) t))
+errata-0.1/REPRODUCTION.lisp:348:  (multiple-value-bind (sym status) (find-symbol n '#:lisp-plus-surface1)
+errata-0.1/REPRODUCTION.lisp:356:(multiple-value-bind (sym status)
+errata-0.1/REPRODUCTION.lisp:357:    (find-symbol "REFUSAL-CATALOG-ENTRY-REACHABILITY" '#:lisp-plus-surface1)
+errata-0.2/REPRODUCTION-II.lisp:35:  (multiple-value-bind (sym status) (find-symbol (string n) '#:lisp-plus-surface1)
+errata-0.2/REPRODUCTION-II.lisp:41:  (multiple-value-bind (sym status) (find-symbol (string n) '#:lisp-plus-cd0)
+errata-0.2/REPRODUCTION-II.lisp:85:(defparameter *p-x* (find-symbol "X" '#:probe-p))
+errata-0.2/REPRODUCTION-II.lisp:86:(defparameter *q-x* (find-symbol "X" '#:probe-q))
+errata-0.2/REPRODUCTION-II.lisp:91:(multiple-value-bind (s st) (find-symbol "X" '#:probe-p)
+errata-0.2/REPRODUCTION-II.lisp:92:  (line "(find-symbol \"X\" P) before . ~A / status ~S" (symbol-package s) st))
+errata-0.2/REPRODUCTION-II.lisp:97:  (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+errata-0.2/REPRODUCTION-II.lisp:114:(multiple-value-bind (s st) (find-symbol "X" '#:probe-p)
+errata-0.2/REPRODUCTION-II.lisp:115:  (line "(find-symbol \"X\" P) after .. ~A / status ~S"
+errata-0.2/REPRODUCTION-II.lisp:183:(let* ((hook (find-symbol "*%FAULT-DECODE-SUBSTITUTION*" '#:lisp-plus-surface1))
+errata-0.2/REPRODUCTION-II.lisp:185:                      (list (find-symbol "DEFINE-ADMISSION-CONTRACT" '#:lisp-plus-surface0)
+errata-0.2/REPRODUCTION-II.lisp:225:(import (find-symbol "Y" '#:probe-q2) (find-package '#:probe-p2))
+errata-0.2/REPRODUCTION-II.lisp:226:(multiple-value-bind (s st) (find-symbol "Y" '#:probe-p2)
+errata-0.2/REPRODUCTION-II.lisp:227:  (line "(find-symbol \"Y\" P2) ....... ~A / status ~S"
+errata-0.2/REPRODUCTION-II.lisp:248:        (package-name (symbol-package (find-symbol "Y" '#:probe-p2))))
+errata-0.2/REPRODUCTION-II.lisp:249:  (multiple-value-bind (sym status) (find-symbol "Y" '#:probe-p2)
+errata-0.2/REPRODUCTION-II.lisp:250:    (line "(find-symbol \"Y\" P2) = ~A / status ~S — a STATUS-ONLY guard would PASS it"
+errata-0.3/REPRODUCTION-III.lisp:47:    (multiple-value-bind (sym status) (find-symbol (string name) p)
+errata-0.3/REPRODUCTION-III.lisp:84:  (funcall (find-symbol "SUBJECT-DIGEST" "SURFACE1-EVIDENCE") *subject-dir*))
+errata-0.3/REPRODUCTION-III.lisp:164:        (error (c) (setf signalling (if (typep c (find-symbol "EXPANSION-REFUSED"
+
+==========================================================================
+COMMAND 4 — THE ONE THAT DECIDES.  A helper is a macro that resolves a name
+into the production packages.  Print each such macro's whole body and show
+whether it demands :EXTERNAL.
+  for each defmacro: sed the form, test for INTERN and for :EXTERNAL
+==========================================================================
+  surface1-selftest.lisp:28                      macro s1     INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  surface1-selftest.lisp:39                      macro cd0    INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  STUB-IMAGE-FIXTURE.lisp:47                     macro s1     INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  STUB-IMAGE-FIXTURE.lisp:53                     macro cd0    INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  de-expansione-testata/APPLICATION.lisp:62      macro s1     INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  de-expansione-testata/APPLICATION.lisp:68      macro cd0    INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  errata-0.1/REPRODUCTION.lisp:38                macro s1     INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  errata-0.1/REPRODUCTION.lisp:44                macro cd0    INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  errata-0.2/REPRODUCTION-II.lisp:34             macro s1     INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  errata-0.2/REPRODUCTION-II.lisp:40             macro cd0    INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+  errata-0.3/REPRODUCTION-III.lisp:45            macro s1     INTERN=NO  :EXTERNAL=YES  OK — resolves through FIND-SYMBOL and refuses unless :EXTERNAL
+
+==========================================================================
+DISPOSITION
+==========================================================================
+  NO production-API-resolving helper in any current executable instrument
+  manufactures symbols.  All resolve through FIND-SYMBOL and refuse unless
+  the symbol is :EXTERNAL.
+
+  REMAINING INTERN CALLS ARE FIXTURE CONSTRUCTION, NOT HELPER RESOLUTION,
+  and are correct as they stand.  They fall in three kinds:
+    * probe-package fixtures  — (intern "X" pkg) in E03R-RHO / PROBE-P / …,
+      symbols created precisely so the layer can be asked about them;
+    * definition names inside source forms under test — (intern "*S1-N*"
+      '#:cl-user), the name a specimen DEFINE-… form is about to bind;
+    * a negative check that DEPENDS on interning — APPLICATION.lisp:186
+      asserts the interned name is NOT bound.
+  None of these resolves an operation of the production API.  The distinction
+  is not stylistic: manufacturing a FIXTURE name is the instrument's subject;
+  manufacturing an API name is the instrument losing the ability to fail.
+
+  OUT OF SCOPE, REPORTED NOT REPAIRED: surface1.lisp and package.lisp are the
+  production layer.  This addendum is not authorized to change them.  For the
+  record, surface1.lisp resolves reconstructed symbols with FIND-SYMBOL and
+  never INTERN by its own documented law (surface1.lisp:626), and validates
+  status rather than mere accessibility (surface1.lisp:739).

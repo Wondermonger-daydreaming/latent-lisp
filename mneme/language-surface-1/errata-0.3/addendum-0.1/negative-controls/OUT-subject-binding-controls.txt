@@ -1,0 +1,29 @@
+SUBJECT-BINDING NEGATIVE CONTROLS — Evidence Addendum 0.1
+logic under test: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/mneme/language-surface-1/run-surface1-candidate.sh
+runner sha256   : c9d978eb298d886f2207bea112dae80fface798441870f6012230f4b280836ba
+
+CONTROLS — each plants ONE fault; the gate must REFUSE.  C0 plants none.
+
+  OK   C0a positive control — correct selftest line PASS    bindings=9214b59bda190327                   ok
+  OK   C0b positive control — correct repro-III line PASS    bindings=9214b59bda190327                   ok
+  OK   C1 selftest subject field ABSENT               REFUSE  bindings=ABSENT                             field set mismatch — required [checks expected failed subject], found [checks expected failed]
+  OK   C2 repro-III subject field ABSENT              REFUSE  bindings=ABSENT                             field set mismatch — required [classification confirmed expected refuted subject verdicts], found [classification confirmed expected refuted verdicts]
+  OK   C3a selftest digest well-formed but WRONG      REFUSE  bindings=deadbeefcafe0123                   subject=deadbeefcafe0123 != this run's digest 9214b59bda190327
+  OK   C3b repro-III digest well-formed but WRONG     REFUSE  bindings=deadbeefcafe0123                   subject=deadbeefcafe0123 != this run's digest 9214b59bda190327
+  OK   C4 transcript carries ZERO canonical lines     REFUSE  bindings=ABSENT                             expected exactly one 'SELFTEST-RESULT' line, found 0
+  OK   C5 transcript carries TWO canonical lines      REFUSE  bindings=9214b59bda190327                   expected exactly one 'SELFTEST-RESULT' line, found 2
+  OK   C6 TWO CONFLICTING digests (spliced tail)      REFUSE  bindings=9214b59bda190327,deadbeefcafe0123  bound [9214b59bda190327,deadbeefcafe0123], this run computed 9214b59bda190327
+       note: the canonical LINE passed (ok); only the widened
+       binding scan caught it.  This is the control that justifies widening.
+  OK   C7 process exited BEFORE emitting its result   REFUSE  bindings=ABSENT                             malformed token 'expec' (no '=') in the SELFTEST-RESULT line
+  OK   C7b truncated run, summary re-appended         REFUSE  bindings=9214b59bda190327                   checks=35 != expected=139 — the instrument did not execute everything it declared
+  OK   C8a subject UPPERCASE hex — not canonical form REFUSE  bindings=ABSENT                             subject '9214B59BDA190327' is not 16 lowercase hex digits
+  OK   C8b subject 15 hex digits, not 16              REFUSE  bindings=ABSENT                             subject '9214b59bda19032' is not 16 lowercase hex digits
+  OK   C8c failed=1 must refuse                       REFUSE  bindings=9214b59bda190327                   failed=1, must be 0
+  OK   C8d an UNKNOWN field added to the line         REFUSE  bindings=9214b59bda190327                   field set mismatch — required [checks expected failed subject], found [checks expected failed skipped subject]
+  OK   C8e repro-III refuted != verdicts              REFUSE  bindings=9214b59bda190327                   refuted=11 != verdicts=12
+
+  passed 16 · failed 0
+  ALL CONTROLS BEHAVED AS REQUIRED — the gate accepts a correct transcript
+  and refuses each planted fault.  The green on this tree is now evidence
+  that something was checked, not evidence that nothing was.

@@ -1,0 +1,31 @@
+PRE-CORRECTION WITNESS — the optional-subject-binding hole
+subject under witness : 431fee16:experiments/latent-lisp/mneme/language-surface-1/run-surface1-candidate.sh
+
+published runner sha256: bd54776841f298d7ef6541f8800ed8074d4b8deeddc27123e2c281235af1236a
+
+EXTRACTED VERBATIM FROM THE PUBLISHED RUNNER:
+  GATE_SELFTEST="^SELFTEST-RESULT checks=([0-9]+) expected=\1 failed=0( subject=${SUBJECT_SHORT})?$"
+  GATE_REPRO3="^REPRODUCTION-III-RESULT verdicts=([0-9]+) expected=\1 confirmed=0 refuted=\1 classification=[0-9]+( subject=${SUBJECT_SHORT})?$"
+  subject_binding() { ... }   (returns the literal string ABSENT when no ' subject=' tail is found)
+  the digest-agreement loop, whose body begins:
+    for v in "$SELFTEST_SUBJ" "$STUB_SUBJ" "$APP_SUBJ" "$REPRO1_SUBJ" "$REPRO2_SUBJ" "$REPRO3_SUBJ"; do
+      [ "$v" = "ABSENT" ] && continue
+
+MEASURED, against transcripts carrying NO subject digest:
+  line: SELFTEST-RESULT checks=139 expected=139 failed=0
+        gate matched = 1   (1 means the gate ACCEPTED it)
+        subject_binding = ABSENT
+  line: REPRODUCTION-III-RESULT verdicts=12 expected=12 confirmed=0 refuted=12 classification=4
+        gate matched = 1   (1 means the gate ACCEPTED it)
+        subject_binding = ABSENT
+
+  digest-agreement loop over (ABSENT ABSENT ok ok ok ok) -> SUBJ_AGREE=1
+        (1 means the run REPORTED AGREEMENT while two instruments bound nothing)
+
+WITNESS ESTABLISHED — the published gate is FAIL-OPEN on subject binding
+for surface1-selftest.lisp and errata-0.3/REPRODUCTION-III.lisp.
+
+HONEST LIMIT, stated so it is not read larger than it is: both instruments
+DO in fact emit the tail in the published transcripts.  What was open is the
+GATE, not the emission — a transcript that lost the tail, by truncation,
+substitution or an instrument regression, would have passed unremarked.

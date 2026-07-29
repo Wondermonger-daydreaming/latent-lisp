@@ -36,7 +36,27 @@ so a suite can no longer silently depend on a private name."
       (error "S1: ~A is ~:[absent~;~:*~A~] in LISP-PLUS-SURFACE1, not :EXTERNAL"
              (string name) status))
     `(,sym ,@args)))
-(defmacro cd0 (name &rest args) `(,(intern (string name) '#:lisp-plus-cd0) ,@args))
+(defmacro cd0 (name &rest args)
+  "EVIDENCE ADDENDUM 0.1 — the last surviving bare-INTERN helper.
+
+Errata 0.1 repaired the S1 helper directly above; Errata 0.3 / D8 F-16 repaired
+BOTH helpers in the stub fixture, the application and all three reproductions.
+This one was missed — five instruments of six.  Bare INTERN cannot tell a private
+name from a public one and MANUFACTURES a name it fails to find, so a typo or a
+demoted export became a fresh internal symbol in LISP-PLUS-CD0 and the error
+surfaced far from its cause, as an undefined function rather than as a refusal to
+resolve.  Worse for an evidence instrument: interning MUTATES the image the suite
+claims to be observing.
+
+Now resolved EXTERNAL-ONLY, refusing at macroexpansion time — the same contract
+S1 has carried since Errata 0.1, and the same one the other five instruments
+carry since Errata 0.3."
+  (multiple-value-bind (symbol status)
+      (find-symbol (string name) '#:lisp-plus-cd0)
+    (unless (eq status :external)
+      (error "CD0: ~A is ~:[absent~;~:*~A~] in LISP-PLUS-CD0, not :EXTERNAL"
+             (string name) status))
+    `(,symbol ,@args)))
 
 (defparameter *checks* 0)
 (defparameter *failed* 0)

@@ -1,0 +1,41 @@
+SEMANTIC-PATH DIFF — Evidence Addendum 0.1
+base (published Errata 0.3 target) : 431fee16
+target                             : the working tree
+restriction                        : EXACT PATHS, never basenames
+
+  UNCHANGED  Canonical Datum /0       experiments/latent-lisp/canonical-datum/
+  UNCHANGED  Surface /0               experiments/latent-lisp/mneme/language-surface-0/
+  UNCHANGED  Form /0                  experiments/latent-lisp/mneme/language-form-0/
+  UNCHANGED  Form /1                  experiments/latent-lisp/mneme/language-form-1/
+  UNCHANGED  Form /2                  experiments/latent-lisp/mneme/language-form-2/
+  UNCHANGED  Slice /1                 experiments/latent-lisp/mneme/language-slice-1/
+  UNCHANGED  Slice /2                 experiments/latent-lisp/mneme/language-slice-2/
+
+  Surface /1 PRODUCTION implementation (the layer, not its apparatus):
+  UNCHANGED  experiments/latent-lisp/mneme/language-surface-1/surface1.lisp
+  UNCHANGED  experiments/latent-lisp/mneme/language-surface-1/package.lisp
+
+  EVERYTHING THAT MOVED UNDER language-surface-1/ SINCE 431fee16, for contrast.
+  NB: this window includes the TWO COMMITS THAT FOLLOWED the published target
+  (1ae509eb, which untracked the audit parcel zip, and 9faf9f3d, which added
+  the relay parcel).  Those are NOT this addendum's changes; the second list
+  isolates what this addendum alone did.
+    M	experiments/latent-lisp/mneme/language-surface-1/RUN-EXITCODES.txt
+    D	experiments/latent-lisp/mneme/language-surface-1/audits/2026-07-28-stranger-audit.zip
+    A	experiments/latent-lisp/mneme/language-surface-1/errata-0.3/RELAY-PARCEL-ERRATA-0.3.md
+    M	experiments/latent-lisp/mneme/language-surface-1/run-surface1-candidate.sh
+    M	experiments/latent-lisp/mneme/language-surface-1/surface1-selftest.lisp
+    ?? experiments/latent-lisp/mneme/language-surface-1/errata-0.3/addendum-0.1/
+
+  THIS ADDENDUM ALONE — diffed against HEAD, not against the published target:
+    M	experiments/latent-lisp/mneme/language-surface-1/RUN-EXITCODES.txt
+    M	experiments/latent-lisp/mneme/language-surface-1/run-surface1-candidate.sh
+    M	experiments/latent-lisp/mneme/language-surface-1/surface1-selftest.lisp
+    ?? experiments/latent-lisp/mneme/language-surface-1/errata-0.3/addendum-0.1/
+    (three files touched: the runner's gate, the selftest's CD0 helper, and
+     RUN-EXITCODES.txt as a consequence of rerunning.  Plus one new directory.)
+
+  NO PRODUCTION OR DEPENDENCY PATH MOVED.  0 files changed across all eight
+  restricted paths.  The version integers, the grammar, the procedure, the
+  policy, the public API, the receipts, the occurrences and the macroexpansion
+  semantics are byte-identical to the published Errata 0.3 target.
