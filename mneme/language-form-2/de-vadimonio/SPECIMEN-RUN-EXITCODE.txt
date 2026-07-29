@@ -1,0 +1,2 @@
+capture method            direct sbcl --non-interactive --load APPLICATION.lisp, stdout+stderr merged, UNFILTERED
+process exit code         0

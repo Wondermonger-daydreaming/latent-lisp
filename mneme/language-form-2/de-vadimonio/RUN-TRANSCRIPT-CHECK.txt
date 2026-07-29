@@ -1,0 +1,27 @@
+
+RUN-TRANSCRIPT-CHECK — de-vadimonio SPECIMEN-RUN.txt
+mechanical reconciliation of the RAW capture; no expected N is hard-coded
+
+  capture method             direct sbcl --non-interactive --load APPLICATION.lisp, stdout+stderr merged, UNFILTERED
+  recorded process exit      0
+
+  footer count               117
+  rendered verdict lines     117
+  rendered ok                117
+  rendered FAIL              0
+  footer failures            0
+  numbered lines in region   117
+
+  footer == rendered           PASS (117)
+  numbering contiguous 1..N    PASS (1..117)
+  every verdict ok|FAIL        PASS 
+  failures agree               PASS (0)
+  ok + FAIL == rendered        PASS 
+  exit agrees with failures    PASS (exit 0, 0 failures)
+  capture unfiltered           PASS (SBCL banner and program header both present)
+
+  RECONCILIATION CLEAN
+
+  This reconciler certifies ONLY that the transcript agrees with itself.
+  It certifies nothing about whether the checks were the right checks.
+
