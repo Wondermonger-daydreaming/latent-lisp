@@ -1,0 +1,9 @@
+de-teste-occiso - raw crash artifacts (post-SIGKILL store bytes)
+cell hit: CW-3 (synced) - durability barrier satisfied, append receipt undelivered
+store identity: pj0-store:dec1101e687b746f9b9fe9e9497a39ebe2497b018fec44b85a9fbb4fffca93bf
+pre-kill  EVENTS.pj0: 1138 octets  sha256 7e398b8effadfb9632c3dac65d52e52c231b46e96558a3ad0e91a61594a042fc  (3 frames)
+post-kill EVENTS.pj0: 1507 octets  sha256 31a6956b0d7da320131893e5566454f6949287c56378f06287988dbf47e5ac38  (4 frames, valid, zero excluded octets)
+final frame: 369 octets beginning at byte 1138
+LOCK after the kill: absent (the critical section had completed)
+receipt delivered to the caller: none
+byte-stability: every file listed here is byte-identical across runs (fixed store nonce; see specimen-common.lisp)

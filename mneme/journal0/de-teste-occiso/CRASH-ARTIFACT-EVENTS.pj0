@@ -1,0 +1,8 @@
+PJ0F 0 1 170 0f7ce27342e61d96bc56c55b6d0f34fb4713cc4ed53c5b2e96d51b7290dd63ff 703ec8e3af3779ebc98dae5bd0e9aa791b18125eb1415656fa3f4bf5c16d63a6 c74fe28a6f536ad50a2a8fe7ee19900e9bfedacc9d4729bc9a7854ba5ee6bc1e
+(rec ((id "event" "body") "the first thing the writer lived through") ((id "event" "event-id") (id "event" "e-001")) ((id "event" "kind") (id "de-teste-occiso" "noted")))
+PJ0F 0 2 171 73021634a666ae30745d777ae6b98dcb59a8e12f472bbd06335ebe513121e750 c74fe28a6f536ad50a2a8fe7ee19900e9bfedacc9d4729bc9a7854ba5ee6bc1e dfdf10c67f8c9d9b49a5c579ea124025446584ab397ce643185bd2e19b612317
+(rec ((id "event" "body") "the second thing the writer lived through") ((id "event" "event-id") (id "event" "e-002")) ((id "event" "kind") (id "de-teste-occiso" "noted")))
+PJ0F 0 3 170 bd3a9c793389f33b1a0a716ff45e2a898db0e1925252a92833715b3c9416b427 dfdf10c67f8c9d9b49a5c579ea124025446584ab397ce643185bd2e19b612317 d4d090e47035b3be403fc0eea83f07f92fa30c3455dbb1fc565cb5b6a32d5c61
+(rec ((id "event" "body") "the third thing the writer lived through") ((id "event" "event-id") (id "event" "e-003")) ((id "event" "kind") (id "de-teste-occiso" "noted")))
+PJ0F 0 4 160 f0aad30b5223dd4a3da3db970ccc54de9c1e65c8bb7a0b395e99917177d48e90 d4d090e47035b3be403fc0eea83f07f92fa30c3455dbb1fc565cb5b6a32d5c61 f784b4c2dc375c50fe4c9eb750314c2a6ed3afd304cf32af19ecefb45fb3d6ee
+(rec ((id "event" "body") "the thing the writer died over") ((id "event" "event-id") (id "event" "e-004")) ((id "event" "kind") (id "de-teste-occiso" "noted")))

@@ -1,0 +1,135 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+de-teste-occiso — the inhabited restart specimen
+governing sentence: a process may die while its durable history survives; reconstruction may derive from that history, but it may not pretend to remember what was never committed.
+
+== phase 1 — the established chain (:synced, three events) ==
+[001] ok   the journal is created with declared durability :synced and a store identity derived from its own metadata basis (§6.1)
+[002] ok   three events commit through the public §9 append path at ordinals 1, 2, 3, each :newly-committed (PJ-APP-1)
+[003] ok   the established chain validates: :valid, 3 frames, every byte of EVENTS.pj0 inside the valid prefix, no tail
+pre-kill EVENTS.pj0: 1138 octets · sha256 7e398b8effadfb9632c3dac65d52e52c231b46e96558a3ad0e91a61594a042fc
+pre-kill store pj0-store:dec1101e687b746f9b9fe9e9497a39ebe2497b018fec44b85a9fbb4fffca93bf: VALID, 3 frames, 1138 valid bytes, terminal d4d090e47035b3be403fc0eea83f07f92fa30c3455dbb1fc565cb5b6a32d5c61
+
+== phase 2 — the killed writer (separate process, SIGKILL at one governed progress point) ==
+[004] ok   the charged writer reached the governed progress point: the barrier marker appeared, and its bytes are the fixed constant "BARRIER-PASSED" — zero coordinate information crosses to the supervisor
+[005] ok   the writer died by SIGKILL — no unwinding, no cleanup, no opportunity to deliver anything (process status :signaled, signal 9)
+[006] ok   NO RECEIPT REACHED THE CALLER: the delivery channel the child would have written after its wait loop does not exist, and the child's stdout carries no ordinal or disposition (PJ-CW-3, PJ-APP-5 — the frame, not the receipt object, is the primary fact)
+
+== phase 3 — raw crash artifacts ==
+[007] ok   the preserved crash artifact is byte-identical to the surviving store: CRASH-ARTIFACT-EVENTS.pj0 sha256 equals the live EVENTS.pj0 sha256 (the recovery's input is inspectable evidence, not a summary)
+post-kill EVENTS.pj0: 1507 octets · sha256 31a6956b0d7da320131893e5566454f6949287c56378f06287988dbf47e5ac38
+final frame: 369 octets, starting at byte 1138 (derived: post-kill length minus pre-kill length)
+
+-- which §1 cell was hit, and how the bytes prove it --
+[008] ok   (a) rules out CW-0 and CW-1: the surviving bytes validate :valid with 4 frames — a COMPLETE fourth frame is present and chains to the third (CW-0 would show 3 frames and CW-1 a torn tail)
+[009] ok   (b) rules out CW-2a/CW-2b: zero excluded octets — the valid prefix consumes all 1507 bytes, so no bytes are absent and none are torn
+[010] ok   (c) the fourth frame carries exactly the charged event: its payload is byte-identical to the canonical encoding of the declared charge, at ordinal 4
+[011] ok   (d) the death was AFTER the critical section, not inside it: no LOCK file survives, because the child's append had returned and its unwind-protect had released the lock before the kill (a kill inside §9.2 would have left the lock held — PJ-LOCK-2: the lock is coordination machinery, never committed evidence)
+[012] ok   (e) the caller holds NO receipt for a frame that IS durably committed — the CW-3 condition itself, and the append-side analogue of an uncertain external write (PJ-CW-3)
+CELL HIT: CW-3 (synced) — barrier satisfied, receipt undelivered.
+HONEST LIMIT, stated because the bytes cannot say it: CW-2c and CW-3 are BYTE-IDENTICAL by design (§29; ALLOWED-SOURCES standing note 2). The bytes prove a complete durable frame; what distinguishes CW-3 from CW-2c here is the harness's ORDERING RECORD — the barrier marker was written only after APPEND-EVENT returned, i.e. after the §10.1 fsync and the step-9 reopen validation — together with the store's declared :synced durability. That ordering is scaffolding evidence, not byte evidence, and it is named as such.
+PJ-DUR-3 bound: :synced here means fsync(2) returned and the reopen validated on this host. It is never power-loss proof.
+
+== phase 4 — the restart (new process; durable bytes + declared configuration only) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | mode primary
+      | admissible inputs: the store directory's durable bytes + declared configuration; no receipt, no killed-process memory, no operator testimony
+[013] ok   (restart) the surviving store opens: metadata canonical, sidecar digest agrees, store identity re-derived from the metadata basis (§6.1)
+[014] ok   (restart) every file consulted lies inside the store directory (no scratch file of the dead writer, no sentinel, no receipt channel)
+      | explain-journal: store pj0-store:dec1101e687b746f9b9fe9e9497a39ebe2497b018fec44b85a9fbb4fffca93bf: VALID, 4 frames, 1507 valid bytes, terminal f784b4c2dc375c50fe4c9eb750314c2a6ed3afd304cf32af19ecefb45fb3d6ee
+      | EVENTS.pj0 sha256 as received: 31a6956b0d7da320131893e5566454f6949287c56378f06287988dbf47e5ac38
+[015] ok   (restart) terminal classification is exactly what the BYTES say (expected VALID, 4 frames) — the reader reports the state present, never the most flattering branch (PJ-CW-2)
+[016] ok   (restart) no torn tail and no excluded region at this cell: the valid prefix consumes every byte of EVENTS.pj0 (zero excluded octets) — reported as an absence, not assumed
+[017] ok   (restart) the event the dead writer was charged with IS committed: found by event identity at ordinal 4, payload byte-identical to the declared charge
+[018] ok   (restart) the store's durability declaration is READ, never inferred: :synced as declared at creation (PJ-DUR-2 — a journal's declared durability does not change in place)
+      | e-005: not-committed · intention-unknown (never-proposed is NOT derivable from durable bytes)
+[019] ok   (restart) an identity that was never committed is answered as NOT-COMMITTED with INTENTION-UNKNOWN — the recovery does not report that it was never proposed, because the journal cannot say so (the killed process's intentions were never committed)
+[020] ok   (restart) reconstruction replays from the primary journal alone, deletes derived artifacts first and attests the deletion (PJ-RCN-3), and yields a view over exactly the validated prefix (K0E-9)
+[021] ok   (restart) the reconstruction receipt's origin is (id "origin" "reconstructed") and the receipt bytes contain no occurrence of "observed" anywhere (PJ-WIT-1/2/4, PJ-RCN-1: storage integrity never upgrades epistemic origin)
+      | reconstruction: terminal ordinal 4 · output-digest e1f70ffc4ec5ee43da32be5b61bc96261d12cde3614f9167c956b01f24e0c25c · origin origin:reconstructed
+[022] ok   (restart) reconstruction beyond the validated prefix is REFUSED, not extrapolated: requesting ordinal (prefix+1) signals unsupported-reconstruction (K0E-11 — recovery never scans past damage or past the end of history)
+[023] ok   (restart) a BLIND UNSAFE RETRY is refused: the same event identity carrying a different payload signals pj0-event-identity-collision and writes zero bytes (PJ-APP-3 — last-write-wins is prohibited)
+[024] ok   (restart) CW-3 reconciliation BY EVENT IDENTITY: re-presenting the declared charge returns :already-committed-identical at the prior coordinate (ordinal 4) with ZERO new bytes and receipt origin :reconstructed (PJ-CRASH-1, PJ-APP-2/4)
+      | joint report: structural PASS · semantic PASS · tail-could-hide-settlement-p NIL
+[025] ok   (restart) the joint structural+semantic report carries TWO verdicts and flags whether a tail could hide a settlement (K0E-26, K0E-15 journal half)
+      | RESULT: 13 checks, 0 failures
+[026] ok   the restart process completed and rendered its own final sentinel (exit 0 AND a RESULT: line — an incomplete transcript licenses nothing)
+[027] ok   the restart wrote no new frame: EVENTS.pj0 is byte-identical to the preserved crash artifact after the whole recovery, reconciliation included (zero new bytes)
+
+== phase 5 — derived CW-1 exhibit (a TRUNCATION of the crash artifact, not a second kill) ==
+derived state: the final frame's last 7 octets removed — the CW-1 cell of Annex B (proper terminal prefix; prior prefix valid; torn tail visible; source untouched).
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | mode torn
+      | admissible inputs: the store directory's durable bytes + declared configuration; no receipt, no killed-process memory, no operator testimony
+[028] ok   (torn) the surviving store opens: metadata canonical, sidecar digest agrees, store identity re-derived from the metadata basis (§6.1)
+[029] ok   (torn) every file consulted lies inside the store directory (no scratch file of the dead writer, no sentinel, no receipt channel)
+      | explain-journal: store pj0-store:dec1101e687b746f9b9fe9e9497a39ebe2497b018fec44b85a9fbb4fffca93bf: TORN-TAIL, 3 frames, 1138 valid bytes, terminal d4d090e47035b3be403fc0eea83f07f92fa30c3455dbb1fc565cb5b6a32d5c61, excluded tail 362 octets (sha256 b1d7b46be90496656bf5c7401a5172f0ffd5344c3813ffc44b6585cf2064e159)
+      | EVENTS.pj0 sha256 as received: 03066cbd74406d117ea99550a3060d66e62bff146f8e29f104dbe130d4b7201c
+[030] ok   (torn) terminal classification is exactly what the BYTES say (expected TORN-TAIL, 3 frames) — the reader reports the state present, never the most flattering branch (PJ-CW-2)
+      | condition-type PJ0-TORN-TAIL · requirement PJ0-§13.2
+      | excluded terminal region: offset 1138 · 362 octets · sha256 b1d7b46be90496656bf5c7401a5172f0ffd5344c3813ffc44b6585cf2064e159
+[031] ok   (torn) the excluded terminal region is VISIBLE (offset, octet count, and digest all reported), NOT committed (outside the valid prefix), and NOT deleted (§14.1 — opening never truncates)
+[032] ok   (torn) reconstruction replays from the primary journal alone, deletes derived artifacts first and attests the deletion (PJ-RCN-3), and yields a view over exactly the validated prefix (K0E-9)
+[033] ok   (torn) the reconstruction receipt's origin is (id "origin" "reconstructed") and the receipt bytes contain no occurrence of "observed" anywhere (PJ-WIT-1/2/4, PJ-RCN-1: storage integrity never upgrades epistemic origin)
+      | reconstruction: terminal ordinal 3 · output-digest 7366221df84b4e71b9e258c1a05ed4f06b54a8bd9efd2c6457af5a55e0ff29e8 · origin origin:reconstructed
+[034] ok   (torn) reconstruction beyond the validated prefix is REFUSED, not extrapolated: requesting ordinal (prefix+1) signals unsupported-reconstruction (K0E-11 — recovery never scans past damage or past the end of history)
+[035] ok   (torn) a BLIND UNSAFE RETRY is refused over damage too: an identity that IS in the valid prefix, re-presented with a different payload, signals pj0-event-identity-collision — the identity lookup runs before the damage refusal, so the collision is named for what it is (PJ-APP-3) and zero bytes are written
+[036] ok   (torn) a damaged store accepts NO new append: presenting a fresh event over a torn tail signals pj0-torn-tail and writes zero bytes (§14.1 — appending would bury the tail)
+[037] ok   (torn) PJ-LOCK-1's other branch still holds over damage: an event ALREADY in the valid prefix reconciles as :already-committed-identical rather than being assumed lost
+[038] ok   (torn) source-preserving salvage: the source EVENTS.pj0 is byte-identical after salvage (PJ-SAL-1), the destination is a NEW store identity with regenerated frames (PJ-SAL-2/K0E-16), and the receipt names its bounded unknown — the excluded tail may describe an external consequence that did occur (PJ-SAL-3)
+[039] ok   (torn) salvage does not resolve the tear: the SOURCE store remains classified :torn-tail with its tail still present after salvage
+      | joint report: structural FAIL · semantic PASS · tail-could-hide-settlement-p T
+[040] ok   (torn) the joint structural+semantic report carries TWO verdicts and flags whether a tail could hide a settlement (K0E-26, K0E-15 journal half)
+      | RESULT: 13 checks, 0 failures
+[041] ok   the restart over the derived CW-1 state completed with its own final sentinel (exit 0 AND RESULT:)
+
+== phase 6 — negative controls (the specimen shown noticing) ==
+[042] ok   control 1 setup: exactly ONE payload byte differs from the crash artifact, inside the fourth frame's payload, preserving length and canonicality (so the check that reddens is the digest, not the grammar)
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | mode mutated
+      | admissible inputs: the store directory's durable bytes + declared configuration; no receipt, no killed-process memory, no operator testimony
+[043] ok   (mutated) the surviving store opens: metadata canonical, sidecar digest agrees, store identity re-derived from the metadata basis (§6.1)
+[044] ok   (mutated) every file consulted lies inside the store directory (no scratch file of the dead writer, no sentinel, no receipt channel)
+      | explain-journal: store pj0-store:dec1101e687b746f9b9fe9e9497a39ebe2497b018fec44b85a9fbb4fffca93bf: CORRUPTION, 3 frames, 1138 valid bytes, terminal d4d090e47035b3be403fc0eea83f07f92fa30c3455dbb1fc565cb5b6a32d5c61, excluded tail 369 octets (sha256 2f696594233c00423bb4bc7ab06c7f8d768e3924c39a79f15e68482f569ec225)
+      | EVENTS.pj0 sha256 as received: 4b133093d3e96b6bc736a71b3dc2f5f5ee8674f5515e02e37fdeb5e5268ca009
+[045] ok   (mutated) terminal classification is exactly what the BYTES say (expected NOT-VALID, 3 frames) — the reader reports the state present, never the most flattering branch (PJ-CW-2)
+      | condition-type PJ0-PAYLOAD-DIGEST-MISMATCH · requirement PJ-HASH-1
+      | excluded terminal region: offset 1138 · 369 octets · sha256 2f696594233c00423bb4bc7ab06c7f8d768e3924c39a79f15e68482f569ec225
+[046] ok   (mutated) the excluded terminal region is VISIBLE (offset, octet count, and digest all reported), NOT committed (outside the valid prefix), and NOT deleted (§14.1 — opening never truncates)
+[047] ok   (mutated) reconstruction replays from the primary journal alone, deletes derived artifacts first and attests the deletion (PJ-RCN-3), and yields a view over exactly the validated prefix (K0E-9)
+[048] ok   (mutated) the reconstruction receipt's origin is (id "origin" "reconstructed") and the receipt bytes contain no occurrence of "observed" anywhere (PJ-WIT-1/2/4, PJ-RCN-1: storage integrity never upgrades epistemic origin)
+      | reconstruction: terminal ordinal 3 · output-digest 7366221df84b4e71b9e258c1a05ed4f06b54a8bd9efd2c6457af5a55e0ff29e8 · origin origin:reconstructed
+[049] ok   (mutated) reconstruction beyond the validated prefix is REFUSED, not extrapolated: requesting ordinal (prefix+1) signals unsupported-reconstruction (K0E-11 — recovery never scans past damage or past the end of history)
+[050] ok   (mutated) a mutated payload byte is classified as CORRUPTION and refused: the check that reddens is the §8.2 payload-digest recomputation over the frame's payload bytes; the valid prefix stops BEFORE the damaged frame and nothing past it is admitted (§13.4 — no skip-forward recovery)
+[051] ok   (mutated) the corrupted store accepts no append and no reconciliation past the damage: presenting the fatal charge over corruption is refused with zero bytes written
+      | joint report: structural FAIL · semantic PASS · tail-could-hide-settlement-p NIL
+[052] ok   (mutated) the joint structural+semantic report carries TWO verdicts and flags whether a tail could hide a settlement (K0E-26, K0E-15 journal half)
+      | RESULT: 10 checks, 0 failures
+[053] ok   control 1 — recovery over mutated journal bytes: the restart REFUSES the damaged frame and completes its own verdict stream (exit 0 AND RESULT:; the reddening check is the §8.2 payload digest recomputation, rendered above)
+[054] ok   control 2 — reconstruction beyond the validated prefix over the CORRUPTED store is refused: requesting ordinal 4 signals unsupported-reconstruction; the reddening check is K0E-11's prefix-bound comparison (recovery never reaches past damage)
+[055] ok   control 3 — a derivation that would need NON-JOURNAL state refuses rather than guesses: two non-superseded attempts on one seat make occupancy underdetermined, and the fold signals unsupported-reconstruction instead of selecting the newest or highest-ordinal attempt (PJ-FOLD-4; the reddening check is the open-attempt count in derive-seat-resolution)
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | child control: dying mid-recovery before any verdict (planted)
+[056] ok   control 4 — a restart process TRUNCATED mid-run is detected by this runner: the child exits 3 with no RESULT: sentinel, and the detection is exactly that pair (an unfinished recovery must never read as a clean one)
+[057] ok   control 5 — an unsafe retry under a HELD writer lock is refused with pj0-lock-failure and writes zero bytes; with the lock released the same retry reconciles as :already-committed-identical (§11; PJ-LOCK-2 — the lock coordinates, it never testifies)
+[058] ok   control 6 — the CW-3 byte proof has TEETH: the same predicate (":valid with 4 frames") applied to the PRE-KILL bytes returns false (3 frames), so a green (a) is a finding and not a tautology
+[059] ok   control 7 — the undelivered-receipt proof has TEETH: with a receipt planted on the delivery channel the same predicate returns false, and it returns true again once the plant is removed
+
+-- control 8: the same harness aimed at a DIFFERENT §1 cell --
+[060] ok   control 8 setup: a second :synced store with a DISTINCT derived identity carries the same three established events
+[061] ok   control 8 — moving ONLY the kill point lands the SAME charge in CW-0 instead of CW-3: the writer is killed before the first frame byte, the bytes are unchanged (sha identical to pre-kill), the store is :valid at 3 frames with no tail and no LOCK, and the charged event is ABSENT by identity lookup (Annex B, synced/CW-0: prior bytes only · no prefix contribution · event absent)
+[062] ok   control 8, the contrast that carries the whole specimen: at CW-0 the ordinary retry COMMITS a new frame (:newly-committed at ordinal 4, bytes grow), where at CW-3 the byte-identical retry RECONCILED (:already-committed-identical, zero new bytes). Same charge, same code, different cell, different lawful recovery — so the cell reported in phase 2 is a finding, not a constant of this harness
+[063] ok   the artifact manifest is written and its own digest lines match the artifacts on disk
+
+de-teste-occiso: 63 checks, 0 failures
+cells hit by live SIGKILL: CW-3 (:synced, phase 2, the specimen) and CW-0 (:synced, control 8, the teeth) · crash artifacts preserved: CRASH-ARTIFACT-EVENTS.pj0 (+ metadata, sidecar, sha256sums, manifest) · derived byte states exhibited: CW-1 (truncation) and a one-byte payload mutation · killed writer processes: 2 · restart processes launched: 4 (primary, torn, mutated, truncated-control) · negative controls: 8
+RESULT: PASS

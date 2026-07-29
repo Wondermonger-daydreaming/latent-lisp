@@ -1,0 +1,74 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+[001] ok   sha256 FIPS: empty message
+[002] ok   sha256 FIPS: abc
+[003] ok   sha256 FIPS: two-block message
+[004] ok   genesis digest is SHA-256(PJ0-GENESIS-0) (§8.1)
+[005] ok   genesis digest matches the frozen synced-demo metadata
+[006] ok   utf8: overlong encoding rejected
+[007] ok   utf8: surrogate rejected
+[008] ok   utf8: truncated sequence rejected
+[009] ok   utf8: 0xf5 lead byte rejected
+[010] ok   utf8: bare continuation rejected
+[011] ok   utf8: four-octet scalar round-trips
+[012] ok   codec: #u #t #f canonical
+[013] ok   codec: canonical integers
+[014] ok   codec: leading-zero integer noncanonical
+[015] ok   codec: negative zero noncanonical
+[016] ok   codec: plus sign invalid
+[017] ok   codec: canonical rational (rat -355 113)
+[018] ok   codec: unreduced rational noncanonical (E-21)
+[019] ok   codec: denominator-one rational noncanonical (E-22)
+[020] ok   codec: negative denominator invalid
+[021] ok   codec: newline as u{a} canonical (E-18)
+[022] ok   codec: raw newline in string invalid (E-17)
+[023] ok   codec: escaped printable scalar noncanonical (E-19)
+[024] ok   codec: uppercase escape hex noncanonical
+[025] ok   codec: surrogate escape invalid
+[026] ok   codec: bytes lowercase canonical, empty canonical
+[027] ok   codec: uppercase byte hex noncanonical (E-20)
+[028] ok   codec: odd byte digit count invalid
+[029] ok   codec: record key order reversed noncanonical (E-23)
+[030] ok   codec: duplicate record key invalid (E-24)
+[031] ok   codec: empty record and sequence canonical
+[032] ok   codec: doubled whitespace noncanonical
+[033] ok   codec: trailing garbage noncanonical
+[034] ok   codec: empty identifier invalid
+[035] ok   codec: PJ-S0-ALL-TYPES fixture round-trips canonically (C-01..05)
+[036] ok   key order: corpus order, not CD/0 §14.3 ValueBytes order
+[037] ok   header spelling: canonical decimals
+[038] ok   header spelling: lowercase 64-hex
+[039] ok   frame digest + frame render reproduce frozen frame 1 (F-03)
+[040] ok   store identity derivation reproduces the frozen store id (F-01)
+[041] ok   reader: empty event file is valid end at byte zero (E-01)
+[042] ok   writer: two appends commit at ordinals 1 and 2 (PJ-APP-1)
+[043] ok   writer: identical re-append reconciles without appending (PJ-APP-2)
+[044] ok   writer: conflicting payload refuses, no last-write-wins (PJ-APP-3)
+[045] ok   identity: (id "a:b") and (id "a" "b") are distinct, not duplicates
+       (RESTITUTOR repair regression — CD/0 identity, not joined strings)
+[046] ok   writer: reconstructed receipt origin (PJ-APP-4)
+[047] ok   writer: held lock refuses with pj0-lock-failure (§11)
+[048] ok   reader: truncated frame classifies torn-tail, prefix intact (E-05/06)
+[049] ok   reader: complete payload missing frame LF is torn tail (E-07)
+[050] ok   reader: trailing garbage — LF-complete line is corruption; LF-less
+       bytes are a torn terminal header (Annex A step 5, PJ-TERM-1)
+[051] ok   writer: append onto a torn store refuses with pj0-torn-tail (§14.1)
+[052] ok   salvage: source preserved, new identity, events preserved
+[053] ok   fold: seat resolution vacant / occupied / unsupported (PJ-FOLD-4)
+[054] ok   reconstruct: derived artifacts deleted first and attested (PJ-RCN-3)
+[055] ok   reconstruct: beyond the validated prefix refused (K0E-11)
+[056] ok   merge: explicit precedence merges; duplicates coalesce (§20)
+[057] ok   merge: missing explicit precedence refused (PJ-MRG-1 / E-40)
+[058] ok   merge: conflicting duplicate refused (E-42)
+[059] ok   merge: causal predecessor inversion refused (E-43)
+[060] ok   joint report: demo store carries TWO verdicts, structural pass
+[061] ok   joint report: kernel-illegal event in valid bytes = dual standing
+[062] ok   joint report: torn tail carries evidence + could-hide-settlement
+[063] ok   conditions: all 21 §23 types are pj0 conditions
+[064] ok   conditions: lawful restarts offered at a validation signal (PJ-CND-2)
+[065] ok   bounds: §34 refusal is a resource condition, not corruption (E-49)
+[066] ok   mutants: all six §28 modes are distinct and named
+
+journal0-selftest: 66 checks, 0 failures
+RESULT: PASS

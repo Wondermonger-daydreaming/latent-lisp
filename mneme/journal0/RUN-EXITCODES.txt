@@ -1,0 +1,20 @@
+# journal0 — exit-code record (RESTITUTOR, 2026-07-29T22:15Z)
+# Host: Linux 7.0.0-28-generic · SBCL 2.4.6 (verified live via
+# (lisp-implementation-version) through the wrapper before any CL ran).
+# All commands executed from the latent-lisp root
+# (/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp).
+
+sbcl --script mneme/journal0/journal0-selftest.lisp   -> exit 0   (66 checks, 0 failures; transcript RUN-SELFTEST.txt)
+sbcl --script mneme/journal0/journal0-vectors.lisp    -> exit 0   (89 checks, 0 failures; transcript RUN-VECTORS.txt)
+sbcl --script mneme/journal0/journal0-vectors.lisp    -> exit 0   (second run; transcript RUN-VECTORS-SECOND.txt)
+
+Determinism proof: RUN-VECTORS.txt and RUN-VECTORS-SECOND.txt are
+BYTE-IDENTICAL — sha256 of both:
+531a5edaf5030f9215fa2d871a3789b8309c14a11ca33711ddf0a075a21bf59d
+(diff -q returned no difference; no timestamps, pids, scratch paths, or
+random store identities are printed by the runner.)
+
+Negative-control exit evidence (control 10, inside RUN-VECTORS.txt): the
+child invocation with JOURNAL0_VECTORS_DIE=1 exits 3 mid-run with no
+"RESULT:" sentinel in its output — verified by the parent runner, check
+[V086].

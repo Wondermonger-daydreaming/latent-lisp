@@ -1,0 +1,152 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== registry ==
+[V001] ok   registry parses as canonical PJ-S/0 with this codec (PJ-SYN-2)
+registry census (derived live): 26 entries = 3 positive + 16 adversarial + 6 semantic + 1 truncation-family
+[V002] ok   registry census covers every entry (no unknown kind)
+
+== positive vectors (3, derived) ==
+[V003] ok   positive-synced-demo: fixture sha256 verified before use
+[V004] ok   positive-synced-demo: store opens; reader accepts; expected-valid-frames 7
+[V005] ok   positive-synced-demo: writer rebuild is byte-exact (frames + metadata + sidecar) (§32.3)
+[V006] ok   positive-one-record: fixture sha256 verified before use
+[V007] ok   positive-one-record: store opens; reader accepts; expected-valid-frames 1
+[V008] ok   positive-one-record: writer rebuild is byte-exact (frames + metadata + sidecar) (§32.3)
+[V009] ok   positive-best-effort: fixture sha256 verified before use
+[V010] ok   positive-best-effort: store opens; reader accepts; expected-valid-frames 2
+[V011] ok   positive-best-effort: writer rebuild is byte-exact (frames + metadata + sidecar) (§32.3)
+
+== adversarial vectors (16, derived) ==
+[V012] ok   adversarial-bad-magic: fixture sha256 verified before use
+[V013] ok   adversarial-bad-magic: refused as corruption with 0 valid frames, §23 category pj0-header-invalid
+        DIVERGENCE(adversarial-bad-magic, field expected-error): registry says "header-magic-version" (reference-tool vocabulary); this gate checks the §23 category pj0-header-invalid — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V014] ok   adversarial-bad-version: fixture sha256 verified before use
+[V015] ok   adversarial-bad-version: refused as corruption with 0 valid frames, §23 category pj0-header-invalid
+        DIVERGENCE(adversarial-bad-version, field expected-error): registry says "header-magic-version" (reference-tool vocabulary); this gate checks the §23 category pj0-header-invalid — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V016] ok   adversarial-leading-zero-ordinal: fixture sha256 verified before use
+[V017] ok   adversarial-leading-zero-ordinal: refused as corruption with 0 valid frames, §23 category pj0-header-invalid
+        DIVERGENCE(adversarial-leading-zero-ordinal, field expected-error): registry says "noncanonical-ordinal" (reference-tool vocabulary); this gate checks the §23 category pj0-header-invalid — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V018] ok   adversarial-ordinal-gap: fixture sha256 verified before use
+[V019] ok   adversarial-ordinal-gap: refused as corruption with 6 valid frames, §23 category pj0-ordinal-gap
+        DIVERGENCE(adversarial-ordinal-gap, field expected-error): registry says "ordinal-gap" (reference-tool vocabulary); this gate checks the §23 category pj0-ordinal-gap — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V020] ok   adversarial-leading-zero-length: fixture sha256 verified before use
+[V021] ok   adversarial-leading-zero-length: refused as corruption with 0 valid frames, §23 category pj0-payload-length-invalid
+        DIVERGENCE(adversarial-leading-zero-length, field expected-error): registry says "noncanonical-length" (reference-tool vocabulary); this gate checks the §23 category pj0-payload-length-invalid — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V022] ok   adversarial-uppercase-digest: fixture sha256 verified before use
+[V023] ok   adversarial-uppercase-digest: refused as corruption with 0 valid frames, §23 category pj0-header-invalid
+        DIVERGENCE(adversarial-uppercase-digest, field expected-error): registry says "digest-syntax" (reference-tool vocabulary); this gate checks the §23 category pj0-header-invalid — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V024] ok   adversarial-payload-hash: fixture sha256 verified before use
+[V025] ok   adversarial-payload-hash: refused as corruption with 6 valid frames, §23 category pj0-payload-digest-mismatch
+        DIVERGENCE(adversarial-payload-hash, field expected-error): registry says "payload-hash" (reference-tool vocabulary); this gate checks the §23 category pj0-payload-digest-mismatch — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V026] ok   adversarial-prev-chain: fixture sha256 verified before use
+[V027] ok   adversarial-prev-chain: refused as corruption with 2 valid frames, §23 category pj0-previous-digest-mismatch
+        DIVERGENCE(adversarial-prev-chain, field expected-error): registry says "previous-frame-digest" (reference-tool vocabulary); this gate checks the §23 category pj0-previous-digest-mismatch — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V028] ok   adversarial-frame-hash: fixture sha256 verified before use
+[V029] ok   adversarial-frame-hash: refused as corruption with 1 valid frame, §23 category pj0-frame-digest-mismatch
+        DIVERGENCE(adversarial-frame-hash, field expected-error): registry says "frame-hash" (reference-tool vocabulary); this gate checks the §23 category pj0-frame-digest-mismatch — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V030] ok   adversarial-noncanonical-record-order: fixture sha256 verified before use
+[V031] ok   adversarial-noncanonical-record-order: refused as corruption with 1 valid frame, §23 category pj0-noncanonical-payload
+        DIVERGENCE(adversarial-noncanonical-record-order, field expected-error): registry says "payload-canonicality:noncanonical PJ-S/0 rendering" (reference-tool vocabulary); this gate checks the §23 category pj0-noncanonical-payload — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V032] ok   adversarial-malformed-utf8: fixture sha256 verified before use
+[V033] ok   adversarial-malformed-utf8: refused as corruption with 1 valid frame, §23 category pj0-invalid-utf8
+        DIVERGENCE(adversarial-malformed-utf8, field expected-error): registry says "payload-canonicality:invalid UTF-8: 'utf-8' codec can't decode byte 0xff in position 10: invalid start byte" (reference-tool vocabulary); this gate checks the §23 category pj0-invalid-utf8 — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V034] ok   adversarial-bad-separator: fixture sha256 verified before use
+[V035] ok   adversarial-bad-separator: refused as corruption with 6 valid frames, §23 category pj0-frame-separator-invalid
+        DIVERGENCE(adversarial-bad-separator, field expected-error): registry says "bad-frame-separator" (reference-tool vocabulary); this gate checks the §23 category pj0-frame-separator-invalid — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V036] ok   adversarial-extra-between: fixture sha256 verified before use
+[V037] ok   adversarial-extra-between: refused as corruption with 1 valid frame, §23 category pj0-header-invalid
+        DIVERGENCE(adversarial-extra-between, field expected-error): registry says "header-field-count" (reference-tool vocabulary); this gate checks the §23 category pj0-header-invalid — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V038] ok   adversarial-splice-other-store: fixture sha256 verified before use
+[V039] ok   adversarial-splice-other-store: refused as corruption with 0 valid frames, §23 category pj0-frame-digest-mismatch
+        DIVERGENCE(adversarial-splice-other-store, field expected-error): registry says "frame-hash" (reference-tool vocabulary); this gate checks the §23 category pj0-frame-digest-mismatch — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V040] ok   adversarial-duplicate-identical: fixture sha256 verified before use
+[V041] ok   adversarial-duplicate-identical: refused as corruption with 7 valid frames, §23 category pj0-duplicate-committed-event
+        DIVERGENCE(adversarial-duplicate-identical, field expected-error): registry says "duplicate-event-id" (reference-tool vocabulary); this gate checks the §23 category pj0-duplicate-committed-event — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+[V042] ok   adversarial-duplicate-conflict: fixture sha256 verified before use
+[V043] ok   adversarial-duplicate-conflict: refused as corruption with 7 valid frames, §23 category pj0-duplicate-committed-event
+        DIVERGENCE(adversarial-duplicate-conflict, field expected-error): registry says "duplicate-event-id" (reference-tool vocabulary); this gate checks the §23 category pj0-duplicate-committed-event — adjudicates to spec text (§23; ALLOWED-SOURCES note 1)
+
+== truncation family ==
+[V044] ok   truncation manifest sha256 verified, parses canonically
+[V045] ok   family covers every proper final-frame offset exactly once: count 1235 = final-frame length 1235 (PJ-TRN-1)
+[V046] ok   all 1235 family members: sha verified, exact offsets, offset-0 valid-end, nonzero torn-tail, prefix byte-identical (PJ-TRN-1/2/3, F-04/F-05)
+[V047] ok   family offsets are exactly 0..count-1, each once (F-04)
+[V048] ok   complete untruncated control equals the frozen synced-demo bytes
+
+== semantic datum vectors (6, derived) ==
+[V049] ok   semantic-witness-separation: sha256 verified; decodes as canonical PJ-S/0 datum (valid-datum)
+[V050] ok   semantic-witness-separation: semantic content matches its requirement
+[V051] ok   semantic-reconstructed-append-receipt: sha256 verified; decodes as canonical PJ-S/0 datum (valid-datum)
+[V052] ok   semantic-reconstructed-append-receipt: semantic content matches its requirement
+[V053] ok   semantic-snapshot-prefix-binding: sha256 verified; decodes as canonical PJ-S/0 datum (valid-datum)
+[V054] ok   semantic-snapshot-prefix-binding: semantic content matches its requirement
+[V055] ok   semantic-merge-receipt-shape: sha256 verified; decodes as canonical PJ-S/0 datum (valid-datum)
+[V056] ok   semantic-merge-receipt-shape: semantic content matches its requirement
+[V057] ok   semantic-unsupported-reconstruction: sha256 verified; decodes as canonical PJ-S/0 datum (valid-datum)
+[V058] ok   semantic-unsupported-reconstruction: semantic content matches its requirement
+[V059] ok   semantic-no-resolved-flag: sha256 verified; decodes as canonical PJ-S/0 datum (valid-datum)
+[V060] ok   semantic-no-resolved-flag: semantic content matches its requirement
+
+== crash windows (§29 + Annex B; outside the registry) ==
+[V061] ok   crash-window JOURNAL-META validates (with sidecar); store identity equals the synced-demo store (same store by design)
+[V062] ok   cw0-before-write.pj0 [CW-0]: valid, 6 frames
+        scenario metadata [CW-0]: declared-durability :synced; no frame byte written; event absent; prior prefix governs
+[V063] ok   cw1-mid-header.pj0 [CW-1]: torn-tail, 6 frames
+        scenario metadata [CW-1]: declared-durability :synced; death after a proper prefix of the header; tail visible, no event
+[V064] ok   cw1-mid-payload.pj0 [CW-1]: torn-tail, 6 frames
+        scenario metadata [CW-1]: declared-durability :synced; death after a proper prefix of the payload; tail visible, no event
+[V065] ok   cw2-full-unacknowledged.pj0 [CW-2c]: valid, 7 frames
+        scenario metadata [CW-2c]: declared-durability :synced; full frame accepted by host write path BEFORE the durability barrier; bytes govern; no delivered success receipt may be inferred (PJ-CRASH-2)
+[V066] ok   cw3-full-synced-receipt-lost.pj0 [CW-3]: valid, 7 frames
+        scenario metadata [CW-3]: declared-durability :synced; durability barrier satisfied, receipt never reached the caller; reconcile by event identity (PJ-CRASH-1)
+[V067] ok   cw2 and cw3 are byte-identical: the CW-2c/CW-3 distinction is scenario metadata, never bytes (§29)
+[V068] ok   PREFIX-BEFORE-FINAL + FINAL-FRAME concatenate to the cw2/cw3 bytes
+[V069] ok   CW-3 reconciliation transcript: re-appending the final event returns already-committed-identical at the prior coordinate, no new frame, receipt origin :reconstructed (PJ-CRASH-1, PJ-APP-2/4, E-27, C-14)
+
+== planted mutants vs scorecard-designated fixtures ==
+[V070] ok   the scorecard designates every planted defect exactly once (PJ-MUT-1)
+[V071] ok   mutant IGNORE-PAYLOAD-HASH killed by adversarial-payload-hash: strict corruption, mutant valid (PJ-MUT-2 expected disagreement)
+[V072] ok   mutant IGNORE-PREV-CHAIN killed by adversarial-prev-chain: strict corruption, mutant valid (PJ-MUT-2 expected disagreement)
+[V073] ok   mutant ACCEPT-NONCANONICAL killed by adversarial-noncanonical-record-order: strict corruption, mutant valid (PJ-MUT-2 expected disagreement)
+[V074] ok   mutant INTERIOR-AS-TAIL killed by adversarial-payload-hash: strict corruption, mutant torn-tail (PJ-MUT-2 expected disagreement)
+[V075] ok   mutant DUPLICATE-LAST-WRITE-WINS killed by adversarial-duplicate-conflict: strict corruption, mutant valid (PJ-MUT-2 expected disagreement)
+[V076] ok   mutant IGNORE-ORDINAL killed by adversarial-ordinal-gap: strict corruption, mutant valid (PJ-MUT-2 expected disagreement)
+
+== negative controls (runner teeth) ==
+[V077] ok   control 1 — payload-byte mutation: exact check gone red = pj0-payload-digest-mismatch at §12 step 8 (PJ-HASH-1)
+[V078] ok   control 2 — frame-digest field mutation: exact check gone red = pj0-frame-digest-mismatch at §12 step 10 (PJ-HASH-1)
+[V079] ok   control 3 — broken predecessor linkage: exact check gone red = pj0-previous-digest-mismatch at §12 step 9 (PJ-HASH-1)
+[V080] ok   control 4 — ordinal discontinuity (coherent digests): exact check gone red = pj0-ordinal-gap at §12 step 5
+[V081] ok   control 5 — truncated frame: exact check gone red = pj0-torn-tail (payload shorter than declared, §13.2)
+[V082] ok   control 6 — valid frames followed by garbage: exact check gone red = pj0-header-invalid (7 frames stand; PJ-TERM-1 forbids skipping)
+[V083] ok   control 7 — duplicate event-id with altered content: exact check gone red = pj0-duplicate-committed-event at §12 step 15 (§13.3)
+[V084] ok   control 8 — fold/reconstruction beyond the validated prefix: exact check gone red = unsupported-reconstruction (K0E-11, Errata §8 control 11)
+[V085] ok   control 9 — recovery requiring unavailable non-journal state (two open attempts, precedence relation absent from the journal): exact check gone red = unsupported-reconstruction (PJ-FOLD-4)
+[V086] ok   control 10 — runner truncated before its final result: child invocation dies mid-run; exact evidence = nonzero exit AND missing RESULT sentinel (an incomplete transcript licenses nothing)
+
+== §12 step 16 — joint structural + semantic verdicts (K0E-26) ==
+        structural-verdict: PASS   semantic-verdict: PASS (extension events: 3; named projection gaps: 4)
+[V087] ok   synced-demo joint report carries TWO verdicts; structural :pass; semantic verdict recorded as its own value (never one green counter)
+[V088] ok   structural PASS / semantic FAIL is lawful and reported as dual standing (Errata §8 control 10; K0E-8)
+Errata §8 controls 10-14 discharge (named, per K0E-5a reporting law):
+  control 10 (dual standing)            DISCHARGED — this runner (above) + journal0-selftest joint-report checks
+  control 11 (no skip-forward recovery) DISCHARGED — control 8 (K0E-11) + PJ-TERM-1 adversarial/garbage controls
+  control 12 (deletion attestation)     DISCHARGED — journal0-selftest RECONSTRUCT check (derived artifacts deleted first, attested in the receipt; PJ-RCN-3)
+  control 13 (torn tail -> bounded)     PARTIAL, NAMED EXCLUSION — the journal half is discharged (torn tail preserved with evidence; tail-could-hide-settlement-p reported); the Kernel-side construction of a bounded-determinacy outcome consuming that flag (K0E-15) is NOT built here: the projection carries no settlement-payload records (named gap in fold.lisp), so the kernel fold cannot yet derive the bounded standing from a torn tail alone
+  control 14 (salvage preserves events) DISCHARGED — journal0-selftest salvage check (K0E-16: frame/store identity changes, abstract events + replay preserved)
+
+== reference-transcript comparison (this implementation's own derivations) ==
+  synced-demo store id:        pj0-store:12b099a4b4fa66b1c4e07a1e076228d4a214588f558a35edf07523782fd1573c
+  synced-demo metadata sha256: af58ab13f6826b33911581d11a55e54c24cedd0c29c05f013714042d013f6184
+  synced-demo events sha256:   41cda0a5b99550579837b94d2a424fc3d763df2b9047e24596339b16779738da
+  frames:                      7
+  final frame starts at byte:  6684
+  final frame length:          1235
+  truncation vectors:          1235
+  terminal frame digest:       d372cf5221016a4d11a968fcd35d890d35e758a0f0e467e68d4f73cf2915e311
+[V089] ok   comparison: 7 frames, final frame at byte 6684, length 1235, 1235 truncation vectors (all derived above, matched against the reference transcript's published numbers)
+
+journal0-vectors: 89 checks, 0 failures
+gate census (derived live): 3 positive · 16 adversarial · 6 semantic · 1235-member truncation family · 5 crash-window scenarios · 6 mutants · 10 negative controls
+RESULT: PASS

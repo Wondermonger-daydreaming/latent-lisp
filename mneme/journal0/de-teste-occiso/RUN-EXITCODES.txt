@@ -1,0 +1,47 @@
+# de-teste-occiso — exit-code record (SUPERSTES, 2026-07-29)
+# Host: Linux 7.0.0-28-generic x86_64 · SBCL 2.4.6 (verified live via
+# (lisp-implementation-version) through the wrapper before any specimen CL
+# ran — the SBCL-wrapper operation-check scar).
+# Filesystem: ext4, native Linux (no WSL, no layered filesystem) — §10.4.
+# All commands executed from the latent-lisp root
+# (/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp).
+
+sbcl --script mneme/journal0/de-teste-occiso/run-specimen.lisp  -> exit 0
+    63 checks, 0 failures; transcript RUN-SPECIMEN.txt
+
+sbcl --script mneme/journal0/de-teste-occiso/run-specimen.lisp  -> exit 0
+    second run; transcript RUN-SPECIMEN-SECOND.txt
+
+Determinism proof: RUN-SPECIMEN.txt and RUN-SPECIMEN-SECOND.txt are
+BYTE-IDENTICAL — sha256 of both:
+8e0b0aa96694d0c1f80c0134ee2ef52af952b209f25dfb964fd462221246f968
+(diff reported no difference.)  Nothing nondeterministic is printed: no pid,
+no timestamp, no absolute path, no random store identity, no elapsed time.
+Both store nonces are FIXED (declared PJ-META-1 deviation, see
+specimen-common.lisp), so both store identities and every digest in the
+capture are byte-stable.  The kill protocol is byte-deterministic BY
+CONSTRUCTION: each child is killed only after it has reached a marker it
+writes at a fixed point in its own control flow, so the surviving bytes are
+identical on every run.  NOTHING IN THE CAPTURE IS NORMALIZED — there was no
+nondeterminism to normalize away.
+
+The preserved crash artifact is byte-stable across runs as well:
+CRASH-ARTIFACT-EVENTS.pj0 sha256
+31a6956b0d7da320131893e5566454f6949287c56378f06287988dbf47e5ac38
+(identical after both runs).
+
+Subprocesses spawned by the runner (each a separate OS process):
+  stage-writer-child.lisp cw3 -> killed by SIGKILL; status :signaled, signal 9
+                                 (phase 2; never exits of its own accord — the
+                                 code below its wait loop is the receipt
+                                 delivery that death prevents)
+  stage-recover.lisp primary  -> exit 0  (13 checks relayed, 0 failures)
+  stage-recover.lisp torn     -> exit 0  (13 checks relayed, 0 failures)
+  stage-recover.lisp mutated  -> exit 0  (10 checks relayed, 0 failures)
+  stage-recover.lisp primary with DE_TESTE_OCCISO_DIE=1
+                              -> exit 3, NO "RESULT:" sentinel
+                                 (negative control 4; the parent detects the
+                                 pair — nonzero exit AND missing sentinel)
+  stage-writer-child.lisp cw0 -> killed by SIGKILL; status :signaled, signal 9
+                                 (negative control 8; the same charge and the
+                                 same program aimed at a different §1 cell)
