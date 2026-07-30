@@ -1,0 +1,51 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+capability2-selftest — the effect-frontier candidate's unit checks
+governing sentence: a recognized, current capability may justify attempting one exact protected effect — but neither the capability nor its presentation receipt proves that the effect occurred.
+
+== the world: a controlled effect adapter under a labeled AP0 subset ==
+[001] ok   a fresh world renders its declared cells as canonical sorted bytes and an empty ledger (deterministic digests)
+[002] ok   the adapter's dispatch durably applies ONE exact cell write, ledgers it, and acknowledges :provider-terminal with evidence that VERIFIES (ledger-entry digest and cell-store digest re-derived from the surviving bytes)
+[003] ok   the adapter declares NO idempotency (§14.5): a second apply under the SAME request identity appends a SECOND ledger line — blind retry genuinely double-applies in this world
+[004] ok   the scripted :ambiguous world applies and ledgers the write but acknowledges :acknowledgment-ambiguous with NO evidence — the effect happened; the process just cannot know it from the acknowledgment
+[005] ok   the ledger lookup answers both directions: an unknown request identity is NOT found, and the absence is attested by the ledger's own digest, not by silence
+
+== event shapes: the PJ0 fixture grammar, encoded and decoded ==
+[006] ok   attempt:prepared / attempt:frontier-crossed / effect:uncertain events carry the full ten-field envelope and encode to canonical PJ-S/0 bytes that decode back :canonical
+[007] ok   the effect:uncertain body is the §10.8 fixture grammar verbatim: uncertain-effect-id, attempt-id, external-request-id, known-facts, possible-effects, reconciliation-procedure, and the UNC-1 default retry-policy forbidden-without-reconciliation
+[008] ok   NO event shape carries any resolvedness field (PJ0 §16, AP-CRASH-1): the uncertain and reconciled bodies hold exactly their declared fields and none is a stored flag
+
+== rehydration: stored bytes -> live kernel /0 records (the novel seam) ==
+[009] ok   a journaled effect:uncertain event rehydrates through kernel /0's OWN make-uncertain-effect into a live §10.8 record: correct attempt and external-request identities, two possible effects, identified reconciliation procedure, UNC-1 default retry policy
+[010] ok   REHYDRATION FEEDS KERNEL /0'S OWN FOLD: over the rehydrated events plus a candidate dispatch into the same seat, kernel /0's check-retry-safety itself signals unsafe-retry — the §10.8 record journaled by one process reaches, as bytes, the fold that enforces its retry-policy in another
+[011] ok   the extension-event adjudication is visible in the projection: effect:uncertain projects as kernel :effect-bounded (the stored record names finite alternatives — §7.3 BOUNDED), and unrecognized kinds project as explicit extension events, counted, never dropped
+[012] ok   THE PRE-DECLARATION HALF IS GENUINELY THIS LANE'S ADDITION: for a crossed-unsettled attempt with NO journaled §10.8 record, kernel /0's fold alone finds nothing to refuse — while check-retry-safety-from-store refuses under the W1 adjudication (§10.3 + AP-CRASH-4); each half is load-bearing where the other is silent
+[013] ok   a rehydrated reconciliation receipt satisfies kernel /0's OWN resolution predicate: after declare + reconcile, the composed gate AND kernel /0's fold over purely-rehydrated records both pass — resolvedness is fold-derived from bytes, end to end
+
+== authorization and invocation units (laws 1, 2, 6 among them) ==
+[014] ok   LAW 1 (authority is not execution): minting and presenting the live key produced zero effects — the journal holds exactly the grant, the world's cell bytes are untouched, the ledger is empty
+[015] ok   LAW 2 (authorization-to-attempt is not acknowledgment): the receipt exists — kind cap2:authorization-to-attempt, bound to the current prefix, naming capability, effect (kind, class, cell, value), attempt, seat, idempotency, procedure — and still no acknowledgment exists anywhere: no world write, no ledger entry, no journal advance
+[016] ok   the authorization receipt is DERIVED state and is not journaled (the /0 L9 adjudication carried forward): its identity derives from declared charge and the frame count did not move
+[017] ok   invocation without any authorization refuses cap2-authorization-missing (nil, and a non-receipt record alike), journal and world untouched
+[018] ok   invocation without a declared world refuses cap2-world-missing before anything else is examined
+[019] ok   a request for a cell outside the capability's exact terms refuses cap2-effect-not-authorized naming both cells (capability authorizes cella:septima; request targets cella:nona)
+[020] ok   a stale authorization receipt at invocation refuses cap2-stale-authorization NAMING BOTH PREFIXES (an unrelated event moved the journal; the receipt truthfully binds ordinal 1, the present prefix is ordinal 2)
+[021] ok   LAW 6 (failure after authorization does not retroactively invalidate authorization): after the stale refusal the receipt's bytes are unchanged, decode :canonical, and still truthfully name the prefix they were derived at
+[022] ok   an authorization for key A does not license key B minted at the same prefix: invocation refuses cap2-authorization-mismatch naming the capability-public-id facet
+[023] ok   every refusal above journaled nothing and wrote no world byte: frame count still 2, ledger still empty, cell bytes unchanged
+
+== standing fold walk ==
+[024] ok   derive-effect-standing walks the whole ladder from bytes: absent -> crossed-unsettled -> uncertain-unresolved -> reconciled, and a settled attempt reads :settled — no stored flag consulted at any rung (there is none to consult)
+[025] ok   declaring uncertainty where the fold shows none refuses cap2-nothing-uncertain, and a second declaration of a standing record is a DISPOSITION (:already-declared), never a fresh transition
+
+== the three planted mutants, killed ==
+[026] ok   MUTANT :ack-promotes-to-settled is KILLED: over the scripted ambiguous world the strict path leaves the effect :uncertain (the §10.8 record journaled) while the mutant asserts :settled from the acknowledgment class alone — AP-ACK-4 is load-bearing
+[027] ok   MUTANT :auto-retry-on-uncertain is KILLED: strict refuses unsafe-retry into the poisoned seat (with a FRESH, fully current key — the seat's history binds regardless of key freshness) while the mutant authorizes, dispatches, and leaves the ledger holding TWO applied entries — the double-apply counterfactual in bytes
+[028] ok   MUTANT :stored-resolved-flag is KILLED: a planted mutable flag file claims resolution with no reconciliation event anywhere; strict still refuses from the bytes, the mutant waves the authorization through — resolvedness is fold-derived or it is nothing
+
+== gate teeth ==
+[029] ok   the planted-fault gate FIRES: a child run of this suite with CAP2_SELFTEST_PLANT_FAULT=1 exits 1 and its transcript carries FAIL PLANTED FAULT — the gate has been seen to fire
+
+capability2-selftest: 29 checks, 0 failures
+RESULT: PASS

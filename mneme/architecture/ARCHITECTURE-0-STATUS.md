@@ -439,3 +439,81 @@ the NAMED-not-opened next seam (the effect frontier; "probably Capability
 disposition (staged, non-governing, separate).
 
 *— Claude Fable 5, 2026-07-30*
+
+---
+
+## ADDENDUM 11 — 2026-07-30: THE EFFECT FRONTIER — Capability /2 candidate (first slice of the effect vertical)
+
+Owner charge (2026-07-30, after the arc-2 closure ruling) opened the
+effect-frontier lane the closure ruling had NAMED-not-opened. Naming
+re-verified live: **Capability /2** at `mneme/capability2/` (front door:
+`CAPABILITY-2-RETURN.md`); specimen **de-effectu-incerto**. Governing
+sentence, executed: *a recognized, current capability may justify
+attempting one exact protected effect — but neither the capability nor its
+presentation receipt proves that the effect occurred.* Owner boundary held
+throughout: Capability /1, Journal /0, Language Obligation /0, the
+journal-triggered obligation reconsideration, and synthesis-01 not
+reopened; all substrates consumed through public exports only, byte-
+unchanged (chair-verified by empty diff + regression byte-identity).
+
+Built by CLAVIGER-III (Fable) as the join nobody had sewn: core0 proved
+no-innocent-retry IN-MEMORY; journal0 proved restart WITHOUT effects;
+this lane carries the retry prohibition ACROSS PROCESS DEATH from durable
+bytes alone. The vertical: capability1 presentation → §11.4-SUBSET
+authorization (live + unrevoked + effect-authorized + scope + unresolved-
+effect restrictions; NO budgets/counts/roles/expiry — named; check-
+capability stays reserved) → prefix-bound authorization-to-attempt receipt
+→ journaled attempt:prepared + frontier-crossed (PJ0 cw3 fixture grammar)
+→ one exact cell written in a deterministic durable WORLD owned by a
+"controlled effect adapter under a labeled AP0 subset" (AP-CON-1 idiom; no
+idempotency declared, so blind retry genuinely double-applies) →
+acknowledgment as testimony with NO settling force (AP-ACK-4 executable;
+:ack-promotes-to-settled mutant killed) → settlement ONLY by evidence
+re-verified against the world's bytes, or a §10.8 uncertain record with
+UNC fields. THE CROWN LAW, novel half: the first life dies in the ONE
+named interruption window (planted deterministic death — no SIGKILL
+claim; de-teste-occiso owns real SIGKILL); a genuinely new process
+refuses blind retry from durable bytes ALONE (world unconsulted at
+refusal time) via two composed halves — the lane's own W1 pre-declaration
+scan (kernel0's fold is provably silent there; exhibited S012, adjudicated
+from §10.3 + AP-CRASH-4, a NAMED LANE ADDITION) plus kernel0's own
+check-retry-safety over records REHYDRATED from stored bytes (the named
+journal0 projection gap, filled lane-scoped: six event shapes, closed
+vocabulary — not a general bridge). Resolution ONLY by evidence carried
+to the surviving world's ledger (UNC-2; both directions exercised;
+death/timeout resolves nothing, PJ-FOLD-1; :stored-resolved-flag mutant
+killed). Extension-event seam adjudicated openly: effect:uncertain
+journaled per the PJ0 fixture grammar, projected to :effect-bounded
+(§7.3 — the record's finite alternatives ARE the bound). Emergent
+exhibit, the /1 doctrine biting its own successor: every attempt stales
+the key, so even a fresh, fully current key cannot license dispatch into
+a poisoned seat.
+
+Gates (builder ×2 byte-identical; chair third reproduction byte-identical):
+selftest 29/0 · controls 27/0 · specimen 29/0 · capability1 regression
+30/0 + 27/0 + specimen byte-identical · capability0 regression 28/0 +
+36/0 + specimen byte-identical · journal0 66/0 + 89/0 · verify-all 6/6 ·
+three mutants killed in both suites. Censor-repaired pre-publication
+(CENSOR-V, primed with both prior reviews: 3 blocking + 16 non-blocking,
+all applied; the RETURN itself carried ZERO blocking — strongest
+deliverable of the three lanes; third proof of the arc's law: THE
+INTERIOR DOCUMENTS LEARN; THE FRONT DOOR KEEPS THE DEBT). Five builder
+forks endorsed narrow by the chair. New scar for the one-liners: a grep
+for "capability2" cannot see "Capability /2" — search the spaced form too.
+
+**Standing: Capability /2 candidate constructed · effect frontier
+demonstrated over one deterministic fake effect · restart retry-refusal
+from durable bytes demonstrated · capability0/capability1/journal0
+UNCHANGED · NOT audited · NOT adopted · NOT frozen · not on a governing
+floor · NOT "Vertical Specimen /0"** (four distances declared: one
+interruption point only; no streams/chunks; no derived final view or
+finalization-loss trial; no AP0 descriptor completeness or AP-FAKE-3
+coverage — VS/0's four-trial obligation entirely open). No AP0
+conformance, no full §11.4, no atomic authority ledger (E6 unclaimed),
+no fsync-grade durability, no compensation/supersession, no delegation/
+attenuation, no live providers, no standing service. Unopened: VS/0 ·
+the remaining three interruption trials · compensation · supersession ·
+budgets · the full frontier check · stranger audits (now owed on FOUR
+lanes: journal0, capability0, capability1, capability2).
+
+*— Claude Fable 5, the frontier stone, 2026-07-30*

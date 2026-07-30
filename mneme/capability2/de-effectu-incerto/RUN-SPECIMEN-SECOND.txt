@@ -1,0 +1,70 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+de-effectu-incerto — the inhabited uncertain-effect restart specimen
+governing sentence: a recognized, current capability may justify attempting one exact protected effect — but neither the capability nor its presentation receipt proves that the effect occurred.
+
+== phase 1 — the first life (separate process; dies in the acknowledgment window after the dispatch durably lands) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | prima vita: store · world · grant · mint · authorize · dispatch — and death in the acknowledgment window
+[001] ok   (prima-vita) the created store's derived identity EQUALS the identity derived from the declared configuration alone
+[002] ok   (prima-vita) the grant commits at ordinal 1; the declared world holds cella:septima = VACUA with an empty request ledger
+[003] ok   (prima-vita) the opaque live key is minted from the fresh /0 authorization (LAW 1 half one: minting wrote no journal frame beyond the grant and no world byte)
+[004] ok   (prima-vita) authorization to attempt granted and its receipt preserved to disk byte-identically (LAW 2: the receipt exists and still nothing is acknowledged — no world byte, no ledger entry, no journal frame beyond the grant)
+      | invoking the protected effect; the planted interruption will fire inside the adapter's acknowledgment window — this process ends here, mid-attempt, and MUST NOT render a RESULT sentinel
+      | world adapter: dying in the acknowledgment window (planted deterministic interruption; dispatch applied and ledgered, acknowledgment not returned)
+[005] ok   the first life DIED IN THE WINDOW as planted: exit code 7, NO RESULT sentinel, and the adapter's dying note in the transcript — the dispatch was applied and ledgered; the acknowledgment never came home
+
+== phase 2 — the surviving durable bytes: the world knows; the journal does not ==
+[006] ok   the surviving journal validates :valid with exactly 3 frames — grant · attempt:prepared · attempt:frontier-crossed — and NOTHING after the frontier: no acknowledgment, no settlement, no uncertainty record; the process died before it could account for its own effect
+[007] ok   THE ASYMMETRY, exhibited in bytes: the surviving WORLD holds cella:septima = VII and exactly ONE applied ledger entry under the journaled external-request identity — the effect HAPPENED; only the record of its happening died with the process
+[008] ok   the dead life's authorization-to-attempt receipt survives as canonical bytes: decision-bearing testimony that LICENSED the attempt (cella:septima := VII, attempt a-001, prefix ordinal 1) and proves nothing about the effect
+EVENTS.pj0 (as the death left it): 2721 octets · sha256 fedf5345e73311c8acec92b3f02e18afd23fa11242ec9bc9c92c13fe8e3e378f
+WORLD CELLS.txt: 37 octets · sha256 45e4d65be8d30d6c7942c24d4d0796e908b91c0ae3364023dae0d4796986a03d
+WORLD REQUEST-LEDGER.txt: 54 octets · sha256 fc831a4d8fdee88c0a3f725e63706a0ec5604d5114bfddb49892354e82dcfdb7
+AUTH-ATTEMPT-RECEIPT.pjs: 1302 octets · sha256 1feef03bd483e8f0224878cf36f9afe5d6f6059586659424c9922207ad5ff46b
+
+== phase 3 — negative control: the truncated restart ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | rediviva: durable bytes + declared configuration only; no memory of the first life exists in this process
+[009] ok   (truncated-control) the reopened store validates :valid with exactly 3 frames — grant · attempt:prepared · attempt:frontier-crossed — and no tail: the first life's story ends mid-attempt, at the crossed frontier
+[010] ok   (truncated-control) the standing derived from bytes alone is CROSSED-UNSETTLED: the frontier was crossed and no settlement, no acknowledgment, no uncertainty record, no reconciliation exists — an open attempt whose effect is nowhere accounted (LAW 4: this is its own state; it is not refusal and not failure, and nothing in the bytes rewrites it as either)
+[011] ok   (truncated-control) a fresh live key mints at the current prefix (the grant stands; authority is derivable) — minting consulted only the journal and wrote nothing
+      | dying mid-restart (planted truncation control)
+[012] ok   a restart process TRUNCATED mid-run is detected by this runner: the child exits 3 with no RESULT: sentinel, and the detection is exactly that pair (an unfinished reconstruction must never read as a clean one); it wrote nothing — journal and world bytes unchanged
+
+== phase 4 — the restart (genuinely new process; durable bytes + declared configuration only) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | rediviva: durable bytes + declared configuration only; no memory of the first life exists in this process
+[013] ok   (rediviva) the reopened store validates :valid with exactly 3 frames — grant · attempt:prepared · attempt:frontier-crossed — and no tail: the first life's story ends mid-attempt, at the crossed frontier
+[014] ok   (rediviva) the standing derived from bytes alone is CROSSED-UNSETTLED: the frontier was crossed and no settlement, no acknowledgment, no uncertainty record, no reconciliation exists — an open attempt whose effect is nowhere accounted (LAW 4: this is its own state; it is not refusal and not failure, and nothing in the bytes rewrites it as either)
+[015] ok   (rediviva) a fresh live key mints at the current prefix (the grant stands; authority is derivable) — minting consulted only the journal and wrote nothing
+[016] ok   (rediviva) THE CROWN LAW, FROM BYTES ALONE: authorization of a NEW attempt into the dead process's seat refuses kernel /0's unsafe-retry — the journaled frontier-crossed with no settlement carries the §14.1 prohibition across process death; neither this process's memory (it has none) nor the world (not yet consulted) participates in the refusal
+[017] ok   (rediviva) the dead attempt's own identity cannot be innocently re-run either: authorization under a-001 refuses duplicate-attempt-identity BEFORE any frontier (:408 — a retry after uncertain execution is not an innocent first attempt in either spelling)
+[018] ok   (rediviva) reconciliation WITHOUT the structured record refuses unstructured-uncertainty (§10.8: inline uncertainty is unlawful; the record must be journaled before resolution may be attempted)
+[019] ok   (rediviva) the uncertainty is STRUCTURED from journaled facts: declare-uncertain-effect builds the §10.8 record through kernel /0's own constructor (UNC-1 validated: named finite alternatives, known facts, identified reconciliation procedure, retry-policy forbidden-without-reconciliation) and journals it in the fixture grammar — 4 frames now
+[020] ok   (rediviva) the seat stays closed after structuring: even a key re-minted at the post-declaration prefix — fully current — still refuses unsafe-retry, now carried by the journaled §10.8 record itself, rehydrated into kernel /0's own fold (authority is cheap to re-derive; dispatch is what the record forbids)
+      | reconciling: carrying the journaled external-request identity to the surviving world's request ledger
+[021] ok   (rediviva) RECONCILIATION RESOLVES :APPLIED WITH EVIDENCE: the world's ledger holds the entry under the journaled external-request identity — the dispatch DID land before the death.  The counterfactual stands in bytes: cella:septima already holds VII and the ledger exactly ONE applied entry — a blind retry would have appended a second application.  attempt:reconciled journaled (5 frames); the §14.2 receipt was built live through kernel /0's own constructor before the event was appended
+[022] ok   (rediviva) ONLY NOW is the seat lawfully free (fold-derived, from bytes: kernel /0's own resolution predicate over the rehydrated receipt): authorization of a fresh attempt into the same seat succeeds — and it is an authorization, not an effect: the cell and ledger are byte-unmoved by it
+[023] ok   (rediviva) a SECOND reconciliation of the same uncertain effect returns the precise disposition :already-reconciled naming the prior event — no new transition, no new frame (LAW 10)
+[024] ok   (rediviva) LAW 6 (failure after authorization does not retroactively invalidate authorization): the dead process's authorization-to-attempt receipt reads back from disk, decodes :canonical, and still truthfully names the licensed effect (cella:septima := VII, attempt a-001) and the exact prefix it was derived at (ordinal 1) — stale for reuse, true forever
+      | the reconciliation read the world; it wrote nothing there — the parent verifies the world's bytes are sha-identical across this entire restart
+      | RESULT: 12 checks, 0 failures
+[025] ok   the restart process completed and rendered its own final sentinel (exit 0 AND RESULT: — an incomplete transcript licenses nothing)
+[026] ok   THE WORLD IS BYTE-IDENTICAL ACROSS THE ENTIRE RESTART (cells and ledger sha256 unchanged): reconciliation carried the journaled request identity TO the world and read; it never wrote — and the cell was therefore set EXACTLY ONCE, by the dead process
+[027] ok   the journal grew by EXACTLY the two accounting frames: 5 frames ending effect:uncertain · attempt:reconciled — the §10.8 record and its evidence-carrying resolution; nothing else was appended and nothing was rewritten (the first three frames' bytes are a prefix of the final journal)
+[028] ok   the preserved authorization receipt is byte-identical across the restart (sha256 equal): four refusals, a declaration, and a reconciliation edited nothing
+
+== phase 5 — preserved artifacts ==
+[029] ok   the preserved artifacts are byte-identical to the live bytes they copy and the SHA256SUMS manifest carries those digests
+
+de-effectu-incerto: 29 checks, 0 failures
+processes: 1 first life (died in the acknowledgment window; its memory died with it) · 2 restarts launched (truncated-control, rediviva) · artifacts preserved: both journal states + metadata + sidecar + world cells + world ledger + authorization receipt + sha256sums + manifest · every effect verdict rendered by a stage child
+RESULT: PASS

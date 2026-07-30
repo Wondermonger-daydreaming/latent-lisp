@@ -1,0 +1,24 @@
+# de-effectu-incerto — exit-code record (CLAVIGER-III, 2026-07-30)
+# Host: Linux 7.0.0-28-generic · SBCL 2.4.6 (operation-checked live via
+# (lisp-implementation-version) through the ~/.local/bin/sbcl wrapper;
+# output not transcript-preserved).
+# Executed from the latent-lisp root.
+
+sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+    -> exit 0   (29 checks, 0 failures; transcript RUN-SPECIMEN.txt)
+sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+    -> exit 0   (second run; transcript RUN-SPECIMEN-SECOND.txt)
+
+Determinism proof (byte-identity by sha256):
+  RUN-SPECIMEN.txt == RUN-SPECIMEN-SECOND.txt
+    0baf4e6fc5c77b9faa931f644c3b9350f35e435bb9923c7d7a270f162a12b4e3
+  (the deterministic ARTIFACT-* files are byte-identically rewritten on
+   every run; their digests are in ARTIFACT-SHA256SUMS.txt)
+
+Stage children (spawned by the runner; codes proven inside the transcript):
+  stage-first-life.lisp with CAP2_WORLD_DIE_IN_WINDOW=1 -> exit 7, no
+      RESULT: sentinel (death in the acknowledgment window; check [005])
+  stage-restart.lisp with DE_EFFECTU_DIE=1              -> exit 3, no
+      RESULT: sentinel (truncated-restart control; check [012])
+  stage-restart.lisp (rediviva)                          -> exit 0 with
+      RESULT: 12 checks, 0 failures (check [025])

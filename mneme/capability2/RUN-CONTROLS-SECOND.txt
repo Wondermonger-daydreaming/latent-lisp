@@ -1,0 +1,49 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+capability2-controls — the effect vertical and its negative controls
+governing sentence: a recognized, current capability may justify attempting one exact protected effect — but neither the capability nor its presentation receipt proves that the effect occurred.
+
+== the owner's vertical, end to end ==
+[001] ok   fresh live capability presentation: the minted key presents successfully at the current prefix under its exact terms — and presenting it changed NOTHING (cell bytes and ledger byte-compared unchanged; journal frame count still 1)
+[002] ok   authorization to attempt: the §11.4-subset check passes (fresh /0 fold :authorized · fresh presentation · exact effect match · attempt identity unbound · seat fold clean) and yields the prefix-bound authorization-to-attempt receipt — while the cell, the ledger, and the journal remain untouched (law 2)
+[003] ok   explicit effect invocation: attempt:prepared and attempt:frontier-crossed journaled per the fixture grammar, the adapter dispatched, the ONE exact cell set — and settlement DERIVED from verified evidence, not from the acknowledgment class (AP-ACK-4): status :settled with class :provider-terminal
+[004] ok   the durable journal account holds the whole story in order: grant · attempt:prepared · attempt:frontier-crossed · request:acknowledged · effect:settled — five frames, :valid, no tail; queries and receipts are NOT in it
+[005] ok   the acknowledgment was journaled as TESTIMONY: the request:acknowledged event carries class ack:provider-terminal plus the ledger-entry and cell-store digests — and those digests re-verify RIGHT NOW against the surviving world's bytes
+[006] ok   the cell was set EXACTLY ONCE (the ledger holds one applied entry under this request identity) and the effect standing derived from bytes is :settled
+
+== negative controls: authorization refusals ==
+[007] ok   NC-1 wrong effect vs capability terms: a request for cella:nona against the cella:septima capability refuses cap2-effect-not-authorized; nothing journaled, nothing written
+[008] ok   NC-2 duplicate attempt identity refuses BEFORE the frontier: a fresh, current key asking to re-run attempt a-001 refuses kernel /0's duplicate-attempt-identity; frame count unchanged
+[009] ok   NC-3 revoked capability at authorization: after the revocation commits, the FRESH /0 fold refuses and cap2-attempt-authorization-refused names the fold's reason (capability-revoked) — the revocation check runs before the object's own staleness can mask it
+[010] ok   NC-4 a merely-advanced (unrevoked) journal refuses the OLD key as cap1-stale-capability at presentation — the same conjunction, named as staleness because that is what it is
+
+== negative controls: invocation refusals (law 7, law 8) ==
+[011] ok   NC-5 LAW 8 (revocation at the frontier): authorize, THEN commit the matching revocation, THEN invoke — invocation refuses cap2-stale-authorization naming both prefixes.  The mechanism is PREFIX-STALENESS (the revocation moved the prefix); the fresh /0 fold, asked directly, names the revocation itself.  No atomic authority ledger is claimed (Constitution E6 unmet)
+[012] ok   NC-6 LAW 7 (refusal is pre-frontier): across every refusal exercised in this suite so far, no refused invocation journaled an attempt event or touched a world byte — exhibited here on the vertical store: exactly ONE attempt's events exist (a-001's four), and the world ledger still holds exactly one entry
+
+== the uncertain outcome, same-life (law 3, law 4) ==
+[013] ok   LAW 3 + LAW 4 (acknowledgment is not settlement; uncertainty is not failure): the ambiguous acknowledgment yields status :uncertain — a typed state of its own, not a refusal, not a failure — with the §10.8 record journaled carrying UNC-1's default retry policy; the attempt's terminal standing stays OPEN
+[014] ok   NC-7 blind retry SAME LIFE: a FRESH, fully current key still cannot license dispatch into the poisoned seat — authorization refuses kernel /0's unsafe-retry (the seat's history binds regardless of key freshness); the ledger still holds ONE entry
+[015] ok   NC-8 blind retry FROM BYTES: reopening the store and the world from their durable bytes alone (open-store / open-world — fresh handles, no shared in-memory state) and asking to dispatch into the seat refuses unsafe-retry identically — the prohibition lives in the bytes, not in this process's memory (the genuinely new-process form is the specimen's)
+
+== reconciliation: both branches, with evidence (law 9, law 10) ==
+[016] ok   BRANCH (a) — the request LANDED: reconciliation queries the surviving world by the journaled external-request identity, finds the ledger entry, and resolves :applied with evidence; the COUNTERFACTUAL stands in bytes — the cell already holds VII and the ledger exactly one entry, so a blind retry would have double-applied
+[017] ok   after reconciliation the seat is lawfully FREE: the composed gate passes from bytes, and a fresh key's authorization into the same seat succeeds (new attempt identity — the old one stays refused as duplicate)
+[018] ok   LAW 10 second reconciliation: reconciling the same uncertain effect again returns the precise disposition :already-reconciled naming the prior event — no new transition, no new frame
+[019] ok   BRANCH (b) — the request NEVER LANDED: after a frontier journaled as crossed with the request lost before dispatch, reconciliation finds NO ledger entry and resolves :not-applied with the ledger's own digest as absence evidence; the cell is byte-identically untouched
+[020] ok   NC-9 inline uncertainty without the §10.8 record: reconciling a crossed-unsettled attempt whose uncertainty was never STRUCTURED refuses kernel /0's unstructured-uncertainty — declare first, then reconcile
+[021] ok   NC-10 reconciliation with insufficient evidence: when the world's request ledger is GONE, reconciliation refuses kernel /0's reconciliation-insufficient — an unanswerable world resolves nothing, in either direction (PJ-FOLD-1)
+[022] ok   NC-11 reconciling where nothing is uncertain refuses cap2-nothing-uncertain (a settled attempt, and an absent one alike): the fold decides what is uncertain, not the caller
+
+== the three planted mutants, killed in this suite too ==
+[023] ok   NC-12a mutant :ack-promotes-to-settled KILLED (strict :uncertain vs mutant :settled over the same scripted ambiguous world)
+[024] ok   NC-12b mutant :auto-retry-on-uncertain KILLED (strict refuses unsafe-retry; the mutant dispatches and the ledger's TWO entries exhibit the double-apply the law exists to prevent)
+[025] ok   NC-12c mutant :stored-resolved-flag KILLED (a mutable flag with no reconciliation event convinces the mutant and not the fold)
+
+== gate teeth ==
+[026] ok   the planted-fault gate FIRES: a child run with CAP2_CONTROLS_PLANT_FAULT=1 exits 1 with FAIL PLANTED FAULT in its transcript
+[027] ok   NC-13 truncation detected: a child run with CAP2_CONTROLS_DIE=1 exits 3 with NO RESULT: sentinel — an unfinished run must never read as a clean one
+
+capability2-controls: 27 checks, 0 failures
+RESULT: PASS

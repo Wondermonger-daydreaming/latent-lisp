@@ -1,0 +1,9 @@
+de-effectu-incerto - preserved raw artifacts
+governing sentence: a recognized, current capability may justify attempting one exact protected effect - but neither the capability nor its presentation receipt proves that the effect occurred.
+store identity: pj0-store:90c95d4ea93a151250630788d71a9a9addcb6deaf863fe03a71e8f879e491e94
+EVENTS-POST-DEATH.pj0: 2721 octets  sha256 fedf5345e73311c8acec92b3f02e18afd23fa11242ec9bc9c92c13fe8e3e378f  (3 frames: grant, attempt:prepared, attempt:frontier-crossed; the journal as the death in the acknowledgment window left it - the frontier crossed, the effect unaccounted)
+EVENTS-FINAL.pj0: 5633 octets  sha256 865cfe50072284b3fac1c06a3ec8c2c9036a09bc2d38771717ac85a0f6a4f6ca  (5 frames: the same prefix byte-identically, plus effect:uncertain and attempt:reconciled - the restart's accounting; nothing rewritten)
+WORLD-CELLS.txt: 37 octets  sha256 45e4d65be8d30d6c7942c24d4d0796e908b91c0ae3364023dae0d4796986a03d  (cella:septima = VII - written EXACTLY ONCE, by the dead process; byte-identical across the restart)
+WORLD-LEDGER.txt: 54 octets  sha256 fc831a4d8fdee88c0a3f725e63706a0ec5604d5114bfddb49892354e82dcfdb7  (ONE applied entry under external-request:cap2:a-001 - the evidence the reconciliation carried home; a blind retry would have appended a second)
+AUTH-ATTEMPT-RECEIPT.pjs: 1302 octets  sha256 1feef03bd483e8f0224878cf36f9afe5d6f6059586659424c9922207ad5ff46b  (the dead life's authorization-to-attempt receipt: licensed the attempt, proves nothing about the effect, byte-identical throughout)
+byte-stability: every file listed here is byte-identical across runs (fixed store nonce; declared PJ-META-1 deviation, see specimen-common.lisp)

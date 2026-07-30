@@ -1,0 +1,73 @@
+# capability2 — exit-code record (CLAVIGER-III, 2026-07-30)
+# Host: Linux 7.0.0-28-generic · SBCL 2.4.6 (operation-checked live via
+# (lisp-implementation-version) through the ~/.local/bin/sbcl wrapper before
+# any CL ran; output not transcript-preserved).
+# All commands executed from the latent-lisp root
+# (/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp).
+
+## This lane's gates
+
+sbcl --script mneme/capability2/capability2-selftest.lisp    -> exit 0   (29 checks, 0 failures; transcript RUN-SELFTEST.txt)
+sbcl --script mneme/capability2/capability2-selftest.lisp    -> exit 0   (second run; transcript RUN-SELFTEST-SECOND.txt)
+sbcl --script mneme/capability2/capability2-controls.lisp    -> exit 0   (27 checks, 0 failures; transcript RUN-CONTROLS.txt)
+sbcl --script mneme/capability2/capability2-controls.lisp    -> exit 0   (second run; transcript RUN-CONTROLS-SECOND.txt)
+sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+                                                             -> exit 0   (29 checks, 0 failures; transcript de-effectu-incerto/RUN-SPECIMEN.txt)
+sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+                                                             -> exit 0   (second run; transcript de-effectu-incerto/RUN-SPECIMEN-SECOND.txt)
+
+Determinism proof (byte-identity by sha256):
+  RUN-SELFTEST.txt  == RUN-SELFTEST-SECOND.txt
+    37d3b5a963875f759049a08a51944c3e544f5e3b0cd4e31c1c02daff5e20503b
+  RUN-CONTROLS.txt  == RUN-CONTROLS-SECOND.txt
+    f7d327956c3016cf6bc35432d0f778738bd71cb44acdb19cce414686e9615416
+  de-effectu-incerto/RUN-SPECIMEN.txt == RUN-SPECIMEN-SECOND.txt
+    0baf4e6fc5c77b9faa931f644c3b9350f35e435bb9923c7d7a270f162a12b4e3
+(No timestamps, pids, absolute paths, or random store identities are
+printed by any runner; store nonces are fixed — declared PJ-META-1
+deviation, test fixtures only; every attempt, seat, query, and request
+identity is declared charge, so every digest — including the world's
+cell-store and ledger digests — is byte-stable across runs.)
+NOTE: the specimen transcripts above were captured AFTER a check-numbering
+repair in run-specimen.lisp (the truncated-control relay was un-nested
+from its scheck so relayed child checks and the parent verdict no longer
+share a number); the two captures shown are both post-repair runs, and
+the selftest/controls transcripts are unaffected by that edit.
+
+## Gate teeth (inside the transcripts; a gate that has never fired is untested)
+
+- selftest check [029]: a child run with CAP2_SELFTEST_PLANT_FAULT=1 exits 1
+  and its transcript carries "FAIL PLANTED FAULT".
+- controls check [026]: a child run with CAP2_CONTROLS_PLANT_FAULT=1 exits 1
+  with "FAIL PLANTED FAULT".
+- controls check [027]: a child run with CAP2_CONTROLS_DIE=1 exits 3 with NO
+  "RESULT:" sentinel (truncation detected as exactly that pair).
+- specimen check [005]: the first life with CAP2_WORLD_DIE_IN_WINDOW=1 exits
+  7 inside the acknowledgment window with NO RESULT: sentinel (the planted
+  interruption point, seen to fire).
+- specimen check [012]: a restart child with DE_EFFECTU_DIE=1 exits 3 with
+  no RESULT: sentinel.
+- permanent planted mutants (+planted-defects+): :ack-promotes-to-settled,
+  :auto-retry-on-uncertain, :stored-resolved-flag — each KILLED in both
+  suites (selftest [026]-[028], controls [023]-[025]).
+
+## Regression gates (capability1, capability0, journal0 untouched; the CD/0 floor holds)
+
+sbcl --script mneme/capability1/capability1-selftest.lisp    -> exit 0   (30 checks, 0 failures)
+sbcl --script mneme/capability1/capability1-controls.lisp    -> exit 0   (27 checks, 0 failures)
+sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp
+                                                             -> exit 0   (29 checks, 0 failures; captured transcript diffed
+                                                                          BYTE-IDENTICAL against the committed
+                                                                          de-clave-mortua/RUN-SPECIMEN.txt; that specimen's
+                                                                          ARTIFACT-* files re-verified against its committed
+                                                                          ARTIFACT-SHA256SUMS.txt — 7 lines, all OK)
+sbcl --script mneme/capability0/capability0-selftest.lisp    -> exit 0   (28 checks, 0 failures)
+sbcl --script mneme/capability0/capability0-controls.lisp    -> exit 0   (36 checks, 0 failures)
+sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+                                                             -> exit 0   (24 checks, 0 failures; transcript diffed BYTE-IDENTICAL
+                                                                          against the committed RUN-SPECIMEN.txt; ARTIFACT-* files
+                                                                          re-verified against the committed ARTIFACT-SHA256SUMS.txt
+                                                                          — 4 lines, all OK)
+sbcl --script mneme/journal0/journal0-selftest.lisp          -> exit 0   (66 checks, 0 failures)
+sbcl --script mneme/journal0/journal0-vectors.lisp           -> exit 0   (89 checks, 0 failures)
+bash mneme/verify-all.sh                                     -> exit 0   (ALL FLOORS HOLD — 6/6 suites green)
