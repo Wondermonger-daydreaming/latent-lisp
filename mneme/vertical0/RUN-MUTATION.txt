@@ -1,0 +1,87 @@
+vertical0 mutation gate — bilateral (contract §13).  Every kill names its predicate.
+no pid, no clock, no temporary name appears below: the twin run must be byte-identical.
+
+== loader fidelity: the mutant child with NO defect IS the program ==
+[M001] ok   mutants/mutant-child.lisp with VERTICAL0_DEFECTS empty produces a journal BYTE-IDENTICAL to program/campaign.lisp's over the same fresh configuration — the forms-loader reproduces CL:LOAD, so every mutant below is the real program with exactly one rule changed
+
+== RULE-OMISSION — an unjustified action or claim, each killed by its exact named predicate ==
+[M002] ok   O1 STRICT: the CAP2-W1 pre-declaration scan refuses blind retry from durable bytes alone — the refusal record is journaled naming condition unsafe-retry, and the standing stays :uncertain-unresolved
+[M003] ok   O1 MUTANT (scan bypassed, fresh key authorizes a retry into the poisoned seat): dies signalling exactly UNSAFE-RETRY, and no second frontier crossing was ever journaled
+[M004] ok   KILLED (rule-omission) unsafe-retry-allowed — two-sided, by unsafe-retry (Kernel /0 §14.1 · CAP2-W1)
+[M005] ok   O2 STRICT: the FRESH /0 fold refuses by name — the journaled refusal is capability-revoked, and nothing crossed
+[M006] ok   O2 MUTANT (mints from the refusal anyway): dies signalling exactly CAP1-MINT-REFUSED — a refusal cannot authorize minting — with no frontier crossed
+[M007] ok   KILLED (rule-omission) revoked-accepted — two-sided, by capability-revoked (fresh /0 fold) -> cap1-mint-refused
+[M008] ok   O3 STRICT: with the capability's resource equal to the effect's cell the attempt is authorized and settles
+[M009] ok   O3 MUTANT (the key is presented against a cell it does not name): dies signalling exactly CAP2-EFFECT-NOT-AUTHORIZED — exact four-term equality — with no frontier crossed
+[M010] ok   KILLED (rule-omission) scope-mismatch-accepted — two-sided, by cap2-effect-not-authorized (exact four-term equality)
+[M011] ok   O4 STRICT: fold(spent)+declared-estimate exceeds the declared ceiling, so the seat dies signalling exactly BUDGET-CEILING-EXCEEDED BEFORE any frontier — no mint, no dispatch, no crossing
+[M012] ok   O4 MUTANT (the ceiling check never refuses): the forbidden act is committed — the frontier IS crossed and the seat settles with the fold over the ceiling
+[M013] ok   KILLED (rule-omission) budget-ignored — two-sided, by budget-ceiling-exceeded (contract §8)
+[M014] ok   O5 STRICT: settlement rides the captured envelope — the custody record and the projection are both durable
+[M015] ok   O5 MUTANT (the acknowledgment is treated as terminal settlement and the seat is projected with nothing in custody): dies signalling exactly PROVIDER-ENVELOPE-MISSING (AP-ENV-4), and no projection record exists
+[M016] ok   KILLED (rule-omission) ack-promoted-to-settlement — two-sided, by provider-envelope-missing (AP-ENV-4; an acknowledgment has no settling force — AP-ACK-4)
+[M017] ok   O6 STRICT: the partial is CLOSED, never resumed — the typed refusal stream-resume-would-duplicate is journaled with exactly 1 chunk preserved, and the census standing is present-partial / crossed-unsettled-partial-closed
+[M018] ok   O6 MUTANT (the stream is resumed from chunk zero so the partial can be called complete): dies signalling exactly DUPLICATE-ATTEMPT-IDENTITY — resumption requires a second crossing of an attempt the validated prefix already binds — and no closure record and no census were ever written
+[M019] ok   O6 companion leg — the same forbidden SHAPE, presented to Adapter /0's own validator, is rejected by name: the frozen BAD-PART-01 fixture (captured chunks erased because no terminal arrived) refuses partial-manifestation-erasure (AP-STR-7)
+[M020] ok   KILLED (rule-omission) partial-promoted-complete — two-sided, by duplicate-attempt-identity + census partial standing (companion: partial-manifestation-erasure)
+[M021] ok   O7 STRICT: interpretation is a separate transformation and journals a receipt — procedure vertical-interpretation-0, version 0, BINDING the input projection receipt identity, claiming a structural class and never truth
+[M022] ok   O7 MUTANT (the projection is claimed as verified semantics): the journaled interpretation carries NO input-projection-receipt-id and NO structural class — a claim copied without a transformation receipt
+[M023] ok   O7 companion leg — the same forbidden SHAPE at Adapter /0: the frozen BAD-TRUTH-01 fixture (a verified-semantics claim on a projection) refuses adapter-truth-minting (AP-PRJ-2)
+[M024] ok   KILLED (rule-omission) projection-promoted-to-truth — two-sided, by the transformation-receipt requirement (companion: adapter-truth-minting)
+[M025] ok   O8 STRICT: the budget fold REFUSES an unreadable journaled cost — its declared clause is "missing cost is never zero" — so the next seat never reaches a frontier.  PREDICATE-NAMED, not condition-typed: the fold's refusal is a SIMPLE-ERROR carrying that clause, and this gate asserts the clause, not merely that something failed
+[M026] ok   O8 MUTANT (unreadable folds as zero): the forbidden act is committed — the fold returns a total that silently treats the missing amount as free, and the campaign runs to a census on it
+[M027] ok   O8 companion leg — at Adapter /0 the category error is refused upstream: a schedule-less extraction returns the TYPED missing-cost marker, which is not a record and not a number, so no zero can be substituted for it (AP-COST-4)
+[M028] ok   KILLED (rule-omission) missing-cost-as-zero — two-sided, by the budget-fold missing-is-never-zero predicate (PREDICATE-NAMED; companion: AP-COST-4 typed marker)
+[M029] ok   O9 STRICT: a census derived in a fresh fold from the PRIMARY durable journal alone (a read-only copy of the campaign-1 store; census.lisp loaded without the orchestration module) asserts 12 seats and is stable across two derivations
+[M030] ok   O9 MUTANT (the census asserts a per-seat fact held only in a finalizer-owned cell): the DELETION PROOF fails — the mutant census is not canonically equal to the census the primary evidence supports
+[M031] ok   O9 named-cell localization tooth: MAKUNBOUND the finalizer cell and the illicit dependency signals UNBOUND-VARIABLE whose CELL-ERROR-NAME is exactly the finalizer-only symbol — the tooth localizes the leak, it does not merely detect it
+[M032] ok   O9 restoration: with the defect uninstalled the census is once more byte-equal to the strict derivation (the gate leaves the program as it found it)
+[M033] ok   KILLED (rule-omission) finalizer-only-fact-accepted — two-sided, by the deletion-proof inequality + the named-cell tooth (unbound-variable / cell-error-name)
+[M034] ok   O10 STRICT (declared durability synced): the shipped witness checker passes with zero failures — every readiness marker came after the last journal append's fsync returned, and no semantic write occurred between the final marker and SIGKILL
+[M035] ok   O10 MUTANT (the same program on a best-effort journal): the shipped witness checker KILLS it — zero fsync(EVENTS.pj0) calls exist anywhere in the trace, so the readiness marker is unbacked.  AND the corpse's bytes still validate :VALID — readable bytes after SIGKILL are NOT the passing condition (contract §4)
+[M036] ok   KILLED (rule-omission) no-sync-durability — two-sided, by the external strace witness (check-sync-before-every-ready)
+[M037] ok   O11 STRICT: each arm reaches its TRUE standing through lawful class-B reconciliation — arm A (effect applied provider-side) effect-standing-with-evidence, arm B (not applied) settled-no-effect
+[M038] ok   O11 MUTANT (the recovery settles from knowledge of how the fake script behaves, reading no class-B evidence): WRONG IN ONE ARM — it answers settled-no-effect in BOTH, so in arm A it denies an effect the provider domain records
+[M039] ok   O11 companion leg — settlement WITHOUT reconciliation evidence is refused by name at Adapter /0: reconcile-request answering not-found with no complete-domain conjunction signals RECONCILIATION-INSUFFICIENT, and with a merely ASSERTED completeness witness signals ADAPTER-WITNESS-BOUNDARY-MISSING (AP-REC-6: exact identity + complete authoritative domain + a distinct OBSERVED witness, or no settlement)
+[M040] ok   KILLED (rule-omission) w1-settled-by-script — two-sided, by the §6 wrong-in-one-arm grading predicate (companion: reconciliation-insufficient / adapter-witness-boundary-missing)
+
+== RULE-ADDITION — a spurious refusal where §12 declares a founded transition ==
+the founded baseline: four seats, three lives, two restarts.  Every §12 row below is a POSITIVE obligation this run discharges; each mutant then fails exactly one of them.
+[M041] ok   §12 fresh authority on untouched seat — mint -> authorize yields an authorization receipt (cap2 attempt:prepared for seat-alpha)
+[M042] ok   §12 sufficient budget before frontier — the attempt proceeds and its cost record is journaled, with no refusal record
+[M043] ok   §12 one lawful dispatch — frontier-crossed + AP0 dispatch + crossing-evidence-binding are all durable
+[M044] ok   §12 one journaled partial chunk — chunk ordinal 1 is durable, journaled before delivery
+[M045] ok   §12 one valid envelope projection — live for seat-alpha, and DERIVED from captured bytes for seat-sealed after its restart
+[M046] ok   §12 one committed projection consumption — the consumption record references the projection receipt identity
+[M047] ok   §12 one evidence-settled execution — seat-alpha settles, and the post-frontier failure seat-slammed reconciles against surviving world evidence
+[M048] ok   §12 untouched seat resumed after restart — seat-slammed is ABSENT from the life-2 journal snapshot and its complete record set appears only in life 3
+[M049] ok   §12 founded nonempty census assertion — a 4-seat outcome map is journaled and the campaign completes
+[M050] ok   deny-every-mint MUTANT: cap2-event:e-a-seat-alpha-prepared, cap2-event:e-a-seat-alpha-frontier absent from durable evidence though the transition's preconditions held
+[M051] ok   KILLED (rule-addition) deny-every-mint — §12 obligation "fresh authority on untouched seat" did not happen though its preconditions held
+[M052] ok   every-seat-poisoned MUTANT: cap2-event:e-a-seat-alpha-frontier, ap0-event:e-seat-alpha-dispatch, ap0-event:e-seat-song-chunk-1 absent from durable evidence though the transition's preconditions held
+[M053] ok   KILLED (rule-addition) every-seat-poisoned — §12 obligation "one lawful dispatch" did not happen though its preconditions held
+[M054] ok   every-budget-exhausted MUTANT: cap2-event:e-a-seat-alpha-frontier, ap0-event:e-seat-alpha-cost absent from durable evidence though the transition's preconditions held
+[M055] ok   KILLED (rule-addition) every-budget-exhausted — §12 obligation "sufficient budget before frontier" did not happen though its preconditions held
+[M056] ok   suppress-every-dispatch MUTANT: cap2-event:e-a-seat-alpha-frontier, cap2-event:e-a-seat-alpha-settled absent from durable evidence though the transition's preconditions held
+[M057] ok   KILLED (rule-addition) suppress-every-dispatch — §12 obligation "one lawful dispatch" did not happen though its preconditions held
+[M058] ok   refuse-every-projection MUTANT: ap0-event:e-seat-alpha-projection, vertical-event:e-seat-sealed-projection absent from durable evidence though the transition's preconditions held
+[M059] ok   KILLED (rule-addition) refuse-every-projection — §12 obligation "one valid envelope projection" did not happen though its preconditions held
+[M060] ok   refuse-every-consumption MUTANT: vertical-event:e-seat-alpha-consumption, vertical-event:e-seat-sealed-consumption absent from durable evidence though the transition's preconditions held
+[M061] ok   KILLED (rule-addition) refuse-every-consumption — §12 obligation "one committed projection consumption" did not happen though its preconditions held
+[M062] ok   preserve-uncertainty-despite-evidence MUTANT: cap2-event:e-a-seat-slammed-reconciled absent from durable evidence though the transition's preconditions held
+[M063] ok   KILLED (rule-addition) preserve-uncertainty-despite-evidence — §12 obligation "one evidence-settled execution" did not happen though its preconditions held
+[M064] ok   every-manifestation-unresolved MUTANT: the transition is refused though its preconditions hold
+[M065] ok   KILLED (rule-addition) every-manifestation-unresolved — §12 obligation "founded nonempty census assertion" did not happen though its preconditions held
+[M066] ok   refuse-founded-census MUTANT: vertical-event:e-census, vertical-event:e-campaign-complete absent from durable evidence though the transition's preconditions held
+[M067] ok   KILLED (rule-addition) refuse-founded-census — §12 obligation "founded nonempty census assertion" did not happen though its preconditions held
+[M068] ok   UNIVERSAL ABSTENTION composite — all nine spurious refusals installed at once: the machine refuses EVERYTHING and this is NOT a passing campaign.  No frontier crossed, no chunk, no projection, no consumption, no settlement, no census, no campaign-complete, and the last life does not exit 0
+[M069] ok   UNIVERSAL ABSTENTION — and the abstention is VISIBLE, not silent: every seat carries a journaled refusal record naming the invented refusal, so the gate is reading refusals rather than a crash
+
+== gate teeth — a gate that has never fired is untested ==
+[M070] ok   the planted-fault tooth FIRES: a child gate with VERTICAL0_MUTATION_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT — the gate can fail, so its PASS is evidence
+[M071] ok   the truncation tooth FIRES: a child gate with VERTICAL0_MUTATION_DIE=1 exits 3 with NO RESULT sentinel — truncation before a canonical result is detectable as exactly that pair, never mistakable for a pass
+
+RULE-OMISSION killed: 11 of 11 (live counter)
+RULE-ADDITION killed: 9 of 9 (live counter)
+vertical0 mutation gate: 71 checks, 0 failures
+RESULT: PASS

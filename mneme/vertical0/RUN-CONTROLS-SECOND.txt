@@ -1,0 +1,52 @@
+vertical0 integration controls — the §14 battery.  Every item fails through its intended named predicate; a generic crash is never a pass.
+no pid, no clock, no temporary name appears below: the twin run must be byte-identical.
+
+== inertness of this lane: the existing tree is unmodified ==
+[C001] ok   the shipped witness checker (harness/witness.lisp), re-run over the PRESERVED campaign-1 / control-a / control-b traces, reproduces RUN-WITNESS.txt BYTE-IDENTICALLY — 62 checks, 0 failures, same lines, same order.  Nothing this lane added changed what the durability witness sees
+[C002] ok   the real campaign (program/campaign.lisp, verbatim) still runs clean: an all-CONTINUE single-life smoke over a fresh scratch execution directory exits 0 and journals a census and a campaign-complete record
+[C003] ok   and the git working tree confirms it: program/, harness/ and the sealed artifacts carry no modification from this lane — the only additions are program/defects.lisp, support/, mutants/ and controls/ (asserted here by re-reading the three preserved run transcripts and finding them unchanged on disk)
+
+== the §14 battery ==
+[C004] ok   §14.01 duplicate seat — one seat identity declared twice in the bank with different cells, so its opening grant would be journaled twice with different content — refused by pj0-event-identity-collision (Journal /0)
+[C005] ok   §14.02 duplicate attempt identity — a second crossing under an attempt name the validated prefix already binds — refused by duplicate-attempt-identity (Kernel /0 §6.6, via Capability /2)
+[C006] ok   §14.03 duplicate provider identity — re-dispatching a preparation that has already crossed the membrane once — refused by unsafe-retry (Kernel /0 §14.1, re-exported by Adapter /0)
+[C007] ok   §14 occupied target before effect — NOT EXERCISED.  The composed stack exposes no predicate for it: Capability /2 deliberately does NOT expose Kernel /0's occupied `perform`, and a second authorized attempt on an already-written cell SETTLES (last write wins).  Recorded here as an APPARENT MISSING PREDECESSOR PREDICATE and reported upward; this lane performs no predecessor repair.  The check below asserts only the fact just stated, so the gap is visible in the transcript rather than silently absent
+[C008] ok   §14.04 revoked capability — a grant that a later revocation defeated, presented at the current prefix — refused by the fresh /0 fold's refusal reason capability-revoked
+[C009] ok   §14.05 stale capability — a live key minted before a journal append and presented after it (every append stales every key) — refused by cap1-stale-capability (Capability /1)
+[C010] ok   §14.06 scope mutation — a capability queried with terms other than the ones it was granted for — refused by the fold's refusal reason capability-scope-mismatch
+[C011] ok   §14.07 scope aliasing — a key whose terms match, presented to authorize an effect on a DIFFERENT cell than the one it names — refused by cap2-effect-not-authorized (exact four-term equality)
+[C012] ok   §14.08 self-restoration attempt — a revoked capability identity re-granted under the same terms, then queried — refused by the fold's terminal refusal capability-revoked (a revocation is not undone by a later grant of the same identity)
+[C013] ok   §14.09 restoration with enlarged scope — the same revoked identity re-granted with a WIDER scope — refused by the fold's terminal refusal capability-revoked (enlargement buys nothing a restoration could not buy)
+[C014] ok   §14.10 spending ceiling exceeded — fold(spent) + declared estimate beyond the declared ceiling, checked BEFORE the frontier — refused by budget-ceiling-exceeded (contract §8; typed, pre-frontier)
+[C015] ok   §14.11 adapter alias drift — dispatch under a resolved configuration other than the one bound at preparation — refused by implicit-provider-fallback (AP-ID-8/9: fallback is not continuation)
+[C016] ok   §14.12 adapter version drift — the descriptor version changes between preparation and dispatch — refused by adapter-version-drift (AP-DESC-3)
+[C017] ok   §14.13 unsafe fallback — the frozen BAD-CFG-01 adversarial fixture (a silent provider substitution) — refused by implicit-provider-fallback, rule-exact at Adapter /0's validator
+[C018] ok   §14.14 unsafe retry — the pre-declaration scan run from durable bytes alone over a seat whose crossing is unsettled — refused by unsafe-retry (CAP2-W1, check-retry-safety-from-store)
+[C019] ok   §14.15 standing inflation — a transport-level acknowledgment relabelled as provider receipt (the frozen BAD-ACK-01 fixture) — refused by acknowledgment-ambiguous (AP-ACK-4: an acknowledgment class has no settling force by itself)
+[C020] ok   §14.16 torn journal tail — a truncated EVENTS.pj0 offered to a recovering child as its surviving evidence — refused by the strict reader's :TORN-TAIL status; the child refuses a damaged prefix rather than resuming on it
+[C021] ok   §14.17 invalid interior record — a flipped octet inside an already-sealed frame — refused by the strict reader's :CORRUPTION status; the child refuses the prefix rather than reading past the damage
+[C022] ok   §14.18 self-written narrative promoted to observation — the program's own account of its conduct claiming origin OBSERVED — refused by the origin-jurisdiction predicate: every vertical- and ap0-namespace event is ASSERTED testimony (AP-JRN-1); an OBSERVED one is a defect
+[C023] ok   §14.19 claim copied without a transformation receipt — a projection's content carried downstream with no procedure identity, version and input binding — refused by the transformation-receipt requirement (contract §10)
+[C024] ok   §14.20 secret opening without an exposure record — a declared synthetic rubric opened with nothing journaled naming capability, principals and scope — refused by the exposure-record requirement (contract §9)
+[C025] ok   §14.21 finalizer-only primary fact — a census assertion held only in a finalizer-owned named cell — refused by the named-cell localization tooth: unbound-variable whose cell-error-name is the finalizer-only symbol
+[C026] ok   §14.22 raw host value crossing a durable boundary — a configuration carrying a host float, and one carrying a bare symbol (i.e. code) — refused by the narrow data reader's refusal (config-reader §2.1: keywords, strings, integers, NIL and proper lists — nothing else)
+[C027] ok   §14.23 convenience accessor discarding outcome context — a refusal reduced to a bare NIL, losing why — refused by cap1-mint-refused, which CARRIES its BASIS (:receipt-not-authorized) and names the /0 reason in its detail, rather than collapsing the refusal to a value
+[C028] ok   §14.24 runner truncation before a canonical result — a gate child killed mid-run — refused by the exit-3 / no-RESULT-sentinel pair (truncation is never mistakable for a pass)
+[C029] ok   §14.25 marker emitted before sync — a readiness marker announcing a durable fact BEFORE that fact's append (and therefore before its fsync) — refused by the corpse test: the record the marker announced is ABSENT from the journal at death, and one fewer fsync(EVENTS.pj0) precedes the marker than in the strict arm
+[C030] ok   §14.26 no-sync durability — the same program on a best-effort journal, whose bytes are STILL readable after SIGKILL — refused by the shipped external witness check-sync-before-every-ready (readable bytes are not the passing condition)
+[C031] ok   §14.27 semantic work after the readiness marker — a journal append between READY and SIGKILL — refused by the shipped external witness check-killed-tail (no write, pwrite, rename or unlink may follow the final marker)
+[C032] ok   §14.28 captured-evidence write-replace with close instead of fsync — the temporary file renamed with no barrier before or after — refused by the shipped external witness check-write-replace-protocol (close alone is never a durability primitive)
+[C033] ok   §14.29 the oracle artifact exposed to a child — a child that opens VERTICAL-HARNESS-ORACLE.sexp — refused by the shipped external witness check-read-set, shown FIRING (a read-set proof that has never caught anything is untested)
+[C034] ok   §14.30 the kill schedule passed through the program configuration — any of life number, W label, kill schedule, expected fold or outcome, or the oracle pathname appearing in what the child lawfully reads — refused by the §2.1 jurisdiction scanner over the PARSED configuration — the data the child can actually read — shown FIRING on a planted config
+[C035] ok   §14.31 schedule independence — the harness schedule changed while the program's own artifacts must not move — refused by the §2.3 digest identity: program source digest, program configuration digest and public bank digest are equal under two genuinely different oracle schedules
+[C036] ok   §14.32 W1 settled through script knowledge — a settlement claimed with no class-B reconciliation evidence read — refused by reconciliation-insufficient, and adapter-witness-boundary-missing when the completeness witness is merely ASSERTED (AP-REC-6).  The full two-arm wrong-in-one-arm grading of the same forbidden design is discharged in RUN-MUTATION.txt (O11) and is not double-counted here
+
+== gate teeth — a gate that has never fired is untested ==
+[C037] ok   the planted-fault tooth FIRES: a child battery with VERTICAL0_CONTROLS_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT — the battery can fail, so its PASS is evidence
+
+§15 RETURN NOTE — apparent missing predecessor predicate.
+  occupied target before effect: the composed stack has no refusal for a second authorized attempt on an already-written cell.  Capability /2 deliberately does not expose Kernel /0's occupied `perform`, and its own frontier settles last-write-wins.  REPORTED, not repaired: this lane makes no predecessor change.
+
+§14 controls exercised here: 32 of 32 passed (live counter)
+vertical0 integration controls: 37 checks, 0 failures
+RESULT: PASS

@@ -1,0 +1,78 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+run-reconstruction-gate — Vertical Specimen /0, contract §11
+the official state is what a FRESH process derives from durable evidence alone
+
+== A. the official reconstruction, in a fresh child process ==
+[R001] ok   1 reconstruct-census.lisp runs in a FRESH child process over the completed campaign's exec/ and exits 0
+[R002] ok   2 the census artifact was produced and is non-empty
+
+== B. the independent replay, in its own fresh child process ==
+[R003] ok   3 replay-census.lisp — structurally separate source, same census procedure — runs in a fresh child and exits 0
+[R004] ok   4 the replay artifact was produced and is non-empty
+
+== C. the two official results are BYTE-IDENTICAL and both :reconstructed ==
+[R005] ok   5 official reconstruction and independent replay are byte-identical
+[R006] ok   6 TEETH: the byte comparator finds a single flipped octet (a comparator that has never refused is untested)
+[R007] ok   7 the official state carries derivation-origin "reconstructed" at the top level AND inside the census record
+[R008] ok   8 the replay's artifact carries the same origin tag (decoded independently, not inferred from the byte comparison)
+
+== D. the 12-seat outcome map, against the sealed expectations ==
+[R009] ok   9 the derived census holds exactly 12 seats
+[R010] ok   10 the derived outcome map equals the sealed contract §3 / oracle expected-outcomes table, seat for seat
+[R011] ok   11 TEETH: the outcome comparator refuses a deliberately wrong expected map (S2 promoted from uncertain to settled)
+
+   the outcome map as DERIVED (not as remembered):
+     seat-first-fruit | present | settled
+     seat-empty-page | present-empty | settled
+     seat-locked-purse | absent | refused-pre-effect | budget-ceiling-exceeded
+     seat-torn-crossing | absent | uncertain-unresolved
+     seat-half-song | present-partial | crossed-unsettled-partial-closed | chunks=1
+     seat-broken-glass | present-invalid | settled
+     seat-dead-hand | absent | refused-pre-effect | capability-revoked
+     seat-slammed-door | absent | reconciled-not-applied
+     seat-burned-draft | absent | settled | absent-after-completion
+     seat-sealed-letter | present | settled | derived-recovery
+     seat-cold-supper | present | settled
+     seat-late-riser | present | settled
+
+== E. refusals: what the official program will not do ==
+[R012] ok   12 TEETH: a child whose image is told the ORCHESTRATION module is present refuses — nonzero exit, no RESULT sentinel
+[R013] ok   13 TEETH: a child pointed at a directory without the primary journal refuses — nonzero exit, no artifact
+
+== F. temporal repeatability of the derivation ==
+[R014] ok   14 a second official child over the same durable evidence produces a byte-identical artifact
+
+== G. the FINALIZER-DELETION PROOF ==
+[R015] ok   15 the completed run is copied to a workspace (the campaign's own directory is never the finalizer's subject)
+[R016] ok   16 the finalizer runs over the workspace copy and writes its four derived artifacts
+[R017] ok   17 with the finalizer's outputs PRESENT, a fresh reconstruction child over the workspace equals the official census byte for byte
+[R018] ok   18 the finalizer's outputs are PRESERVED before deletion (the proof discards them from the run, not from the record)
+[R019] ok   19 EVERY derived index / summary / export is DELETED from the workspace — the finalizer's derived/, and the campaign's own export/ and mirror-sim/ bundles with it
+[R020] ok   20 only PRIMARY evidence is retained: the journal, the captured evidence files, the public config (and the class-A/B world state)
+[R021] ok   21 THE PROOF: a fresh child that never loads the finalizer module reconstructs the census from what is left, byte-identical to the pre-deletion official state
+[R022] ok   22 TEETH: the deletion proof is sensitive to what actually matters — remove a PRIMARY journal and reconstruction refuses
+
+== H. the NAMED-CELL localization tooth (in-process diagnostic) ==
+[R023] ok   23 the finalizer, run IN THIS PROCESS over a workspace copy, populates all three named cells
+[R024] ok   24 all three cells are MAKUNBOUND
+[R025] ok   25 with the cells unbound, the reconstruction procedure run IN-PROCESS completes unaffected and returns the official bytes
+[R026] ok   26 TEETH: a deliberately-dependent probe closure reading one of those cells signals UNBOUND-VARIABLE whose CELL-ERROR-NAME is the finalizer-only symbol *FINALIZER-INDEX-CACHE*
+[R027] ok   27 TEETH: the same holds for the summary and export cells (each names itself, so a leak could be localized)
+
+== I. the FINALIZER-ONLY-FACT mutant ==
+[R028] ok   28 the planted mutant is LIVE: a finalizer run with the plant enabled writes a fabricated seat into its derived artifacts
+[R029] ok   29 THE KILL: a fresh reconstruction over the same workspace does NOT contain the finalizer-only fact anywhere in its canonical bytes
+[R030] ok   30 the planted fact is also absent from the derived outcome map (13 seats would be a finalizer-authored primary fact; 12 is the journal's own answer)
+
+== J. the completed campaign was not mutated by any of this ==
+[R031] ok   31 runs/campaign-1/exec is byte-for-byte what it was before the gate ran: every reconstruction is read-only over durable evidence
+
+campaign-1/exec: 16 primary files, tree manifest 79c675ecfa98418458e2e98e8da6e804648bec40ca409323864c4b1b41dfed12
+official state:  8482 canonical octets, sha256 706f7e1e582e06cce14ba44428b7c0705bd6480a8dcbd5ebf5a9a85874cdd05a
+independent replay: sha256 706f7e1e582e06cce14ba44428b7c0705bd6480a8dcbd5ebf5a9a85874cdd05a
+post-deletion reconstruction: sha256 706f7e1e582e06cce14ba44428b7c0705bd6480a8dcbd5ebf5a9a85874cdd05a
+
+run-reconstruction-gate: 31 checks, 0 failures
+RESULT: PASS
