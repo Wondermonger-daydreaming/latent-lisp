@@ -1,0 +1,30 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+adapter0-scripts — the ten frozen deterministic scripts, each run twice
+terminal law: fold-derived from surviving records (AP-CRASH-1), compared against the script's declared expectation.
+
+[S001] ok   script-absent: computed terminal absent-after-completion equals declared absent-after-completion (records 6, crashed no)
+[S002] ok   script-absent: two-pass replay digests byte-identical (sha256 44c1706cf31551b7386f7f1e7a25a07a62419d1af7dd6e15080e0620b8187511)
+[S003] ok   script-cancel: computed terminal present-partial equals declared present-partial (records 6, crashed yes)
+[S004] ok   script-cancel: two-pass replay digests byte-identical (sha256 372a583edac68bbb3d85000590fede9b0e4516ef6b509eb6b39d2141f012cb03)
+[S005] ok   script-empty: computed terminal present-empty equals declared present-empty (records 6, crashed no)
+[S006] ok   script-empty: two-pass replay digests byte-identical (sha256 3b099c8dc780482dcd6bd4cf64651d676a30d921a8fee41d1ca731e60816b9c0)
+[S007] ok   script-invalid: computed terminal present-invalid equals declared present-invalid (records 6, crashed no)
+[S008] ok   script-invalid: two-pass replay digests byte-identical (sha256 e573f3c0adda4963960cf2a8df0ccb577cbeb78a0770b7556a32b6dfe1fc5240)
+[S009] ok   script-present: computed terminal present equals declared present (records 7, crashed no)
+[S010] ok   script-present: two-pass replay digests byte-identical (sha256 9dee0df1f14706b96c7f27ffa5fc004598ec86455abe01a3fda55ad4a66355d3)
+[S011] ok   script-reconcile: computed terminal completed equals declared completed (records 5, crashed yes)
+[S012] ok   script-reconcile: two-pass replay digests byte-identical (sha256 1b07d9b70c3678595fafdbd1196bf8cbbbbcd3800effd8ad4d9b6baa79b78389)
+[S013] ok   script-w1: computed terminal unresolved-effect equals declared unresolved-effect (records 4, crashed yes)
+[S014] ok   script-w1: two-pass replay digests byte-identical (sha256 552b7628552f44c394bacf5e56c5754a271feacb9a3f7d20dd6e3ea17ef6e3df)
+[S015] ok   script-w2: computed terminal present-partial equals declared present-partial (records 7, crashed yes)
+[S016] ok   script-w2: two-pass replay digests byte-identical (sha256 b740892ca644ed265247e427e26cc450d7f34d33c9ae1e7a2cfd72ad98c3b5f3)
+[S017] ok   script-w3: computed terminal captured-unprojected equals declared captured-unprojected (records 6, crashed yes)
+[S018] ok   script-w3: two-pass replay digests byte-identical (sha256 8f5b5a45f2a15bc4300b419fb50f77f1369eb7051696c2a5de3520ef2975cab8)
+[S019] ok   script-w4: computed terminal projected-unconsumed equals declared projected-unconsumed (records 7, crashed yes)
+[S020] ok   script-w4: two-pass replay digests byte-identical (sha256 f00b8b6c94e2d2d31c8afd485790a4994e6b4f4132b186cf264730d5d3fb3674)
+[S021] ok   LIVE COUNTER: 10 scripts executed — the four crash windows (W1 unresolved-effect · W2 present-partial · W3 captured-unprojected · W4 projected-unconsumed), the four terminal shapes, cancellation, and reconciliation are all among them (AP-FAKE-3, AP-CRASH-2)
+
+adapter0-scripts: 21 checks, 0 failures
+RESULT: PASS

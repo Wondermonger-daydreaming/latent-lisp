@@ -1,0 +1,54 @@
+# adapter0 — exit-code record (CLAVIGER-IV, 2026-07-30)
+# Host: Linux 7.0.0-28-generic · SBCL 2.4.6 (operation-checked live via
+# (lisp-implementation-version) through the ~/.local/bin/sbcl wrapper
+# before any CL ran; output not transcript-preserved).
+# All commands executed from the latent-lisp root
+# (/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp).
+
+## This lane's gates (each run twice; every pair byte-identical — see SEAL-RECORD.md digests)
+
+sbcl --script mneme/adapter0/adapter0-selftest.lisp   -> exit 0   (39 checks, 0 failures; RUN-SELFTEST.txt, RUN-SELFTEST-SECOND.txt)
+sbcl --script mneme/adapter0/adapter0-vectors.lisp    -> exit 0   (107 checks, 0 failures; 48 positive + 33 adversarial-with-declared-condition + 20 mutants-killed-by-intended-rule; RUN-VECTORS.txt, RUN-VECTORS-SECOND.txt)
+sbcl --script mneme/adapter0/adapter0-scripts.lisp    -> exit 0   (21 checks, 0 failures; 10 scripts x 2 runs, digests printed; RUN-SCRIPTS.txt, RUN-SCRIPTS-SECOND.txt)
+sbcl --script mneme/adapter0/adapter0-joint.lisp      -> exit 0   (24 checks, 0 failures; RUN-JOINT.txt, RUN-JOINT-SECOND.txt)
+sbcl --script mneme/adapter0/adapter0-l17.lisp        -> exit 0   (4 checks, 0 failures; writes L17-ROUTE-AUDIT-ARTIFACT.md deterministically; RUN-L17.txt, RUN-L17-SECOND.txt)
+sbcl --script mneme/adapter0/adapter0-controls.lisp   -> exit 0   (24 checks, 0 failures; RUN-CONTROLS.txt, RUN-CONTROLS-SECOND.txt)
+sbcl --script mneme/adapter0/de-membrana-loquente/run-specimen.lisp
+                                                      -> exit 0   (12 checks, 0 failures; RUN-SPECIMEN.txt, RUN-SPECIMEN-SECOND.txt)
+
+## Gate teeth (inside the transcripts; a gate that has never fired is untested)
+
+- selftest [039]: child with ADAPTER0_SELFTEST_PLANT_FAULT=1 exits 1, transcript carries "FAIL PLANTED FAULT".
+- vectors [V106]: child with ADAPTER0_VECTORS_PLANT_FAULT=1 exits 1 with "FAIL PLANTED FAULT".
+- vectors [V107]: child with ADAPTER0_VECTORS_DIE=1 exits 3 with NO "RESULT:" sentinel (truncation detected as exactly that pair).
+- controls [C023]: child with ADAPTER0_CONTROLS_PLANT_FAULT=1 exits 1 with "FAIL PLANTED FAULT".
+- controls [C024]: child with ADAPTER0_CONTROLS_DIE=1 exits 3 with NO "RESULT:" sentinel.
+- permanent planted defects (+planted-defects+): :delivery-before-journal
+  (killed by the machine's own §10.5 custody guard, typed signal) and
+  :erase-partials (killed by the declared-terminal comparison) — selftest
+  [037] and controls [C011]/[C015].
+- 20 frozen rule-omission mutants: each killed two-sidedly (strict reject
+  with the declared condition; accept under exactly the named rule
+  disabled) — vectors [V085]-[V104].
+
+## Regression gates (all substrates byte-unchanged; run after this lane's gates)
+
+sbcl --script mneme/capability2/capability2-selftest.lisp    -> exit 0   (29 checks, 0 failures)
+sbcl --script mneme/capability2/capability2-controls.lisp    -> exit 0   (27 checks, 0 failures)
+sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+                                                             -> exit 0   (captured transcript diffed BYTE-IDENTICAL
+                                                                          against the committed RUN-SPECIMEN.txt)
+sbcl --script mneme/capability1/capability1-selftest.lisp    -> exit 0   (30 checks, 0 failures)
+sbcl --script mneme/capability1/capability1-controls.lisp    -> exit 0   (27 checks, 0 failures)
+sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp
+                                                             -> exit 0   (transcript BYTE-IDENTICAL vs committed)
+sbcl --script mneme/capability0/capability0-selftest.lisp    -> exit 0   (28 checks, 0 failures)
+sbcl --script mneme/capability0/capability0-controls.lisp    -> exit 0   (36 checks, 0 failures)
+sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+                                                             -> exit 0   (transcript BYTE-IDENTICAL vs committed)
+sbcl --script mneme/journal0/journal0-selftest.lisp          -> exit 0   (66 checks, 0 failures)
+sbcl --script mneme/journal0/journal0-vectors.lisp           -> exit 0   (89 checks, 0 failures)
+bash mneme/verify-all.sh                                     -> exit 0   (ALL FLOORS HOLD — 6/6 suites green)
+
+git status (filtered of this lane's new files and _staging/): EMPTY —
+zero modifications outside mneme/adapter0/.

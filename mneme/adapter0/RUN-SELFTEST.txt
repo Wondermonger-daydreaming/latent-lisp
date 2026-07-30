@@ -1,0 +1,59 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+adapter0-selftest — the membrane candidate's unit checks
+governing refusal: do not translate provider ambiguity into kernel certainty; preserve the envelope, name the boundary, identify the witness, record who was exposed, and carry the unknown forward until evidence — not fluency — narrows it.
+
+== Class A fixtures decode canonical ==
+[001] ok   both canonical descriptors load and are distinct adapter identities (fake-reference-0, fake-limited-ack-0)
+[002] ok   the full descriptor witnesses all eight §9 acknowledgment classes; the limited descriptor witnesses exactly {transport-accepted, no-acknowledgment}
+[003] ok   the absence table carries exactly the eleven §14/Appendix-C shapes (derived live from the fixture, not hardcoded counts elsewhere)
+[004] ok   table rows map per the normative minimum: missing→absent+absent-after-completion · empty-string→present-empty ·
+        invalid-utf8→present-invalid · partial→present-partial ·
+        nonempty→present
+[005] ok   a shape outside the table is a MISS (returns no row — the caller must refuse, never improvise: AP-ABS-1)
+[006] ok   the registry's own scalar counts equal the counts DERIVED by folding its entries (48 positive, 33 adversarial, 81 entries) and the on-disk mutant enumeration equals mutant-count (20)
+[007] ok   every registry entry's path exists on disk and decodes canonical
+
+== the rule table ==
+[008] ok   rule identities are unique
+[009] ok   every frozen mutant's disabled-rule names an existing rule (the §24.2 vocabulary is implemented, not approximated)
+[010] ok   closed vocabularies carry their normative sizes: 8 acknowledgment classes (§9) · 7 identity timings (§5.3) · 5 provider-testimony sources (AP-ID-3) · 4 cost standings (§16) · 9 reconciliation results (§18)
+[011] ok   an exact rational amount string passes the money rule; a binary-float spelling and a decimal-point spelling both refuse cost-float-noncanonical (AP-COST-1)
+[012] ok   a synthetic identity-domain collapse — the local request identity offered as provider request identity (source local-identifier) — refuses provider-request-id-invented (AP-ID-3)
+[013] ok   a duplicate chunk with ALTERED payload (duplicate-identical false) refuses stream-chunk-identity-collision (AP-STR-3); the same duplicate declared identical is idempotent (AP-STR-2)
+[014] ok   a stream claiming journal-before-delivery whose recorded history delivered first refuses stream-persistence-order-invalid (§10.5 is checked against the history, not the label)
+[015] ok   an undeclared intermediary refuses exposed-principal-drift (AP-EXP-4)
+[016] ok   a cancellation erasing partials refuses partial-manifestation-erasure (AP-CAN-3)
+[017] ok   a W2 fold claim of absent (journal available) refuses partial-manifestation-erasure; W1 claiming settled-no-effect refuses reconciliation-insufficient (§11 dispositions)
+
+== the owner's non-equivalences, held mechanically ==
+[018] ok   descriptor ≠ live adapter object: binding a live adapter where a descriptor belongs refuses; describing a descriptor (not a live object) refuses; the two are distinct host types
+[019] ok   prepared ≠ dispatched: preparation yields a prepared record, not a dispatch handle; local request identity is bound pre-frontier (AP-ID-1) and the provider idempotency slot is a SEPARATE field holding #u (local ≠ idempotency ≠ provider identity)
+[020] ok   requested alias ≠ resolved machine identity: the prepared record binds declared AND resolved configuration as separate fields (AP-ID-7)
+[021] ok   dispatch ≠ acknowledgment: the dispatch record carries crossing evidence and NO acknowledgment class; the provider request identity slot at dispatch is #u under the acknowledgment timing class — never minted (AP-ID-3)
+[022] ok   a second dispatch of the SAME preparation refuses with Kernel /0's unsafe-retry (AP-DSP-3: retry ≠ innocent repetition)
+[023] ok   acknowledgment ≠ execution ≠ settlement: the acknowledgment record binds witness facets and a LEARNED provider request identity, and carries no settlement field at all (AP-ACK-4)
+[024] ok   journal-before-delivery holds on the live stream path: each chunk is in the durable trail BEFORE the sink sees it (§10.5)
+[025] ok   raw envelope ≠ projected manifestation: capture yields an envelope record (binary custody, octet count, integrity evidence); projection yields a SEPARATE receipt-bearing record with origin derived (AP-PRJ-6)
+[026] ok   projection refuses on a table miss instead of improvising (AP-ABS-1) — and the refusal names the shape
+[027] ok   projection before capture refuses provider-envelope-missing (AP-ENV-4): a fresh handle with no envelope cannot be projected
+[028] ok   cancellation request ≠ cancellation settlement: the cancellation record says unsettled, residual effects possible, partials preserved (AP-CAN-1/3/4)
+[029] ok   usage ≠ cost: extract-usage returns an adapter-measured usage record; extract-cost WITHOUT a price schedule returns a typed missing-cost marker — not zero, not free, not a number (AP-COST-4)
+[030] ok   estimated ≠ billed: with a schedule the cost record is standing estimated with an exact rational amount; dashboard-confirmed is a DIFFERENT standing the fake never claims for itself (AP-COST-2/3)
+[031] ok   reconciliation not-found ≠ proved no effect: not-found without a distinct completeness witness refuses (adapter-witness-boundary-missing); with the full AP-REC-6 conjunction it settles; without the identity it refuses reconciliation-identity-missing
+[032] ok   adapter testimony ≠ boundary observation: a self-report filed as observed refuses (AP-JRN-1/PJ-WIT-1)
+[033] ok   execution ≠ manifestation: the ABSENT script executes to completion and manifests NOTHING — terminal absent-after-completion, distinct from every present-class terminal (SCRIPT-ABSENT, §14)
+[034] ok   partial stream ≠ nothing: the mid-stream kill (SCRIPT-W2) folds to present-partial, never absent (AP-STR-6/7)
+
+== script machine invariants ==
+[035] ok   the machine's terminal is FOLD-DERIVED (AP-CRASH-1): no emitted record carries any resolved flag field
+[036] ok   every emitted chunk record carries adapter identity and stream relation fields (AP-G4-1/AP-G4-2)
+[037] ok   the planted :delivery-before-journal defect is KILLED by the machine's own custody guard (typed stream-persistence-order-invalid), and the planted :erase-partials fold is KILLED by the declared-terminal comparison
+[038] ok   the crash boundary is honest: W1's surviving trail has dispatch but NO acknowledgment, envelope, or projection record
+
+== gate teeth ==
+[039] ok   the planted-fault gate FIRES: a child run with ADAPTER0_SELFTEST_PLANT_FAULT=1 exits 1 and its transcript carries FAIL PLANTED FAULT
+
+adapter0-selftest: 39 checks, 0 failures
+RESULT: PASS

@@ -1,0 +1,26 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+de-membrana-loquente — the lawful route reaches the membrane and returns a structured outcome
+law: Capability /2 governs crossing and settlement; Adapter /0 reports membrane facts and settles nothing.
+
+[M001] ok   the created store's identity equals the identity derived from declared configuration alone (deterministic ground)
+[M002] ok   AUTHORITY: the grant commits at ordinal 1; the world holds cella:vox = VACUA with an empty request ledger
+[M003] ok   AP0 PREPARATION journaled BEFORE any crossing: prepared invocation, binary request capture, and exposure event (the provider fake-provider-0 named as principal, the invoker recorded exposed) — ordinals 2-4, world still untouched
+[M004] ok   Capability /1: the opaque live key is minted from the fresh /0 fold against the current prefix (minting adds no journal frame beyond the 4 already committed, and no world byte)
+[M005] ok   Capability /2 AUTHORITY CONTEXT: the authorization-to-attempt receipt licenses ONE exact effect (cella:vox := VOX, attempt a-001), binds the prefix WITH the AP0 pre-frontier account in it (terminal ordinal 4), and is preserved to disk byte-identically; still no frontier, no world byte
+[M006] ok   THE CROSSING (cap2's door): status :settled with acknowledgment class :provider-terminal; the world holds cella:vox = VOX with exactly one ledger entry; settlement was DERIVED from verified evidence, not from the acknowledgment class
+[M007] ok   AP0 MEMBRANE EVIDENCE journaled: dispatch record · crossing binding (naming the cap2 frontier AND acknowledgment events) · acknowledgment (witness facets, learned provider request identity) · terminal envelope · world-evidence capture · derived projection (origin derived, receipt-bearing, status present) · adapter-measured usage — every record a canonical datum, every event origin :asserted (AP-JRN-1)
+[M008] ok   USAGE ≠ COST at the membrane: with no identified price schedule the cost is a typed MISSING marker — not zero, not free (AP-COST-4)
+[M009] ok   Capability /2 SETTLEMENT: derive-effect-standing folds the validated prefix to :settled for attempt a-001 — the standing comes from the event sequence, never from any stored flag
+[M010] ok   THE STRUCTURED OUTCOME: a canonical record binding authority (capability public id + receipt digest), journal (attempt + local request identities), envelope + projection context (receipt id), exposure-bearing world evidence (cells digest), and the subject value — NOT a bare answer string (AP-OP-2), preserved to disk byte-identically
+
+store terminal digest: d031c2bc61eadf731312be165515de505c739ad548dc796af4e27fb478393fbd
+events file sha256: 26e0e826256a2af71eff9e8fd50471c0c51a5bfc98e6e7740c25223a04406fb1
+world cells sha256: 7de14d607f1b524a82982f201746f4c2454647fb7e257d4298681f1fc23a7663
+outcome sha256: 1899f51090aaf8991797ca70dbf3b8b23163edf31bcda23e8967b319bd3ee65f
+[M011] ok   the final journal carries the full two-jurisdiction account in one validated prefix of 15 frames: grant + 3 AP0 pre-frontier events + cap2's 4 crossing events (prepared, frontier-crossed, acknowledged, settled) + 7 AP0 membrane-evidence events
+[M012] ok   five artifacts preserved with a manifest and a sha256 ledger (auth receipt · structured outcome · final events · world cells · world ledger)
+
+de-membrana-loquente: 12 checks, 0 failures
+RESULT: PASS

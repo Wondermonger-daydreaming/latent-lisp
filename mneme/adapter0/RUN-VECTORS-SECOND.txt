@@ -1,0 +1,123 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+adapter0-vectors — the frozen AP0 vector set under the independently seeded validator
+registry: ONE canonical record; all counts derived live from its entries fold.
+
+== registry arbitration ==
+[V001] ok   derived counts equal the registry's own scalars: positive 48 · adversarial 33 · entries 81 · mutants-on-disk 20 · vector-count 101
+[V002] ok   the positive/ and adversarial/ directories hold exactly the files the registry names — nothing missing, nothing unregistered
+
+== the eighty-one registered cases ==
+[V003] ok   ACK-01 [acknowledgment] accepts
+[V004] ok   ACK-02 [acknowledgment] accepts
+[V005] ok   ACK-03 [acknowledgment] accepts
+[V006] ok   ACK-04 [acknowledgment] accepts
+[V007] ok   ACK-05 [acknowledgment] accepts
+[V008] ok   ACK-06 [acknowledgment] accepts
+[V009] ok   ACK-07 [acknowledgment] accepts
+[V010] ok   ACK-08 [acknowledgment] accepts
+[V011] ok   RID-01 [request-identity] accepts
+[V012] ok   RID-02 [request-identity] accepts
+[V013] ok   RID-03 [request-identity] accepts
+[V014] ok   RID-04 [request-identity] accepts
+[V015] ok   RID-05 [request-identity] accepts
+[V016] ok   RID-06 [request-identity] accepts
+[V017] ok   RID-07 [request-identity] accepts
+[V018] ok   ABS-01 [projection] accepts
+[V019] ok   ABS-02 [projection] accepts
+[V020] ok   ABS-03 [projection] accepts
+[V021] ok   ABS-04 [projection] accepts
+[V022] ok   ABS-05 [projection] accepts
+[V023] ok   ABS-06 [projection] accepts
+[V024] ok   ABS-07 [projection] accepts
+[V025] ok   ABS-08 [projection] accepts
+[V026] ok   ABS-09 [projection] accepts
+[V027] ok   ABS-10 [projection] accepts
+[V028] ok   ABS-11 [projection] accepts
+[V029] ok   STR-01 [stream] accepts
+[V030] ok   STR-02 [stream] accepts
+[V031] ok   STR-03 [stream] accepts
+[V032] ok   STR-04 [stream] accepts
+[V033] ok   CAN-01 [cancellation] accepts
+[V034] ok   CAN-02 [cancellation] accepts
+[V035] ok   REC-01 [reconciliation] accepts
+[V036] ok   REC-02 [reconciliation] accepts
+[V037] ok   REC-03 [reconciliation] accepts
+[V038] ok   BAT-01 [batching] accepts
+[V039] ok   CFG-01 [configuration] accepts
+[V040] ok   CST-01 [cost] accepts
+[V041] ok   CST-02 [cost] accepts
+[V042] ok   ERG-01 [ergonomics] accepts
+[V043] ok   EXP-01 [exposure] accepts
+[V044] ok   FAKE-01 [fake-determinism] accepts
+[V045] ok   ENV-RED-01 [envelope-custody] accepts
+[V046] ok   WIN-1 [crash-window] accepts
+[V047] ok   WIN-2 [crash-window] accepts
+[V048] ok   WIN-3 [crash-window] accepts
+[V049] ok   WIN-4 [crash-window] accepts
+[V050] ok   WIN-1-JOURNAL-DOWN [crash-window] accepts
+[V051] ok   BAD-CAP-01 [capability] rejects with its declared condition (adapter-descriptor-invalid; rule boolean-capability)
+[V052] ok   BAD-ACK-01 [acknowledgment] rejects with its declared condition (acknowledgment-ambiguous; rule ack-promotion)
+[V053] ok   BAD-ACK-RELABELLED [acknowledgment] rejects with its declared condition (adapter-witness-boundary-missing; rule ack-outside-witness-set)
+[V054] ok   BAD-ACK-NO-WITNESS [acknowledgment] rejects with its declared condition (adapter-witness-boundary-missing; rule ack-witness-missing)
+[V055] ok   BAD-RID-01 [request-identity] rejects with its declared condition (provider-request-id-unavailable; rule provider-id-timing-unavailable)
+[V056] ok   BAD-RID-COUNTER [request-identity] rejects with its declared condition (provider-request-id-invented; rule provider-id-invented)
+[V057] ok   BAD-RID-CONFLICT [request-identity] rejects with its declared condition (provider-request-identity-conflict; rule provider-id-conflict)
+[V058] ok   BAD-STR-01 [stream] rejects with its declared condition (stream-chunk-adapter-identity-missing; rule stream-adapter-identity)
+[V059] ok   BAD-STR-02 [stream] rejects with its declared condition (stream-sequence-conflict; rule stream-relation-missing)
+[V060] ok   BAD-STR-03 [stream] rejects with its declared condition (stream-sequence-gap; rule gap-hidden)
+[V061] ok   BAD-PART-01 [stream] rejects with its declared condition (partial-manifestation-erasure; rule partial-erased)
+[V062] ok   BAD-STR-DBJ [stream] rejects with its declared condition (stream-persistence-order-invalid; rule stream-persistence-invalid)
+[V063] ok   BAD-ENV-01 [projection] rejects with its declared condition (provider-envelope-missing; rule projection-before-capture)
+[V064] ok   BAD-ENV-MISSING-CAPTURE [projection] rejects with its declared condition (provider-envelope-missing; rule projection-before-capture)
+[V065] ok   BAD-PRJ-01 [projection] rejects with its declared condition (absence-mapping-table-miss; rule absence-table-miss)
+[V066] ok   BAD-PRJ-02 [projection] rejects with its declared condition (present-payload-erasure; rule absence-mapping-mismatch)
+[V067] ok   BAD-PRJ-STATE-AS-STATUS [projection] rejects with its declared condition (projection-output-noncanonical; rule projection-status-legal)
+[V068] ok   BAD-TRUTH-01 [projection] rejects with its declared condition (adapter-truth-minting; rule projection-truth-minting)
+[V069] ok   BAD-PRJ-ORIGIN [projection] rejects with its declared condition (projection-origin-invalid; rule projection-origin-invalid)
+[V070] ok   BAD-ENV-REDACTION [envelope-custody] rejects with its declared condition (provider-envelope-redaction-invalid; rule redaction-custody-invalid)
+[V071] ok   BAD-CST-01 [cost] rejects with its declared condition (cost-float-noncanonical; rule float-money)
+[V072] ok   BAD-CST-02 [cost] rejects with its declared condition (cost-standing-missing; rule cost-standing-valid)
+[V073] ok   BAD-CAN-01 [cancellation] rejects with its declared condition (cancellation-unconfirmed; rule cancellation-claim-exceeds)
+[V074] ok   BAD-CAN-RELABELLED [cancellation] rejects with its declared condition (adapter-truth-minting; rule cancellation-witness-missing)
+[V075] ok   BAD-REC-01 [reconciliation] rejects with its declared condition (reconciliation-insufficient; rule reconciliation-domain-incomplete)
+[V076] ok   BAD-REC-RELABELLED [reconciliation] rejects with its declared condition (adapter-witness-boundary-missing; rule reconciliation-witness-missing)
+[V077] ok   BAD-REC-NO-ID [reconciliation] rejects with its declared condition (reconciliation-identity-missing; rule reconciliation-identity-missing)
+[V078] ok   BAD-EXP-01 [exposure] rejects with its declared condition (exposed-principal-boundary-unknown; rule provider-omitted)
+[V079] ok   BAD-CFG-01 [configuration] rejects with its declared condition (implicit-provider-fallback; rule implicit-fallback)
+[V080] ok   BAD-RETRY-01 [retry] rejects with its declared condition (reconciliation-insufficient; rule blind-retry)
+[V081] ok   BAD-ERG-01 [ergonomics] rejects with its declared condition (adapter-truth-minting; rule ergonomics-bypass)
+[V082] ok   BAD-WIT-01 [witnessing] rejects with its declared condition (adapter-witness-boundary-missing; rule self-report-observed)
+[V083] ok   BAD-WIN-JOURNAL-DOWN [crash-window] rejects with its declared condition (reconciliation-insufficient; rule journal-down-misclassified)
+[V084] ok   LIVE COUNTERS after all registered cases executed: 48 accepted = positive-count, 33 rejected with declared conditions = adversarial-count
+
+== the twenty rule-omission mutants (§24.2) ==
+[V085] ok   MUT-01 kills BY ITS INTENDED RULE: full table rejects BAD-CAP-01 with adapter-descriptor-invalid; table minus boolean-capability accepts it
+[V086] ok   MUT-02 kills BY ITS INTENDED RULE: full table rejects BAD-ACK-01 with acknowledgment-ambiguous; table minus ack-promotion accepts it
+[V087] ok   MUT-03 kills BY ITS INTENDED RULE: full table rejects BAD-ACK-RELABELLED with adapter-witness-boundary-missing; table minus ack-outside-witness-set accepts it
+[V088] ok   MUT-04 kills BY ITS INTENDED RULE: full table rejects BAD-ACK-NO-WITNESS with adapter-witness-boundary-missing; table minus ack-witness-missing accepts it
+[V089] ok   MUT-05 kills BY ITS INTENDED RULE: full table rejects BAD-RID-COUNTER with provider-request-id-invented; table minus provider-id-invented accepts it
+[V090] ok   MUT-06 kills BY ITS INTENDED RULE: full table rejects BAD-RID-CONFLICT with provider-request-identity-conflict; table minus provider-id-conflict accepts it
+[V091] ok   MUT-07 kills BY ITS INTENDED RULE: full table rejects BAD-PART-01 with partial-manifestation-erasure; table minus partial-erased accepts it
+[V092] ok   MUT-08 kills BY ITS INTENDED RULE: full table rejects BAD-STR-DBJ with stream-persistence-order-invalid; table minus stream-persistence-invalid accepts it
+[V093] ok   MUT-09 kills BY ITS INTENDED RULE: full table rejects BAD-ENV-MISSING-CAPTURE with provider-envelope-missing; table minus projection-before-capture accepts it
+[V094] ok   MUT-10 kills BY ITS INTENDED RULE: full table rejects BAD-PRJ-01 with absence-mapping-table-miss; table minus absence-table-miss accepts it
+[V095] ok   MUT-11 kills BY ITS INTENDED RULE: full table rejects BAD-PRJ-02 with present-payload-erasure; table minus absence-mapping-mismatch accepts it
+[V096] ok   MUT-12 kills BY ITS INTENDED RULE: full table rejects BAD-PRJ-ORIGIN with projection-origin-invalid; table minus projection-origin-invalid accepts it
+[V097] ok   MUT-13 kills BY ITS INTENDED RULE: full table rejects BAD-ENV-REDACTION with provider-envelope-redaction-invalid; table minus redaction-custody-invalid accepts it
+[V098] ok   MUT-14 kills BY ITS INTENDED RULE: full table rejects BAD-CAN-RELABELLED with adapter-truth-minting; table minus cancellation-witness-missing accepts it
+[V099] ok   MUT-15 kills BY ITS INTENDED RULE: full table rejects BAD-REC-RELABELLED with adapter-witness-boundary-missing; table minus reconciliation-witness-missing accepts it
+[V100] ok   MUT-16 kills BY ITS INTENDED RULE: full table rejects BAD-REC-NO-ID with reconciliation-identity-missing; table minus reconciliation-identity-missing accepts it
+[V101] ok   MUT-17 kills BY ITS INTENDED RULE: full table rejects BAD-CST-01 with cost-float-noncanonical; table minus float-money accepts it
+[V102] ok   MUT-18 kills BY ITS INTENDED RULE: full table rejects BAD-EXP-01 with exposed-principal-boundary-unknown; table minus provider-omitted accepts it
+[V103] ok   MUT-19 kills BY ITS INTENDED RULE: full table rejects BAD-CFG-01 with implicit-provider-fallback; table minus implicit-fallback accepts it
+[V104] ok   MUT-20 kills BY ITS INTENDED RULE: full table rejects BAD-WIN-JOURNAL-DOWN with reconciliation-insufficient; table minus journal-down-misclassified accepts it
+[V105] ok   LIVE COUNTER: 20 of 20 mutants killed — a validator accepting any planted mutant is nonconforming evidence
+
+== gate teeth ==
+[V106] ok   the planted-fault gate FIRES: a child with ADAPTER0_VECTORS_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT
+[V107] ok   the truncation tooth FIRES: a child with ADAPTER0_VECTORS_DIE=1 exits 3 with NO RESULT sentinel
+
+adapter0-vectors: 107 checks, 0 failures
+RESULT: PASS

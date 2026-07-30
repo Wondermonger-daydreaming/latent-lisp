@@ -1,0 +1,11 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+adapter0-l17 — the mechanical route audit (AP-ERG-1/2/3)
+[L001] ok   the lawful route to a projected manifestation is 4 public API actions (prepare-invocation → dispatch → await-terminal → project-envelope) — the exact figure every frozen vector declares as lawful-route-steps
+[L002] ok   no supported bypass exists: the twelve-operation surface returns typed records/handles/markers only (AP-OP-2) and provides NO raw provider call (AP-ERG-2 honored by absence — raw escape is not merely discouraged, it is not offered)
+[L003] ok   AP-ERG-1 holds vacuously-with-evidence: supported bypass count is 0, so no supported route is shorter than the lawful one; the comparison is recorded row-by-row in the artifact
+[L004] ok   the artifact file was written and carries the lawful-route row and the twelve operation rows
+
+adapter0-l17: 4 checks, 0 failures
+RESULT: PASS

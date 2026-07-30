@@ -1,0 +1,43 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+adapter0-controls — every forbidden design, presented and refused
+
+== identity and configuration ==
+[C001] ok   1 descriptor/live-object collapse: preparing against a bare descriptor record refuses adapter-descriptor-invalid (AP-DESC-1)
+[C002] ok   2 identity-domain collapse: a local identifier offered as provider request identity refuses provider-request-id-invented (AP-ID-3), and the prepared record keeps local / idempotency / provider identities in three separate fields
+[C003] ok   3 implicit fallback: the frozen fallback fixture refuses implicit-provider-fallback, and a dispatch under a DIFFERENT resolved configuration than prepared refuses the same way (AP-ID-9: fallback ≠ continuation)
+[C004] ok   4 blind retry: the frozen retry fixture refuses (AP-DSP-3), and re-dispatching an already-dispatched preparation signals Kernel /0's unsafe-retry
+[C005] ok   21 adapter-version drift: a descriptor version change between preparation and dispatch refuses adapter-version-drift (AP-DESC-3) — drift is never accepted silently
+[C006] ok   22 alias/route drift: the resolved machine identity is bound at preparation (AP-ID-7); dispatch under a drifted resolution refuses rather than silently re-resolving (AP-ID-8)
+
+== acknowledgment and witnessing ==
+[C007] ok   5 acknowledgment promotion: the frozen promoted fixture refuses acknowledgment-ambiguous (AP-ACK-4), and a synthetic transport→terminal promotion refuses identically
+[C008] ok   6 unwitnessable acknowledgment class: provider-terminal emitted under the limited descriptor (witnessable set = {transport-accepted, no-acknowledgment}) refuses adapter-witness-boundary-missing (AP-ACK-3)
+[C009] ok   16 self-certified reconciliation completeness: the frozen relabelled fixture refuses adapter-witness-boundary-missing (AP-REC-1), and the reconcile-request operation refuses the same conjunction gap live
+[C010] ok   15 cancellation promoted to no effect: socket closure claimed as provider settlement refuses cancellation-unconfirmed (AP-CAN-1), and provider-settled without a boundary witness refuses adapter-truth-minting (AP-CAN-6)
+
+== stream custody ==
+[C011] ok   7 delivery before journal: the frozen undeclared-DBJ fixture refuses stream-persistence-order-invalid (§10.5), and the machine's planted :delivery-before-journal defect is killed by its own custody guard
+[C012] ok   8 duplicate chunk with altered payload refuses stream-chunk-identity-collision (AP-STR-3)
+[C013] ok   9 sequence conflict: chunks without their sequence relation refuse stream-sequence-conflict (AP-G4-2/AP-STR-4)
+[C014] ok   10 gap silently normalized: a hidden gap refuses stream-sequence-gap (AP-STR-5 — visibility is the law; normalization requires a receipt)
+[C015] ok   11 partial chunks erased by missing terminal: the frozen erasure fixture refuses partial-manifestation-erasure (AP-STR-7), and the planted :erase-partials fold is killed by the declared terminal
+
+== envelope, projection, truth ==
+[C016] ok   12 projection before envelope custody: the frozen missing-capture fixture refuses provider-envelope-missing (AP-ENV-4/R2), and the live operation refuses the same way on an uncaptured handle
+[C017] ok   13 absence-table improvisation: the frozen invented-shape fixture refuses absence-mapping-table-miss (AP-ABS-1), and the live projection refuses the same shape instead of improvising
+[C018] ok   14 projection promoted to semantic truth: a verified-semantics claim on a projection refuses adapter-truth-minting (AP-PRJ-2)
+[C019] ok   20 exposed intermediary omitted: the frozen provider-omitted fixture refuses exposed-principal-boundary-unknown (AP-EXP-1), and an undeclared intermediary refuses exposed-principal-drift (AP-EXP-4)
+
+== money ==
+[C020] ok   17 usage promoted to cost: extract-usage yields a usage record with units and NO monetary field; extract-cost without a price schedule yields the typed missing-cost marker — usage never becomes money by relabelling
+[C021] ok   18 estimated promoted to billed: a stronger-than-evidence standing ("billed" is not in the §16 vocabulary) refuses cost-standing-missing, and the fake's own cost records only ever claim estimated (AP-COST-2/3)
+[C022] ok   19 missing cost as zero: the missing-cost marker is not a record, not a number, and carries its reason — missing ≠ free (AP-COST-4); the frozen float fixture refuses cost-float-noncanonical (AP-COST-1)
+
+== gate teeth ==
+[C023] ok   the planted-fault gate FIRES: a child with ADAPTER0_CONTROLS_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT
+[C024] ok   23 runner truncation before canonical result: a child with ADAPTER0_CONTROLS_DIE=1 exits 3 with NO RESULT sentinel — truncation is detectable as exactly that pair
+
+adapter0-controls: 24 checks, 0 failures
+RESULT: PASS

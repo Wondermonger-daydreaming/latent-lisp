@@ -1,0 +1,37 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+adapter0-joint — structural AP0 validity and Kernel semantic validity, two verdicts, never one green counter
+
+== (a) the eighteen projection-family vectors, two verdicts each ==
+[J001] ok   ABS-01: structural pass · semantic pass — expected semantic accept
+[J002] ok   ABS-02: structural pass · semantic pass — expected semantic accept
+[J003] ok   ABS-03: structural pass · semantic pass — expected semantic accept
+[J004] ok   ABS-04: structural pass · semantic pass — expected semantic accept
+[J005] ok   ABS-05: structural pass · semantic pass — expected semantic accept
+[J006] ok   ABS-06: structural pass · semantic pass — expected semantic accept
+[J007] ok   ABS-07: structural pass · semantic pass — expected semantic accept
+[J008] ok   ABS-08: structural pass · semantic pass — expected semantic accept
+[J009] ok   ABS-09: structural pass · semantic pass — expected semantic accept
+[J010] ok   ABS-10: structural pass · semantic pass — expected semantic accept
+[J011] ok   ABS-11: structural pass · semantic pass — expected semantic accept
+[J012] ok   BAD-ENV-01: structural pass · semantic fail (provider-envelope-missing) — expected semantic reject
+[J013] ok   BAD-ENV-MISSING-CAPTURE: structural pass · semantic fail (provider-envelope-missing) — expected semantic reject
+[J014] ok   BAD-PRJ-01: structural pass · semantic fail (absence-mapping-table-miss) — expected semantic reject
+[J015] ok   BAD-PRJ-02: structural pass · semantic fail (present-payload-erasure) — expected semantic reject
+[J016] ok   BAD-PRJ-STATE-AS-STATUS: structural pass · semantic fail (projection-output-noncanonical) — expected semantic reject
+[J017] ok   BAD-TRUTH-01: structural pass · semantic fail (adapter-truth-minting) — expected semantic reject
+[J018] ok   BAD-PRJ-ORIGIN: structural pass · semantic fail (projection-origin-invalid) — expected semantic reject
+[J019] ok   LIVE COUNTERS: 18 structural passes and 18 semantic agreements over the projection family — every frozen projection vector is STRUCTURALLY canonical; only the semantic verdict divides them
+[J020] ok   THE SEPARATION ITSELF: the state-as-status fixture (BAD-PRJ-STATE-AS-STATUS) is structural PASS + semantic FAIL, and its condition (projection-output-noncanonical) comes from Kernel /0's adopted status algebra — a Kernel violation, NOT reclassified as a parser defect
+
+== (b) planted structural defects — never consulted semantically ==
+[J021] ok   malformed bytes (an unclosed record) land structural FAIL with semantics :not-consulted
+[J022] ok   a PARSEABLE but noncanonical spelling (unsorted record keys) lands structural FAIL — canonicality is part of structure, and semantics are still :not-consulted
+[J023] ok   a structurally canonical record from a NON-projection family (BAD-CST-01) still fails SEMANTICALLY with its declared condition — the structural pass never launders a semantic violation
+
+== (c) the adopted journal-side joint surface (K0E-26) ==
+[J024] ok   a fixed-nonce scratch store (declared PJ-META-1 deviation, test fixture only) yields a joint-structural-semantic-report with TWO verdict slots, each pass, each under its OWN procedure identity
+
+adapter0-joint: 24 checks, 0 failures
+RESULT: PASS
