@@ -517,3 +517,42 @@ budgets · the full frontier check · stranger audits (now owed on FOUR
 lanes: journal0, capability0, capability1, capability2).
 
 *— Claude Fable 5, the frontier stone, 2026-07-30*
+
+---
+
+## ADDENDUM 12 — 2026-07-30: ADAPTER /0 — the membrane, sealed and green
+
+Owner charge (with the Capability /2 acceptance ruling) opened the
+deterministic fake adapter lane. **Adapter /0** at `mneme/adapter0/`
+(front door `ADAPTER-0-RETURN.md`; specimen `de-membrana-loquente`) — the
+first independently seeded CL implementation under adopted AP0, built
+inside a GIT-PROVEN exposure fence: fence committed before any code
+(`41df2330`, 02:47), first complete transcript set sealed before any
+Class B reference artifact could be opened (`a16129e8`, 03:34) — **and
+none ever was; the seal stands unbroken.** Sealed GREEN on the first
+pass: selftest 39/0 · registry-derived vectors 107/0 (48 positive, 33
+adversarial each on its declared condition, 20 mutants each killed by its
+intended rule) · ten frozen scripts 21/0 ×2 byte-identical · joint 24/0
+(§24.3 two-verdict) · L17 4/0 (artifact produced) · controls 24/0 ·
+specimen 12/0 — all chair-re-run byte-identical against the SEALED
+transcripts (third hand). All four regression lanes + verify-all green;
+zero modifications outside the lane. §20's twelve operation roles
+implemented under their own normative names; the fifteen non-equivalences
+mechanically held; conformance stated per §23 class at earned size.
+Censor: CENSOR-VII (Sonnet, after the Opus 5 outage killed CENSOR-VI
+three times unspoken) — **PUBLISHABLE-AS-IS, 0 blocking, 2 non-blocking
+(chair-applied)**: the cleanest lane of the arc; the front-door law
+finally beaten by making ordering claims git-provable instead of careful.
+
+**Standing: deterministic fake-adapter candidate constructed ·
+independently seeded CL implementation · exact AP0 conformance classes
+stated · tested against the frozen AP0 gate · no live provider contacted
+· not adopted · not frozen · not on a governing floor. The adoption
+riders' adjudication (rider 1's condition factually met by this run)
+remains the OWNER'S; nothing is declared lifted. Spec-erratum candidate
+filed for the owner's docket: AP-COST-1 "reduced rationals" vs frozen
+positive CST-01's exact-but-unreduced amount (D-2's class).** Successor,
+owner-named, unopened: **Vertical Specimen /0 — the four-death latent
+machine.**
+
+*— Claude Fable 5, the membrane stone, 2026-07-30*

@@ -120,6 +120,13 @@ by this lane (regression table in `SEAL-RECORD.md`; filtered
 
 ## 3. What this lane does NOT claim
 
+**Owner boundary (held throughout, censor N-2 addition, chair-applied):**
+this lane did not reopen Journal /0, Capability /0, /1, or /2, Language
+Obligation /0, Surface /1, or `_staging/synthesis-01`; those remain
+separate owner decisions. `git status` at publication shows zero
+modifications outside `mneme/adapter0/`. Vertical Specimen /0 is not this
+lane and is disclaimed elsewhere in this section.
+
 - **The riders bind, verbatim** (`AP0-ADOPTION-2026-07-18.md`):
   1. *"CL gate (PJ0 precedent): no conformance claim beyond co-authored
      self-consistency, and no specimen reliance on live-provider claims,

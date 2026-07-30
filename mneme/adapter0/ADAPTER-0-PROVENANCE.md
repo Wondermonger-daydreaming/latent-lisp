@@ -42,7 +42,7 @@ whose results only listed Class B *pathnames* (permitted by the fence).
 ## Rulings and records consulted
 
 - The mission charge (owner-authorized, 2026-07-30) with its naming
-  adjudication and rider text.
+  adjudication and rider text (the riders quoted from `AP0-ADOPTION-2026-07-18.md` AS RELAYED IN THE CHARGE; per this ledger's own enumeration, the adoption file itself was not separately opened by this hand — censor N-1 clarification, chair-applied).
 
 ## What was executed but never read
 

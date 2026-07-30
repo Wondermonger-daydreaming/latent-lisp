@@ -166,8 +166,10 @@ layers and a heartbeat:**
    exclusion's confession was itself widened mid-arc to name its own omissions — the project's
    thesis, applied to its own honesty ledger.
 
-**The trilogy governs; the erratum governs beside it; the kernel0 pure core now implements the
-whole charge.** Remaining, carried openly (not discharged by any of the above): the independent
+**The trilogy governs; the erratum governs beside it; kernel0 implements the
+whole charge — and the successor lanes on the phase board are no longer owed:
+the journal store, the capability/live-authority machinery, and the
+deterministic fake adapter are built (see "The implementation era" above).** Remaining, carried openly (not discharged by any of the above): the independent
 Common Lisp PJ0/AP0 gates, the stranger's primitive-minimization seat (still reserved, still
 empty on principle), the successor lanes on the phase board
 (`mneme/architecture/IMPLEMENTATION-PHASE-BOARD-2026-07-18.md`) — the Mneme journal store,
@@ -175,6 +177,43 @@ capability/live-authority machinery (*a durable record that authority existed is
 the past, not live authority in the present*), the deterministic fake adapter — and then a
 vertical specimen deliberately killed at four defined points. Current WE-ARE-HERE, always:
 `mneme/architecture/ARCHITECTURE-0-STATUS.md`.
+
+---
+
+## The implementation era (2026-07-24 → 2026-07-30 — the organs)
+
+The phase board's lanes stopped being future tense. Each lane below is an
+executable Common Lisp vertical in this tree, consuming its predecessors
+strictly through public package exports, with its own suites, negative
+controls, planted-mutant kills, double-run byte-identical transcripts, and
+a RETURN document that states what is demonstrated and what is not.
+**Standing discipline: everything below is a CANDIDATE — constructed,
+tested, published; not audited, not adopted, not frozen, not on a
+governing floor — except where an adoption/closure ruling is filed in
+`mneme/RULING-*.md`.** All greens are same-family self-consistency;
+stranger audits are owed and not commissioned.
+
+| lane | law it executes | front door |
+|---|---|---|
+| `mneme/language-core-0/` + slices/forms/surfaces | the two doors: `derive` (evidentiary, closed evidence) vs `perform` (effect-capable) over one consequential substrate | `language-core-0/CORE-0-CLOSURE.md` |
+| `mneme/journal0/` | the first independently-seeded CL Process Journal /0 store — durable history that refuses to pretend it remembers what was never committed (specimen: `de-teste-occiso`, a real-SIGKILL restart) | `journal0/JOURNAL-0-RETURN.md` |
+| `mneme/architecture/pj0-errata/` | PJ0 Erratum 0.1 — the D-2 record-key-order adjudication (corpus order normative; order-by-encoding ≠ order-by-content) | `pj0-errata/LISP-PLUS-PJ0-ERRATA-0.1.md` |
+| `mneme/capability0/` | *history may prove that authority once existed; only the validated present prefix can say whether it remains live* — live authority is fold-derived, never a stored status (specimen: `de-potestate-revocata`) | `capability0/CAPABILITY-0-RETURN.md` |
+| `mneme/capability1/` | *a receipt may explain why a key was minted; it is not the key, and its description cannot forge one* — the opaque minting bridge; the key dies with its process (specimen: `de-clave-mortua`) | `capability1/CAPABILITY-1-RETURN.md` |
+| `mneme/capability2/` | *neither the capability nor its presentation receipt proves that the effect occurred* — the effect frontier; an unresolved crossed frontier forbids blind replay even after process death (specimen: `de-effectu-incerto`) | `capability2/CAPABILITY-2-RETURN.md` |
+| `mneme/adapter0/` | *a fake world is useful only when it can reproduce every ambiguity the real membrane may lawfully leave unresolved* — the first independently-seeded CL deterministic fake adapter under adopted AP0, built inside a git-proven exposure fence (fence committed before code; first transcripts sealed before any reference implementation could be opened — and none ever was) | `adapter0/ADAPTER-0-RETURN.md` + `SEAL-RECORD.md` |
+
+The capability arc (/0 + /1) is CLOSED by owner ruling
+(`mneme/RULING-capability1-arc-closure-2026-07-30.md`); Capability /2 is
+ACCEPTED as a published candidate
+(`mneme/RULING-capability2-acceptance-2026-07-30.md`). The obligation
+question is adjudicated-not-opened
+(`mneme/RULING-obligation-second-inhabitant-2026-07-29.md`). Adapter /0's
+run factually passes the full frozen AP0 vector set as the first
+independently-seeded CL implementation; the adoption riders' standing
+remains the owner's adjudication, and nothing here claims it. Next on the
+board, deliberately unopened: **Vertical Specimen /0 — the four-death
+latent machine.**
 
 ---
 
@@ -205,6 +244,11 @@ L7  testimony survives its death  completed+verified work crosses the gap; a mer
 
 Everything runs on **SBCL 2.4.6** (`sbcl --script <file>`; the atelier scripts run from their own directories).
 
+> **(Historical sweep — kept as the record of that day; the tree has grown
+> far past this count since. The current executable floor is
+> `mneme/verify-all.sh` — 6/6 suites — plus each implementation lane's own
+> `RUN-EXITCODES.txt` recipe.)**
+>
 > **Re-swept 2026-07-12 (evening):** the tree has grown to **182** `.lisp` files (the day added 2 Lane-B
 > monadologia specimens, GPT Sol's 10-instrument decad, and the leibnitiana chamber's fifth and sixth
 > tranches). Every file was run under `sbcl --script` from its own directory (relative `load`s honored).
@@ -325,6 +369,16 @@ latent-lisp/
 │   │                          #     Sol's disposition, and ARCHITECTURE-0-STATUS.md (the WE-ARE-HERE)
 │   ├── kernel0/               #   THE FIRST EXECUTABLE LISP+ (2026-07-18): pure core, 14 files,
 │   │                          #     selftest 29/0, run: sbcl --script kernel0-selftest.lisp
+│   ├── journal0/              #   Process Journal /0 in CL — independently seeded, gate-authored
+│   │                          #     (89/0 vectors · 66/0 selftest · de-teste-occiso SIGKILL specimen)
+│   ├── capability0/           #   live authority, fold-derived (de-potestate-revocata)
+│   ├── capability1/           #   the opaque minting bridge (de-clave-mortua)
+│   ├── capability2/           #   the effect frontier (de-effectu-incerto)
+│   ├── adapter0/              #   the AP0 fake adapter, sealed independent seeding (de-membrana-loquente)
+│   ├── language-core-0/       #   derive/perform two-door substrate + fake-courier world
+│   ├── language-slice-{0,1,2}/ · language-form-{0,1,2}/ · language-surface-{0,1}/
+│   │                          #   the language lanes (each with its own RETURN/CLOSURE + floors)
+│   ├── RULING-*.md            #   owner rulings — records of truth for arc closures/acceptances
 │   ├── lci0/                  #   Located Claim Identity /0 — closed arc: audit → errata → ten closures
 │   │                          #     implemented CL+Py, fresh-audit 10/10, merged 2026-07-15
 │   ├── language-a/            #   Language-A materials (public lane only — no items/keys/outputs)
@@ -380,5 +434,8 @@ open; the profile is Mneme, and the language has earned a repo of its own.*
 was banked and the language got its constitution by afternoon; by evening, its adopted Architecture 0.1,
 its sealed Kernel /0, its first executable heartbeat, and its journal spine; and by night, its adapter
 boundary — the trilogy complete, hostile-passed, adjudicated, repaired, verified, and sealed, and the
-phase turned from specification to implementation. One Saturday. The commits are the witness; the
-selftest is the pulse.*
+phase turned from specification to implementation. One Saturday. And refreshed again by Claude
+Fable 5 on 2026-07-30 — the week the organs grew: durable memory (journal0), present-tense authority
+(capability0), a mortal body for it (capability1), a hand that touches the world exactly once
+(capability2), and a membrane that can speak every lawful ambiguity on command (adapter0), built under
+a git-proven exposure fence. The commits are the witness; the seals are the pulse.*
