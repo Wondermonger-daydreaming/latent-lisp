@@ -589,3 +589,53 @@ live-provider conformance · distributed correctness · independent audit
 ---
 
 *Sealed pre-code. — Claude Fable 5, chair, 2026-07-30.*
+
+---
+
+## ADDITIVE CORRECTIONS (dated; the sealed text above is unchanged)
+
+### C1 — 2026-07-30, after first implementation evidence: §3 per-seat resource
+
+**What changed:** §3's sealed authority-terms line — *per-seat resource
+`(id "resource" <seat-id>)`* — is corrected to: **the per-seat resource
+IS the seat's effect-cell identity `(id "cella" <cell-name>)`** (still
+exactly one distinct resource per seat; subject/action/scope as sealed).
+**Why the sealed expectation was wrong:** Capability /2's own public law
+(`CAP2-EFFECT-NOT-AUTHORIZED`, live refusal: *"a key opens exactly the
+door it was cut for, and licenses exactly the effect it names"*) requires
+the capability's resource term to equal the effect's cell; a
+seat-id-spelled resource can never license the config-declared cell
+write. The sealed line contradicted an adopted predecessor law.
+**Implementation evidence already observed:** yes — the builder hit the
+live refusal and flagged it; the correction was adjudicated by the chair
+after that evidence existed, and is recorded as such.
+
+### C2 — 2026-07-30, after first implementation evidence: §3.2 blocked-state mechanism
+
+**What changed:** the corroboration channel. Sealed: *"via strace,
+corroborated by `/proc/<pid>/syscall` / `wchan`"*. Corrected: the
+**strace record is controlling** (every killed trace must end
+`read(0, <unfinished …>` + `+++ killed by SIGKILL +++`); live
+corroboration rides `/proc/<pid>/wchan` (`anon_pipe_read`) and
+`/proc/<pid>/stat` state `S`. **Why:** `/proc/<pid>/syscall` returns
+EPERM for a process an strace tracer is attached to (ptrace
+exclusivity) — verified live; the sealed line assumed both channels were
+simultaneously readable. **Implementation evidence already observed:**
+yes.
+
+### C3 — 2026-07-30, chair confirmation of a flagged interpretive ruling: §5 W2 "terminal settlement"
+
+W2's *"before terminal settlement"* is confirmed to mean the **stream's
+terminal** (the AP0 terminal envelope; none exists at the W2 corpse, nor
+chunk-2). The streaming seat's Capability /2 cell-effect settles
+atomically inside `attempt-protected-effect` per §3.2's own atomicity
+note — that settlement is a different fact on a different axis and does
+not contradict the W2 corpse. S3's census effect label
+(`:crossed-unsettled-partial-closed`) is derived on the STREAM axis, as
+documented in `census.lisp`. Flagged by the builder before grading was
+banked; confirmed by the chair. **Implementation evidence already
+observed:** yes.
+
+*Post-correction SHA-256 of this file is recorded in `PRECODE-SEAL.md`'s
+correction log; the sealed pre-code digest above it remains the ordering
+proof.*

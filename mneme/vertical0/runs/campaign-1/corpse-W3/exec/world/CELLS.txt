@@ -1,0 +1,13 @@
+cella:cella-clausa VACUA
+cella:cella-clausa-post VACUA
+cella:cella-dimidia V-seat-half-song
+cella:cella-fracta V-seat-broken-glass
+cella:cella-frigida VACUA
+cella:cella-mortua VACUA
+cella:cella-prima V-seat-first-fruit
+cella:cella-scissa VACUA
+cella:cella-sera VACUA
+cella:cella-sigillata V-seat-sealed-letter
+cella:cella-speculi VACUA
+cella:cella-usta V-seat-burned-draft
+cella:cella-vacua V-seat-empty-page

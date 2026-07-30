@@ -1,0 +1,2 @@
+KILL W1 boundary=EFFECT-FRONTIER-CROSSED-UNSETTLED occurrence=1 seat=seat-control pid=2375871 wchan=anon_pipe_read state=S (noncanonical diagnostics)
+CORPSE W1 snapshot=mneme/vertical0/runs/control-a/corpse-W1/

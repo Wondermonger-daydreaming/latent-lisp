@@ -23,3 +23,18 @@ contract was verified against adopted predecessor law by the chair (three
 API surveys, cited in the session record) and is built in this same lane.
 
 *— Claude Fable 5, chair, 2026-07-30.*
+
+---
+
+## Correction log (additive; the sealed digests above are the ordering proof)
+
+- **2026-07-30, post-build:** three dated additive corrections appended to
+  `LISP-PLUS-VERTICAL-SPECIMEN-0.md` (C1 per-seat resource = effect cell,
+  forced by CAP2-EFFECT-NOT-AUTHORIZED; C2 blocked-state corroboration —
+  /proc/<pid>/syscall is EPERM under an attached tracer, strace record
+  controlling; C3 chair confirmation that W2 "terminal settlement" means
+  the STREAM terminal). All three arose from implementation evidence and
+  say so. Post-correction SHA-256:
+  `625417279422e32cd1819b815021b6bfa632ca1c5a3555c3025849de25980918`.
+  The sealed pre-code hash `ef96b0a7…` remains what the pre-code commit
+  proves. Config and oracle are byte-unchanged.

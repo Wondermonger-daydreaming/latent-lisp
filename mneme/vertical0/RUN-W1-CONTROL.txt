@@ -1,0 +1,73 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+vertical0 harness — W1 indistinguishability control pair (contract §6; pids/paths noncanonical)
+two arms, identical program bytes, identical config bytes, identical (empty) provider domains; hidden truth differs ONLY in the oracle until after both dispositions are banked.
+
+[H001] ok   the two arms' materialized configs and initial provider domains are byte-identical (all program-visible AND all lawful pre-reconciliation evidence identical)
+
+== arm A, life 1 (killed at the frontier window) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | CHILD-PID 2375871 (noncanonical)
+      | NOTE store pj0-store:a83eb2c7bfa203538570a7359db18bf08128d4988737ed99dd7856e50b951f6d: :valid, 0 frames (created from declared configuration)
+      | BOUNDARY-READY seat=seat-control boundary=EFFECT-FRONTIER-CROSSED-UNSETTLED  [campaign occurrence 1]
+      | KILL: W1 at EFFECT-FRONTIER-CROSSED-UNSETTLED occurrence 1 (seat seat-control): pid 2375871 blocked [wchan=anon_pipe_read state=S] -> SIGKILL
+[H002] ok   arm A life 1 died by SIGKILL at EFFECT-FRONTIER-CROSSED-UNSETTLED occurrence 1, blocked state confirmed
+
+== arm B, life 1 (killed at the frontier window) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | CHILD-PID 2375909 (noncanonical)
+      | NOTE store pj0-store:a83eb2c7bfa203538570a7359db18bf08128d4988737ed99dd7856e50b951f6d: :valid, 0 frames (created from declared configuration)
+      | BOUNDARY-READY seat=seat-control boundary=EFFECT-FRONTIER-CROSSED-UNSETTLED  [campaign occurrence 1]
+      | KILL: W1 at EFFECT-FRONTIER-CROSSED-UNSETTLED occurrence 1 (seat seat-control): pid 2375909 blocked [wchan=anon_pipe_read state=S] -> SIGKILL
+[H003] ok   arm B life 1 died by SIGKILL at EFFECT-FRONTIER-CROSSED-UNSETTLED occurrence 1, blocked state confirmed
+
+== both arms, life 2: recovery to the banked disposition (order-enforced: NO provider evidence exists yet) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | CHILD-PID 2375945 (noncanonical)
+      | NOTE store pj0-store:a83eb2c7bfa203538570a7359db18bf08128d4988737ed99dd7856e50b951f6d: :valid, 8 frames (resumed from durable evidence)
+      | NOTE seat seat-control: fresh key refused for the poisoned seat (unsafe-retry, pre-frontier)
+      | BOUNDARY-READY seat=seat-control boundary=CONTROL-DISPOSITION-COMMITTED
+      | arm paused blocked at disposition [pid=2375945 wchan=anon_pipe_read] (noncanonical)
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | CHILD-PID 2375980 (noncanonical)
+      | NOTE store pj0-store:a83eb2c7bfa203538570a7359db18bf08128d4988737ed99dd7856e50b951f6d: :valid, 8 frames (resumed from durable evidence)
+      | NOTE seat seat-control: fresh key refused for the poisoned seat (unsafe-retry, pre-frontier)
+      | BOUNDARY-READY seat=seat-control boundary=CONTROL-DISPOSITION-COMMITTED
+      | arm paused blocked at disposition [pid=2375980 wchan=anon_pipe_read] (noncanonical)
+[H004] ok   THE INDISTINGUISHABILITY POINT: both arms' banked journals are byte-identical at the committed disposition — all program-visible evidence equal while hidden truth (oracle-side) differs; a difference here would mean the program leaked the oracle or treated script determinism as evidence
+[H005] ok   both dispositions are the STRUCTURED uncertainty: the §10.8 record is journaled and the standing is :uncertain-unresolved in both banked arms
+
+== the concurrent provider plays (per the oracle's private table): arm A: effect applied to the provider domain; arm B: not ==
+[H006] ok   the oracle's private table says arm A :effect-applied and arm B :effect-not-applied (grader knowledge; the children never see this file)
+
+== arm A, life 2 continues: class-B reconciliation ==
+      | NOTE seat seat-control: class-B reconciliation completed -> effect-standing-with-evidence
+      | NOTE census: 1 seat derived from durable evidence
+      | NOTE campaign-complete record journaled
+      | NOTE nothing remains; exiting 0
+[H007] ok   arm A completed exit 0
+
+== arm B, life 2 continues: class-B reconciliation ==
+      | NOTE seat seat-control: class-B reconciliation not-found -> settled-no-effect
+      | NOTE census: 1 seat derived from durable evidence
+      | NOTE campaign-complete record journaled
+      | NOTE nothing remains; exiting 0
+[H008] ok   arm B completed exit 0
+
+== grading: each arm reached its TRUE standing through lawful class-B evidence ==
+[H009] ok   arm A: reconciliation result COMPLETED (found in the provider domain), settles-no-effect FALSE, outcome standing effect-standing-with-evidence — the uncertainty is preserved WITH evidence, not erased
+[H010] ok   arm B: reconciliation result NOT-FOUND under the full AP-REC-6 conjunction (exact identity + complete authoritative domain + distinct observed completeness witness): settles-no-effect TRUE, outcome standing settled-no-effect
+[H011] ok   in BOTH arms the banked disposition bytes are a strict byte-prefix of the final journal: the original uncertainty records remain unchanged; reconciliation appended, it never rewrote
+[H012] ok   the two arms DIVERGE only after the provider played: their final journals differ (each arm reached its own true standing)
+
+vertical0 harness (control): 12 checks, 0 failures
+RESULT: PASS
