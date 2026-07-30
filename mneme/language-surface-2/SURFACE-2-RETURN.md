@@ -242,3 +242,35 @@ modules, so Surface /3 does not clone a third receipt machine), then
 convenience never turns five distinct offices into one Boolean).
 
 *— Claude Fable 5, chair, at the owner's authorization, 2026-07-30.*
+
+---
+
+## ADDENDUM — 2026-07-30 (final): ERRATUM 0.2 CLOSURE
+
+The lane's final binder correction (`ERRATUM-0.1-BINDER.md`, Erratum
+0.2 section): **constant binding symbols are refused** — `T`, `NIL`,
+keywords, and defined constants alike — at the `with-outcome` variable,
+the `match-outcome` variable, and every facet-binding name, judged by
+**`CONSTANTP` with the macro environment** (both macros take
+`&environment`; `%parse-clause` threads it), through the existing
+retained codes only. Standing at closure:
+
+```text
+grammar   3
+procedure 3
+policy    1
+
+surface2-erratum-binder  15/0
+surface2-selftest        29/0
+surface2-controls        38/0
+surface2-inhabited       18/0
+(all twin transcripts byte-identical; verify-all 6/6)
+```
+
+**Surface /2 is CLOSED at Erratum 0.2 — permanently.** This addendum is
+documentation only: no executable logic, version, receipt, or outcome
+semantic moved with it. Successor, named not opened: *Surface
+Account /0 — Closed Languages, One Inspector*; *Surface /3 — Authority
+Stays Explicit* waits behind it.
+
+*— Claude Fable 5, chair, 2026-07-30.*

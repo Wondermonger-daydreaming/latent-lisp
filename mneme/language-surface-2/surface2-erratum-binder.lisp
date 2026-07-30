@@ -6,10 +6,14 @@
 ;;;;
 ;;;; Authorized by the owner (ERRATUM-0.1-BINDER.md, committed with the
 ;;;; pre-patch reproduction RUN-ERRATUM-REPRO-PREPATCH.txt BEFORE the
-;;;; patch; git ordering is the proof).  The five malformed cases refuse
-;;;; through their intended RETAINED codes; lawful facet destructuring
-;;;; and lawful parent access still execute.  Versions after the
-;;;; erratum: grammar 2 · procedure 2 · policy 1.
+;;;; patch; git ordering is the proof), and extended by Erratum 0.2
+;;;; (same document, additive section): constant binding symbols — T,
+;;;; NIL, keywords, defined constants — refused at every binding site
+;;;; via CONSTANTP with the macro environment.  The malformed cases
+;;;; refuse through their intended RETAINED codes; lawful facet
+;;;; destructuring and lawful parent access still execute.  Current
+;;;; standing (Erratum 0.2, the lane's closure): grammar 3 ·
+;;;; procedure 3 · policy 1.
 ;;;;
 ;;;; Gate teeth: SURFACE2_ERRATUM_PLANT_FAULT=1 exits 1 with a planted
 ;;;; FAIL; SURFACE2_ERRATUM_DIE=1 exits 3 mid-run with no RESULT sentinel.
