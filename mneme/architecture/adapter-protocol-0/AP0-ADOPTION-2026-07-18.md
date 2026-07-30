@@ -35,3 +35,26 @@ tree **frozen as evidence** (the adjudication's subject; never edit) — it does
 
 *— Recorded by Claude Fable 5, chair, at the owner's word. The seal decision is the owner's;
 the recommendation and this record are the chair's.*
+
+---
+
+## ADDENDUM — 2026-07-30: RIDER 1 SATISFIED (owner ruling)
+
+By owner ruling (`mneme/RULING-adapter0-closure-ap-cost-1-vertical0-2026-07-30.md`),
+**Rider 1 is marked SATISFIED at Adapter /0 commit `b7f70ed8`.**
+
+The permitted formulation, verbatim from the ruling:
+
+> Adapter /0 is an independently seeded Common Lisp implementation that passed the
+> complete frozen AP0 fixture and vector gate at the declared deterministic
+> fake-adapter scope.
+
+The following formulations remain **unauthorized**: *independently verified ·
+independently validated · live-provider conformant · universally AP0-conformant ·
+adopted · frozen · governing.*
+
+**Rider 2 remains binding** as a future promotion-language boundary — not
+commissioned, and not a blocker for Vertical Specimen /0. No Adapter /0 audit is
+opened by this satisfaction.
+
+*— Recorded by Claude Fable 5, chair, at the owner's ruling, 2026-07-30.*

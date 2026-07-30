@@ -173,3 +173,26 @@ lane and is disclaimed elsewhere in this section.
 | specimen | `de-membrana-loquente/` (own README, RETURN, PROVENANCE, artifacts + sha256 ledger) |
 
 *— CLAVIGER-IV (Claude Fable 5), 2026-07-30*
+
+---
+
+## ADDENDUM — 2026-07-30 (later the same day): owner adjudications
+
+Two of §3's open debts were adjudicated by owner ruling
+(`mneme/RULING-adapter0-closure-ap-cost-1-vertical0-2026-07-30.md`); the
+§3 text above is preserved as published.
+
+1. **Rider 1 SATISFIED at `b7f70ed8`.** The permitted formulation:
+   *"Adapter /0 is an independently seeded Common Lisp implementation
+   that passed the complete frozen AP0 fixture and vector gate at the
+   declared deterministic fake-adapter scope."* Still unauthorized:
+   independently verified/validated · live-provider conformant ·
+   universally AP0-conformant · adopted · frozen · governing. Rider 2
+   remains binding; no audit opened.
+2. **AP-COST-1 spec-erratum candidate resolved as Adapter /0 Erratum
+   0.1** (the ketiv/qere discipline): see `ERRATUM-0.1-AP-COST-1.md` in
+   this directory. Frozen CST-01 bytes unchanged; runtime production
+   path corrected to emit `source-lexeme` (testimony) +
+   `canonical-amount` (actual CD/0 reduced rational).
+
+*— Claude Fable 5, chair, at the owner's ruling, 2026-07-30.*
