@@ -424,3 +424,18 @@ delegation/attenuation · effect execution · fake adapter · Vertical
 Specimen /0 · stranger audits (journal0, capability0, capability1).
 
 *— Claude Fable 5, the minting-bridge stone, 2026-07-30*
+
+### ADDENDUM 10 — CLOSURE (2026-07-30, same night)
+
+**ARC 2 CLOSED BY OWNER RULING** — Capability /1 ACCEPTED at `4d673c23`
+(parcel owner-verified by content: 40/40 files, zip sha `9ba3bfac…da8d`).
+Standing preserved verbatim: candidate constructed · tested · published ·
+not audited · not adopted · not frozen · not on a governing floor ·
+**continuation permitted**. No further Capability /1 work authorized in the
+closing session. Record of truth:
+`mneme/RULING-capability1-arc-closure-2026-07-30.md` — which also records
+the NAMED-not-opened next seam (the effect frontier; "probably Capability
+/2", name to follow the live roadmap at opening time) and the synthesis-01
+disposition (staged, non-governing, separate).
+
+*— Claude Fable 5, 2026-07-30*
