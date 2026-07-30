@@ -1,0 +1,37 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+capability0-selftest — unit teeth
+governing sentence: history may prove that authority once existed; only the validated present prefix can say whether it remains live.
+
+[001] ok   datum= is exact canonical CD/0 equality: same segments equal, different segments differ, and NIL is never equal to anything
+[002] ok   segment aliasing is DISTINCT under datum=: (id "a:b") and (id "a" "b") are different identities (canonical encodings differ; the equality is CD/0's, not a joined-string's)
+[003] ok   ensure-identifier accepts an identifier datum unchanged and a segment list by construction; refuses a bare string with cap0-malformed-authority-event
+[004] ok   declare-bootstrap-authority builds an explicit bootstrap value; a non-string store binding is refused (cap0-bootstrap-missing)
+[005] ok   make-grant-event carries kind capability0:granted, its event identity, and all six capability terms; construction is deterministic (two constructions encode byte-identically)
+[006] ok   make-revocation-event carries kind capability0:revoked and the exact target capability identity
+[007] ok   a constructor missing a required term refuses with cap0-malformed-authority-event (nothing half-built)
+[008] ok   an empty journal folds to an empty ledger under the explicit bootstrap (no record invented from nothing)
+[009] ok   the fold REFUSES to derive without an explicit bootstrap: NIL signals cap0-bootstrap-missing; a bootstrap bound to another store identity signals cap0-bootstrap-store-mismatch carrying expected and actual
+[010] ok   after one committed grant the fold yields one record with the grant's exact terms, grant ordinal 1, and NO revocation
+[011] ok   a committed capability0-kind event MISSING a required field makes the fold refuse with cap0-malformed-authority-event naming ordinal and field — the fold never guesses what an event meant
+[012] ok   a committed grant whose issuer the declared bootstrap does not ground makes the fold refuse with kernel0's MINTING-AUTHORITY-INVALID (offending-field "issuer")
+[013] ok   an authorized receipt binds to the EXACT validated prefix: store-id, terminal ordinal, valid byte count, and terminal digest all equal the fresh prefix-report's values
+[014] ok   receipt carries procedure identity and version, the query identity, the capability identity, and the grant event identity
+[015] ok   receipt construction is deterministic: two queries at the same prefix with the same terms encode BYTE-IDENTICALLY
+[016] ok   a receipt survives the canonical codec: decode-pjs0 of its encoding reads back the same decision, reason, and binding
+[017] ok   the origin facet is a CLOSED set: :live-query and :reconstructed render as themselves, :observed is REFUSED IN CODE (the ecase has no such member — law L10 enforced, not remembered), and no receipt byte sequence contains "observed"
+[018] ok   receipt-current-p DETECTS a stale binding and names the facets: after one further committed event, a receipt from the earlier prefix mismatches on terminal-ordinal, valid-byte-count, and terminal-digest (store-id still agrees)
+[019] ok   require-live-authority returns the receipt when authority is live
+[020] ok   an unknown capability identity escalates to kernel0's CAPABILITY-MISSING (the exact exported type)
+[021] ok   a term mismatch escalates to kernel0's CAPABILITY-SCOPE-MISMATCH with offending-field naming the mismatched term ("subject")
+[022] ok   after the matching revocation commits, the escalation is kernel0's CAPABILITY-REVOKED with BOTH event identities in evidence-ids (§11.6: historical validity distinguished from current state)
+[023] ok   planted mutant :ignore-revocation is KILLED: the strict fold refuses (revoked) where the defective fold still authorizes
+[024] ok   planted mutant :receipt-unbound-to-prefix is KILLED: the strict receipt's binding matches the fresh prefix-report, the mutant's genesis-bound receipt does not
+[025] ok   planted mutant :cached-status is KILLED: warmed on a live grant, then a revocation commits underneath it — the strict fold-per-query refuses, the cached-status mutant still authorizes from its cache (the mutable status slot, demonstrated fatal)
+[026] ok   the STRICT path never touches the mutant cache: after strict queries the cache variable is still NIL (no status is stored anywhere; every strict answer is a fresh fold)
+[027] ok   query-live-authority writes NOTHING: EVENTS.pj0 is byte-identical (by sha256) before and after a query and an escalated refusal
+[028] ok   gate teeth: this selftest CAN fail — a child run with a planted fault exits 1 and its transcript carries the FAIL line (a suite that has never been seen red certifies nothing)
+
+capability0-selftest: 28 checks, 0 failures
+RESULT: PASS

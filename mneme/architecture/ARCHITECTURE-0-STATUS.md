@@ -309,3 +309,56 @@ Front doors: `language-slice-2/LANGUAGE-SLICE-2-{WORK-ORDER-1,SPEC-1,CLOSURE-1}.
 and `language-surface-0/LANGUAGE-SURFACE-0-{WORK-ORDER,SPEC,API,CLOSURE}.md`.
 
 *— Claude Opus 5 (1M context), 2026-07-25*
+
+---
+
+## ADDENDUM 9 — 2026-07-30: ARC 2 OPENED — Capability /0 candidate (first slice)
+
+Owner charge of 2026-07-29 (late) opened the capability/live-authority lane.
+Naming followed the tree per recon (INDAGATRIX-II): the charge's provisional
+"Live Authority /0" was NOT minted — the production is arc 2's reserved
+"capability and live-authority machinery," and its free conforming /N name is
+**Capability /0** at `mneme/capability0/` (front door:
+`CAPABILITY-0-RETURN.md`). Governing sentence, executed not stated: *history
+may prove that authority once existed; only the validated present prefix can
+say whether it remains live.*
+
+Built by CLAVIGER (Fable) over journal0's public exports only — journal0
+capability-ignorant, zero existing files modified (chair-verified by empty
+diff over Surface/1, Form 0/1/2, Slice 0/1/2, atelier, journal0, PJ0,
+kernel0). Twelve laws executed with teeth (grant≠revocation mutation;
+revocation erases nothing; fold-derived liveness with NO mutable status slot
+— cached-status mutant killed; receipts bound to store-id + terminal ordinal
++ valid byte count + terminal digest; receipt-at-P is not authority at P+n;
+unrelated/sibling events revoke nothing; second revocation = precise
+`:already-revoked` disposition naming the ORIGINAL event, never a fresh
+transition; torn tail cannot silently revoke — answers WITH tail evidence;
+interior corruption = typed refusal, adjudicated vs journal0's
+history-reconstruct as different question-kinds; `:reconstructed` never
+`:observed`, closed ecase; no effect execution at all). Specimen
+**de-potestate-revocata**: genuine process-death restart reconstructs the
+same refusal from durable bytes + declared config alone; original
+authorization receipt byte-identical and truthful; presenting it as PRESENT
+authority refuses `cap0-stale-receipt` naming all four facets of BOTH
+prefixes. Gates: selftest 28/0 · controls 36/0 · specimen 24/0
+(chair re-run byte-identical, third reproduction) · journal0 66/0 + 89/0
+intact · verify-all 6/6. Kernel0's exported authority conditions received
+their first signaling sites; §19.5 reserved verbs deliberately unclaimed
+(`query-live-authority` is the unreserved name).
+
+**Censor-repaired before publication** (CENSOR-III, hostile claims review:
+3 blocking + 15 non-blocking, all applied — false ordering claim in the
+fence, §11.2 compliance-smuggled-behind-disclaimer, transitive conformance
+import of journal0's unclaimed §32.5; review at
+`_staging/capability0-CENSOR-REVIEW.md`).
+
+**Standing: candidate · NOT audited · NOT adopted · NOT frozen · not on a
+governing floor · NOT "Vertical Specimen /0"** (that reserved name requires
+the fake adapter + four interruption trials — unopened). No cryptographic
+authenticity, no distributed revocation, no expiry, no multi-writer safety,
+no effect authorization, no delegation closure, no full capability security.
+Follow-ons unopened: minting bridge (§11.3), restoration (§11.7),
+attenuation/delegation (path documented, RETURN §2.12), killed-writer
+authority variant, deterministic fake adapter.
+
+*— Claude Fable 5, the arc-2 stone, 2026-07-30*

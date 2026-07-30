@@ -1,0 +1,48 @@
+# capability0 — exit-code record (CLAVIGER, 2026-07-29)
+# Host: Linux 7.0.0-28-generic · SBCL 2.4.6 (operation-checked live via
+# (lisp-implementation-version) through the ~/.local/bin/sbcl wrapper before
+# any CL ran; output not transcript-preserved).
+# All commands executed from the latent-lisp root
+# (/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp).
+
+## This lane's gates
+
+sbcl --script mneme/capability0/capability0-selftest.lisp    -> exit 0   (28 checks, 0 failures; transcript RUN-SELFTEST.txt)
+sbcl --script mneme/capability0/capability0-selftest.lisp    -> exit 0   (second run; transcript RUN-SELFTEST-SECOND.txt)
+sbcl --script mneme/capability0/capability0-controls.lisp    -> exit 0   (36 checks, 0 failures; transcript RUN-CONTROLS.txt)
+sbcl --script mneme/capability0/capability0-controls.lisp    -> exit 0   (second run; transcript RUN-CONTROLS-SECOND.txt)
+sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+                                                             -> exit 0   (24 checks, 0 failures; transcript de-potestate-revocata/RUN-SPECIMEN.txt)
+sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+                                                             -> exit 0   (second run; transcript de-potestate-revocata/RUN-SPECIMEN-SECOND.txt)
+
+Determinism proof (byte-identity by sha256):
+  RUN-SELFTEST.txt  == RUN-SELFTEST-SECOND.txt
+    0f1abbe28ac164e87b11e666245aad939104d606c32bcc47f53b96a9285daadc
+  RUN-CONTROLS.txt  == RUN-CONTROLS-SECOND.txt
+    246fee667faef56319d5c71cb824a5b225c30b347585e06d46a692eb40781335
+  de-potestate-revocata/RUN-SPECIMEN.txt == RUN-SPECIMEN-SECOND.txt
+    4f4e9c20965a1c89f8ddf9d170364ca4d11fab8429329651175c1f8995856332
+(No timestamps, pids, absolute paths, or random store identities are
+printed by any runner; store nonces are fixed — declared PJ-META-1
+deviation, test fixtures only.)
+
+## Gate teeth (inside the transcripts; a gate that has never fired is untested)
+
+- selftest check [028]: a child run with CAP0_SELFTEST_PLANT_FAULT=1 exits 1
+  and its transcript carries "FAIL PLANTED FAULT".
+- controls check [035]: a child run with CAP0_CONTROLS_PLANT_FAULT=1 exits 1
+  with "FAIL PLANTED FAULT".
+- controls check [036]: a child run with CAP0_CONTROLS_DIE=1 exits 3 with NO
+  "RESULT:" sentinel (truncation detected as exactly that pair).
+- specimen check [023]: a restart child with DE_POTESTATE_DIE=1 exits 3
+  with no RESULT: sentinel.
+- permanent planted mutants (+planted-defects+): :cached-status,
+  :ignore-revocation, :receipt-unbound-to-prefix — each KILLED in both
+  suites (selftest [023]-[025], controls [022]-[024]).
+
+## Regression gates (journal0 untouched; the CD/0 floor holds)
+
+sbcl --script mneme/journal0/journal0-selftest.lisp          -> exit 0   (66 checks, 0 failures)
+sbcl --script mneme/journal0/journal0-vectors.lisp           -> exit 0   (89 checks, 0 failures)
+bash mneme/verify-all.sh                                     -> exit 0   (ALL FLOORS HOLD — 6/6 suites green)

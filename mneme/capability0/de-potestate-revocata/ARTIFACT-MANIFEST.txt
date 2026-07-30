@@ -1,0 +1,6 @@
+de-potestate-revocata - preserved raw artifacts
+governing sentence: history may prove that authority once existed; only the validated present prefix can say whether it remains live.
+store identity: pj0-store:912e0e7d43dcac4b7447ed30bb9437b02abb2713bbe60e31e60959e6ae02dc98
+EVENTS.pj0: 1455 octets  sha256 ef83e0a99af0dc0b39d20658a94654f9ebb255db88b1056b73ec0ceefec8c55b  (3 frames: grant g-001 - unrelated u-001 - revocation r-001; :valid, no tail)
+RECEIPT-AT-P.pjs: 1020 octets  sha256 1a0abfd1585e6741086ce827d978454043f80895f4449d7c56e6bfa262adca4a  (:authorized at terminal ordinal 1, preserved by the first life, byte-identical across the restart)
+byte-stability: every file listed here is byte-identical across runs (fixed store nonce; declared PJ-META-1 deviation, see specimen-common.lisp)

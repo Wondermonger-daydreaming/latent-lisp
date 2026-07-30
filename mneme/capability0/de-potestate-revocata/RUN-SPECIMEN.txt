@@ -1,0 +1,63 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+de-potestate-revocata — the inhabited live-authority specimen
+governing sentence: history may prove that authority once existed; only the validated present prefix can say whether it remains live.
+
+== phase 1 — the first life (separate process: bootstrap · grant · receipt at P · unrelated · revocation · exit) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | prima vita: explicit bootstrap · grant · query at P · preserve receipt · unrelated event · revocation · exit
+[001] ok   (prima-vita) the created store's derived identity EQUALS the identity derived from the declared configuration alone — the bootstrap binding is config, not a copy off the live store
+[002] ok   (prima-vita) before anything is granted, a query WITHOUT bootstrap authority refuses with cap0-bootstrap-missing (the no-smuggling proof, run in the very process that owns every convenience)
+[003] ok   (prima-vita) the capability grant commits durably through the public append path: ordinal 1, :newly-committed, declared durability :synced
+[004] ok   (prima-vita) live authority at prefix P: decision :authorized, reason grant-live-at-validated-prefix, bound to the EXACT validated prefix (ordinal 1, byte count and terminal digest of the fresh report), naming grant event g-001
+[005] ok   (prima-vita) the receipt's canonical bytes are preserved to disk and read back byte-identical (the artifact the restart will judge)
+      | receipt at P: ordinal 1 · terminal 0bc895c6f2baa6a9e6f34cef847a85d5a44b842954e8ff810b888dce9c19cccb · sha256 1a0abfd1585e6741086ce827d978454043f80895f4449d7c56e6bfa262adca4a
+[006] ok   (prima-vita) an unrelated committed event does not revoke: at prefix P+1 the charged query is still :authorized
+[007] ok   (prima-vita) the receipt from P is already DETECTABLY not-current at P+1 (receipt-current-p false) — staleness begins at the first committed event after issue, not at revocation
+[008] ok   (prima-vita) the explicit revocation commits at ordinal 3 and the query becomes a governed refusal: :refused capability-revoked, naming BOTH the historical grant (g-001) and the revoking event (r-001)
+      | prefix now: 3 frames · terminal 66fbf33798a34534190666235a08c176d642efed31fc9e6f151c7b9a89bbbbe0
+      | this process now exits; its memory of having been authorized dies with it
+      | RESULT: 8 checks, 0 failures
+[009] ok   the first life completed and rendered its own final sentinel (exit 0 AND a RESULT: line — an incomplete transcript licenses nothing)
+
+== phase 2 — the surviving durable bytes ==
+[010] ok   the preserved receipt file exists and its bytes decode canonically to an :authorized receipt bound to terminal ordinal 1 (prefix P)
+[011] ok   the surviving journal validates :valid with exactly 3 frames (grant · unrelated · revocation), no tail — the whole first life is durable history now
+EVENTS.pj0: 1455 octets · sha256 ef83e0a99af0dc0b39d20658a94654f9ebb255db88b1056b73ec0ceefec8c55b
+RECEIPT-AT-P.pjs: 1020 octets · sha256 1a0abfd1585e6741086ce827d978454043f80895f4449d7c56e6bfa262adca4a
+
+== phase 3 — the restart (genuinely new process; durable bytes + declared configuration only) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | redivivus: durable bytes + declared configuration only; no dead process memory, no inherited receipt object, no operator testimony
+[012] ok   (redivivus) the surviving store opens and its derived identity EQUALS the identity derived from the declared configuration alone — the restart trusts config + bytes, never testimony
+[013] ok   (redivivus) the validated prefix is exactly what the bytes say: :valid, 3 frames, every byte inside the prefix, no tail
+[014] ok   (redivivus) IDENTICAL REFUSAL, reconstructed: the fold over durable bytes alone answers :refused capability-revoked, naming the SAME grant event (g-001) and the SAME revoking event (r-001) the first life saw — fold-derived, not remembered
+[015] ok   (redivivus) the reconstructed refusal says WHAT IT IS: origin renders (id "origin" "reconstructed") and the receipt bytes contain no occurrence of "observed" (L10/L15: storage integrity never upgrades epistemic origin)
+      | reconstructed refusal: capability-revoked · grant cap0-event:g-001 · revoking cap0-event:r-001 · bound to terminal 66fbf33798a34534190666235a08c176d642efed31fc9e6f151c7b9a89bbbbe0
+[016] ok   (redivivus) the preserved receipt DECODES canonically from its durable bytes (decode-pjs0 status :canonical) and reads back decision :authorized bound to terminal ordinal 1
+[017] ok   (redivivus) the old receipt is STILL TRUTHFUL about prefix P: its bound terminal digest IS the store's frame-1 digest, in the surviving chain, today — 'authorized relative to validated prefix P' did not become false; it became PAST
+[018] ok   (redivivus) presenting the old receipt as PRESENT authority is refused with CAP0-STALE-RECEIPT naming BOTH prefixes: the receipt's binding (ordinal 1) and the present validated prefix (ordinal 3), digests distinct, the present digest equal to the fresh report's — history proves authority existed; it is not live authority
+[019] ok   (redivivus) the restart WROTE NOTHING: EVENTS.pj0 is byte-identical (sha256) after the whole reconstruction, refusal, and stale-receipt presentation — recognizing (or refusing) authority executes no effect and appends no frame
+      | RESULT: 8 checks, 0 failures
+[020] ok   the restart process completed and rendered its own final sentinel (exit 0 AND RESULT:)
+[021] ok   THE ORIGINAL RECEIPT IS UNCHANGED: the preserved receipt file is byte-identical across the restart (sha256 equal) — nothing about the refusal edited, revoked, or 'expired' the historical receipt; it remains a true statement about prefix P that is no longer a key to the present
+[022] ok   the journal bytes are unchanged across the restart too (sha256 equal): reconstruction reads; it never writes
+
+== phase 4 — negative control: the truncated restart ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | child control: dying mid-restart before any verdict (planted)
+[023] ok   a restart process TRUNCATED mid-run is detected by this runner: the child exits 3 with no RESULT: sentinel, and the detection is exactly that pair (an unfinished reconstruction must never read as a clean one)
+
+== phase 5 — preserved artifacts ==
+[024] ok   the preserved artifacts are byte-identical to the live files they copy (sha256 of each artifact equals the digest recorded from the live bytes) and the SHA256SUMS manifest carries those digests
+
+de-potestate-revocata: 24 checks, 0 failures
+processes: 1 first life (exited; memory gone) · 2 restarts launched (primary, truncated-control) · artifacts preserved: ARTIFACT-EVENTS.pj0 + metadata + sidecar + RECEIPT-AT-P + sha256sums + manifest · every authority verdict rendered by a stage child through the public surface
+RESULT: PASS

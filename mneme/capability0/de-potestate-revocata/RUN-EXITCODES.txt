@@ -1,0 +1,28 @@
+# de-potestate-revocata — exit-code record (CLAVIGER, 2026-07-29)
+# Host: Linux 7.0.0-28-generic · SBCL 2.4.6 (operation-checked live via
+# (lisp-implementation-version) through the wrapper before any CL ran;
+# output not transcript-preserved).
+# All commands executed from the latent-lisp root
+# (/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp).
+
+sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+    -> exit 0   (24 checks, 0 failures; transcript RUN-SPECIMEN.txt)
+sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+    -> exit 0   (second run; transcript RUN-SPECIMEN-SECOND.txt)
+
+Determinism proof: RUN-SPECIMEN.txt and RUN-SPECIMEN-SECOND.txt are
+BYTE-IDENTICAL — sha256 of both:
+4f4e9c20965a1c89f8ddf9d170364ca4d11fab8429329651175c1f8995856332
+(No timestamps, pids, absolute paths, or random store identities are
+printed; fixed store nonce — declared PJ-META-1 deviation.)
+
+Preserved-artifact digests (also in ARTIFACT-SHA256SUMS.txt; byte-stable
+across runs):
+ef83e0a99af0dc0b39d20658a94654f9ebb255db88b1056b73ec0ceefec8c55b  ARTIFACT-EVENTS.pj0
+466e6682de95590baefa2ef6d2b7196363b543260109c2acf331385958a9678c  ARTIFACT-JOURNAL-META.pjs
+922e1170dd3656abc3de5bba672a95ee01b6f5c02bda6e21d3af222057d18320  ARTIFACT-JOURNAL-META.pjs.sha256
+1a0abfd1585e6741086ce827d978454043f80895f4449d7c56e6bfa262adca4a  ARTIFACT-RECEIPT-AT-P.pjs
+
+Negative-control exit evidence (inside RUN-SPECIMEN.txt, check [023]): the
+restart child invoked with DE_POTESTATE_DIE=1 exits 3 mid-run with no
+"RESULT:" sentinel — detected by the orchestrator as exactly that pair.
