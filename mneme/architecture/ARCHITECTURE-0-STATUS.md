@@ -362,3 +362,65 @@ attenuation/delegation (path documented, RETURN §2.12), killed-writer
 authority variant, deterministic fake adapter.
 
 *— Claude Fable 5, the arc-2 stone, 2026-07-30*
+
+---
+
+## ADDENDUM 10 — 2026-07-30: ARC 2 SECOND SLICE — Capability /1 candidate (the minting bridge)
+
+Owner charge (2026-07-30, small hours) opened the minting-bridge slice the
+same night Capability /0 published. Lineage from the tree: capability0's own
+RETURN reserved this production as "the minting-bridge slice"; **Capability
+/1** at `mneme/capability1/` (front door: `CAPABILITY-1-RETURN.md`) was
+verified free before creation. Governing sentence, executed: *a receipt may
+explain why a key was minted; it is not the key, and its description cannot
+forge one.*
+
+Built by CLAVIGER-II (Fable) over capability0's AND journal0's public
+exports only — both substrates candidates, both byte-unchanged
+(chair-verified: zero tracked modifications after three full suite re-runs;
+the /0 specimen's deterministic ARTIFACT rewrite disclosed and
+byte-verified). The bridge: `make-minting-context` (explicit recognizer, EQ
+table, never a liveness cache — mutant-killed) → `mint-from-authorization`
+(§11.3 subset: the presented /0 receipt is honored as claim shape only —
+staleness refused via /0's own discipline, then a FRESH /0 derivation whose
+decision alone authorizes; scope copied exact; minter caller-declared,
+delegates NONE — named divergence; opaque object created internally, bound
+to the fresh receipt's four prefix facets; public minting receipt emitted
+as canonical PJ-S/0 bytes) → `present-live-capability` (EQ recognition →
+exact-term discipline → fresh validate-journal + four-facet staleness
+naming both prefixes). §11.2 satisfied AT THIS SLICE'S SCOPE (in-process,
+non-adversarial, EQ-recognition; hostile same-process introspection
+explicitly out of scope, boundary stated at the front door). §19.5 reserved
+verbs remain unclaimed. Specimen **de-clave-mortua**: the key dies with its
+process — the restart re-derives the same authorization decision from
+durable history (:reconstructed) but cannot obtain the dead object (auth
+receipt, minting receipt, printed form, and an internal-constructor mimic
+each refuse typed); a fresh query + fresh mint yields new identities linked
+to the same grant. Honest subsumption adjudicated and written: any journal
+advance staleness-refuses an old key at presentation; revocation distinctly
+governs MINTING (fresh derivation refuses; doctored receipt refused
+:fresh-derivation-refused).
+
+Gates (builder ×2 byte-identical; chair third reproduction byte-identical):
+selftest 30/0 · controls 27/0 · specimen 29/0 · capability0 regression
+28/0 + 36/0 + specimen byte-identical · journal0 66/0 + 89/0 · verify-all
+6/6 · three planted mutants killed in both suites
+(:context-as-liveness-cache, :serializable-authority, :public-constructor).
+Censor-repaired pre-publication (CENSOR-IV: 1 blocking — the front-door
+§11.2 claim lacked its scope boundary — + 13 non-blocking; the CENSOR-III
+defect-classes were pre-empted by charge and HELD; review at
+`_staging/capability1-CENSOR-REVIEW.md`). Five builder forks all endorsed
+narrow by the chair (typed-signal refusals at presentation; required terms;
+fresh-receipt binding; caller-declared minter; torn-tail-presents-with-
+tail-surfaced).
+
+**Standing: Capability /1 candidate constructed · opaque minting bridge
+demonstrated · Capability /0 UNCHANGED · NOT audited · NOT adopted · NOT
+frozen · not on a governing floor.** No host-process adversarial security,
+cryptographic authenticity, distributed authority, delegation, attenuation,
+expiry, effect execution, or durable capability handles. Unopened: §11.4
+full frontier check (check-capability reserved) · restoration §11.7 ·
+delegation/attenuation · effect execution · fake adapter · Vertical
+Specimen /0 · stranger audits (journal0, capability0, capability1).
+
+*— Claude Fable 5, the minting-bridge stone, 2026-07-30*

@@ -1,0 +1,9 @@
+de-clave-mortua - preserved raw artifacts
+governing sentence: a receipt may explain why a key was minted; it is not the key, and its description cannot forge one.
+store identity: pj0-store:db3d710cf6925af3acbd6d6dd47dfaca23937a9c5604684698ee1173d26ec157
+EVENTS.pj0: 643 octets  sha256 ccdf6541ade65a4cafc2fae9abbbbdd3cec77f5149145792535944598ca0c3f3  (1 frame: grant g-001; :valid, no tail; neither life's mint or presentations moved it)
+AUTH-RECEIPT.pjs: 1021 octets  sha256 405c762e7eec0930305efd7d5e3eaa73153ea83a871c270f35df97a64d0fc51e  (:authorized at terminal ordinal 1; STILL CURRENT at the restart, and still not a key)
+MINT-RECEIPT.pjs: 1275 octets  sha256 f99db591957b90e93613775d10ca2222878ed8e1978e3fdc34015bee44bcce04  (the dead key's complete public description; refused by recognition when presented)
+MINT-RECEIPT-2.pjs: 1275 octets  sha256 1a97a9fab46cfdc220f651999f0b76f7a67642d1fcd9060b21151accd0722538  (the restart's fresh key: new public identity, new occurrence, same grant g-001)
+DEAD-KEY-PRINT.txt: 94 octets  sha256 9d667d49c010cbb2fccd108bb9b9673f6a8b86659b3ba1c8c2405281baf8b13b  (the printed form; reader-rejected on read-back)
+byte-stability: every file listed here is byte-identical across runs (fixed store nonce; declared PJ-META-1 deviation, see specimen-common.lisp)

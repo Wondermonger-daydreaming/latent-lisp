@@ -1,0 +1,72 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+de-clave-mortua — the inhabited dead-key specimen
+governing sentence: a receipt may explain why a key was minted; it is not the key, and its description cannot forge one.
+
+== phase 1 — the first life (separate process: bootstrap · grant · query at P · MINT · present · preserve testimony · exit) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | prima vita: bootstrap · grant · query at P · MINT · present · preserve testimony · exit (the key dies with this process)
+[001] ok   (prima-vita) the created store's derived identity EQUALS the identity derived from the declared configuration alone — the bootstrap binding is config, not a copy off the live store
+[002] ok   (prima-vita) the capability grant commits durably through the public append path: ordinal 1, :newly-committed, declared durability :synced
+[003] ok   (prima-vita) live authority at prefix P: decision :authorized, bound to the EXACT validated prefix (ordinal 1, fresh report's byte count and terminal digest), naming grant event g-001
+[004] ok   (prima-vita) the minting bridge mints the opaque live key from the truthful authorization: recognized by this context (EQ membership), bound to P's four facets, occurrence and public identities derived from the fresh authorization receipt's bytes at serial 1
+      | minted: public identity cap1-key:405c762e7eec0930305efd7d5e3eaa73153ea83a871c270f35df97a64d0fc51e:1
+      | minting occurrence: cap1-mint:405c762e7eec0930305efd7d5e3eaa73153ea83a871c270f35df97a64d0fc51e:1
+[005] ok   (prima-vita) successful presentation while P remains current: decision cap1:presented, bound to the same four facets
+[006] ok   (prima-vita) the key's PUBLIC record is preserved to disk and reads back byte-identical: the authorization receipt bytes, the minting receipt bytes, and the printed form of the live object — testimony of what is about to die
+[007] ok   (prima-vita) the printed form is testimony shaped like testimony: it names the public identity, opens with the unreadable #<, and contains neither the store identity, the terminal digest, nor any term — and there is nothing else to leak: the object holds NO secret material at all
+[008] ok   (prima-vita) minting and presenting journaled NOTHING: the store still validates :valid with exactly 1 frame (the grant); mint occurrences are process-local facts over a validated prefix (L9)
+      | prefix P: 1 frame · terminal 4f021819a2ce85f64c9bf92c135d29d43e83dda88af292ecbfe3fda2acb8812b
+      | this process now exits; the minting context, the recognition table, and the key itself die with it — only testimony survives
+      | RESULT: 8 checks, 0 failures
+[009] ok   the first life completed and rendered its own final sentinel (exit 0 AND a RESULT: line — an incomplete transcript licenses nothing)
+
+== phase 2 — the surviving durable bytes ==
+[010] ok   the surviving journal validates :valid with exactly 1 frame (the grant), no tail — neither the mint nor the presentations left a byte in it
+[011] ok   the preserved public record decodes canonically: the authorization receipt reads :authorized bound to terminal ordinal 1; the minting receipt reads kind cap1:minting, naming a cap1-key public identity and grant g-001
+EVENTS.pj0: 643 octets · sha256 ccdf6541ade65a4cafc2fae9abbbbdd3cec77f5149145792535944598ca0c3f3
+AUTH-RECEIPT.pjs: 1021 octets · sha256 405c762e7eec0930305efd7d5e3eaa73153ea83a871c270f35df97a64d0fc51e
+MINT-RECEIPT.pjs: 1275 octets · sha256 f99db591957b90e93613775d10ca2222878ed8e1978e3fdc34015bee44bcce04
+DEAD-KEY-PRINT.txt: 94 octets · sha256 9d667d49c010cbb2fccd108bb9b9673f6a8b86659b3ba1c8c2405281baf8b13b
+
+== phase 3 — the restart (genuinely new process; durable bytes + declared configuration only) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | redivivus: durable bytes + declared configuration only; no dead process memory, no minting context, no key — only testimony
+[012] ok   (redivivus) the surviving store opens and its derived identity EQUALS the identity derived from the declared configuration alone — the restart trusts config + bytes, never testimony
+[013] ok   (redivivus) the validated prefix is exactly what the bytes say: :valid, 1 frame (the grant), no tail — the journal never recorded the mint, because a mint is not an event; the prefix has NOT moved since the key was minted, and the key is dead anyway
+[014] ok   (redivivus) the SAME authorization decision is re-derived from durable bytes alone, declared as what it is: origin :reconstructed, decision :authorized, naming the SAME grant event g-001; the receipt bytes contain no occurrence of "observed"
+[015] ok   (redivivus) the preserved record decodes canonically and is STILL CURRENT TESTIMONY: the authorization receipt reads :authorized at ordinal 1 and its binding still names the present validated prefix; the minting receipt reads kind cap1:minting with the same binding — nothing about these bytes went stale, which is exactly what makes what follows the point
+[016] ok   (redivivus) THE DEAD KEY CANNOT BE OBTAINED (i): presenting the preserved AUTHORIZATION receipt as a capability refuses with cap1-unrecognized-object — still-current justification is still not a key
+[017] ok   (redivivus) THE DEAD KEY CANNOT BE OBTAINED (ii): presenting the preserved MINTING receipt as a capability refuses with cap1-unrecognized-object, the receipt's claimed public identity reported as a claim — the fullest public description of the key, refused by name
+[018] ok   (redivivus) THE DEAD KEY CANNOT BE OBTAINED (iii): a mimic built through the lane's own INTERNAL constructor (the labelled hostile path) from the minting receipt's public fields — public identity, occurrence identity, all four terms, minter, all four binding facets, everything the disk knows — refuses with cap1-unrecognized-object: recognition is EQ membership in a table that died with the first life; NO serializable content re-enters it
+[019] ok   (redivivus) THE DEAD KEY CANNOT BE OBTAINED (iv): the preserved printed form cannot even be read back — READ-FROM-STRING on it signals (the #< syntax is reader-rejected); the label on the corpse is not a resurrection spell
+[020] ok   (redivivus) FRESH DERIVATION + FRESH MINT: this life's own query (declared identity q-vita-2) is :authorized and the bridge mints a NEW live key — recognized by THIS context, bound to the same (unmoved) prefix
+[021] ok   (redivivus) THE NEW KEY IS NEW: its public identity and minting occurrence identity both DIFFER from the dead key's (recorded in the preserved minting receipt), while both minting receipts link the SAME grant event g-001 — same authority lineage, different life, different key
+      | dead key (from testimony): cap1-key:405c762e7eec0930305efd7d5e3eaa73153ea83a871c270f35df97a64d0fc51e:1
+      | new key (this life): cap1-key:f4e6b939f9c4b02ba14e92ed883ea9d0c222413ce01d02e76ccbb0c87d082e5c:1
+[022] ok   (redivivus) the NEW key presents successfully at the current validated prefix — live authority has an opaque body again, in this process, because this process minted one
+[023] ok   (redivivus) the restart WROTE NO FRAME: EVENTS.pj0 is byte-identical (sha256) across the whole reconstruction, four refused necromancies, fresh mint, and presentation — recognizing, refusing, and minting are process-local; only /0 events move the journal
+      | RESULT: 12 checks, 0 failures
+[024] ok   the restart process completed and rendered its own final sentinel (exit 0 AND RESULT:)
+[025] ok   THE TESTIMONY IS UNCHANGED: authorization receipt, minting receipt, and printed form are all byte-identical across the restart (sha256 equal) — four refused necromancies edited nothing
+[026] ok   the journal bytes are unchanged across the restart too (sha256 equal): reconstruction, refusal, and re-minting read; they never write
+[027] ok   THE TWO LIVES MINTED TWO KEYS: the restart's minting receipt decodes canonically and names a capability public identity AND a minting occurrence identity both DIFFERENT from the first life's, while both receipts link the SAME grant event g-001 — the orchestrator's own cross-life comparison, over nothing but the two receipts' bytes
+
+== phase 4 — negative control: the truncated restart ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | child control: dying mid-restart before any verdict (planted)
+[028] ok   a restart process TRUNCATED mid-run is detected by this runner: the child exits 3 with no RESULT: sentinel, and the detection is exactly that pair (an unfinished reconstruction must never read as a clean one)
+
+== phase 5 — preserved artifacts ==
+[029] ok   the preserved artifacts are byte-identical to the live files they copy (sha256 of each artifact equals the digest recorded from the live bytes) and the SHA256SUMS manifest carries those digests
+
+de-clave-mortua: 29 checks, 0 failures
+processes: 1 first life (exited; the key died with it) · 2 restarts launched (primary, truncated-control) · artifacts preserved: ARTIFACT-EVENTS.pj0 + metadata + sidecar + AUTH-RECEIPT + MINT-RECEIPT + MINT-RECEIPT-2 + DEAD-KEY-PRINT + sha256sums + manifest · every capability verdict rendered by a stage child
+RESULT: PASS

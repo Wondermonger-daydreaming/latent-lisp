@@ -1,0 +1,39 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+capability1-selftest — unit teeth
+governing sentence: a receipt may explain why a key was minted; it is not the key, and its description cannot forge one.
+
+[001] ok   make-minting-context builds an explicit context: minting-context-p true, label carried, ZERO objects minted, and it recognizes nothing (a fresh recognizer grants nothing)
+[002] ok   the context label reader is defensive: mutating the returned string does not change the context's label
+[003] ok   mint/present without an explicit context refuse with cap1-context-missing (nil and a non-context both refused; nothing runs on ambient recognition)
+[004] ok   the minting bridge mints from a truthful :authorized receipt: returns a live-capability + a minting receipt; the object is recognized by ITS context (EQ membership), and the minted count is now 1
+[005] ok   occurrence and public identities are exactly the documented derivation: ("cap1-mint"|"cap1-key") + sha256 of the FRESH authorization receipt's canonical bytes + this context's serial 1 — identity is a recomputable name, never a secret
+[006] ok   the object binds the EXACT validated prefix of its mint (all four facets equal the authorization receipt's binding: store-id, terminal ordinal 1, valid byte count, terminal digest)
+[007] ok   print-object shows ONLY the public identity: the printed form names the public id, is #<-unreadable, is deterministic across prints, and contains neither the terminal digest, the store id, nor any term
+[008] ok   the printed form cannot be read back at all: READ-FROM-STRING on it signals (the #< syntax is reader-rejected); a printed key is a label on a corpse, not a resurrection
+[009] ok   datum readers are defensive copies: two reads of the scope are canonically equal but NOT EQ, and neither is EQ to a third read (mutation of a returned value cannot reach live authority)
+[010] ok   string readers are defensive copies: mutating a returned store-id or terminal-digest string leaves subsequent reads unchanged
+[011] ok   presentation succeeds while the minted prefix is current: the presentation receipt renders decision cap1:presented, names the capability's public id and occurrence id, and binds the SAME four prefix facets
+[012] ok   term discipline is exact and total: a wrong resource refuses cap1-term-mismatch naming exactly ("resource"); an omitted action refuses naming "action"; the condition carries the capability's public identity
+[013] ok   the AUTHORIZATION receipt presented as a capability refuses with cap1-unrecognized-object (presented-type recorded; the receipt that justified the mint is not the key it justified)
+[014] ok   the MINTING receipt presented as a capability refuses with cap1-unrecognized-object, and its claimed public identity is reported as a claim (the receipt names the key; naming is not holding)
+[015] ok   a counterfeit with EVERY public field copied — built through the REAL internal constructor — refuses with cap1-unrecognized-object: recognition is EQ membership, so even the constructor grants nothing; only this context's own minting does
+[016] ok   a GENUINE capability presented to a DIFFERENT minting context refuses with cap1-unrecognized-object carrying the refusing context's label: recognition does not travel between recognizers
+[017] ok   after ANY journal advance the capability refuses as STALE: cap1-stale-capability names BOTH prefixes (binding ordinal 1 vs present ordinal 2; digests distinct; present digest equal to the fresh report's)
+[018] ok   recognition is NOT liveness: after the stale refusal the context STILL recognizes the object (context-recognizes-p true) and presentation STILL refuses — the context recognizes; the journal decides
+[019] ok   a fresh derivation re-mints at the moved prefix: NEW occurrence identity, NEW public identity (serial 2, different fresh-receipt sha), SAME grant event linked in both minting receipts — the authority lineage is the journal's, the key is this life's
+[020] ok   a /0 REFUSAL receipt cannot authorize minting: cap1-mint-refused with basis :receipt-not-authorized (the refusal is truthful testimony AGAINST the mint)
+[021] ok   non-receipts cannot authorize minting: a grant EVENT, the MINTING receipt, and NIL each refuse with basis :not-an-authority-receipt
+[022] ok   a DOCTORED receipt — decision :authorized for a NEVER-GRANTED capability, bound to the CURRENT prefix — refuses with basis :fresh-derivation-refused, fresh reason capability-missing: the description claimed a key and the fold said no (the governing sentence, executed)
+[023] ok   a STALE authorization receipt refuses the mint with /0's OWN cap0-stale-receipt naming both prefixes (ordinal 1 vs 2): the bridge inherits /0's present-receipt discipline unchanged
+[024] ok   /0's bootstrap refusals propagate through the bridge: minting with NIL bootstrap refuses cap0-bootstrap-missing; presentation with a wrong-store bootstrap refuses cap0-bootstrap-store-mismatch (this lane signals /0's exported types for the identical meaning)
+[025] ok   the object constructor is package-internal: %MAKE-LIVE-CAPABILITY exists with :internal status, MAKE-LIVE-CAPABILITY and COPY-LIVE-CAPABILITY do not exist at all, and NO external symbol of the package names a live-capability constructor or copier (package discipline shown, its limits named in the RETURN)
+[026] ok   planted mutant :serializable-authority is KILLED: a mimic whose public identity was parsed back out of the genuine object's PRINTED form is refused by the strict path (unrecognized) and accepted by the mutant — printed testimony got up and unlocked the mutant's door, and only the mutant's
+[027] ok   planted mutant :public-constructor is KILLED: a hand-built struct with a foreign public identity is refused by the strict path and accepted by the type-recognizing mutant — constructing the struct must never be minting
+[028] ok   planted mutant :context-as-liveness-cache is KILLED: the journal advances under a minted key — the strict path refuses STALE (fresh validation, every presentation), the mutant still presents from recognition alone (the standing cache this lane forbids, demonstrated fatal; the control that kills it is a journal advance, the same vehicle a committed revocation rides in)
+[029] ok   minting and presenting write NOTHING: EVENTS.pj0 is byte-identical (sha256) across a fresh mint, a successful presentation, a stale refusal, and a mint refusal — mint occurrences are process-local; the journaled facts remain /0's events (L9)
+[030] ok   gate teeth: this selftest CAN fail — a child run with a planted fault exits 1 and its transcript carries the FAIL line (a suite that has never been seen red certifies nothing)
+
+capability1-selftest: 30 checks, 0 failures
+RESULT: PASS

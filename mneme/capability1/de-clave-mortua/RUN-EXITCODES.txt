@@ -1,0 +1,41 @@
+# de-clave-mortua — exit-code record (CLAVIGER-II, 2026-07-29)
+# Host: Linux 7.0.0-28-generic · SBCL 2.4.6 (operation-checked live via
+# (lisp-implementation-version) through the wrapper before any CL ran;
+# output not transcript-preserved).
+# All commands executed from the latent-lisp root
+# (/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp).
+
+sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp
+    -> exit 0   (29 checks, 0 failures; transcript RUN-SPECIMEN.txt)
+sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp
+    -> exit 0   (second run; transcript RUN-SPECIMEN-SECOND.txt)
+
+Determinism proof: RUN-SPECIMEN.txt and RUN-SPECIMEN-SECOND.txt are
+BYTE-IDENTICAL — sha256 of both:
+2e03de1f35a22644c6541533aa4ea043d0074f59b71718d69ad8fce0dd4bef28
+(No timestamps, pids, absolute paths, or random store identities are
+printed; fixed store nonce — declared PJ-META-1 deviation — and both
+lives' query identities are declared charge, so the two lives' key
+identities are byte-stable too.)
+
+Preserved-artifact digests (also in ARTIFACT-SHA256SUMS.txt; byte-stable
+across runs):
+ccdf6541ade65a4cafc2fae9abbbbdd3cec77f5149145792535944598ca0c3f3  ARTIFACT-EVENTS.pj0
+0401c5ccf4fd055aa4448c14302913075581ba0da2ec45b9f7ac1dc877ffa1d3  ARTIFACT-JOURNAL-META.pjs
+6cbfb7f31073b339740d0ea8049b92fcc06daf6a6863ad67c36738192796e789  ARTIFACT-JOURNAL-META.pjs.sha256
+405c762e7eec0930305efd7d5e3eaa73153ea83a871c270f35df97a64d0fc51e  ARTIFACT-AUTH-RECEIPT.pjs
+f99db591957b90e93613775d10ca2222878ed8e1978e3fdc34015bee44bcce04  ARTIFACT-MINT-RECEIPT.pjs
+1a97a9fab46cfdc220f651999f0b76f7a67642d1fcd9060b21151accd0722538  ARTIFACT-MINT-RECEIPT-2.pjs
+9d667d49c010cbb2fccd108bb9b9673f6a8b86659b3ba1c8c2405281baf8b13b  ARTIFACT-DEAD-KEY-PRINT.txt
+
+(Legibility note, checkable off this table alone: the dead key's public
+identity printed in the transcripts is
+cap1-key:405c762e…d0fc51e:1 — the sha256 of ARTIFACT-AUTH-RECEIPT.pjs —
+because the first life's authorization receipt was still CURRENT at its
+mint, so the bridge's fresh re-derivation was byte-identical to the
+preserved receipt.  The identity derivation is public and recomputable;
+the KEY still died with its process.)
+
+Negative-control exit evidence (inside RUN-SPECIMEN.txt, check [028]): the
+restart child invoked with DE_CLAVE_DIE=1 exits 3 mid-run with no
+"RESULT:" sentinel — detected by the orchestrator as exactly that pair.

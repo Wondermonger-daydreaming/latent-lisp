@@ -1,0 +1,46 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+capability1-controls — the minting-bridge vertical, executed
+governing sentence: a receipt may explain why a key was minted; it is not the key, and its description cannot forge one.
+
+== store A: the inhabited vertical ==
+[001] ok   VERTICAL 1 — fresh /0 authority query at validated prefix P (ordinal 1): decision :authorized, receipt bound to P (receipt-current-p against a fresh report)
+[002] ok   VERTICAL 2 — explicit minting occurrence: the bridge mints an opaque live capability + a public minting receipt; the object is recognized by its context and bound to P's four facets
+[003] ok   VERTICAL 3 — the minting receipt is truthful public testimony: canonical CD/0 record naming the occurrence identity, the capability public identity, the minter, the authorizing query identity, the grant event (g-a01), all four terms, P's four facets, and the identified scope + mint procedures
+[004] ok   VERTICAL 4 — successful presentation while P remains current: presentation receipt decision cap1:presented, bound to the same four facets, naming the key's public identity
+[005] ok   VERTICAL 5 / NC-5 — the journal advances (unrelated event, ordinal 2): the old key refuses as STALE by type, cap1-stale-capability naming BOTH prefixes (binding ordinal 1 vs present ordinal 2, digests distinct, present digest equal to the fresh report's)
+[006] ok   VERTICAL 6 — authority is still live at the moved prefix: fresh query :authorized; fresh mint yields a NEW key with a NEW occurrence identity and NEW public identity, LINKED to the SAME grant (g-a01) in both minting receipts
+[007] ok   VERTICAL 7 — the new key presents successfully at the current prefix (ordinal 2)
+[008] ok   VERTICAL 8 / NC-6a — revocation commits (ordinal 3): the live key refuses as STALE (the adjudicated subsumption: under exact prefix binding, the advance CONTAINING the revocation is itself a binding mismatch; revocation distinctly governs minting, next checks)
+[009] ok   VERTICAL 9 / NC-6b — the fresh /0 query now REFUSES: decision :refused, reason capability-revoked, naming the historical grant (g-a01) AND the revoking event (r-a01)
+[010] ok   VERTICAL 10 / NC-6c / NC-10 — NO key can be freshly minted after revocation, on typed bases: (i) the pre-revocation authorization receipt refuses the mint with /0's cap0-stale-receipt (ordinal 2 vs 3); (ii) a DOCTORED receipt claiming :authorized at the CURRENT prefix refuses with cap1-mint-refused :fresh-derivation-refused, fresh reason capability-revoked, the fresh refusal naming the revoking event r-a01 — the receipt's description could not forge the key
+
+== store B: recognition controls (a fresh live world) ==
+[011] ok   NC-1 — the AUTHORIZATION receipt presented as a capability: cap1-unrecognized-object (adjudication executed: recognition refuses ANY object the context did not mint, record datums included; presented-type is the record type, not live-capability)
+[012] ok   NC-2 — the MINTING receipt presented as a capability: cap1-unrecognized-object, with the receipt's claimed public identity reported as a claim (the minting receipt records everything public about the key and still opens nothing)
+[013] ok   NC-3 — a hand-constructed object with EVERY public field copied (built through the internal constructor, the named hostile path): refused by recognition, cap1-unrecognized-object carrying the copied public identity as a CLAIM — identical description, no membership
+[014] ok   NC-4 — a capability from ANOTHER minting context (two contexts, one process): the GENUINE key-b refuses at context gamma with cap1-unrecognized-object labeled gamma; and it still presents fine at beta (the refusal was the context's, not the key's)
+[015] ok   NC-8 — foreign terms at presentation: a wrong action refuses cap1-term-mismatch naming exactly ("action"); wrong action AND resource name both, declaration order; the adjudicated reading is the stricter one — the caller states its requested terms and ALL four must equal the minted terms exactly
+[016] ok   NC-9 — a /0 REFUSAL receipt handed to the mint: cap1-mint-refused basis :receipt-not-authorized (a truthful refusal is testimony against the mint, and its own decision field is honored as a claim shape, then refused as standing)
+[017] ok   NC-9b — non-receipts handed to the mint (a grant event; a bare string datum): cap1-mint-refused basis :not-an-authority-receipt for each
+[018] ok   NC-11 — /0's own refusals propagate through the bridge: mint with NO bootstrap refuses cap0-bootstrap-missing; mint with a WRONG-STORE bootstrap refuses cap0-bootstrap-store-mismatch (expected/actual carried); presentation checks the same discipline
+
+== store C: the torn tail under a minted key (derived byte state) ==
+[019] ok   NC-torn — a TORN TAIL does not stale the key and cannot silently revoke it: the reader classifies :torn-tail with the valid prefix = the minted prefix (all four facets equal), the presentation SUCCEEDS, and the receipt SURFACES the excluded tail (offset = valid byte count = the one-frame length; sha rendered) — an incomplete trailing frame was never a committed advance (adjudication mirrors /0's law 9)
+[020] ok   NC-torn (contrast that carries it) — the SAME revocation, fully committed on the twin (bytes restored), DOES stale the key: cap1-stale-capability ordinal 1 vs 2, and the fresh /0 query refuses capability-revoked (only commitment moves the prefix)
+
+== store D: interior corruption at presentation (derived byte state) ==
+[021] ok   NC-corr — an INVALID INTERIOR frame refuses presentation outright by TYPED refusal, kernel0's JOURNAL-PREFIX-INVALID (one payload byte of frame 2 flipped; the reader classifies :corruption): no staleness comparison is attempted against an unbounded prefix (the /0 fold adjudication, adopted at the presentation frontier)
+[022] ok   NC-corr (teeth for the check itself) — restoring the original octet makes the store :valid again and the SAME presentation succeeds: the refusal above was the corruption's doing, not a constant of the harness
+
+== store E: the planted mutants ==
+[023] ok   NC-12a — planted mutant :serializable-authority KILLED at the current prefix: a counterfeit with the genuine key's public fields is refused by the strict path (unrecognized) and PRESENTED by the description-recognizing mutant — the exact world §11.2 forbids, demonstrated fatal
+[024] ok   NC-12b — planted mutant :public-constructor KILLED at the current prefix: a hand-built struct with a FOREIGN public identity is refused by the strict path and PRESENTED by the type-recognizing mutant — constructing is not minting
+[025] ok   NC-12c — planted mutant :context-as-liveness-cache KILLED by a journal advance: the strict path re-validates fresh and refuses STALE; the mutant answers from recognition alone and still presents — a recognition context that decays into a liveness cache waves keys past the journal, demonstrated fatal (and a committed revocation would ride the same advance it just waved through)
+[026] ok   gate teeth (fault) — a child run with a planted fault exits 1 and its transcript carries the FAIL line: this suite CAN go red
+[027] ok   gate teeth (truncation) / NC-13 — a child killed mid-run before any verdict exits 3 with NO RESULT sentinel, and the detection is exactly that pair: an unfinished run must never read as a clean one
+
+capability1-controls: 27 checks, 0 failures
+vertical executed: query - mint - present - advance - stale - re-mint - revoke - fresh-query-refuses - no-fresh-mint · controls: receipts-as-keys, counterfeit, cross-context, foreign terms, refusal/non-receipt/doctored/stale mints, bootstrap absence/mismatch, torn tail, interior corruption, three planted mutants, planted fault, truncated child
+RESULT: PASS
