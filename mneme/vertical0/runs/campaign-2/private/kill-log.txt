@@ -1,0 +1,8 @@
+KILL W1 boundary=EFFECT-FRONTIER-CROSSED-UNSETTLED occurrence=1 seat=seat-torn-crossing pid=2418438 wchan=anon_pipe_read state=S (noncanonical diagnostics)
+CORPSE W1 snapshot=mneme/vertical0/runs/campaign-1/corpse-W1/
+KILL W2 boundary=STREAM-CHUNK-CUSTODY-COMMITTED occurrence=1 seat=seat-half-song pid=2418444 wchan=anon_pipe_read state=S (noncanonical diagnostics)
+CORPSE W2 snapshot=mneme/vertical0/runs/campaign-1/corpse-W2/
+KILL W3 boundary=ENVELOPE-CUSTODY-COMMITTED occurrence=1 seat=seat-sealed-letter pid=2418451 wchan=anon_pipe_read state=S (noncanonical diagnostics)
+CORPSE W3 snapshot=mneme/vertical0/runs/campaign-1/corpse-W3/
+KILL W4 boundary=PROJECTION-COMMITTED occurrence=2 seat=seat-cold-supper pid=2418467 wchan=anon_pipe_read state=S (noncanonical diagnostics)
+CORPSE W4 snapshot=mneme/vertical0/runs/campaign-1/corpse-W4/

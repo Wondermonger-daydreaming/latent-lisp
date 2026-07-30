@@ -1,0 +1,60 @@
+# RUN-REPEATABILITY-TEETH — the report's exit discipline, FIRED on a planted fault
+# One byte of campaign-2's seat-first-fruit envelope flipped in a scratch copy
+# (/tmp workspace; the preserved runs/ state untouched). Expected: DIFFERS + exit 1.
+
+vertical0 temporal repeatability — campaign-1 vs campaign-2
+byte comparison by cmp(1); every canonical item must read IDENTICAL.
+
+== A. canonical artifacts (contract §16) ==
+
+  -- the durable journal --
+  IDENTICAL   exec/store/EVENTS.pj0                                      primary journal
+  IDENTICAL   exec/store/JOURNAL-META.pjs                                journal meta
+
+  -- captured evidence (all bytes the program ever custodied) --
+  IDENTICAL   exec/evidence/seat-broken-glass-envelope.bin               evidence
+  IDENTICAL   exec/evidence/seat-burned-draft-envelope.bin               evidence
+  IDENTICAL   exec/evidence/seat-cold-supper-envelope.bin                evidence
+  IDENTICAL   exec/evidence/seat-empty-page-envelope.bin                 evidence
+  DIFFERS     exec/evidence/seat-first-fruit-envelope.bin                evidence
+  IDENTICAL   exec/evidence/seat-late-riser-envelope.bin                 evidence
+  IDENTICAL   exec/evidence/seat-sealed-letter-envelope.bin              evidence
+
+  -- derived exports --
+  IDENTICAL   exec/export/campaign-export.sexp                           finalizer-independent export
+  IDENTICAL   exec/mirror-sim/campaign-export.sexp                       simulated publication copy
+
+  -- world state (class A) and the fake provider domain (class B) --
+  IDENTICAL   exec/world/CELLS.txt                                       world cells
+  IDENTICAL   exec/world/REQUEST-LEDGER.txt                              world request ledger
+  IDENTICAL   exec/fake-world/provider-domain.sexp                       provider domain
+
+  -- the four corpse journals (state at each SIGKILL) --
+  IDENTICAL   corpse-W1/exec/store/EVENTS.pj0                            corpse journal W1
+  IDENTICAL   corpse-W2/exec/store/EVENTS.pj0                            corpse journal W2
+  IDENTICAL   corpse-W3/exec/store/EVENTS.pj0                            corpse journal W3
+  IDENTICAL   corpse-W4/exec/store/EVENTS.pj0                            corpse journal W4
+
+== B. SUPPLEMENT (beyond the §16 list): complete exec/ and corpse trees ==
+
+  DIFFERS     exec/
+      Files mneme/vertical0/runs/campaign-1/exec/evidence/seat-first-fruit-envelope.bin and /tmp/vertical0-repeatability-teeth/campaign-2-planted/exec/evidence/seat-first-fruit-envelope.bin differ
+  IDENTICAL   corpse-W1/  (recursive diff -rq clean)
+  IDENTICAL   corpse-W2/  (recursive diff -rq clean)
+  IDENTICAL   corpse-W3/  (recursive diff -rq clean)
+  IDENTICAL   corpse-W4/  (recursive diff -rq clean)
+
+== C. official reconstruction over campaign-2, against campaign-1's digest ==
+
+  reconstruct-census.lisp (fresh child) over /tmp/vertical0-repeatability-teeth/campaign-2-planted/exec/ — exit 2
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | reconstruct-census: reconstruct-census: captured evidence evidence/seat-first-fruit-envelope.bin no longer matches its journaled sha256 binding
+  MISSING     official census could not be produced
+
+== verdict ==
+  canonical comparisons: 17 IDENTICAL, 1 DIFFERS, 1 MISSING
+  supplementary tree comparisons differing: 1
+  VERDICT: NOT repeatable as declared — see the DIFFERS/MISSING rows above.
+TEETH-RUN EXIT: 1

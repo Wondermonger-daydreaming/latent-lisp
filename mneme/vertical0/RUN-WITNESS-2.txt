@@ -1,0 +1,105 @@
+=== PROVENANCE PREAMBLE (added by PRAETOR; the raw transcript follows the rule line) ===
+
+harness/witness.lisp is NOT path-parameterized either: its campaign root is the
+literal "mneme/vertical0/runs/campaign-1/" (line 395) and the control arms are
+"mneme/vertical0/runs/control-a|b/" (lines 406, 410).  It takes no argv.
+
+This witness run was executed with the IDENTICAL invocation
+
+    sbcl --script mneme/vertical0/harness/witness.lisp
+
+from the same scratch working root described in RUN-CAMPAIGN-2.txt, i.e. the five
+traces it read at "mneme/vertical0/runs/campaign-1/trace-life{1..5}.txt" are the
+CAMPAIGN-2 traces (now at mneme/vertical0/runs/campaign-2/ in the lab tree).  The
+two control arms were read through symlinks to the lab's unchanged
+runs/control-a and runs/control-b, so W039..W062 below re-witness the committed
+control traces, not new ones.
+
+Exit code: 0.  62 checks / 0 failures.
+
+=== RAW TRANSCRIPT (sbcl --script mneme/vertical0/harness/witness.lisp) ===
+vertical0 external syscall witness — the trace is controlling.
+Earned by a PASS below: "the implementation invoked its declared durability protocol before the process-death boundary" — never power-loss durability, never storage-stack tolerance (contract §1.2).
+
+-- campaign life 1 (mneme/vertical0/runs/campaign-1/trace-life1.txt) --
+[W001] ok   campaign life 1: trace parsed (1774 fd-resolved records)
+[W002] ok   campaign life 1: boundary EFFECT-FRONTIER-CROSSED-UNSETTLED readiness at line 1940 came AFTER the last journal append's fsync (last write(EVENTS.pj0)@1930 < last fsync(EVENTS.pj0)@1931 < READY@1940)
+[W003] ok   campaign life 1: write-replace of seat-first-fruit-envelope.bin.tmp — fsync(tmp) preceded the rename (line 1319) and fsync(parent directory) followed it; close alone was never the durability primitive
+[W004] ok   campaign life 1: write-replace of seat-empty-page-envelope.bin.tmp — fsync(tmp) preceded the rename (line 1627) and fsync(parent directory) followed it; close alone was never the durability primitive
+[W005] ok   campaign life 1 (W1): between the final READY and SIGKILL there is NO semantic write of any kind (no write/pwrite/rename/unlink on any fd)
+[W006] ok   campaign life 1 (W1): the child died BLOCKED in read(0, ...) — the in-flight syscall at SIGKILL is the wait pipe read (trace-controlling blocked-state proof)
+[W007] ok   campaign life 1: read-set proof — the child NEVER opened the oracle artifact, any harness-private directory, or any corpse snapshot
+[W008] ok   campaign life 1: the class-B provider domain was NEVER opened (no reconciliation reader ran in this life)
+[W009] ok   campaign life 1: zero fdatasync calls — the declared barrier is fsync and only fsync appears
+
+-- campaign life 2 (mneme/vertical0/runs/campaign-1/trace-life2.txt) --
+[W010] ok   campaign life 2: trace parsed (1151 fd-resolved records)
+[W011] ok   campaign life 2: boundary STREAM-CHUNK-CUSTODY-COMMITTED readiness at line 1312 came AFTER the last journal append's fsync (last write(EVENTS.pj0)@1302 < last fsync(EVENTS.pj0)@1303 < READY@1312)
+[W012] ok   campaign life 2 (W2): between the final READY and SIGKILL there is NO semantic write of any kind (no write/pwrite/rename/unlink on any fd)
+[W013] ok   campaign life 2 (W2): the child died BLOCKED in read(0, ...) — the in-flight syscall at SIGKILL is the wait pipe read (trace-controlling blocked-state proof)
+[W014] ok   campaign life 2: read-set proof — the child NEVER opened the oracle artifact, any harness-private directory, or any corpse snapshot
+[W015] ok   campaign life 2: the class-B provider domain was NEVER opened (no reconciliation reader ran in this life)
+[W016] ok   campaign life 2: zero fdatasync calls — the declared barrier is fsync and only fsync appears
+
+-- campaign life 3 (mneme/vertical0/runs/campaign-1/trace-life3.txt) --
+[W017] ok   campaign life 3: trace parsed (1999 fd-resolved records)
+[W018] ok   campaign life 3: boundary ENVELOPE-CUSTODY-COMMITTED readiness at line 2274 came AFTER the last journal append's fsync (last write(EVENTS.pj0)@2267 < last fsync(EVENTS.pj0)@2268 < READY@2274)
+[W019] ok   campaign life 3: write-replace of seat-broken-glass-envelope.bin.tmp — fsync(tmp) preceded the rename (line 1267) and fsync(parent directory) followed it; close alone was never the durability primitive
+[W020] ok   campaign life 3: write-replace of seat-burned-draft-envelope.bin.tmp — fsync(tmp) preceded the rename (line 1873) and fsync(parent directory) followed it; close alone was never the durability primitive
+[W021] ok   campaign life 3: write-replace of seat-sealed-letter-envelope.bin.tmp — fsync(tmp) preceded the rename (line 2208) and fsync(parent directory) followed it; close alone was never the durability primitive
+[W022] ok   campaign life 3 (W3): between the final READY and SIGKILL there is NO semantic write of any kind (no write/pwrite/rename/unlink on any fd)
+[W023] ok   campaign life 3 (W3): the child died BLOCKED in read(0, ...) — the in-flight syscall at SIGKILL is the wait pipe read (trace-controlling blocked-state proof)
+[W024] ok   campaign life 3: read-set proof — the child NEVER opened the oracle artifact, any harness-private directory, or any corpse snapshot
+[W025] ok   campaign life 3: the class-B provider domain was NEVER opened (no reconciliation reader ran in this life)
+[W026] ok   campaign life 3: zero fdatasync calls — the declared barrier is fsync and only fsync appears
+
+-- campaign life 4 (mneme/vertical0/runs/campaign-1/trace-life4.txt) --
+[W027] ok   campaign life 4: trace parsed (1231 fd-resolved records)
+[W028] ok   campaign life 4: boundary PROJECTION-COMMITTED readiness at line 1081 came AFTER the last journal append's fsync (last write(EVENTS.pj0)@1074 < last fsync(EVENTS.pj0)@1075 < READY@1081)
+[W029] ok   campaign life 4: boundary PROJECTION-COMMITTED readiness at line 1437 came AFTER the last journal append's fsync (last write(EVENTS.pj0)@1430 < last fsync(EVENTS.pj0)@1431 < READY@1437)
+[W030] ok   campaign life 4: write-replace of seat-cold-supper-envelope.bin.tmp — fsync(tmp) preceded the rename (line 1354) and fsync(parent directory) followed it; close alone was never the durability primitive
+[W031] ok   campaign life 4 (W4): between the final READY and SIGKILL there is NO semantic write of any kind (no write/pwrite/rename/unlink on any fd)
+[W032] ok   campaign life 4 (W4): the child died BLOCKED in read(0, ...) — the in-flight syscall at SIGKILL is the wait pipe read (trace-controlling blocked-state proof)
+[W033] ok   campaign life 4: read-set proof — the child NEVER opened the oracle artifact, any harness-private directory, or any corpse snapshot
+[W034] ok   campaign life 4: the class-B provider domain was NEVER opened (no reconciliation reader ran in this life)
+[W035] ok   campaign life 4: zero fdatasync calls — the declared barrier is fsync and only fsync appears
+
+-- campaign life 5 (mneme/vertical0/runs/campaign-1/trace-life5.txt) --
+[W036] ok   campaign life 5: trace parsed (1600 fd-resolved records)
+[W037] ok   campaign life 5: write-replace of seat-late-riser-envelope.bin.tmp — fsync(tmp) preceded the rename (line 1331) and fsync(parent directory) followed it; close alone was never the durability primitive
+[W038] ok   campaign life 5: write-replace of campaign-export.sexp.tmp — fsync(tmp) preceded the rename (line 1727) and fsync(parent directory) followed it; close alone was never the durability primitive
+[W039] ok   campaign life 5: write-replace of campaign-export.sexp.tmp — fsync(tmp) preceded the rename (line 1735) and fsync(parent directory) followed it; close alone was never the durability primitive
+[W040] ok   campaign life 5: read-set proof — the child NEVER opened the oracle artifact, any harness-private directory, or any corpse snapshot
+[W041] ok   campaign life 5: the class-B provider domain was NEVER opened (no reconciliation reader ran in this life)
+[W042] ok   campaign life 5: zero fdatasync calls — the declared barrier is fsync and only fsync appears
+
+-- control-a life 1 (mneme/vertical0/runs/control-a/trace-life1.txt) --
+[W043] ok   control-a life 1: trace parsed (925 fd-resolved records)
+[W044] ok   control-a life 1: boundary EFFECT-FRONTIER-CROSSED-UNSETTLED readiness at line 1052 came AFTER the last journal append's fsync (last write(EVENTS.pj0)@1045 < last fsync(EVENTS.pj0)@1046 < READY@1052)
+[W045] ok   control-a life 1 (W1): between the final READY and SIGKILL there is NO semantic write of any kind (no write/pwrite/rename/unlink on any fd)
+[W046] ok   control-a life 1 (W1): the child died BLOCKED in read(0, ...) — the in-flight syscall at SIGKILL is the wait pipe read (trace-controlling blocked-state proof)
+[W047] ok   control-a life 1: read-set proof — the child NEVER opened the oracle artifact, any harness-private directory, or any corpse snapshot
+[W048] ok   control-a life 1: the class-B provider domain was NEVER opened (no reconciliation reader ran in this life)
+
+-- control-a life 2 (mneme/vertical0/runs/control-a/trace-life2.txt) --
+[W049] ok   control-a life 2: trace parsed (919 fd-resolved records)
+[W050] ok   control-a life 2: boundary CONTROL-DISPOSITION-COMMITTED readiness at line 950 came AFTER the last journal append's fsync (last write(EVENTS.pj0)@938 < last fsync(EVENTS.pj0)@939 < READY@950)
+[W051] ok   control-a life 2: read-set proof — the child NEVER opened the oracle artifact, any harness-private directory, or any corpse snapshot
+[W052] ok   control-a life 2: the class-B provider domain was opened ONLY inside the declared reconciliation reader — every open comes AFTER the banked CONTROL-DISPOSITION-COMMITTED readiness
+
+-- control-b life 1 (mneme/vertical0/runs/control-b/trace-life1.txt) --
+[W053] ok   control-b life 1: trace parsed (925 fd-resolved records)
+[W054] ok   control-b life 1: boundary EFFECT-FRONTIER-CROSSED-UNSETTLED readiness at line 1052 came AFTER the last journal append's fsync (last write(EVENTS.pj0)@1045 < last fsync(EVENTS.pj0)@1046 < READY@1052)
+[W055] ok   control-b life 1 (W1): between the final READY and SIGKILL there is NO semantic write of any kind (no write/pwrite/rename/unlink on any fd)
+[W056] ok   control-b life 1 (W1): the child died BLOCKED in read(0, ...) — the in-flight syscall at SIGKILL is the wait pipe read (trace-controlling blocked-state proof)
+[W057] ok   control-b life 1: read-set proof — the child NEVER opened the oracle artifact, any harness-private directory, or any corpse snapshot
+[W058] ok   control-b life 1: the class-B provider domain was NEVER opened (no reconciliation reader ran in this life)
+
+-- control-b life 2 (mneme/vertical0/runs/control-b/trace-life2.txt) --
+[W059] ok   control-b life 2: trace parsed (919 fd-resolved records)
+[W060] ok   control-b life 2: boundary CONTROL-DISPOSITION-COMMITTED readiness at line 950 came AFTER the last journal append's fsync (last write(EVENTS.pj0)@938 < last fsync(EVENTS.pj0)@939 < READY@950)
+[W061] ok   control-b life 2: read-set proof — the child NEVER opened the oracle artifact, any harness-private directory, or any corpse snapshot
+[W062] ok   control-b life 2: the class-B provider domain was opened ONLY inside the declared reconciliation reader — every open comes AFTER the banked CONTROL-DISPOSITION-COMMITTED readiness
+
+vertical0 witness: 62 checks, 0 failures
+RESULT: PASS

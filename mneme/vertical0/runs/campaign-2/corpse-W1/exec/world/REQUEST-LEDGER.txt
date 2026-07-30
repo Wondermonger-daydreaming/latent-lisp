@@ -1,0 +1,2 @@
+external-request:cap2:a-seat-first-fruit cella:cella-prima V-seat-first-fruit applied
+external-request:cap2:a-seat-empty-page cella:cella-vacua V-seat-empty-page applied

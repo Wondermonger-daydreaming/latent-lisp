@@ -1,0 +1,186 @@
+=== PROVENANCE PREAMBLE (added by PRAETOR; the raw transcript follows the rule line) ===
+
+harness/harness.lisp is NOT path-parameterized: its campaign run-root is the
+literal #p"mneme/vertical0/runs/campaign-1/" (line 380), and campaign mode begins
+with (fresh-directory run-root), which deletes that directory recursively.  No
+argv, environment variable, or configuration selects a different run-root, and
+this verification pass was forbidden to edit any existing file.
+
+The second campaign was therefore produced by the IDENTICAL invocation
+
+    sbcl --script mneme/vertical0/harness/harness.lisp campaign
+
+executed with a DIFFERENT working directory: a scratch root outside the lab tree
+whose relative layout mirrors the lab's (top-level and mneme/ entries symlinked to
+the real tree; mneme/vertical0/ a real directory holding byte-copies of
+VERTICAL-HARNESS-ORACLE.sexp and VERTICAL-PROGRAM-CONFIG.sexp, symlinks to the
+program/harness/reconstruction/mutants/controls/support sources, and a real runs/
+directory).  Consequences, stated plainly:
+
+  · the lab's mneme/vertical0/runs/campaign-1/ was never written, never deleted,
+    and never read by the campaign-2 child; `git status` on it is empty;
+  · every relative path is identical to campaign-1's, so this is a fresh-directory
+    temporal re-run under the same relative layout; the absolute prefix differed,
+    which is additional to (not a substitute for) the §16 claim;
+  · consequently the noncanonical diagnostics below name "campaign-1" — that is
+    the scratch root's copy, not the lab's.  The resulting artifacts were copied
+    to mneme/vertical0/runs/campaign-2/ (65 files, verified byte-identical to the
+    scratch originals by `diff -rq`).
+
+Exit code: 0.  Shape: 35 checks / 0 failures, four SIGKILL deaths (W1..W4), one
+clean life-5 exit 0, four corpse snapshots, five syscall traces.
+
+=== RAW TRANSCRIPT (sbcl --script mneme/vertical0/harness/harness.lisp campaign) ===
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+vertical0 harness — campaign mode (all pids/paths in this transcript are noncanonical diagnostics)
+the child is invoked IDENTICALLY every life: resume from durable evidence alone; the schedule below is harness knowledge the child never receives.
+
+== life 1 ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | CHILD-PID 2418438 (noncanonical)
+      | NOTE store pj0-store:a83eb2c7bfa203538570a7359db18bf08128d4988737ed99dd7856e50b951f6d: :valid, 0 frames (created from declared configuration)
+      | NOTE seat seat-first-fruit: schedule-less cost -> typed missing-cost marker (missing, never zero)
+      | NOTE seat seat-first-fruit: full clean route complete
+      | NOTE seat seat-empty-page: full clean route complete
+      | NOTE seat seat-locked-purse: budget-ceiling-exceeded refused pre-frontier, refusal journaled
+      | BOUNDARY-READY seat=seat-torn-crossing boundary=EFFECT-FRONTIER-CROSSED-UNSETTLED  [campaign occurrence 1]
+      | KILL: W1 at EFFECT-FRONTIER-CROSSED-UNSETTLED occurrence 1 (seat seat-torn-crossing): pid 2418438 blocked [wchan=anon_pipe_read state=S] -> SIGKILL
+life 1: killed (W1)
+
+== life 2 ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | CHILD-PID 2418444 (noncanonical)
+      | NOTE store pj0-store:a83eb2c7bfa203538570a7359db18bf08128d4988737ed99dd7856e50b951f6d: :valid, 58 frames (resumed from durable evidence)
+      | NOTE seat seat-first-fruit: complete in durable evidence; nothing remains
+      | NOTE seat seat-empty-page: complete in durable evidence; nothing remains
+      | NOTE seat seat-locked-purse: refusal already durable; nothing remains
+      | NOTE seat seat-torn-crossing: fresh key refused for the poisoned seat (unsafe-retry, pre-frontier)
+      | NOTE seat seat-torn-crossing: uncertainty structured; left unresolved by declared policy (:leave-unresolved) — never resolved in-campaign
+      | BOUNDARY-READY seat=seat-half-song boundary=STREAM-CHUNK-CUSTODY-COMMITTED  [campaign occurrence 1]
+      | KILL: W2 at STREAM-CHUNK-CUSTODY-COMMITTED occurrence 1 (seat seat-half-song): pid 2418444 blocked [wchan=anon_pipe_read state=S] -> SIGKILL
+life 2: killed (W2)
+
+== life 3 ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | CHILD-PID 2418451 (noncanonical)
+      | NOTE store pj0-store:a83eb2c7bfa203538570a7359db18bf08128d4988737ed99dd7856e50b951f6d: :valid, 71 frames (resumed from durable evidence)
+      | NOTE seat seat-first-fruit: complete in durable evidence; nothing remains
+      | NOTE seat seat-empty-page: complete in durable evidence; nothing remains
+      | NOTE seat seat-locked-purse: refusal already durable; nothing remains
+      | NOTE seat seat-torn-crossing: uncertainty structured and left unresolved by declared policy; nothing remains
+      | NOTE seat seat-half-song: partial stream closed (typed refusal; 1 chunk preserved, never rewritten, never resumed)
+      | NOTE seat seat-broken-glass: full clean route complete
+      | NOTE seat seat-dead-hand: capability-revoked refused pre-frontier, refusal journaled
+      | NOTE seat seat-slammed-door: post-frontier failure reconciled :not-applied against surviving world evidence
+      | NOTE seat seat-burned-draft: full clean route complete
+      | BOUNDARY-READY seat=seat-sealed-letter boundary=ENVELOPE-CUSTODY-COMMITTED  [campaign occurrence 1]
+      | KILL: W3 at ENVELOPE-CUSTODY-COMMITTED occurrence 1 (seat seat-sealed-letter): pid 2418451 blocked [wchan=anon_pipe_read state=S] -> SIGKILL
+life 3: killed (W3)
+
+== life 4 ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | CHILD-PID 2418467 (noncanonical)
+      | NOTE store pj0-store:a83eb2c7bfa203538570a7359db18bf08128d4988737ed99dd7856e50b951f6d: :valid, 131 frames (resumed from durable evidence)
+      | NOTE seat seat-first-fruit: complete in durable evidence; nothing remains
+      | NOTE seat seat-empty-page: complete in durable evidence; nothing remains
+      | NOTE seat seat-locked-purse: refusal already durable; nothing remains
+      | NOTE seat seat-torn-crossing: uncertainty structured and left unresolved by declared policy; nothing remains
+      | NOTE seat seat-half-song: closed as partial in durable evidence; its partiality is never completed
+      | NOTE seat seat-broken-glass: complete in durable evidence; nothing remains
+      | NOTE seat seat-dead-hand: refusal already durable; nothing remains
+      | NOTE seat seat-slammed-door: reconciled in durable evidence
+      | NOTE seat seat-burned-draft: complete in durable evidence; nothing remains
+      | NOTE seat seat-sealed-letter: envelope integrity re-checked against the journaled binding (sha256 a9359a523c50f8075b75218fcf7541fa141da3f5804bbc82aee756203bb0ada7)
+      | BOUNDARY-READY seat=seat-sealed-letter boundary=PROJECTION-COMMITTED  [campaign occurrence 1]
+      | NOTE seat seat-sealed-letter: recovered by derived projection from captured bytes; provider not recalled
+      | BOUNDARY-READY seat=seat-cold-supper boundary=PROJECTION-COMMITTED  [campaign occurrence 2]
+      | KILL: W4 at PROJECTION-COMMITTED occurrence 2 (seat seat-cold-supper): pid 2418467 blocked [wchan=anon_pipe_read state=S] -> SIGKILL
+life 4: killed (W4)
+
+== life 5 ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | CHILD-PID 2418474 (noncanonical)
+      | NOTE store pj0-store:a83eb2c7bfa203538570a7359db18bf08128d4988737ed99dd7856e50b951f6d: :valid, 148 frames (resumed from durable evidence)
+      | NOTE seat seat-first-fruit: complete in durable evidence; nothing remains
+      | NOTE seat seat-empty-page: complete in durable evidence; nothing remains
+      | NOTE seat seat-locked-purse: refusal already durable; nothing remains
+      | NOTE seat seat-torn-crossing: uncertainty structured and left unresolved by declared policy; nothing remains
+      | NOTE seat seat-half-song: closed as partial in durable evidence; its partiality is never completed
+      | NOTE seat seat-broken-glass: complete in durable evidence; nothing remains
+      | NOTE seat seat-dead-hand: refusal already durable; nothing remains
+      | NOTE seat seat-slammed-door: reconciled in durable evidence
+      | NOTE seat seat-burned-draft: complete in durable evidence; nothing remains
+      | NOTE seat seat-sealed-letter: complete in durable evidence
+      | NOTE seat seat-cold-supper: existing projection consumed after restart; provider not recalled, projection frame untouched
+      | NOTE seat seat-late-riser: full clean route complete
+      | NOTE interpretation: seat seat-first-fruit -> structural class present (structure, never truth)
+      | NOTE interpretation: seat seat-empty-page -> structural class empty (structure, never truth)
+      | NOTE interpretation: seat seat-broken-glass -> structural class invalid (structure, never truth)
+      | NOTE interpretation: seat seat-burned-draft -> structural class absent-mapped (structure, never truth)
+      | NOTE interpretation: seat seat-sealed-letter -> structural class present (structure, never truth)
+      | NOTE interpretation: seat seat-cold-supper -> structural class present (structure, never truth)
+      | NOTE interpretation: seat seat-late-riser -> structural class present (structure, never truth)
+      | NOTE census: 12 seats derived from durable evidence
+      | NOTE secret opening: exposure record journaled (principalis-unus, principalis-duo within scope vertical-campaign-graders)
+      | NOTE publication: export staged, simulated commit frontier settled, mirror-sim written, receipt journaled (channel: test-channel-only-no-real-mirror)
+      | NOTE campaign-complete record journaled
+      | NOTE nothing remains; exiting 0
+life 5: exit 0 — nothing remains
+
+== grading: the campaign shape ==
+[H001] ok   five lives ran: four SIGKILL deaths then one clean exit 0
+[H002] ok   the four kills landed exactly on the oracle's schedule: W1@frontier/1, W2@chunk/1, W3@envelope/1, W4@projection/2 — each at the oracle's expected seat, each after a confirmed blocked-on-pipe state
+[H003] ok   one boundary pause was CONTINUEd rather than killed: the recovery projection (PROJECTION-COMMITTED occurrence 1, life 4) — the child pauses at every declared occurrence whether or not a kill is scheduled there
+
+== grading: the four corpses (exec-dir snapshots at each death) ==
+[H004] ok   corpse W1 (seat-torn-crossing): the frontier group is durable — AP0 prepared/request-capture/exposure + cap2 prepared/frontier-crossed + AP0 dispatch + crossing-evidence-binding
+[H005] ok   corpse W1: its journal bytes are a strict byte-prefix of the final journal — every later life APPENDED; nothing was rewritten
+[H006] ok   corpse W1: NO acknowledgment (AP0 or cap2), NO settlement, NO uncertainty record — from the bytes alone the standing is genuinely :crossed-unsettled
+[H007] ok   corpse W1: no effect evidence — the surviving world's request ledger holds NO entry under the journaled external-request identity (the request was lost in flight; the bytes cannot tell)
+[H008] ok   corpse W2 (seat-half-song): the frontier group is durable — AP0 prepared/request-capture/exposure + cap2 prepared/frontier-crossed + AP0 dispatch + crossing-evidence-binding
+[H009] ok   corpse W2: its journal bytes are a strict byte-prefix of the final journal — every later life APPENDED; nothing was rewritten
+[H010] ok   corpse W2: acknowledgment and chunk-1 custody are durable; chunk-2 and the stream terminal envelope are NOT — at least one chunk committed, no terminal settlement exists
+[H011] ok   corpse W3 (seat-sealed-letter): the frontier group is durable — AP0 prepared/request-capture/exposure + cap2 prepared/frontier-crossed + AP0 dispatch + crossing-evidence-binding
+[H012] ok   corpse W3: its journal bytes are a strict byte-prefix of the final journal — every later life APPENDED; nothing was rewritten
+[H013] ok   corpse W3: the complete raw envelope is durably in custody — journal record + evidence file whose sha256 recomputes to the journaled binding; no projection exists
+[H014] ok   corpse W4 (seat-cold-supper): the frontier group is durable — AP0 prepared/request-capture/exposure + cap2 prepared/frontier-crossed + AP0 dispatch + crossing-evidence-binding
+[H015] ok   corpse W4: its journal bytes are a strict byte-prefix of the final journal — every later life APPENDED; nothing was rewritten
+[H016] ok   corpse W4: the projection record is durable; no consumption, no interpretation exists yet
+[H017] ok   across the W4 death the projection receipt is byte-identical: the projection event's canonical payload in the corpse equals the same event's payload in the final journal (consumption references; it never rewrites)
+
+== grading: the recovery folds ==
+[H018] ok   after W1 the torn crossing was STRUCTURED, never resolved: the §10.8 record is journaled, the CAP2-W1 pre-declaration scan's refusal is journaled (blind retry refused from durable bytes alone), and the final standing is :uncertain-unresolved
+[H019] ok   after W2 the partial stream was CLOSED, never resumed: the typed refusal record stands (stream-resume-would-duplicate), exactly 1 chunk preserved, and no chunk-2 was ever journaled
+[H020] ok   after W3 the projection was DERIVED from captured bytes by vertical-recovery-projection-0 (origin derived), and the provider was not recalled: exactly one dispatch record exists for the seat in the whole campaign
+[H021] ok   after W4 the EXISTING projection was consumed: the consumption record references the projection receipt identity, and no second envelope or projection was created for the seat
+
+== grading: the final outcome map (census vs oracle) ==
+[H022] ok   outcome seat-first-fruit: manifestation present, effect settled
+[H023] ok   outcome seat-empty-page: manifestation present-empty, effect settled
+[H024] ok   outcome seat-locked-purse: manifestation absent, absence-state refused-pre-effect, refusal budget-ceiling-exceeded
+[H025] ok   outcome seat-torn-crossing: manifestation absent, effect uncertain-unresolved
+[H026] ok   outcome seat-half-song: manifestation present-partial, effect crossed-unsettled-partial-closed
+[H027] ok   outcome seat-broken-glass: manifestation present-invalid, effect settled
+[H028] ok   outcome seat-dead-hand: manifestation absent, absence-state refused-pre-effect, refusal capability-revoked
+[H029] ok   outcome seat-slammed-door: manifestation absent, effect reconciled-not-applied
+[H030] ok   outcome seat-burned-draft: manifestation absent, effect settled, absence-state absent-after-completion
+[H031] ok   outcome seat-sealed-letter: manifestation present, effect settled, projection-origin derived-recovery
+[H032] ok   outcome seat-cold-supper: manifestation present, effect settled
+[H033] ok   outcome seat-late-riser: manifestation present, effect settled
+[H034] ok   the finalization records are durable: interpretation receipts for every projected seat, the census, the synthetic secret exposure, the publication receipt, and campaign-complete
+[H035] ok   the publication stayed simulated: the mirror-sim copy's bytes equal the staged export's bytes, and both equal the journaled census record's canonical encoding (test-channel-only; the real mirror was never contacted)
+
+vertical0 harness (campaign): 35 checks, 0 failures
+RESULT: PASS

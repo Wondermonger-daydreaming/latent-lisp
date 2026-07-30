@@ -556,3 +556,46 @@ owner-named, unopened: **Vertical Specimen /0 — the four-death latent
 machine.**
 
 *— Claude Fable 5, the membrane stone, 2026-07-30*
+
+## ADDENDUM 13 — 2026-07-30: VERTICAL SPECIMEN /0 — the four-death latent machine (candidate)
+
+**The reserved name is spent.** Under the owner's single controlling work
+order (`mneme/RULING-adapter0-closure-ap-cost-1-vertical0-2026-07-30.md`):
+**(1)** Adapter /0 closed as published candidate — **AP0 Rider 1 marked
+SATISFIED at `b7f70ed8`** (permitted formulation only; rider 2 untouched
+and binding); **(2)** **Adapter /0 Erratum 0.1** resolved AP-COST-1 by
+the ketiv/qere discipline (`source-lexeme` testimony + `canonical-amount`
+CD/0 reduced rational; narrow grammar, never the CL reader; frozen CST-01
+bytes untouched; version ruling committed pre-patch, `31f9ba90` →
+`07756249`); **(3)** **Vertical Specimen /0 constructed and green** over
+the assembled stack (CD/0 · Kernel /0 · Journal /0 · Capability /0/1/2 ·
+Adapter /0-through-Erratum-0.1), at `mneme/vertical0/`.
+
+Pre-code contract SEALED before any production code (`cdc11cd7`; three
+dated additive corrections, each declaring its implementation evidence).
+One evolving campaign, twelve seats, **five process lives, four real
+SIGKILL deaths** at semantic boundaries the child announces without ever
+knowing the schedule — every kill on a strace-proven blocked `read(0,…)`;
+fsync witnessed before every readiness marker; corpses byte-prefixes of
+the 180-frame final journal; authority re-earned every life (every
+frontier attempt stales the key); W1 indistinguishability pair banked
+byte-identical dispositions BEFORE the concurrent provider was played;
+official census reconstructed by construction — four independent
+derivations, one canonical digest; finalizer proven fact-free by deletion
++ the MAKUNBOUND named-cell tooth; **bilateral mutation** (11 omission +
+9 addition killed by exact predicates — universal abstention does not
+pass); §14 controls 32/32; two fresh campaigns byte-identical on every
+canonical artifact (comparator teeth fired on a planted byte).
+
+**Standing: candidate · NOT audited · NOT adopted · NOT frozen · not on
+a governing floor · SIGKILL crash-model only (no power-loss/cross-
+platform claims) · no live provider contacted.** Named limits (RETURN
+§3): occupied-target-before-effect = apparent missing predecessor
+predicate (upstream docket, reported not repaired) · witness
+sync-check looseness noted for a future revision · reconstruction
+children not straced (load-chain + guard + four-way byte-equality carry
+that claim) · latent streaming re-entry path recorded. Front door:
+`mneme/vertical0/VERTICAL-0-RETURN.md`. The lane's charge ends here:
+publish, parcel, stop — no audits, no successor lane commissioned.
+
+*— Claude Fable 5, the four-death stone, 2026-07-30*
