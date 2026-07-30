@@ -242,11 +242,14 @@ never a content address."
 
 (defun surface2-grammar-identity ()
   (%id '("lisp-plus-surface2" "grammar") '("term2" "0")))
-(defun surface2-grammar-version () 1)
+;; Erratum 0.1: the accepted source-form language narrowed (binder
+;; shapes; facet uniqueness; parent-shadow refusal) => grammar 1 -> 2.
+(defun surface2-grammar-version () 2)
 
 (defun surface2-procedure-identity ()
   (%id '("lisp-plus-surface2" "procedure") '("macroexpand" "0")))
-(defun surface2-procedure-version () 1)
+;; Erratum 0.1: expansion behavior changed => procedure 1 -> 2.
+(defun surface2-procedure-version () 2)
 
 (defun surface2-policy-identity ()
   (%id '("lisp-plus-surface2" "policy") '("ceilings" "0")))
@@ -1416,16 +1419,32 @@ speakable here."
 ;;; THE TWO FORMS (contract §3).
 ;;; ==================================================================
 
-(defmacro with-outcome ((var derivation-form) &body body)
-  "Evaluate DERIVATION-FORM; refuse (typed, SURFACE2-NOT-AN-OUTCOME)
-unless the value is a SEAT-OUTCOME; bind VAR for BODY.  The complete
-object stays bound; nothing is projected away."
-  (unless (and var (symbolp var) (not (keywordp var)))
+(defun %proper-list-p (object)
+  "T iff OBJECT is a proper (finite, nil-terminated) list."
+  (loop for tail = object then (cdr tail)
+        while (consp tail)
+        finally (return (null tail))))
+
+(defmacro with-outcome (binding &body body)
+  "Evaluate the binding's derivation form; refuse (typed,
+SURFACE2-NOT-AN-OUTCOME) unless the value is a SEAT-OUTCOME; bind the
+binding's variable for BODY.  The complete object stays bound; nothing
+is projected away.  Erratum 0.1: BINDING is validated here — exactly a
+proper two-element list (VAR DERIVATION-FORM) with VAR a bindable
+symbol — so a malformed shape refuses :WITH-OUTCOME-BINDING-MALFORMED
+through the discipline instead of escaping as a host lambda-list error."
+  (unless (and (%proper-list-p binding) (= 2 (length binding)))
     (%refuse :expansion :with-outcome-binding-malformed
-             :detail (format nil "~s is not a bindable variable" var)))
-  `(let ((,var ,derivation-form))
-     (%require-seat-outcome ,var 'with-outcome)
-     ,@body))
+             :detail (format nil "~s is not a proper (VAR DERIVATION-FORM) ~
+                                  two-element binding" binding)))
+  (let ((var (first binding))
+        (derivation-form (second binding)))
+    (unless (and var (symbolp var) (not (keywordp var)))
+      (%refuse :expansion :with-outcome-binding-malformed
+               :detail (format nil "~s is not a bindable variable" var)))
+    `(let ((,var ,derivation-form))
+       (%require-seat-outcome ,var 'with-outcome)
+       ,@body)))
 
 (defun %parse-clause (clause var)
   "Clause -> (values canonical-atoms body otherwise-p).  Clause syntax:
@@ -1440,16 +1459,35 @@ object stays bound; nothing is projected away."
          (rest (rest clause))
          (bindings nil))
     (when (eq (first rest) :facets)
+      ;; Erratum 0.1: the marker must be FOLLOWED by an explicit proper
+      ;; specification list — a dangling :facets no longer vanishes.
+      (unless (consp (cdr rest))
+        (%refuse :expansion :facet-binding-malformed
+                 :detail ":facets marker with no specification list"))
       (let ((specs (second rest)))
-        (unless (and (listp specs)
+        (unless (and (%proper-list-p specs)
                      (every (lambda (spec)
-                              (and (consp spec) (symbolp (first spec))
+                              (and (%proper-list-p spec)
+                                   (consp spec) (symbolp (first spec))
                                    (not (keywordp (first spec)))
                                    (member (second spec) +facet-axes+)
                                    (null (cddr spec))))
                             specs))
           (%refuse :expansion :facet-binding-malformed
                    :detail (format nil "~s" specs)))
+        ;; Erratum 0.1: facet variables unique within the clause, and
+        ;; never the parent outcome variable — the parent stays
+        ;; accessible under its bound name in every branch, literally.
+        (let ((names (mapcar #'first specs)))
+          (when (member var names)
+            (%refuse :expansion :facet-binding-malformed
+                     :detail (format nil "facet variable ~s would shadow ~
+                                          the parent outcome variable" var)))
+          (unless (= (length names)
+                     (length (remove-duplicates names)))
+            (%refuse :expansion :facet-binding-malformed
+                     :detail (format nil "duplicate facet variables in ~s"
+                                     names))))
         (setf bindings specs
               rest (cddr rest))))
     (let ((body (if bindings

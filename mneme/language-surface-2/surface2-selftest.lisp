@@ -331,10 +331,11 @@ OTHERWISE — with the parent outcome consulted in EVERY body."
              ("LISP-PLUS-SURFACE2" "MATCH-OUTCOME"))
            (known-surface2-constructs))))
 
-(check "18 grammar, procedure and policy versions all read 1"
+(check "18 grammar 2, procedure 2, policy 1 (Erratum 0.1: the binder ~
+        narrowing moved grammar and procedure; ceilings unchanged)"
   (lambda ()
-    (and (= 1 (surface2-grammar-version))
-         (= 1 (surface2-procedure-version))
+    (and (= 2 (surface2-grammar-version))
+         (= 2 (surface2-procedure-version))
          (= 1 (surface2-policy-version)))))
 
 (check "19 the refusal catalogue is split — protocol refusals and ~
@@ -372,8 +373,8 @@ OTHERWISE — with the parent outcome consulted in EVERY body."
     (setf *match-request* (request-expansion *match-form* :macroexpand-1 *tag*))
     (and (expansion-request-p *match-request*)
          (expansion-request-construct-identity *match-request*)
-         (= 1 (expansion-request-grammar-version *match-request*))
-         (= 1 (expansion-request-procedure-version *match-request*))
+         (= 2 (expansion-request-grammar-version *match-request*))
+         (= 2 (expansion-request-procedure-version *match-request*))
          (= 1 (expansion-request-policy-version *match-request*)))))
 
 (check "21 the stored source datum decodes back to a tree that re-encodes ~
@@ -400,8 +401,8 @@ OTHERWISE — with the parent outcome consulted in EVERY body."
         versions as values"
   (lambda ()
     (and (verify-receipt *match-receipt*)
-         (= 1 (expansion-receipt-grammar-version *match-receipt*))
-         (= 1 (expansion-receipt-procedure-version *match-receipt*))
+         (= 2 (expansion-receipt-grammar-version *match-receipt*))
+         (= 2 (expansion-receipt-procedure-version *match-receipt*))
          (= 1 (expansion-receipt-policy-version *match-receipt*)))))
 
 (check "24 the accounted expansion IS the expansion this image performs: ~

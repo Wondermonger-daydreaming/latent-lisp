@@ -29,7 +29,7 @@ surface2-selftest — outcomes keep their axes, positive direction
 
 == the discipline: doors, receipts, versions ==
 [S017] ok   17 the construct table has exactly the two declared rows
-[S018] ok   18 grammar, procedure and policy versions all read 1
+[S018] ok   18 grammar 2, procedure 2, policy 1 (Erratum 0.1: the binder narrowing moved grammar and procedure; ceilings unchanged)
 [S019] ok   19 the refusal catalogue is split — protocol refusals and integrity alarms, never flattened — and the contract's named codes are all catalogued
 [S020] ok   20 DOOR 1 mints an immutable request carrying the construct identity and the three governing versions as VALUES
 [S021] ok   21 the stored source datum decodes back to a tree that re-encodes to the same canonical octets (the account names the form)

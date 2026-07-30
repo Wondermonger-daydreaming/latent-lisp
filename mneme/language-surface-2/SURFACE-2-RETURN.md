@@ -212,3 +212,33 @@ by this lane. The only additions in the tree are the files of
    census evidence class the precedence selects) — derived from presence
    facts already on the object, recorded here as surplus beyond the §2
    slot list.
+
+---
+
+## ADDENDUM — 2026-07-30 (later): ERRATUM 0.1, the binder — and CLOSURE
+
+One bounded owner-authorized correction (`ERRATUM-0.1-BINDER.md`;
+pre-patch reproduction committed first, 6/6 defects reproduced —
+`RUN-ERRATUM-REPRO-PREPATCH.txt`): facet bindings could shadow the
+parent outcome variable, duplicate facet variables were accepted, a
+dangling `:facets` was silently swallowed, and malformed `with-outcome`
+binding shapes escaped as host lambda-list errors instead of the
+catalogued refusal. Repaired surgically (binder only; `seat-outcome`,
+derivation, pattern-axis semantics, the inhabited passage, Surface /1,
+Vertical /0 all untouched): `with-outcome` validates one raw binding
+argument (exactly a proper two-element list); facet variables must be
+unique and never the parent variable; `:facets` requires an explicit
+proper specification list — all through the EXISTING codes.
+**Versions: grammar 1→2, procedure 1→2, policy 1.** New gate
+`surface2-erratum-binder` 12/0, twin byte-identical, teeth fired; the
+three published gates rerun green (the only transcript delta is the
+version line in the selftest); `verify-all` 6/6. **Surface /2 is
+CLOSED at this erratum** per the owner's authorization — no audit, no
+review cycle. Successors named, not opened: *Surface Account /0 —
+Closed Languages, One Inspector* (one composite public
+expansion-account front door over independently closed surface
+modules, so Surface /3 does not clone a third receipt machine), then
+*Surface /3 — Authority Stays Explicit* (effect/capability forms whose
+convenience never turns five distinct offices into one Boolean).
+
+*— Claude Fable 5, chair, at the owner's authorization, 2026-07-30.*

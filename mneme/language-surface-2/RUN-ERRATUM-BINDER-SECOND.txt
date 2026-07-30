@@ -1,0 +1,27 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+surface2-erratum-binder — the binder holds its own doors now
+
+== the five malformed cases, each refusing through its retained code ==
+[E001] ok   1 parent shadowing refuses :FACET-BINDING-MALFORMED — a facet variable EQ to the parent outcome variable can no longer steal its name (the parent stays accessible, literally)
+[E002] ok   2 duplicate facet variables refuse :FACET-BINDING-MALFORMED — one clause, one name, one binding
+[E003] ok   3 dangling :facets refuses :FACET-BINDING-MALFORMED — the marker must be followed by an explicit proper specification list; it is never silently swallowed
+[E004] ok   4 with-outcome NON-LIST binding refuses :WITH-OUTCOME-BINDING-MALFORMED through the discipline — no host lambda-list error escapes
+[E005] ok   5 with-outcome ONE-ELEMENT and THREE-ELEMENT bindings refuse :WITH-OUTCOME-BINDING-MALFORMED — exactly a proper two-element (VAR DERIVATION-FORM) is the accepted shape
+[E006] ok   6 companion shapes stay refused: dotted specification list and dotted spec both :FACET-BINDING-MALFORMED; keyword variable in a correct pair still :WITH-OUTCOME-BINDING-MALFORMED
+
+== the positive direction: lawful forms still execute ==
+[E007] ok   7 lawful facet destructuring executes — distinct facet names bind clause-locally while the PARENT stays bound and readable in the same body
+[E008] ok   8 lawful with-outcome executes — the two-element binding shape binds the complete outcome
+
+== the version consequence ==
+[E009] ok   9 grammar 1 -> 2, procedure 1 -> 2, policy 1 (the accepted source-form language narrowed; expansion behavior changed; ceilings untouched)
+[E010] ok   10 receipts carry the new versions — a lawful expansion through the discipline's doors stores grammar 2 / procedure 2 / policy 1
+
+== gate teeth ==
+[E011] ok   11 the planted-fault gate FIRES: a child with SURFACE2_ERRATUM_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT
+[E012] ok   12 runner truncation: a child with SURFACE2_ERRATUM_DIE=1 exits 3 with NO RESULT sentinel
+
+surface2-erratum-binder: 12 checks, 0 failures
+RESULT: PASS
