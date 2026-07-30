@@ -1,0 +1,14 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+surface2 erratum 0.1 — PRE-PATCH reproduction (defects expected PRESENT)
+
+[R001] ok   1 parent shadowing ACCEPTED: a facet binding reusing the parent variable expands without refusal (the defect)
+[R002] ok   2 duplicate facet variables ACCEPTED: two bindings of one name in one clause expand without refusal (the defect)
+[R003] ok   3 dangling :facets ACCEPTED: a :facets marker with no specification list is silently swallowed (the defect)
+[R004] ok   4a with-outcome NON-LIST binding escapes as a HOST error, not a retained surface2 refusal (the leak)
+[R005] ok   4b with-outcome ONE-ELEMENT binding escapes as a HOST error, not a retained surface2 refusal (the leak)
+[R006] ok   4c with-outcome THREE-ELEMENT binding escapes as a HOST error, not a retained surface2 refusal (the leak)
+
+surface2-erratum-repro: 6 checks, 0 failures
+RESULT: DEFECTS-REPRODUCED
