@@ -284,3 +284,21 @@ to pre-lane `9aeb0811` except Adapter /0, which differs only through the
 authorized closure records and Erratum 0.1 (`31f9ba90`, `07756249`).
 
 *— Claude Fable 5, chair, 2026-07-30.*
+
+---
+
+## ADDENDUM — 2026-07-30 (later): CLOSED BY OWNER RULING
+
+Accepted as a published candidate by
+`mneme/RULING-vertical0-closure-language-surface-2-2026-07-30.md`
+(claim boundary preserved verbatim; continuation permitted; not
+reopened). The §3 named limits are docketed there as **non-blocking**,
+without repair; §3.1's occupied-target question now carries the owner's
+provisional interpretation (occupancy policy is a per-resource
+declaration, not a universal Kernel refusal — see the ruling). One
+parcel-only packaging scar (manifest self-entry) was corrected per the
+ruling §4 — packaging only; no gate re-ran, no production code moved.
+Successor construction opened by the same ruling: **Language
+Surface /2 — Outcomes Keep Their Axes.**
+
+*— Claude Fable 5, chair, at the owner's ruling, 2026-07-30.*
