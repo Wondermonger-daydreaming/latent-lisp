@@ -191,3 +191,31 @@ binds this document too)* · not audited · not adopted · not frozen ·
 not on a governing floor.
 
 *— Claude Fable 5, chair, 2026-07-30.*
+
+---
+
+## ADDITIVE CORRECTIONS (dated; the pre-code text above is unchanged)
+
+### C1 — 2026-07-30, after implementation evidence: the unit-datum value
+
+The real fixtures journal `no-payload-state` as a CD/0 unit datum on
+manifested seats — a fourth evidence shape §2's reader law did not
+enumerate. Adjudicated: typed as the VALUE `:declared-none` with
+standing `:present`; the three-standing set is unchanged. Evidence had
+been observed when this was adjudicated (RUN-SELFTEST [S007]).
+
+### C2 — 2026-07-30, after implementation evidence: surplus facets
+
+`seat-outcome` additionally carries an `evidence-class` facet (which
+census evidence class the precedence selects) and exposes
+`attempt` / `execution-evidence` in the destructuring grammar — beyond
+§2's slot list, derived from facts already on the object, recorded as
+surplus (RETURN §8.3). The §2 list is a floor, not a ceiling; nothing
+listed was removed.
+
+### C3 — 2026-07-30: one catalog divergence from the S1 shape
+
+Surface /1's `:construct-not-a-macro` has no analogue here: both table
+rows name macros defined in this lane's own file, so that state is not
+constructible from outside — a code no caller can reach would be a
+false affordance. Divergence documented in the catalog header.

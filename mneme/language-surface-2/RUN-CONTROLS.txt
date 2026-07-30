@@ -1,0 +1,71 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+surface2-controls — the teeth, each fired live
+
+== fixtures ==
+[C001] ok   1 the untouched census path yields the twelve campaign seats
+
+== expansion-time structural refusals, each fired ==
+[C002] ok   2 :NON-EXHAUSTIVE-MATCH fires — a match without OTHERWISE refuses AT EXPANSION, with the code retained on the refusal object
+[C003] ok   3 :NON-EXHAUSTIVE-MATCH also fires for the empty match
+[C004] ok   4 :DUPLICATE-PATTERN fires — one pattern written twice
+[C005] ok   5 :DUPLICATE-PATTERN sees through spelling: a conjunction in a different order and a refusal name as symbol vs string are ONE pattern
+[C006] ok   6 :UNREACHABLE-PATTERN fires — a narrower conjunction after its wider prefix can never run
+[C007] ok   7 :UNREACHABLE-PATTERN fires for a clause written after OTHERWISE
+[C008] ok   8 :PATTERN-NOT-IN-GRAMMAR fires on the forbidden-inference vocabulary — :success, :truth, :retry-safe, :cost do not exist as axes and cannot be minted from outside
+[C009] ok   9 :PATTERN-NOT-IN-GRAMMAR fires on an unlawful value for a known axis (:execution :flourished is no cap2 standing)
+[C010] ok   10 :MATCH-VAR-NOT-A-SYMBOL, :WITH-OUTCOME-BINDING-MALFORMED and :FACET-BINDING-MALFORMED each fire
+
+== the runtime typed refusal ==
+[C011] ok   11 SURFACE2-NOT-AN-OUTCOME fires when WITH-OUTCOME binds a non-outcome, carries code :NOT-A-SEAT-OUTCOME, and IS a SURFACE2-EXPANSION-REFUSED (one handler catches the family)
+[C012] ok   12 MATCH-OUTCOME refuses the same way on a non-outcome — never a silent NIL dispatch
+
+== door-phase refusals, each fired ==
+[C013] ok   13 request-phase refusals fire: not-a-call, head-not-a-symbol, operation-not-declared, occurrence-tag-not-identifier
+[C014] ok   14 term-grammar refusals fire: an unrepresentable term, shared structure, the depth ceiling, the node ceiling, the octet ceiling
+[C015] ok   15 :NOT-A-KNOWN-SURFACE2-CONSTRUCT fires at Door 2 for a head outside the two-row table, and NOTHING is minted
+[C016] ok   16 :SOURCE-NOT-RECONSTRUCTIBLE fires publicly: a head whose home package is deleted between the doors leaves a datum this image can no longer rebuild
+[C017] ok   17 a structurally refused MATCH-OUTCOME refuses through the doors too: try-perform on a non-exhaustive match answers (NIL NIL refusal) with :NON-EXHAUSTIVE-MATCH — nothing minted for a refused expansion
+
+== receipt integrity alarms, fired through the planted-fault hooks ==
+[C018] ok   18 :SOURCE-IDENTITY-PROJECTION-MISMATCH fires when the planted fault feeds the mint a foreign source identity
+[C019] ok   19 :EXPANDED-IDENTITY-PROJECTION-MISMATCH fires the same way on the expanded side
+[C020] ok   20 the missing-receipt mutant is CAUGHT: with the skip-receipt fault planted, the perform answers no receipt and VERIFY-RECEIPT refuses :RECEIPT-NOT-MINTED — the checking discipline, not luck
+[C021] ok   21 without the fault the SAME request mints, and the receipt's digests re-derive
+
+== the payload-or-NIL planted defect (contract §6) ==
+[C022] ok   22 the TRUE expansion keeps the parent outcome bound: the body reads seat id, chunk custody AND the execution axis from it
+[C023] ok   23 the payload-or-NIL mutant is the planted defect and it is KILLED: under the fault hook the same match collapses to the bare manifestation string — seat id, chunk custody and execution axis all lost — and the comparison against the true result catches it
+
+== mutant classifiers killed against the census truth ==
+[C024] ok   24 branch-discarding-the-effect-axis is KILLED on seat-half-song: a mutant that consumes manifestation "present-partial" and writes the effect conclusion "settled" contradicts the census truth "crossed-unsettled-partial-closed"
+[C025] ok   25 absent-manifestation-means-failed-execution is KILLED on seat-burned-draft: manifestation reads "absent" while the execution axis holds :SETTLED — the mutant's verdict contradicts the retained axis
+[C026] ok   26 present-invalid-treated-as-absence is KILLED on seat-broken-glass: the census truth says "present-invalid", the outcome retains it :PRESENT with interpretation "invalid" — the mutant's "absent" is a different fact
+
+== retry of an uncertain effect: exposure, not affordance ==
+[C027] ok   27 the surface EXPOSES :UNCERTAIN-UNRESOLVED on seat-torn-crossing and the CAP2-W1 pre-declaration scan still REFUSES a fresh dispatch over durable bytes alone
+[C028] ok   28 the surface adds NO retry affordance: no exported symbol of LISP-PLUS-SURFACE2 speaks of retry, resume or dispatch
+
+== the synthesized scratch store: typed readings vs the one-NIL ==
+[C029] ok   29 wrong-typed field vs absent field are DIFFERENT answers here: a string in the chunk-custody slot reads :MALFORMED-IN-EVIDENCE, a missing slot reads :ABSENT-FROM-EVIDENCE
+[C030] ok   30 the predecessor reader CANNOT tell them apart: BODY-INTEGER answers one NIL for both bodies — the pun this surface makes structurally impossible, demonstrated on the same bytes
+[C031] ok   31 the surface exposes :CROSSED-UNSETTLED as itself on the synthesized seat — never softened into a completion or a failure
+
+== the forbidden-vocabulary guard, fired ==
+[C032] ok   32 the lexical guard FIRES on a planted dirty disposition string and stays quiet on a clean one
+
+== the Surface /1 negative control: the REAL Surface /1 refuses this lane's heads ==
+[C033] ok   33 the real Surface /1 Door 1 mints a request for a MATCH-OUTCOME form (an unknown head is a lawful request; it has no construct identity to record)
+[C034] ok   34 the real Surface /1 Door 2 REFUSES it :NOT-A-KNOWN-SURFACE-CONSTRUCT — no receipt, no expansion, no occurrence minted; the refusal object is retained with phase :PERFORM
+[C035] ok   35 the signalling door agrees: PERFORM-EXPANSION raises Surface /1's own EXPANSION-REFUSED carrying the same code — and WITH-OUTCOME refuses identically
+
+== read-only proof ==
+[C036] ok   36 the campaign-1 journal's bytes are untouched by everything above (the scratch store took every append)
+
+== gate teeth ==
+[C037] ok   37 the planted-fault gate FIRES: a child with SURFACE2_CONTROLS_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT
+[C038] ok   38 runner truncation is detectable as exactly the pair (exit 3, no RESULT sentinel): a child with SURFACE2_CONTROLS_DIE=1
+
+surface2-controls: 38 checks, 0 failures
+RESULT: PASS

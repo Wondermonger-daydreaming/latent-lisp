@@ -1,0 +1,50 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+surface2-selftest — outcomes keep their axes, positive direction
+
+== the fixtures: campaign-1, read-only ==
+[S001] ok   1 the validated prefix carries the campaign's events
+[S002] ok   2 all twelve seats derive to SEAT-OUTCOME objects
+
+== every facet reader answers (values VALUE STANDING) on every seat ==
+[S003] ok   3 every facet reader on every seat returns a lawful standing
+[S004] ok   4 evidence class, execution standing, manifestation, effect, provenance and interpretation agree with the campaign-1 truth on all twelve seats
+[S005] ok   5 the attempt name is derived once and carried as a value
+[S006] ok   6 the cap2 evidence plist is RETAINED: every :settled seat still holds its settled event; the reconciled seat holds its reconciliation event
+[S007] ok   7 typed absence, measured against real evidence: seat-burned-draft's no-payload-state is :PRESENT "absent-after-completion"; seat-first-fruit's field is a CD/0 UNIT — :PRESENT :DECLARED-NONE, the writer's explicit none; seat-locked-purse (no projection at all) is :ABSENT-FROM-EVIDENCE.  BODY-STRING answers NIL to all three; this surface does not
+[S008] ok   8 provenance is a SLOT, never an (or ...): seat-sealed-letter answers :DERIVED-RECOVERY, seat-cold-supper answers :LIVE
+[S009] ok   9 the retained refusal keeps type and explanation DISTINCT on seat-locked-purse and seat-dead-hand
+[S010] ok   10 chunk custody: seat-half-song reads 1 :PRESENT; a seat with no stream reads :NOT-APPLICABLE, typed, never NIL
+[S011] ok   11 the witness is retained: every seat's SOURCE-EVENTS lists the events its derivation consulted
+
+== WITH-OUTCOME: the whole object, bound ==
+[S012] ok   12 WITH-OUTCOME binds the complete outcome and the body reads any axis it likes
+
+== MATCH-OUTCOME: every pattern class matches and RUNS its body across all twelve campaign seats ==
+[S013] ok   13 all twelve seats dispatched and every body consulted the parent outcome (each result carries the seat id read from it)
+[S014] ok   14 every clause of the dispatch was exercised at least once (nine clause keys)
+[S015] ok   15 OTHERWISE runs as a real clause and receives the WHOLE outcome (a projection seat reaching OTHERWISE can still read its axes)
+[S016] ok   16 MATCH-OUTCOME with a bound variable name works over WITH-OUTCOME (the two forms compose)
+
+== the discipline: doors, receipts, versions ==
+[S017] ok   17 the construct table has exactly the two declared rows
+[S018] ok   18 grammar, procedure and policy versions all read 1
+[S019] ok   19 the refusal catalogue is split — protocol refusals and integrity alarms, never flattened — and the contract's named codes are all catalogued
+[S020] ok   20 DOOR 1 mints an immutable request carrying the construct identity and the three governing versions as VALUES
+[S021] ok   21 the stored source datum decodes back to a tree that re-encodes to the same canonical octets (the account names the form)
+[S022] ok   22 DOOR 2 performs the MATCH-OUTCOME expansion and mints a receipt
+[S023] ok   23 the receipt's digest identities re-derive from its stored data (VERIFY-RECEIPT green), and the receipt stores the minting versions as values
+[S024] ok   24 the accounted expansion IS the expansion this image performs: ENCODE-TERM2 of a direct MACROEXPAND-1 equals the receipt's expanded datum, byte for byte
+[S025] ok   25 disposition names the operation's shape: :MACROEXPAND-1 -> "expanded-once"
+[S026] ok   26 WITH-OUTCOME goes through the same doors: request, perform, receipt, digests re-derive
+[S027] ok   27 the TRY- twins answer (REQUEST NIL) / (RECEIPT EXPANDED NIL) on the completing path
+[S028] ok   28 receipts and refusals carry identity OCTETS (comparable, diagnosable, never a content address)
+
+== read-only proof ==
+[S029] ok   29 the campaign-1 journal's bytes are untouched by everything above
+
+== gate teeth ==
+
+surface2-selftest: 29 checks, 0 failures
+RESULT: PASS

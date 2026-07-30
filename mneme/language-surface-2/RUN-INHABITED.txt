@@ -1,0 +1,52 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+surface2-inhabited — one Vertical /0 passage, re-expressed; the evidence carried home, compared
+
+== fixtures ==
+
+== the two paths over the same preserved fixtures ==
+[V001] ok   1 the OLD path (the real DERIVE-CENSUS, census-only chain) walks campaign-1
+[V002] ok   2 the NEW path (DERIVE-SEAT-OUTCOME + MATCH-OUTCOME) walks the same bank
+[V003] ok   3 per-seat agreement, plist for plist: all twelve seats EQUAL
+[V004] ok   4 facet-for-facet agreement on every seat: manifestation, effect, absence-state, refusal, chunk custody, projection-origin
+[V005] ok   5 CANONICAL BYTE EQUALITY: ENCODE-PJS0 of the two census records is octet-for-octet the same
+   old census: 2118 octets, sha256 e0da6227b71095ac6b1732f99310faa6328abf5860bba0c679d1ebf5f04a36a6
+   new census: 2118 octets, sha256 e0da6227b71095ac6b1732f99310faa6328abf5860bba0c679d1ebf5f04a36a6
+
+== the SURPLUS the new path retains (the old path read it and dropped it, or never lifted it) ==
+[V006] ok   6 execution axis: the old census plists carry NO :execution key; every new outcome answers a cap2 standing AND retains the evidence plist behind it
+[V007] ok   7 provenance: the old plist keeps only the recovery rider; the new object answers :LIVE / :DERIVED-RECOVERY / :NONE on every seat as a slot
+[V008] ok   8 interpretation: the old census never lifts the journaled structural class; the new object retains it for every interpreted seat
+[V009] ok   9 refusal explanation: the old plist keeps the condition NAME only; the new object retains name AND journaled explanation, distinct
+[V010] ok   10 the witness: every new outcome lists the journal events its derivation consulted; the old path's probes vanish into locals
+   surplus per seat (retained beyond the census plist):
+     seat-first-fruit: execution=SETTLED evidence-events=4 provenance=LIVE interpretation=present consulted=2
+     seat-empty-page: execution=SETTLED evidence-events=4 provenance=LIVE interpretation=empty consulted=2
+     seat-locked-purse: execution=ABSENT evidence-events=0 provenance=NONE interpretation=NOT-INTERPRETED consulted=1
+     seat-torn-crossing: execution=UNCERTAIN-UNRESOLVED evidence-events=3 provenance=NONE interpretation=NOT-INTERPRETED consulted=0
+     seat-half-song: execution=SETTLED evidence-events=4 provenance=NONE interpretation=NOT-INTERPRETED consulted=1
+     seat-broken-glass: execution=SETTLED evidence-events=4 provenance=LIVE interpretation=invalid consulted=2
+     seat-dead-hand: execution=ABSENT evidence-events=0 provenance=NONE interpretation=NOT-INTERPRETED consulted=1
+     seat-slammed-door: execution=RECONCILED evidence-events=4 provenance=NONE interpretation=NOT-INTERPRETED consulted=0
+     seat-burned-draft: execution=SETTLED evidence-events=4 provenance=LIVE interpretation=absent-mapped consulted=2
+     seat-sealed-letter: execution=SETTLED evidence-events=4 provenance=DERIVED-RECOVERY interpretation=present consulted=2
+     seat-cold-supper: execution=SETTLED evidence-events=4 provenance=LIVE interpretation=present consulted=2
+     seat-late-riser: execution=SETTLED evidence-events=4 provenance=LIVE interpretation=present consulted=2
+
+== the two census guards, fired IDENTICALLY on mutated fixtures ==
+[V011] ok   11 CROSS-AXIS GUARD, old path: the real census REFUSES the poison fixture (projection present, cap2 standing not :settled)
+[V012] ok   12 CROSS-AXIS GUARD, new path: the rewritten passage refuses the SAME fixture through its refusing CLAUSE — code :PROJECTION-WITHOUT-SETTLED-EXECUTION, retained and typed
+[V013] ok   13 TOTALITY GUARD, old path: a bank seat with no evidence at all refuses in the real census (founded or not asserted)
+[V014] ok   14 TOTALITY GUARD, new path: the OTHERWISE clause refuses the SAME fixture — code :NO-EVIDENCE-CLASS, retained and typed
+[V015] ok   15 both guards fire on the guard fixtures and NEITHER path refuses the lawful campaign-1 fixtures (the guards discriminate, they do not blanket)
+
+== journal effects not involved: the passage is pure ==
+[V016] ok   16 the NEW path performed NO journal append anywhere above: the preserved campaign-1 journal's bytes are digest-identical to the pre-run reading (every mutated fixture lived in scratch)
+
+== gate teeth ==
+[V017] ok   17 the planted-fault gate FIRES: a child with SURFACE2_INHABITED_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT
+[V018] ok   18 runner truncation is detectable as exactly the pair (exit 3, no RESULT sentinel): a child with SURFACE2_INHABITED_DIE=1
+
+surface2-inhabited: 18 checks, 0 failures
+RESULT: PASS
