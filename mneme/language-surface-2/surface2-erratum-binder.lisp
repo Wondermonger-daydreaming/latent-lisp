@@ -124,6 +124,46 @@
                          '(with-outcome (:o (form)) (list :o)))))))))
 
 ;;; ---------------------------------------------------------------------------
+(note "~%== Erratum 0.2: constant symbols cannot bind (T and NIL, every site) ==")
+
+(check "6a T as the with-outcome variable refuses ~
+        :WITH-OUTCOME-BINDING-MALFORMED, and NIL likewise — CONSTANTP in ~
+        the macro environment judges bindability, not keywordness alone"
+  (lambda ()
+    (and (eq :with-outcome-binding-malformed
+             (code-of (lambda ()
+                        (macroexpand-1 '(with-outcome (t (form)) t)))))
+         (eq :with-outcome-binding-malformed
+             (code-of (lambda ()
+                        (macroexpand-1 '(with-outcome (nil (form)) nil))))))))
+
+(check "6b T and NIL as the match-outcome variable refuse ~
+        :MATCH-VAR-NOT-A-SYMBOL through the same bindability judgment"
+  (lambda ()
+    (and (eq :match-var-not-a-symbol
+             (code-of (lambda ()
+                        (macroexpand-1 '(match-outcome t (otherwise t))))))
+         (eq :match-var-not-a-symbol
+             (code-of (lambda ()
+                        (macroexpand-1 '(match-outcome nil (otherwise nil)))))))))
+
+(check "6c T and NIL as facet-binding names refuse ~
+        :FACET-BINDING-MALFORMED — no expansion may LET-bind a constant"
+  (lambda ()
+    (and (eq :facet-binding-malformed
+             (code-of (lambda ()
+                        (macroexpand-1
+                         '(match-outcome o
+                           ((:execution :settled) :facets ((t :manifestation)) o)
+                           (otherwise o))))))
+         (eq :facet-binding-malformed
+             (code-of (lambda ()
+                        (macroexpand-1
+                         '(match-outcome o
+                           ((:execution :settled) :facets ((nil :manifestation)) o)
+                           (otherwise o)))))))))
+
+;;; ---------------------------------------------------------------------------
 (note "~%== the positive direction: lawful forms still execute ==")
 
 (defvar *root* (merge-pathnames "../../" (make-pathname
@@ -156,16 +196,17 @@
 ;;; ---------------------------------------------------------------------------
 (note "~%== the version consequence ==")
 
-(check "9 grammar 1 -> 2, procedure 1 -> 2, policy 1 (the accepted ~
-        source-form language narrowed; expansion behavior changed; ~
-        ceilings untouched)"
+(check "9 grammar 3, procedure 3, policy 1 (Erratum 0.1 moved 1->2; ~
+        Erratum 0.2's constant-symbol narrowing moved 2->3; ceilings ~
+        untouched throughout)"
   (lambda ()
-    (and (= 2 (surface2-grammar-version))
-         (= 2 (surface2-procedure-version))
+    (and (= 3 (surface2-grammar-version))
+         (= 3 (surface2-procedure-version))
          (= 1 (surface2-policy-version)))))
 
-(check "10 receipts carry the new versions — a lawful expansion through ~
-        the discipline's doors stores grammar 2 / procedure 2 / policy 1"
+(check "10 receipts carry the current versions — a lawful expansion ~
+        through the discipline's doors stores grammar 3 / procedure 3 / ~
+        policy 1"
   (lambda ()
     (let ((request (request-expansion
                     '(with-outcome (o (identity nil)) o)
@@ -176,8 +217,8 @@
           (perform-expansion request)
         (declare (ignorable expanded occurrence))
         (and receipt
-             (= 2 (expansion-receipt-grammar-version receipt))
-             (= 2 (expansion-receipt-procedure-version receipt))
+             (= 3 (expansion-receipt-grammar-version receipt))
+             (= 3 (expansion-receipt-procedure-version receipt))
              (= 1 (expansion-receipt-policy-version receipt)))))))
 
 ;;; ---------------------------------------------------------------------------

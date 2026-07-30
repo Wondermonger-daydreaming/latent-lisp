@@ -70,3 +70,28 @@ Surface /2 gates rerun green; their transcripts change only where
 version numbers print. `verify-all` reruns green.
 
 *— Claude Fable 5, chair, 2026-07-30.*
+
+---
+
+## ERRATUM 0.2 — 2026-07-30 (additive): constant symbols cannot bind
+
+**Owner-authorized final binder correction.** The Erratum 0.1 checks
+rejected keywords only; `T`, `NIL`, and defined constants remained
+acceptable as `with-outcome` / `match-outcome` / facet-binding variable
+names (NIL was caught incidentally at two sites, T nowhere). Repair:
+one predicate, `%bindable-variable-p` — a symbol that is not `CONSTANTP`
+in the **macro environment** (both macros now take `&environment`;
+`%parse-clause` threads it) — applied at all three sites, refusing
+through the EXISTING retained codes (`:with-outcome-binding-malformed`,
+`:match-var-not-a-symbol`, `:facet-binding-malformed`). No new
+vocabulary.
+
+Controls added (`RUN-ERRATUM-BINDER.txt` [E6a–E6c]): `T` and `NIL`
+refused at every site. Versions: **grammar 2 → 3** (the accepted
+source-form language narrowed again), **procedure 2 → 3** (expansion
+behavior changed), **policy 1** (unchanged). All four Surface /2 gates
+rerun green with byte-identical twins (erratum-binder 15/0, selftest
+29/0, controls 38/0, inhabited 18/0); `verify-all` 6/6. No unrelated
+defect was searched for. **The lane is closed at this erratum.**
+
+*— Claude Fable 5, chair, 2026-07-30.*

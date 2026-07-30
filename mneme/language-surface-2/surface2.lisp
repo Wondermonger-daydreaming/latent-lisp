@@ -244,12 +244,16 @@ never a content address."
   (%id '("lisp-plus-surface2" "grammar") '("term2" "0")))
 ;; Erratum 0.1: the accepted source-form language narrowed (binder
 ;; shapes; facet uniqueness; parent-shadow refusal) => grammar 1 -> 2.
-(defun surface2-grammar-version () 2)
+;; Erratum 0.2: constant symbols (T, NIL, keywords, defined constants)
+;; rejected as binding names at every site => grammar 2 -> 3.
+(defun surface2-grammar-version () 3)
 
 (defun surface2-procedure-identity ()
   (%id '("lisp-plus-surface2" "procedure") '("macroexpand" "0")))
 ;; Erratum 0.1: expansion behavior changed => procedure 1 -> 2.
-(defun surface2-procedure-version () 2)
+;; Erratum 0.2: expansion behavior changed again (CONSTANTP judgment
+;; with the macro environment) => procedure 2 -> 3.
+(defun surface2-procedure-version () 3)
 
 (defun surface2-policy-identity ()
   (%id '("lisp-plus-surface2" "policy") '("ceilings" "0")))
@@ -1425,31 +1429,46 @@ speakable here."
         while (consp tail)
         finally (return (null tail))))
 
-(defmacro with-outcome (binding &body body)
+(defun %bindable-variable-p (object environment)
+  "Erratum 0.2: T iff OBJECT may name a binding — a symbol that is not
+a constant in ENVIRONMENT.  CONSTANTP with the macro environment rejects
+keywords, T, NIL, and every defined constant alike; a name the host
+would refuse to LET-bind (or worse, silently shadow a constant with) is
+refused HERE, through the discipline's retained codes."
+  (and object
+       (symbolp object)
+       (not (constantp object environment))))
+
+(defmacro with-outcome (binding &body body &environment env)
   "Evaluate the binding's derivation form; refuse (typed,
 SURFACE2-NOT-AN-OUTCOME) unless the value is a SEAT-OUTCOME; bind the
 binding's variable for BODY.  The complete object stays bound; nothing
 is projected away.  Erratum 0.1: BINDING is validated here — exactly a
-proper two-element list (VAR DERIVATION-FORM) with VAR a bindable
-symbol — so a malformed shape refuses :WITH-OUTCOME-BINDING-MALFORMED
-through the discipline instead of escaping as a host lambda-list error."
+proper two-element list (VAR DERIVATION-FORM) — so a malformed shape
+refuses :WITH-OUTCOME-BINDING-MALFORMED through the discipline instead
+of escaping as a host lambda-list error.  Erratum 0.2: VAR must be a
+bindable variable — no constant symbol (keywords, T, NIL, defined
+constants), judged by CONSTANTP in the macro environment."
   (unless (and (%proper-list-p binding) (= 2 (length binding)))
     (%refuse :expansion :with-outcome-binding-malformed
              :detail (format nil "~s is not a proper (VAR DERIVATION-FORM) ~
                                   two-element binding" binding)))
   (let ((var (first binding))
         (derivation-form (second binding)))
-    (unless (and var (symbolp var) (not (keywordp var)))
+    (unless (%bindable-variable-p var env)
       (%refuse :expansion :with-outcome-binding-malformed
-               :detail (format nil "~s is not a bindable variable" var)))
+               :detail (format nil "~s is not a bindable variable ~
+                                    (constant symbols cannot bind)" var)))
     `(let ((,var ,derivation-form))
        (%require-seat-outcome ,var 'with-outcome)
        ,@body)))
 
-(defun %parse-clause (clause var)
+(defun %parse-clause (clause var env)
   "Clause -> (values canonical-atoms body otherwise-p).  Clause syntax:
   (PATTERN [:facets ((NAME AXIS)...)] BODY...)
-  (otherwise [:facets ...] BODY...)"
+  (otherwise [:facets ...] BODY...)
+ENV is the macro environment (Erratum 0.2: facet names are judged
+bindable by CONSTANTP there — no keywords, T, NIL, or constants)."
   (unless (consp clause)
     (%refuse :expansion :pattern-not-in-grammar
              :detail (format nil "~s is not a clause" clause)))
@@ -1468,8 +1487,8 @@ through the discipline instead of escaping as a host lambda-list error."
         (unless (and (%proper-list-p specs)
                      (every (lambda (spec)
                               (and (%proper-list-p spec)
-                                   (consp spec) (symbolp (first spec))
-                                   (not (keywordp (first spec)))
+                                   (consp spec)
+                                   (%bindable-variable-p (first spec) env)
                                    (member (second spec) +facet-axes+)
                                    (null (cddr spec))))
                             specs))
@@ -1499,7 +1518,7 @@ through the discipline instead of escaping as a host lambda-list error."
                     rest)))
       (values atoms body otherwise-p))))
 
-(defmacro match-outcome (var &body clauses)
+(defmacro match-outcome (var &body clauses &environment env)
   "Dispatch on the facets of the SEAT-OUTCOME bound to VAR.  The
 structural laws, checked AT EXPANSION with retained typed refusals:
 an explicit OTHERWISE clause is REQUIRED (:NON-EXHAUSTIVE-MATCH);
@@ -1510,15 +1529,16 @@ outcome remains bound in EVERY clause body, including OTHERWISE, which
 receives the whole outcome — no expansion path reduces the outcome to
 payload-or-NIL, a completion boolean, manifestation alone, or
 condition-or-value."
-  (unless (and var (symbolp var) (not (keywordp var)))
+  (unless (%bindable-variable-p var env)
     (%refuse :expansion :match-var-not-a-symbol
-             :detail (format nil "~s" var)))
+             :detail (format nil "~s is not a bindable variable ~
+                                  (constant symbols cannot bind)" var)))
   (unless clauses
     (%refuse :expansion :non-exhaustive-match
              :detail "MATCH-OUTCOME with no clauses matches nothing and owns nothing"))
   (let ((parsed nil) (otherwise-body nil) (otherwise-seen nil))
     (dolist (clause clauses)
-      (multiple-value-bind (atoms body otherwise-p) (%parse-clause clause var)
+      (multiple-value-bind (atoms body otherwise-p) (%parse-clause clause var env)
         (cond
           (otherwise-p
            (when otherwise-seen

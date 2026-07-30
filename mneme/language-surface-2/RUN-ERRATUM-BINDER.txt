@@ -11,17 +11,22 @@ surface2-erratum-binder — the binder holds its own doors now
 [E005] ok   5 with-outcome ONE-ELEMENT and THREE-ELEMENT bindings refuse :WITH-OUTCOME-BINDING-MALFORMED — exactly a proper two-element (VAR DERIVATION-FORM) is the accepted shape
 [E006] ok   6 companion shapes stay refused: dotted specification list and dotted spec both :FACET-BINDING-MALFORMED; keyword variable in a correct pair still :WITH-OUTCOME-BINDING-MALFORMED
 
+== Erratum 0.2: constant symbols cannot bind (T and NIL, every site) ==
+[E007] ok   6a T as the with-outcome variable refuses :WITH-OUTCOME-BINDING-MALFORMED, and NIL likewise — CONSTANTP in the macro environment judges bindability, not keywordness alone
+[E008] ok   6b T and NIL as the match-outcome variable refuse :MATCH-VAR-NOT-A-SYMBOL through the same bindability judgment
+[E009] ok   6c T and NIL as facet-binding names refuse :FACET-BINDING-MALFORMED — no expansion may LET-bind a constant
+
 == the positive direction: lawful forms still execute ==
-[E007] ok   7 lawful facet destructuring executes — distinct facet names bind clause-locally while the PARENT stays bound and readable in the same body
-[E008] ok   8 lawful with-outcome executes — the two-element binding shape binds the complete outcome
+[E010] ok   7 lawful facet destructuring executes — distinct facet names bind clause-locally while the PARENT stays bound and readable in the same body
+[E011] ok   8 lawful with-outcome executes — the two-element binding shape binds the complete outcome
 
 == the version consequence ==
-[E009] ok   9 grammar 1 -> 2, procedure 1 -> 2, policy 1 (the accepted source-form language narrowed; expansion behavior changed; ceilings untouched)
-[E010] ok   10 receipts carry the new versions — a lawful expansion through the discipline's doors stores grammar 2 / procedure 2 / policy 1
+[E012] ok   9 grammar 3, procedure 3, policy 1 (Erratum 0.1 moved 1->2; Erratum 0.2's constant-symbol narrowing moved 2->3; ceilings untouched throughout)
+[E013] ok   10 receipts carry the current versions — a lawful expansion through the discipline's doors stores grammar 3 / procedure 3 / policy 1
 
 == gate teeth ==
-[E011] ok   11 the planted-fault gate FIRES: a child with SURFACE2_ERRATUM_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT
-[E012] ok   12 runner truncation: a child with SURFACE2_ERRATUM_DIE=1 exits 3 with NO RESULT sentinel
+[E014] ok   11 the planted-fault gate FIRES: a child with SURFACE2_ERRATUM_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT
+[E015] ok   12 runner truncation: a child with SURFACE2_ERRATUM_DIE=1 exits 3 with NO RESULT sentinel
 
-surface2-erratum-binder: 12 checks, 0 failures
+surface2-erratum-binder: 15 checks, 0 failures
 RESULT: PASS
