@@ -336,13 +336,79 @@ provider-reported figure is invented."
                        '("ap0" "count")
                        (%int (+ 64 (%machine-seed machine)))))))))
 
+(defun parse-cost-lexeme (lexeme)
+  "Erratum 0.1 narrow exact-number grammar: [\"-\"] digits [\"/\" digits],
+denominator nonzero.  Returns an actual CD/0 number datum — an integer
+datum when the reduced denominator is 1, else a reduced rational datum —
+so equivalent spellings collapse to ONE canonical durable value.  The CL
+reader is never the cost-field grammar: floating-point syntax refuses
+COST-FLOAT-NONCANONICAL; every other malformation refuses
+COST-LEXEME-NONCANONICAL (both AP-COST-1)."
+  (labels ((%refuse (condition detail)
+             (signal-ap0 condition
+                         :requirement-id "AP-COST-1"
+                         :frontier-crossed nil
+                         :detail detail))
+           (%digits (string start end what)
+             (when (>= start end)
+               (%refuse 'cost-lexeme-noncanonical
+                        (format nil "empty ~a in cost lexeme" what)))
+             (let ((value 0))
+               (loop for index from start below end
+                     for char = (char string index)
+                     do (unless (char<= #\0 char #\9)
+                          (%refuse (if (member char '(#\. #\e #\E #\d #\D))
+                                       'cost-float-noncanonical
+                                       'cost-lexeme-noncanonical)
+                                   (format nil "non-digit ~s in cost ~
+                                                lexeme ~a" char what))
+                          )
+                        (setf value (+ (* value 10)
+                                       (- (char-code char)
+                                          (char-code #\0)))))
+               value)))
+    (unless (stringp lexeme)
+      (%refuse 'cost-lexeme-noncanonical
+               "cost lexeme must be a string of the declared grammar"))
+    (when (zerop (length lexeme))
+      (%refuse 'cost-lexeme-noncanonical "empty cost lexeme"))
+    (let* ((negative (char= (char lexeme 0) #\-))
+           (start (if negative 1 0))
+           (slash (position #\/ lexeme :start start))
+           (numerator (%digits lexeme start (or slash (length lexeme))
+                               "numerator"))
+           (denominator (if slash
+                            (%digits lexeme (1+ slash) (length lexeme)
+                                     "denominator")
+                            1)))
+      (when (zerop denominator)
+        (%refuse 'cost-lexeme-noncanonical
+                 "zero denominator in cost lexeme"))
+      ;; Native CL exact rational arithmetic is the value substrate:
+      ;; / auto-reduces and collapses n/1 to the integer.
+      (let ((value (/ (if negative (- numerator) numerator) denominator)))
+        (if (integerp value)
+            (make-integer-datum value)
+            (make-rational-datum (numerator value)
+                                 (denominator value)))))))
+
+(defun cost-canonical-amount (cost-record)
+  "The qere: the CD/0 number datum on which the machine may act.
+Arithmetic over costs consumes THIS field only — the source lexeme is
+testimony, never re-parsed at use time."
+  (case-field cost-record "canonical-amount"))
+
 (defun extract-cost (live-adapter dispatch-handle cost-procedure-id
                      &key price-schedule-id)
   "Cost record (§16).  Without an identified, versioned price schedule
 there is NO derivable cost: the return is a typed MISSING-COST-MARKER —
 never a zero amount (AP-COST-4), never a promotion of usage into money
-(usage ≠ cost).  With a schedule, the record is :estimated in exact
-canonical units (AP-COST-1/AP-COST-2)."
+(usage ≠ cost).  With a schedule, the record is :estimated
+(AP-COST-2/3) and — Erratum 0.1, the ketiv/qere discipline — carries
+BOTH the received spelling as SOURCE-LEXEME (testimony, retained
+byte-exact) and the CANONICAL-AMOUNT as an actual CD/0 integer or
+reduced rational (AP-COST-1); a string never becomes durable money by
+spelling a number."
   (unless (live-adapter-p live-adapter)
     (signal-ap0 'adapter-descriptor-invalid
                 :requirement-id "AP-DESC-1"
@@ -352,19 +418,21 @@ canonical units (AP-COST-1/AP-COST-2)."
     (if (null price-schedule-id)
         (%make-missing-cost "no identified price schedule; missing cost ~
                              is not free")
-        (%rec '("ap0" "record-kind") (%id "record" "cost-record")
-              '("ap0" "cost-id")
-              (%str (format nil "cst-~a" (%machine-script-leaf machine)))
-              '("ap0" "adapter-identity")
-              (%str (%machine-adapter-identity machine))
-              '("ap0" "standing") (%str "estimated")
-              '("ap0" "amount")
-              ;; Exact rational in the declared micro-unit; no float ever
-              ;; touches durable money.
-              (%str (format nil "~a/1000000" (+ 100 (%machine-seed machine))))
-              '("ap0" "currency") (%str "USD")
-              '("ap0" "price-schedule-id") (%str price-schedule-id)
-              '("ap0" "procedure-id") (%str cost-procedure-id)))))
+        (let ((lexeme (format nil "~a/1000000"
+                              (+ 100 (%machine-seed machine)))))
+          (%rec '("ap0" "record-kind") (%id "record" "cost-record")
+                '("ap0" "cost-id")
+                (%str (format nil "cst-~a" (%machine-script-leaf machine)))
+                '("ap0" "adapter-identity")
+                (%str (%machine-adapter-identity machine))
+                '("ap0" "standing") (%str "estimated")
+                ;; ketiv: what the fake schedule wrote, kept unchanged.
+                '("ap0" "source-lexeme") (%str lexeme)
+                ;; qere: the exact value the machine may act on.
+                '("ap0" "canonical-amount") (parse-cost-lexeme lexeme)
+                '("ap0" "currency") (%str "USD")
+                '("ap0" "price-schedule-id") (%str price-schedule-id)
+                '("ap0" "procedure-id") (%str cost-procedure-id))))))
 
 ;;; ---------------------------------------------------------------------------
 ;;; §25 L17 route audit surface.

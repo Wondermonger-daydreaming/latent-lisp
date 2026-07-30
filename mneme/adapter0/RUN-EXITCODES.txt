@@ -52,3 +52,12 @@ bash mneme/verify-all.sh                                     -> exit 0   (ALL FL
 
 git status (filtered of this lane's new files and _staging/): EMPTY —
 zero modifications outside mneme/adapter0/.
+
+## Erratum 0.1 (2026-07-30, owner-authorized) — post-patch re-run
+
+sbcl --script mneme/adapter0/adapter0-erratum-cost.lisp -> exit 0   (18 checks, 0 failures; RUN-ERRATUM-COST.txt, RUN-ERRATUM-COST-SECOND.txt; pair byte-identical)
+# All six lane gates re-run twice: exits 0, pairs byte-identical; only the
+# RUN-SELFTEST pair changed vs the sealed set (check [030] description).
+# Specimen re-run byte-identical vs committed RUN-SPECIMEN.txt.
+# Gate teeth: ADAPTER0_ERRATUM_PLANT_FAULT=1 -> exit 1 "FAIL PLANTED FAULT";
+# ADAPTER0_ERRATUM_DIE=1 -> exit 3, no RESULT sentinel (fired live, [E017]/[E018]).

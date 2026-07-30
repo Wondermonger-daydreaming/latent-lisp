@@ -1,0 +1,33 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+adapter0-erratum-cost — the ketiv/qere discipline, proven live
+
+== canonicalization: one durable value per mathematical value ==
+[E001] ok   1 the CST-01 ketiv: "1932912/1000000" parses to the qere 120807/62500 — an actual CD/0 REDUCED rational datum, not a string
+[E002] ok   2 "100/1000000" → 1/10000
+[E003] ok   3 equivalent spellings collapse: "2/4" and "1/2" produce the SAME canonical durable value
+[E004] ok   4 the integer/rational seam is canonical: "4/2" and "2" produce ONE canonical value — an INTEGER datum (n/1 collapses; no rational-with-denominator-1 twin survives)
+[E005] ok   5 sign is lawful in the grammar and canonicalizes: "-2/4" → reduced -1/2
+
+== refusals: the grammar is narrow, never the CL reader ==
+[E006] ok   6 binary floating-point syntax refuses cost-float-noncanonical (AP-COST-1): "1.932912"
+[E007] ok   7 exponent syntax refuses cost-float-noncanonical: "1932912e-6"
+[E008] ok   8 malformed rational syntax refuses cost-lexeme-noncanonical: empty denominator "1932912/"
+[E009] ok   9 malformed: empty numerator "/5", junk "abc", embedded junk "12a/3", empty string, whitespace "1 /2" — each refuses cost-lexeme-noncanonical
+[E010] ok   10 zero denominator refuses cost-lexeme-noncanonical: "5/0" (the refusal is the parser's, not a leaked host division error)
+[E011] ok   11 the CL reader is not the grammar: read-eval "#.(+ 1 1)", complex "#C(1 2)", package syntax "cl:pi" — each refuses typed, none evaluates
+
+== the live production path: ketiv retained, qere enacted ==
+[E012] ok   12 missing cost remains missing: extract-cost without a price schedule returns the typed marker — not a record, NOT ZERO, not a number, and it carries its reason (AP-COST-4)
+[E013] ok   13 the produced cost record carries BOTH fields: source-lexeme retained byte-exact as testimony AND canonical-amount as an actual CD/0 reduced rational; the old string-amount field is gone
+[E014] ok   14 estimated remains distinct from billed: the record's standing is estimated; the erratum changed the amount REPRESENTATION, never the standing vocabulary (AP-COST-2/3)
+[E015] ok   15 arithmetic uses only the canonical amount: summing the CST-01 qere and the live record's qere over CD/0 accessor values gives 483253/250000 exactly — no lexeme is re-parsed at use time
+[E016] ok   16 the frozen CST-01 fixture is untouched fixture-language: its amount field is still the string "1932912/1000000" on disk, and the fixture VALIDATOR still accepts the case (the erratum patched the production path, not the frozen bytes)
+
+== gate teeth ==
+[E017] ok   17 the planted-fault gate FIRES: a child with ADAPTER0_ERRATUM_PLANT_FAULT=1 exits 1 carrying FAIL PLANTED FAULT
+[E018] ok   18 runner truncation before canonical result: a child with ADAPTER0_ERRATUM_DIE=1 exits 3 with NO RESULT sentinel — truncation is detectable as exactly that pair
+
+adapter0-erratum-cost: 18 checks, 0 failures
+RESULT: PASS

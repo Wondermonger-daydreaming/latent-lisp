@@ -56,6 +56,12 @@
                 #:make-unit-datum
                 #:make-boolean-datum
                 #:make-integer-datum
+                ;; Erratum 0.1 (ketiv/qere): the canonical-amount slot is
+                ;; an actual CD/0 number, so the rational constructor and
+                ;; its defensive accessors join the imports.
+                #:make-rational-datum
+                #:rational-datum-numerator
+                #:rational-datum-denominator
                 #:make-string-datum
                 #:make-sequence-datum
                 #:make-record-entry
@@ -126,6 +132,7 @@
    #:usage-standing-missing
    #:cost-standing-missing
    #:cost-float-noncanonical
+   #:cost-lexeme-noncanonical
    #:cancellation-unsupported
    #:cancellation-unconfirmed
    #:reconciliation-unsupported
@@ -216,6 +223,10 @@
    #:project-envelope
    #:extract-usage
    #:extract-cost
+   ;; Erratum 0.1: the narrow exact-number cost grammar (never the CL
+   ;; reader) and the canonical-amount accessor.
+   #:parse-cost-lexeme
+   #:cost-canonical-amount
    #:dispatch-handle
    #:dispatch-handle-p
    #:invocation-spec

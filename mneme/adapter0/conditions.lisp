@@ -96,6 +96,9 @@
  usage-standing-missing
  cost-standing-missing
  cost-float-noncanonical
+ ;; Erratum 0.1: malformed (non-float) cost lexeme syntax — the narrow
+ ;; grammar's refusal for junk, missing parts, or a zero denominator.
+ cost-lexeme-noncanonical
  cancellation-unsupported
  cancellation-unconfirmed
  reconciliation-unsupported

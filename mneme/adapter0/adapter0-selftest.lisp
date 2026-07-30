@@ -408,21 +408,28 @@
         (AP-COST-4)"
   (lambda ()
     (let ((usage (extract-usage *live* *handle* "fake-usage-procedure-0"))
-          (missing (extract-cost *live* *handle* "fake-cost-procedure-0")))
+          (missing (extract-cost *live* *handle* "fake-cost-procedure-1")))
       (and (record-datum-p usage)
            (equal "adapter-measured" (case-string usage "source"))
            (missing-cost-marker-p missing)
            (not (record-datum-p missing))))))
 
 (check "estimated ≠ billed: with a schedule the cost record is standing ~
-        estimated with an exact rational amount; dashboard-confirmed is a ~
-        DIFFERENT standing the fake never claims for itself (AP-COST-2/3)"
+        estimated; Erratum 0.1 ketiv/qere — the SOURCE-LEXEME retains the ~
+        received spelling byte-exact while CANONICAL-AMOUNT is an actual ~
+        CD/0 reduced rational (100/1000000 → 1/10000), and ~
+        dashboard-confirmed is a DIFFERENT standing the fake never claims ~
+        for itself (AP-COST-1/2/3)"
   (lambda ()
-    (let ((cost (extract-cost *live* *handle* "fake-cost-procedure-0"
+    (let ((cost (extract-cost *live* *handle* "fake-cost-procedure-1"
                               :price-schedule-id "fake-prices-v0")))
       (and (record-datum-p cost)
            (equal "estimated" (case-string cost "standing"))
-           (equal "100/1000000" (case-string cost "amount"))))))
+           (equal "100/1000000" (case-string cost "source-lexeme"))
+           (let ((amount (cost-canonical-amount cost)))
+             (and (rational-datum-p amount)
+                  (= 1 (rational-datum-numerator amount))
+                  (= 10000 (rational-datum-denominator amount))))))))
 
 (check "reconciliation not-found ≠ proved no effect: not-found without a ~
         distinct completeness witness refuses (adapter-witness-boundary-~

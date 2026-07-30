@@ -334,7 +334,7 @@
            (handle (dispatch prepared :live-adapter *live*)))
       (await-terminal handle)
       (let ((usage (extract-usage *live* handle "fake-usage-procedure-0"))
-            (missing (extract-cost *live* handle "fake-cost-procedure-0")))
+            (missing (extract-cost *live* handle "fake-cost-procedure-1")))
         (and (record-datum-p usage)
              (not (case-field-present-p usage "amount"))
              (not (case-field-present-p usage "currency"))
@@ -358,7 +358,7 @@
            (await-terminal handle)
            (equal "estimated"
                   (case-string (extract-cost *live* handle
-                                             "fake-cost-procedure-0"
+                                             "fake-cost-procedure-1"
                                              :price-schedule-id
                                              "fake-prices-v0")
                                "standing"))))))
@@ -373,7 +373,7 @@
                               :logical-operation-id "op-c19"
                               :attempt-id "a-c19" :run-label "c19")))
            (handle (dispatch prepared :live-adapter *live*))
-           (missing (extract-cost *live* handle "fake-cost-procedure-0")))
+           (missing (extract-cost *live* handle "fake-cost-procedure-1")))
       (and (missing-cost-marker-p missing)
            (not (numberp missing))
            (stringp (missing-cost-marker-reason missing))

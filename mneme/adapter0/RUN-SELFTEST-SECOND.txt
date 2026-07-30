@@ -40,7 +40,7 @@ governing refusal: do not translate provider ambiguity into kernel certainty; pr
 [027] ok   projection before capture refuses provider-envelope-missing (AP-ENV-4): a fresh handle with no envelope cannot be projected
 [028] ok   cancellation request ≠ cancellation settlement: the cancellation record says unsettled, residual effects possible, partials preserved (AP-CAN-1/3/4)
 [029] ok   usage ≠ cost: extract-usage returns an adapter-measured usage record; extract-cost WITHOUT a price schedule returns a typed missing-cost marker — not zero, not free, not a number (AP-COST-4)
-[030] ok   estimated ≠ billed: with a schedule the cost record is standing estimated with an exact rational amount; dashboard-confirmed is a DIFFERENT standing the fake never claims for itself (AP-COST-2/3)
+[030] ok   estimated ≠ billed: with a schedule the cost record is standing estimated; Erratum 0.1 ketiv/qere — the SOURCE-LEXEME retains the received spelling byte-exact while CANONICAL-AMOUNT is an actual CD/0 reduced rational (100/1000000 → 1/10000), and dashboard-confirmed is a DIFFERENT standing the fake never claims for itself (AP-COST-1/2/3)
 [031] ok   reconciliation not-found ≠ proved no effect: not-found without a distinct completeness witness refuses (adapter-witness-boundary-missing); with the full AP-REC-6 conjunction it settles; without the identity it refuses reconciliation-identity-missing
 [032] ok   adapter testimony ≠ boundary observation: a self-report filed as observed refuses (AP-JRN-1/PJ-WIT-1)
 [033] ok   execution ≠ manifestation: the ABSENT script executes to completion and manifests NOTHING — terminal absent-after-completion, distinct from every present-class terminal (SCRIPT-ABSENT, §14)

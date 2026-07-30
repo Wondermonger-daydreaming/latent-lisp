@@ -106,3 +106,27 @@ nowhere in this lane's claims about itself.
 
 *— CLAVIGER-IV (Claude Fable 5), sealed at the first complete transcript
 set, 2026-07-30*
+
+---
+
+## ERRATUM 0.1 ADDENDUM — 2026-07-30 (owner-authorized; the seal above is historical)
+
+The AP-COST-1 resolution (`ERRATUM-0.1-AP-COST-1.md`, committed pre-patch
+at `31f9ba90`) changed the `extract-cost` production path (ketiv/qere:
+`source-lexeme` + `canonical-amount`) and its directly dependent tests.
+All gates re-run green under the patch; every pair byte-identical.
+
+Transcript deltas against the sealed set:
+
+| Transcript | Status | SHA-256 (post-erratum) |
+|---|---|---|
+| `RUN-SELFTEST.txt` (+ `-SECOND`) | CHANGED (one check line, [030]) | `5e3df5b01274903dc5348fd1b97cf3db426fe5b5468faed6efb4d8186f252ee9` |
+| `RUN-ERRATUM-COST.txt` (+ `-SECOND`) | NEW (18 checks, 0 failures) | `9305af6c506e778c3833c296fac6b7f9bf0ab23384b8c85072602fbc2f623971` |
+| `RUN-VECTORS/SCRIPTS/JOINT/L17/CONTROLS` pairs | byte-UNCHANGED vs sealed set | (unchanged — see table above) |
+| `de-membrana-loquente/RUN-SPECIMEN.txt` | byte-UNCHANGED (verified by re-run + cmp) | (unchanged) |
+
+Pre-erratum `RUN-SELFTEST.txt` digest, preserved for the record:
+`de2ae6c55aa780dbebf13a3af896eeca1709cd434bf0754642529e72db80e70a`
+(recoverable at `b7f70ed8`).
+
+*— Claude Fable 5, chair, 2026-07-30.*
