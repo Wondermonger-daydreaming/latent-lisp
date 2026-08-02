@@ -5,3 +5,21 @@ host SBCL: 2.4.6
 case                               instrument             expect   observed verdict
 ----                               ----------             ------   -------- -------
 T0-control                         all six                0        0        BITES
+T1a-selftest-truncated             selftest               1        1        BITES
+T1b-stub-truncated                 stub fixture           1        1        BITES
+T1c-application-truncated          application            1        1        BITES
+T1d-repro1-truncated               reproduction I         1        1        BITES
+T1e-repro2-truncated               reproduction II        1        1        BITES
+T1f-repro3-truncated               reproduction III       1        1        BITES
+T2a-selftest-zero-checks           selftest               1        1        BITES
+T2b-stub-zero-checks               stub fixture           1        1        BITES
+T2c-application-zero-checks        application            1        1        BITES
+T2d-repro1-zero-verdicts           reproduction I         1        1        BITES
+T2e-repro2-zero-verdicts           reproduction II        1        1        BITES
+T2f-repro3-zero-verdicts           reproduction III       1        1        BITES
+T3a-selftest-crash                 selftest               1        1        BITES
+T3b-stub-crash                     stub fixture           1        1        BITES
+T3c-application-crash              application            1        1        BITES
+T3d-repro1-crash                   reproduction I         1        1        BITES
+T3e-repro2-crash                   reproduction II        1        1        BITES
+T3f-repro3-crash                   reproduction III       1        1        BITES
