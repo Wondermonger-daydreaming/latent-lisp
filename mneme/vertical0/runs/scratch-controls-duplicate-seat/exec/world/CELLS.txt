@@ -1,2 +1,0 @@
-cella:cella-alpha VACUA
-cella:cella-altera VACUA

@@ -1,1 +1,0 @@
-(:vertical-program-config (:policy (:x some-symbol)))

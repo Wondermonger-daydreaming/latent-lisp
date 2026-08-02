@@ -1,2 +1,0 @@
-external-request:cap2:a-seat-alpha cella:cella-alpha V-seat-alpha applied
-external-request:cap2:a-seat-beta cella:cella-beta V-seat-beta applied

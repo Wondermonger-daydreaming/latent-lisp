@@ -1,2 +1,0 @@
-cella:cella-alpha V-seat-alpha
-cella:cella-beta V-seat-beta

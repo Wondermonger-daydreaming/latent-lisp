@@ -1,3 +1,0 @@
-external-request:cap2:a-seat-alpha cella:cella-alpha V-seat-alpha applied
-external-request:cap2:a-seat-song cella:cella-dimidia V-seat-song applied
-external-request:cap2:a-seat-sealed cella:cella-sigillata V-seat-sealed applied
