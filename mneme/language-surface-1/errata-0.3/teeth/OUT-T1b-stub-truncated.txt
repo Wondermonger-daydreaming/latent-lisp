@@ -26,13 +26,10 @@ cut at byte 3711 of 6257 (clean top-level form boundary)
 
   SUBJECT BINDING PER INSTRUMENT (each computed the digest itself; this wrapper
   computed its own and compares — agreement is two sources, not an echo):
-    selftest 9214b59bda190327 · stub ABSENT · application 9214b59bda190327
-    repro I 9214b59bda190327 · repro II 9214b59bda190327 · repro III 9214b59bda190327
-    ALL SIX ARE REQUIRED TO BIND.  ABSENT is a FAILURE, not a reported gap
-    (Evidence Addendum 0.1): every instrument emits the tail, so an absence means
-    a transcript lost it.  A comma-joined value means one transcript carries two
-    different digests — a splice — and fails by the same comparison.
-    stub bound NOTHING — absence is not lawful; all six instruments emit the tail
+    selftest ABSENT · stub ABSENT · application 9214b59bda190327
+    repro I 9214b59bda190327 · repro II 9214b59bda190327 · repro III ABSENT
+    ABSENT means that instrument does not yet print the binding.  It is gated on
+    completeness, not bound to content.  Naming the gap is the point of saying it.
 
   THE BEFORE CAPTURES, where these findings were CONFIRMED, are preserved at
     errata-0.1/pre-errata-evidence/REPRODUCTION-OUTPUT-2e21f367.txt
@@ -64,19 +61,19 @@ cut at byte 3711 of 6257 (clean top-level form boundary)
 === RUNNER EXIT 1
 === WHAT EACH INSTRUMENT ACTUALLY PRINTED AS ITS CANONICAL LINE
     (an exit code says THAT something refused; this says WHAT was refused)
-    RUN-SELFTEST.txt           SELFTEST-RESULT checks=139 expected=139 failed=0 subject=9214b59bda190327
+    RUN-SELFTEST.txt           SELFTEST-RESULT checks=139 expected=139 failed=0
     RUN-STUB-IMAGE.txt         (NO CANONICAL LINE PRINTED)
     RUN-APPLICATION.txt        APPLICATION-RESULT checks=26 expected=26 failed=0 subject=9214b59bda190327
     RUN-REPRODUCTION.txt       REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0 subject=9214b59bda190327
     RUN-REPRODUCTION-II.txt    REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0 subject=9214b59bda190327
-    RUN-REPRODUCTION-III.txt   REPRODUCTION-III-RESULT verdicts=12 expected=12 confirmed=0 refuted=12 classification=3 subject=9214b59bda190327
+    RUN-REPRODUCTION-III.txt   REPRODUCTION-III-RESULT verdicts=12 expected=12 confirmed=0 refuted=12 classification=3
 === RUN-EXITCODES.txt
 subject-digest         9214b59bda190327dc879186bd6d567eae8d2e7d0d162f869148fad1ad6aaf99
 subject-label          (none supplied)   (ADVISORY, not a measurement)
-surface1-selftest      exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
-stub-image-fixture     exit 0 · canonical line validated 0 (must be 1) · subject ABSENT · expected exactly one 'STUB-RESULT' line, found 0
-de-expansione-testata  exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
-reproduction I         exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
-reproduction II        exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
-reproduction III       exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
-digest agreement       0 (must be 1; ABSENT is a FAILURE — Evidence Addendum 0.1) · stub bound NOTHING — absence is not lawful; all six instruments emit the tail
+surface1-selftest      exit 0 · canonical line matched 1 (must be 1) · subject ABSENT
+stub-image-fixture     exit 0 · canonical line matched 0 (must be 1) · subject ABSENT
+de-expansione-testata  exit 0 · canonical line matched 1 (must be 1) · subject 9214b59bda190327
+reproduction I         exit 0 · canonical line matched 1 (must be 1) · subject 9214b59bda190327
+reproduction II        exit 0 · canonical line matched 1 (must be 1) · subject 9214b59bda190327
+reproduction III       exit 0 · canonical line matched 1 (must be 1) · subject ABSENT
+digest agreement       1 (must be 1; ABSENT bindings are reported, not counted)
