@@ -15,11 +15,68 @@
 ;;;; layer: there is no LISP-PLUS-FORM0:: and no LISP-PLUS-FORM1:: anywhere in
 ;;;; this file or in form2.lisp, and there must never be.
 
+;;;; ------------------------------------------------------------------
+;;;; LOAD-HEALTH GATE (Lexical Source Erratum 0.1, 2026-08-02)
+;;;;
+;;;; WHAT WAS HERE BEFORE, AND WHY IT WAS WRONG.  This form used to read:
+;;;;
+;;;;     (let ((*error-output* (make-broadcast-stream)))
+;;;;       (handler-bind ((style-warning #'muffle-warning))
+;;;;         (load ...)))
+;;;;
+;;;; A broadcast stream with no components is a sink.  Binding *ERROR-OUTPUT*
+;;;; to one discards EVERY diagnostic the compiler writes while loading
+;;;; form2.lisp — not only the STYLE-WARNINGs the handler meant to muffle, but
+;;;; genuine WARNINGs too.  That is exactly what happened: form2.lisp carried
+;;;; two real "undefined variable" WARNINGs (LAWFUL, escaped out of a docstring
+;;;; by an unescaped interior quote; and *%FAULT-REBUILD-CD0-FAILURE*, read
+;;;; before it was declared), and this suite reported 86/86 green over both of
+;;;; them for as long as they existed.  A suite that cannot see a warning is not
+;;;; evidence that there was none.
+;;;;
+;;;; WHAT IT DOES NOW.  *ERROR-OUTPUT* is left alone, so every diagnostic is
+;;;; visible to whoever runs this.  STYLE-WARNINGs are still muffled — that is
+;;;; permitted and unchanged.  Every NON-style warning is collected and, unless
+;;;; it matches the allowlist below, makes this suite exit NONZERO before a
+;;;; single check runs.  A future undefined-variable warning cannot be reported
+;;;; as a pass.
+;;;;
+;;;; THE ALLOWLIST IS EMPTY AND IS MEANT TO STAY EMPTY.  It exists so that any
+;;;; future exception must be written down, named, and justified in source
+;;;; rather than absorbed silently by a sink.
+;;;;
+;;;; SCOPE: this is a Form /2-local observability repair.  It does not convert
+;;;; warnings to errors anywhere else, and it changes no Form /2 semantics.
+;;;; ------------------------------------------------------------------
+
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (let ((*error-output* (make-broadcast-stream)))
-    (handler-bind ((style-warning #'muffle-warning))
+  (let ((allowlist '())          ; EMPTY BY INTENT — add nothing without a reason in writing
+        (offenders '()))
+    (handler-bind ((style-warning #'muffle-warning)
+                   (warning (lambda (w)
+                              ;; Collect and DECLINE: the warning still reaches
+                              ;; the real *ERROR-OUTPUT*, so it is both counted
+                              ;; here and visible to the operator.
+                              (push (princ-to-string w) offenders))))
       (load (merge-pathnames "form2.lisp"
-                             (or *load-truename* *default-pathname-defaults*))))))
+                             (or *load-truename* *default-pathname-defaults*))))
+    (setf offenders
+          (remove-if (lambda (text)
+                       (some (lambda (allowed) (search allowed text)) allowlist))
+                     (nreverse offenders)))
+    (when offenders
+      (format *error-output*
+              "~&~%form2-selftest: LOAD-HEALTH GATE FAILED — ~a non-style warning(s) ~
+               while loading form2.lisp.~%~
+               The allowlist has ~a entr~:@p, so none of these was expected.~%~
+               A green check count below this line would not have been evidence.~%~%"
+              (length offenders) (length allowlist))
+      (loop for w in offenders
+            for i from 1
+            do (format *error-output* "  [~a] ~a~%" i w))
+      (format *error-output* "~%RESULT: FAIL (load-health gate)~%")
+      (finish-output *error-output*)
+      (sb-ext:exit :code 1 :abort t))))
 
 (defpackage #:form2-selftest (:use #:common-lisp))
 (in-package #:form2-selftest)

@@ -653,6 +653,29 @@ encounter with a real datum."
                                       :detail "the record carries no such key"))))
              (%resolve value (rest steps) path-datum)))))))
 
+;;; PLANTED-FAULT HOOKS — internal, unexported, NIL in every ordinary run.
+;;; They exist so the three integrity alarms have reachable fixtures.  A gate
+;;; that has never fired is untested, not passing.
+;;;
+;;; POSITION IS LOAD-BEARING (Lexical Source Erratum 0.1, 2026-08-02): this
+;;; block sits ABOVE %REBUILD because %REBUILD reads
+;;; *%FAULT-REBUILD-CD0-FAILURE* in its first form.  While the block sat below
+;;; the receipt section, a fresh source load compiled that read before any
+;;; declaration existed and SBCL reported "undefined variable" — a real
+;;; non-style WARNING that the selftest's *ERROR-OUTPUT* sink then swallowed.
+;;; The block was MOVED, not rewritten: same names, same NIL defaults, same
+;;; docstring, same unexported status, same fixture behaviour.  Keep new fault
+;;; hooks here, above their first reader.
+(defvar *%fault-rebuild-cd0-failure* nil
+  "When non-NIL, %REBUILD signals the exact CD/0 record-key budget failure, so
+the reclassification path of §10.4 has a fixture.  See the catalogue note: the
+code is unreachable from the public API while the input ceiling sits far below
+CD/0's record-key budget, and a handler with no fixture is what this lane
+refuses.")
+(defvar *%fault-observed-old* nil)
+(defvar *%fault-output-identity* nil)
+(defvar *%fault-procedure-version* nil)
+
 (defun %rebuild (node steps replacement)
   "A PURE REBUILD.  Descend with readers, reconstruct the ancestor spine with
 constructors.  CD/0 exposes no mutator, so this is the only possible shape and
@@ -722,19 +745,6 @@ catches and reclassifies."
 (defun form-transformation-receipt-policy-version (r)
   (declare (ignore r)) (transformation-policy-version))
 
-;;; PLANTED-FAULT HOOKS — internal, unexported, NIL in every ordinary run.
-;;; They exist so the three integrity alarms have reachable fixtures.  A gate
-;;; that has never fired is untested, not passing.
-(defvar *%fault-rebuild-cd0-failure* nil
-  "When non-NIL, %REBUILD signals the exact CD/0 record-key budget failure, so
-the reclassification path of §10.4 has a fixture.  See the catalogue note: the
-code is unreachable from the public API while the input ceiling sits far below
-CD/0's record-key budget, and a handler with no fixture is what this lane
-refuses.")
-(defvar *%fault-observed-old* nil)
-(defvar *%fault-output-identity* nil)
-(defvar *%fault-procedure-version* nil)
-
 (defconstant +disposition-replaced+ :replaced-at-path
   "Names the OPERATION THAT RAN, not an adverb about its character.  The layer
 may say where and what; it may never say better, same, or right.")
@@ -748,7 +758,7 @@ makes OBSERVED-OLD and OUTPUT-DATUM-IDENTITY derivable from the committed
 proposal payload.  Omitting them from the identity therefore loses no
 discrimination AMONG SUCH TRANSITIONS.
 
-"Lawful" was the earlier word and it was too broad: it reads as a claim about
+\"Lawful\" was the earlier word and it was too broad: it reads as a claim about
 every transition the world might call lawful, when the guarantee holds only for
 transitions THIS procedure produced, at THIS version, with the preconditions
 actually checked.

@@ -25,10 +25,13 @@
 
   SUBJECT BINDING PER INSTRUMENT (each computed the digest itself; this wrapper
   computed its own and compares — agreement is two sources, not an echo):
-    selftest ABSENT · stub 48e3a21ee1631d01 · application 48e3a21ee1631d01
-    repro I 48e3a21ee1631d01 · repro II 48e3a21ee1631d01 · repro III ABSENT
-    ABSENT means that instrument does not yet print the binding.  It is gated on
-    completeness, not bound to content.  Naming the gap is the point of saying it.
+    selftest 48e3a21ee1631d01 · stub 48e3a21ee1631d01 · application 48e3a21ee1631d01
+    repro I 48e3a21ee1631d01 · repro II 48e3a21ee1631d01 · repro III 48e3a21ee1631d01
+    ALL SIX ARE REQUIRED TO BIND.  ABSENT is a FAILURE, not a reported gap
+    (Evidence Addendum 0.1): every instrument emits the tail, so an absence means
+    a transcript lost it.  A comma-joined value means one transcript carries two
+    different digests — a splice — and fails by the same comparison.
+    all six instruments bound the digest and agree with this run's
 
   THE BEFORE CAPTURES, where these findings were CONFIRMED, are preserved at
     errata-0.1/pre-errata-evidence/REPRODUCTION-OUTPUT-2e21f367.txt
@@ -60,19 +63,19 @@
 === RUNNER EXIT 1
 === WHAT EACH INSTRUMENT ACTUALLY PRINTED AS ITS CANONICAL LINE
     (an exit code says THAT something refused; this says WHAT was refused)
-    RUN-SELFTEST.txt           SELFTEST-RESULT checks=139 expected=139 failed=1
+    RUN-SELFTEST.txt           SELFTEST-RESULT checks=139 expected=139 failed=1 subject=48e3a21ee1631d01
     RUN-STUB-IMAGE.txt         STUB-RESULT checks=8 expected=8 failed=0 subject=48e3a21ee1631d01
     RUN-APPLICATION.txt        APPLICATION-RESULT checks=26 expected=26 failed=0 subject=48e3a21ee1631d01
     RUN-REPRODUCTION.txt       REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0 subject=48e3a21ee1631d01
     RUN-REPRODUCTION-II.txt    REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=1 subject=48e3a21ee1631d01
-    RUN-REPRODUCTION-III.txt   REPRODUCTION-III-RESULT verdicts=12 expected=12 confirmed=0 refuted=12 classification=3
+    RUN-REPRODUCTION-III.txt   REPRODUCTION-III-RESULT verdicts=12 expected=12 confirmed=0 refuted=12 classification=3 subject=48e3a21ee1631d01
 === RUN-EXITCODES.txt
 subject-digest         48e3a21ee1631d013fb23e6e8c666af7b80b356bbb2cb719c7fbb3f0073064e4
 subject-label          (none supplied)   (ADVISORY, not a measurement)
-surface1-selftest      exit 1 · canonical line matched 0 (must be 1) · subject ABSENT
-stub-image-fixture     exit 0 · canonical line matched 1 (must be 1) · subject 48e3a21ee1631d01
-de-expansione-testata  exit 0 · canonical line matched 1 (must be 1) · subject 48e3a21ee1631d01
-reproduction I         exit 0 · canonical line matched 1 (must be 1) · subject 48e3a21ee1631d01
-reproduction II        exit 0 · canonical line matched 0 (must be 1) · subject 48e3a21ee1631d01
-reproduction III       exit 0 · canonical line matched 1 (must be 1) · subject ABSENT
-digest agreement       1 (must be 1; ABSENT bindings are reported, not counted)
+surface1-selftest      exit 1 · canonical line validated 0 (must be 1) · subject 48e3a21ee1631d01 · failed=1, must be 0
+stub-image-fixture     exit 0 · canonical line validated 1 (must be 1) · subject 48e3a21ee1631d01 · ok
+de-expansione-testata  exit 0 · canonical line validated 1 (must be 1) · subject 48e3a21ee1631d01 · ok
+reproduction I         exit 0 · canonical line validated 1 (must be 1) · subject 48e3a21ee1631d01 · ok
+reproduction II        exit 0 · canonical line validated 0 (must be 1) · subject 48e3a21ee1631d01 · confirmed=1, must be 0
+reproduction III       exit 0 · canonical line validated 1 (must be 1) · subject 48e3a21ee1631d01 · ok
+digest agreement       1 (must be 1; ABSENT is a FAILURE — Evidence Addendum 0.1) · all six instruments bound the digest and agree with this run's

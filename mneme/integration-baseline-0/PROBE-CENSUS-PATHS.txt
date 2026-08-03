@@ -1,0 +1,33 @@
+# PROBE-CENSUS-PATHS.txt — the frozen 28-path universe, identity-bound.
+# Rewritten ONLY by: probe-census.sh --refresh-expected
+# An ordinary census run never touches this file, so a drifting tree
+# fails validation instead of silently re-baselining itself.
+# format: <sha256>  <path relative to the subject tree>
+56d0f76786ef6bb1b6856c4114f2e907adeabeeeb0eb2eb60b2c94129fad8174  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/CHAIR/probe-crash-verify.lisp
+63c7fce8b0e6d323f384c1ca73f8220f6243b62ab611a6f4a21f12895456042b  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/CHAIR/probe-door-semantics.lisp
+c86c8a3f79142089a7996c4c82b1ecd80cda8bccab533cf9f40d8f9c7ab253cb  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/CHAIR/probe-escape-unwrapped.lisp
+865aae95d01959b965d73913edd3d04559c81dc2516d2d2f90072b2687e4d37b  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/CHAIR/probe-pln.lisp
+c003f2655955637709b8698d47a2b164063f76baa20cb42a3a876940661fba47  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/CHAIR/probe-receipt-composition.lisp
+f57d6dd4ae602ae6e162fc2c8f90f1d8df296ca133d0e51d8c00167a4b1f13a1  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P0-sanity.lisp
+4251e787da40cd02af6dff8e4e9a3e4290f18714a994a862564076737237af30  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P1-reachability.lisp
+26dbf6564de773d90d64ef45b78be4f0ed893305d42849510aed56fe95fd9aea  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P1b-stub-mine.lisp
+497c2d21e8670ef8ca1dab59c0d9d51081588af1918c9fd09799057b82e7ee07  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P2-amplification.lisp
+3628ef71728147bc8370a30c78417993b556af4641dfb6ebcfdb755920a559fc  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P2c-fire-expanded-nodes.lisp
+dd1188a312ec825e590a61ba823720d18bc0f474b02f4ef11acb9228ad5ee5aa  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P2d-minimal-N.lisp
+ac6d7c4341aeb5f4bf5570b48c92552569688523563eca20cc307c3931b9baba  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P3-hostile.lisp
+f9b83d2e20f944790530335b989118d6bf868c3b2aa5a54039e807b8649c1f51  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P3e-encode-term-stack.lisp
+9885f54cd2cd58a147ecd036d582347029f88c4ab06a3c26cfb151c71304fc46  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P3f-detail-and-thresholds.lisp
+fd976ae8d7c9ca6bb80918b9e4a288f0f3173d065142bf823ac87847f266fb7e  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P5-temporal.lisp
+78986e99eaaffaf4869657b466c36d1cc43c0e63a578c67bbcb07dbd82e7f706  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/P7-intern-reach.lisp
+8a7e77678ef63e841314f3af54a50a34717117665f55190d29c972961e45f085  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/prelude.lisp
+a10c682e7f254440663961eca78cf1610de56949cfee447372a36cd406bfc903  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/teeth.sh
+4cb36ad209f6c60ff9b5b19f62e4a3b9c69962b38f223e29bd41ff8dbc1cc1d3  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/FOSSOR/teeth2.sh
+6fae139bb6840d3553726c110604b090796830c2950e0dedb7293251ea21eceb  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/PERSCRUTATOR/preamble.lisp
+774ca165a88f315fca00c1421c0a37ce96f383089d61d726a41cf901c64fdf62  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/TABULARIUS/probe-A.lisp
+a337936d29b0fddf74e3f5b5bf9d25f7bd2e2a7967526630886447359e1c5225  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/TABULARIUS/probe-B.lisp
+ea8447bfd88577a98059b065232e0957d380b4019267c295c5f02d81e123daf1  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/TABULARIUS/probe-C.lisp
+4f54187a86d98e0ba9b611e232a99d89df4b35c3920410d51329980c959a0a8e  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/TABULARIUS/probe-D.lisp
+14b418b7345f25074897dbcdee5cb1c3178af09224976bc0c576d42dc93084b7  mneme/language-surface-1/audits/2026-07-28-stranger-audit/probes/TABULARIUS/probe-E.lisp
+4aba4f04666b23ad881bdeaa05e0242fbf264bca62c90e9733f9b597504ac38c  mneme/language-surface-1/errata-0.1/REPRODUCTION.lisp
+b4092d74b81b07245dd43193069b1dc43fdcd0586fa3ea44030797c77beba46b  mneme/language-surface-1/errata-0.2/REPRODUCTION-II.lisp
+9b85135c266c9359448c1b6e5c5b77a57658e89179147735cf3d9c2862eb8d33  mneme/language-surface-1/errata-0.3/pre-errata-evidence/PRE-REPAIR-D5.lisp

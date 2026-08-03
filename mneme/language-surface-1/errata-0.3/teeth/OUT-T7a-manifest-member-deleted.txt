@@ -7,19 +7,19 @@ subject-digest.sh: HARD FAIL — manifest member ABSENT from the subject: ../ker
 === RUNNER EXIT 2
 === WHAT EACH INSTRUMENT ACTUALLY PRINTED AS ITS CANONICAL LINE
     (an exit code says THAT something refused; this says WHAT was refused)
-    RUN-SELFTEST.txt           SELFTEST-RESULT checks=139 expected=139 failed=0
-    RUN-STUB-IMAGE.txt         STUB-RESULT checks=8 expected=8 failed=0 subject=e588866ac42a804b
-    RUN-APPLICATION.txt        APPLICATION-RESULT checks=26 expected=26 failed=0 subject=e588866ac42a804b
-    RUN-REPRODUCTION.txt       REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0 subject=e588866ac42a804b
-    RUN-REPRODUCTION-II.txt    REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0 subject=e588866ac42a804b
-    RUN-REPRODUCTION-III.txt   REPRODUCTION-III-RESULT verdicts=12 expected=12 confirmed=0 refuted=12 classification=3
+    RUN-SELFTEST.txt           SELFTEST-RESULT checks=139 expected=139 failed=0 subject=9214b59bda190327
+    RUN-STUB-IMAGE.txt         STUB-RESULT checks=8 expected=8 failed=0 subject=9214b59bda190327
+    RUN-APPLICATION.txt        APPLICATION-RESULT checks=26 expected=26 failed=0 subject=9214b59bda190327
+    RUN-REPRODUCTION.txt       REPRODUCTION-RESULT verdicts=6 expected=6 confirmed=0 subject=9214b59bda190327
+    RUN-REPRODUCTION-II.txt    REPRODUCTION-RESULT verdicts=4 expected=4 confirmed=0 subject=9214b59bda190327
+    RUN-REPRODUCTION-III.txt   REPRODUCTION-III-RESULT verdicts=12 expected=12 confirmed=0 refuted=12 classification=3 subject=9214b59bda190327
 === RUN-EXITCODES.txt
-subject-digest         e588866ac42a804b2bc085a5de3f2f7e516bbb6f15dd57bc8a70ca23f92378a0
+subject-digest         9214b59bda190327dc879186bd6d567eae8d2e7d0d162f869148fad1ad6aaf99
 subject-label          (none supplied)   (ADVISORY, not a measurement)
-surface1-selftest      exit 0 · canonical line matched 1 (must be 1) · subject ABSENT
-stub-image-fixture     exit 0 · canonical line matched 1 (must be 1) · subject e588866ac42a804b
-de-expansione-testata  exit 0 · canonical line matched 1 (must be 1) · subject e588866ac42a804b
-reproduction I         exit 0 · canonical line matched 1 (must be 1) · subject e588866ac42a804b
-reproduction II        exit 0 · canonical line matched 1 (must be 1) · subject e588866ac42a804b
-reproduction III       exit 0 · canonical line matched 1 (must be 1) · subject ABSENT
-digest agreement       1 (must be 1; ABSENT bindings are reported, not counted)
+surface1-selftest      exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+stub-image-fixture     exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+de-expansione-testata  exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+reproduction I         exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+reproduction II        exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+reproduction III       exit 0 · canonical line validated 1 (must be 1) · subject 9214b59bda190327 · ok
+digest agreement       1 (must be 1; ABSENT is a FAILURE — Evidence Addendum 0.1) · all six instruments bound the digest and agree with this run's

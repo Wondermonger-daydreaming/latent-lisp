@@ -4,3 +4,10 @@ _staging/
 # generated Python bytecode and interpreter caches
 __pycache__/
 *.py[cod]
+
+# R2: the zero-.lisp proof artifacts are generated at PARCEL time against the
+# final tip and shipped in the parcel. A committed copy would go stale the moment
+# HEAD moved — which is a new way to reproduce the very self-contradiction R2 was
+# returned to fix. The generator (zero-lisp-proof.sh) is committed; its output is not.
+mneme/integration-baseline-0/ZERO-LISP-PROOF.md
+mneme/integration-baseline-0/ZERO-LISP-DIFF-RAW.patch

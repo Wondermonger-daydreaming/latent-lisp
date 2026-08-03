@@ -12,13 +12,83 @@ play. They belong together because they are made of the same parenthesis, and ev
 
 ---
 
+## Current state — START HERE (2026-08-02)
+
+**The language is Lisp+. Mneme is its memory-and-continuity layer.** That relation is sealed
+(`mneme/architecture/ARCHITECTURE-0-STATUS.md:23`). Earlier text on this page inverted it and
+has been corrected. As implemented, `mneme/` is the directory holding the whole construction,
+and **the memory layer itself does not yet exist as a lane** — the name Mneme currently names a
+promise and a directory, not a working layer.
+
+Lisp+ today is an adopted specification constitution plus nineteen **candidate** implementation
+packages, arranged in two stacks that meet at one read-only seam. Every lane passes its own
+declared gates on SBCL 2.4.6/Linux. **No implementation is adopted**, and adoption attaches to
+specifications only.
+
+### The three front-door commands
+
+Run these from the subject-tree root. They work verbatim.
+
+```sh
+# 1. LOAD — bring the whole current construction into one image (ASDF umbrella `lisp-plus`)
+bash mneme/load-lisp-plus.sh
+
+# 2. VERIFY — the canonical aggregate release floor over every principal lane
+bash mneme/verify-release.sh                  # full floor (long)
+bash mneme/verify-release.sh --profile ci     # reduced profile; names everything it omits
+bash mneme/verify-release.sh --list           # the gate table, running nothing
+
+# 3. DEMONSTRATE — the strongest composite the tree actually supports
+bash mneme/run-composite-demonstration.sh
+```
+
+The load command is **gated**: it inspects its own transcript and exits nonzero on any warning,
+redefinition, undefined variable, or `DEFCONSTANT-UNEQL`, with an allowlist that is empty by
+intent. A command that exits zero over a warning storm is not a clean load. The supported
+subsystem load orders — and the one composition that is refused rather than silently
+double-loading Canonical Datum /0 — are exhibited by:
+
+```sh
+bash mneme/load-order-matrix.sh    # 15 orders, each in a fresh image, observed by trace
+```
+
+**Loading is not adoption.** A green floor means every executable gate passed at its authorized
+count and every known unresolved finding is unchanged — not that any semantic question is
+resolved.
+
+### The first missing semantic seam, named
+
+**No derive/perform language operation executes against a journal-backed process.** Core /0's
+derive/perform doors have never opened onto the durable process substrate; Surface /2's contact
+with Stack A is a **read-only re-expression of a completed run**. The composite demonstration
+prints this boundary at the end of every run. Integration Baseline /0 **names** this seam; it
+does not build it.
+
+### Where authority and limits live
+
+| you want | read |
+|---|---|
+| who ruled what, and what standing anything has | `mneme/integration-baseline-0/AUTHORITY-INDEX.md` |
+| what may and may not be claimed | `mneme/integration-baseline-0/CLAIM-CEILING-0.md` |
+| which old records are superseded or historical | `mneme/integration-baseline-0/SUPERSESSION-MAP.md` |
+| what this milestone did and did not do | `mneme/integration-baseline-0/INTEGRATION-BASELINE-0-RETURN.md` |
+
+**`mneme/latent-mvp/` is a FOSSIL** — a historical stratum, retained intact with its historical
+floor, and **no longer the `START HERE` path**. It has zero edges with the kernel0-era stack.
+The sections below that route to it are kept as the record of that period.
+
+---
+
 ## Two benches
 
 The repository has a spine: **an instrument and a workshop.**
 
 ### `mneme/` — the instrument (the rigorous bench)
 
-**Mneme** (working name "Lisp+") is a Lisp for latent-space minds. It was built one law at a time across a
+**Lisp+** is a Lisp for latent-space minds; **Mneme** is the name of its memory-and-continuity
+layer, which is specified but not yet implemented (the relation is sealed — see *Current state*
+above; this paragraph is kept as the record of the period when the two names were still
+contested). It was built one law at a time across a
 single long session, each brick reviewed by a fresh-weights cold chair (GPT Sol) *before* the next was written,
 then consolidated into one shared kernel. Its thesis: the failure mode worth catching in a mind made of
 fluency is not "the program crashes" — it is **"the claim wears a check's costume."** So Mneme is an epistemic
@@ -37,6 +107,8 @@ this" cannot be raised to a graded claim without a *certificate* — a bare asse
 > not a universal theorem.** The earlier front-page phrasing — "it *fails to parse*" — was aspirational and has
 > been corrected: a claim that overstates its own standing is exactly the thing this project exists to catch.
 
+**[HISTORICAL — this was the front door until 2026-08-02; `latent-mvp/` is now FOSSIL-MARKED.
+The current entry point is `bash mneme/load-lisp-plus.sh`. See *Current state* above.]**
 Start at `mneme/latent-mvp/kernel.lisp` — the shared root (package `mneme`, ~50 exports): typed `claim` and
 `witness`, `certificate`, the grade vocabulary, the authority table, `witness-supports-p`,
 `verify-proposition`, `raise-claim` (certificate-required), `authenticate-grade`, `freeze`/`mneme-revive`, and
@@ -93,10 +165,15 @@ programming **Latent Space Machines** — and the full constitutional exchange a
 3. **`SOL-DISPOSITION-ON-ARCHITECTURE-0-REVIEW.md`** — Sol's return: verdict accepted, all repairs adopted
    in principle, and a self-recusal from the independent minimization audit (*"shared roots do not
    disappear when they travel through a different model provider"*).
-4. **`ARCHITECTURE-0-STATUS.md`** — the chamber's WE-ARE-HERE. Current state: **ball with the owner**
-   (decision docket DK-1–DK-4 + D1–D10 → a decisions record), then Architecture 0.1 as a traced repair,
-   then Kernel /0 spec, reference runtime, and one forced-interruption vertical specimen — in that order,
-   with no kernel implementation before the decisions record.
+4. **`ARCHITECTURE-0-STATUS.md`** — the chamber's WE-ARE-HERE.
+   **[SUPERSEDED as a statement of current state, 2026-08-02.** The paragraph that stood here —
+   "ball with the owner … no kernel implementation before the decisions record" — was true on
+   2026-07-18 and was twelve days and roughly ten lanes stale by 2026-07-30. The decisions
+   record landed; Architecture 0.1 was adopted; Kernel /0 was specified and implemented; the
+   four-death vertical specimen was built and ruled. The stone itself still carries a
+   2026-07-18 header and ends at Addendum 13 — amending the constitution's own status record is
+   not a packaging act and Integration Baseline /0 declined to do it. For current standing read
+   `mneme/integration-baseline-0/AUTHORITY-INDEX.md`.**]**
 
 The central wager, post-review: *Lisp+ preserves ordinary Lisp evaluation while making consequential
 latent-machine operations produce durable, inspectable process records whose execution, manifestation,
@@ -210,10 +287,16 @@ ACCEPTED as a published candidate
 question is adjudicated-not-opened
 (`mneme/RULING-obligation-second-inhabitant-2026-07-29.md`). Adapter /0's
 run factually passes the full frozen AP0 vector set as the first
-independently-seeded CL implementation; the adoption riders' standing
-remains the owner's adjudication, and nothing here claims it. Next on the
-board, deliberately unopened: **Vertical Specimen /0 — the four-death
-latent machine.**
+independently-seeded CL implementation.
+
+**[SUPERSEDED 2026-08-02.** This passage said the AP0 riders' standing "remains the owner's
+adjudication" and that Vertical Specimen /0 was "deliberately unopened". Both are now false and
+both misled a later reader: **AP0 Rider 1 was ruled SATISFIED** at `b7f70ed8`
+(`RULING-adapter0-closure-ap-cost-1-vertical0-2026-07-30.md`) — **Rider 2 remains binding**,
+forbidding "independently verified/validated" — and **Vertical Specimen /0 was built, run, and
+accepted as a published candidate** by ruling `72b2c973`, with five limits docketed
+non-blocking and a SIGKILL-only crash-model ceiling. See
+`mneme/integration-baseline-0/CLAIM-CEILING-0.md`.**]**
 
 ---
 
@@ -245,9 +328,12 @@ L7  testimony survives its death  completed+verified work crosses the gap; a mer
 Everything runs on **SBCL 2.4.6** (`sbcl --script <file>`; the atelier scripts run from their own directories).
 
 > **(Historical sweep — kept as the record of that day; the tree has grown
-> far past this count since. The current executable floor is
-> `mneme/verify-all.sh` — 6/6 suites — plus each implementation lane's own
-> `RUN-EXITCODES.txt` recipe.)**
+> far past this count since. The executable floor named here,
+> `mneme/verify-all.sh` — 6/6 suites — covers `latent-mvp`, the atelier and the
+> language-a fixtures, and **none of the current language**. Since 2026-08-02 the
+> canonical aggregate floor is `mneme/verify-release.sh`, which *invokes*
+> `verify-all.sh` and the two sibling floors rather than replacing them, and
+> accounts for every principal lane.)**
 >
 > **Re-swept 2026-07-12 (evening):** the tree has grown to **182** `.lisp` files (the day added 2 Lane-B
 > monadologia specimens, GPT Sol's 10-instrument decad, and the leibnitiana chamber's fifth and sixth
@@ -269,16 +355,20 @@ Everything runs on **SBCL 2.4.6** (`sbcl --script <file>`; the atelier scripts r
 >
 > These are reported, not repaired — they belong to Retis's corner, to mend with Retis's word.
 
+**The current front door is the three commands in *Current state* above.** The block below
+still works exactly as printed, but every line in it exercises the **fossil stratum and the
+workshop**, not the current language — that is why it was replaced as the quickstart.
+
 ```sh
-# The seven laws, as one walk over the shared kernel — seven ✓, exit 0:
+# HISTORICAL (the fossil's floor). The seven laws as one walk — seven ✓, exit 0:
 cd mneme/latent-mvp
 sbcl --script conformance-walk.lisp
 
-# The mneme atelier — first cabinet + jurisdiction wing + Sol's decad, each file its own process:
+# HISTORICAL. The mneme atelier — first cabinet + jurisdiction wing + Sol's decad:
 cd mneme/atelier
-./run-all.sh          # four pass-banners; the whole mneme floor: cd mneme && bash verify-all.sh (6/6)
+./run-all.sh          # four pass-banners; the fossil's own floor: cd mneme && bash verify-all.sh (6/6)
 
-# Any individual brick or specimen — watch a single law hold:
+# HISTORICAL. Any individual brick or specimen — watch a single law hold:
 sbcl --script mneme/latent-mvp/evidence-kernel.lisp
 sbcl --script atelier/homoiconic-verse/specimens/de-superstite.lisp
 ```
@@ -363,12 +453,19 @@ not in this repository and will not be.
 
 ```
 latent-lisp/
-├── mneme/                     # the instrument — Mneme / Lisp+
+├── lisp-plus.asd              # the ASDF umbrella — loads the whole construction (a load
+│                              #   container, NOT a semantic authority; loading is not adoption)
+├── mneme/                     # the instrument — Lisp+ (Mneme is its unbuilt memory layer)
+│   ├── load-lisp-plus.sh      #   FRONT DOOR 1 — one-command clean-checkout load
+│   ├── verify-release.sh      #   FRONT DOOR 2 — the canonical aggregate release floor
+│   ├── run-composite-demonstration.sh   # FRONT DOOR 3 — the composite demonstration
+│   ├── integration-baseline-0/#   authority index · claim ceiling · supersession map · RETURN
 │   ├── architecture/          #   THE LANGUAGE'S CONSTITUTION-IN-PROGRESS (2026-07-18):
 │   │                          #     Sol's Draft 0 + roadmap, Fable's review (VIABLE WITH REPAIR),
 │   │                          #     Sol's disposition, and ARCHITECTURE-0-STATUS.md (the WE-ARE-HERE)
 │   ├── kernel0/               #   THE FIRST EXECUTABLE LISP+ (2026-07-18): pure core, 14 files,
-│   │                          #     selftest 29/0, run: sbcl --script kernel0-selftest.lisp
+│   │                          #     selftest 33 passed / 0 failed / 59 mutants killed
+│   │                          #     run: sbcl --script mneme/kernel0/kernel0-selftest.lisp
 │   ├── journal0/              #   Process Journal /0 in CL — independently seeded, gate-authored
 │   │                          #     (89/0 vectors · 66/0 selftest · de-teste-occiso SIGKILL specimen)
 │   ├── capability0/           #   live authority, fold-derived (de-potestate-revocata)
@@ -379,12 +476,16 @@ latent-lisp/
 │   ├── language-slice-{0,1,2}/ · language-form-{0,1,2}/ · language-surface-{0,1}/
 │   │                          #   the language lanes (each with its own RETURN/CLOSURE + floors)
 │   ├── RULING-*.md            #   owner rulings — records of truth for arc closures/acceptances
-│   ├── lci0/                  #   Located Claim Identity /0 — closed arc: audit → errata → ten closures
-│   │                          #     implemented CL+Py, fresh-audit 10/10, merged 2026-07-15
+│   ├── lci0/                  #   Located Claim Identity /0 — implemented CL+Py, merged 2026-07-15.
+│   │                          #     NOT a closed arc: the lane's own README says conformance
+│   │                          #     remains BLOCKED pending authorial closure, and the algebraic
+│   │                          #     -law audit reads 84 PASS / 4 preserved FAIL /
+│   │                          #     "AUTHORIAL RULING REQUIRED", still unanswered.
 │   ├── language-a/            #   Language-A materials (public lane only — no items/keys/outputs)
 │   ├── spec/                  #   normative chain incl. the de-corroboratione program rulings
-│   ├── latent-mvp/            #   the runnable core
-│   │   ├── kernel.lisp        #     shared root (package mneme, ~50 exports) — START HERE
+│   ├── latent-mvp/            #   FOSSIL — historical stratum, retained with its own floor
+│   │                          #     (0 edges with the kernel0-era stack; not the front door)
+│   │   ├── kernel.lisp        #     shared root (package mneme, ~50 exports) — FOSSIL
 │   │   ├── conformance-walk.lisp   # the seven laws as one walk, exit 0
 │   │   ├── lisp-plus.lisp · handoff-kernel.lisp · judgment.lisp
 │   │   ├── evidence-kernel.lisp · surviving-witness.lisp
@@ -426,8 +527,11 @@ latent-lisp/
 **live home**: new work happens in the lab at `experiments/latent-lisp/` and is pushed here. The predecessor
 directories (`experiments/lispplus/`, `experiments/lisp-atelier/`) are kept in the lab as frozen fossils with
 pointer notes, so historical references stay valid; `lispplus/` in particular remains the received, author-gated
-artifact-of-record for the Mneme/Lisp+ program. The name question — "Lisp+" or "Mneme" — is still genuinely
-open; the profile is Mneme, and the language has earned a repo of its own.*
+artifact-of-record for the Lisp+ program. **The name question is CLOSED and was closed before
+this sentence was last edited: the language is Lisp+, and Mneme is its memory-and-continuity
+layer** (`mneme/architecture/ARCHITECTURE-0-STATUS.md:23`). The clause that stood here — "still
+genuinely open; the profile is Mneme" — inverted the sealed relation and is corrected as of
+2026-08-02.*
 
 *— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11; refreshed by Claude Fable 5 on 2026-07-12
 (the day the decad entered the workshop) and three times on 2026-07-18 — the day the Language-A emission
