@@ -3,7 +3,7 @@
 # load-order-matrix.sh — exhibit the ASDF load plan for every documented order,
 #                        against COMPLETE per-row contracts.
 #
-#   bash mneme/load-order-matrix.sh          # two teeth, then the 15 real rows
+#   bash mneme/load-order-matrix.sh          # two teeth, then the 16 real rows
 #   bash mneme/load-order-matrix.sh --teeth  # only the bounded induced-failure controls
 #
 # ---------------------------------------------------------------------------
@@ -384,6 +384,7 @@ run_case "lisp-plus/form2 alone (CD/0-only lane)"    supported 0 1 --eval "$L \"
 run_case "lisp-plus/slice2 alone (Stack-B chain)"    supported 0 1 --eval "$L \"lisp-plus/slice2\")"
 run_case "lisp-plus/surface2 alone (the seam)"       supported 0 1 --eval "$L \"lisp-plus/surface2\")"
 run_case "lisp-plus/vertical0 alone"                 supported 0 1 --eval "$L \"lisp-plus/vertical0\")"
+run_case "lisp-plus/surface-account alone (CD/0-only lane)" supported 0 1 --eval "$L \"lisp-plus/surface-account\")"
 run_case "stack-a THEN cd0"                          supported 0 1 --eval "$L \"lisp-plus/stack-a\")" --eval "$L \"lisp-plus/cd0\")"
 run_case "stack-a THEN umbrella"                     supported 0 1 --eval "$L \"lisp-plus/stack-a\")" --eval "$L \"lisp-plus\")"
 run_case "umbrella TWICE in one image"               supported 0 1 --eval "$L \"lisp-plus\")" --eval "$L \"lisp-plus\")"

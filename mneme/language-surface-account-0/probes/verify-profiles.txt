@@ -1,0 +1,84 @@
+# ==========================================================================
+# NON-PRODUCTION FEASIBILITY PROBE — Surface Account /0 — transcript profiles.
+# not a package, not an API, not loadable as part of any system.
+# ==========================================================================
+#
+# THE EXPECTED PROFILE IS DECLARED HERE, NOT INFERRED FROM THE TRANSCRIPT.
+# A verifier that reads its expectations out of the artifact it is checking
+# cannot detect a whole missing section: the artifact simply declares a
+# smaller truth and the verifier agrees with it.  So the runner names a
+# profile, the profile names the exact ordered sections, their exact case
+# counts AND their exact check counts, and a transcript that does not match is
+# refused.
+#
+# FORMAT — one profile per line:
+#
+#     <profile-name>   <SECTION>:<CASES>:<CHECKS>  [<SECTION>:<CASES>:<CHECKS> ...]
+#
+# R2 ADDED THE THIRD FIELD, and it is the field that closes the R1 hole.  R1
+# bound CASES externally but still compared CHECKS against the transcript's own
+# [PASS] count — two numbers that a hollowed-out section moves TOGETHER.  A
+# CONTROLS-B shell whose body is deleted and whose header is forged to
+# CHECKS=0 has zero PASS lines and claims zero, and R1 accepted it.  Under R2
+# the profile states the number: CONTROLS-B has 27 checks, and a transcript
+# that says otherwise contradicts the external binding and is refused.
+#
+# The sections are ORDERED.  Each one is one child block of the transcript
+# (one throwaway SBCL image), delimited by an opening PARCEL_TIP and a
+# closing PARCEL_TIP + CHILD-EXIT.  Blank lines and #-comments are ignored.
+#
+# Each section additionally has an exact ordered CHECK-ID / anchor sequence,
+# declared in verify-sequences.txt and keyed <profile>:<SECTION>.
+
+matrix     POSITIVE-MATRIX:14:27
+controls   CONTROLS-A:0:43 CONTROLS-B:0:27
+freshness  FRESHNESS:0:31
+
+# R2 additions.  The four bindings above are fixed by the R2 adjudication and
+# are not touched; each new section carries its own external binding.
+schema     SCHEMA-WITNESS:0:135
+#
+# R3.3 MOVED THIS ONE ROW, from 27 to 31, and says why rather than editing a
+# number quietly.  R3.3-C adds four checks to the ALLOCATOR-SHAPE arm: the
+# non-ASCII decimal defect exhibited on this runtime, the ASCII predicate
+# refusing all four ruled code points plus two mixed spellings, the "1"/"10"
+# positive controls, and the shared constructor's own emitted counter segment.
+# The count is RECOMPUTED FROM THE FINAL SOURCE, not carried for continuity.
+allocator  ALLOCATOR:0:31
+
+# R3.3 additions — the two schedule-pinned initialization teeth (R3.3-B), each
+# in its own fresh image, each with its own external binding.  Neither reuses an
+# existing section name, so no R3.2 sequence can stand in for one of these.
+init-stale      INIT-STALE-SCHEDULE:0:12
+init-recursive  INIT-RECURSIVE-LOAD:0:11
+
+# R3.3.1 additions — the two returned goblins and the retry loop's own
+# contention tooth, each in its own fresh image because each needs an image in
+# which the candidate source has NEVER been loaded.  Each carries its own
+# external binding and its own new section name, so no R3.3 sequence can stand
+# in for one of these.  Every count here is RECOMPUTED FROM A CLEAN RUN of the
+# final source and read back against the call sites; none is carried.
+init-post-election     INIT-POST-ELECTION-FAILURE:0:11
+init-plist-foreign     INIT-PLIST-FOREIGN-PROPERTY:0:7
+init-plist-contention  INIT-PLIST-CONTENTION:0:6
+
+# R3.3.2 additions — the two returned defects, each in its own fresh image and
+# each with its own new section name, so no R3.3.1 sequence can stand in for one
+# of these.  Both counts are RECOMPUTED FROM A CLEAN RUN of the final sources and
+# read back against the call sites; neither is carried.
+init-publication-finality  INIT-PUBLICATION-FINALITY:0:11
+init-carrier-slot          INIT-CARRIER-SLOT:0:8
+
+# R3.3.3 addition — the one returned seam (the malformed-carrier totality
+# closure), in its own fresh image and under its own new section name, so no
+# R3.3.2 sequence can stand in for it and it cannot stand in for one of theirs.
+# The count is RECOMPUTED FROM A CLEAN RUN of the final sources and read back
+# against the call sites; it is not carried.
+init-carrier-total         INIT-CARRIER-TOTALITY:0:7
+
+# The synthetic base used by run-verifier-specimens.sh.  It is NOT a probe
+# transcript and its sections are deliberately named apart from the real ones
+# so that no synthetic sequence can ever stand in for a real one.  Its tip is
+# the all-zero fixture tip, which is not a Git object and is accepted only
+# under the verifier's explicit --fixture-tip mode.
+synthetic  SYN-CONTROLS-A:0:3 SYN-CONTROLS-B:0:4

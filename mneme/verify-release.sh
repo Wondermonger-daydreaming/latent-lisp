@@ -169,6 +169,11 @@ both|surface2|.|sbcl --script mneme/language-surface-2/surface2-selftest.lisp|su
 both|surface2|.|sbcl --script mneme/language-surface-2/surface2-controls.lisp|surface2-controls: 38 checks, 0 failures|no
 both|surface2|.|sbcl --script mneme/language-surface-2/surface2-inhabited.lisp|surface2-inhabited: 18 checks, 0 failures|no
 both|surface2|.|sbcl --script mneme/language-surface-2/surface2-erratum-binder.lisp|surface2-erratum-binder: 15 checks, 0 failures|no
+both|surface-account|.|sbcl --script mneme/language-surface-account-0/production/surface-account-selftest.lisp|surface-account-selftest: 38 checks, 0 failures|no
+both|surface-account|.|sbcl --script mneme/language-surface-account-0/production/surface-account-inhabited.lisp|surface-account-inhabited: 12 checks, 0 failures|no
+both|surface-account|.|bash mneme/language-surface-account-0/production/surface-account-graph-gate.sh|surface-account-graph-gate: 9 checks passed, 0 failed|no
+full|surface-account|.|bash mneme/language-surface-account-0/production/run-hostile-profiles.sh|surface-account-hostile-profiles: 7 roles + 4 loader cases, 110 checks, 0 failures|no
+full|surface-account|.|bash mneme/language-surface-account-0/production/surface-account-disease.sh|surface-account-disease: 8 diseases detected, 8 controls clean|yes
 full|vertical0|.|bash mneme/vertical0/harness/repeatability.sh|-|yes
 full|vertical0|.|sbcl --script mneme/vertical0/controls/run-integration-controls.lisp|vertical0 integration controls: 37 checks, 0 failures|yes
 full|vertical0|.|sbcl --script mneme/vertical0/mutants/run-mutation-gate.lisp|vertical0 mutation gate: 71 checks, 0 failures|yes
@@ -356,7 +361,8 @@ echo "==========================================================================
 printf '%-22s %-12s %s\n' STATUS LANE 'GATES (executed this run)'
 for lane in aggregate kernel0 journal0 capability0 capability1 capability2 \
             adapter0 core0 slice0 slice1 slice2 form0 form1 form2 \
-            surface0 surface1 surface2 vertical0 cd0 lci0 atelier release; do
+            surface0 surface1 surface2 surface-account vertical0 cd0 lci0 \
+            atelier release; do
   p=0; f=0; b=0
   for row in "${ROWS[@]:-}"; do
     [ -z "$row" ] && continue

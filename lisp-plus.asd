@@ -113,7 +113,8 @@
 
 (defpackage #:lisp-plus-system
   (:use #:common-lisp)
-  (:export #:*root* #:*lane-order* #:lane #:lane-once #:load-lanes-in-order
+  (:export #:*root* #:*lane-order* #:lane #:lane-once #:lane-once-complete
+           #:surface-account-api-complete-p #:load-lanes-in-order
            #:require-stack-a-precondition #:unsupported-load-order))
 
 (in-package #:lisp-plus-system)
@@ -133,6 +134,60 @@
   "Load RELATIVE-PATH unless PACKAGE-DESIGNATOR already names a live package.
 Mirrors the guard idiom the tree's own sources use."
   (unless (find-package package-designator)
+    (lane relative-path)))
+
+;;; Surface Account /0 readiness (R4.1, sharpened R4.3).  PACKAGE EXISTENCE
+;;; IS NOT LANE COMPLETENESS for this lane: its implementation runs the
+;;; once-only initialization MID-FILE (oracle-faithful placement), so a
+;;; first load that fails at initialization leaves the package present with
+;;; five of the nine declared exports unbound — and a package-keyed guard
+;;; would certify that half-loaded lane as loaded (STRANGER's R4 finding
+;;; R4-PRODUCTION-HALF-LOAD-CERTIFIED-BY-THE-PACKAGE-GUARD).  AND FBOUNDP
+;;; ALONE IS NOT API COMPLETENESS EITHER (R4.3, the owner's
+;;; R4-READINESS-GUARD-ACCEPTS-NONEXTERNAL-API counterexample): the R4.1
+;;; predicate discarded FIND-SYMBOL's second value, so nine INTERNAL fbound
+;;; dummies in a pre-created namesake package satisfied it and the umbrella
+;;; certified a lane with zero public exports and no identity carrier.  The
+;;; predicate therefore requires, for every declared name, FIND-SYMBOL
+;;; status :EXTERNAL **and** FBOUNDP (all nine exports are functions; none
+;;; is a variable, so no BOUNDP clause is needed), plus the presence of the
+;;; identity carrier symbol (interned only by actually reading the
+;;; implementation).  The body between the SA0-COMPLETENESS-PREDICATE-CORE
+;;; markers is kept token-identical to the copy in production/load.lisp —
+;;; one predicate in substance, two forced textual homes — enforced by the
+;;; lane's static agreement gate (surface-account-graph-gate.sh GG-5/GG-6);
+;;; the selftest's export census keeps the nine-name list honest.  A lawful
+;;; complete load satisfies it exactly as before; an incomplete lane fails
+;;; it, so the lane loader runs and REPAIRS (package.lisp re-applied first,
+;;; then the implementation), asserting the same predicate after the load
+;;; and failing closed if it still does not hold.
+(defun surface-account-api-complete-p ()
+  ;; SA0-COMPLETENESS-PREDICATE-CORE-BEGIN (GG-5: this region is
+  ;; token-identical to the copy in production/load.lisp — one predicate
+  ;; in substance, two forced textual homes)
+  (let ((package (find-package '#:lisp-plus-surface-account)))
+    (and package
+         (not (null (find-symbol "SA0-IDENTITY-CARRIER" package)))
+         (every (lambda (name)
+                  (multiple-value-bind (symbol status)
+                      (find-symbol name package)
+                    (and symbol
+                         (eq status :external)
+                         (fboundp symbol))))
+                '("INITIALIZE-IMAGE-IDENTITY" "IDENTITY-READY-P"
+                  "IMAGE-EPOCH-HEX" "IMAGE-EPOCH-DATUM"
+                  "EPOCH-GATHERINGS" "ELECTION-COUNT"
+                  "MINT-PERFORMANCE-IDENTIFIER"
+                  "PERFORMANCE-IDENTIFIER-SHAPE-P"
+                  "LAWFUL-COUNTER-TEXT-P"))))
+  ;; SA0-COMPLETENESS-PREDICATE-CORE-END
+  )
+
+(defun lane-once-complete (completeness-predicate relative-path)
+  "Load RELATIVE-PATH unless COMPLETENESS-PREDICATE (a function designator)
+returns true.  The predicate-guarded sibling of LANE-ONCE, for lanes whose
+loaded-ness is not equivalent to their package's existence."
+  (unless (funcall completeness-predicate)
     (lane relative-path)))
 
 (define-condition unsupported-load-order (error)
@@ -183,16 +238,27 @@ reload CD/0.  Fail closed, loudly, with the reason."
     (#:lisp-plus-form1        . "mneme/language-form-1/form1.lisp")
     (#:lisp-plus-form2        . "mneme/language-form-2/form2.lisp")
     (#:lisp-plus-surface2     . "mneme/language-surface-2/surface2.lisp")
-    (#:lisp-plus-vertical0    . "mneme/vertical0/program/load.lisp"))
+    (#:lisp-plus-vertical0    . "mneme/vertical0/program/load.lisp")
+    ;; R4.1/R4.3: the guard for this row is a COMPLETENESS PREDICATE — every
+    ;; declared export :EXTERNAL and FBOUNDP, carrier present — not a
+    ;; package (see SURFACE-ACCOUNT-API-COMPLETE-P above).  The walker
+    ;; dispatches on the :predicate marker; every other row is untouched.
+    ((:predicate surface-account-api-complete-p)
+     . "mneme/language-surface-account-0/production/load.lisp"))
   "The canonical umbrella load order.  Stack A first; everything after it is
 guarded and finds its predecessors already present.")
 
 (defun load-lanes-in-order ()
-  "Load every lane of *LANE-ORDER*, in order, each guarded on its own package.
-This is the umbrella's whole implementation."
+  "Load every lane of *LANE-ORDER*, in order, each guarded on its own package —
+except rows whose guard is a (:PREDICATE fn) marker, which are guarded by the
+named completeness predicate instead (R4.1; currently one row, Surface
+Account /0).  This is the umbrella's whole implementation."
   (require-stack-a-precondition)
   (dolist (row *lane-order*)
-    (lane-once (car row) (cdr row))))
+    (let ((guard (car row)))
+      (if (and (consp guard) (eq :predicate (first guard)))
+          (lane-once-complete (second guard) (cdr row))
+          (lane-once guard (cdr row))))))
 
 (in-package #:asdf-user)
 
@@ -384,6 +450,31 @@ This is the umbrella's whole implementation."
                                "mneme/vertical0/program/load.lisp")))
 
 ;;; --------------------------------------------------------------------------
+;;; Surface Account /0 — the accepted R3.3.3 identity mechanism, production
+;;; form (R4 candidate).
+;;;
+;;; CD/0-only by design: its loader guard-loads Canonical Datum /0 for
+;;; itself, so — per the false-edge law in the header — it declares NO
+;;; `:depends-on`.  Under the umbrella it is the LAST lane-order row, so
+;;; Stack A has already loaded CD/0 exactly once and the guard finds it
+;;; present.  Loading gathers the image's once-only identity state (sixteen
+;;; OS-random epoch octets); a repeated load observes the established state.
+;;; --------------------------------------------------------------------------
+
+(defsystem "lisp-plus/surface-account"
+  :description "Surface Account /0 — once-only image identity, epoch, and performance-identifier allocator (guard-loads CD/0 only, by design)."
+  :version "0"
+  :perform (load-op (o c)
+             (declare (ignore o c))
+             ;; R4.1/R4.3: predicate-guarded (nine exports each :EXTERNAL
+             ;; and FBOUNDP, identity carrier present), never
+             ;; package-guarded — see the header note on this lane.
+             (uiop:symbol-call '#:lisp-plus-system '#:lane-once-complete
+                               (uiop:find-symbol* '#:surface-account-api-complete-p
+                                                  '#:lisp-plus-system)
+                               "mneme/language-surface-account-0/production/load.lisp")))
+
+;;; --------------------------------------------------------------------------
 ;;; The umbrella.
 ;;;
 ;;; It walks `*lane-order*` ITSELF and declares no `:depends-on`.  ASDF's
@@ -396,7 +487,7 @@ This is the umbrella's whole implementation."
 
 (defsystem "lisp-plus"
   :description "Lisp+ — the current construction, loadable as one thing. A load container, not an adoption."
-  :long-description "Loads the nineteen principal Lisp+ packages into one image on
+  :long-description "Loads the twenty principal Lisp+ packages into one image on
 SBCL 2.4.6/Linux, in one explicit order, with Canonical Datum /0 loaded exactly
 once.  Loading is not adoption, not conformance, and not validation of any kind.
 See mneme/integration-baseline-0/CLAIM-CEILING-0.md."

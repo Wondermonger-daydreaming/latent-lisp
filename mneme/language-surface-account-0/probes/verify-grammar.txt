@@ -1,0 +1,170 @@
+# ==========================================================================
+# NON-PRODUCTION FEASIBILITY PROBE — Surface Account /0 — transcript GRAMMAR.
+# not a package, not an API, not loadable as part of any system.
+# ==========================================================================
+#
+# THE R2 LAW: NO LINE IS SILENTLY IGNORED.
+#
+# The R1 verifier had a catch-all: any body line it did not recognize fell
+# through a bare `next`.  That is a hole with a polite name — material can be
+# inserted into a block and the gate will step over it.  Under R2 every line
+# inside a child block must be CONSUMED BY A DECLARED PRODUCTION or REFUSED,
+# and the productions are declared HERE, as data, not buried in the parser.
+#
+# FORMAT — one declaration per line, fields separated by ' ::: ':
+#
+#   PRODUCTION ::: <name> ::: <ERE>
+#       a body line matching <ERE> is consumed and contributes no ID.
+#
+#   ANCHOR ::: <name> ::: <ERE> ::: <id-ERE>
+#       a body line matching <ERE> is consumed AND contributes one ID to its
+#       section's ID stream.  The ID is the substring of the line matched by
+#       <id-ERE>, with every run of characters outside [A-Za-z0-9] replaced by
+#       a single '-' and the result upper-cased.  The ID stream is then
+#       compared, in order, against the section's declared sequence in
+#       verify-sequences.txt.
+#
+#   RESERVED ::: <name> ::: <ERE>
+#       a line matching <ERE> may ONLY be consumed by a PRODUCTION or an
+#       ANCHOR.  It may never reach a FALLBACK.  This is what keeps the
+#       broad fallbacks from becoming a second catch-all: every structural
+#       token of this transcript language is reserved, so a forged or
+#       malformed structural line is refused rather than read as a
+#       measurement or as prose.
+#
+#   FALLBACK ::: <name> ::: <ERE>
+#       tried, in order, ONLY for lines that match no RESERVED ERE.  The two
+#       fallbacks are the indented measurement line and prose.
+#
+# THE ORDER OF APPLICATION, exactly:
+#
+#   1. bracketed-verdict rejection (independent of indentation);
+#   2. in-body PARCEL_TIP stamps must equal the tested tip;
+#   3. PRODUCTION / ANCHOR, top to bottom, first match wins;
+#   4. if the line matches any RESERVED ERE -> REFUSED;
+#   5. FALLBACK, top to bottom;
+#   6. otherwise REFUSED.
+#
+# The frame lines (opening/closing PARCEL_TIP, END-OF-TRANSCRIPT,
+# PROBE-SECTION-PASS, CHILD-EXIT) are NOT declared here: they are the block
+# frame and are enforced by the verifier's state machine, which also rejects
+# every bracketed verdict form independent of indentation before any
+# production is consulted.
+#
+# WHAT THIS DOES AND DOES NOT GUARANTEE, said plainly.  It guarantees that no
+# line matching a reserved structural token can enter a block unless it is
+# exactly well formed, that every counted assertion carries an externally
+# declared ID in an externally declared order, and that nothing at all may
+# follow END-OF-TRANSCRIPT except the declared separator, the closing stamp
+# and CHILD-EXIT 0.  It does NOT claim that free prose inside a block is
+# constrained in content: prose is consumed by the NARRATIVE production, which
+# is a declared production and is named as such, not a silent skip.
+
+# ---- the separators and the fixed frame furniture --------------------------
+PRODUCTION ::: rule-equals ::: ^={74}$
+PRODUCTION ::: rule-dashes ::: ^-{74}$
+PRODUCTION ::: banner ::: ^NON-PRODUCTION FEASIBILITY PROBE .*$
+PRODUCTION ::: operation-check ::: ^OPERATION-CHECK sbcl [0-9][0-9.]* \(trivial child through this exact invocation\)$
+PRODUCTION ::: volatile-top ::: ^VOLATILE .*$
+PRODUCTION ::: volatile-indented ::: ^    +VOLATILE .*$
+# R3 NOTE ON THE FOOTER.  This production still admits any FAILURES count, and
+# it is NOT the place the R3 law is enforced: verify-transcript.sh refuses any
+# footer that is not lexically "CHECKS <n>   FAILURES 0   CASES <n>" BEFORE any
+# production is consulted.  The law lives in the verifier deliberately, because
+# this file can be replaced with --grammar and a law a caller can swap out is
+# not a law.
+PRODUCTION ::: checks-footer ::: ^CHECKS [0-9]+   FAILURES [0-9]+   CASES [0-9]+$
+PRODUCTION ::: asdf-smoke ::: ^kernel[0-9]+ [a-z+ ]+ smoke: PASS$
+
+# ---- the verdict line and its ID, one to one -------------------------------
+# The verdict line keeps its exact R0/R1 shape so that every citation written
+# against a label still resolves.  The CHECK-ID line that must immediately
+# follow it is the R2 addition and is the ID-bearing anchor.
+PRODUCTION ::: verdict-pass ::: ^  \[PASS\] .+$
+ANCHOR ::: check-id ::: ^  CHECK-ID [A-Z0-9-]+$ ::: [A-Z0-9-]+$
+
+# ---- the matrix ------------------------------------------------------------
+ANCHOR ::: case-open ::: ^CASE [0-9]{2}  PROVIDER .*$ ::: ^CASE [0-9]{2}
+ANCHOR ::: case-close ::: ^END-CASE [0-9]{2}$ ::: ^END-CASE [0-9]{2}
+ANCHOR ::: stop-line ::: ^  STOP case [0-9]{2}  .*$ ::: ^  STOP case [0-9]{2}
+PRODUCTION ::: fixture-delimiter ::: ^  FIXTURE-TEXT-(BEGIN|END)$
+PRODUCTION ::: fixture-text ::: ^  \|( .*)?$
+
+# ---- the controls ----------------------------------------------------------
+ANCHOR ::: control-heading ::: ^CONTROL [1-7] .*$ ::: ^CONTROL [1-7]
+PRODUCTION ::: arm-heading ::: ^  -- [A-Z-]+ ARM: .+$
+
+# ---- control 6, the nine-step redefinition matrix --------------------------
+ANCHOR ::: c6-provider-open ::: ^C6-PROVIDER S[12]$ ::: ^C6-PROVIDER S[12]$
+ANCHOR ::: c6-provider-close ::: ^END-C6-PROVIDER S[12]$ ::: ^END-C6-PROVIDER S[12]$
+ANCHOR ::: c6-step ::: ^  C6-S[12]-STEP-[1-9] .*$ ::: ^  C6-S[12]-STEP-[1-9]
+PRODUCTION ::: c6-step-reading ::: ^  C6-S[12]-STEP-[1-9]-READING: .*$
+
+# ---- control 7, the tightened S2 shape and its jurisdiction table -----------
+ANCHOR ::: c7-shape-open ::: ^C7-S2-EXACT-SHAPE$ ::: ^C7-S2-EXACT-SHAPE$
+ANCHOR ::: c7-shape-close ::: ^END-C7-S2-EXACT-SHAPE$ ::: ^END-C7-S2-EXACT-SHAPE$
+ANCHOR ::: c7-jurisdiction ::: ^C7-S2-JURISDICTION-TABLE .*$ ::: ^C7-S2-JURISDICTION-TABLE
+ANCHOR ::: c7-partition-rows ::: ^    C7-S2-[A-Z-]+-ROWS .*$ ::: ^    C7-S2-[A-Z-]+-ROWS
+ANCHOR ::: c7-shape-field ::: ^    C7-S2-(MEASURED|PLANTED-WRONG) .*$ ::: ^    C7-S2-(MEASURED|PLANTED-WRONG)
+
+# ---- the freshness demonstration -------------------------------------------
+# R3 added T4 — the package/source reload arm the R3-B ruling requires — so the
+# three EREs below admit T4 as well.  They are widened, never loosened: the
+# character class is still an explicit closed set of arm numbers, so a
+# FRESHNESS-T5 that nobody declared is still refused.
+ANCHOR ::: freshness-planted ::: ^FRESHNESS-T[1234]-PLANTED .*$ ::: ^FRESHNESS-T[1234]-PLANTED
+ANCHOR ::: freshness-open ::: ^FRESHNESS-T[1234] .*$ ::: ^FRESHNESS-T[1234]
+ANCHOR ::: freshness-close ::: ^END-FRESHNESS-T[1234]$ ::: ^END-FRESHNESS-T[1234]$
+
+# ---- the CD/0 inspection-record schema witness (R2) -------------------------
+ANCHOR ::: schema-branch-open ::: ^SCHEMA-BRANCH [a-z0-9-]+$ ::: ^SCHEMA-BRANCH [a-z0-9-]+$
+ANCHOR ::: schema-branch-close ::: ^END-SCHEMA-BRANCH [a-z0-9-]+$ ::: ^END-SCHEMA-BRANCH [a-z0-9-]+$
+ANCHOR ::: schema-detail-ceiling ::: ^SCHEMA-DETAIL-CEILING$ ::: ^SCHEMA-DETAIL-CEILING$
+# R3.2 added the full-record detail block the R3.1 return requires — the two
+# union members carried as COMPLETE recognized records.  It is declared as its
+# OWN anchor rather than by widening the line above, so every label stays an
+# exact literal and a SCHEMA-DETAIL-WHATEVER nobody declared is still refused
+# by r-schema.
+ANCHOR ::: schema-detail-full-record ::: ^SCHEMA-DETAIL-FULL-RECORD$ ::: ^SCHEMA-DETAIL-FULL-RECORD$
+PRODUCTION ::: schema-doc-deviation ::: ^  SCHEMA-DOC-DEVIATION [a-z0-9-]+ [a-z0-9-]+ doc=[A-Z-]+ measured=[A-Z-]+$
+
+# ---- the concurrent allocator tooth (R2) ------------------------------------
+# R3.2 added the two first-load initialization arms the R3.2-B ruling requires
+# (INIT-RACE, INIT-PLANTED), so the two EREs below admit them as well.  They are
+# WIDENED, never loosened: the arm name is still an explicit closed set, so an
+# ALLOCATOR-WHATEVER that nobody declared is still refused by r-allocator.  The
+# longer alternatives are written FIRST so that the id-ERE yields the whole arm
+# name under any first-match-wins regex engine as well as under leftmost-longest.
+ANCHOR ::: allocator-arm-open ::: ^ALLOCATOR-(INIT-PLANTED|INIT-RACE|CLEAN|PLANTED|SHAPE)  .*$ ::: ^ALLOCATOR-(INIT-PLANTED|INIT-RACE|CLEAN|PLANTED|SHAPE)
+ANCHOR ::: allocator-arm-close ::: ^END-ALLOCATOR-(INIT-PLANTED|INIT-RACE|CLEAN|PLANTED|SHAPE)$ ::: ^END-ALLOCATOR-(INIT-PLANTED|INIT-RACE|CLEAN|PLANTED|SHAPE)$
+
+# ---- the in-body PARCEL_TIP stamp (probe-header / probe-footer) ------------
+# Checked against the tested tip by the state machine before it is consumed.
+PRODUCTION ::: kv-parcel-tip ::: ^ {4}PARCEL_TIP +[0-9a-f]{40}$
+
+# ---- the reserved structural tokens ----------------------------------------
+# Any line whose first token is one of these MUST have matched a production
+# above.  A malformed or forged structural line therefore cannot be read as
+# prose; it is refused.
+RESERVED ::: r-parcel-tip ::: ^ *PARCEL_TIP
+RESERVED ::: r-child-exit ::: ^ *CHILD-EXIT
+RESERVED ::: r-end-of-transcript ::: ^ *END-OF-TRANSCRIPT
+RESERVED ::: r-probe-section ::: ^ *PROBE-SECTION-
+RESERVED ::: r-check-id ::: ^ *CHECK-ID
+RESERVED ::: r-checks ::: ^ *CHECKS
+RESERVED ::: r-case ::: ^ *(END-)?CASE
+RESERVED ::: r-control ::: ^ *CONTROL
+RESERVED ::: r-c6 ::: ^ *(END-)?C6-
+RESERVED ::: r-c7 ::: ^ *(END-)?C7-
+RESERVED ::: r-freshness ::: ^ *(END-)?FRESHNESS-
+RESERVED ::: r-stop ::: ^ *STOP case
+RESERVED ::: r-operation-check ::: ^ *OPERATION-CHECK
+RESERVED ::: r-volatile ::: ^ *VOLATILE
+RESERVED ::: r-fixture ::: ^ *FIXTURE-TEXT-
+RESERVED ::: r-schema ::: ^ *(END-)?SCHEMA-
+RESERVED ::: r-allocator ::: ^ *(END-)?ALLOCATOR-
+RESERVED ::: r-peer-image ::: ^ *PEER-IMAGE
+
+# ---- the two fallbacks, reached only by non-reserved lines -----------------
+FALLBACK ::: measurement ::: ^    +[^ ].*$
+FALLBACK ::: narrative ::: ^ {0,3}[^ ].*$
