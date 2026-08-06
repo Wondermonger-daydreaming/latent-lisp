@@ -20,10 +20,32 @@ has been corrected. As implemented, `mneme/` is the directory holding the whole 
 and **the memory layer itself does not yet exist as a lane** — the name Mneme currently names a
 promise and a directory, not a working layer.
 
-Lisp+ today is an adopted specification constitution plus nineteen **candidate** implementation
-packages, arranged in two stacks that meet at one read-only seam. Every lane passes its own
-declared gates on SBCL 2.4.6/Linux. **No implementation is adopted**, and adoption attaches to
-specifications only.
+Lisp+ today is an adopted specification constitution plus twenty implementation packages,
+arranged in two stacks that meet at one read-only seam. Every lane passes its own declared
+gates on SBCL 2.4.6/Linux. Nineteen packages remain **candidates** (adoption attaches to
+specifications only) — with **one owner-ruled exception, 2026-08-06**: the Surface Account /0
+production component was accepted through its R4→R4.3 production-admission campaign and
+**adopted into this tree by owner authorization** (see the update block below).
+
+### UPDATE 2026-08-06 — Surface Account /0: adopted and published
+
+The `language-surface-account-0` lane closed its laboratory (R0→R3.3.3, owner-accepted) and
+its production campaign (R4→R4.3, owner-accepted after one owner-HALT with a live
+counterexample). Its production component — one process-wide identity state, one epoch
+gathering, monotonic account allocation, canonical ASCII counter grammar, a total
+carrier-plist scanner, and a repair-capable loader whose completeness predicate requires
+`FIND-SYMBOL` status `:EXTERNAL` *plus* `FBOUNDP` for all nine exports — now ships in
+`mneme/language-surface-account-0/production/` and is reachable through the `lisp-plus`
+umbrella. The floors grew by exactly its five gate rows (full 89→94, CI 73→76), and a
+public-clone readback reproduced every accepted count from a bare checkout.
+
+Standing interpretations that travel with it (owner's ruling, verbatim in the lane's
+`OWNER-RULING-R4-RETURN-AND-R4.3-COMMISSION.md` and `ADOPTION-RECEIPT-2026-08-06.md`):
+the identity mechanism and frozen R3.3.3 regressions are **PASS — LOCKED**; the readiness
+predicate establishes **API shape under ordinary image composition** — it is not a security
+or provenance boundary, and the carrier is a completeness marker under the non-forging
+package precondition, "not cryptographic attestation wearing parentheses." Surface `/3`
+remains shut.
 
 ### The three front-door commands
 
@@ -49,7 +71,7 @@ subsystem load orders — and the one composition that is refused rather than si
 double-loading Canonical Datum /0 — are exhibited by:
 
 ```sh
-bash mneme/load-order-matrix.sh    # 15 orders, each in a fresh image, observed by trace
+bash mneme/load-order-matrix.sh    # 16 orders, each in a fresh image, observed by trace
 ```
 
 **Loading is not adoption.** A green floor means every executable gate passed at its authorized
