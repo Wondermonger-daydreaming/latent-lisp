@@ -1,0 +1,24 @@
+== ONE ACT /0 TERMINAL LOCAL OBJECT CLOSURE — 2026-08-08T08:56:26Z ==
+-- (a) bundle digest:
+598c0cfc0d150afe12cf65d21622e2c58a985e1a9178b32d56d8dbd8a7f90635  /home/gauss/Downloads/oneact-0-candidate-r23-SELFCONTAINED.bundle
+598c0cfc0d150afe12cf65d21622e2c58a985e1a9178b32d56d8dbd8a7f90635  REQUIRED
+DIGEST: MATCH
+-- (b) fresh empty repo: /tmp/oneact-closure-jymCuF
+no alternates (object isolation confirmed)
+-- (c) git bundle verify (in fresh repo):
+/home/gauss/Downloads/oneact-0-candidate-r23-SELFCONTAINED.bundle is okay
+The bundle contains this ref:
+461f2013d1a6feca2b13819ff6ae3f60617e8e82 refs/heads/oneact/candidate-freeze-2026-08-07
+The bundle records a complete history.
+The bundle uses this hash algorithm: sha1
+-- (d) materialize:
+fetch OK
+full commit: 461f2013d1a6feca2b13819ff6ae3f60617e8e82
+tree id:     1123c3c3326664f54d1d96547ba872a876cbd495
+checkout OK: 0 dirty entries
+-- (e) equality vs pushed candidate:
+local branch:  461f2013d1a6feca2b13819ff6ae3f60617e8e82
+origin branch: 461f2013d1a6feca2b13819ff6ae3f60617e8e82
+local tree:    1123c3c3326664f54d1d96547ba872a876cbd495
+EQUALITY: commit==local==origin AND tree==tree — PASS
+== CLOSURE: PASS ==

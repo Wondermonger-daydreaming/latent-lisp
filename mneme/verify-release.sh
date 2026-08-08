@@ -48,6 +48,9 @@
 #                          CANDIDATE: running it raises no lane's standing.
 #                          Distinct from ABSENT (nothing is built) and from
 #                          PASS (which would read as settled).
+#   ADOPTED                the owner adopted the exact verified candidate by
+#                          ruling; the row cites the adoption record, which
+#                          discloses any owner variance (e.g. a waived gate).
 #
 # A gate whose observed count differs from its authorized count FAILS CLOSED,
 # even upward.  This floor detects drift; it does not absorb it.
@@ -222,7 +225,7 @@ vertical0|ARCHIVED-NOT-RERUN|Vertical /0 five-life SIGKILL campaign|A strace-con
 language-a|ARCHIVED-NOT-RERUN|Language-A tranche-B (706 files, emission BANKED 295/312)|Exists only on unmerged mirror branches; deliberately not merged during this milestone per the owner ruling (archive now, adopt later). Scoring is owner-locked pending the null-semantics ruling. The lab tree holds three language-a files, exercised inside verify-all.sh.
 latent-mvp|PASS|latent-mvp historical floor (6/6 suites)|FOSSIL-MARKED. Retained intact as a historical stratum with its historical floor, exercised inside verify-all.sh above. It has zero edges with the kernel0-era stack and is no longer the front door.
 mneme-memory|ABSENT|Mneme memory layer|Not implemented. No lane exists. "Mneme" currently names a directory, not a working memory-and-continuity layer. Nothing here can be run because nothing here has been built.
-seam|CANDIDATE-NOT-ADOPTED|derive/perform over a journal-backed process: an EXECUTABLE CANDIDATE seam exists|CORRECTED (owner ruling R2.3 item 3). The prior text here read "THE FIRST MISSING SEMANTIC SEAM ... No executable exists", and that is no longer true: One Act /0 (lane act0, three rows above) executes a Stack-B language operation — core0's derive/perform doors, over slice1 canonicalization, closed on the read side by Surface /2 — against a Stack-A journal-backed, capability-gated process, in one governed act, and its 173 checks run green from a fresh image through ASDF. WHAT THAT DOES NOT MEAN: EXECUTION DOES NOT CONFER ADOPTION. One Act /0 is a CANDIDATE; adoption, merge and publication are not authorized for it, its stranger primitive-minimization audit is owed and has never been run, and no lane's standing moves because a candidate ran green. The seam is no longer absent; it is inhabited by an unadopted candidate, which is a different sentence from either "missing" or "settled".
+seam|ADOPTED|derive/perform over a journal-backed process: One Act /0 — ADOPTED|ADOPTED 2026-08-08 by owner terminal ruling (One Act /0 R2.3 terminal adoption). The exact verified candidate commit 461f2013d1a6feca2b13819ff6ae3f60617e8e82 (tree 1123c3c3326664f54d1d96547ba872a876cbd495) was merged unmodified; its 173 checks, the 97-gate floor, the loader witnesses and the disease/control pairs all ran green pre-adoption and once post-adoption. DISCLOSURE, VERBATIM FROM THE ADOPTION RECORD: the stranger primitive-minimization audit prescribed as a promotion gate was NOT performed; the owner waived that gate for One Act /0 because its resource cost was disproportionate to the remaining design risk. This variance does not constitute independent validation and does not prevent later primitive reduction or architectural revision. Full record: mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md.
 TABLE
 
 # ===========================================================================
@@ -453,7 +456,7 @@ done
 
 echo
 N_DECLARED=0; N_D_UNRESOLVED=0; N_D_BLOCKED=0; N_D_ARCHIVED=0; N_D_ABSENT=0; N_D_PASS=0
-N_D_CANDIDATE=0
+N_D_CANDIDATE=0; N_D_ADOPTED=0
 while IFS='|' read -r lane status head why; do
   [ -z "${lane:-}" ] && continue
   N_DECLARED=$((N_DECLARED+1))
@@ -464,6 +467,7 @@ while IFS='|' read -r lane status head why; do
     ABSENT)                 N_D_ABSENT=$((N_D_ABSENT+1)) ;;
     PASS)                   N_D_PASS=$((N_D_PASS+1)) ;;
     CANDIDATE-NOT-ADOPTED)  N_D_CANDIDATE=$((N_D_CANDIDATE+1)) ;;
+    ADOPTED)                N_D_ADOPTED=$((N_D_ADOPTED+1)) ;;
   esac
 done <<< "$DECLARED"
 
@@ -498,6 +502,7 @@ echo "   of which ARCHIVED-NOT-RERUN   : $N_D_ARCHIVED"
 echo "   of which ABSENT               : $N_D_ABSENT"
 echo "   of which PASS (elsewhere)     : $N_D_PASS"
 echo "   of which CANDIDATE-NOT-ADOPTED: $N_D_CANDIDATE"
+echo "   of which ADOPTED              : $N_D_ADOPTED"
 echo
 echo " THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this"
 echo " floor ran in this process; a carried status row is a standing fact this"
