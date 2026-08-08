@@ -41,6 +41,14 @@
 #   FAIL                   anything else, including a count or verdict that
 #                          moved away from its authorized value
 #
+# The DECLARED table below (carried status rows, never executed here) uses one
+# further status of its own:
+#
+#   CANDIDATE-NOT-ADOPTED  an executable exists and runs green, and it is a
+#                          CANDIDATE: running it raises no lane's standing.
+#                          Distinct from ABSENT (nothing is built) and from
+#                          PASS (which would read as settled).
+#
 # A gate whose observed count differs from its authorized count FAILS CLOSED,
 # even upward.  This floor detects drift; it does not absorb it.
 #
@@ -89,6 +97,16 @@ case "$PROFILE" in full|ci) ;; *) echo "!! --profile must be full or ci" >&2; ex
 # Every count below is the authorized count carried from the lane's own
 # committed RUN-EXITCODES.txt / RETURN gate table.  Changing one here without
 # a ruling is a defect, not a fix.
+#
+# ONE ACT /0 (lane `act0`, three rows, registered by owner ruling R2.3 item 3)
+# IS AN UNADOPTED CANDIDATE.  Its rows are here because the floor should be
+# able to RUN it, not because its standing has moved: adoption, merge and
+# publication are not authorized for that lane, and a green row is not a
+# ruling.  It acquires no umbrella row this round — the standalone
+# `lisp-plus/act0` door stays canonical.  (This file has no per-row adoption
+# marker and none is invented here: several other lanes in this table are
+# candidates too, and marking only one would silently imply the rest are
+# adopted.  The carried status row `seam` below states it in words instead.)
 # ===========================================================================
 
 read -r -d '' GATES <<'TABLE' || true
@@ -174,6 +192,9 @@ both|surface-account|.|sbcl --script mneme/language-surface-account-0/production
 both|surface-account|.|bash mneme/language-surface-account-0/production/surface-account-graph-gate.sh|surface-account-graph-gate: 9 checks passed, 0 failed|no
 full|surface-account|.|bash mneme/language-surface-account-0/production/run-hostile-profiles.sh|surface-account-hostile-profiles: 7 roles + 4 loader cases, 110 checks, 0 failures|no
 full|surface-account|.|bash mneme/language-surface-account-0/production/surface-account-disease.sh|surface-account-disease: 8 diseases detected, 8 controls clean|yes
+both|act0|.|sbcl --script mneme/language-act-0/act0-selftest.lisp|oneact0-selftest: 173 checks, 0 failures|no
+full|act0|.|bash mneme/language-act-0/act0-load-witnesses.sh|act0-load-witnesses: 6/6 cases green, tooth caught|no
+full|act0|.|bash mneme/language-act-0/act0-loader-disease.sh|act0-loader-disease: 3 diseases detected, 3 controls clean|no
 full|vertical0|.|bash mneme/vertical0/harness/repeatability.sh|-|yes
 full|vertical0|.|sbcl --script mneme/vertical0/controls/run-integration-controls.lisp|vertical0 integration controls: 37 checks, 0 failures|yes
 full|vertical0|.|sbcl --script mneme/vertical0/mutants/run-mutation-gate.lisp|vertical0 mutation gate: 71 checks, 0 failures|yes
@@ -201,8 +222,40 @@ vertical0|ARCHIVED-NOT-RERUN|Vertical /0 five-life SIGKILL campaign|A strace-con
 language-a|ARCHIVED-NOT-RERUN|Language-A tranche-B (706 files, emission BANKED 295/312)|Exists only on unmerged mirror branches; deliberately not merged during this milestone per the owner ruling (archive now, adopt later). Scoring is owner-locked pending the null-semantics ruling. The lab tree holds three language-a files, exercised inside verify-all.sh.
 latent-mvp|PASS|latent-mvp historical floor (6/6 suites)|FOSSIL-MARKED. Retained intact as a historical stratum with its historical floor, exercised inside verify-all.sh above. It has zero edges with the kernel0-era stack and is no longer the front door.
 mneme-memory|ABSENT|Mneme memory layer|Not implemented. No lane exists. "Mneme" currently names a directory, not a working memory-and-continuity layer. Nothing here can be run because nothing here has been built.
-seam|ABSENT|derive/perform over a journal-backed process|THE FIRST MISSING SEMANTIC SEAM. No executable exists in which a Stack-B language operation (core0's derive/perform doors, or any slice/form/surface operation) executes against a Stack-A journal-backed, capability-gated process. Surface /2's contact with Stack A is a read-only re-expression of a COMPLETED run. This milestone names the seam; it does not build it.
+seam|CANDIDATE-NOT-ADOPTED|derive/perform over a journal-backed process: an EXECUTABLE CANDIDATE seam exists|CORRECTED (owner ruling R2.3 item 3). The prior text here read "THE FIRST MISSING SEMANTIC SEAM ... No executable exists", and that is no longer true: One Act /0 (lane act0, three rows above) executes a Stack-B language operation — core0's derive/perform doors, over slice1 canonicalization, closed on the read side by Surface /2 — against a Stack-A journal-backed, capability-gated process, in one governed act, and its 173 checks run green from a fresh image through ASDF. WHAT THAT DOES NOT MEAN: EXECUTION DOES NOT CONFER ADOPTION. One Act /0 is a CANDIDATE; adoption, merge and publication are not authorized for it, its stranger primitive-minimization audit is owed and has never been run, and no lane's standing moves because a candidate ran green. The seam is no longer absent; it is inhabited by an unadopted candidate, which is a different sentence from either "missing" or "settled".
 TABLE
+
+# ===========================================================================
+# THE AUTHORIZED ENUMERATION — recomputed from the table above on EVERY run,
+# and compared against the authorized totals.  Registering a gate without
+# amending these numbers, or amending these numbers without registering a
+# gate, FAILS CLOSED before a single gate executes.
+#
+# The floor's own doctrine, applied to the floor itself: a count that differs
+# from its authorized value fails closed EVEN UPWARD.  Until R2.3 the floor
+# counted its gates dynamically and would have absorbed a silently vanished
+# row as good news.
+#
+#   94 -> 97 full   (+3: One Act /0's selftest, load witnesses, loader disease)
+#   76 -> 77 light  (+1: the selftest alone; the other two are full-profile)
+# ===========================================================================
+AUTHORIZED_GATES_FULL=97
+AUTHORIZED_GATES_CI=77
+
+COUNT_CI="$(printf '%s\n' "$GATES" | grep -c '^both|')"
+COUNT_FULL_ONLY="$(printf '%s\n' "$GATES" | grep -c '^full|')"
+COUNT_FULL=$((COUNT_CI + COUNT_FULL_ONLY))
+
+ENUM_BAD=0
+[ "$COUNT_FULL" -ne "$AUTHORIZED_GATES_FULL" ] && ENUM_BAD=1
+[ "$COUNT_CI"   -ne "$AUTHORIZED_GATES_CI"   ] && ENUM_BAD=1
+if [ "$ENUM_BAD" -ne 0 ]; then
+  echo "!! FAIL CLOSED: gate enumeration drift."
+  echo "   full profile : expected $AUTHORIZED_GATES_FULL, table enumerates $COUNT_FULL"
+  echo "   ci profile   : expected $AUTHORIZED_GATES_CI, table enumerates $COUNT_CI"
+  echo "   The table and its authorized totals must be amended together, under a ruling."
+  exit 1
+fi
 
 # ===========================================================================
 if [ "$LIST_ONLY" -eq 1 ]; then
@@ -240,6 +293,7 @@ fi
 echo "subject root : $ROOT"
 echo "caller cwd   : $(pwd)"
 echo "profile      : $PROFILE"
+echo "enumeration  : full $COUNT_FULL/$AUTHORIZED_GATES_FULL · light $COUNT_CI/$AUTHORIZED_GATES_CI  (authorized == actual, recomputed from the table)"
 
 # Snapshot the caller's checkout so we can prove we left it alone.
 GIT_BEFORE=""
@@ -336,6 +390,18 @@ while IFS='|' read -r prof lane cwd cmd expect writes; do
   run_gate "$lane" "$cwd" "$cmd" "$expect" "$writes"
 done <<< "$GATES"
 
+# --- the attempted count IS the authorized count ---------------------------
+# The enumeration was checked before the run; this checks that the run actually
+# attempted every enumerated row (a `continue` bug, a mangled line, a partial
+# read would all show up here rather than in nobody's arithmetic).
+EXPECTED_ATTEMPTS=$([ "$PROFILE" = "ci" ] && echo "$AUTHORIZED_GATES_CI" || echo "$AUTHORIZED_GATES_FULL")
+ATTEMPT_BAD=0
+if [ "$N" -ne "$EXPECTED_ATTEMPTS" ]; then
+  ATTEMPT_BAD=1
+  echo
+  echo "!! FAIL CLOSED: this run attempted $N gate(s); profile $PROFILE authorizes $EXPECTED_ATTEMPTS."
+fi
+
 # --- cleanliness, fail closed ---------------------------------------------
 echo
 echo "-- checkout cleanliness --"
@@ -361,7 +427,7 @@ echo "==========================================================================
 printf '%-22s %-12s %s\n' STATUS LANE 'GATES (executed this run)'
 for lane in aggregate kernel0 journal0 capability0 capability1 capability2 \
             adapter0 core0 slice0 slice1 slice2 form0 form1 form2 \
-            surface0 surface1 surface2 surface-account vertical0 cd0 lci0 \
+            surface0 surface1 surface2 surface-account act0 vertical0 cd0 lci0 \
             atelier release; do
   p=0; f=0; b=0
   for row in "${ROWS[@]:-}"; do
@@ -387,6 +453,7 @@ done
 
 echo
 N_DECLARED=0; N_D_UNRESOLVED=0; N_D_BLOCKED=0; N_D_ARCHIVED=0; N_D_ABSENT=0; N_D_PASS=0
+N_D_CANDIDATE=0
 while IFS='|' read -r lane status head why; do
   [ -z "${lane:-}" ] && continue
   N_DECLARED=$((N_DECLARED+1))
@@ -396,6 +463,7 @@ while IFS='|' read -r lane status head why; do
     ARCHIVED-NOT-RERUN)     N_D_ARCHIVED=$((N_D_ARCHIVED+1)) ;;
     ABSENT)                 N_D_ABSENT=$((N_D_ABSENT+1)) ;;
     PASS)                   N_D_PASS=$((N_D_PASS+1)) ;;
+    CANDIDATE-NOT-ADOPTED)  N_D_CANDIDATE=$((N_D_CANDIDATE+1)) ;;
   esac
 done <<< "$DECLARED"
 
@@ -429,6 +497,7 @@ echo "   of which BLOCKED-EXTERNAL-INPUT: $N_D_BLOCKED"
 echo "   of which ARCHIVED-NOT-RERUN   : $N_D_ARCHIVED"
 echo "   of which ABSENT               : $N_D_ABSENT"
 echo "   of which PASS (elsewhere)     : $N_D_PASS"
+echo "   of which CANDIDATE-NOT-ADOPTED: $N_D_CANDIDATE"
 echo
 echo " THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this"
 echo " floor ran in this process; a carried status row is a standing fact this"
@@ -455,7 +524,7 @@ echo " archived-only item passed its integrity check. It does NOT mean that all"
 echo " semantic questions are resolved, and it adopts nothing."
 echo "==========================================================================="
 
-if [ "$N_FAIL" -ne 0 ] || [ "$DIRTY" -ne 0 ]; then
+if [ "$N_FAIL" -ne 0 ] || [ "$DIRTY" -ne 0 ] || [ "$ATTEMPT_BAD" -ne 0 ]; then
   echo
   echo "FLOOR RESULT: FAIL"
   exit 1

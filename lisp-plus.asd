@@ -41,6 +41,15 @@
 ;;;;       lane is guarded, and each guard-loads Canonical Datum /0 (or its own
 ;;;;       predecessor) for itself.
 ;;;;
+;;;;       ⚠ TWO LANES ARE **NOT** IN THIS CLASS, and must never be returned
+;;;;       to it: Surface Account /0 (R4.1/R4.3) and One Act /0 (R2.2) are
+;;;;       COMPLETENESS-CHECKED — their guard is a predicate over the whole
+;;;;       declared external API plus a readiness carrier, because for them
+;;;;       PACKAGE EXISTENCE IS NOT IMPLEMENTATION READINESS.  A `find-package`
+;;;;       guard on either certifies a half-built or empty lane as loaded, at
+;;;;       ASDF exit 0.  Both defects were reproduced by the owner, on two
+;;;;       different lanes, three weeks apart.
+;;;;
 ;;;;   (b) The Stack-A core chain is UNGUARDED:
 ;;;;         capability2/load.lisp -> capability1 -> capability0
 ;;;;                               -> journal0 -> kernel0 -> canonical-datum
@@ -115,7 +124,10 @@
   (:use #:common-lisp)
   (:export #:*root* #:*lane-order* #:lane #:lane-once #:lane-once-complete
            #:surface-account-api-complete-p #:load-lanes-in-order
-           #:require-stack-a-precondition #:unsupported-load-order))
+           #:require-stack-a-precondition #:unsupported-load-order
+           ;; One Act /0 loader finality (R2.2)
+           #:act0-api-complete-p #:act0-api-shortfall #:act0-lane-files
+           #:load-act0-lane #:ensure-act0-lane #:act0-lane-incomplete))
 
 (in-package #:lisp-plus-system)
 
@@ -189,6 +201,236 @@ returns true.  The predicate-guarded sibling of LANE-ONCE, for lanes whose
 loaded-ness is not equivalent to their package's existence."
   (unless (funcall completeness-predicate)
     (lane relative-path)))
+
+;;; ==========================================================================
+;;; One Act /0 readiness (R2.2).  PACKAGE EXISTENCE IS NOT IMPLEMENTATION
+;;; READINESS — the second terminal of the species Surface Account R4.3
+;;; permanently outlawed.
+;;;
+;;; The stanza this replaces opened `(unless (find-package
+;;; '#:lisp-plus-language-act0) ...)`, and the owner reproduced two
+;;; false-success states against it (ruling R2.2, "Blocking defect"):
+;;;
+;;;   EMPTY NAMESAKE PACKAGE      ASDF exit 0 · exports 0  · RUN-ACT absent
+;;;   PACKAGE.LISP LOADED ALONE   ASDF exit 0 · exports 70 · RUN-ACT :EXTERNAL
+;;;                                                          but not FBOUNDP
+;;;
+;;; Either an empty package collision, or merely loading `package.lisp` to
+;;; read the interface, made `asdf:load-system "lisp-plus/act0"` report
+;;; success over an unusable lane.  Note the second state especially: the
+;;; export census was already CORRECT (70 of 70, every name :EXTERNAL) and
+;;; the lane was still empty — which is why a census-only predicate would
+;;; be no cure, and why every name below is checked for the BINDING its
+;;; kind requires.
+;;;
+;;; THE API IS ENUMERATED, NEVER ITERATED.  A predicate that walked
+;;; DO-EXTERNAL-SYMBOLS would be satisfied by whatever the package happens
+;;; to contain — an empty package trivially satisfies "every external
+;;; symbol is fbound".  The three lists below are the declared external
+;;; interface of `mneme/language-act-0/package.lisp`, written out:
+;;;
+;;;   41 functions   (FBOUNDP)
+;;;   13 variables and lane constants  (BOUNDP)
+;;;   16 types — 14 conditions + 2 structure classes  (FIND-CLASS)
+;;;   --
+;;;   70 declared exports, asserted by +ACT0-API-COUNT+ so that editing a
+;;;      list without editing the count fails closed rather than silently
+;;;      shrinking the guard;
+;;;   + 1 final-source readiness carrier (below), which no census can supply.
+;;;
+;;; Every name is additionally required to have FIND-SYMBOL status
+;;; :EXTERNAL — the R4.3 clause, carried here whole: a status-blind check is
+;;; satisfied by internal fbound dummies in a pre-created package.
+;;;
+;;; THE CARRIER IS WHY THE FOURTH SOURCE CANNOT BE SKIPPED.  Bindings alone
+;;; cannot prove a load reached the END of the LAST file: 40 of the 41
+;;; functions are defined in act0.lisp, so a lane loaded through
+;;; act0.lisp and stopped before act0-gates.lisp is 69/70 complete.
+;;; ACT0-LANE-READY-CARRIER is established by the LAST form of
+;;; act0-gates.lisp, the last-loaded source; its presence, boundness and
+;;; exact value are the evidence that the final form of the final source
+;;; was evaluated.  (Idiom taken from Surface Account /0's
+;;; SA0-IDENTITY-CARRIER, strengthened from presence-only to
+;;; presence + BOUNDP + EQUAL value, since a bare interned name can be
+;;; forged by any hand that can pre-create a package.)
+;;;
+;;; The carrier is INTERNAL to the act0 package, exactly as SA0's is — so
+;;; `mneme/language-act-0/package.lisp` is UNCHANGED by this repair.
+;;; ==========================================================================
+
+(defparameter +act0-external-functions+
+  '("ACT-FIXTURE-ADAPTER-SYMBOL" "ACT-FIXTURE-ARM" "ACT-FIXTURE-ATTEMPT-NAME"
+    "ACT-FIXTURE-CELL-SEGMENTS" "ACT-FIXTURE-FORM" "ACT-FIXTURE-LABEL"
+    "ACT-FIXTURE-LANGUAGE-LABEL" "ACT-FIXTURE-P" "ACT-FIXTURE-RUNTIME-SEAT"
+    "ACT-RECORD-ACT-ID" "ACT-RECORD-FIXTURE" "ACT-RECORD-P"
+    "ACT0-CONDITION-DETAIL" "ACT0-CONDITION-REQUIREMENT-ID"
+    "AGREEMENT-GATE" "BIND-OFFICES"
+    "BUILD-F1" "BUILD-F2" "BUILD-F3" "BUILD-F4" "BUILD-F5"
+    "BUILD-FIXTURE-WORLDS" "BUILD-STORE" "CANONICALIZE-REQUEST"
+    "CHECK" "CHECK-CELL-LEXIS" "CHECK-EQ" "CHECK-TEXT-LEXIS"
+    "CLASSIFY-ACT-FRAMES" "CORRESPONDENCE-VERDICT"
+    "FRAME-EVENT-ID" "FRAME-KIND" "LANE-ENVELOPE"
+    "MINT-ACT-IDENTITY" "NOTE" "REQUEST-RECORD" "REQUEST-SHA256-OCTETS"
+    "RUN-ACT" "RUN-ALL-ARMS" "VALIDATE-ACT-FIXTURE-TABLE" "W-ENV-PREFLIGHT")
+  "The 41 declared external FUNCTIONS of One Act /0.  RUN-ALL-ARMS is the only
+one defined in act0-gates.lisp; the other 40 come from act0.lisp.")
+
+(defparameter +act0-external-variables+
+  '("*ACT-FIXTURE-TABLE*" "*BOOTSTRAP*" "*CHECKS-FAILED*" "*CHECKS-PASSED*"
+    "*MINTING-CONTEXT*" "*RUN-ROOT*" "*STORE*" "*WORLDS*"
+    "+ACT-ID-DOMAIN+" "+ACT-STORE-NONCE+" "+LANE-EVENT-NAMESPACE+"
+    "+LANE-STEM+" "+RUNTIME-PROCESS-NAME+")
+  "The 13 declared external VARIABLES and lane constants (all BOUNDP once the
+lane is loaded; the five +NAME+ forms are DEFPARAMETERs, not DEFCONSTANTs,
+which is why re-loading a source is lawful rather than DEFCONSTANT-UNEQL).")
+
+(defparameter +act0-external-types+
+  '("ACT0-CONDITION" "ACT-AUTHORITY-BINDING-REFUSED" "ACT-BINDING-CONSUMED"
+    "ACT-BRIDGE-CONTRACT-VIOLATED" "ACT-DISPATCHER-BINDING-REFUSED"
+    "ACT-FIXTURE" "ACT-FIXTURE-TABLE-INVALID" "ACT-FRAME-ORDERING-VIOLATED"
+    "ACT-IDENTITY-BRANCH" "ACT-IDENTITY-TAKEN" "ACT-OFFICE-R-TERM-DIVERGENCE"
+    "ACT-PROCESS-IDENTITY-DIVERGENCE" "ACT-READBACK-DISAGREEMENT" "ACT-RECORD"
+    "ACT-REQUEST-LEXIS-REFUSED" "ACT-REQUEST-SHAPE-REFUSED")
+  "The 16 declared external TYPES — 14 lane-local condition types and the two
+structure classes ACT-FIXTURE and ACT-RECORD.  Each names a class once
+defined, so FIND-CLASS is the recognizability test for all sixteen.")
+
+(defparameter +act0-api-count+ 70
+  "41 functions + 13 variables + 16 types.  Asserted, so that shortening a list
+without shortening the guard is a failure and not a quiet weakening.")
+
+(defparameter +act0-readiness-carrier+ "ACT0-LANE-READY-CARRIER"
+  "The final-source readiness carrier: established by the LAST form of
+act0-gates.lisp, the last source the lane loads.")
+
+(defparameter +act0-carrier-value+
+  '(:lane "one-act-0" :final-source "act0-gates.lisp" :position :last-form)
+  "The carrier's exact value.  Presence of an interned name proves only that
+some hand interned it; EQUAL to this proves the lane's own final form ran.")
+
+(defparameter +act0-lane-sources+
+  '("mneme/language-act-0/package.lisp"
+    "mneme/language-act-0/act0-fixtures.lisp"
+    "mneme/language-act-0/act0.lisp"
+    "mneme/language-act-0/act0-gates.lisp")
+  "One Act /0's four sources IN THEIR DECLARED ORDER.  package.lisp is FIRST
+and is re-applied on every repair — the R4.2 'skip package.lisp if the package
+exists' shortcut is precisely what made an incomplete package unrepairable.")
+
+;;; R2.3 item 1 — THE PHANTOM EXPORT, CLOSED.
+;;;
+;;; R2.2 exported #:ACT0-LANE-FILES from LISP-PLUS-SYSTEM and never gave it a
+;;; function, variable or class binding: a name in the package's public
+;;; interface that answers to nothing.  A phantom export is not cosmetic — it
+;;; is a published door with no room behind it, and any reader who trusts the
+;;; export list is misled about the system's surface.
+;;;
+;;; The reader is a FUNCTION, not the DEFPARAMETER itself, for one reason: the
+;;; defparameter's value is a mutable quoted list, and handing a caller that
+;;; list would let any hand rearrange, shorten or lengthen the lane's declared
+;;; LOAD ORDER in place — the ordering the readiness carrier exists to prove
+;;; was reached.  Each call therefore re-conses the list AND copies each path
+;;; string, so nothing a caller can mutate is shared with the guard.
+;;;
+;;; ONE ENUMERATION, TWO READERS: this function and LOAD-ACT0-LANE both read
+;;; +ACT0-LANE-SOURCES+, so the published list and the loaded list cannot
+;;; drift apart.  Witnesses (act0-load-witnesses.lisp, case-invariant battery
+;;; SE-1..SE-7) assert :EXTERNAL + FBOUNDP, the exact four paths in order,
+;;; EQUAL-but-non-EQ across two calls, and that EVERY LISP-PLUS-SYSTEM
+;;; external has a binding of its kind — so no phantom can ship again.
+(defun act0-lane-files ()
+  "One Act /0's four lane sources, in their declared load order, as a FRESH
+list of FRESH strings.  Never returns +ACT0-LANE-SOURCES+ itself, and never
+returns a list that shares structure with it: two calls are EQUAL and never EQ."
+  (mapcar #'copy-seq +act0-lane-sources+))
+
+(defun act0-api-shortfall ()
+  "Return a list of human-readable reasons One Act /0 is NOT ready, or NIL.
+One enumeration, two readers: ACT0-API-COMPLETE-P is (NULL (ACT0-API-SHORTFALL))
+so the predicate and the failure report can never drift apart."
+  (let ((package (find-package '#:lisp-plus-language-act0))
+        (missing '()))
+    (unless (= +act0-api-count+
+               (+ (length +act0-external-functions+)
+                  (length +act0-external-variables+)
+                  (length +act0-external-types+)))
+      (push "the enumerated API lists disagree with +ACT0-API-COUNT+" missing))
+    (if (null package)
+        (push "the package LISP-PLUS-LANGUAGE-ACT0 does not exist" missing)
+        (flet ((probe (name kind test)
+                 (multiple-value-bind (symbol status) (find-symbol name package)
+                   (cond ((null symbol)
+                          (push (format nil "~a ~a: not interned" kind name) missing))
+                         ((not (eq status :external))
+                          (push (format nil "~a ~a: status ~s, not :EXTERNAL"
+                                        kind name status)
+                                missing))
+                         ((not (funcall test symbol))
+                          (push (format nil "~a ~a: external but ~a" kind name
+                                        (ecase kind
+                                          (:function "not FBOUNDP")
+                                          (:variable "not BOUNDP")
+                                          (:type "names no class")))
+                                missing))))))
+          (dolist (n +act0-external-functions+) (probe n :function #'fboundp))
+          (dolist (n +act0-external-variables+) (probe n :variable #'boundp))
+          (dolist (n +act0-external-types+)
+            (probe n :type (lambda (s) (and (find-class s nil) t)))))
+        )
+    (when package
+      (let ((carrier (find-symbol +act0-readiness-carrier+ package)))
+        (cond ((null carrier)
+               (push (format nil "readiness carrier ~a absent: the load never reached the final form of act0-gates.lisp"
+                             +act0-readiness-carrier+)
+                     missing))
+              ((not (boundp carrier))
+               (push (format nil "readiness carrier ~a interned but UNBOUND"
+                             +act0-readiness-carrier+)
+                     missing))
+              ((not (equal (symbol-value carrier) +act0-carrier-value+))
+               (push (format nil "readiness carrier ~a holds ~s, not the lane's declared value"
+                             +act0-readiness-carrier+ (symbol-value carrier))
+                     missing)))))
+    (nreverse missing)))
+
+(defun act0-api-complete-p ()
+  "True iff One Act /0's whole declared external API is present with the binding
+its kind requires, every name :EXTERNAL, and the final-source readiness carrier
+established.  Package existence alone NEVER satisfies this."
+  (null (act0-api-shortfall)))
+
+(define-condition act0-lane-incomplete (error)
+  ((detail :initarg :detail :reader act0-lane-incomplete-detail))
+  (:report
+   (lambda (c s)
+     (format s "~&lisp-plus/act0: LANE LOAD DID NOT COMPLETE.~%~%~
+                All four One Act /0 sources were loaded in their declared~%~
+                order, and ACT0-API-COMPLETE-P is STILL false afterwards.~%~
+                This system therefore refuses to report success: an ASDF~%~
+                load that exits 0 over an unusable lane is the R2.2 defect~%~
+                (package existence is not implementation readiness), and~%~
+                failing closed is the whole repair.~%~%~
+                Shortfall:~%~{  * ~a~%~}"
+             (act0-lane-incomplete-detail c)))))
+
+(defun load-act0-lane ()
+  "Load One Act /0's four sources in their declared order, package.lisp FIRST.
+Unconditional by design: this is the REPAIR arm, entered only when the lane is
+not already complete."
+  (dolist (source +act0-lane-sources+) (lane source)))
+
+(defun ensure-act0-lane ()
+  "The One Act /0 load guard.  Load-or-repair, then ASSERT, then fail closed.
+The ruling's disjunction — namesake package missing OR the API incomplete — is
+one test here: ACT0-API-COMPLETE-P is false whenever the package is absent, by
+its first clause, so an absent package and a half-built package take the same
+repair path instead of the absent-only skip R4.2 was convicted for."
+  (unless (act0-api-complete-p)
+    (load-act0-lane)
+    (let ((shortfall (act0-api-shortfall)))
+      (when shortfall
+        (error 'act0-lane-incomplete :detail shortfall))))
+  t)
 
 (define-condition unsupported-load-order (error)
   ((detail :initarg :detail :reader unsupported-load-order-detail))
@@ -438,6 +680,44 @@ Account /0).  This is the umbrella's whole implementation."
              (uiop:symbol-call '#:lisp-plus-system '#:lane-once
                                '#:lisp-plus-surface2
                                "mneme/language-surface-2/surface2.lisp")))
+
+;;; --------------------------------------------------------------------------
+;;; One Act /0 — one Lisp+ form, one witnessed, capability-mediated act.
+;;;
+;;; CANDIDATE.  Loading is not adoption, and nothing in this lane is
+;;; independent verification (AP0 adoption Rider 2).
+;;;
+;;; THREE EDGES, and exactly three: stack-a (the journal-backed process and the
+;;; two capability offices), core0 (the `perform` door — and, transitively, its
+;;; own `lisp-plus/slice1` edge, which is the lane's request canonicalizer and
+;;; is NOT in the Stack-A chain), and surface2 (the read-side closing bracket,
+;;; consumed through its public exports only, with ZERO edits).
+;;;
+;;; ⚠ NO EDGE ON `lisp-plus/adapter0`, and its absence is mechanical rather than
+;;; declared: Adapter /0 is not in this lane's stack and no artifact of this lane
+;;; may claim adapter0 conformance, AP0 conformance, or any membrane property
+;;; beyond what Capability /2 itself claims (contract M-2, M-3).
+;;; ⚠ NO EDGE ON `lisp-plus/surface-account` — this lane performs; it does not
+;;; macroexpand, mints no head, and must not route anything through the
+;;; composite (contract S-3, S-4; GATE-12's non-contact instrument).
+;;; --------------------------------------------------------------------------
+
+(defsystem "lisp-plus/act0"
+  :description "One Act /0 — one governed act, its lane-local journal account, and the read-side agreement gate (candidate)."
+  :version "0"
+  :depends-on ("lisp-plus/stack-a" "lisp-plus/core0" "lisp-plus/surface2")
+  ;; R2.2: PREDICATE-GUARDED, never package-guarded.  ENSURE-ACT0-LANE tests
+  ;; ACT0-API-COMPLETE-P (70 declared exports, each :EXTERNAL and bound as its
+  ;; kind requires, plus the final-source readiness carrier), loads all four
+  ;; sources in declared order when it is false — package.lisp FIRST, so an
+  ;; existing incomplete package is REPAIRED rather than skipped — re-asserts
+  ;; the predicate, and signals ACT0-LANE-INCOMPLETE if it still does not hold.
+  ;; See the One Act /0 readiness block above.  Witnesses:
+  ;; mneme/language-act-0/act0-load-witnesses.{lisp,sh}; disease comparator:
+  ;; mneme/language-act-0/act0-loader-disease.sh.
+  :perform (load-op (o c)
+             (declare (ignore o c))
+             (uiop:symbol-call '#:lisp-plus-system '#:ensure-act0-lane)))
 
 (defsystem "lisp-plus/vertical0"
   :description "Vertical Specimen /0 program — the durable process path (SIGKILL crash model only)."
