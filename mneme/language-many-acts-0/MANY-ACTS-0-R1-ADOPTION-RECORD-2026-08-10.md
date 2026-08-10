@@ -82,3 +82,21 @@ product freeze.
   the documentary and constitutional rounds.
 
 — recorded by Claude Fable 5 (chair), sealed by the owner's ruling, 2026-08-10
+
+## ADDENDUM — Owner disposition of the publication incident (Owner Ruling 2 §2, 2026-08-10)
+
+The owner ruled on the publication-process incident that occurred during this
+adoption's execution (commit `a14bb55d`, reverted by `7f417d49`; anatomy in the lab
+notes, `notes/2026-08-10-incident-a14bb55d-sync-env-hijack.md`):
+**`a14bb55d` is RETAINED in main history — no rewrite, no rebase, no excision, no
+force-push.** It records a contained publication-process incident; it is not an
+adopted semantic state; its material effect was reversed by `7f417d49`, hash-proven
+equivalent to the intended merge tree; the public mirror was never contaminated; the
+hardening at `f2ce32fa`/`f986b231` (env scrub, push-target assertion, truthful
+receipt) is the permanent procedural remedy; the inert reverted commit remains useful
+provenance and a regression witness for publication tooling. **Disposition CLOSED**
+unless new evidence shows the revert incomplete or the mirror touched. The incident
+is not product drift, not evidence earned, not an adopted feature.
+
+*R1 execution return ACCEPTED by the same ruling; Round 0 closed; R1 governs under
+Riders 1–6, ceiling unchanged. — recorded by the chair, 2026-08-10*
