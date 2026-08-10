@@ -719,6 +719,40 @@ Account /0).  This is the umbrella's whole implementation."
              (declare (ignore o c))
              (uiop:symbol-call '#:lisp-plus-system '#:ensure-act0-lane)))
 
+;;; --------------------------------------------------------------------------
+;;; Many Acts /0 — a finite Lisp+ program, as inspectable data, sequencing
+;;; MULTIPLE adopted One Act /0 executions.
+;;;
+;;; CANDIDATE.  Loading is not adoption, and nothing in this lane is
+;;; independent verification (AP0 adoption Rider 2).
+;;;
+;;; ⚠ THIS STANZA IS PURELY ADDITIVE.  It does not enter `*lane-order*', does
+;;; not enter the umbrella, and does not enter `verify-release.sh''s executed
+;;; gate table or its authorized counts.  Nothing above or below it changed.
+;;;
+;;; ONE EDGE, and exactly one: `lisp-plus/act0'.  Everything else this lane
+;;; touches — journal0, capability0/1/2, core0, kernel0, cd0, surface2 — it
+;;; reaches THROUGH One Act /0's own declared stack, through PUBLIC exports
+;;; only, with zero edits anywhere.
+;;;
+;;; GUARD CLASS.  Package-guarded (`lane-once'), which is the guarded class the
+;;; header describes — NOT the completeness-checked class One Act /0 and
+;;; Surface Account /0 occupy.  That is a deliberate limit of a candidate and
+;;; is stated rather than glossed: a load that dies mid-file would leave the
+;;; package present and the lane half-built, and this guard would not catch it.
+;;; A lane that ever asks for a floor must earn the stronger guard first.
+;;; --------------------------------------------------------------------------
+
+(defsystem "lisp-plus/many-acts-0"
+  :description "Many Acts /0 — a closed program-authoring surface over the adopted One Act /0 operation (candidate)."
+  :version "0"
+  :depends-on ("lisp-plus/act0")
+  :perform (load-op (o c)
+             (declare (ignore o c))
+             (uiop:symbol-call '#:lisp-plus-system '#:lane-once
+                               '#:lisp-plus-many-acts0
+                               "mneme/language-many-acts-0/load.lisp")))
+
 (defsystem "lisp-plus/vertical0"
   :description "Vertical Specimen /0 program — the durable process path (SIGKILL crash model only)."
   :version "0"

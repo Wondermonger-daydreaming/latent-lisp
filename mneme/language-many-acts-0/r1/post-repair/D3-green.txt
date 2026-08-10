@@ -1,0 +1,38 @@
+==============================================================================
+MANY ACTS /0 — R1 REPAIR CAMPAIGN — POST-REPAIR WITNESS — D3
+==============================================================================
+command    : timeout 60 sbcl --script D3-circular-source.lisp
+cwd        : mneme/language-many-acts-0/r1/
+date -u    : Mon Aug 10 03:16:20 UTC 2026
+branch     : many-acts-0-candidate
+head       : b0d1b844a85d5a29d57045c0da1f299a58a91f82
+sbcl       : SBCL 2.4.6
+
+PROVES     : D3-CIRCULAR-SOURCE — the validator's total walk carries no visited set and does not terminate on circular cons structure; the declared node bound cannot save it, and only an external watchdog stops the image.
+
+READING    : every line must read CLOSED / OWNED and the exit code must be 0.
+==============================================================================
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  -- D3-1 building a self-referential list
+  -- D3-1 entering the validator (in the PRE-REPAIR transcript this is the LAST LINE)
+  [CLOSED] D3-1 a self-referential list terminates in a typed refusal  refused MA0-SOURCE-REFUSED [V-SHAPE]; detail names "a lawful source is a TREE"
+  -- D3-2 building a cycle nested in an otherwise-lawful program
+  -- D3-2 entering the validator
+  [CLOSED] D3-2 a nested cycle terminates in a typed refusal  refused MA0-SOURCE-REFUSED [V-SHAPE]; detail names "a lawful source is a TREE"
+  -- D3-2b building an ACYCLIC shared substructure (a DAG, not a cycle)
+  [CLOSED] D3-2b acyclic SHARED substructure is refused by the same tree law  refused MA0-SOURCE-REFUSED [V-SHAPE]; detail names "a lawful source is a TREE"
+  -- D3-3 building a long finite source (300 bind steps)
+  [CLOSED] D3-3 a long finite source just inside the node bound is accepted  accepted
+  -- D3-4 building a source beyond the declared node bound (3000 bind steps)
+  [CLOSED] D3-4 a source beyond the declared node bound is refused by the bound  refused MA0-SOURCE-REFUSED [V-SHAPE]; detail names "node count exceeds the declared bound"
+  -- D3-5 an ordinary lawful source
+  [CLOSED] D3-5 an ordinary lawful source is still accepted  accepted
+
+ma0-D3-circular-source: 6 closed, 0 defect(s) present
+
+==============================================================================
+exit code  : 0
+==============================================================================

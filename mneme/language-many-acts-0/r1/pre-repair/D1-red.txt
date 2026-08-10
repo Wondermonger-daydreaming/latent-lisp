@@ -1,0 +1,47 @@
+==============================================================================
+MANY ACTS /0 — R1 REPAIR CAMPAIGN — PRE-REPAIR WITNESS — D1
+==============================================================================
+command    : timeout 120 sbcl --script D1-ownership.lisp
+cwd        : mneme/language-many-acts-0/r1/
+date -u    : Mon Aug 10 02:25:45 UTC 2026
+branch     : many-acts-0-candidate
+head       : cea1d7720028bd28d782909281fde84320988d1a
+sbcl       : SBCL 2.4.6
+
+PROVES     : D1-OWNERSHIP — copy-tree copies cons structure and SHARES mutable string leaves, so exported readers hand out the very strings the validated program, the environment and the result retain; and the environment does not own the strings its caller declared.
+
+READING    : a DEFECT-PRESENT line is the defect reproducing.  For D3 the red
+             is the WATCHDOG KILL — exit 124 with the transcript ending at
+             'entering the validator'.
+==============================================================================
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [DEFECT-PRESENT] D1-1 mutating a returned source copy leaves the retained source unchanged  fresh readback arm = "B-L2"
+  [DEFECT-PRESENT] D1-2 the validated program still executes the arm its text named  source text named "B-L1"; executed "B-L2"
+  [DEFECT-PRESENT] D1-3 the environment owns its declared input  declared "caller-original"; run carried "Xaller-original"
+  [DEFECT-PRESENT] D1-4 mutating a returned result value leaves the retained result unchanged  fresh readback payload = "Zayload-original"
+  [DEFECT-PRESENT] D1-5 mutating a returned store-id leaves the environment's identifier unchanged  declared "pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760"; environment now reports "Zj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760"
+  [DEFECT-PRESENT] D1-6 mutating a returned act-summary arm leaves the summary unchanged  was "B-L2"; summary now reports "Z-L2"
+
+ma0-D1-ownership: 0 owned, 6 defect(s) present
+
+==============================================================================
+exit code  : 1
+==============================================================================

@@ -1,0 +1,28 @@
+==============================================================================
+MANY ACTS /0 — R1 REPAIR CAMPAIGN — POST-REPAIR WITNESS — D2
+==============================================================================
+command    : timeout 120 sbcl --script D2-branch-binding.lisp
+cwd        : mneme/language-many-acts-0/r1/
+date -u    : Mon Aug 10 03:16:16 UTC 2026
+branch     : many-acts-0-candidate
+head       : b0d1b844a85d5a29d57045c0da1f299a58a91f82
+sbcl       : SBCL 2.4.6
+
+PROVES     : D2-BRANCH-BINDING — branch alternatives are validated sequentially against ONE mutable binding table, so a later alternative may reference a name bound only inside an earlier one: accepted at validation, dead at runtime when that alternative was not the selected one.
+
+READING    : every line must read CLOSED / OWNED and the exit code must be 0.
+==============================================================================
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  [CLOSED] D2-1 a sibling-alternative reference is refused at validation  refused MA0-BINDING-REFUSED [V-BIND]
+  [CLOSED] D2-2 no run can reach the unbound name (nothing was accepted)  the validator refused; there is no accepted program to run
+  [CLOSED] D2-3 a pre-branch binding referenced inside alternatives stays lawful  accepted
+  [CLOSED] D2-4 the sealed no-shadowing law refuses one name defined in two alternatives  refused MA0-BINDING-REFUSED [V-BIND]
+
+ma0-D2-branch-binding: 4 closed, 0 defect(s) present
+
+==============================================================================
+exit code  : 0
+==============================================================================

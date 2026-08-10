@@ -1,0 +1,64 @@
+==============================================================================
+MANY ACTS /0 — R1 REPAIR CAMPAIGN — POST-REPAIR WITNESS — D4
+==============================================================================
+command    : timeout 120 sbcl --script D4-env-crosswire.lisp
+cwd        : mneme/language-many-acts-0/r1/
+date -u    : Mon Aug 10 03:16:23 UTC 2026
+branch     : many-acts-0-candidate
+head       : b0d1b844a85d5a29d57045c0da1f299a58a91f82
+sbcl       : SBCL 2.4.6
+
+PROVES     : D4-ENV-CROSSWIRE — constructing a second environment overwrites the One Act /0 run-state specials; running the FIRST environment afterwards appends journal events and world effects into the SECOND environment's store before composition notices anything is wrong.
+
+READING    : every line must read CLOSED / OWNED and the exit code must be 0.
+==============================================================================
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  -- store-id A = pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760
+  -- store-id B = pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760
+  -- the two identifiers are IDENTICAL — a content-derived identifier cannot discriminate these stores
+  -- before the run: A store/EVENTS.pj0 = 638 bytes, B = 638 bytes
+  -- after the run:  A store/EVENTS.pj0 = 638 bytes, B = 638 bytes
+  -- outcome: MA0-ENVIRONMENT-STALE [MA0-ENV-STALE]: ma0-run-program was handed an environment of generation 1 while generation 2 holds the One Act /0 run-state specials; a later `make-ma0-environment' took them over, so an act run through this object would journal into a store it does not own.  This environment's own store is pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760.  Nothing was written, minted, or journaled in any store.  Many Acts /0 is ONE PROGRAM PER IMAGE: it does not orchestrate two live environments, and this refusal is not a step toward doing so.
+  [CLOSED] D4-1 environment B's store gained nothing from environment A's run  B changed: (nothing)
+  [CLOSED] D4-2 neither store was touched — the refusal precedes the first consequential act  A changed: (nothing) | B changed: (nothing)
+  [CLOSED] D4-3 the run ended in the lane's typed stale-environment refusal, naming its own store-id  MA0-ENVIRONMENT-STALE [MA0-ENV-STALE]: ma0-run-program was handed an environment of generation 1 while generation 2 holds the One Act /0 run-state specials; a later `make-ma0-environment' took them over, so an act run through this object would journal into a store it does not own.  This environment's own store is pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760.  Nothing was written, minted, or journaled in any store.  Many Acts /0 is ONE PROGRAM PER IMAGE: it does not orchestrate two live environments, and this refusal is not a step toward doing so.
+  [CLOSED] D4-4 environment B is still usable afterwards  returned, disposition :COMPLETED
+
+ma0-D4-env-crosswire: 4 closed, 0 defect(s) present
+
+==============================================================================
+exit code  : 0
+==============================================================================

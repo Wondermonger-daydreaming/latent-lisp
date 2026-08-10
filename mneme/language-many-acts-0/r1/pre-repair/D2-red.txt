@@ -1,0 +1,45 @@
+==============================================================================
+MANY ACTS /0 — R1 REPAIR CAMPAIGN — PRE-REPAIR WITNESS — D2
+==============================================================================
+command    : timeout 120 sbcl --script D2-branch-binding.lisp
+cwd        : mneme/language-many-acts-0/r1/
+date -u    : Mon Aug 10 02:25:48 UTC 2026
+branch     : many-acts-0-candidate
+head       : cea1d7720028bd28d782909281fde84320988d1a
+sbcl       : SBCL 2.4.6
+
+PROVES     : D2-BRANCH-BINDING — branch alternatives are validated sequentially against ONE mutable binding table, so a later alternative may reference a name bound only inside an earlier one: accepted at validation, dead at runtime when that alternative was not the selected one.
+
+READING    : a DEFECT-PRESENT line is the defect reproducing.  For D3 the red
+             is the WATCHDOG KILL — exit 124 with the transcript ending at
+             'entering the validator'.
+==============================================================================
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  [DEFECT-PRESENT] D2-1 a sibling-alternative reference is refused at validation  the source was ACCEPTED; `leaked' is defined only inside the FIRST alternative
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [DEFECT-PRESENT] D2-2 the accepted program does not die at runtime on the leaked name  RUNTIME FAILURE MA0-BINDING-REFUSED [V-BIND]: identifier LEAKED is unbound at evaluation — accepted at validation, dead at run
+  [CLOSED] D2-3 a pre-branch binding referenced inside alternatives stays lawful  accepted
+  [CLOSED] D2-4 the sealed no-shadowing law refuses one name defined in two alternatives  refused MA0-BINDING-REFUSED [V-BIND]
+
+ma0-D2-branch-binding: 2 closed, 2 defect(s) present
+
+==============================================================================
+exit code  : 1
+==============================================================================

@@ -1,0 +1,26 @@
+==============================================================================
+MANY ACTS /0 — R1 REPAIR CAMPAIGN — PRE-REPAIR WITNESS — D3
+==============================================================================
+command    : timeout 60 sbcl --script D3-circular-source.lisp
+cwd        : mneme/language-many-acts-0/r1/
+date -u    : Mon Aug 10 02:25:52 UTC 2026
+branch     : many-acts-0-candidate
+head       : cea1d7720028bd28d782909281fde84320988d1a
+sbcl       : SBCL 2.4.6
+
+PROVES     : D3-CIRCULAR-SOURCE — the validator's total walk carries no visited set and does not terminate on circular cons structure; the declared node bound cannot save it, and only an external watchdog stops the image.
+
+READING    : a DEFECT-PRESENT line is the defect reproducing.  For D3 the red
+             is the WATCHDOG KILL — exit 124 with the transcript ending at
+             'entering the validator'.
+==============================================================================
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  -- D3-1 building a self-referential list
+  -- D3-1 entering the validator (before the repair, THIS IS THE LAST LINE)
+
+==============================================================================
+exit code  : 124   (124 = KILLED BY THE WATCHDOG — the validator did not terminate)
+==============================================================================

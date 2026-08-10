@@ -78,13 +78,19 @@ bash mneme/load-order-matrix.sh    # 16 orders, each in a fresh image, observed 
 count and every known unresolved finding is unchanged — not that any semantic question is
 resolved.
 
-### The first missing semantic seam, named
+### The derive/perform seam — corrected 2026-08-09
 
-**No derive/perform language operation executes against a journal-backed process.** Core /0's
-derive/perform doors have never opened onto the durable process substrate; Surface /2's contact
-with Stack A is a **read-only re-expression of a completed run**. The composite demonstration
-prints this boundary at the end of every run. Integration Baseline /0 **names** this seam; it
-does not build it.
+**One Act /0 supplies the adopted derive/perform seam over a journal-backed process. It is one
+sealed application-scale act. Lisp+ does not yet possess an adopted open-ended authoring or
+multi-act composition surface.**
+
+*(Correction note: until 2026-08-09 this section asserted, present-tense, that no derive/perform
+language operation executes against a journal-backed process — true when written 2026-08-02,
+false since One Act /0's adoption (candidate `461f2013`, adopted and published 2026-08-08). The
+old text remains in history and in the three IB0-frozen documents, which stay untouched as
+historical strata under the existing closure ruling.)* Surface /2's contact with Stack A remains
+a **read-only re-expression of a completed run**. Integration Baseline /0 **named** this seam;
+One Act /0 built its first sealed crossing.
 
 ### Where authority and limits live
 

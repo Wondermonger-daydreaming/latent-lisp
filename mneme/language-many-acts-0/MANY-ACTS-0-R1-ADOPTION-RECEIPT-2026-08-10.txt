@@ -1,0 +1,78 @@
+MANY ACTS /0 R1 — ADOPTION RECEIPT (mechanical identities)
+===========================================================
+Date: 2026-08-10.  Chair: Claude Fable 5.  Gate hand: CUSTOS (Claude Opus).
+Adopting instrument: owner ruling "Owner disposition — Many Acts /0 R1:
+ADOPTED WITH RIDERS" (2026-08-10, direct; filed verbatim beside this receipt
+as MANY-ACTS-0-R1-ADOPTION-OWNER-RULING-2026-08-10.md).
+
+ADOPTED OBJECT
+  parcel            ~/Downloads/many-acts-0-r1-return-parcel-2026-08-10.tar.gz
+  parcel sha256     54aa7783c494d8f32baa3c10eecd48590b88b13f07f0de6c8724831807a02803
+  transport patch   sources/changes.patch
+  patch sha256      913a1c9bd1158c855cca6f68f065af9228130cc9fa3c2bb374fb1fc364f20998
+
+RE-DERIVED GIT COORDINATES (chair, fail-closed, all matched the ruling)
+  predecessor       76952ea4f278d269f98f158555e412a095a3da6f
+    parent          f83a06899bc82a7217b070bb27f53a352d37a9a8
+    tree            ea60fc7e1561877ede2311c29385ef5dcd912fc7
+  freeze tip        231873c7be8ba275cd5756c929efba2f9c807157
+  freeze record     9bff7d02cad02e1e832a201ccd71a6d4a0607912
+  product freeze lane subtree   e94870bd9091e67f68e9cf238a6c5d0dcf302a05
+  P4 holdout        ef98ede12021889753babb6d368b218689cf311d
+  R1 return         e170e1d680b273e7906d1edd2b352cfb7aede458
+  return lane subtree           dd2a7a0aa36d6ddabfb6b66c569260bbc73edab7
+  ancestry          76952ea4 -> 9bff7d02 -> ef98ede1 -> e170e1d6 (verified)
+
+ADOPTION GATES (serial, isolated worktree at e170e1d6; transcripts
+/tmp/ma0-r1-adoption-gates/; SBCL 2.4.6 wrapper operation-checked; strace present)
+  selftest x2       200 checks, 0 failures  (both; exits 0/0)
+    bodies          byte-identical, 23,372 B,
+                    sha256 d8d36cd476e6990ea3e9546277132ee19ff45d6536e559b2a09339e65bdece5d
+    G1 note         reference body sha 6f03877e... differs ONLY in the printed
+                    absolute checkout-root line (both roots exactly 15 chars);
+                    sed-substitution reproduces the reference hash exactly.
+  teeth             15 sections attempted, 15 green, 0 red, 0 omitted
+    within          diseases 5 detected / 5 controls clean;
+                    concordance 7 arms, 126 facets, 0 divergences;
+                    coverage 7/7 arms, 0 uncovered;
+                    D5 generation seam 43 closed, 0 defects;
+                    D1/D2/D3/D4 0 defects (D3 inside watchdog, no 124)
+  P3                11 checks, 0 failures (exit 0)
+  P4 (rerun)        11 checks, 0 failures (exit 0 — THIS RERUN's exit code;
+                    the historical first-run transcript's missing exit code
+                    REMAINS MISSING, per the ruling)
+  One Act           173 checks, 0 failures (exit 0)
+  release floor     PASS — 77/77 executable gates, 0 blocked; enumeration
+                    full 97/97 / light 77/77; carried rows unchanged
+  V-F digest        2b51b4df26fe0fa1e4a156f9408a92f5a501aba9fa2401eb08e10a123f1264f0  (exact)
+  campaign gates    9 gates, 0 failures
+  worktree          porcelain empty; HEAD and lane subtree byte-identical
+
+CLAIM CEILINGS (Riders 1-6 govern; see the verbatim ruling)
+  The adopted claim (Rider 1, exact):
+    "A same-author, post-R1-freeze holdout program was expressible through
+     the repaired Many Acts /0 candidate authoring surface without evaluator
+     modification."
+  P4 additionally supplied a first-execution transcript, 11 checks, 0 failures.
+  NOT licensed: P4 first-run exit code captured as 0; stranger inhabitation;
+  independent inhabitation; guide-only semantic transmission; independent
+  implementation; open-ended authoring; unrestricted domain generality;
+  multi-environment orchestration; transactionality or crash resumability.
+  Nothing here is independently verified, independently validated,
+  stranger-audited, or independently reproduced.
+
+EXCLUSIONS
+  Every PortJ/0 court-construction commit (12388ff9, 71422395, fa712000,
+  53f69972, b6db942a, eb701eca, 572f7edf, ba2ffe8b and successors) verified
+  NOT in the merged range; the R1 semantic adoption covers none of them.
+
+INTEGRATION (completed by the merge this receipt rides in; identities in the
+adoption record and the chair's session report)
+  merge protocol    non-destructive --no-ff of the bounded range
+                    (merge-base..e170e1d6) + adoption docs into main;
+                    conflict preview: clean; main unmoved since fork.
+  publication       private origin push and public-mirror readback recorded
+                    SEPARATELY in the adoption record; an unreached mirror
+                    is not publication.
+
+— recorded by Claude Fable 5 (chair), under the owner's adoption ruling

@@ -1,0 +1,69 @@
+==============================================================================
+MANY ACTS /0 — R1 REPAIR CAMPAIGN — PRE-REPAIR WITNESS — D4
+==============================================================================
+command    : timeout 120 sbcl --script D4-env-crosswire.lisp
+cwd        : mneme/language-many-acts-0/r1/
+date -u    : Mon Aug 10 02:26:52 UTC 2026
+branch     : many-acts-0-candidate
+head       : cea1d7720028bd28d782909281fde84320988d1a
+sbcl       : SBCL 2.4.6
+
+PROVES     : D4-ENV-CROSSWIRE — constructing a second environment overwrites the One Act /0 run-state specials; running the FIRST environment afterwards appends journal events and world effects into the SECOND environment's store before composition notices anything is wrong.
+
+READING    : a DEFECT-PRESENT line is the defect reproducing.  For D3 the red
+             is the WATCHDOG KILL — exit 124 with the transcript ending at
+             'entering the validator'.
+==============================================================================
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  -- store-id A = pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760
+  -- store-id B = pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760
+  -- the two identifiers are IDENTICAL — a content-derived identifier cannot discriminate these stores
+  -- before the run: A store/EVENTS.pj0 = 638 bytes, B = 638 bytes
+  -- after the run:  A store/EVENTS.pj0 = 638 bytes, B = 6753 bytes
+  -- outcome: MA0-COMPOSITION-DIVERGENCE [ACT-ORDER-1]: no F1 is durable for attempt a-prima
+  [DEFECT-PRESENT] D4-1 environment B's store gained nothing from environment A's run  B changed: (store/EVENTS.pj0 638->6753 world-apply/CELLS.txt 85->107
+            world-apply/REQUEST-LEDGER.txt 0->73)
+  [DEFECT-PRESENT] D4-2 neither store was touched — the refusal precedes the first consequential act  A changed: (nothing) | B changed: (store/EVENTS.pj0 638->6753
+                                   world-apply/CELLS.txt 85->107
+                                   world-apply/REQUEST-LEDGER.txt 0->73)
+  [DEFECT-PRESENT] D4-3 the run ended in the lane's typed stale-environment refusal, naming its own store-id  MA0-COMPOSITION-DIVERGENCE [ACT-ORDER-1]: no F1 is durable for attempt a-prima
+  [DEFECT-PRESENT] D4-4 environment B is still usable afterwards  DIED: ACT-IDENTITY-TAKEN
+
+ma0-D4-env-crosswire: 0 closed, 4 defect(s) present
+
+==============================================================================
+exit code  : 1
+==============================================================================

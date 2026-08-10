@@ -1,0 +1,232 @@
+==============================================================================
+MANY ACTS /0 — R1 REPAIR CAMPAIGN — POST-REPAIR WITNESS — D5
+==============================================================================
+command    : timeout 300 sbcl --script D5-generation-seam.lisp
+cwd        : mneme/language-many-acts-0/r1/
+date -u    : Mon Aug 10 04:52:24 UTC 2026
+branch     : many-acts-0-candidate
+head       : ca62ac2cc4f5dba767b1e44ee0fa2d7797878ced
+sbcl       : SBCL 2.4.6
+
+PROVES     : D5-GENERATION-SEAM (owner's pre-freeze gate) — the window between the generation increment and the return of make-ma0-environment is REACHABLE from the public API, so a FAILED construction of a second environment kills a working first one: the counter advances, the good environment goes stale, and the five run-state specials are left pointing at a store no object owns. Also: the default struct printer exposes the generation (and the live store, bootstrap and minting context) on any environment.
+
+READING    : every line must read CLOSED / OWNED and the exit code must be 0.
+==============================================================================
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+== D5-1 — construction failure leaves the live environment ALIVE ==
+  -- each attempt gets its OWN fresh environment A, so the attempts
+  -- are independent evidence rather than a queue behind the first.
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.1 setup: a fresh A is current
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  -- attempt 1 — oversized declaration (post-increment window) => MA0-SOURCE-REFUSED [MA0-OWN-BOUND]
+  [CLOSED] D5-1.1 A is STILL CURRENT after: oversized declaration (post-increment window)  A reads :CURRENT
+  [CLOSED] D5-1.1 A's own root is byte-unchanged
+  [CLOSED] D5-1.1 the specials still point at A  was /tmp/ma0-d5-A1-795508/ now /tmp/ma0-d5-A1-795508/
+  [CLOSED] D5-1.1 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.2 setup: a fresh A is current
+  -- attempt 2 — an arm outside the sealed seven => MA0-ENVIRONMENT-REFUSED [MA0-ENV-ARMS]
+  [CLOSED] D5-1.2 A is STILL CURRENT after: an arm outside the sealed seven  A reads :CURRENT
+  [CLOSED] D5-1.2 A's own root is byte-unchanged
+  [CLOSED] D5-1.2 the specials still point at A  was /tmp/ma0-d5-A2-795508/ now /tmp/ma0-d5-A2-795508/
+  [CLOSED] D5-1.2 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.3 setup: a fresh A is current
+  -- attempt 3 — a grant naming an undeclared arm => MA0-ENVIRONMENT-REFUSED [MA0-ENV-GRANT]
+  [CLOSED] D5-1.3 A is STILL CURRENT after: a grant naming an undeclared arm  A reads :CURRENT
+  [CLOSED] D5-1.3 A's own root is byte-unchanged
+  [CLOSED] D5-1.3 the specials still point at A  was /tmp/ma0-d5-A3-795508/ now /tmp/ma0-d5-A3-795508/
+  [CLOSED] D5-1.3 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.4 setup: a fresh A is current
+  -- attempt 4 — a seat map naming a seat no fixture carries => MA0-ENVIRONMENT-REFUSED [MA0-ENV-SEAT]
+  [CLOSED] D5-1.4 A is STILL CURRENT after: a seat map naming a seat no fixture carries  A reads :CURRENT
+  [CLOSED] D5-1.4 A's own root is byte-unchanged
+  [CLOSED] D5-1.4 the specials still point at A  was /tmp/ma0-d5-A4-795508/ now /tmp/ma0-d5-A4-795508/
+  [CLOSED] D5-1.4 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.5 setup: a fresh A is current
+  -- attempt 5 — an input value that is not an admitted atom => MA0-ENVIRONMENT-REFUSED [MA0-ENV-DATA]
+  [CLOSED] D5-1.5 A is STILL CURRENT after: an input value that is not an admitted atom  A reads :CURRENT
+  [CLOSED] D5-1.5 A's own root is byte-unchanged
+  [CLOSED] D5-1.5 the specials still point at A  was /tmp/ma0-d5-A5-795508/ now /tmp/ma0-d5-A5-795508/
+  [CLOSED] D5-1.5 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.6 setup: a fresh A is current
+  -- attempt 6 — a revocation for an undeclared arm => MA0-ENVIRONMENT-REFUSED [MA0-ENV-REVOKE]
+  [CLOSED] D5-1.6 A is STILL CURRENT after: a revocation for an undeclared arm  A reads :CURRENT
+  [CLOSED] D5-1.6 A's own root is byte-unchanged
+  [CLOSED] D5-1.6 the specials still point at A  was /tmp/ma0-d5-A6-795508/ now /tmp/ma0-d5-A6-795508/
+  [CLOSED] D5-1.6 the mint counter is unmoved  0 -> 0
+  [CLOSED] D5-1 the surviving A still RUNS a program (arm A)  :COMPLETED
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1 a later environment C constructs and runs (arm B-L1)  :COMPLETED
+  [CLOSED] D5-1 and the earlier A is now STALE, because C legitimately took over  A reads :STALE
+
+== D5-3 — the generation is not exposed or accepted ==
+  [CLOSED] D5-3 no EXPORTED symbol names the generation  NIL
+  [CLOSED] D5-3 printing an ENVIRONMENT reveals no generation  #<LISP-PLUS-MANY-ACTS0::MA0-ENVIRONMENT pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760> #<MA0-ENVIRONMENT pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c
+  [CLOSED] D5-3 printing a RESULT reveals no generation  #S(LISP-PLUS-MANY-ACTS0::MA0-RESULT    :PROGRAM-NAME "d5-subject"    :DISPOSITION :COMPLETED    :VALUE "ran"    :REFUSAL-CODE NIL    :REFUSAL-DETAIL NIL    :ACT-SUMMARIES (#S(LISP-PLUS-MANY-ACTS0::MA0
+
+== D5-4 — both doors refuse a stale environment BEFORE any work ==
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-4 ma0-run-program refuses the stale environment, typed  (:STALE "MA0-ENV-STALE"
+ "pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760")
+  [CLOSED] D5-4 the refusal carries the STALE environment's own store-id  "pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760"
+  [CLOSED] D5-4 ma0-complete-act refuses BEFORE it touches the act result  (:STALE "MA0-ENV-STALE")
+  [CLOSED] D5-4 the stale environment's own store is byte-unchanged
+  [CLOSED] D5-4 the INSTALLED environment's store is byte-unchanged
+  [CLOSED] D5-4 no capability activity: the mint counter is unmoved  0 -> 0
+  [CLOSED] D5-4 the installed environment is still usable (arm C-i)  :COMPLETED
+
+ma0-D5-generation-seam: 43 closed, 0 defect(s) present
+
+==============================================================================
+exit code  : 0
+==============================================================================
