@@ -109,7 +109,7 @@ unresolved finding is unchanged* — never that a semantic question is resolved.
 | `mneme/portable-judge-0/` | a judge that travels — candidate parcel | **CANDIDATE — not an adoption declaration** (2026-08-10) |
 | `mneme/public-sufficiency-0/` | the governance of *this mirror*: what may be published, how transport is recorded, what "published" means | LIVE lane; publication authorization **B (blanket-current, bounded)** ruled 2026-08-18; transport sentinel raised |
 | `mneme/language-act-1/` | One Act /1 — perform *across* process death | **ADOPTED 2026-08-22** at lab commit `aeeefa40` (owner act, ceilings verbatim; Sol I ruled ADOPTION-ELIGIBLE on a fresh-stranger audit + supplement; record `mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md`; floor row `act1\|ADOPTED`). Ceilings: not "independently verified"; 27-symbol ML/0 coupling is version-bound debt |
-| `mneme/memory-layer-0/` | Memory Layer /0 — the language's durable account of its own act (write / retrieve / consolidate under *ISSUED(evidence, act) ⇏ OCCURRED(act)*) | **CANDIDATE-NOT-ADOPTED · REGISTERED · stranger audit owed · no independent verification** (2026-08-21; floor 112/112; lane parcel SHA-256 `5742b4f8…`) |
+| `mneme/memory-layer-0/` | Memory Layer /0 — the language's durable account of its own act (write / retrieve / consolidate under *ISSUED(evidence, act) ⇏ OCCURRED(act)*) | **ADOPTED AND PUBLISHED · stranger audit owed · no independent verification** (adopted 2026-08-22 by Sol I's terminal standing ruling, owner-countersigned; published at mirror `9a56eabd…` by exact-bound transport of lab `71d94fc2…`; registered 2026-08-21 as CANDIDATE-NOT-ADOPTED; floor 112/112; lane parcel SHA-256 `5742b4f8…`, the 61-file R5 object unchanged; "published" warrants public transport of the bound bytes only, "adopted" is the owner's and Sol's governance act — neither discharges the stranger audit) |
 | `mneme/integration-baseline-0/` | authority index · claim ceiling · supersession map | CLOSED by owner ruling 2026-08-03 — historical, never edited |
 | `mneme/lci0/` · `canonical-datum/` | Located Claim Identity /0 · Canonical Datum /0 | CLOSED + FROZEN; LCI0 algebraic-law audit carries 4 preserved FAILs, "authorial ruling required" |
 | `mneme/language-a/` | Language-A emission materials (public lane only) | ARCHIVED, banked 295/312 — not re-run |
@@ -307,7 +307,7 @@ latent-lisp/
 │   ├── portable-judge-0/      #   candidate parcel
 │   ├── public-sufficiency-0/  #   the governance of this mirror's publication
 │   ├── language-act-1/        #   One Act /1 — ADOPTED 2026-08-22 (registered 08-20)
-│   ├── memory-layer-0/        #   Memory Layer /0 — CANDIDATE-NOT-ADOPTED, REGISTERED 2026-08-21
+│   ├── memory-layer-0/        #   Memory Layer /0 — ADOPTED AND PUBLISHED 2026-08-22 (registered 2026-08-21)
 │   ├── lci0/ · spec/ · language-a/ · RULING-*.md
 │   ├── latent-mvp/            #   FOSSIL — v0/v1 kernel + the seven-law conformance walk
 │   ├── atelier/               #   the mneme atelier — CANON.md, instruments (Sol's decad)

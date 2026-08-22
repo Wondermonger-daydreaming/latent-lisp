@@ -1154,3 +1154,36 @@ now state ADOPTED and point to their carried rows (every changed line a `#`-comm
 whole-chain re-census (RECENSOR II, anchor `6bbbe482` → candidate) then found the README and this stone one
 correction behind C11; both are brought level in the same commit as this postscript. Frozen 38/38 and ML/0
 61/61 unmoved throughout. *— the chair*
+
+### ADDENDUM 18 (2026-08-22, afternoon): MEMORY LAYER /0 — ADOPTED AND PUBLISHED
+
+**Standing (Sol I terminal standing ruling, owner-countersigned by verbatim relay — quote exactly):**
+> **MEMORY LAYER `/0` — ADOPTED AND PUBLISHED · stranger audit owed · no independent verification**
+
+1. **Publication.** Exact-bound transport of lab commit `71d94fc2…` (subject OID `0f3b2650…`) to the public
+   mirror, target `9a56eabd…`, far-side Git tree `c7a3820e…` = the bound subject minus the two `_staging/`
+   exclusions (Git tree identity is the far-side witness). Executed by the owner's hand through the governed
+   `transport-supervisor.sh` after the chair's invocation was refused by its auto-mode classifier (refusal
+   preserved, not disguised). Transport record `567d0e37…` GREEN. Sentinel lifted on disk for the one act and
+   re-raised. Return parcel `c128bd25…` ACCEPTED **WITH RECEIPT ERRATUM**: the far-side manifest was captured
+   during a far-side floor (5,261 lines, seven gate-[035] fixtures) — the raw 5,254/`1e3a8f84…` manifest claim
+   is struck; the tree equality stands. Far-side floor 110 PASS / 2 BLOCKED-EXTERNAL-INPUT (rows [071]/[072]
+   need lab commit `431fee16`, absent from mirror history — venue limitation, not a failure).
+2. **Adoption.** The owner's and Sol's governance act over the object registered 2026-08-21 (ADDENDUM 16
+   POSTSCRIPT 8). The 61-file R5 object and its RETURN pin `d9fac67d…` are UNCHANGED. Ceilings carried
+   verbatim: durable account survives its writer · occurrence requires its full admitted conjunction · warrant
+   issuance cannot manufacture the warranted event · inadmissible evidence yields `:unresolved`, including
+   when its conclusion is accidentally true · §5.A honest append-only failure semantics + mandatory pre-append
+   dry decode · `/0` same-store only · receipt-bearing foreign lineage reserved to Memory Layer /1 · D6 PARTIAL
+   · D4 SHOWN-AS-AMENDED · package privacy is defense in depth · same-family execution non-independent.
+3. **What the words warrant.** "Published" = public transport of the bound tracked bytes, not every semantic
+   claim those bytes contain. "Adopted" = the governance act. Neither discharges the stranger audit.
+4. **This addendum, the README rows and the floor's `ml0` carried row are administrative records
+   propagation** (Sol I §V) — not an ML/0 semantic repair, not a condition of the standing. `package.lisp`'s
+   candidate-era header and `FLOOR-RESULT.txt` inside the frozen object are left as they are, disclosed here.
+   The route that carried ML/0 from R5 to this line (ADDENDUM 17 → RECENSOR II → kiln → one prose correction
+   → bound → ferry) is recorded in the lab at `notes/2026-08-22-ml0-terminal-adoption-and-publication-record.md`.
+5. **No R6. No new candidate. No census restart.** The office is open; the next work is Sol II's bounded
+   toaster program, which is a benchmark, not a charter.
+
+*— Claude Fable 5, the chair, 2026-08-22*
