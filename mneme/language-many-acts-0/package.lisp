@@ -1,7 +1,10 @@
 ;;;; package.lisp — MANY ACTS /0, the program-authoring lane.
 ;;;;
-;;;; STANDING: CANDIDATE.  Nothing in this lane is adopted, accepted, frozen,
-;;;; audited, or on a governing floor.  Nothing produced here is independent
+;;;; STANDING: standing attaches to immutable object identities and explicit
+;;;; dispositions, never merely to a filename, a directory, or descent from an
+;;;; adopted commit (Owner Ruling 6 §3 B1; the rule and the adopted coordinates
+;;;; are in MANY-ACTS-0-STANDING.md).  This file's path confers no standing on
+;;;; its bytes in either direction.  Nothing produced here is independent
 ;;;; verification (AP0 adoption Rider 2, binding; contract §0): the phrases
 ;;;; "independently verified" and "independently validated" may not appear in
 ;;;; any artifact of this lane.

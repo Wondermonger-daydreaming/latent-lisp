@@ -1,0 +1,14 @@
+de-actu-resurgente - preserved raw artifacts
+governing sentence: the language door survives the process's death as a refusal - a genuinely new image, given only durable bytes and declared configuration, must refuse the same act at the perform boundary, and may proceed only through evidence-carried reconciliation at the runtime level.
+CANDIDATE. Not adopted, not audited, not on a floor. Crash model: planted deterministic death only (no SIGKILL, no power loss, no mid-instruction truncation). Capability-disciplined, never capability-secure.
+store identity: pj0-store:50a146c243cd2cb59054536676d5a89888077b54e391e088813d3e022525a470
+act identity (derived from domain + runtime seat + canonical request, re-derived byte-equal by the resurgent image): oneact1:act:100d24bc8e5db39e5fcb201a9118685fce84b824728fdf2fe843597244669442
+100d24bc8e5db39e5fcb201a9118685fce84b824728fdf2fe843597244669442
+EVENTS-POST-DEATH.pj0: 2726 octets  sha256 0af2c1c4a263ed7453bc0f46ce2c4ebff6d74e4c2f52a605772006784b2b6f15  (3 frames: capability0:granted, attempt:prepared, attempt:frontier-crossed - the journal as the death in the acknowledgment window left it)
+EVENTS-FINAL.pj0: 10187 octets  sha256 895c133148796abba093513361707bb2b8f333638ff6d276f5bdc733e3844cdd  (9 frames: the SAME PREFIX byte-identically, plus effect:uncertain, attempt:reconciled, and the fresh act's four - nothing rewritten)
+WORLD-CELLS-POST-DEATH.txt: 48 octets  sha256 3ca4f76c1d20b1d390e604132fe3faf3b8449269582fac371b062ebda4bc6ec7
+WORLD-LEDGER-POST-DEATH.txt: 67 octets  sha256 d407c1b82eedb43310c1ead963f0bec032315e01f9cd4ba6d684aea08beec289  (ONE applied entry, made by the dead process; the refused repeat and the refused disguise added none)
+WORLD-CELLS-FINAL.txt: 44 octets  sha256 d5cf6e9e44e670d6fe81a4a39f84fe1effc8acfcf249194ea5c9b93506544ba8
+WORLD-LEDGER-FINAL.txt: 132 octets  sha256 3c2972415c3cf1aaf8906f0a6049f1ee6de5348d01c18939d5018391648cde7e  (TWO entries: the dead act's, untouched, and the fresh act's - the post-death bytes are a prefix of these)
+ACT-IDENTITY.txt: 142 octets  sha256 c57d579c55ba4dd46f18a86917f6dbfe4c21a11170c28f2385da300e0990866d  (what the dying process derived, byte-unchanged across the entire restart)
+byte-stability: every file listed here is byte-identical across runs (fixed store nonce; declared PJ-META-1 deviation, see specimen-common.lisp)

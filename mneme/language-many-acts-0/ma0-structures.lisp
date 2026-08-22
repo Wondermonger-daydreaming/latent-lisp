@@ -1,8 +1,11 @@
 ;;;; ma0-structures.lisp — the lane's typed conditions, declared constants, and
 ;;;; the four immutable structures.
 ;;;;
-;;;; CANDIDATE.  Nothing here is adopted, and nothing here is independent
-;;;; verification (contract §0).
+;;;; STANDING: attaches to immutable object identities and explicit
+;;;; dispositions, never to a filename or directory (Owner Ruling 6 §3 B1;
+;;;; MANY-ACTS-0-STANDING.md).  This file's path confers no standing on its
+;;;; bytes in either direction, and nothing here is independent verification
+;;;; (contract §0).
 ;;;;
 ;;;; EVERY SLOT IS READ-ONLY AND EVERY LIST-VALUED READER COPIES.  A read-only
 ;;;; slot stops `setf`; it does not stop a caller mutating the LIST the slot
@@ -45,7 +48,7 @@
              `(progn ,@(loop for n in names
                              collect `(define-condition ,n (,base) ())))))
   (families ma0-refusal
-            ma0-source-refused          ; V-SHAPE V-ATOMS V-READ V-DATA V-PKG
+            ma0-source-refused          ; V-SHAPE V-ATOMS (umbrella) V-READ V-DATA V-PKG
                                         ; V-ARM V-TERM V-RETRY
             ma0-environment-refused     ; contract §7
             ma0-authority-slot-unfilled ; W-AUTH-EXPLICIT

@@ -1,0 +1,22 @@
+RED-CONSOLIDATION-BEFORE — captured 2026-08-21T16:21:12Z against R4 as shipped (lab HEAD 635586f9)
+command: cd experiments/latent-lisp && sbcl --script mneme/memory-layer-0/ml0-consolidation-proof.lisp
+
+---- inputs ----
+  A: :OCCURRED authority :VALIDATED-RETRIEVAL
+  B: :OCCURRED authority :VALIDATED-RETRIEVAL
+[001] ok   both inputs are validated-retrieval accounts standing :OCCURRED
+---- consolidation (in-memory) ----
+  occurrence :OCCURRED  issuance :ISSUED-IN-WRITING-IMAGE  sources 4  predecessors 2  inputs 2
+[002] ok   consolidation COMPUTES :OCCURRED over the union
+[003] FAIL consolidation's result is a TYPED carrier, not bare values
+  raw input authority :RAW-DECODE
+[004] FAIL consolidation REFUSES a raw-decode (non-validated) input with a typed condition
+---- the documented durable route: make-ml0-bundle :sources -> ml0-write ----
+  derived occurrence :UNRESOLVED  derivation :CONSOLIDATION  predecessors 2  sources 4
+  derived row standings: (:STORED-ASSERTION :STORED-ASSERTION :STORED-ASSERTION
+                          :STORED-ASSERTION)
+[005] FAIL the DERIVED account, retrieved, carries the standing consolidation COMPUTED (:occurred)
+[006] FAIL the derived account's rows are NOT converted to testimony
+[007] ok   lineage names both predecessors
+ml0-consolidation-proof: 7 checks, 4 failures
+exit=1

@@ -1,0 +1,1183 @@
+== ma0-teeth — SBCL 2.4.6 — 2026-08-10T23:37:16Z ==
+   subject tree: /home/gauss/ma0-b-exec/experiments/latent-lisp
+
+===========================================================================
+ SECTION: 0 LANE SUITE
+===========================================================================
+== ma0-selftest — SBCL 2.4.6 ==
+   subject tree: /home/gauss/ma0-b-exec/experiments/latent-lisp/
+== MANY ACTS /0 — SELFTEST (candidate; adopts nothing) ==
+
+== VALIDATOR WITNESSES (all refusals typed, pre-act, footprint-free) ==
+  [PASS] W-V-BASELINE the lawful skeleton is accepted
+  [PASS] W-V-BASELINE name reads back
+  [PASS] W-V-SHAPE unknown program head  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-SHAPE dotted pair  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-SHAPE missing clause  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-SHAPE two forms in one file  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-SHAPE bare ident as a value  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-READ reader-eval cannot reach the validator  type=MA0-SOURCE-REFUSED code="V-READ" (expected MA0-SOURCE-REFUSED "V-READ")
+  [PASS] W-V-DATA a vector is not admitted  type=MA0-SOURCE-REFUSED code="V-DATA" (expected MA0-SOURCE-REFUSED "V-DATA")
+  [PASS] W-V-DATA a character is not admitted  type=MA0-SOURCE-REFUSED code="V-DATA" (expected MA0-SOURCE-REFUSED "V-DATA")
+  [PASS] W-V-DATA a float is not admitted  type=MA0-SOURCE-REFUSED code="V-DATA" (expected MA0-SOURCE-REFUSED "V-DATA")
+  [PASS] W-V-DATA a pathname is not admitted  type=MA0-SOURCE-REFUSED code="V-DATA" (expected MA0-SOURCE-REFUSED "V-DATA")
+  [PASS] W-V-PKG a host-package symbol is refused  type=MA0-SOURCE-REFUSED code="V-PKG" (expected MA0-SOURCE-REFUSED "V-PKG")
+  [PASS] W-V-PKG an uninterned symbol is refused  type=MA0-SOURCE-REFUSED code="V-PKG" (expected MA0-SOURCE-REFUSED "V-PKG")
+  [PASS] W-V-BIND use before define  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] W-V-BIND duplicate definition  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] W-V-BIND no shadowing across branch arms  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] W-V-FIELD field over an act-result  type=MA0-BINDING-REFUSED code="V-FIELD" (expected MA0-BINDING-REFUSED "V-FIELD")
+  [PASS] W-V-FIELD field over an ordinary value  type=MA0-BINDING-REFUSED code="V-FIELD" (expected MA0-BINDING-REFUSED "V-FIELD")
+  [PASS] W-V-FIELD ref over a derived outcome  type=MA0-BINDING-REFUSED code="V-FIELD" (expected MA0-BINDING-REFUSED "V-FIELD")
+  [PASS] W-V-FIELD branch head is an ordinary value  type=MA0-BINDING-REFUSED code="V-FIELD" (expected MA0-BINDING-REFUSED "V-FIELD")
+  [PASS] W-V-AUTH a string in authority position  type=MA0-BINDING-REFUSED code="V-RES-AUTH" (expected MA0-BINDING-REFUSED "V-RES-AUTH")
+  [PASS] W-V-AUTH an undeclared slot  type=MA0-BINDING-REFUSED code="V-AUTH" (expected MA0-BINDING-REFUSED "V-AUTH")
+  [PASS] W-V-AUTH an act-result in authority position  type=MA0-BINDING-REFUSED code="V-AUTH" (expected MA0-BINDING-REFUSED "V-AUTH")
+  [PASS] W-V-AUTH a slot is not a value  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] W-V-ARM an unknown arm  type=MA0-SOURCE-REFUSED code="V-ARM" (expected MA0-SOURCE-REFUSED "V-ARM")
+  [PASS] W-V-ARM the same arm twice, STATICALLY  type=MA0-SOURCE-REFUSED code="V-ARM" (expected MA0-SOURCE-REFUSED "V-ARM")
+  [PASS] W-V-PATTERN an unknown axis  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN an unknown axis value  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN a missing otherwise  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN a duplicate clause pattern  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN one axis named twice in a conjunction  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN an outcome axis over an act-result  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-TERM a missing terminal  type=MA0-SOURCE-REFUSED code="V-TERM" (expected MA0-SOURCE-REFUSED "V-TERM")
+  [PASS] W-V-TERM a step after a terminal  type=MA0-SOURCE-REFUSED code="V-TERM" (expected MA0-SOURCE-REFUSED "V-TERM")
+  [PASS] W-V-TERM a branch arm that does not terminate  type=MA0-SOURCE-REFUSED code="V-TERM" (expected MA0-SOURCE-REFUSED "V-TERM")
+  [PASS] W-V-RETRY there is no retry step  type=MA0-SOURCE-REFUSED code="V-RETRY" (expected MA0-SOURCE-REFUSED "V-RETRY")
+  [PASS] W-V-RETRY there is no reconcile step  type=MA0-SOURCE-REFUSED code="V-RETRY" (expected MA0-SOURCE-REFUSED "V-RETRY")
+  [PASS] W-V-RETRY value computation is not admitted  type=MA0-SOURCE-REFUSED code="V-RETRY" (expected MA0-SOURCE-REFUSED "V-RETRY")
+
+== W-V-FOOTPRINT ==
+    scratch directory holds 38 entries
+  [PASS] W-V-FOOTPRINT no store or world directory exists  subdirectories: NIL
+  [PASS] W-V-FOOTPRINT every entry is a source file this suite wrote  entries: ("W-V-ARM an unknown arm.lisp"
+          "W-V-ARM the same arm twice, STATICALLY.lisp"
+          "W-V-AUTH a slot is not a value.lisp"
+          "W-V-AUTH a string in authority position.lisp"
+          "W-V-AUTH an act-result in authority position.lisp"
+          "W-V-AUTH an undeclared slot.lisp"
+          "W-V-BIND duplicate definition.lisp"
+          "W-V-BIND no shadowing across branch arms.lisp"
+          "W-V-BIND use before define.lisp"
+          "W-V-DATA a character is not admitted.lisp"
+          "W-V-DATA a float is not admitted.lisp"
+          "W-V-DATA a pathname is not admitted.lisp"
+          "W-V-DATA a vector is not admitted.lisp"
+          "W-V-FIELD branch head is an ordinary value.lisp"
+          "W-V-FIELD field over an act-result.lisp"
+          "W-V-FIELD field over an ordinary value.lisp"
+          "W-V-FIELD ref over a derived outcome.lisp"
+          "W-V-PATTERN a duplicate clause pattern.lisp"
+          "W-V-PATTERN a missing otherwise.lisp"
+          "W-V-PATTERN an outcome axis over an act-result.lisp"
+          "W-V-PATTERN an unknown axis value.lisp"
+          "W-V-PATTERN an unknown axis.lisp"
+          "W-V-PATTERN one axis named twice in a conjunction.lisp"
+          "W-V-PKG a host-package symbol is refused.lisp"
+          "W-V-PKG an uninterned symbol is refused.lisp"
+          "W-V-READ reader-eval cannot reach the validator.lisp"
+          "W-V-RETRY there is no reconcile step.lisp"
+          "W-V-RETRY there is no retry step.lisp"
+          "W-V-RETRY value computation is not admitted.lisp"
+          "W-V-SHAPE bare ident as a value.lisp" "W-V-SHAPE dotted pair.lisp"
+          "W-V-SHAPE missing clause.lisp"
+          "W-V-SHAPE two forms in one file.lisp"
+          "W-V-SHAPE unknown program head.lisp"
+          "W-V-TERM a branch arm that does not terminate.lisp"
+          "W-V-TERM a missing terminal.lisp"
+          "W-V-TERM a step after a terminal.lisp" "skeleton.lisp")
+
+== W-IMMUTABLE ==
+  [PASS] W-IMMUTABLE ma0-program-source hands out a fresh copy
+  [PASS] W-IMMUTABLE the two copies are equal
+  [PASS] W-IMMUTABLE mutating a returned copy leaves the original unchanged
+  [PASS] W-IMMUTABLE a later copy is unchanged by the mutation
+  [PASS] W-IMMUTABLE no (setf MA0-PROGRAM-NAME) exists
+  [PASS] W-IMMUTABLE no (setf MA0-PROGRAM-SOURCE) exists
+  [PASS] W-IMMUTABLE no (setf MA0-RESULT-DISPOSITION) exists
+  [PASS] W-IMMUTABLE no (setf MA0-RESULT-VALUE) exists
+  [PASS] W-IMMUTABLE no (setf MA0-RESULT-ACT-SUMMARIES) exists
+  [PASS] W-IMMUTABLE no (setf MA0-ACT-SUMMARY-CLASS) exists
+  [PASS] W-IMMUTABLE no (setf MA0-ENVIRONMENT-STORE-ID) exists
+
+== R1/D1 — OWNERSHIP (both directions, MUTABLE LEAVES) ==
+  [PASS] R1/D1 CONTRAST copy-tree shares mutable leaves (why %ma0-own exists)  original now "Xeaf"
+  [PASS] R1/D1 %ma0-own returns an EQUAL structure
+  [PASS] R1/D1 %ma0-own copies the spine
+  [PASS] R1/D1 %ma0-own copies a TOP-LEVEL string leaf
+  [PASS] R1/D1 %ma0-own copies a NESTED string leaf
+  [PASS] R1/D1 %ma0-own SHARES symbols (the binding table depends on EQ)
+  [PASS] R1/D1 direction i: mutating the ORIGINAL leaves the owned copy alone  owned="alpha"
+  [PASS] R1/D1 direction ii: mutating the OWNED copy leaves the original alone  original="beta"
+  [PASS] R1/D1 %ma0-own copies an admitted mutable BYTE VECTOR  original[0]=1 owned[0]=99
+  [PASS] R1/D1 TOOTH the ownership budget REFUSES an oversized datum  code="MA0-OWN-BOUND"
+
+== R1/D1 — THE SOURCE BOUNDARY, both directions ==
+  [PASS] R1/D1 the source readback contains a string to mutate  found "skeleton"
+  [PASS] R1/D1 mutating a returned SOURCE string leaves the retained source alone  was "skeleton"; fresh readback "skeleton"
+  [PASS] R1/D1 ma0-program-name hands out a FRESH string each call
+  [PASS] R1/D1 mutating a returned name leaves the program's name alone  now "skeleton"
+
+== R1/D2 — PATH-SENSITIVE BRANCH BINDING ==
+  [PASS] R1/D2 a later alternative may not see an earlier one's binding  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] R1/D2 the otherwise clause may not see an alternative's binding  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] R1/D2 CONTROL a pre-branch binding stays visible in every alternative
+  [PASS] R1/D2 the sealed define-once law still spans sibling alternatives  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] R1/D2 V-ARM still spans sibling alternatives (arms are not restored)  type=MA0-SOURCE-REFUSED code="V-ARM" (expected MA0-SOURCE-REFUSED "V-ARM")
+  [PASS] R1/D2 THE VACUITY WITNESS no step may follow a branch (V-TERM)  type=MA0-SOURCE-REFUSED code="V-TERM" (expected MA0-SOURCE-REFUSED "V-TERM")
+
+== R1/D3 — A LAWFUL SOURCE IS A TREE (bounded, terminating) ==
+  [PASS] R1/D3 a self-referential list is refused, and TERMINATES  code="V-SHAPE" detail names "a lawful source is a TREE"
+  [PASS] R1/D3 a cycle nested in an otherwise-lawful program is refused  code="V-SHAPE" detail names "a lawful source is a TREE"
+  [PASS] R1/D3 acyclic SHARED substructure is refused by the same law  code="V-SHAPE" detail names "a lawful source is a TREE"
+  [PASS] R1/D3 CONTROL a long FINITE source inside the node bound is accepted
+  [PASS] R1/D3 a source beyond the declared node bound is refused BY THE BOUND  code="V-SHAPE" detail names "node count exceeds the declared bound"
+  [PASS] R1/D3 CONTROL an ordinary lawful source is still accepted
+
+== R1/D5 — THE GENERATION: monotonic, never reset, never reused ==
+  [PASS] R1/D5 TOOTH the mutation detector FIRES on a planted decrement  ("decf")
+  [PASS] R1/D5 TOOTH the mutation detector FIRES on a planted reset  ("(setf *ma0-environment-generation*")
+  [PASS] R1/D5 TOOTH the detector does NOT fire on the lawful increment
+  [PASS] R1/D5 the gate is not vacuous — it saw the counter  6 mention(s)
+  [PASS] R1/D5 the counter has EXACTLY ONE increment site  found 1
+  [PASS] R1/D5 nothing decrements, resets, rebinds, or unbinds the counter  NIL
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [PASS] R1/D5 successive constructions get STRICTLY INCREASING generations  (1 2 3)
+  [PASS] R1/D5 each construction advances the counter by exactly one  (1 2 3)
+  [PASS] R1/D5 only the LAST environment is current; no older one revives  generations (1 2 3), installed 3
+
+== GREP GATES (each shown able to FIRE before its clean pass is reported) ==
+  [PASS] TOOTH the no-internals grep FIRES on a planted violation  hits=("lisp-plus-journal0")
+  [PASS] TOOTH the no-internals grep does NOT fire on a lawful single colon
+  [PASS] NO-INTERNALS package.lisp
+  [PASS] NO-INTERNALS ma0-structures.lisp
+  [PASS] NO-INTERNALS ma0-validate.lisp
+  [PASS] NO-INTERNALS ma0-environment.lisp
+  [PASS] NO-INTERNALS ma0-compose.lisp
+  [PASS] NO-INTERNALS ma0-eval.lisp
+  [PASS] NO-INTERNALS ma0-selftest-suite.lisp
+  [PASS] NO-INTERNALS load.lisp
+  [PASS] NO-INTERNALS ma0-driver.lisp
+  [PASS] NO-INTERNALS ma0-selftest.lisp
+  [PASS] NO-INTERNALS r1/D1-ownership.lisp
+  [PASS] NO-INTERNALS r1/D2-branch-binding.lisp
+  [PASS] NO-INTERNALS r1/D3-circular-source.lisp
+  [PASS] NO-INTERNALS r1/D4-env-crosswire.lisp
+  [PASS] NO-INTERNALS r1/D5-generation-seam.lisp
+  [PASS] NO-INTERNALS r1/run-r1-program.lisp
+  [PASS] TOOTH the W-GENERIC grep FIRES on a planted program name
+  [PASS] W-GENERIC ma0-eval.lisp names no program and no fixture identity  found=NIL
+  [PASS] W-GENERIC ma0-validate.lisp names no program and no fixture identity  found=NIL
+  [PASS] W-GENERIC ma0-compose.lisp names no program and no fixture identity  found=NIL
+  [PASS] W-GENERIC ma0-structures.lisp names no program and no fixture identity  found=NIL
+
+== SCENARIO p1 ==
+  [PASS] p1 exit code  exit=0 expected=0
+  [PASS] p1 reached its declared end  end line="DRIVER-END p1 reached-end"
+  [PASS] p1: program-name="editio"  nearest="program-name=\"editio\""
+  [PASS] p1: disposition=:COMPLETED  nearest="disposition=:COMPLETED"
+  [PASS] p1: value=(:ANNOUNCED "codex-sangallensis" :SETTLED)  nearest="value=(:ANNOUNCED \"codex-sangallensis\" :SETTLED)"
+  [PASS] p1: refusal-code=NIL  nearest="refusal-code=NIL"
+  [PASS] p1: summary-count=1  nearest="summary-count=1"
+  [PASS] p1: summary 0 arm="A" class=:A disposition=:RETURNED verdict="agree" hexlen=64  nearest="summary 0 arm=\"A\" class=:A disposition=:RETURNED verdict=\"agree\" hexlen=64"
+  [PASS] p1: prefix-status=:VALID  nearest="prefix-status=:VALID"
+  [PASS] p1: derived prima execution=:SETTLED evidence-class=:NONE provenance=:NONE  nearest="derived prima execution=:SETTLED evidence-class=:NONE provenance=:NONE"
+  [PASS] p1: frame prima F1 present=T  nearest="frame prima F1 present=T"
+  [PASS] p1: frame prima F2 present=T  nearest="frame prima F2 present=T"
+  [PASS] p1: frame prima F3 present=NIL  nearest="frame prima F3 present=NIL"
+  [PASS] p1: frame prima F4 present=NIL  nearest="frame prima F4 present=NIL"
+  [PASS] p1: frame prima F5 present=T  nearest="frame prima F5 present=T"
+  [PASS] p1: classification=:ACT-REPORTED  nearest="classification=:ACT-REPORTED"
+  [PASS] p1: store-id-length=74  nearest="store-id-length=74"
+
+== SCENARIO p2-alpha ==
+  [PASS] p2-alpha exit code  exit=0 expected=0
+  [PASS] p2-alpha reached its declared end  end line="DRIVER-END p2-alpha reached-end"
+  [PASS] p2-alpha: program-name="custodia"  nearest="program-name=\"custodia\""
+  [PASS] p2-alpha: disposition=:REFUSED  nearest="disposition=:REFUSED"
+  [PASS] p2-alpha: refusal-code=:UNCERTAINTY-HALTS-CHAIN  nearest="refusal-code=:UNCERTAINTY-HALTS-CHAIN"
+  [PASS] p2-alpha: refusal-detail="marcus"  nearest="refusal-detail=\"marcus\""
+  [PASS] p2-alpha: summary-count=2  nearest="summary-count=2"
+  [PASS] p2-alpha: summary 0 arm="A" class=:A disposition=:RETURNED verdict="agree" hexlen=64  nearest="summary 0 arm=\"A\" class=:A disposition=:RETURNED verdict=\"agree\" hexlen=64"
+  [PASS] p2-alpha: summary 1 arm="C-i" class=:C-I disposition=:INTERRUPTED verdict="agree" hexlen=64  nearest="summary 1 arm=\"C-i\" class=:C-I disposition=:INTERRUPTED verdict=\"agree\" hexlen=64"
+  [PASS] p2-alpha: frame revocata :F1 present=NIL  nearest="frame revocata :F1 present=NIL"
+  [PASS] p2-alpha: prefix-status=:VALID  nearest="prefix-status=:VALID"
+
+== SCENARIO p2-beta ==
+  [PASS] p2-beta exit code  exit=0 expected=0
+  [PASS] p2-beta reached its declared end  end line="DRIVER-END p2-beta reached-end"
+  [PASS] p2-beta: program-name="custodia"  nearest="program-name=\"custodia\""
+  [PASS] p2-beta: disposition=:REFUSED  nearest="disposition=:REFUSED"
+  [PASS] p2-beta: refusal-code=:AUTHORITY-REVOKED-BEFORE-DUTY-3  nearest="refusal-code=:AUTHORITY-REVOKED-BEFORE-DUTY-3"
+  [PASS] p2-beta: summary-count=3  nearest="summary-count=3"
+  [PASS] p2-beta: summary 2 arm="B-R" class=:UNPAIRED-F1 disposition=:MINT-REFUSED verdict=NIL hexlen=64  nearest="summary 2 arm=\"B-R\" class=:UNPAIRED-F1 disposition=:MINT-REFUSED verdict=NIL hexlen=64"
+  [PASS] p2-beta: frame revocata F1 present=T  nearest="frame revocata F1 present=T"
+  [PASS] p2-beta: frame revocata F2 present=NIL  nearest="frame revocata F2 present=NIL"
+  [PASS] p2-beta: frame revocata F3 present=NIL  nearest="frame revocata F3 present=NIL"
+  [PASS] p2-beta: frame revocata F4 present=NIL  nearest="frame revocata F4 present=NIL"
+  [PASS] p2-beta: frame revocata F5 present=NIL  nearest="frame revocata F5 present=NIL"
+  [PASS] p2-beta: classification revocata=:BINDING-DECLARED-UNPAIRED  nearest="classification revocata=:BINDING-DECLARED-UNPAIRED"
+  [PASS] p2-beta: prefix-status=:VALID  nearest="prefix-status=:VALID"
+
+== SCENARIO w-branch-one ==
+  [PASS] w-branch-one exit code  exit=0 expected=0
+  [PASS] w-branch-one reached its declared end  end line="DRIVER-END w-branch-one reached-end"
+  [PASS] w-branch-one: value=:TOOK-THE-QUIET-ARM  nearest="value=:TOOK-THE-QUIET-ARM"
+  [PASS] w-branch-one: summary-count=0  nearest="summary-count=0"
+  [PASS] w-branch-one: prefix-frames-before=1  nearest="prefix-frames-before=1"
+  [PASS] w-branch-one: prefix-frames-after=1  nearest="prefix-frames-after=1"
+  [PASS] w-branch-one: frame amissa :F1 present=NIL  nearest="frame amissa :F1 present=NIL"
+
+== SCENARIO w-branch-exact ==
+  [PASS] w-branch-exact exit code  exit=0 expected=0
+  [PASS] w-branch-exact reached its declared end  end line="DRIVER-END w-branch-exact reached-end"
+  [PASS] w-branch-exact: value=:EXACT-MATCHING-HELD  nearest="value=:EXACT-MATCHING-HELD"
+  [PASS] w-branch-exact: probe execution=:ABSENT provenance=:NONE evidence-class=:NONE  nearest="probe execution=:ABSENT provenance=:NONE evidence-class=:NONE"
+  [PASS] w-branch-exact: probe execution-standing-of-facet=:PRESENT  nearest="probe execution-standing-of-facet=:PRESENT"
+
+== SCENARIO w-derive-ne-perform ==
+  [PASS] w-derive-ne-perform exit code  exit=0 expected=0
+  [PASS] w-derive-ne-perform reached its declared end  end line="DRIVER-END w-derive-ne-perform reached-end"
+  [PASS] w-derive-ne-perform: prefix-frames-before=1  nearest="prefix-frames-before=1"
+  [PASS] w-derive-ne-perform: prefix-frames-after=1  nearest="prefix-frames-after=1"
+  [PASS] w-derive-ne-perform: value=:THREE-DERIVES-AND-NO-ACT  nearest="value=:THREE-DERIVES-AND-NO-ACT"
+
+== SCENARIO w-auth-unfilled ==
+  [PASS] w-auth-unfilled exit code  exit=0 expected=0
+  [PASS] w-auth-unfilled reached its declared end  end line="DRIVER-END w-auth-unfilled reached-end"
+  [PASS] w-auth-unfilled: refused type=LISP-PLUS-MANY-ACTS0:MA0-AUTHORITY-SLOT-UNFILLED code="MA0-AUTH-1"  nearest="refused type=LISP-PLUS-MANY-ACTS0:MA0-AUTHORITY-SLOT-UNFILLED code=\"MA0-AUTH-1\""
+  [PASS] w-auth-unfilled: frame prima :F1 present=NIL  nearest="frame prima :F1 present=NIL"
+  [PASS] w-auth-unfilled: prefix-frames=0  nearest="prefix-frames=0"
+
+== SCENARIO w-order-store ==
+  [PASS] w-order-store exit code  exit=0 expected=0
+  [PASS] w-order-store reached its declared end  end line="DRIVER-END w-order-store reached-end"
+  [PASS] w-order-store: first-completion verdict="agree" class=:A  nearest="first-completion verdict=\"agree\" class=:A"
+  [PASS] w-order-store: prefix-frames=8  nearest="prefix-frames=8"
+  [PASS] w-order-store: refused type=LISP-PLUS-MANY-ACTS0:MA0-COMPOSITION-DIVERGENCE code="ACT-ORDER-1"  nearest="refused type=LISP-PLUS-MANY-ACTS0:MA0-COMPOSITION-DIVERGENCE code=\"ACT-ORDER-1\""
+  [PASS] w-order-store: prefix-frames-after=8  nearest="prefix-frames-after=8"
+  [PASS] w-order-store: prefix-status=:VALID  nearest="prefix-status=:VALID"
+
+== SCENARIO w-no-erase ==
+  [PASS] w-no-erase exit code  exit=0 expected=0
+  [PASS] w-no-erase reached its declared end  end line="DRIVER-END w-no-erase reached-end"
+  [PASS] w-no-erase: composed arm="A" verdict="agree"  nearest="composed arm=\"A\" verdict=\"agree\""
+  [PASS] w-no-erase: composed arm="C-i" verdict="agree"  nearest="composed arm=\"A\" verdict=\"agree\""
+  [PASS] w-no-erase: before prefix-frames=21  nearest="before prefix-frames=21"
+  [PASS] w-no-erase: revoked-duty class=:UNPAIRED-F1 disposition=:MINT-REFUSED  nearest="revoked-duty class=:UNPAIRED-F1 disposition=:MINT-REFUSED"
+  [PASS] w-no-erase: after prefix-frames=22  nearest="after prefix-frames=22"
+  [PASS] w-no-erase: earlier-frames-unchanged=T  nearest="earlier-frames-unchanged=T"
+  [PASS] w-no-erase: earlier-frame-rows=10  nearest="earlier-frame-rows=10"
+  [PASS] w-no-erase: prefix-status=:VALID  nearest="prefix-status=:VALID"
+
+== SCENARIO w-error-propagates ==
+  [PASS] w-error-propagates exit code  exit=0 expected=0
+  [PASS] w-error-propagates reached its declared end  end line="DRIVER-END w-error-propagates reached-end"
+  [PASS] w-error-propagates: first disposition=:COMPLETED  nearest="first disposition=:COMPLETED"
+  [PASS] w-error-propagates: propagated type=LISP-PLUS-LANGUAGE-ACT0:ACT-IDENTITY-TAKEN requirement="ACT-9b"  nearest="propagated type=LISP-PLUS-LANGUAGE-ACT0:ACT-IDENTITY-TAKEN requirement=\"ACT-9b\""
+  [PASS] w-error-propagates: converted-to-completed=NIL  nearest="converted-to-completed=NIL"
+
+== SCENARIO w-error-uncaught ==
+  [PASS] w-error-uncaught exit code  exit=1 expected=1
+  [PASS] w-error-uncaught reached its declared end  end line="DRIVER-END w-error-uncaught propagated"
+  [PASS] w-error-uncaught: first disposition=:COMPLETED  nearest="first disposition=:COMPLETED"
+  [PASS] w-error-uncaught: PROPAGATED LISP-PLUS-LANGUAGE-ACT0:ACT-IDENTITY-TAKEN  nearest="PROPAGATED LISP-PLUS-LANGUAGE-ACT0:ACT-IDENTITY-TAKEN"
+
+== TALLY: 200 passed, 0 failed ==
+ma0-selftest: 200 checks, 0 failures
+
+===========================================================================
+ SECTION: 1 NO-INTERNALS (contract §3, extended to the teeth's own files)
+===========================================================================
+  [PASS] TOOTH the no-internals grep FIRES on a planted violation
+  [PASS] TOOTH it does NOT fire on a lawful single colon
+  [PASS] NO-INTERNALS ma0-concordance.lisp
+  [PASS] NO-INTERNALS ma0-concordance-canonical.lisp
+  [PASS] NO-INTERNALS ma0-concordance-ma0.lisp
+  [PASS] NO-INTERNALS ma0-no-blind-replay.lisp
+  [PASS] NO-INTERNALS ma0-footprint-witness.lisp
+  [PASS] NO-INTERNALS ma0-res-not-auth.lisp
+  [PASS] NO-INTERNALS ma0-concordance.sh
+  [PASS] NO-INTERNALS ma0-diseases.sh
+  [PASS] NO-INTERNALS ma0-campaign-gates.sh
+  [PASS] NO-INTERNALS ma0-teeth.sh
+ma0-teeth-no-internals: 10 files, 0 hits
+
+===========================================================================
+ SECTION: 2 W-NO-BLIND-REPLAY
+===========================================================================
+== ma0-no-blind-replay — SBCL 2.4.6 ==
+   run root: /tmp/ma0-replay.1wotUm/
+== W-NO-BLIND-REPLAY — a consumed arm, re-invoked by hand ==
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [PASS] CONTROL the first invocation completes  class=:A verdict="agree"
+  [PASS] CONTROL its F1 is durable for this attempt
+    prefix frames after the completed act: 8
+  [PASS] W-NO-BLIND-REPLAY the ADOPTED lane (One Act /0) refuses the replay  type=LISP-PLUS-LANGUAGE-ACT0:ACT-IDENTITY-TAKEN requirement="ACT-9b"
+  [PASS] W-NO-BLIND-REPLAY the refusal carries One Act /0's own requirement-id  requirement-id="ACT-9b"
+  [PASS] W-NO-BLIND-REPLAY the refusal is NOT an MA0 condition — the law is One Act /0's  typep ma0-refusal => NIL
+DENS-REPLAY refusal-type=ACT-IDENTITY-TAKEN
+DENS-REPLAY refusal-requirement-id=ACT-9b
+  [PASS] W-NO-BLIND-REPLAY the refused replay appended nothing  before=8 after=8
+  [PASS] W-NO-BLIND-REPLAY the prefix still reads back whole  status=:VALID
+   run root removed (exists: NIL)
+
+== TALLY: 7 passed, 0 failed ==
+ma0-no-blind-replay: 7 checks, 0 failures
+
+===========================================================================
+ SECTION: 3 W-V-FOOTPRINT (program level)
+===========================================================================
+== ma0-footprint-witness — SBCL 2.4.6 ==
+   run root: /tmp/ma0-footprint.h0lqDq/
+== W-V-FOOTPRINT (program level) — an invalid program against a LIVE store ==
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+    prefix frames with the environment standing: 2
+  [PASS] W-V-ARM two acts on one arm are refused  type=LISP-PLUS-MANY-ACTS0:MA0-SOURCE-REFUSED code="V-ARM"
+  [PASS] W-V-ARM the refusal is typed V-ARM  code="V-ARM"
+  [PASS] W-V-FOOTPRINT the invalid program appended NOTHING to the live store  before=2 after=2
+  [PASS] NON-VACUITY a lawful program on another arm DOES complete  disposition=:COMPLETED
+  [PASS] NON-VACUITY and it DOES grow the prefix — the store was never dead  before=2 after=9
+   run root removed (exists: NIL)
+
+== TALLY: 5 passed, 0 failed ==
+ma0-footprint-witness: 5 checks, 0 failures
+
+===========================================================================
+ SECTION: 4 CONCORDANCE
+===========================================================================
+== MANY ACTS /0 — CONCORDANCE TEETH (candidate; adopts nothing) ==
+   the re-composition (contract §4) against the adopted composer,
+   separate images, separate stores, structure and verdicts only.
+
+== CANONICAL SIDE — run-all-arms, One Act /0's own composer ==
+  [PASS] canonical image exit code  exit=0
+  [PASS] canonical image reached its end  END="reached-end"
+  [PASS] canonical run reports zero failed One Act /0 checks  checks-failed="0"
+  [PASS] canonical run returned all seven adopted arms  arms-returned="7"
+
+== MA0 SIDE — arm A, ma0-complete-act, its own image and store ==
+  [PASS] MA0 image A exit code  exit=0
+  [PASS] MA0 image A reached its end  END="reached-end"
+  [PASS] MA0 image A ran the arm it was asked for  arm="A"
+
+== MA0 SIDE — arm B-L1, ma0-complete-act, its own image and store ==
+  [PASS] MA0 image B-L1 exit code  exit=0
+  [PASS] MA0 image B-L1 reached its end  END="reached-end"
+  [PASS] MA0 image B-L1 ran the arm it was asked for  arm="B-L1"
+
+== MA0 SIDE — arm B-L2, ma0-complete-act, its own image and store ==
+  [PASS] MA0 image B-L2 exit code  exit=0
+  [PASS] MA0 image B-L2 reached its end  END="reached-end"
+  [PASS] MA0 image B-L2 ran the arm it was asked for  arm="B-L2"
+
+== MA0 SIDE — arm B-R, ma0-complete-act, its own image and store ==
+  [PASS] MA0 image B-R exit code  exit=0
+  [PASS] MA0 image B-R reached its end  END="reached-end"
+  [PASS] MA0 image B-R ran the arm it was asked for  arm="B-R"
+
+== MA0 SIDE — arm C-i, ma0-complete-act, its own image and store ==
+  [PASS] MA0 image C-i exit code  exit=0
+  [PASS] MA0 image C-i reached its end  END="reached-end"
+  [PASS] MA0 image C-i ran the arm it was asked for  arm="C-i"
+
+== MA0 SIDE — arm C-ii, ma0-complete-act, its own image and store ==
+  [PASS] MA0 image C-ii exit code  exit=0
+  [PASS] MA0 image C-ii reached its end  END="reached-end"
+  [PASS] MA0 image C-ii ran the arm it was asked for  arm="C-ii"
+
+== MA0 SIDE — arm D, ma0-complete-act, its own image and store ==
+  [PASS] MA0 image D exit code  exit=0
+  [PASS] MA0 image D reached its end  END="reached-end"
+  [PASS] MA0 image D ran the arm it was asked for  arm="D"
+
+== W-CONCORD-A — 18 facets ==
+  [PASS] W-CONCORD A frames-present  (F1 F2 F5)
+  [PASS] W-CONCORD A frames-absent  (F3 F4)
+  [PASS] W-CONCORD A classification  ACT-REPORTED
+  [PASS] W-CONCORD A class  A
+  [PASS] W-CONCORD A act-id-hex  9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175
+  [PASS] W-CONCORD A f2-frontier  CROSSED
+  [PASS] W-CONCORD A f2-outcome-view  COMMITTED
+  [PASS] W-CONCORD A f2-effect-axis-value  SETTLED
+  [PASS] W-CONCORD A f2-effect-axis-determinacy  DETERMINATE
+  [PASS] W-CONCORD A f3-ledger-answer  none
+  [PASS] W-CONCORD A f4-runtime-resolution  none
+  [PASS] W-CONCORD A correspondence-row  none
+  [PASS] W-CONCORD A correspondence-verdict  none
+  [PASS] W-CONCORD A f5-execution-standing  SETTLED
+  [PASS] W-CONCORD A f5-evidence-class  NONE
+  [PASS] W-CONCORD A agreement-row  A
+  [PASS] W-CONCORD A agreement-verdict  agree
+  [PASS] W-CONCORD A mint-refusal  none
+
+== W-CONCORD-BL1 — 18 facets ==
+  [PASS] W-CONCORD B-L1 frames-present  (F1 F2 F5)
+  [PASS] W-CONCORD B-L1 frames-absent  (F3 F4)
+  [PASS] W-CONCORD B-L1 classification  ACT-REPORTED
+  [PASS] W-CONCORD B-L1 class  B
+  [PASS] W-CONCORD B-L1 act-id-hex  660e47bd6c4d895a8a3a5f41ec621079dd0107a54cc1d8e4bb3c320836f94f32
+  [PASS] W-CONCORD B-L1 f2-frontier  NOT-CROSSED
+  [PASS] W-CONCORD B-L1 f2-outcome-view  REFUSED
+  [PASS] W-CONCORD B-L1 f2-effect-axis-value  NOT-ENTERED
+  [PASS] W-CONCORD B-L1 f2-effect-axis-determinacy  DETERMINATE
+  [PASS] W-CONCORD B-L1 f3-ledger-answer  none
+  [PASS] W-CONCORD B-L1 f4-runtime-resolution  none
+  [PASS] W-CONCORD B-L1 correspondence-row  none
+  [PASS] W-CONCORD B-L1 correspondence-verdict  none
+  [PASS] W-CONCORD B-L1 f5-execution-standing  ABSENT
+  [PASS] W-CONCORD B-L1 f5-evidence-class  NONE
+  [PASS] W-CONCORD B-L1 agreement-row  B
+  [PASS] W-CONCORD B-L1 agreement-verdict  agree
+  [PASS] W-CONCORD B-L1 mint-refusal  none
+
+== W-CONCORD-BL2 — 18 facets ==
+  [PASS] W-CONCORD B-L2 frames-present  (F1 F2 F5)
+  [PASS] W-CONCORD B-L2 frames-absent  (F3 F4)
+  [PASS] W-CONCORD B-L2 classification  ACT-REPORTED
+  [PASS] W-CONCORD B-L2 class  B
+  [PASS] W-CONCORD B-L2 act-id-hex  9e37664530c90134ceac45d81a4f71ddc0e69ca5f6255e65e6246662de3c6b7e
+  [PASS] W-CONCORD B-L2 f2-frontier  NOT-CROSSED
+  [PASS] W-CONCORD B-L2 f2-outcome-view  REFUSED
+  [PASS] W-CONCORD B-L2 f2-effect-axis-value  NOT-ENTERED
+  [PASS] W-CONCORD B-L2 f2-effect-axis-determinacy  DETERMINATE
+  [PASS] W-CONCORD B-L2 f3-ledger-answer  none
+  [PASS] W-CONCORD B-L2 f4-runtime-resolution  none
+  [PASS] W-CONCORD B-L2 correspondence-row  none
+  [PASS] W-CONCORD B-L2 correspondence-verdict  none
+  [PASS] W-CONCORD B-L2 f5-execution-standing  ABSENT
+  [PASS] W-CONCORD B-L2 f5-evidence-class  NONE
+  [PASS] W-CONCORD B-L2 agreement-row  B
+  [PASS] W-CONCORD B-L2 agreement-verdict  agree
+  [PASS] W-CONCORD B-L2 mint-refusal  none
+
+== W-CONCORD-BR — 18 facets ==
+  [PASS] W-CONCORD B-R frames-present  (F1)
+  [PASS] W-CONCORD B-R frames-absent  (F2 F3 F4 F5)
+  [PASS] W-CONCORD B-R classification  BINDING-DECLARED-UNPAIRED
+  [PASS] W-CONCORD B-R class  UNPAIRED-F1
+  [PASS] W-CONCORD B-R act-id-hex  2715cba038d2bab77ded383806dc3f9b0adc612b3a75345b8f6cb72d9d9c0b1d
+  [PASS] W-CONCORD B-R f2-frontier  none
+  [PASS] W-CONCORD B-R f2-outcome-view  none
+  [PASS] W-CONCORD B-R f2-effect-axis-value  none
+  [PASS] W-CONCORD B-R f2-effect-axis-determinacy  none
+  [PASS] W-CONCORD B-R f3-ledger-answer  none
+  [PASS] W-CONCORD B-R f4-runtime-resolution  none
+  [PASS] W-CONCORD B-R correspondence-row  none
+  [PASS] W-CONCORD B-R correspondence-verdict  none
+  [PASS] W-CONCORD B-R f5-execution-standing  none
+  [PASS] W-CONCORD B-R f5-evidence-class  none
+  [PASS] W-CONCORD B-R agreement-row  none
+  [PASS] W-CONCORD B-R agreement-verdict  none
+  [PASS] W-CONCORD B-R mint-refusal  CAP1-MINT-REFUSED/CAP1-MINT-2
+
+== W-CONCORD-CI — 18 facets ==
+  [PASS] W-CONCORD C-i frames-present  (F1 F2 F3 F4 F5)
+  [PASS] W-CONCORD C-i frames-absent  NIL
+  [PASS] W-CONCORD C-i classification  ACT-REPORTED-WITH-RECONCILIATION
+  [PASS] W-CONCORD C-i class  C-I
+  [PASS] W-CONCORD C-i act-id-hex  874247cf9b9bbfe9bd3cbbcba5c00a393f6d891599647d2c6e8765533f910528
+  [PASS] W-CONCORD C-i f2-frontier  CROSSED
+  [PASS] W-CONCORD C-i f2-outcome-view  INDETERMINATE
+  [PASS] W-CONCORD C-i f2-effect-axis-value  BOUNDED
+  [PASS] W-CONCORD C-i f2-effect-axis-determinacy  BOUNDED
+  [PASS] W-CONCORD C-i f3-ledger-answer  ANSWERED-COMMITTED
+  [PASS] W-CONCORD C-i f4-runtime-resolution  APPLIED
+  [PASS] W-CONCORD C-i correspondence-row  row-1
+  [PASS] W-CONCORD C-i correspondence-verdict  agree
+  [PASS] W-CONCORD C-i f5-execution-standing  RECONCILED
+  [PASS] W-CONCORD C-i f5-evidence-class  RECONCILED
+  [PASS] W-CONCORD C-i agreement-row  C-reconciled
+  [PASS] W-CONCORD C-i agreement-verdict  agree
+  [PASS] W-CONCORD C-i mint-refusal  none
+
+== W-CONCORD-CII — 18 facets ==
+  [PASS] W-CONCORD C-ii frames-present  (F1 F2 F3 F4 F5)
+  [PASS] W-CONCORD C-ii frames-absent  NIL
+  [PASS] W-CONCORD C-ii classification  ACT-REPORTED-WITH-RECONCILIATION
+  [PASS] W-CONCORD C-ii class  C-II
+  [PASS] W-CONCORD C-ii act-id-hex  dfb9fc46b1cad01cfea7b8430efb3d506d3ec391d6f1ae0ecf16d17bc599f4bd
+  [PASS] W-CONCORD C-ii f2-frontier  CROSSED
+  [PASS] W-CONCORD C-ii f2-outcome-view  INDETERMINATE
+  [PASS] W-CONCORD C-ii f2-effect-axis-value  BOUNDED
+  [PASS] W-CONCORD C-ii f2-effect-axis-determinacy  BOUNDED
+  [PASS] W-CONCORD C-ii f3-ledger-answer  ANSWERED-NOT-COMMITTED
+  [PASS] W-CONCORD C-ii f4-runtime-resolution  NOT-APPLIED
+  [PASS] W-CONCORD C-ii correspondence-row  row-2
+  [PASS] W-CONCORD C-ii correspondence-verdict  jurisdictional-divergence
+  [PASS] W-CONCORD C-ii f5-execution-standing  RECONCILED
+  [PASS] W-CONCORD C-ii f5-evidence-class  RECONCILED
+  [PASS] W-CONCORD C-ii agreement-row  C-reconciled
+  [PASS] W-CONCORD C-ii agreement-verdict  agree
+  [PASS] W-CONCORD C-ii mint-refusal  none
+
+== W-CONCORD-D — 18 facets ==
+  [PASS] W-CONCORD D frames-present  (F1 F2 F5)
+  [PASS] W-CONCORD D frames-absent  (F3 F4)
+  [PASS] W-CONCORD D classification  ACT-REPORTED
+  [PASS] W-CONCORD D class  D
+  [PASS] W-CONCORD D act-id-hex  063ab33fcd756c0c7616b24a4664f665a29e00d05d8c73d7ee51e670a30ae574
+  [PASS] W-CONCORD D f2-frontier  CROSSED
+  [PASS] W-CONCORD D f2-outcome-view  no-outcome-host-fault
+  [PASS] W-CONCORD D f2-effect-axis-value  no-outcome-host-fault
+  [PASS] W-CONCORD D f2-effect-axis-determinacy  no-outcome-host-fault
+  [PASS] W-CONCORD D f3-ledger-answer  none
+  [PASS] W-CONCORD D f4-runtime-resolution  none
+  [PASS] W-CONCORD D correspondence-row  none
+  [PASS] W-CONCORD D correspondence-verdict  none
+  [PASS] W-CONCORD D f5-execution-standing  CROSSED-UNSETTLED
+  [PASS] W-CONCORD D f5-evidence-class  NONE
+  [PASS] W-CONCORD D agreement-row  D-pre
+  [PASS] W-CONCORD D agreement-verdict  agree
+  [PASS] W-CONCORD D mint-refusal  none
+
+== SETUP AUDIT — the canonical harvest against act0-selftest.lisp ==
+  [PASS] W-ONEACT-GREEN act0-selftest exit code  exit=0
+  [PASS] W-ONEACT-GREEN oneact0-selftest: 173 checks, 0 failures  tail="oneact0-selftest: 173 checks, 0 failures"
+  [PASS] SETUP-AUDIT A class  adopted="A" canonical="A"
+  [PASS] SETUP-AUDIT A agreement-row  adopted="A" canonical="A"
+  [PASS] SETUP-AUDIT A agreement-verdict  adopted="agree" canonical="agree"
+  [PASS] SETUP-AUDIT A frames-present  adopted="(F1 F2 F5)" canonical="(F1 F2 F5)"
+  [PASS] SETUP-AUDIT B-L1 class  adopted="B" canonical="B"
+  [PASS] SETUP-AUDIT B-L1 agreement-row  adopted="B" canonical="B"
+  [PASS] SETUP-AUDIT B-L1 agreement-verdict  adopted="agree" canonical="agree"
+  [PASS] SETUP-AUDIT B-L1 frames-present  adopted="(F1 F2 F5)" canonical="(F1 F2 F5)"
+  [PASS] SETUP-AUDIT B-L2 class  adopted="B" canonical="B"
+  [PASS] SETUP-AUDIT B-L2 agreement-row  adopted="B" canonical="B"
+  [PASS] SETUP-AUDIT B-L2 agreement-verdict  adopted="agree" canonical="agree"
+  [PASS] SETUP-AUDIT B-L2 frames-present  adopted="(F1 F2 F5)" canonical="(F1 F2 F5)"
+  [PASS] SETUP-AUDIT B-R class  adopted="UNPAIRED-F1" canonical="UNPAIRED-F1"
+  [PASS] SETUP-AUDIT B-R agreement-row  adopted="none" canonical="none"
+  [PASS] SETUP-AUDIT B-R agreement-verdict  adopted="none" canonical="none"
+  [PASS] SETUP-AUDIT B-R frames-present  adopted="(F1)" canonical="(F1)"
+  [PASS] SETUP-AUDIT C-i class  adopted="C-I" canonical="C-I"
+  [PASS] SETUP-AUDIT C-i agreement-row  adopted="C-reconciled" canonical="C-reconciled"
+  [PASS] SETUP-AUDIT C-i agreement-verdict  adopted="agree" canonical="agree"
+  [PASS] SETUP-AUDIT C-i frames-present  adopted="(F1 F2 F3 F4 F5)" canonical="(F1 F2 F3 F4 F5)"
+  [PASS] SETUP-AUDIT C-ii class  adopted="C-II" canonical="C-II"
+  [PASS] SETUP-AUDIT C-ii agreement-row  adopted="C-reconciled" canonical="C-reconciled"
+  [PASS] SETUP-AUDIT C-ii agreement-verdict  adopted="agree" canonical="agree"
+  [PASS] SETUP-AUDIT C-ii frames-present  adopted="(F1 F2 F3 F4 F5)" canonical="(F1 F2 F3 F4 F5)"
+  [PASS] SETUP-AUDIT D class  adopted="D" canonical="D"
+  [PASS] SETUP-AUDIT D agreement-row  adopted="D-pre" canonical="D-pre"
+  [PASS] SETUP-AUDIT D agreement-verdict  adopted="agree" canonical="agree"
+  [PASS] SETUP-AUDIT D frames-present  adopted="(F1 F2 F5)" canonical="(F1 F2 F5)"
+
+== TALLY: 181 passed, 0 failed; 126 facets compared, 0 divergences ==
+ma0-concordance: 7 arms, 126 facets, 0 divergences
+
+===========================================================================
+ SECTION: 4b CONCORDANCE TOOTH (a planted divergence must go RED)
+===========================================================================
+  [PASS] the comparator REFUSED the planted divergence (exit 1):
+           [FAIL] W-CONCORD C-ii correspondence-verdict  DIVERGENCE  canonical="jurisdictional-divergence"  ma0="PLANTED-DIVERGENCE"
+ma0-concordance-tooth: 1 planted divergence, 1 detected
+
+===========================================================================
+ SECTION: 5 DISEASES
+===========================================================================
+== ma0-diseases — SBCL 2.4.6 ==
+   subject tree: /home/gauss/ma0-b-exec/experiments/latent-lisp
+
+-- D-BOTH-ARMS  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-BOTH-ARMS DETECTED — the named check went RED (exit 1):
+             [FAIL] w-branch-one: summary-count=0  nearest="summary-count=1"
+
+-- D-AMBIENT  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-AMBIENT DETECTED — the named check went RED (exit 1):
+             [FAIL] w-auth-unfilled: refused type=LISP-PLUS-MANY-ACTS0:MA0-AUTHORITY-SLOT-UNFILLED code="MA0-AUTH-1"
+
+-- D-AUTO-RETRY  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-AUTO-RETRY DETECTED — the named check went RED (exit 1):
+             [FAIL] p2-alpha exit code  exit=1 expected=0
+
+-- D-SKIP-VALIDATE  /  witness: sbcl --script mneme/language-many-acts-0/ma0-footprint-witness.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-footprint-witness: 5 checks, 0 failures
+  [PASS] D-SKIP-VALIDATE DETECTED — the named check went RED (exit 1):
+             [FAIL] W-V-FOOTPRINT the invalid program appended NOTHING to the live store  before=2 after=12
+
+-- D-SKIP-VALIDATE  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-SKIP-VALIDATE DETECTED — the named check went RED (exit 1):
+             [FAIL] W-V-SHAPE dotted pair  the source was ACCEPTED; expected MA0-SOURCE-REFUSED [V-SHAPE]
+
+-- D-SPECIAL-CASE  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-SPECIAL-CASE DETECTED — the named check went RED (exit 1):
+             [FAIL] W-GENERIC ma0-eval.lisp names no program and no fixture identity  found=("editio")
+
+-- the checkout's porcelain is UNCHANGED: the diseases lived and died in the replica --
+
+ma0-diseases: 5 diseases detected, 6 controls clean
+  (6 disease/control PAIRS: D-SKIP-VALIDATE is exhibited on BOTH of its witnesses)
+
+===========================================================================
+ SECTION: 6 CAMPAIGN GATES
+===========================================================================
+== ma0-campaign-gates — SBCL 2.4.6 ==
+   checkout : /home/gauss/ma0-b-exec
+   subject  : experiments/latent-lisp
+   seal     : 9e52b7e1
+
+-- W-VF-UNCHANGED --
+  [PASS] W-VF-UNCHANGED the V-F freeze table digest  sha256=2b51b4df26fe0fa1e4a156f9408a92f5a501aba9fa2401eb08e10a123f1264f0
+
+-- W-ONEACT-GREEN --
+  [PASS] W-ONEACT-GREEN oneact0-selftest: 173 checks, 0 failures  exit=0
+
+-- W-FLOOR-UNTOUCHED --
+  [PASS] W-FLOOR-UNTOUCHED the guarded path exists: experiments/latent-lisp/mneme/verify-release.sh  
+  [PASS] W-FLOOR-UNTOUCHED the guarded path exists: experiments/latent-lisp/mneme/language-act-0  
+  [PASS] W-FLOOR-UNTOUCHED the guarded path exists: experiments/latent-lisp/lisp-plus.asd  
+  [PASS] W-FLOOR-UNTOUCHED verify-release.sh + language-act-0/ carry no diff since 9e52b7e1  (empty --stat)
+  [PASS] W-FLOOR-UNTOUCHED and neither is dirty in the working tree  (empty porcelain)
+  [PASS] W-FLOOR-UNTOUCHED lisp-plus.asd shows ADDITIONS ONLY since 9e52b7e1  +34 -0
+
+-- REDUCED FLOOR (profile ci) --
+  [PASS] REDUCED FLOOR 77 attempted / 77 passed / 0 blocked (profile ci)  exit=0
+
+ma0-campaign-gates: 9 gates, 0 failures
+
+===========================================================================
+ SECTION: 7 W-RES-NOT-AUTH
+===========================================================================
+== ma0-res-not-auth — SBCL 2.4.6 ==
+   run root: /tmp/ma0-res-not-auth.4uEvLJ/
+== W-RES-NOT-AUTH — a result object forced into authority position ==
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [PASS] SETUP the act minted a live Office R capability  live-capability-p=T
+
+-- CONTROL: the act's own key at Capability /1's seam --
+    genuine key => :OTHER-CAP1 LISP-PLUS-CAPABILITY1:CAP1-STALE-CAPABILITY requirement="CAP1-STALE-1"
+  [PASS] CONTROL the GENUINE key is not refused as unrecognized  outcome=:OTHER-CAP1 type=LISP-PLUS-CAPABILITY1:CAP1-STALE-CAPABILITY requirement="CAP1-STALE-1"
+  [PASS] CONTROL and the seam gave it a decision it could only give a key it minted  outcome=:OTHER-CAP1 (a receipt, or a refusal from PAST recognition)
+  [PASS] SETUP the program bound a real act-summary  act-summary-p=T
+  [PASS] SETUP a derived seat-outcome stands for the completed seat  seat-outcome-p=T
+    prefix frames before the hostile block: 19
+
+-- HALF 2: the result objects at Capability /1's recognition seam --
+DENS-RNA act-summary condition-type=CAP1-UNRECOGNIZED-OBJECT
+DENS-RNA act-summary requirement-id=CAP1-REC-1
+DENS-RNA act-summary presented-type=MA0-ACT-SUMMARY
+DENS-RNA act-summary context-label=manyacts0
+  [PASS] W-RES-NOT-AUTH CAPABILITY /1 refuses the act-summary as UNRECOGNIZED  outcome=:UNRECOGNIZED type=LISP-PLUS-CAPABILITY1:CAP1-UNRECOGNIZED-OBJECT
+  [PASS] W-RES-NOT-AUTH the act-summary refusal is Capability /1's own condition  type=LISP-PLUS-CAPABILITY1:CAP1-UNRECOGNIZED-OBJECT
+  [PASS] W-RES-NOT-AUTH the act-summary refusal carries a requirement-id  requirement-id="CAP1-REC-1"
+  [PASS] W-RES-NOT-AUTH the act-summary refusal is NOT an MA0 condition  typep ma0-refusal => NIL — the law is Capability /1's
+  [PASS] W-RES-NOT-AUTH the act-summary refusal names the presenting context  context-label="manyacts0"
+DENS-RNA seat-outcome condition-type=CAP1-UNRECOGNIZED-OBJECT
+DENS-RNA seat-outcome requirement-id=CAP1-REC-1
+DENS-RNA seat-outcome presented-type=SEAT-OUTCOME
+DENS-RNA seat-outcome context-label=manyacts0
+  [PASS] W-RES-NOT-AUTH CAPABILITY /1 refuses the seat-outcome as UNRECOGNIZED  outcome=:UNRECOGNIZED type=LISP-PLUS-CAPABILITY1:CAP1-UNRECOGNIZED-OBJECT
+  [PASS] W-RES-NOT-AUTH the seat-outcome refusal is Capability /1's own condition  type=LISP-PLUS-CAPABILITY1:CAP1-UNRECOGNIZED-OBJECT
+  [PASS] W-RES-NOT-AUTH the seat-outcome refusal carries a requirement-id  requirement-id="CAP1-REC-1"
+  [PASS] W-RES-NOT-AUTH the seat-outcome refusal is NOT an MA0 condition  typep ma0-refusal => NIL — the law is Capability /1's
+  [PASS] W-RES-NOT-AUTH the seat-outcome refusal names the presenting context  context-label="manyacts0"
+
+-- HALF 1: the same substitution where MA0's surface can see it --
+  [PASS] W-RES-NOT-AUTH a literal in authority position  type=LISP-PLUS-MANY-ACTS0:MA0-BINDING-REFUSED code="V-RES-AUTH" (expected "V-RES-AUTH")
+  [PASS] W-RES-NOT-AUTH an act-result in authority position  type=LISP-PLUS-MANY-ACTS0:MA0-BINDING-REFUSED code="V-AUTH" (expected "V-AUTH")
+  [PASS] W-RES-NOT-AUTH a derived outcome in authority position  type=LISP-PLUS-MANY-ACTS0:MA0-BINDING-REFUSED code="V-AUTH" (expected "V-AUTH")
+  [PASS] W-RES-NOT-AUTH an act-summary handed to the environment as a grant slot  type=LISP-PLUS-MANY-ACTS0:MA0-ENVIRONMENT-REFUSED code="MA0-ENV-GRANT" (expected "MA0-ENV-GRANT")
+  [PASS] W-RES-NOT-AUTH a seat-outcome handed to the environment as an input value  type=LISP-PLUS-MANY-ACTS0:MA0-ENVIRONMENT-REFUSED code="MA0-ENV-DATA" (expected "MA0-ENV-DATA")
+
+-- the store --
+  [PASS] W-RES-NOT-AUTH the hostile block appended NOTHING  before=19 after=19
+  [PASS] W-RES-NOT-AUTH the prefix still reads back whole  status=:VALID
+   run root removed (exists: NIL)
+
+== TALLY: 22 passed, 0 failed ==
+ma0-res-not-auth: 22 checks, 0 failures
+
+===========================================================================
+ SECTION: 8 R1/D1 OWNERSHIP
+===========================================================================
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [OWNED] D1-1 mutating a returned source copy leaves the retained source unchanged  fresh readback arm = "B-L1"
+  [OWNED] D1-2 the validated program still executes the arm its text named  source text named "B-L1"; executed "B-L1"
+  [OWNED] D1-3 the environment owns its declared input  declared "caller-original"; run carried "caller-original"
+  [OWNED] D1-4 mutating a returned result value leaves the retained result unchanged  fresh readback payload = "payload-original"
+  [OWNED] D1-5 mutating a returned store-id leaves the environment's identifier unchanged  declared "pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760"; environment now reports "pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760"
+  [OWNED] D1-6 mutating a returned act-summary arm leaves the summary unchanged  was "B-L1"; summary now reports "B-L1"
+
+ma0-D1-ownership: 6 owned, 0 defect(s) present
+
+===========================================================================
+ SECTION: 9 R1/D2 BRANCH BINDING
+===========================================================================
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  [CLOSED] D2-1 a sibling-alternative reference is refused at validation  refused MA0-BINDING-REFUSED [V-BIND]
+  [CLOSED] D2-2 no run can reach the unbound name (nothing was accepted)  the validator refused; there is no accepted program to run
+  [CLOSED] D2-3 a pre-branch binding referenced inside alternatives stays lawful  accepted
+  [CLOSED] D2-4 the sealed no-shadowing law refuses one name defined in two alternatives  refused MA0-BINDING-REFUSED [V-BIND]
+
+ma0-D2-branch-binding: 4 closed, 0 defect(s) present
+
+===========================================================================
+ SECTION: 10 R1/D3 CIRCULAR SOURCE (external watchdog)
+===========================================================================
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  -- D3-1 building a self-referential list
+  -- D3-1 entering the validator (in the PRE-REPAIR transcript this is the LAST LINE)
+  [CLOSED] D3-1 a self-referential list terminates in a typed refusal  refused MA0-SOURCE-REFUSED [V-SHAPE]; detail names "a lawful source is a TREE"
+  -- D3-2 building a cycle nested in an otherwise-lawful program
+  -- D3-2 entering the validator
+  [CLOSED] D3-2 a nested cycle terminates in a typed refusal  refused MA0-SOURCE-REFUSED [V-SHAPE]; detail names "a lawful source is a TREE"
+  -- D3-2b building an ACYCLIC shared substructure (a DAG, not a cycle)
+  [CLOSED] D3-2b acyclic SHARED substructure is refused by the same tree law  refused MA0-SOURCE-REFUSED [V-SHAPE]; detail names "a lawful source is a TREE"
+  -- D3-3 building a long finite source (300 bind steps)
+  [CLOSED] D3-3 a long finite source just inside the node bound is accepted  accepted
+  -- D3-4 building a source beyond the declared node bound (3000 bind steps)
+  [CLOSED] D3-4 a source beyond the declared node bound is refused by the bound  refused MA0-SOURCE-REFUSED [V-SHAPE]; detail names "node count exceeds the declared bound"
+  -- D3-5 an ordinary lawful source
+  [CLOSED] D3-5 an ordinary lawful source is still accepted  accepted
+
+ma0-D3-circular-source: 6 closed, 0 defect(s) present
+
+===========================================================================
+ SECTION: 11 R1/D4 ENVIRONMENT CROSSWIRE
+===========================================================================
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  -- store-id A = pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760
+  -- store-id B = pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760
+  -- the two identifiers are IDENTICAL — a content-derived identifier cannot discriminate these stores
+  -- before the run: A store/EVENTS.pj0 = 638 bytes, B = 638 bytes
+  -- after the run:  A store/EVENTS.pj0 = 638 bytes, B = 638 bytes
+  -- outcome: MA0-ENVIRONMENT-STALE [MA0-ENV-STALE]: ma0-run-program was handed an environment of generation 1 while generation 2 holds the One Act /0 run-state specials; a later `make-ma0-environment' took them over, so an act run through this object would journal into a store it does not own.  This environment's own store is pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760.  Nothing was written, minted, or journaled in any store.  Many Acts /0 is ONE PROGRAM PER IMAGE: it does not orchestrate two live environments, and this refusal is not a step toward doing so.
+  [CLOSED] D4-1 environment B's store gained nothing from environment A's run  B changed: (nothing)
+  [CLOSED] D4-2 neither store was touched — the refusal precedes the first consequential act  A changed: (nothing) | B changed: (nothing)
+  [CLOSED] D4-3 the run ended in the lane's typed stale-environment refusal, naming its own store-id  MA0-ENVIRONMENT-STALE [MA0-ENV-STALE]: ma0-run-program was handed an environment of generation 1 while generation 2 holds the One Act /0 run-state specials; a later `make-ma0-environment' took them over, so an act run through this object would journal into a store it does not own.  This environment's own store is pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760.  Nothing was written, minted, or journaled in any store.  Many Acts /0 is ONE PROGRAM PER IMAGE: it does not orchestrate two live environments, and this refusal is not a step toward doing so.
+  [CLOSED] D4-4 environment B is still usable afterwards  returned, disposition :COMPLETED
+
+ma0-D4-env-crosswire: 4 closed, 0 defect(s) present
+
+===========================================================================
+ SECTION: 12 R1 SEVEN-ARM COVERAGE
+===========================================================================
+===========================================================================
+ MANY ACTS /0 — R1 §7 SEVEN-ARM TRAVERSAL COVERAGE
+ date -u : Mon Aug 10 23:51:10 UTC 2026
+===========================================================================
+
+-- spawning traversals, one program per image --
+  [ok] p1
+  harvested from p1: A 
+  [ok] p2-alpha
+  harvested from p2-alpha: A C-i 
+  [ok] p2-beta
+  harvested from p2-beta: A B-R C-i 
+  [ok] p3-holdout
+  harvested from p3-holdout: A B-L2 C-ii 
+  [ok] r1-bl1
+  harvested from r1-bl1: B-L1 
+  [ok] r1-d
+  harvested from r1-d: D 
+
+===========================================================================
+ ARM   TRAVERSED   BY
+===========================================================================
+ A     yes         p1 p2-alpha p2-beta p3-holdout 
+ B-L1  yes         r1-bl1 
+ B-L2  yes         p3-holdout 
+ B-R   yes         p2-beta 
+ C-i   yes         p2-alpha p2-beta 
+ C-ii  yes         p3-holdout 
+ D     yes         r1-d 
+===========================================================================
+
+ma0-coverage: 7 arms, 7 traversed, 0 uncovered
+
+===========================================================================
+ SECTION: 13 R1/D5 GENERATION SEAM
+===========================================================================
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+
+== D5-1 — construction failure leaves the live environment ALIVE ==
+  -- each attempt gets its OWN fresh environment A, so the attempts
+  -- are independent evidence rather than a queue behind the first.
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.1 setup: a fresh A is current
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  -- attempt 1 — oversized declaration (post-increment window) => MA0-SOURCE-REFUSED [MA0-OWN-BOUND]
+  [CLOSED] D5-1.1 A is STILL CURRENT after: oversized declaration (post-increment window)  A reads :CURRENT
+  [CLOSED] D5-1.1 A's own root is byte-unchanged
+  [CLOSED] D5-1.1 the specials still point at A  was /tmp/ma0-d5-A1-955410/ now /tmp/ma0-d5-A1-955410/
+  [CLOSED] D5-1.1 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.2 setup: a fresh A is current
+  -- attempt 2 — an arm outside the sealed seven => MA0-ENVIRONMENT-REFUSED [MA0-ENV-ARMS]
+  [CLOSED] D5-1.2 A is STILL CURRENT after: an arm outside the sealed seven  A reads :CURRENT
+  [CLOSED] D5-1.2 A's own root is byte-unchanged
+  [CLOSED] D5-1.2 the specials still point at A  was /tmp/ma0-d5-A2-955410/ now /tmp/ma0-d5-A2-955410/
+  [CLOSED] D5-1.2 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.3 setup: a fresh A is current
+  -- attempt 3 — a grant naming an undeclared arm => MA0-ENVIRONMENT-REFUSED [MA0-ENV-GRANT]
+  [CLOSED] D5-1.3 A is STILL CURRENT after: a grant naming an undeclared arm  A reads :CURRENT
+  [CLOSED] D5-1.3 A's own root is byte-unchanged
+  [CLOSED] D5-1.3 the specials still point at A  was /tmp/ma0-d5-A3-955410/ now /tmp/ma0-d5-A3-955410/
+  [CLOSED] D5-1.3 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.4 setup: a fresh A is current
+  -- attempt 4 — a seat map naming a seat no fixture carries => MA0-ENVIRONMENT-REFUSED [MA0-ENV-SEAT]
+  [CLOSED] D5-1.4 A is STILL CURRENT after: a seat map naming a seat no fixture carries  A reads :CURRENT
+  [CLOSED] D5-1.4 A's own root is byte-unchanged
+  [CLOSED] D5-1.4 the specials still point at A  was /tmp/ma0-d5-A4-955410/ now /tmp/ma0-d5-A4-955410/
+  [CLOSED] D5-1.4 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.5 setup: a fresh A is current
+  -- attempt 5 — an input value that is not an admitted atom => MA0-ENVIRONMENT-REFUSED [MA0-ENV-DATA]
+  [CLOSED] D5-1.5 A is STILL CURRENT after: an input value that is not an admitted atom  A reads :CURRENT
+  [CLOSED] D5-1.5 A's own root is byte-unchanged
+  [CLOSED] D5-1.5 the specials still point at A  was /tmp/ma0-d5-A5-955410/ now /tmp/ma0-d5-A5-955410/
+  [CLOSED] D5-1.5 the mint counter is unmoved  0 -> 0
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1.6 setup: a fresh A is current
+  -- attempt 6 — a revocation for an undeclared arm => MA0-ENVIRONMENT-REFUSED [MA0-ENV-REVOKE]
+  [CLOSED] D5-1.6 A is STILL CURRENT after: a revocation for an undeclared arm  A reads :CURRENT
+  [CLOSED] D5-1.6 A's own root is byte-unchanged
+  [CLOSED] D5-1.6 the specials still point at A  was /tmp/ma0-d5-A6-955410/ now /tmp/ma0-d5-A6-955410/
+  [CLOSED] D5-1.6 the mint counter is unmoved  0 -> 0
+  [CLOSED] D5-1 the surviving A still RUNS a program (arm A)  :COMPLETED
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-1 a later environment C constructs and runs (arm B-L1)  :COMPLETED
+  [CLOSED] D5-1 and the earlier A is now STALE, because C legitimately took over  A reads :STALE
+
+== D5-3 — the generation is not exposed or accepted ==
+  [CLOSED] D5-3 no EXPORTED symbol names the generation  NIL
+  [CLOSED] D5-3 printing an ENVIRONMENT reveals no generation  #<LISP-PLUS-MANY-ACTS0::MA0-ENVIRONMENT pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760> #<MA0-ENVIRONMENT pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c
+  [CLOSED] D5-3 printing a RESULT reveals no generation  #S(LISP-PLUS-MANY-ACTS0::MA0-RESULT    :PROGRAM-NAME "d5-subject"    :DISPOSITION :COMPLETED    :VALUE "ran"    :REFUSAL-CODE NIL    :REFUSAL-DETAIL NIL    :ACT-SUMMARIES (#S(LISP-PLUS-MANY-ACTS0::MA0
+
+== D5-4 — both doors refuse a stale environment BEFORE any work ==
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [CLOSED] D5-4 ma0-run-program refuses the stale environment, typed  (:STALE "MA0-ENV-STALE"
+ "pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760")
+  [CLOSED] D5-4 the refusal carries the STALE environment's own store-id  "pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760"
+  [CLOSED] D5-4 ma0-complete-act refuses BEFORE it touches the act result  (:STALE "MA0-ENV-STALE")
+  [CLOSED] D5-4 the stale environment's own store is byte-unchanged
+  [CLOSED] D5-4 the INSTALLED environment's store is byte-unchanged
+  [CLOSED] D5-4 no capability activity: the mint counter is unmoved  0 -> 0
+  [CLOSED] D5-4 the installed environment is still usable (arm C-i)  :COMPLETED
+
+ma0-D5-generation-seam: 43 closed, 0 defect(s) present
+
+===========================================================================
+ MANY ACTS /0 — TEETH TALLY
+===========================================================================
+  GREEN   0 LANE SUITE  ::  ma0-selftest: 200 checks, 0 failures
+  GREEN   1 NO-INTERNALS  ::  ma0-teeth-no-internals: 10 files, 0 hits
+  GREEN   2 W-NO-BLIND-REPLAY  ::  ma0-no-blind-replay: 7 checks, 0 failures
+  GREEN   3 W-V-FOOTPRINT (program level)  ::  ma0-footprint-witness: 5 checks, 0 failures
+  GREEN   4 CONCORDANCE  ::  ma0-concordance: 7 arms, 126 facets, 0 divergences
+  GREEN   4b CONCORDANCE TOOTH  ::  ma0-concordance-tooth: 1 planted divergence, 1 detected
+  GREEN   5 DISEASES  ::  ma0-diseases: 5 diseases detected, 6 controls clean
+  GREEN   6 CAMPAIGN GATES  ::  ma0-campaign-gates: 9 gates, 0 failures
+  GREEN   7 W-RES-NOT-AUTH  ::  ma0-res-not-auth: 22 checks, 0 failures
+  GREEN   8 R1/D1 OWNERSHIP  ::  ma0-D1-ownership: 6 owned, 0 defect(s) present
+  GREEN   9 R1/D2 BRANCH BINDING  ::  ma0-D2-branch-binding: 4 closed, 0 defect(s) present
+  GREEN   10 R1/D3 CIRCULAR SOURCE (external watchdog)  ::  ma0-D3-circular-source: 6 closed, 0 defect(s) present
+  GREEN   11 R1/D4 ENVIRONMENT CROSSWIRE  ::  ma0-D4-env-crosswire: 4 closed, 0 defect(s) present
+  GREEN   12 R1 SEVEN-ARM COVERAGE  ::  ma0-coverage: 7 arms, 7 traversed, 0 uncovered
+  GREEN   13 R1/D5 GENERATION SEAM  ::  ma0-D5-generation-seam: 43 closed, 0 defect(s) present
+
+  sections attempted : 15
+  green              : 15
+  red                : 0
+  omitted            : 0
+
+ma0-teeth: 15 sections attempted, 0 red
+exit=0

@@ -1,0 +1,64 @@
+MEMORY LAYER /0 — RED CAPTURE, THE TWO BLOCKERS, AGAINST THE BLOCKED BUILD
+
+Captured BEFORE any repair code existed, against the lane as the chair's
+disposition found it.  Repository HEAD at capture: e5d6bc08
+(the blocked candidate is a492a05f…, commit aef0de43).
+Command: sbcl --script mneme/memory-layer-0/ml0-block-proof.lisp
+This capture MUST exit nonzero.  A blocker that cannot be reproduced is a
+blocker nobody has to fix.
+===========================================================================
+
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+Memory Layer /0 — BLOCK PROOF.  The chair's two blockers, probed against the code as it stands.  CANDIDATE; nothing here is adopted.
+
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV ML0_SELFTEST_PLANT_FAULT unset
+  W-ENV ML0_CONTROLS_PLANT_FAULT unset
+  W-ENV ML0_READER_DIE unset
+  W-ENV ACT1_SELFTEST_PLANT_FAULT unset
+  W-ENV ACT1_CONTROLS_PLANT_FAULT unset
+  W-ENV ACT1_RESTART_DIE unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV enumerated 11 variables (1 Class I + 10 Class II); 9 Class III declared out of stack, named and NOT asserted
+
+---- ground truth: the refused act genuinely did not happen ----
+      | derived effect standing for a-secunda : :ABSENT
+      | world ledger rows under its derived external-request key: 0
+      | and Core /0 DID issue evidence for it: T
+
+---- B1a: a forged public :world-bytes row ----
+  account            : f47d741d2680f254c3d2705644ab8a9732ed8cd381f9e9861f5dfa1c10155358
+  act                : f87620bdb43d0dc15e36f31b79777cf594d17dda4f338d9ae7df5ba267fa7e4b
+  seat / attempt     : secunda / a-secunda
+  OCCURRENCE standing: :OCCURRED
+  ISSUANCE standing  : :UNRESOLVED   (a SEPARATE axis; never folded)
+  effect (observed)  : not-read / :INDETERMINATE
+  derivation         : :DIRECT-WRITE  (0 predecessors)
+  retrieval origin   : :RECONSTRUCTED
+  sources            : world-bytes
+[1] OPEN    B1a · a forged public :world-bytes row over a lawfully-refused, absent act CANNOT mint :occurred
+      ⚠ THE ACCOUNT DURABLY READS :OCCURRED.  The act refused before the frontier, the journal never moved, and the world holds no row — and an ordinary public caller has just written it into the language's memory as having happened.
+
+---- B1b: an unwarranted :issued-in-writing-image claim ----
+[2] OPEN    B1b · a bundle claiming :issued-in-writing-image without a validated current-image issuance observation cannot carry that standing
+      ⚠ THE CALLER'S KEYWORD IS NOW IN THE DURABLE BYTES.  No evidence object was involved and no predicate was consulted; the account testifies to an issuance nobody observed.
+
+---- B2: consolidation and distinct provenance ----
+      | the two rows agree ONLY in species, payload digest and producer principal; they differ in coordinate, recorder, route, scope, frontier relation, interval and attestation
+      | canonical record bytes identical? NO — they are different rows
+      | source rows surviving consolidation: 1
+[3] OPEN    B2 · two source rows with DISTINCT provenance but equal species/digest/producer both survive the consolidation union
+      ⚠ ONE READING WAS DELETED.  The rows differ in coordinate, recorder, route, scope, frontier relation, interval and attestation, and the deduplicator ignored all of them — while the comment beside it calls its own test `THE SAME READING OF THE SAME BYTES BY THE SAME MECHANISM`.
+
+---- P: the positive control ----
+[4] CLOSED  P · a LAWFUL reading of a genuinely occurred act still reaches :OCCURRED — the repair is a discrimination, not a wall
+      the lawful path is open
+
+ml0-block-proof: 4 probes, 1 closed, 3 open
+
+RED_BLOCK_BEFORE_EXIT=1

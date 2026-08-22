@@ -1,0 +1,36 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+One Act /1 — RED PROOF of the crown tooth.  CANDIDATE; nothing here is adopted.
+
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV ACT1_SELFTEST_PLANT_FAULT unset
+  W-ENV ACT1_CONTROLS_PLANT_FAULT unset
+  W-ENV ACT1_RESTART_DIE unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV enumerated 8 variables (1 Class I + 7 Class II); 9 Class III declared out of stack, named and NOT asserted
+
+GROUND: standing :CROSSED-UNSETTLED · frames 3 · world ledger entries 0 — the frontier is crossed, nothing follows it in the journal, and the world was never touched: the durable shape a death leaves.
+
+---- CURED — the lane as it ships (:durable-guard :consult-store) ----
+  durable-guard column : :CONSULT-STORE
+  disposition          : :REFUSED
+  outcome-kind         : :REFUSED
+  reason               : :ACT1-DURABLE-GUARD/UNSAFE-RETRY/CAP2-W1
+  world byte-unchanged : yes
+  CROWN TOOTH          : PASS
+
+---- UNCURED — the bridge does not consult the durable bytes (:durable-guard :skip-store) ----
+  durable-guard column : :SKIP-STORE
+  disposition          : :REFUSED
+  outcome-kind         : :REFUSED
+  reason               : :UNSAFE-RETRY/CAP2-W1
+  world byte-unchanged : yes
+  CROWN TOOTH          : FAIL
+
+READ THIS BEFORE BANKING THE PROOF: the uncured act was still REFUSED and the world still byte-unchanged — capability /2 refuses at the runtime boundary with a reason of its own.  The tooth kills the uncured bridge on WHICH BOUNDARY ANSWERED, which is what the lane's claim is about.  A state in which nothing refuses needs BOTH defences down; the specimen's leak control builds exactly that state and catches the resulting write.
+
+oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites

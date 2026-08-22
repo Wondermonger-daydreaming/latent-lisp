@@ -82,7 +82,9 @@
 ;;;; lane's own accepted runner, `act0-selftest.lisp' — whose setup is One Act
 ;;;; /0's OWN — and requires the canonical harvest to agree with what that
 ;;;; runner prints, on class, agreement row, agreement verdict and the frame
-;;;; table, for all four arms.  W-ONEACT-GREEN falls out of the same execution.
+;;;; table, for all SEVEN arms — the audit loop reads `*dens-arms*', so the R1 §7
+;;;; coverage closure carried it from four arms to seven along with everything
+;;;; else.  W-ONEACT-GREEN falls out of the same execution.
 ;;;;
 ;;;; ---------------------------------------------------------------------------
 ;;;; THE TOOTH
@@ -94,7 +96,12 @@
 ;;;; divergence is untested, not agreeing.
 ;;;;
 ;;;; Sentinel, printed on the green path and no other:
-;;;;   ma0-concordance: 4 arms, 72 facets, 0 divergences
+;;;;   ma0-concordance: 7 arms, 126 facets, 0 divergences
+;;;;
+;;;; — SEVEN arms x EIGHTEEN enumerated facets = 126 comparisons (R1 §7 coverage
+;;;; closure; this comment read "4 arms, 72 facets" before it).  Both numbers in
+;;;; the sentinel are computed from `*dens-arms*' and the compared-facet counter,
+;;;; never from this line.
 ;;;;
 ;;;; — DENS (Claude Opus 5, subagent), 2026-08-09
 

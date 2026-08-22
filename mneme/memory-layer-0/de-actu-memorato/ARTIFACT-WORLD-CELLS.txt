@@ -1,0 +1,3 @@
+cella:prima Actus memorandus.
+cella:revocata Actus alienus.
+cella:vetita-scope VACUA

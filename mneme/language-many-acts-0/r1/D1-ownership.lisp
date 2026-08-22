@@ -3,7 +3,13 @@
 ;;;; Fresh image.  PUBLIC EXPORTS ONLY: nothing below names an unexported symbol
 ;;;; of this lane or of any predecessor.
 ;;;;
-;;;; WHAT IT PROVES.  `copy-tree' copies cons structure and SHARES its mutable
+;;;; WHAT IT TESTS WHETHER HOLDS.  (Post-R1 wording, adoption Rider 6,
+;;;; 2026-08-10: this header read "WHAT IT PROVES", and the preserved red
+;;;; transcript quotes it with that word.  A fixture TESTS WHETHER a defect
+;;;; is present; it proves nothing about the repaired state, whose account
+;;;; is the GREEN capture beside the red one.)  The hypothesis under test:
+;;;;
+;;;; `copy-tree' copies cons structure and SHARES its mutable
 ;;;; leaves.  Every exported reader of this lane hands out a copy whose STRINGS
 ;;;; are the very strings the validated program, the environment, and the result
 ;;;; retain.  Six probes, in both directions:

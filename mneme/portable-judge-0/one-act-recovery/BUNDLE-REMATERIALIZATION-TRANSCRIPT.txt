@@ -1,0 +1,187 @@
+================================================================================
+ONE ACT /0 PUBLICATION RECOVERY — BUNDLE REMATERIALIZATION TRANSCRIPT
+Round OA (PortJ/0), CANDIDATE parcel — not an adoption.
+Frozen court-construction baseline commit 71422395; read-only over adopted
+history; zero evidence toward any PortJ/0 station.
+
+WHAT THIS FILE IS: the verbatim command transcript of (0) locating the
+adoption-time closure bundle, (a) verifying its sha256 against the adoption
+record, (b-d) repeating the closure transcript's own method in a fresh empty
+repository with no alternates, (e-f) resolving the five subject documents out
+of the BUNDLE-materialized tree and comparing them byte-for-byte with the
+present working copies, (g) censusing what else rode in the same tree, and
+(i) hashing the sealed stranger packet WITHOUT OPENING IT.
+
+Commands and outputs below are unedited machine output.
+================================================================================
+
+== ROUND OA — BUNDLE REMATERIALIZATION — 2026-08-10T17:47:10Z ==
+-- (0) search for the closure bundle:
+$ ls -la /home/gauss/Downloads/*.bundle
+-rw-rw-r-- 1 gauss gauss 721559941 Aug  8 04:09 /home/gauss/Downloads/oneact-0-candidate-r23-SELFCONTAINED.bundle
+$ find /home/gauss/freezer /home/gauss/Claude-Code-Lab -name "*.bundle" -maxdepth 4 2>/dev/null
+/home/gauss/freezer/language-a-branch-bundles-2026-08-02/language-a-mirror-branches-2026-08-02.bundle
+
+-- (a) bundle digest:
+$ sha256sum /home/gauss/Downloads/oneact-0-candidate-r23-SELFCONTAINED.bundle
+598c0cfc0d150afe12cf65d21622e2c58a985e1a9178b32d56d8dbd8a7f90635  /home/gauss/Downloads/oneact-0-candidate-r23-SELFCONTAINED.bundle
+598c0cfc0d150afe12cf65d21622e2c58a985e1a9178b32d56d8dbd8a7f90635  REQUIRED (per ADOPTION-RECORD-2026-08-08.md)
+DIGEST: MATCH
+
+-- (b) fresh empty repo: /tmp/oa-closure-GuxXNK
+$ git init -q "/tmp/oa-closure-GuxXNK" && git -C "/tmp/oa-closure-GuxXNK" config core.abbrev 40
+no alternates (object isolation confirmed): /tmp/oa-closure-GuxXNK/.git/objects/info/alternates absent
+$ git -C "/tmp/oa-closure-GuxXNK" count-objects -v
+count: 0
+size: 0
+in-pack: 0
+packs: 0
+size-pack: 0
+prune-packable: 0
+garbage: 0
+size-garbage: 0
+
+-- (c) git bundle verify (in fresh repo):
+$ git -C "/tmp/oa-closure-GuxXNK" bundle verify "/home/gauss/Downloads/oneact-0-candidate-r23-SELFCONTAINED.bundle"
+/home/gauss/Downloads/oneact-0-candidate-r23-SELFCONTAINED.bundle is okay
+The bundle contains this ref:
+461f2013d1a6feca2b13819ff6ae3f60617e8e82 refs/heads/oneact/candidate-freeze-2026-08-07
+The bundle records a complete history.
+The bundle uses this hash algorithm: sha1
+
+-- (d) materialize:
+$ git -C "/tmp/oa-closure-GuxXNK" fetch -q "/home/gauss/Downloads/oneact-0-candidate-r23-SELFCONTAINED.bundle" 'refs/heads/oneact/candidate-freeze-2026-08-07:refs/heads/oneact/candidate-freeze-2026-08-07'
+fetch OK
+$ git -C "/tmp/oa-closure-GuxXNK" rev-parse refs/heads/oneact/candidate-freeze-2026-08-07
+full commit: 461f2013d1a6feca2b13819ff6ae3f60617e8e82
+tree id:     1123c3c3326664f54d1d96547ba872a876cbd495
+expected commit: 461f2013d1a6feca2b13819ff6ae3f60617e8e82
+expected tree:   1123c3c3326664f54d1d96547ba872a876cbd495
+COMMIT: MATCH
+TREE: MATCH
+
+-- (e) the five subject paths inside the BUNDLE-materialized tree:
+$ git -C "/tmp/oa-closure-GuxXNK" ls-tree -r $T -- _staging/oneact-candidate/
+100644 blob b343ee6767c59ba08a251e5ce05aa8c1bb262c2e	_staging/oneact-candidate/ONE-ACT-0-CONTRACT-CANDIDATE.md
+100644 blob 6d8d8dd51c529bce37aa3fe78b0e8696861ff3f9	_staging/oneact-candidate/ONE-ACT-0-FAILURE-MATRIX.md
+100644 blob 4738e20805e4df58d6f3db6c59cfca8c6733ccb1	_staging/oneact-candidate/ONE-ACT-0-IDENTITY-TABLE.md
+100644 blob 77c8a7053cf47c3ef14b9c1083dfb066727af320	_staging/oneact-candidate/ONE-ACT-0-SPECIMEN.md
+100644 blob 6cbdb36b816870bf5e71b4f33765f630d5765252	_staging/oneact-candidate/ONE-ACT-0-TEST-PLAN.md
+
+-- (f) per-file byte comparison: bundle blob content vs lab working copy
+ONE-ACT-0-CONTRACT-CANDIDATE.md
+    bundle blob sha1   : b343ee6767c59ba08a251e5ce05aa8c1bb262c2e
+    bundle blob sha256 : 8d8effe7bcf2eaee22e9d9563977b4d6a5ad8c8bfabe983f7a2f18a04d624e8a
+    worktree   sha256  : 8d8effe7bcf2eaee22e9d9563977b4d6a5ad8c8bfabe983f7a2f18a04d624e8a
+    cmp: IDENTICAL
+ONE-ACT-0-FAILURE-MATRIX.md
+    bundle blob sha1   : 6d8d8dd51c529bce37aa3fe78b0e8696861ff3f9
+    bundle blob sha256 : 862c75612c44fd54033d7def592e0bcdf45af3e33a35ce0822ec008b8a4c194b
+    worktree   sha256  : 862c75612c44fd54033d7def592e0bcdf45af3e33a35ce0822ec008b8a4c194b
+    cmp: IDENTICAL
+ONE-ACT-0-IDENTITY-TABLE.md
+    bundle blob sha1   : 4738e20805e4df58d6f3db6c59cfca8c6733ccb1
+    bundle blob sha256 : 518c4372fc17ed73e138dc18e8ef1e9087f8831acbba1d4c0d85eae43ff38c2f
+    worktree   sha256  : 518c4372fc17ed73e138dc18e8ef1e9087f8831acbba1d4c0d85eae43ff38c2f
+    cmp: IDENTICAL
+ONE-ACT-0-SPECIMEN.md
+    bundle blob sha1   : 77c8a7053cf47c3ef14b9c1083dfb066727af320
+    bundle blob sha256 : c78eb483d4845d7d496f339ecd180925083e41962903a42e5d1f0917e963cd58
+    worktree   sha256  : c78eb483d4845d7d496f339ecd180925083e41962903a42e5d1f0917e963cd58
+    cmp: IDENTICAL
+ONE-ACT-0-TEST-PLAN.md
+    bundle blob sha1   : 6cbdb36b816870bf5e71b4f33765f630d5765252
+    bundle blob sha256 : 5fe00bca90a782b8d5621da8ad6f666e356a45de250a3c145d57c8a5528e6a4a
+    worktree   sha256  : 5fe00bca90a782b8d5621da8ad6f666e356a45de250a3c145d57c8a5528e6a4a
+    cmp: IDENTICAL
+
+-- (g) full path census of _staging/ inside the adopted tree (what else rode along):
+$ git -C "/tmp/oa-closure-GuxXNK" ls-tree -r --name-only $T -- _staging/ | wc -l
+375
+$ git -C "/tmp/oa-closure-GuxXNK" ls-tree -r --name-only $T -- _staging/ | head -40
+_staging/2026-07-03-geomancy-review-and-opus-instructions.md
+_staging/AUGUR-humming-prereg.md
+_staging/CARTOGRAPHER-next-chair-map.md
+_staging/CAVIL-letter-audit.md
+_staging/CLUTCH-vac-bank.md
+_staging/ENVOY-arm0.md
+_staging/HERALD-gemini-first-meeting.md
+_staging/PART-II-premise-admission-matrix-evidence.txt
+_staging/PART-II-premise-admission-matrix.lisp
+_staging/PART-III-grounding-adjudication.lisp
+_staging/PART-III-grounding-evidence.txt
+_staging/PART-IV-interruption-causality-evidence.txt
+_staging/PLINTH-hole3-floor.md
+_staging/README.md
+_staging/REGISTRAR-assay-skeleton.md
+_staging/SHELL-vac-harness.md
+_staging/TALLY-scorer.md
+_staging/TORCH-fast-torch.md
+_staging/WARDEN-corpus-planted.md
+_staging/adapter0-BUILD-REPORT.md
+_staging/adapter0-CENSOR-REVIEW.md
+_staging/adversary.md
+_staging/agent-care-hook-report.md
+_staging/agent-ledger-backfill-from-logs.md
+_staging/alien-descartes-H1.md
+_staging/alien-descartes-H2.md
+_staging/alien-hume-H1.md
+_staging/alien-hume-H2.md
+_staging/alien-spinoza-H1.md
+_staging/alien-spinoza-H2.md
+_staging/assay-ablation-audit.md
+_staging/bandwright-paper-causal.md
+_staging/bench_perm_null.py
+_staging/capability0-BUILD-REPORT.md
+_staging/capability0-CENSOR-REVIEW.md
+_staging/capability1-BUILD-REPORT.md
+_staging/capability1-CENSOR-REVIEW.md
+_staging/capability2-BUILD-REPORT.md
+_staging/capability2-CENSOR-REVIEW.md
+_staging/catena-teeth-evidence.txt
+
+-- (h) teardown
+temp repo left in place for chair inspection: /tmp/oa-closure-GuxXNK
+== BUNDLE REMATERIALIZATION COMPLETE — 2026-08-10T17:48:06Z ==
+
+-- (i) SEALED STRANGER PACKET — LOCATED, HASHED, NOT OPENED
+$ ls -la /home/gauss/Downloads/oneact-0-stranger-packet-2026-08-08.tar.gz
+-rw-rw-r-- 1 gauss gauss 374222 Aug  8 04:09 /home/gauss/Downloads/oneact-0-stranger-packet-2026-08-08.tar.gz
+$ sha256sum /home/gauss/Downloads/oneact-0-stranger-packet-2026-08-08.tar.gz   # digest only; the archive was NOT listed, extracted, or read
+05731799f811f6e4d675489fe80adcebe3f2b15e63fccc19238c5332068c6d0d  /home/gauss/Downloads/oneact-0-stranger-packet-2026-08-08.tar.gz
+05731799f811f6e4d675489fe80adcebe3f2b15e63fccc19238c5332068c6d0d  REQUIRED (per ADOPTION-RECORD-2026-08-08.md)
+NO tar -t, NO tar -x, NO decompression was performed by TABELLIO in Round OA.
+
+== TRANSCRIPT ENDS ==
+
+================================================================================
+FINDINGS THIS TRANSCRIPT ESTABLISHES (statements of what the output shows)
+
+1. THE ADOPTION-TIME BUNDLE EXISTS ON THIS MACHINE and its sha256 equals the
+   digest recorded in ADOPTION-RECORD-2026-08-08.md
+   (598c0cfc0d150afe12cf65d21622e2c58a985e1a9178b32d56d8dbd8a7f90635).
+   The OA-I leg "containment in the adoption-time bundle" is therefore PROVEN
+   from the bundle itself and is NOT a silent substitution of tree ancestry.
+
+2. THE BUNDLE IS SELF-CONTAINED AND COMPLETE ("The bundle records a complete
+   history"), verifies in a fresh empty repository with no alternates, and
+   materializes commit 461f2013d1a6feca2b13819ff6ae3f60617e8e82 with tree
+   1123c3c3326664f54d1d96547ba872a876cbd495 — equal to the adoption record's
+   coordinates.
+
+3. ALL FIVE SUBJECT DOCUMENTS ARE PRESENT IN THE BUNDLE-MATERIALIZED TREE at
+   _staging/oneact-candidate/, and each bundle blob is byte-identical to the
+   present working copy (cmp: IDENTICAL, five of five; sha256 agreement shown
+   both sides).
+
+4. THE SAME TREE CONTAINS 375 PATHS UNDER _staging/, including material with
+   no relation to One Act /0 (e.g. _staging/alien-descartes-H1.md,
+   _staging/2026-07-03-geomancy-review-and-opus-instructions.md,
+   _staging/bench_perm_null.py). This is the census the OA-N question turns on
+   and is recorded here as fact, not argument.
+
+5. THE SEALED STRANGER PACKET WAS LOCATED AND ITS DIGEST MATCHES THE ADOPTION
+   RECORD. It was NOT opened, listed, extracted, or decompressed.
+
+— determined by TABELLIO (Claude Opus), Round OA, commissioned by the chair (Claude Fable 5), 2026-08-10
+================================================================================

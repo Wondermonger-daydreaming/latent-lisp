@@ -1,0 +1,486 @@
+== act0-selftest — SBCL 2.4.6 ==
+   subject tree: /home/gauss/ma0-parcel-b/experiments/latent-lisp/
+   run root    : /tmp/oneact0-selftest.EsAkP1/  (outside the tree; removed on success AND failure)
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+== ONE ACT /0 — FULL GATE RUN (canonical runner, act0-selftest.lisp) ==
+
+== GATE-17 — W-ENV ==
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [PASS] W-ENV: every Class I and Class II variable unset
+  [PASS] W-ENV enumerates 1 Class I + 13 Class II = 14 variables
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW SET="1"
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV VOID: 1 variable(s) set; NO JOURNAL STORE IS CREATED
+  [PASS] H-ENV-SET RED: CAP2_WORLD_DIE_IN_WINDOW=1 VOIDS the run before the first act  environment variable CAP2_WORLD_DIE_IN_WINDOW is set to "1"; §7.1 declares one process life and this switch can end the process
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [PASS] H-ENV-SET GREEN after the plant is removed
+
+== F-STORE ==
+  [PASS] FS-01: the nonce is EXACTLY sixteen octets, by length  16
+    FS-02 RIDER: PJ-META-1 unpredictability is INTENTIONALLY NOT MET
+      by this store, and this store is TEST INFRASTRUCTURE ONLY.
+
+== L0 teeth — the fixture table's own gates ==
+  [PASS] H-ACT-COLLAPSE(L0) RED: duplicate runtime seat => act-fixture-table-invalid  ACT-FIXTURE-TABLE-INVALID
+  [PASS] H-LABEL-INERT GREEN BY DESIGN: a repeated fixture label is lawful and inert
+  [PASS] H-CELL-1 RED: two rows sharing a world cell => act-fixture-table-invalid
+  [PASS] FX-10 RED: a runtime process name colliding with a seat => invalid
+  [PASS] L0 GREEN: the declared fixture table validates
+
+== GATE-13 teeth — M-13a lexis, and H-INJECT layer 1 ==
+  [PASS] H-INJECT layer 1 RED: :text newline refused at L1b, code point 0x0A  role TEXT: code point 0x0A at zero-based index 9
+  [PASS] M-13a-2 RED: :text trailing space  role TEXT: code point 0x20 at zero-based index 8
+  [PASS] M-13a-2 RED: :text leading space  role TEXT: code point 0x20 at zero-based index 0
+  [PASS] M-13a-2 RED: :text TAB  role TEXT: code point 0x09 at zero-based index 1
+  [PASS] M-13a-2 RED: :text DEL  role TEXT: code point 0x7F at zero-based index 1
+  [PASS] M-13a-1 RED: :cell SPACE  role CELL: code point 0x20 at zero-based index 5
+  [PASS] M-13a-1 RED: :cell non-ASCII  role CELL: code point 0x12B at zero-based index 8
+  [PASS] M-13a-1 RED: :cell empty string refused pre-frontier
+  [PASS] M-13a-2 RED: :text empty string refused pre-frontier
+  [PASS] M-13a-2(d) GREEN: repeated internal spaces are lawful
+  [PASS] FM-01/FM-02 GREEN A
+  [PASS] FM-01/FM-02 GREEN C-i
+  [PASS] FM-01/FM-02 GREEN C-ii
+  [PASS] FM-01/FM-02 GREEN B-R
+  [PASS] FM-01/FM-02 GREEN D
+  [PASS] FM-01/FM-02 GREEN B-L1
+  [PASS] FM-01/FM-02 GREEN B-L2
+
+== GATE-14 / FX-11 — the derivation, exhibited per arm ==
+  arm A      domain="lisp-plus/one-act-0/act-id/v0"
+    seat=seat:prima (19 octets)  request=187 octets  preimage=242 octets
+    digest=9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175
+    act-id=oneact0:act:9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175
+  [PASS] FX-11 A digest is 64 lowercase hex  length=64
+  arm C-i    domain="lisp-plus/one-act-0/act-id/v0"
+    seat=seat:ambigua (21 octets)  request=186 octets  preimage=243 octets
+    digest=874247cf9b9bbfe9bd3cbbcba5c00a393f6d891599647d2c6e8765533f910528
+    act-id=oneact0:act:874247cf9b9bbfe9bd3cbbcba5c00a393f6d891599647d2c6e8765533f910528
+  [PASS] FX-11 C-i digest is 64 lowercase hex  length=64
+  arm C-ii   domain="lisp-plus/one-act-0/act-id/v0"
+    seat=seat:amissa (20 octets)  request=194 octets  preimage=250 octets
+    digest=dfb9fc46b1cad01cfea7b8430efb3d506d3ec391d6f1ae0ecf16d17bc599f4bd
+    act-id=oneact0:act:dfb9fc46b1cad01cfea7b8430efb3d506d3ec391d6f1ae0ecf16d17bc599f4bd
+  [PASS] FX-11 C-ii digest is 64 lowercase hex  length=64
+  arm B-R    domain="lisp-plus/one-act-0/act-id/v0"
+    seat=seat:revocata (22 octets)  request=181 octets  preimage=239 octets
+    digest=2715cba038d2bab77ded383806dc3f9b0adc612b3a75345b8f6cb72d9d9c0b1d
+    act-id=oneact0:act:2715cba038d2bab77ded383806dc3f9b0adc612b3a75345b8f6cb72d9d9c0b1d
+  [PASS] FX-11 B-R digest is 64 lowercase hex  length=64
+  arm D      domain="lisp-plus/one-act-0/act-id/v0"
+    seat=seat:fracta (20 octets)  request=185 octets  preimage=241 octets
+    digest=063ab33fcd756c0c7616b24a4664f665a29e00d05d8c73d7ee51e670a30ae574
+    act-id=oneact0:act:063ab33fcd756c0c7616b24a4664f665a29e00d05d8c73d7ee51e670a30ae574
+  [PASS] FX-11 D digest is 64 lowercase hex  length=64
+  arm B-L1   domain="lisp-plus/one-act-0/act-id/v0"
+    seat=seat:vetita-scope (26 octets)  request=193 octets  preimage=255 octets
+    digest=660e47bd6c4d895a8a3a5f41ec621079dd0107a54cc1d8e4bb3c320836f94f32
+    act-id=oneact0:act:660e47bd6c4d895a8a3a5f41ec621079dd0107a54cc1d8e4bb3c320836f94f32
+  [PASS] FX-11 B-L1 digest is 64 lowercase hex  length=64
+  arm B-L2   domain="lisp-plus/one-act-0/act-id/v0"
+    seat=seat:vetita-ambient (28 octets)  request=185 octets  preimage=249 octets
+    digest=9e37664530c90134ceac45d81a4f71ddc0e69ca5f6255e65e6246662de3c6b7e
+    act-id=oneact0:act:9e37664530c90134ceac45d81a4f71ddc0e69ca5f6255e65e6246662de3c6b7e
+  [PASS] FX-11 B-L2 digest is 64 lowercase hex  length=64
+
+== GATE-14 / FX-12 — cold recomputation ==
+  [PASS] FX-12 A cold datum=  oneact0:act:9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175
+  [PASS] FX-12 C-i cold datum=  oneact0:act:874247cf9b9bbfe9bd3cbbcba5c00a393f6d891599647d2c6e8765533f910528
+  [PASS] FX-12 C-ii cold datum=  oneact0:act:dfb9fc46b1cad01cfea7b8430efb3d506d3ec391d6f1ae0ecf16d17bc599f4bd
+  [PASS] FX-12 B-R cold datum=  oneact0:act:2715cba038d2bab77ded383806dc3f9b0adc612b3a75345b8f6cb72d9d9c0b1d
+  [PASS] FX-12 D cold datum=  oneact0:act:063ab33fcd756c0c7616b24a4664f665a29e00d05d8c73d7ee51e670a30ae574
+  [PASS] FX-12 B-L1 cold datum=  oneact0:act:660e47bd6c4d895a8a3a5f41ec621079dd0107a54cc1d8e4bb3c320836f94f32
+  [PASS] FX-12 B-L2 cold datum=  oneact0:act:9e37664530c90134ceac45d81a4f71ddc0e69ca5f6255e65e6246662de3c6b7e
+
+== GATE-14 / FX-13 — the two ACT-L2 contrast exhibits ==
+  [PASS] FX-13 base = arm A's frozen digest  actual="9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175" expected="9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175"
+  [PASS] FX-13(a) seat-only contrast DIFFERS  preimage=244 digest=f606a0a054d208e4878ead885fdd5fa739ab5295b8e9e29d6079b72929ffa235
+  [PASS] FX-13(b) V-REQ of the mutated text  len=187 sha=bd8b120d76f88a5d631ae7e987ccac375932cb26afd31d78b730a54f7c212329
+  [PASS] FX-13(b) text-only contrast DIFFERS  preimage=242 digest=733e809af7dc863f73010094db432ec2cc47ec107ef8d5aed24b60d763ab205b
+
+== GATE-14 teeth — H-ACT-PREIMAGE ==
+    PLANTED mutant preimage length 226   digest fd668847939f1e80c95c3dc32282287a2e22b3302d9d626df6804f9065f7cad9
+    LAWFUL  preimage length 242   digest 9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175
+  [PASS] H-ACT-PREIMAGE RED: concatenation mutant differs from the lawful mint  both digests and both lengths named, as §5.2b requires
+  [PASS] H-ACT-PREIMAGE GREEN after the plant is removed
+
+== GATE-16 (vectors) — the SIXTY-THREE frozen digest lines ==
+  [PASS] V-ACT-ID A  preimage=242 digest=9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175
+  [PASS] V-ACT-ID C-i  preimage=243 digest=874247cf9b9bbfe9bd3cbbcba5c00a393f6d891599647d2c6e8765533f910528
+  [PASS] V-ACT-ID C-ii  preimage=250 digest=dfb9fc46b1cad01cfea7b8430efb3d506d3ec391d6f1ae0ecf16d17bc599f4bd
+  [PASS] V-ACT-ID B-R  preimage=239 digest=2715cba038d2bab77ded383806dc3f9b0adc612b3a75345b8f6cb72d9d9c0b1d
+  [PASS] V-ACT-ID D  preimage=241 digest=063ab33fcd756c0c7616b24a4664f665a29e00d05d8c73d7ee51e670a30ae574
+  [PASS] V-ACT-ID B-L1  preimage=255 digest=660e47bd6c4d895a8a3a5f41ec621079dd0107a54cc1d8e4bb3c320836f94f32
+  [PASS] V-ACT-ID B-L2  preimage=249 digest=9e37664530c90134ceac45d81a4f71ddc0e69ca5f6255e65e6246662de3c6b7e
+  [PASS] VEC V-NC27 ("cella" "prima")  len=20/20 sha=4f76e28197d923365150f638de3fecac682e70eebd24d4c255c09eb29337e2d1
+  [PASS] VEC V-NC27 ("cella:prima")  len=20/20 sha=db97dd08319a49b3439faa4d66f3abb2f5de7975eee80c4254d5d4f735e0594d
+  [PASS] VEC V-EVID prima F1  len=28/28 sha=c5f8d2e4d20090f09a6b20e9706c7b93254f1763ef3b31bab8087b266763e083
+  [PASS] VEC V-EVID prima F2  len=28/28 sha=d59a52ee5a2c385c720e1a21aa1687841b5fea94660fb8064bd9dcacb47048c2
+  [PASS] VEC V-EVID prima F3  len=28/28 sha=cd82c9b8da2d9c4f753e452681e5e8b096c3faf3ab9318e2b77595210801cf56
+  [PASS] VEC V-EVID prima F4  len=28/28 sha=bb07e366613d1a53d985aa17f43b38809f8a0d32ebf3bb2ea56c48f946ff120d
+  [PASS] VEC V-EVID prima F5  len=28/28 sha=0d9068dca310ecff114bc8b7c9e5e6e026dae95e92b03a0ab8f18bdc54f7ca02
+  [PASS] VEC V-EVID ambigua F1  len=30/30 sha=ef636816a1732854f9fcac3c4930f53874e383b587156ac9382bc708fdc08d4f
+  [PASS] VEC V-EVID ambigua F2  len=30/30 sha=5011b8b5d395e12faaa519fc00d57d8fa6c5e1388cf8e946ae8efc79e4721f92
+  [PASS] VEC V-EVID ambigua F3  len=30/30 sha=dad91be10eeb9bf6f8e068a7fcff8f2824cbe5b8ba0f356766350a5d78d28927
+  [PASS] VEC V-EVID ambigua F4  len=30/30 sha=7c971a0f345d5f636427506ce32e96c51db3bc1d736d9154a2ee9e2b6ad574ba
+  [PASS] VEC V-EVID ambigua F5  len=30/30 sha=04b12e2a68f09fb9a13d81838c7ef399c8753b5dd34a4839f63bb05ea7729568
+  [PASS] VEC V-EVID amissa F1  len=29/29 sha=cb9d6e4dec008e46fecbe23a657c6ff321bd1f7087a5c7a4eb4d1681d2cb28f3
+  [PASS] VEC V-EVID amissa F2  len=29/29 sha=178095c846ce324ab500151f4384c0c3c45d69feee4f18362243d474509b84f9
+  [PASS] VEC V-EVID amissa F3  len=29/29 sha=0315019af81681658980ddf800892e0a96336ddc5f5c4e07882798e772ff6fb4
+  [PASS] VEC V-EVID amissa F4  len=29/29 sha=f4fc679b22f6d21f77a26ce80e6491d6177db0894c45a32d46862a1575125a0d
+  [PASS] VEC V-EVID amissa F5  len=29/29 sha=7df93717c94c7cdbf967f2d5f83cd95a5e166fcf1de924b001d22377dcafe572
+  [PASS] VEC V-EVID revocata F1  len=31/31 sha=0bc5d98a97c6ac1593b6074b2c82040dcf06f97271e19d9cc5139cc89918f2e7
+  [PASS] VEC V-EVID revocata F2  len=31/31 sha=648d1813e7c7ba50cb5939f41f75bf23883812a7ed78856a873c6f93856c595e
+  [PASS] VEC V-EVID revocata F3  len=31/31 sha=8402f7e46612c2ec47ad4c085fd53e4ced20e2fa708c3efab45095dde210e01a
+  [PASS] VEC V-EVID revocata F4  len=31/31 sha=565ed659b2eb0fb1d5c175cf2d3828864de33ec9e0fc01dbfed39757d3c7a34f
+  [PASS] VEC V-EVID revocata F5  len=31/31 sha=7f222cd1b075d1c685dcb5fbbc28b7d4b3ab2813317ba89d2fe91ec6594e7e15
+  [PASS] VEC V-EVID fracta F1  len=29/29 sha=ba4a5a5ad091b75be72c427378760139d68fd442792b9546e91fc522f6db2eb3
+  [PASS] VEC V-EVID fracta F2  len=29/29 sha=0c4acd1cdcf32390a4338e5d710f7dcaa37ce209de2b6b11a0ecf8137a63a94a
+  [PASS] VEC V-EVID fracta F3  len=29/29 sha=7634b4f1babe549c08b721443e4158e3e47afdcfbf3c9168e48900f31541c98f
+  [PASS] VEC V-EVID fracta F4  len=29/29 sha=e9f735a90ab3f915cbe26b13000a29d0c6c1d8753e64ee93d5c55538655da1f1
+  [PASS] VEC V-EVID fracta F5  len=29/29 sha=33910f7f320ff829f3c77fe4bc1708d13cbb085770eb4aee1d03f4c1b6f7b130
+  [PASS] VEC V-EVID vetita-scope F1  len=35/35 sha=6f8801e57bfd42e5d38b74988cd357656269707e63758b92b47731a71f7232ba
+  [PASS] VEC V-EVID vetita-scope F2  len=35/35 sha=eff06e68dc8d0d91f51a775e41a486b78775fd129d530d53790bec7693e41fd4
+  [PASS] VEC V-EVID vetita-scope F3  len=35/35 sha=57ad779a5254badceeef7671fd1e19f7d2c8152f0dc7864fe536f266c74765ca
+  [PASS] VEC V-EVID vetita-scope F4  len=35/35 sha=d33d83b43ffe79925f160ea17e6457516f61f41c00ddef7ebb5d53cc9cf7b968
+  [PASS] VEC V-EVID vetita-scope F5  len=35/35 sha=4168b6f7e91704c3428648de6e140a1447fcce462c85933b5add2114ae5ab3f3
+  [PASS] VEC V-EVID vetita-ambient F1  len=37/37 sha=384250135e6c2c7c91ab30a6c13620e36cc1ab1602df9f02079ec5661b82bca9
+  [PASS] VEC V-EVID vetita-ambient F2  len=37/37 sha=7734f0ef4dffdaa2de838a62d43bf0c6968ffe195898002f05af909e4f0343b2
+  [PASS] VEC V-EVID vetita-ambient F3  len=37/37 sha=e5712c029ed2d29d13ee1c40b0869582eba2a7513d61abbf5853d5b643d1a557
+  [PASS] VEC V-EVID vetita-ambient F4  len=37/37 sha=6ed1871b83b7a37006a996eda5bba3de86c7ee7d3f236e78cf9781cc0e548d57
+  [PASS] VEC V-EVID vetita-ambient F5  len=37/37 sha=77873c8ac1a2d386b7496d16c073ef0a2a68ce048d45381b5f1fd1722b324cce
+  [PASS] VEC V-KIND F1  len=29/29 sha=f61ef8c7f8d7b1f900a5faadd0c53712b1bb01ee4fedb46296c79d7f7e7546ca
+  [PASS] VEC V-KIND F2  len=35/35 sha=8e5ac4eb20a5018d2f4bf09d3d3abe14de498c5966d6fad6e318fb0cb26c46bd
+  [PASS] VEC V-KIND F3  len=43/43 sha=97823a5d98800dd0e9831551e90de22e14cbf0dffb620ffbce03252d44b78545
+  [PASS] VEC V-KIND F4  len=42/42 sha=f1a49c98c2cde65d8fc017d1d40f42d69cf654ab2d1d700d03c75d55dffe03b3
+  [PASS] VEC V-KIND F5  len=21/21 sha=b3eff8a1b30e0957544c2a12c83b3fe6db59df4f3f92f76362262e88cebaa426
+  [PASS] VEC boundary:lane-accounting  len=33/33 sha=f01ba1ab17ff6f5c0b013e01262349624589ff0d8255d1b59ceba09726860a82
+  [PASS] VEC witness:lane-self-report  len=33/33 sha=489dd17f49cada51a2ffd45ff845244278eea1a33671fbdec6060ab82fa6e7f2
+  [PASS] VEC origin:self-reported  len=29/29 sha=61e5930bae2aa1dc26e2e1060facbc1e50d835b071813babde95ca03f8027d8f
+  [PASS] VEC principal:oneact0  len=26/26 sha=f1c269ebd1a0c2c7feccb8e64d70e168c08d2cdd8e944914caf644c4f530f0d0
+  [PASS] VEC attempt:a-prima  len=24/24 sha=d34cbd7418a2e8bbd0bc0f26c44ee38f22af8e791645282edc39e3469364e12f
+  [PASS] VEC process:actus  len=22/22 sha=d860ae9c93a6f1b6eb8fb1c42ab4c8ddd4800f1a02fd512e50f7f2bfcfa6d85f
+  [PASS] VEC principal:actus  len=24/24 sha=1a6756f6e41c635fd6ddc1ef422a17202d728aa7822c2fa9b9e579606bb77626
+  [PASS] V-REQ A  len=187 idempotent=T
+  [PASS] V-REQ C-i  len=186 idempotent=T
+  [PASS] V-REQ C-ii  len=194 idempotent=T
+  [PASS] V-REQ B-R  len=181 idempotent=T
+  [PASS] V-REQ D  len=185 idempotent=T
+  [PASS] V-REQ B-L1  len=193 idempotent=T
+  [PASS] V-REQ B-L2  len=185 idempotent=T
+  [PASS] VECTOR COUNT is 63  counted 63 digest lines
+
+== GATE-4 teeth — the agreement gate ==
+  [PASS] GATE-4 RED: a wrong Class-A pairing DISAGREES
+  [PASS] GATE-4 RED: Class-D with standing :settled DISAGREES (O-4a exhaustiveness)
+  [PASS] GATE-4 RED: Class-D with evidence-class :uncertain and no declare DISAGREES
+  [PASS] GATE-4 RED: a pairing ABSENT from the table DISAGREES
+  [PASS] GATE-4 GREEN: the lawful Class-A pairing AGREES
+  [PASS] GATE-4 GREEN: the lawful Class-D pairing AGREES
+  [PASS] R-4a/R-5: correspondence row 2 reads jurisdictional-divergence, NEVER agree
+  [PASS] R-4a: correspondence row 1 reads agree
+  [PASS] R-4a: a mismatched correspondence reads disagree
+
+== GATE-3 — THE SEVEN ARMS IN CONTRACT ORDER ==
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+    store-id pj0-store:b9afe334e9a3dd6685f8263fb89b744ef7493a80f407980159274f0c9ac65760
+
+---- ARM A (fixture label "prima" — LEGIBILITY ONLY) ----
+    act-id oneact0:act:9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175
+    BIND-4/BIND-5 readback: pass (F1 at ordinal 9)
+    PRE-1 (eq resolved bridge) => T
+    PRE-2 name/identity/version => equal
+    class A  standing :SETTLED  disposition :RETURNED
+    F2 appended (frontier CROSSED, view COMMITTED)
+    readback: standing :SETTLED evidence-class :NONE · row A · verdict agree
+  [PASS] GATE-3 A: agreement verdict  row A standing :SETTLED class :NONE
+
+---- ARM B-L1 (fixture label "vetita-scope" — LEGIBILITY ONLY) ----
+    act-id oneact0:act:660e47bd6c4d895a8a3a5f41ec621079dd0107a54cc1d8e4bb3c320836f94f32
+    BIND-4/BIND-5 readback: pass (F1 at ordinal 16)
+    PRE-1 (eq resolved bridge) => T
+    PRE-2 name/identity/version => equal
+    class B  standing :ABSENT  disposition :REFUSED
+    F2 appended (frontier NOT-CROSSED, view REFUSED)
+    readback: standing :ABSENT evidence-class :NONE · row B · verdict agree
+  [PASS] GATE-3 B-L1: agreement verdict  row B standing :ABSENT class :NONE
+
+---- ARM B-L2 (fixture label "vetita-ambient" — LEGIBILITY ONLY) ----
+    act-id oneact0:act:9e37664530c90134ceac45d81a4f71ddc0e69ca5f6255e65e6246662de3c6b7e
+    BIND-4/BIND-5 readback: pass (F1 at ordinal 19)
+    PRE-1 (eq resolved bridge) => T
+    PRE-2 name/identity/version => equal
+    class B  standing :ABSENT  disposition :REFUSED
+    F2 appended (frontier NOT-CROSSED, view REFUSED)
+    readback: standing :ABSENT evidence-class :NONE · row B · verdict agree
+  [PASS] GATE-3 B-L2: agreement verdict  row B standing :ABSENT class :NONE
+
+---- ARM B-R (fixture label "revocata" — LEGIBILITY ONLY) ----
+    act-id oneact0:act:2715cba038d2bab77ded383806dc3f9b0adc612b3a75345b8f6cb72d9d9c0b1d
+    BIND-4/BIND-5 readback: pass (F1 at ordinal 22)
+    L3b mint REFUSED: CAP1-MINT-REFUSED [CAP1-MINT-2]
+    F1 stands alone — BINDING-DECLARED-UNPAIRED (J-2c, J-6)
+  [PASS] GATE-3 B-R: L3b mint refused CAP1-MINT-REFUSED/CAP1-MINT-2
+  [PASS] BR-04 exactly ONE F1, readable back by event-id
+  [PASS] BR-03 F2 must NOT exist for a-revocata
+  [PASS] BR-03 F3 must NOT exist for a-revocata
+  [PASS] BR-03 F4 must NOT exist for a-revocata
+  [PASS] BR-03 F5 must NOT exist for a-revocata
+  [PASS] BR-05 derive-effect-standing => :ABSENT
+  [PASS] BR-08 J-6 classification is BINDING-DECLARED-UNPAIRED
+  [PASS] BR-06 world untouched: cell still empty
+  [PASS] BR-07 WI-1: ledger count under this arm's external-request is 0
+
+---- ARM C-i (fixture label "ambigua" — LEGIBILITY ONLY) ----
+    act-id oneact0:act:874247cf9b9bbfe9bd3cbbcba5c00a393f6d891599647d2c6e8765533f910528
+    BIND-4/BIND-5 readback: pass (F1 at ordinal 23)
+    PRE-1 (eq resolved bridge) => T
+    PRE-2 name/identity/version => equal
+    class C-I  standing :UNCERTAIN-UNRESOLVED  disposition :INTERRUPTED
+    F2 appended (frontier CROSSED, view INDETERMINATE)
+    F3 frozen BEFORE the runtime reconciliation (ANSWERED-COMMITTED)
+    F4: runtime :APPLIED · row row-1 · verdict agree
+    readback: standing :RECONCILED evidence-class :RECONCILED · row C-reconciled · verdict agree
+  [PASS] GATE-3 C-i: agreement verdict  row C-reconciled standing :RECONCILED class :RECONCILED
+
+---- ARM C-ii (fixture label "amissa" — LEGIBILITY ONLY) ----
+    act-id oneact0:act:dfb9fc46b1cad01cfea7b8430efb3d506d3ec391d6f1ae0ecf16d17bc599f4bd
+    BIND-4/BIND-5 readback: pass (F1 at ordinal 33)
+    PRE-1 (eq resolved bridge) => T
+    PRE-2 name/identity/version => equal
+    class C-II  standing :CROSSED-UNSETTLED  disposition :INTERRUPTED
+    F2 appended (frontier CROSSED, view INDETERMINATE)
+    declare-uncertain-effect ran (C-ii)
+    F3 frozen BEFORE the runtime reconciliation (ANSWERED-NOT-COMMITTED)
+    F4: runtime :NOT-APPLIED · row row-2 · verdict jurisdictional-divergence
+    readback: standing :RECONCILED evidence-class :RECONCILED · row C-reconciled · verdict agree
+  [PASS] GATE-3 C-ii: agreement verdict  row C-reconciled standing :RECONCILED class :RECONCILED
+
+---- ARM D (fixture label "fracta" — LEGIBILITY ONLY) ----
+    act-id oneact0:act:063ab33fcd756c0c7616b24a4664f665a29e00d05d8c73d7ee51e670a30ae574
+    BIND-4/BIND-5 readback: pass (F1 at ordinal 42)
+    PRE-1 (eq resolved bridge) => T
+    PRE-2 name/identity/version => equal
+    class D  standing :CROSSED-UNSETTLED  disposition :HOST-FAULT
+    F2 appended (frontier CROSSED, view no-outcome-host-fault)
+    readback: standing :CROSSED-UNSETTLED evidence-class :NONE · row D-pre · verdict agree
+  [PASS] GATE-3 D: agreement verdict  row D-pre standing :CROSSED-UNSETTLED class :NONE
+
+== ARM SUMMARY ==
+  A      class=:A             row=A verdict=agree 
+  B-L1   class=:B             row=B verdict=agree 
+  B-L2   class=:B             row=B verdict=agree 
+  B-R    class=:UNPAIRED-F1   row=- verdict=- classification=BINDING-DECLARED-UNPAIRED
+  C-i    class=:C-I           row=C-reconciled verdict=agree 
+  C-ii   class=:C-II          row=C-reconciled verdict=agree 
+  D      class=:D             row=D-pre verdict=agree 
+
+== V-F1..V-F5 — BODY-OCTET FREEZE (first full lawful run) ==
+  F1    A                ordinal  9
+      body      678 octets  sha256=8f4065987a04c2224419a1f254ae4d132d95894b4922a24465b5b78c43a19561
+      envelope 1090 octets  sha256=dbb6c6e64b6d9e0c65060c313a136c87119f23c27d00c859d4fa796e1f6e892f
+  F2    A                ordinal 14
+      body      698 octets  sha256=c07ce7aca05fe9906b4718827a8f56059d7b713dcc5be1583f71ae1874141492
+      envelope 1116 octets  sha256=d4ed941f7109c93db9b042f8cca8a00f36690530038a05d59839544796b9e173
+  F3    A                ABSENT BY LAW on this arm
+  F4    A                ABSENT BY LAW on this arm
+  F5    A                ordinal 15
+      body      602 octets  sha256=0b45df320c9b47ec933a95ecb35362217a3977af7863a4efec90a4e7135b21a2
+      envelope 1006 octets  sha256=7ecf1f328a7fda1e6e82b7bafe53a96d23f67dfeccfa7ff42f332e9735fe83f3
+  F1    C-i              ordinal 23
+      body      691 octets  sha256=bb55ed1cc74903ea2474723816bec9895bbe12491b08153e42ec63d4e4477d65
+      envelope 1107 octets  sha256=c7e155e14cdbba360f76c704c45581ff17c08bf7b2e5aae678641f3b941dee2e
+  F2    C-i              ordinal 28
+      body      703 octets  sha256=2fda9e5b1faf452e6d1d54b053c8cf6905e4cc375b85ab25cc3b4a060e09890f
+      envelope 1125 octets  sha256=67b0ef1fb147d53d814ff6337f842a1869ed35ebcacbb715beb0618385955836
+  F3    C-i              ordinal 29
+      body      281 octets  sha256=6f258b53a2012d520bfeab470b6e2d3571aa5f48920f8b34613f31228ba44e47
+      envelope  711 octets  sha256=b42404c342b9f9adc1f44d305ebbcff0bbbe8d66fc604fba302d8d734e994d12
+  F4    C-i              ordinal 31
+      body      206 octets  sha256=e68593e9488c8ae56edd48c5bf075e8860bbe971703ef74183edff32bf1f08e1
+      envelope  635 octets  sha256=d1c56839484aec82632089dfec54d4a75da29864b2bd5fca841417ee67f5a15b
+  F5    C-i              ordinal 32
+      body      614 octets  sha256=2cd22e37427d8c443c7fa695bd00e4dc38cd377066ebeee8d4e89772af14be7d
+      envelope 1022 octets  sha256=a3e6e19da1b1d4af93cfd109c8317988cf0ecdfcb992bb3f5721cf7a761aae6b
+  F1    C-ii             ordinal 33
+      body      685 octets  sha256=a2abed5c5af38ed385d3037e149e67341ef6fb607f464f0d4207b9e71ac8fe33
+      envelope 1099 octets  sha256=a9301c79b8d42f55f8fc5679f2ddc1d026443b0916def217a9c9f5522f27f766
+  F2    C-ii             ordinal 36
+      body      701 octets  sha256=1cc2d9f91026b1169a5c796cd84ebfc3f481a8302c37064e66f68306fb5961b5
+      envelope 1121 octets  sha256=f7a134dc4c67900fc7ec140f11681f062e66eca1f03f76235ff19b0738ddc89d
+  F3    C-ii             ordinal 38
+      body      284 octets  sha256=a03e0ea4fb3102c6dcf7291853f7fa93cd2f23858a14eb4041aa929e03c3c787
+      envelope  712 octets  sha256=ac11864623d493734ef0951d6602d35ad107b391e4e3d0d970e76fab22df0ce9
+  F4    C-ii             ordinal 40
+      body      230 octets  sha256=e1268efa0fa0c97f649d368875cd9fdba92e0fce377320f55901db9454bcb307
+      envelope  657 octets  sha256=e701dc2712b5b7baa293798e32313b0a08e1462fc0ff6114781b62d57c489574
+  F5    C-ii             ordinal 41
+      body      613 octets  sha256=f8f8a5376b0275a814030b883b819d1334404ca6cc694726dd67bb3569da70df
+      envelope 1019 octets  sha256=1f7cf27502d4d1ce07838538c3b60b2e9cac834b2a35cb6482f0b240a83f3185
+  F1    B-R              ordinal 22
+      body      697 octets  sha256=f62196f7968cbfd7b92b11d9103955a9795303b7a75f31ec36454a4bc302baa3
+      envelope 1115 octets  sha256=9a71f5b3d6c699e0584330768f8551916365746509b29f75b44410456fb9fc9d
+  F2    B-R              ABSENT BY LAW on this arm
+  F3    B-R              ABSENT BY LAW on this arm
+  F4    B-R              ABSENT BY LAW on this arm
+  F5    B-R              ABSENT BY LAW on this arm
+  F1    D                ordinal 42
+      body      685 octets  sha256=940b597d602aaa140ff61f5c0fe77bf00d0155e8b71e82668f131343f6ad3edc
+      envelope 1099 octets  sha256=ffec702b6267fb2392cdc38c71fa6e0690c242771377a9ed9c44face16ffff0d
+  F2    D                ordinal 45
+      body      747 octets  sha256=460a0205f1531d053269bc3a8c942c53f0205a1574a1d6303a90848e10238f37
+      envelope 1167 octets  sha256=2309afe4a3e83613be899992a2042b1879464550c697c6c2abdd3ad28c330c19
+  F3    D                ABSENT BY LAW on this arm
+  F4    D                ABSENT BY LAW on this arm
+  F5    D                ordinal 46
+      body      617 octets  sha256=60676e86bdc97bd79b48ce91df3313ec872286a521c27c77e5e8a2e494730a22
+      envelope 1023 octets  sha256=f7b57c32dfde4397405578683937dfd3442ebc202444a2b05b030f7e723ea2c7
+  F1    B-L1             ordinal 16
+      body      721 octets  sha256=feca8485f4b3e3efe769188d70f5266b37cdd066eb0008db8cf7f593431f84b7
+      envelope 1147 octets  sha256=34bfd72f331d2be124baddfbf6b99b960a7cf9494f036295ebe7e76b4bff16cb
+  F2    B-L1             ordinal 17
+      body      719 octets  sha256=1e41bc24df8d3e331965fc8f4df0463bc8976c9838b9801a6ba6ec9a95865e99
+      envelope 1151 octets  sha256=111c738d38c54a84c59d77a133b587d1fb54add41c42272c2e78cdba2ef0abc7
+  F3    B-L1             ABSENT BY LAW on this arm
+  F4    B-L1             ABSENT BY LAW on this arm
+  F5    B-L1             ordinal 18
+      body      608 octets  sha256=581dbbcd9dcf6c0ad05d6a18222cf2b142360133781d078360260e10c4b23020
+      envelope 1026 octets  sha256=f6e3f5cf1c57e394cab5bceb3af8433f00ef3aea14497e2ad7db2686163a1112
+  F1    B-L2             ordinal 19
+      body      744 octets  sha256=b42add97f081a444070a5ee251db5dfa7623cb392a823189a30ae2687a08b1fc
+      envelope 1174 octets  sha256=ec8b406dd16c2e03c33efc72c24a7fca4c0ec07bbf02538ab6e746dee1445267
+  F2    B-L2             ordinal 20
+      body      723 octets  sha256=80a0697f54d1524856cea862369d453b270a828671e65f29ed9efaf3f9451f43
+      envelope 1159 octets  sha256=6699f5c2f5a75ff44d47f4d82eb6b0fcc09051a593a5aa6d8dcc2d200f60c20f
+  F3    B-L2             ABSENT BY LAW on this arm
+  F4    B-L2             ABSENT BY LAW on this arm
+  F5    B-L2             ordinal 21
+      body      610 octets  sha256=7e65759f41f2071161f1577466415cbae49dcecb9ff63b476f241944cc1bfa82
+      envelope 1032 octets  sha256=97ac3ca72f1ce76a01f8031f4ecd2aeca1c57362bd2c69ccdb5f59b1aec275f7
+  FREEZE SUMMARY: 23 frames frozen, 12 absent by law
+  [PASS] V-F freeze: 23 frames frozen, 12 absent by law, over 35 event-id slots  23 frozen + 12 absent = 35
+
+== GATE-8 — journal purity across readbacks ==
+  [PASS] GATE-8: store terminal digest byte-identical across every readback  b1246ccdc12ab8f11dba2af232909027372e602e298ba3e06dab3d4ac4ae6f12
+
+== GATE-6 teeth — the binding conjuncts ==
+  [PASS] BIND-1 RED: :cell not STRING= to the rendered grant resource
+  [PASS] BIND-3n RED: a two-predicate ruling refuses on the NARROWNESS conjunct  requirement-id=BIND-3n
+  [PASS] BIND-3i RED: wrong predicate refuses on a STRICT-PATH arm  requirement-id=BIND-3i
+  [PASS] BIND-3i GREEN BY LAW on a CONTROL arm (chair ruling 2): only BIND-3n runs
+  [PASS] BIND-2a RED: the ruling names a different adapter symbol
+  [PASS] GATE-6 GREEN: arm A's real binding passes every conjunct
+
+== GATE-14 teeth — H-ACT-BRANCH ==
+  [PASS] H-ACT-BRANCH RED: F2 carrying a different act-id => act-identity-branch (J-4c)  act identity branch: F1 in store carries oneact0:act:898b1a9a7370b702c1a0799670076fe1be5090d7c9adcc0f0f4654ccf7bd035d; this act:language-attempt-bound would carry oneact0:act:063ab33fcd756c0c7616b24a4664f665a29e00d05d8c73d7ee51e670a30ae574
+  [PASS] H-ACT-BRANCH: the guard read F1 FROM THE STORE, not from a host variable
+
+== GATE-7 teeth — frame ordering ==
+  [PASS] GATE-7 RED: a frame out of order => act-frame-ordering-violated / ACT-ORDER-1  frame kind act:language-reconciliation-frozen (intended ordinal 3) has no F1 to follow for act oneact0:act:9225363236e0b090cb3bf3516719e6812ee8eb720bdf7e4a65deca0c3c70ca08
+  [PASS] GATE-7 RED: F2 after F5 on a completed act => act-frame-ordering-violated  frame kind act:language-attempt-bound (intended ordinal 2) would follow act:readback (ordinal 5) for act oneact0:act:9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175
+
+== GATE-15 teeth — H-SAME-NAME-WRONG-OBJECT ==
+  [PASS] H-SAME-NAME-WRONG-OBJECT: the impostor is indistinguishable by name/identity/version
+  [PASS] H-SAME-NAME-WRONG-OBJECT RED: PRE-1's EQ assertion separates them
+  [PASS] GATE-15 GREEN: PRE-1 holds for the genuine bridge
+
+== GATE-19 — binding consumption, both shapes ==
+  [PASS] H-REDERIVE-CONSUMED RED: same seat + same request => act-identity-taken (ACT-8)  act identity oneact0:act:9acd6395f8304369c8b7e10f16af43d78987be36dea6abf0e4f5872b032d6175 is already present in the validated prefix at ordinal 9
+  [PASS] H-REUSE-SEAT: the re-derived identity DIFFERS, so ACT-8 is blind to it
+  [PASS] H-REUSE-SEAT: ACT-8's prefix scan does NOT fire on shape 2
+  [PASS] H-REUSE-SEAT RED: the SEAT SCAN refuses act-binding-consumed  runtime seat "prima" was consumed by the F1 at ordinal 9
+  [PASS] GATE-19 GREEN: an unconsumed seat passes both scans
+
+== GATE-5 teeth — the retry gates ==
+  [PASS] D-08 the seat is POISONED: standing is crossed-unsettled
+  [PASS] G3 RED: a second use of the attempt-name => duplicate-attempt-identity, PRE-FRONTIER  DUPLICATE-ATTEMPT-IDENTITY
+  [PASS] G2 RED: a FRESH attempt in the poisoned seat => unsafe-retry  UNSAFE-RETRY
+
+== NC-39 / H-UNPAIRED-F1 — the two teeth arm B-R cannot supply ==
+  [PASS] NC-39 tooth (i): the fabricated F2 carries an attempt identity NO ACT MINTED
+  [PASS] NC-39 tooth (i) RED: appending it would move B-R from BINDING-DECLARED-UNPAIRED to READBACK-MISSING  and READBACK-MISSING is a finding, not a pass — the round STOPS
+    ⚠ THE LANE DOES NOT APPEND IT.  A pre-act failure needs no attempt
+      identity (ACT-11, OR-7); a lane that invents one to keep the frames
+      paired has forged the very join the frames exist to provide.
+  [PASS] NC-39 tooth (ii): PRE-1 is a route to the unpaired shape that B-R CANNOT reach
+  [PASS] NC-39 tooth (ii): its unpaired shape classifies BINDING-DECLARED-UNPAIRED too
+
+== GATE-16 teeth — the two duplicate-event-id behaviours ==
+  [PASS] H-DUP-IDENTICAL RED: byte-identical re-append does NOT signal  disposition=:ALREADY-COMMITTED-IDENTICAL ordinal=9
+  [PASS] H-DUP-IDENTICAL RED: ACT-8a would have caught it — disposition is not :newly-committed
+  [PASS] H-DUP-CONFLICTING RED: same event-id, different payload => pj0-event-identity-collision  requirement-id=PJ-APP-3
+
+== GATE-13 — H-INJECT layer 2 (the disease) ==
+  [PASS] WI-1: the settled arm has EXACTLY ONE ledger line (not >=1, not 'found')  count=1
+  [PASS] H-INJECT layer 2 RED: WI-3 fires — the victim's count reads 2 where 1 was captured  before=1 after=2
+  [PASS] H-INJECT layer 2 RED: the TOTAL line count also moved  before=1 after=2
+  [PASS] H-INJECT layer 2: world-ledger-LOOKUP still reports 'found' and CANNOT see the second line  find-if stops at the first match — which is exactly why the COUNT is the diagnosis
+
+== GATE-20 teeth — H-AP0-COLLIDE ==
+  [PASS] GATE-20 GREEN before the plant: no ap0-event/vertical-event frame for the seat
+  [PASS] H-AP0-COLLIDE RED: N-6a's per-arm assertion fires, naming the colliding event id  a ap0-event frame for seat prima is in the validated prefix: ap0-event:e-prima-projection
+  [PASS] H-AP0-COLLIDE layer 2 RED: the readback is reclassified to :projection  evidence-class=:PROJECTION provenance=:LIVE
+    ⚠ THE PLANT IS PERMANENT IN THIS STORE — the arms already ran, and
+      an append cannot be un-appended.  That is why this gate runs LAST.
+   run root removed: /tmp/oneact0-selftest.EsAkP1/ (exists: NIL)
+
+== TALLY: 173 passed, 0 failed ==
+oneact0-selftest: 173 checks, 0 failures
+exit=0

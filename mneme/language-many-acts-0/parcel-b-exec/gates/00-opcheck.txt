@@ -1,0 +1,7 @@
+== SBCL operation-check through the wrapper, before any Lisp ran ==
+/home/gauss/.local/bin/sbcl
+-rwxr-xr-x 1 gauss gauss 1985928 Aug  9 16:08 /home/gauss/.local/bin/sbcl
+SBCL 2.4.6
+
+"2.4.6" op-check exit=0
+2026-08-10T23:20:55Z

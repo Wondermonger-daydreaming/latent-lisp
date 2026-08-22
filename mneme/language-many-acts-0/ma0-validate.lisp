@@ -1,7 +1,10 @@
 ;;;; ma0-validate.lisp — the closed validator (GRAMMAR §2), and the source
 ;;;; reader that is its only lawful mouth.
 ;;;;
-;;;; CANDIDATE.  Nothing here is adopted (contract §0).
+;;;; STANDING: attaches to immutable object identities and explicit
+;;;; dispositions, never to a filename or directory (Owner Ruling 6 §3 B1;
+;;;; MANY-ACTS-0-STANDING.md).  This file's path confers no standing on its
+;;;; bytes in either direction (contract §0).
 ;;;;
 ;;;; ⚠ VALIDATION IS TOTAL BEFORE ANY ENVIRONMENT CONTACT.  Not one function in
 ;;;; this file touches a store, a world, a capability, or a special variable of
@@ -92,7 +95,7 @@ program is ONE form" pathname))
                   "the reader refused ~a: ~a [~a]" pathname (type-of c) c))))
 
 ;;; ===========================================================================
-;;; §3 — V-SHAPE / V-ATOMS / V-DATA / V-PKG: the total atom and shape scan.
+;;; §3 — V-SHAPE / V-ATOMS (umbrella) / V-DATA / V-PKG: the total atom and shape scan.
 ;;; ===========================================================================
 
 (defun %ma0-proper-list-p (object)
@@ -137,7 +140,7 @@ not return — which is exactly the defect r1/pre-repair/D3-red.txt records."
 ;;; ---------------------------------------------------------------------------
 
 (defun %ma0-scan-atoms (form)
-  "V-DATA / V-ATOMS / V-PKG / V-SHAPE, in ONE total walk, with the declared
+  "V-DATA / V-ATOMS (umbrella) / V-PKG / V-SHAPE, in ONE total walk, with the declared
 depth and node bounds enforced as it goes, and with an EQ-visited table that
 makes the walk TOTAL on any input whatsoever (R1/D3).
 

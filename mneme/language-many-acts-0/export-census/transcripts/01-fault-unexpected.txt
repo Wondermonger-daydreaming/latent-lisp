@@ -1,0 +1,55 @@
+MA0 EXPORT CENSUS /0 — TOOTH (a): PLANTED UNEXPECTED EXPORT
+==========================================================
+Date        : 2026-08-10T23:19:33Z
+Branch      : ma0-export-census
+Plant       : '#:ma0-refuse' added to the (:export ...) list of package.lisp.
+              ma0-refuse is a REAL internal defun (ma0-structures.lisp:71), so
+              it IS fbound.  A boundness-only gate would wave it through; only
+              exact set equality can catch it.  That is the point of this tooth.
+package.lisp blob, baseline : a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+package.lisp blob, planted  : 2f968f4d812672a1ab8264f7f6e2dfa318a587bf
+EXPECT      : gate REFUSES and NAMES ma0-refuse as UNEXPECTED; exit 1.
+==========================================================
+
+== operation check ==
+SBCL 2.4.6
+sbcl --script reports: 
+"2.4.6" 
+
+== expected table identity ==
+path : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+blob : 78592073905450ff9afcd22dea53afbf53764fa1
+rows : 38 (comment lines excluded)
+
+== ma0-export-census — SBCL 2.4.6 ==
+   subject tree : /home/gauss/ma0-census/experiments/latent-lisp/
+   expected table: /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+
+=== MA0 EXPORT CENSUS /0 — CANDIDATE ===
+package            : LISP-PLUS-MANY-ACTS0
+expected table     : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+expected cardinality (DERIVED from the set): 38
+actual   cardinality (DERIVED from the set): 39
+NOTE: cardinality is reported as an observation.  The test below
+is EXACT SET EQUALITY OF NAMES; no branch of this gate compares a
+count against a literal.
+
+--- [1/3] EXACT SET EQUALITY ---
+MISSING    : none
+UNEXPECTED (external in the live package, not on the roll) — 1:
+    + ma0-refuse
+
+--- [2/3] BOUNDNESS IN THE DESIGNATED SENSE ---
+all 38 present expected export(s) bound in their designated sense
+
+--- [3/3] HOME-PACKAGE GUARD (additional) ---
+all external symbols homed in LISP-PLUS-MANY-ACTS0
+
+=== VERDICT ===
+  note: boundness checked for 38 name(s)
+ma0-export-census: REFUSED — 1 finding(s):
+  * 1 unexpected export(s)
+The success sentinel is WITHHELD.
+
+==========================================================
+OBSERVED EXIT: 1   (captured directly from the gate process)

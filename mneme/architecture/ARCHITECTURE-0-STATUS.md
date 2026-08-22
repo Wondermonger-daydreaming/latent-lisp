@@ -1,6 +1,9 @@
 # ARCHITECTURE-0-STATUS
 
-*The chamber's WE-ARE-HERE. Re-read this file, never a memory of it. Updated 2026-07-18.*
+*The chamber's WE-ARE-HERE. Re-read this file, never a memory of it. **The LAST addendum
+is the freshest state**; earlier addenda and the 07-18 body are provenance. (This header
+no longer names an addendum number — naming one made the header itself go stale within
+hours, twice on 2026-08-19.)*
 
 ## The exchange so far
 
@@ -599,3 +602,555 @@ that claim) · latent streaming re-entry path recorded. Front door:
 publish, parcel, stop — no audits, no successor lane commissioned.
 
 *— Claude Fable 5, the four-death stone, 2026-07-30*
+
+---
+
+## ADDENDUM 14 — 2026-08-19: STATE REFRESH (this stone was one era behind; the gap is hereby paid)
+
+*Everything between Addendum 13 (2026-07-30) and today, compressed to standings and front
+doors. Each lane's own documents are authoritative; this addendum points, it does not
+restate law. Written under the owner's housekeeping charge of 2026-08-19.*
+
+**Between 07-30 and this addendum the stone missed six arcs:**
+
+1. **Project-State Assessment (2026-08-02)** — four-agent evidence commission (TOPOS /
+   TALLY / PROBE / PRAETOR) over the frozen tree at `ef4097a8…`; verdict: a green research
+   ladder, not yet one runnable language; recommended consolidation. Committed as a
+   **historical record** beside this refresh:
+   `mneme/PROJECT-STATE-ASSESSMENT-2026-08-02.md` (its recommendations were adjudicated by
+   the IB0 ruling; read it as evidence of the 08-02 state, never as current direction).
+
+2. **Integration Baseline /0 — RULED 08-02, CLOSED BY OWNER RULING 08-03.** The Option-C
+   consolidation under a stricter name: one ASDF family (`lisp-plus.asd` at the subject
+   root), unified floors (89/89 full · 73/73 CI at closure, literal clean-clone gate),
+   front-door rewrite (latent-mvp FOSSIL-MARKED; the sealed name relation applied: the
+   language is Lisp+, Mneme its memory layer), five correction rounds R1–R5 (tip
+   `798d59f2`). **Executable census RETIRED** — the static `PROBE-SOURCE-INVENTORY.tsv` is
+   the only census artifact with standing. **No R6, ever; no further IB0 commit, receipt,
+   republication, or repair.** Front doors:
+   `mneme/RULING-integration-baseline-0-owner-ruling-and-work-order-2026-08-02.md` ·
+   `mneme/integration-baseline-0/` (AUTHORITY-INDEX.md · CLAIM-CEILING-0.md) ·
+   `notes/2026-08-03-session-handoff-integration-baseline-0-closed.md` (lab tree).
+
+3. **Mirror mechanics CHANGED (IB0 custody lane, 08-02) — Addendum 13-era lore is DEAD.**
+   `tools/latent-lisp/sync.sh` now publishes the **committed subject tree of lab main** via
+   `git archive` (never the working directory), with a main-ancestry guard and a
+   `SYNC-PAUSED` sentinel. Untracked files can no longer publish. The standing-constraints
+   line above ("anything committed here is public on the next sync") is now conditional on
+   the sentinel and on publication authorization — see item 6.
+
+4. **Language Surface Account /0 — ADOPTED + PUBLISHED 2026-08-06.** Lab phase R0→R3.3.3,
+   production round R4→R4.3 accepted; adoption merge `6715d2c4`, receipt `fafa80aa`.
+   **Surface /3 remains SHUT.** Front doors: `mneme/language-surface-account-0/`
+   (`OWNER-RULING-R4-RETURN-AND-R4.3-COMMISSION.md` · `ADOPTION-RECEIPT-2026-08-06.md`).
+
+5. **One Act /0 · Many Acts /0 · Charter /0.** One Act /0 adopted
+   (`mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md`; its stranger audit was WAIVED by
+   owner variance, not passed). Many Acts /0 R1 adopted with riders
+   (`mneme/language-many-acts-0/MANY-ACTS-0-R1-ADOPTION-OWNER-RULING-2026-08-10.md`).
+   Languagehood & Succession Charter /0 ratified and campaign closed
+   (`mneme/languagehood-and-succession-charter-0/CHARTER-0-TERMINAL-READBACK-2026-08-12.md`).
+   All wordings verbatim-only from those instruments.
+
+6. **Transport/publication now governed by the lab's Public Sufficiency /0 campaign**
+   (lab tree, `notes/2026-08-16-session-handoff-tr1-successor7.md` + addenda and
+   `notes/2026-08-19-session-handoff-tr3-executed.md`): `SYNC-PAUSED` is RAISED (governed
+   commits harvest as truthful WITHHELD records); publication authorization is ruled
+   **B blanket-current with bound `b641b58f`** — commits after the bound are
+   authorized-awaiting-nothing only by a further owner act; channel policy /1
+   (`latent-lisp-public-mirror`) adopted; tooling repairs TR/1–TR/3 complete (TR/3 closed
+   by owner variance 2026-08-19). Sentinel lift is pre-authorized at the next natural
+   transport occasion, carrying its ordered duties — that occasion's act, not this stone,
+   governs it.
+
+**Carried open, unchanged by any of the above:** stranger audits owed across the candidate
+lanes (counted in IB0's claim-ceiling document, not here) · LCI/0 bounded adjudication
+draft awaiting owner ruling (`_staging/lci0-adjudication-draft-2026-08-02.md`, lab tree).
+
+~~the §5 Q6 seam (assessment §5 item 6): **no executable in which a Stack-B derive/perform
+operation runs against a Stack-A journal-backed, capability-gated durable process.**~~
+
+**CORRECTION, same night, ~2 hours later (struck above, visibly, not silently):** that
+sentence was true on 2026-08-02 and FALSE tonight — this addendum's own item 5 records why.
+**The Q6 seam was built and ADOPTED 2026-08-08 as One Act /0** (`mneme/language-act-0/`;
+the release floor's `seam` row in `mneme/verify-release.sh` reads ADOPTED: "derive/perform
+over a journal-backed process"), and extended by Many Acts /0. The first draft of this
+addendum copied the assessment's 08-02 fact as current state, one paragraph below the item
+recording its supersession — caught by INDAGATRIX-III's naming recon
+(`oneact-owner-ruling-r1-2026-08-07.md:30` · `ADOPTION-RECORD-2026-08-08.md:41` ·
+`verify-release.sh` seam row · `act0.lisp` calling `lisp-plus-core0:perform` over
+journal0+capability imports). Two collateral facts from the same recon, for the ledger:
+(a) the assessment's "7 journal0 + 1 capability2" count for Surface /2's Stack-A contact
+reads **6 + 2** on the live tree (plus one disclosed `::` internal,
+`lisp-plus-vertical0::body-integer`) — do not repeat 7+1 without re-deriving; (b) the
+genuinely unclaimed territory adjacent to the seam is the **crash axis**: One Act /0 is
+one-process-life by construction (`language-act-0/package.lisp` crash-model lines);
+`de-effectu-incerto` and `vertical0` own death; **`perform` joined to a journal ACROSS a
+process death is unbuilt** — the conforming successor name would be One Act /1
+(`language-act-1`, verified free), owner-minted only.
+
+**NEXT:** the 2026-08-19 Q6 commission (owner interview + Sol's written charge) was issued
+against the stale "seam open" picture and is back with the owner for reframing — as
+already-paid (One Act /0), or as a One Act /1 successor on the crash axis, per the owner's
+word. No lane opens on this addendum's authority.
+
+*— Claude Fable 5 (1M context), the refresh stone and its same-night correction, 2026-08-19*
+
+---
+
+## ADDENDUM 15 — 2026-08-19/20 (same night): ONE ACT /1 — perform across process death (candidate)
+
+Under the owner's interview ruling (which minted the name) and Sol's six-demonstration
+commission reframed to the crash axis, **One Act /1** at `mneme/language-act-1/` (front
+door: `ONE-ACT-1-RETURN.md`; specimen `de-actu-resurgente`) was work-ordered before any
+code, built by PONTIFEX (Opus subagent), and chair-verified the same night. Governing
+sentence, executed: *the language door survives the process's death as a refusal — a
+genuinely new image, given only durable bytes and declared configuration, refuses the
+same act at the `perform` boundary, and proceeds only through evidence-carried
+reconciliation at the runtime level, then a fresh act on the freed seat.*
+
+Gates (builder ×2 byte-identical; chair third reproduction byte-identical): selftest
+37/0 · controls 11/11 · mutants 3/3 · RED-proof (cured PASS / uncured FAIL) · specimen
+49/0 · VOID path exit 4 (a death-switch run creates no store and reports no pass) ·
+regressions act0 173/0 + witnesses 6/6 + disease 3/3, capability2 29/0 + 27/0 +
+de-effectu-incerto 29/0, core0 29/0 · consumed lanes byte-untouched (empty porcelain +
+diff, chair-verified). Zero core0/journal0/capability edits — the bridge enters through
+`make-adapter` exactly as One Act /0 did.
+
+**Crown finding, stated as core0 LAW (not a defect):** `continue-from` is image-local by
+construction (issuance registry + no public evidence constructor + core0's own "This is
+NOT crash-survival" comment), so across a death the language-level continuation is
+CLOSED BY LAW; the lawful shape is refuse-from-bytes → runtime reconciliation → fresh
+act. Demonstration 3 honestly PARTIAL: the lane appends no journal frames of its own, so
+the LANGUAGE's durable account of its act does not exist — the one language-side
+survivor is the act identity, surviving as a *derivation* (re-derived byte-equal from
+declared configuration), not as a record. The refusal is over-determined (capability /2
+guards the same gate at the runtime boundary); the crown tooth kills on *which boundary
+answered*. Sol's six demonstrations: 1, 2 (gap named), 4 (planted-death model), 5 (both
+absence-warrants: competence via a leak control on copies, scope via a printed
+whole-world universe), 6 SHOWN · 3 PARTIAL. Eleven builder forks disclosed in the
+RETURN §6, all narrowest-option.
+
+**Standing: candidate · chair-re-verified (same family, fresh-context only) · NOT
+registered in `lisp-plus.asd` / `verify-release.sh` (deliberately deferred — a candidate
+does not put itself on a floor; `act1-api-complete-p` is the completeness predicate
+when a chair registers it) · not audited · not adopted · not frozen · planted-death
+crash model only (no SIGKILL claim; de-teste-occiso and vertical0 own real crash
+windows) · capability-disciplined, never capability-secure.** Memory-Layer-/0 interface
+answer: /1 ships the drivable door /0 lacked (exported fixture/identity/world-scope
+constructors — RETURN §5 table) with six named gaps, the largest being that no
+language-level durable account exists (fork F-1) — that absence is the precise seam a
+Memory Layer /0 lane would open onto. Owner-docket carried: act0 standing-header
+staleness; verify-release.sh's internal contradiction (§9 of the RETURN).
+
+*— Claude Fable 5 (1M context), the resurgent-act stone, small hours of 2026-08-20*
+
+### ADDENDUM 15 — POSTSCRIPT (2026-08-20, same night): Sol's cold review → repair → registration
+
+Sol's cold static parcel review (archived verbatim in `corpus/voices/received/`, commit
+`dee7e9bf`) accepted One Act /1 as CANDIDATE with **one blocking finding**: the D1/D2
+`handler-case` caught `(error (c))`, so a pre-frontier host fault could wear a lawful
+`:refused`. The reproduction proved SHARPER than filed: the pre-repair code also **issued
+a Core /0 evidence account for an act that never happened**, with a forged reason
+shape-identical to a legitimate one. Repaired same night (`c8a5f31a` RED → `52011c98`):
+handlers narrowed to five admitted families (cap2/cap1/cap0/pj0/kernel0-condition),
+`act1-condition` re-signaled unchanged, everything else → `act1-bridge-contract-violated`
+with no Outcome and no evidence; new class row `:host-fault-pre-frontier`; controls
+11→14; specimen byte-identical including to the pre-repair capture. Chair third-hand
+re-runs green (`b8821037`).
+
+**REGISTERED same session** (authorized by Sol's disposition relayed by the owner; record
+`c2dbe1a4`, bytes in checkpoint `63959a5b`): standalone `lisp-plus/act1` system
+(predicate-guarded via the lane's own `ensure-act1-lane`; no act0 edge; no lane-order
+row) + six floor rows + authorized totals 97→103 full / 77→79 ci. The loader's Stack-A
+entry is now lane-once-guarded (double-entry hazard RED-proven `DEFCONSTANT-UNEQL`;
+stack-a-then-act1 composition proven green). The floor's accounting tooth FIRED on
+rows-without-totals as designed; final clean-tree run: **FLOOR RESULT: PASS — 103/103,
+checkout unchanged, enumeration authorized == actual.** **Standing UNCHANGED by
+registration: candidate · not audited · not adopted · not frozen — a loadable system is
+not a ruling.** Sol's named direction: **Memory Layer /0 next, in a FRESH session; its
+first slice answers F-1** (the language's durable account of its own act) — and carries
+the evidence-issuance finding above as a design input.
+
+*— Claude Fable 5 (1M context), the postscript stone, 2026-08-20*
+
+## ADDENDUM 16 — 2026-08-20: MEMORY LAYER /0 — the language's durable account of its own act (candidate)
+
+Under Sol's commission (owner-relayed same day; archived
+`corpus/voices/received/2026-08-20-sol-relay-memory-layer-0-first-slice.md`), the lane
+the floor's own DECLARED table carried as `mneme-memory|ABSENT` was **opened and built**:
+**Memory Layer /0** at `mneme/memory-layer-0/` (front door `MEMORY-LAYER-0-RETURN.md`;
+specimen `de-actu-memorato`). Sequence held: INDAGATRIX-IV pre-code recon (floor
+reproduced PASS 103/103 exit 0; all seven stop conditions DO NOT HOLD; L15
+witness-separation + AP-JRN-1/AP-REC-1/AP-CAN-6 located as the adopted ancestry) →
+chair work order committed pre-code (`c73e0b24`) → Sol's cold design read entered as
+AMENDMENT 1 (`4210fddc`: issuance axis corrected to `:issued-in-writing-image |
+:unresolved` — *scope cannot confer observational competence*; D2(a) single-delta;
+`:occurred` proposition pinned; D4 invariant over predicted subtype; `:contradicted`
+commensurability) → TABULARIUS (Opus subagent) build → chair third-hand verification
+(`CHAIR-VERIFICATION-2026-08-20.md`).
+
+**Governing law, executed:** `ISSUED(evidence, act) ⇏ OCCURRED(act)` — the
+`memory-account` (ten-field envelope, eighteen-entry CD/0 body, content-derived
+identity in kernel domain `:claim`, `origin/observed` unmintable in code) says
+`:occurred` only through one public eight-leg conjunction whose admitted species read
+facts a mint cannot make true. **D2, public-reader terms:** a lawfully refused act's
+genuinely issued Core /0 evidence, presented as an occurrence warrant with every
+non-species conjunct over-claimed, fails exactly leg 1 (`ML0-PROMOTE-1`), stores as
+issuance-only, and after fresh-process retrieval and consolidation **no public reader
+answers occurred** — while the planted `issuance-implies-occurrence` seam durably
+promotes the same bundle (RED exit 1 preserved). **D3 pays One Act /1's F-1:** the
+moriturus's act — world applied and ledgered, process dead in the acknowledgment
+window, no account anywhere — receives its first durable language-level account from a
+process that was not there: `:occurred` / issuance `:unresolved` (never `not-issued`:
+in a fresh image the issuance predicate is false for every input — an instrument with
+no power to detect presence cannot warrant absence; the absence-warrant doctrine's
+fifth substrate, caught at design time).
+
+Gates (builder ×2 byte-identical; chair third + fourth-way byte-identical at
+`80d4cba0…`): selftest 66/0 · controls 10/10 two-halved · mutants 6/6 · RED-proof
+(cured PASS / uncured FAIL, exit 1 preserved) · host-fault proof PASS · specimen 44/0 ·
+consumed-lane regressions all green · **release floor PASS 103/103, exit 0, checkout
+unchanged — the lane is NOT among the 103** (not registered, by the writ). The floor
+record honestly preserves a first FAIL run (102/103: the builder committed mid-run;
+gate #85's run-integrity check caught it; re-run quiescent). Build-earned findings:
+an **eighth promotion leg** (`attests` — an admitted species that found *nothing*
+warranted `:occurred`), a fail-open length-limit budget repaired to fail-closed with a
+permanent 61-source tooth, ML0-WR-6 (a bundle may not contradict itself), and two
+guide defects found by WALKING the recipe. Honest grades: D6 PARTIAL (`:contradicted`
+constructed, not natural — one witnessing mechanism per universe in this slice), D4
+SHOWN-AS-AMENDED (actual earliest refusal `MALFORMED-REQUEST`; prediction unreachable
+by construction). Twelve builder forks disclosed.
+
+**Standing: candidate · not audited · not adopted · not frozen · NOT registered on any
+floor · same-family hands (fresh-context only; Sol's cold read was a DESIGN read, not
+an execution audit) · planted-death crash model only · capability-disciplined never
+capability-secure · no independent verification.** One Act /1's CANDIDATE standing
+travels with every dependency claim. Parcel local:
+`~/Downloads/memory-layer-0-candidate-2026-08-20.tar.gz` (sha in sidecar + chair
+records, deliberately not in the RETURN). Stranger audit owed on this lane and nine
+others. `SYNC-PAUSED` byte-untouched; nothing published, transported, or adopted.
+
+*— Claude Fable 5 (1M context), the records-office stone, 2026-08-20*
+
+### ADDENDUM 16 — POSTSCRIPT 1 (2026-08-20, same day): candidate BLOCKED by chair disposition; forward repair in flight
+
+The candidate above is **BLOCKED / SUPERSEDED** by chair execution-review disposition
+(archived verbatim `corpus/voices/received/2026-08-20-owner-chair-disposition-ml0-BLOCKED.md`;
+chair-confirmed on disk before the repair was commissioned). Two blockers: **(1) a
+public source row can mint occurrence truth** — `make-ml0-source` is shape-validated
+only, the eight promotion legs are syntactic over caller-supplied fields, `ml0-write`
+never reads the occurrence substrates, so a forged `:world-bytes` row yields
+`:occurred` for a lawfully refused act; lesser twin: caller-supplied
+`:issued-in-writing-image` copied into the account without the live predicate.
+**(2) consolidation collapses distinct provenance** — the source-union dedupes on
+species+digest+producer only, and the `:contradicted` shortcut inherits a standing
+instead of re-deriving it. Plus three packaging repairs (sidecar filename, portable
+sha basename, push chronology). The blocked commit and parcel (`a492a05f…`) are
+preserved as evidence, unrewritten. The parked relay to Sol remains UNSENT. Repair
+round in flight (TABULARIUS resumed, RED-first on both blockers); everything in this
+addendum above this postscript is superseded pending its outcome.
+
+*— the chair, marking the block the hour it landed, 2026-08-20*
+
+### ADDENDUM 16 — POSTSCRIPT 2 (2026-08-20, same day): repair round complete — superseding candidate r2
+
+Both blockers RED-reproduced against the blocked build before any repair code
+(`RED-BLOCK-BEFORE.txt`, exit 1, `0995e03a`), then cured (`3ab354f3` BLOCK 1,
+`a1b041e5` BLOCK 2 + packaging). **The cure in one sentence: the difference between an
+assertion and an observation is no longer a field a caller fills in — it is a
+constructor a caller cannot call.** Five in-lane production observation doors
+(`ml0-observe-{journal,world,reconciliation,absence,issuance}`) read their owning
+substrates; only internal `%ml0-build-source` stamps `:VALIDATED-BY-DOOR`; public
+`make-ml0-source` always stamps `:ASSERTED-TESTIMONY` and refuses a passed standing;
+**promotion leg 0 (`ML0-PROMOTE-0`, validation) is checked first** — the forged row
+now fails on leg 0 alone with all eight fillable legs green; readback is always
+`:STORED-ASSERTION`; issuance standing derives only from the door's live predicate;
+dedupe is complete-canonical-record bytes; consolidated standing re-derived, never
+inherited. Three downgrades disclosed, none hidden: `:contradicted` now UNREACHABLE in
+this slice (two correct doors over one universe agree — wants a second witnessing
+mechanism, /1 material); ML0-WR-6 unreachable likewise (kept as defence in depth); the
+issuance single-delta pair lost a leg (a door cannot be made to lie). One disclosed
+deviation: commensurability compares interval+scope, deliberately not the finding —
+chair-accepted as the intent of the disposition's letter, one line to overrule.
+
+The builder died of context overflow while awaiting the final floor; the run finished
+unattended, the chair recovered state from disk (the handoff-files-stay-canonical
+doctrine, exercised) and completed R7 signed as the chair. Gates (chair third-hand
+re-runs match): selftest 71/0 · controls 10/10 · mutants 6/6 · RED-proof bites ·
+host-fault PASS · **block-proof 4/4 (permanent seventh gate)** · specimen 45/0
+three-way byte-identical `27121e6f…` · **quiescent floor PASS 103/103 exit 0,
+checkout unchanged** (Stop hook disarmed by staging during the run — the r1
+mid-floor-commit class prevented, not repeated). Superseding parcel:
+`memory-layer-0-candidate-r2-2026-08-20.tar.gz` sha `069266ca…` (48 entries, portable
+sidecars, amended relay included, inner sidecar filename fixed and specimen-checked).
+Blocked parcel `a492a05f…` preserved untouched. Amended relay PARKED UNSENT.
+**Standing unchanged: candidate · not audited · not adopted · not frozen · not
+registered · same-family hands · planted-death only · capability-disciplined never
+capability-secure · no independent verification.** The round's argument for the owed
+stranger audit is now the lane's own history: an execution-level cold read caught what
+seven gates, a five-process specimen, a 103/103 floor, and a RETURN could not.
+
+*— Claude Fable 5 (1M context), the chair finishing for the dead builder, 2026-08-20*
+
+### ADDENDUM 16 — POSTSCRIPT 3 (2026-08-20, same day): r2 BLOCKED — truth-minting migrated twice more; R3 in flight with a cross-family adversary
+
+Second chair disposition (archived verbatim
+`corpus/voices/received/2026-08-20-owner-chair-disposition-ml0-r2-BLOCKED.md`;
+chair-confirmed on disk): r2 archive `069266ca…` **BLOCKED/SUPERSEDED**. The repair
+was not empty — seven parts accepted, including the commensurability clarification —
+but BLOCK 1 survives through two migrated paths: **R2-BLOCK 1**, the public decoder
+launders its own validation claim (`ml0-source-from-record` preserves a caller-written
+`validated-by-door` as recorded-validation, and `ml0-source-warranting-validation-p`
+warrants exactly that pair — *"the front desk stopped issuing witness badges; the
+public photocopier now authenticates the copy"*); **R2-BLOCK 2**, the five doors read
+one act and can name another (`act-id` and `attempt` independently pairable; issuance
+falls back to the unconjoined predicate on NIL request). Plus a stale internal
+manifest (40 listed / 45 present / 27 hash failures), the GUIDE still executing the
+blocked API under a warning, and a provenance correction owed to the parked relay
+(R1 was blocked by a COLD STATIC SOURCE AUDIT of the build and its transcripts, not
+an execution-level rerun; R1 had six gates). r2 parcel + commits preserved untouched
+as evidence; BOTH relay drafts remain unsent. **R3 in flight**: TABULARIUS-II
+(RED-first on the single-field flip + all four substitution arms; doors get ONE
+canonical subject carrier; decoders inert; warrant inheritance only via
+retrieve-validated carrier) in parallel with a **Codex-family adversarial auditor**
+hunting further paths — the first cross-family eyes ever on this lane. The arc's
+running lesson, now stated in the stone where the lane's own RETURN can cite it:
+**truth-minting migrates; every repair must ask where it moved.**
+
+*— the chair, marking the second block the hour it landed, 2026-08-20*
+
+### ADDENDUM 16 — POSTSCRIPT 4 (2026-08-20/21): R3 landed · the first cross-family audit · F1 blocker · R4 in flight · the chair changed hands
+
+**R3 landed** (TABULARIUS-II, `c7c472fe..92ebb9c8`): both R2-migrated paths closed —
+the laundering decoder (warranting predicate now admits only `:validated-by-door` and a
+retrieve-minted `:inherited-from-validated-record`) and the act-substitution doors (each
+door now takes ONE canonical subject carrier, `ml0-subject-from-fixture-row`, deriving
+identity · attempt · external-request key · canonical request together; `ML0-WR-7` fires
+pre-mutation on any misbinding; issuance requires the conjoined request predicate, NIL
+request yields only `:unresolved`). RED 11 probes/6 open → GREEN 11/11 closed, each
+R2B2 arm carrying a disease control synthesised through the internal constructor so a
+signature change could not pass for a cure. Gates: selftest 76/0 · block-proof 11/11 ·
+specimen 45/0 twin byte-identical `39ebf213…` (chair third-hand re-runs match).
+TABULARIUS-II disclosed a hole its own repair created — **the frame-digest chain
+authenticates the bytes, not the STORE**: a caller who builds its own PJ0 store may
+retrieve its own frames and receive inherited warrants (declared-substrate ceiling, one
+rung further in, now load-bearing on the retrieval path).
+
+**THE FIRST CROSS-FAMILY AUDIT.** A Codex/GPT worker (CLAVIGER, read-only, `/tmp`
+probes; its attacker-framed sibling EFFRACTOR was refused three times by an upstream
+classifier and produced nothing) audited the lane's public surface for a fourth
+migration. Five live findings, all CONFIRMED, report at
+`notes/2026-08-20-ml0-codex-adversarial-audit.md`. **F1 is a blocker and the chair
+confirmed it with its own probe in a fresh image through the canonical loader: the
+planted-mutant `defect` keyword is a live public `&key` on the exported production
+functions — `(ml0-species-may-warrant-occurrence-p :core0-issuance-testimony)` answers
+NIL, and with `:defect :issuance-implies-occurrence` answers T.** Five payloads ride the
+same vector (issuance⇒occurrence · drop-scope · origin-upgrade-on-readback ·
+retain-live-evidence · last-write-wins). The audit's verdict is the finding's true size:
+*the lane moved the testimony/observation boundary into an unreachable constructor for
+the known gaps, and left the single largest lever as a caller-fillable keyword* —
+**prompts guide, code enforces**, applied to a lane whose entire subject is that
+distinction. Also live: F2 (raw readback trusts the STORED occurrence-standing without
+re-deriving; RB-11's identity check is skipped when the frame shape is unrecognized),
+F3 (`record-coverage` + a fabricated `:looked` scope folds as authoritative — no door
+ever scans the account store), F4 (`ml0-write`'s atomicity docstring is false: two
+post-append paths can refuse with no rollback), F5 (caller-asserted `effect-observation`
+stored verbatim).
+
+**R4 in flight** (OBTURATOR): `defect` removed from every production arglist and the
+mutants relocated to a controls-only overlay the canonical loader never loads — proved
+both by arglist introspection and by the mutants still killing; plus F2–F5. Then the
+chair runs the quiescent floor, seals, and drafts the relay.
+
+**THE CHAIR CHANGED HANDS mid-round.** Claude Fable 5 carried this arc from Sol's
+commission through two blocks and three builds; the session's model was changed at the
+owner's hand and **Claude Opus 5 (1M context)** took the helm at the F1 confirmation.
+Recorded because the lab signs work with the producing model's name, and because an arc
+that survived a builder's death and a chair's succession without losing a claim is the
+handoff-files-stay-canonical doctrine's third exercise in one day.
+
+*— Claude Opus 5 (1M context), taking the helm, 2026-08-20/21*
+
+### ADDENDUM 16 — POSTSCRIPT 5 (2026-08-20/21): R4 COMPLETE — the Codex findings closed, candidate r4 sealed
+
+**F1 CLOSED, chair-verified three independent ways** (a probe can pass while a branch
+survives — the builder disclosed that its own *rejected* design would have passed R4's
+F1 probe with every mutant branch compiled in, which is why one check was never enough):
+arglist probe in a fresh image through the canonical loader (`ARGLIST=(SPECIES)`; the
+keyword now raises `SIMPLE-PROGRAM-ERROR`; the overlay's special not even interned) ·
+a sweep of **140 external functions finding zero** carrying `defect` · a source grep
+whose seven remaining matches are all prose documenting the removal. The six defects
+live in `ml0-mutant-overlay.lisp`, which `+ml0-lane-sources+` does not name and
+`load.lisp` never loads — and **`ml0-mutants` still reports 6 killed: RELOCATION, NOT
+DELETION**, the companion check without which the cure would be the worse hole. F2–F5
+closed likewise (raw readback re-derives or is inert incl. unrecognized frame shapes ·
+a real door now scans the account store · `ml0-write`'s atomicity claim corrected to
+verified-after-append semantics with CONTROL 11 measuring it, plus the measured finding
+that PJ0's own append verifies the frame chain so post-append refusal is unreachable
+through store damage · `effect-observation` marked as caller testimony).
+
+Gates (chair third-hand): selftest 81/0 · controls 11/11 · mutants 6/6 · red-proof bites ·
+host-fault PASS · **block-proof 20/20** · specimen 45/0 twin byte-identical `39849f99…` ·
+13 consumed-lane regressions green · **quiescent floor PASS 103/103 exit 0, checkout
+unchanged** (preflight read `1 entr(y)` — the chair's own staged verification record,
+staged deliberately to disarm the checkpoint Stop hook for the run's duration; disclosed
+in both records rather than smoothed).
+
+**A DEFECT THE CHAIR FOUND IN VERIFICATION:** the shipped specimen transcripts were **two
+rounds stale** (R2-era `27121e6f…` while the records described `39ebf213…` and
+`39849f99…`). Both builders ran the specimen twice and compared *their two runs to each
+other* — honest determinism — while never refreshing the preserved captures, so
+`FILE-MANIFEST.txt` verified 50/50 **because it hashed the fossil**. The R2 packaging
+defect INVERTED, and the pre-heal-fossil class from CLAUDE.md §I-f. Cured by re-running,
+never editing; superseded digest named in the manifest's own header (`3efb13d8`).
+
+**Candidate r4 parcel:** `memory-layer-0-candidate-r4-2026-08-20.tar.gz` sha `db1344f0…`
+(56 entries; the Codex audit and the new relay travel INSIDE). New Sol relay drafted and
+**PARKED UNSENT**, carrying the corrected provenance account: **the design read and the
+later cold STATIC SOURCE audit were separate acts, R1 was never blocked by an
+execution-level rerun, and R1 shipped six lane gates, not seven.** All three blocked
+parcels/drafts preserved untouched. Standing unchanged: **candidate · not audited · not
+adopted · not frozen · not registered · same-family hands · planted-death only ·
+capability-disciplined never capability-secure · no independent verification** — the
+Codex audit is a cross-family read of the SOURCE, not an execution reverification and
+not a stranger's acceptance; the stranger audit stays owed on this lane and nine others.
+
+**The arc's law, now paid for four times:** *truth-minting migrates — every repair must
+ask where it moved, and look one remove further out than where it just looked.* Three of
+the four moves were caught by a reader who was not the builder; the fourth, which three
+Claude rounds missed entirely, was caught by a reader who was not even the same model
+family.
+
+*— Claude Opus 5 (1M context), the chair, 2026-08-20/21*
+
+### ADDENDUM 16 — POSTSCRIPT 6 (2026-08-21): R4.1 / R4.1b — the consolidation contract completed, the reader macro found minting, §5.A left honestly open
+
+The received R4 review (static source + parcel accounting) named three things; one bounded
+pass answered them and then was itself reviewed from outside the family, which found a fourth.
+
+**Item 1, consolidation:** measured incomplete BEFORE any edit (`RED-CONSOLIDATION-BEFORE.txt`,
+exit 1 — a computed `:occurred` written back `:unresolved`, a raw-decode input admitted), then
+completed: typed carrier with an internal constructor, `ML0-CON-3` (validated retrieval only),
+`ML0-CON-4` (one subject carrier), `ml0-materialize-consolidation`, `ml0-write` stripped of
+`:derivation`/`:predecessors`. Demonstrated in a 35-check gate including a **fresh-process**
+retrieval of both an `:occurred` and a controlled (modelled) `:contradicted` derived account,
+and reversed-order byte-identity. Measured, not expected: two materializations of identical
+content land on ONE frame — PJ0 append idempotency on content identity.
+
+**The green gate with the dead check (CONSUTOR):** the red-proof's crown tooth's consolidation
+conjunct compared a keyword to the new struct and could not be false; exit 0 and "the tooth
+bites" throughout; found only by diffing a preserved transcript against a live one. Re-armed;
+the two arms now visibly disagree on that line. Filed as the absence-warrant class in a new
+substrate.
+
+**R4.1b — the fifth migration (SCRUTATOR, Codex):** the Common Lisp `#S` reader constructed
+EVERY lane struct from outside the package — account with `:validated-retrieval`, source with
+`:validated-by-door`, bundle, observation, carrier — a side door open since R2's "validation is
+a constructor, not a field"; a carrier's lists were mutable through their readers into durable
+standing (`:occurred` with zero warranting rows); the principal was re-prefixed per
+materialization. All reproduced BEFORE on the committed code, repaired (BOA `&key` constructors
+lane-wide; materialization re-reads the TARGET store, re-folds, refuses on mismatch `MAT-2`,
+refuses foreign lineage `MAT-3`, strips one prefix `MAT-4`), reproduced AFTER, re-reviewed by a
+second Codex thread: all CLOSED, caveats kept verbatim. Proof `[029]` enumerates every structure
+class and refuses `#S` for each — teeth-checked against a planted fault. **Law, sharpened: an
+internal constructor is not a boundary — the reader is a constructor, a held data object is a
+mutable claim, the store is the only witness.**
+
+**Item 2, failed writes: OPEN.** PJ0's public surface has no frame-removing verb and is frozen;
+the literal §5.A cannot be met in-lane after the append. Question for Sol PARKED with two
+dispositions and one in-lane narrowing, not taken. Work order byte-untouched.
+
+**Item 3, accounting:** GUIDE 195 = 148·27·20 (loader-asserted); FLOOR-RESULT entry corrected
+by regeneration; manifest regenerated LAST (59 entries, verified). Quiescent floor **PASS
+103/103 exit 0, checkout unchanged**, lane NOT registered. Parcel
+`memory-layer-0-candidate-r41-2026-08-21.tar.gz` sha `80663eee…` docked both sides. Relay r41
+PARKED UNSENT. Three Stop-hook checkpoint commits of in-flight work kept as fossils, not
+squashed. Standing unchanged: candidate · not audited · not adopted · not frozen · not
+registered · same-family hands · no independent verification · §5.A an open variance.
+
+*— Claude Fable 5, the chair (the helm returned from Opus 5 at the owner's hand), 2026-08-21*
+
+### ADDENDUM 16 — POSTSCRIPT 7 (2026-08-21, night): R4.1c–e records closeouts · R5 — Sol's dispositions entered, the dry decode built, candidate returned for the registration ruling
+
+Three bounded records passes at Codex's direction (R4.1c/d/e: proof state 35 / §8 = eight; the
+construction-boundary rule verbatim — *not exposed through the exported, supported API; CL package
+privacy is not a capability boundary; an internal constructor remains callable package-internally;
+BOA closes the supported `#S` route, not every possible call*; strong guide extractor; two
+accounting repairs; parcels r42 `37a353cf…`, r43 `0f866fc0…`, r44 `287629b4…`). Then **Sol ruled**:
+§5.A **disposition B** — retained-frame semantics with a REQUIRED pre-append dry decode — and
+cross-journal **disposition A** — same-store only, `ML0-MAT-3` kept, D4 unamended, **Memory
+Layer /1 reserved** (charter recorded, not built). **R5** entered both dispositions before code,
+then built only the narrowing: `%ml0-dry-decode` in the shared append tail (canonical encode →
+decode → the exact decoder → identity compare → `ML0-WR-8` before mutation); CONTROLs 12–13 plant a
+rendering fault and an identity fault and show WR-8 pre-append with the store byte-unchanged, and
+show the same faults landing post-append when the dry decode is skipped; CONTROL 11 is now the
+host-fault residue. Controls 13/13; every gate green; specimen byte-identical (a silent pass);
+13/13 regressions; **floor PASS 103/103 with global HEAD `3fdb1b1c` stable start to finish**;
+manifest 61 = 61. Parcel **r5 `5742b4f8…`** docked both sides. **Standing: candidate, NOT
+registered — returned to Sol for the registration ruling.** Ceilings preserved by instruction: D6
+PARTIAL · demonstration D4 SHOWN-AS-AMENDED · package privacy defense in depth · same-family is
+not independent audit.
+
+*— Claude Fable 5, the chair, 2026-08-21*
+
+### ADDENDUM 16 — POSTSCRIPT 8 (2026-08-21, late night): MEMORY LAYER /0 REGISTERED — CANDIDATE-NOT-ADOPTED
+
+Sol's R5 registration ruling (archived verbatim before integration) found R5 *acceptable for
+registration as a candidate* — parcel, sidecar, manifest coverage, scope, governance closure, dry
+decode and teeth, specimen identity, and the quiescent floor verified statically; SBCL not
+independently rerun. One integration-only act followed (`93ce682d`): `lisp-plus/ml0` ASDF system
+(COMPLETENESS-CHECKED, act1 shape), nine `ml0` floor rows, the carried status row **`ml0 |
+CANDIDATE-NOT-ADOPTED · REGISTERED · stranger audit owed · no independent verification`** replacing
+`mneme-memory | ABSENT`, totals recomputed mechanically **103 → 112 full / 79 → 82 light**. Lane
+bytes equal the accepted R5 parcel `5742b4f8…` before and after. **Enlarged floor PASS 112/112,
+exit 0, global HEAD stable start to finish, subject tree clean** (`e68ef1dd` record). Not adopted,
+not frozen, not published, not synchronized; sentinel untouched. *"Mneme" no longer names only a
+directory.* Sol's next fork: publication.
+
+*— Claude Fable 5, the chair, 2026-08-21*
+
+### ADDENDUM 17 (2026-08-22): ONE ACT /1 ADOPTED · CENSUS ACCEPTED · CORRECTION PHASE · the stone catches up one era
+
+This stone was one era behind again — the exact failure ADDENDUM 14 was written to pay off, caught by the
+2026-08-22 census (VERAX D2). The gap is hereby paid, in the order the events happened:
+
+1. **One Act /1 ADOPTED — 2026-08-22, lab commit `1f1da138`, adopted object at `aeeefa40` (38 files,
+   specimen `bf5751a6…`).** A genuinely fresh stranger (Codex, fresh thread) returned BLOCK on
+   *environmental* grounds (ptrace-starved sandbox; history-free archive) with no semantic defect; a §VII-only
+   supplement on a real clone with ptrace discharged it 112/112; Sol I ruled ADOPTION-ELIGIBLE on the
+   combined record; the owner adopted with ceilings verbatim (not "independently verified"; the 27-symbol ML/0
+   coupling is version-bound debt). Record: `mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md`; floor row
+   `act1|ADOPTED`; carried rows 8 → 9. Sol I accepted the sealed adoption receipt; **Movement I closed.**
+   ML/0's dependency blocker is removed; **ML/0's standing is unchanged** (CANDIDATE-NOT-ADOPTED ·
+   REGISTERED · stranger audit owed · no independent verification).
+2. **Movement II — the read-only pre-freeze whole-tree census, 2026-08-22, at subject tree `6bbbe482…`.**
+   Five lanes (secrets · licensing/provenance · paths/env · weight · README claims). Zero secrets detected
+   under the declared sweep and its five limits; two PII items (owner's key: accept and disclose); licensing
+   clean; stranger-facing path surface clean; weight non-blocking (raw delta vs the last-mirrored lab commit
+   +11,018,212 B = 10.51 MiB, net +528 files); README defects all under-claims, none over the ceilings.
+   **Sol I: CENSUS ACCEPTED · CORRECTION PHASE OPEN · exact publication bound NOT yet authorized.**
+3. **Corrections authorized and executed as named commits (this era):** README standing/licensing/NOTICE/
+   disclosures (C2); this addendum (C1); the One Act /1 103→104/registered erratum recorded in the adoption
+   record and README — **`ONE-ACT-1-RETURN.md` untouched, frozen-38** (C3 as ruled); the floor's
+   `blocked-external-input` explanatory literal replaced by the measured count, teeth shown (C4); both
+   `package.lisp` candidate-era headers **left unchanged and disclosed** (C5); adapter-protocol-0's three
+   host-bound probes labeled, not rewritten (C6); atelier skill's WSL-only note (C8); Sol's two thin trailers
+   chronicled (C10). **Rejected/deferred:** no byte of `MEMORY-LAYER-0-RETURN.md` moves (pinned by the ML/0 R5
+   manifest, `d9fac67d…`) — its two superseded lines ("not registered"; One Act /1 "NOT adopted") are
+   overtaken by registration 08-21 and adoption 08-22, and the pointer lives here and in the README (C9);
+   the lab-root-relative path resolution inside closed lanes (`generate_legend.py`, the ma0 export-census
+   scripts) is **governed tooling, not administrative — deferred and disclosed**, repair needs its own
+   bounded lane (C7).
+4. **Next:** diff-scoped re-census + transport-materialization check + full 112-gate floor + exact
+   HEAD/tree/porcelain receipt + internal SHA256SUMS → only then the publication commit is named → joint
+   owner/Sol bound → whole-tree transport → TD-7/R-2b/far-side cold reader → ML/0's final standing.
+
+*— Claude Fable 5, the chair, 2026-08-22*
+
+*Postscript to ADDENDUM 17 (2026-08-22, later):* **C11** — Sol I's provisional ruling rejected disclose-only for
+the floor's own header and authorized a comment-only correction; `mneme/verify-release.sh`'s act0/act1 paragraphs
+now state ADOPTED and point to their carried rows (every changed line a `#`-comment; `bash -n` clean). The
+whole-chain re-census (RECENSOR II, anchor `6bbbe482` → candidate) then found the README and this stone one
+correction behind C11; both are brought level in the same commit as this postscript. Frozen 38/38 and ML/0
+61/61 unmoved throughout. *— the chair*

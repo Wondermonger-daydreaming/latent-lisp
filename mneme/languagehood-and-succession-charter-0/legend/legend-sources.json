@@ -1,0 +1,224 @@
+{
+  "registry_version": 3,
+  "purpose": "Authoritative source registry for the derived cross-lane status legend adopted at clause C.3 of RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md. This registry records where standing was conferred and by whom; it confers none.",
+  "path_base": "repository root (/home/gauss/Claude-Code-Lab)",
+  "status_vocabulary": [
+    "ADOPTED LAW",
+    "ACCEPTED EVIDENCE",
+    "PROPOSED HOLDING",
+    "OPEN",
+    "REFUSED CLAIM",
+    "HISTORICAL"
+  ],
+  "entries": [
+    {
+      "id": "CI0",
+      "proposition": "Clean-room outsider inhabitation (CI0)",
+      "status": "OPEN",
+      "sub_annotation": "OPEN-JURISDICTION-CLOSED (stranger audit barred by Ruling 6B)",
+      "standing_instrument": "experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-6B-CENSUS-R1-ACCEPTED-B7-CLOSED-2026-08-10.md",
+      "verbatim_anchor": "Do not advance S-freeze or open the stranger audit",
+      "note": "The jurisdiction is closed by owner order, not answered; no instance of outsider inhabitation is recorded.",
+      "instrument_role": "constrains"
+    },
+    {
+      "id": "F-1-SPINE",
+      "proposition": "The R0.x line governs as the working candidate spine; the F-1 factual premise stands at VERIFIED WITH EXCEPTIONS (19 SUBSUMED / 8 PARTIALLY / 3 ABSENT)",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "disposition; Charter-P1 preserved as historical candidate stratum",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md",
+      "verbatim_anchor": "R0.x candidate line governs as the working candidate spine going into ratification",
+      "note": "C.2. Rendering the premise as verified without the exceptions is, by the ruling's own words, a misquotation of it; directive 3.9 keeps its authority from its originating owner ruling.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "F-2-LEGEND",
+      "proposition": "The section A status legend is adopted for cross-lane constitutional use as a derived index",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "conditional effectiveness (C.3.6 generator gate)",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md",
+      "verbatim_anchor": "cross-lane constitutional reliance on the legend begins **only after** the generator exists",
+      "note": "C.3. This generated legend is the artifact that clause governs; until the gate passes the legend remains the charter's internal finding aid.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "F-4-PERM",
+      "proposition": "Permanence doctrine: succession is not a node and no experiment can ever grant it",
+      "status": "PROPOSED HOLDING",
+      "sub_annotation": "left [PROPOSED] by deliberate owner ruling; neither adopted nor foreclosed",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md",
+      "verbatim_anchor": "*no experiment can ever grant it* (Charter-P1 Art. 13) **remains `[PROPOSED]` and is NOT adopted**",
+      "note": "C.4(i). The row records a deliberate non-adoption; it is not a gap awaiting cleanup.",
+      "instrument_role": "rules-status"
+    },
+    {
+      "id": "F-4-VOCAB",
+      "proposition": "Successor may appear only inside the exact marked frames trajectory toward or aspires to, never in a result sentence",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "vocabulary rule; marked aspiration acquires no evidentiary standing",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md",
+      "verbatim_anchor": "may appear **only** inside an expressly aspirational marked frame",
+      "note": "C.4(ii). Rung 9's REFUSED CLAIM entry and W-04's exclusion of succession bind independently of this vocabulary permission.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "F-8-CITIZEN",
+      "proposition": "Dedication language is permitted only by enumerated citizens; the inventory at adoption holds exactly one sentence",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "inventory of one; extended only by later owner action",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md",
+      "verbatim_anchor": "**Lisp+ is designed as an experimental language for latent-space authorship.**",
+      "note": "C.5. The licence flows from the ruling's enumeration, not from Charter-P1, which remains candidate text; no dedication sentence licenses comparative fitness or LM0 discharge.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "INDEP-IMPL",
+      "proposition": "An independent Lisp+ implementation exists",
+      "status": "REFUSED CLAIM",
+      "sub_annotation": "never-shorten rule; only the long licensed sentence may ever be stated, and only on a green result",
+      "standing_instrument": "experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULINGS-1-2026-08-10.md",
+      "verbatim_anchor": "It must never be shortened to “an independent Lisp+ implementation exists.”",
+      "note": "Ruling 3 (AOI / two-target ruling) inside OWNER-RULINGS-1. No green result exists; the prohibition is on the compression itself.",
+      "instrument_role": "refusal-ground"
+    },
+    {
+      "id": "LM0",
+      "proposition": "Comparative latent-machine authorship fitness (LM0)",
+      "status": "OPEN",
+      "sub_annotation": "OPEN-UNOPENED; zero data; pre-registration skeleton stamped NOT-TO-BE-RUN",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md",
+      "verbatim_anchor": "A waiver requires an explicit owner ruling with the residual confound written into the licensed sentence. **LM0 remains OPEN-UNOPENED.**",
+      "note": "OPEN-UNOPENED stated by the adopted instrument (C.6); the W-13 procedural edge transmits no evidence. Previous row wrongly cited the candidate claim-ceiling sheet (a recording source, not an owner act).",
+      "instrument_role": "rules-status"
+    },
+    {
+      "id": "MA0R1",
+      "proposition": "Many Acts /0 R1 is the owner-adopted governing repaired implementation base; the language layer remains a candidate",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "adopted with riders; claim ceiling = Rider 1's exact sentence",
+      "standing_instrument": "experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-ADOPTION-OWNER-RULING-2026-08-10.md",
+      "verbatim_anchor": "is **OWNER-ADOPTED** as the governing repaired Many Acts /0 base, subject to the claim ceilings and riders below.",
+      "note": "Riders 1-6 bind; nothing here adopts the Many Acts /0 candidate as language law, and the stranger audit remains OWED.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "ONEACT",
+      "proposition": "One Act /0 is adopted",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "adopted under an owner variance on the stranger-audit gate",
+      "standing_instrument": "experiments/latent-lisp/mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md",
+      "verbatim_anchor": "- One Act /0: **ADOPTED** (live status: the release floor's `seam` row).",
+      "note": "Stranger primitive-minimization audit WAIVED, NOT PASSED; the packet is SEALED, UNOPENED, NOT ADJUDICATED and may never be represented as evidence of independent review.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "PORTJ-L0",
+      "proposition": "Portable conformance of the Many Acts /0 language layer (PortJ-L/0)",
+      "status": "OPEN",
+      "sub_annotation": "OPEN-JURISDICTION-CLOSED (Ruling 6B stop clause)",
+      "standing_instrument": "experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-6B-CENSUS-R1-ACCEPTED-B7-CLOSED-2026-08-10.md",
+      "verbatim_anchor": "Stop after the integration receipt. Do not advance S-freeze or open the stranger audit, PortJ-F/0, hidden bank, J2, portability, conformance, or independent-implementation jurisdiction.",
+      "note": "Closed to further advance by owner order; reopening is an owner act. Evidence remains ZERO.",
+      "instrument_role": "constrains"
+    },
+    {
+      "id": "ROUNDP",
+      "proposition": "Round P of the Portable Judge /0 campaign is closed; portability is not established and the round earned zero evidence",
+      "status": "HISTORICAL",
+      "sub_annotation": "closed record; vector bank candidate and unadopted, no vector scorable",
+      "standing_instrument": "experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-5A-P2R1-ACCEPTED-ROUND-P-CLOSED-2026-08-10.md",
+      "verbatim_anchor": "* Portability is not established.\n* The eighteen residual items remain open for their proper later jurisdictions.\n* Evidence earned: **zero**.",
+      "note": "Only citable membership form: 156 = 188-19-9-4; 43/90 = 47.8%. Closing the round completed documentary work only; it adopted nothing.",
+      "instrument_role": "closure-record"
+    },
+    {
+      "id": "RP4",
+      "proposition": "R-P4 expressibility record, at Rider 1's exact sentence and no other",
+      "status": "ACCEPTED EVIDENCE",
+      "sub_annotation": "non-aggregating (W-06); not a station",
+      "standing_instrument": "experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-ADOPTION-OWNER-RULING-2026-08-10.md",
+      "verbatim_anchor": "A same-author, post-R1-freeze holdout program was expressible through the repaired Many Acts /0 candidate authoring surface without evaluator modification.",
+      "note": "Standing conferred by the R1 adoption (Rider 1, the adopted claim sentence); non-aggregating per W-06. Previous registry row wrongly cited the candidate charter (a current-statement source, not the conferrer).",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "RP5",
+      "proposition": "R-P5 qualified cross-substrate semantic-agreement record, at its only citable sentence",
+      "status": "ACCEPTED EVIDENCE",
+      "sub_annotation": "non-aggregating (W-06); the transmission reading is owner-refused",
+      "standing_instrument": "notes/2026-08-10-p5-sol-inhabitation-protocol.md",
+      "verbatim_anchor": "Execution result and 10/0 prediction match: ACCEPTED. Claim language amended.",
+      "note": "Standing conferred by the owner P5 PROVENANCE CORRECTION (2026-08-10, append-only owner text in the protocol file): record ACCEPTED at its governing sentence; transmission reading refused. Previous row wrongly cited the candidate charter.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "SUCC",
+      "proposition": "Lisp+ qualifies as an independently implemented Lisp successor",
+      "status": "REFUSED CLAIM",
+      "sub_annotation": "refusal attaches to the formulation, not to the question (W-09)",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md",
+      "verbatim_anchor": "succession as achieved fact; comparative fitness for model authors; LM0 discharge.",
+      "note": "Refusal grounded in the adopted instrument's consolidated non-inference clause (SS D); W-04's adopted exclusion sentence states the same bar. Previous row wrongly cited the candidate charter, which records but did not confer the refusal's adopted ground.",
+      "instrument_role": "refusal-ground"
+    },
+    {
+      "id": "SURFACE0",
+      "proposition": "Surface Account /0 is adopted",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "adoption receipt under owner ruling ACCEPT R4.3",
+      "standing_instrument": "experiments/latent-lisp/mneme/language-surface-account-0/ADOPTION-RECEIPT-2026-08-06.md",
+      "verbatim_anchor": "Adoption merge commit (lab `main`) | `6715d2c480aa37c2584d11d353de17ad55816484`",
+      "note": "Surface /3 remains shut and untouched by the adoption; all gates recorded there are self-consistency certification, never independent conformance.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "W-02",
+      "proposition": "Semantic-jurisdiction doctrine (W-02): the host executes the judge but does not supply the normative meaning of Lisp+ forms",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "both sentences inseparable, divergence clause included",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md",
+      "verbatim_anchor": "the host executes the judge but does not supply the normative meaning of Lisp+ forms",
+      "note": "C.1. The short commission form (the substrate executes the judge; it is not itself the law) is NOT separately adopted and may not be cited as adopted law.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "W-04",
+      "proposition": "Languagehood classification (W-04): Lisp+ warrants classification as a small experimental hosted language, with its exclusion sentence inseparable",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "only citable in the full two-sentence verbatim form",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-F-3b-W04-RATIFIED-2026-08-12.md",
+      "verbatim_anchor": "moves from **PROPOSED HOLDING** to **ADOPTED LAW** by owner ratification.",
+      "note": "Quoting the classification sentence without the exclusion sentence is a CC-2 violation; the anchor deliberately quotes the ratifying act, not a severable half of W-04.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "W-13",
+      "proposition": "LM0 procedural admission edge (W-13): a procedural precondition that transmits no evidence, with section J pinned to frozen R0.19",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "procedural law; transmits no evidence",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md",
+      "verbatim_anchor": "The following is **ADOPTED AS PROCEDURAL LAW**, at exactly this wording, including its closing sentence:",
+      "note": "C.6. Section J is pinned to LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.19.md as frozen at commit f799fb50; satisfaction of the edge may never be cited as evidence for LM0's thesis.",
+      "instrument_role": "confers"
+    },
+    {
+      "id": "CHARTER-0",
+      "proposition": "The Languagehood & Succession Charter /0 is ADOPTED at the exact R3 text (sealed sha 2bf7e64a...); its carried dispositions, riders, ceilings, and exclusions bind at exactly their incorporated standings; ratification created no empirical evidence",
+      "status": "ADOPTED LAW",
+      "sub_annotation": "ratified 2026-08-12; frozen strata R0..R2 historical; deferred forks stay deferred",
+      "standing_instrument": "experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/RULING-CHARTER-0-RATIFIED-R3-2026-08-12.md",
+      "verbatim_anchor": "I adopt LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R3 as Languagehood &",
+      "instrument_role": "confers",
+      "note": "Registry revision to v3 performed under the ratification ruling (the recorded act); generation_date unchanged (2026-08-12, the same acts' effective date)."
+    }
+  ],
+  "generation_date": "2026-08-12",
+  "generation_date_denotes": "the effective date of this registry revision: the date of the owner acts (Disposition Instrument /0 adoption, F-3b ruling) and of the R1 Ratification-Blocker Repair /0 commission that govern its contents. An explicit controlled datum, changed only when the registry is revised under a recorded act; never an ambient clock read.",
+  "instrument_role_vocabulary": {
+    "confers": "the act that created/ratified the standing the row states",
+    "rules-status": "an owner act that determined the row's current status without conferring content standing (e.g. ruled to remain PROPOSED; adopted statement that a node remains OPEN-UNOPENED)",
+    "constrains": "an owner act holding a jurisdiction closed; OPEN standing itself is an absence of conferral - nothing confers it",
+    "refusal-ground": "the owner act grounding a refusal of a formulation",
+    "closure-record": "the owner act closing a historical record at its ceiling"
+  }
+}

@@ -1,0 +1,32 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [PASS] validated through the public door
+  [PASS] disposition is :refused (no arrival declared)  got :REFUSED
+  [PASS] refusal code is :luggage-unsettled-no-arrival  got :LUGGAGE-UNSETTLED-NO-ARRIVAL
+  [PASS] the traveler's name crossed the whole program as ordinary data  got "peregrinus-tertius"
+  [PASS] exactly THREE acts ran — the feast (arm D) did not  got 3
+  [PASS] no summary names arm D (the untaken downstream effect)
+  [PASS] leg 1: arm A returned  A/:RETURNED
+  [PASS] leg 2: arm B-L2 refused — and the program CONTINUED past it  B-L2/:REFUSED
+  [PASS] leg 3: arm C-ii interrupted (the uncertainty that stood)  C-ii/:INTERRUPTED
+  [PASS] act-id-hex present on every leg (64 chars each)
+  [PASS] a store-id exists (durable per-act history under One Act)
+
+ma0-p3-holdout: 11 checks, 0 failures
+exit=0

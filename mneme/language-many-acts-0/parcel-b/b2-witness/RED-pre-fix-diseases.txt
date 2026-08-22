@@ -1,0 +1,44 @@
+== ma0-diseases — SBCL 2.4.6 ==
+   subject tree: /home/gauss/ma0-parcel-b/experiments/latent-lisp
+
+-- D-BOTH-ARMS  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-BOTH-ARMS DETECTED — the named check went RED (exit 1):
+             [FAIL] w-branch-one: summary-count=0  nearest="summary-count=1"
+
+-- D-AMBIENT  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-AMBIENT DETECTED — the named check went RED (exit 1):
+             [FAIL] w-auth-unfilled: refused type=LISP-PLUS-MANY-ACTS0:MA0-AUTHORITY-SLOT-UNFILLED code="MA0-AUTH-1"
+
+-- D-AUTO-RETRY  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-AUTO-RETRY DETECTED — the named check went RED (exit 1):
+             [FAIL] p2-alpha exit code  exit=1 expected=0
+
+-- D-SKIP-VALIDATE  /  witness: sbcl --script mneme/language-many-acts-0/ma0-footprint-witness.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-footprint-witness: 5 checks, 0 failures
+  [PASS] D-SKIP-VALIDATE DETECTED — the named check went RED (exit 1):
+             [FAIL] W-V-FOOTPRINT the invalid program appended NOTHING to the live store  before=2 after=12
+
+-- D-SKIP-VALIDATE  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-SKIP-VALIDATE DETECTED — the named check went RED (exit 1):
+             [FAIL] W-V-SHAPE dotted pair  the source was ACCEPTED; expected MA0-SOURCE-REFUSED [V-SHAPE]
+
+-- D-SPECIAL-CASE  /  witness: sbcl --script mneme/language-many-acts-0/ma0-selftest.lisp --
+  [PASS] control: the witness is GREEN on an unmutated replica
+           ma0-selftest: 200 checks, 0 failures
+  [PASS] D-SPECIAL-CASE DETECTED — the named check went RED (exit 1):
+             [FAIL] W-GENERIC ma0-eval.lisp names no program and no fixture identity  found=("editio")
+
+-- the checkout's porcelain is UNCHANGED: the diseases lived and died in the replica --
+
+ma0-diseases: 5 diseases detected, 5 controls clean
+  (6 disease/control PAIRS: D-SKIP-VALIDATE is exhibited on BOTH of its witnesses)
+exit=0

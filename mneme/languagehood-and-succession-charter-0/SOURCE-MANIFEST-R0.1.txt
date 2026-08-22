@@ -1,0 +1,169 @@
+SOURCE MANIFEST — LANGUAGEHOOD & SUCCESSION CHARTER /0 R0.1 PARCEL
+Candidate R0.1. Not adopted. Compiled 2026-08-11 on branch many-acts-0-candidate.
+Revised at R0.1 by the agent SIGNATOR under the chair, repairing SOL-HR-03 (source custody).
+
+WHAT THIS IS: the repository-relative paths consulted while preparing the R0/R0.1 parcel.
+Paths are relative to the repository root. Nothing here is a claim about any path's
+contents; nothing here confers standing on any path; no gate is opened by any line.
+
+HOW TO READ THE MARKERS:
+  (authenticated directly at R0.1)
+                = opened AT SOURCE this session by SIGNATOR against the authoritative
+                  repository, with the read extent stated and the blob sha recorded.
+                  Per-source detail, quotation checks, and every mismatch found live in
+                  SOURCE-AUTHENTICATION-R0.1.md §2-§3. Blob shas are
+                  `git rev-parse HEAD:<path>` at HEAD 232da116; in every authenticated
+                  case `git hash-object` on the working tree returned the same value.
+                  AUTHENTICATION IS NOT ADOPTION, and byte-presence is not truth of
+                  content: the marker says the source says it, nothing more.
+  [via digest]  = opened by a drafting digest, not by the chair or SIGNATOR directly. The
+                  parenthetical gives the digest's own declared read extent, copied
+                  faithfully, including partial fractions. AT R0.1 NO REMAINING
+                  [via digest] ENTRY CONTROLS A RATIFIABLE SENTENCE — each is background
+                  (existence/standing of a candidate body, custody-inventory identity not
+                  quoted, header-only read, or a capped outside reading). Verified by
+                  extracting all 79 paths cited by the R0.1 charter and its ledger and
+                  checking each against the [PROPOSED] holdings, licensed sentences, exact
+                  ceilings, and status determinations of R0.1.
+  (no marker)   = read directly by the chair during R0 drafting; the parenthetical states
+                  the extent. Where SIGNATOR re-opened the same path at R0.1, the
+                  authentication marker supersedes and both extents are shown.
+  @ <sha>       = commit identity appended only where it is material to distinguish a
+                  frozen or governing copy from a later one.
+  Absence of a path here means it was not consulted — not that it does not exist.
+  The digests' own "NOT OPENED" sections remain the authority on their blind spots.
+
+STANDING GAP THIS MANIFEST CANNOT CLOSE: the Charter /0 commission (original, and the
+2026-08-11 R0.1 repair commission) is quoted at charter §A.0 and relied on at §D.1, §E.0,
+§F.1.3, §G.3, §G.4 and two rung titles, and IT IS NOT A REPOSITORY ARTIFACT — no such file
+exists under `git ls-files`, and the quoted sentence "executable green is not adoption"
+appears in no file in the repository. It is therefore the one ratification-bearing source
+no reader of this repository can authenticate. See SOURCE-AUTHENTICATION-R0.1.md §3 A-1
+and §5.2. Curable only by the owner filing the commission verbatim in-lane, as every
+owner ruling in this lane is filed.
+
+
+# rulings
+
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULINGS-1-2026-08-10.md  @ fa712000 (introducing commit, registrar-derived)  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 280/280 lines; blob b77f5779; 9/9 quotation checks pass — Ruling 1 designation + PJ0 reservation, Ruling 3's hypothesis/green sentence/never-shorten rule, Ruling 8's claim-lattice sentence, rename directive, the DG licensed phrase with "tested" present at L262, the open-ended/general-purpose/arbitrary-domains bar, the 28-place negative result. Prior: chair grep-verified lines for Rulings 1/3/8; read in full 280/280 [via digest])
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULINGS-2-2026-08-10.md  @ 53f69972  [via digest] (read in part 1-80/159; and in the custody inventory, 159 lines — background: no R0.1 sentence rests on it)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-2-POST-R1-DISPOSITION-AND-PARCEL-A-ORDER-2026-08-10.md  @ ad34b530  [via digest] (custody inventory, 190 lines — background)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-3-THREE-PARCEL-DISPOSITIONS-2026-08-10.md  @ 048ad705  (authenticated directly at R0.1 — SIGNATOR read head 1-16/141; blob 7b498c50; confirms the D5 citation is Rider 2 and "Rider 3" was a clerical error. NOTE, filed as anomaly A-2: this instrument is NOT the "Ruling 3" the charter cites throughout — that is OWNER-RULINGS-1 §Ruling 3. Also read in the custody inventory, 141 lines [via digest])
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-4-PARCEL-A-ACCEPTED-ROUND-P-PENDING-2026-08-10.md  @ 9bcb28f9  [via digest] (custody inventory, 77 lines — background)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-5-P2R1-017AD2DE-PARCEL-B-2026-08-10.md  @ 014b32ed  [via digest] (custody inventory, 84 lines — background; superseded in operative effect by 5A)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-5A-P2R1-ACCEPTED-ROUND-P-CLOSED-2026-08-10.md  @ 5b13a1b6  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 128/128 lines; blob 879c2b07; 4/4 quotation checks pass — the settled account §4 L101, the empty-repository test "did not pass and must never be represented as passing" L66, Rider 5A-R1's unratified literal universal L95, "Portability is not established." L111. Two renderings noted: charter capitalizes "NOT" inside quotes (A-4) and compresses the settled account below its owner-stated form, dropping "LANG" and "as a non-enumerable residue" (A-6). Prior: chair grep-verified lines; custody inventory, 128 lines [via digest])
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-6-PARCEL-B-DISPOSED-EXECUTION-ORDERED-2026-08-10.md  @ e87f2d08  [via digest] (custody inventory, 225 lines — background; its §3 B1 rule reaches R0.1 only through MANY-ACTS-0-STANDING.md, which IS authenticated below)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-6A-EXEC-ACCEPTED-CENSUS-R1-ORDERED-2026-08-10.md  @ 5e58a966  [via digest] (custody inventory, 59 lines — background)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-6B-CENSUS-R1-ACCEPTED-B7-CLOSED-2026-08-10.md  @ eaf82ddc  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 41/41 lines; blob 6182cfc0; 2/2 quotation checks pass — the governing stop clause L39 verbatim, and the quiescent-tree rider L35 verbatim including its refusal of tamper-resistance claims. Prior: chair read in full, 41 lines)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-ADOPTION-OWNER-RULING-2026-08-10.md  @ 2b69c18c (adoption commit — cite this, not 7f417d49 which is the sync-revert)  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 232/232 lines; blob d349d80a; 5/5 quotation checks pass — Rider 1's exact sentence L96, the NINE not-licensed items L102-110, the audit's "Nothing here may be called independently verified, independently validated, stranger-audited, or independently reproduced" L90, the audit caps L88, Rider 4's source-is-a-tree L152, Rider 6's PROVES->TESTS WHETHER L172. Finding M-5: the charter's count of nine is correct at source, but its parenthetical enumerates eight, merging the owner's separate "stranger inhabitation" and "independent inhabitation". Prior: chair read in full, 232 lines; also [via digest] x2)
+experiments/latent-lisp/mneme/portable-judge-0/ROUND-P-CLOSURE-RECORD-2026-08-10.md  @ 15608111  [via digest] (custody inventory, 43 lines — background)
+
+notes/canonical-datum-reception/ruling-2026-07-13/CD0-POST-IMPLEMENTATION-RULING.md  (authenticated directly at R0.1 — ADDED AT R0.1, not consulted during R0 drafting; SIGNATOR read the independence-wording loci L212, L231, L614. This is the TRUE HOME of the formulation "independently seeded under shared normative infrastructure" that the charter attributes to LCI/0 — see mismatch M-2. A mirror copy of the same ruling sits in the tree at experiments/latent-lisp/CD0-POST-IMPLEMENTATION-RULING.md. CD/0 lane, not this one; listed for provenance, and listing confers nothing)
+
+
+# receipts
+
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-ADOPTION-RECORD-2026-08-10.md  @ 2b69c18c  [via digest] (custody inventory, 102 lines — background; the governing text is the ruling above, authenticated)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-ADOPTION-RECEIPT-2026-08-10.txt  @ 2b69c18c  [via digest] (custody inventory, 78 lines — background)
+experiments/latent-lisp/mneme/portable-judge-0/PARCEL-B-EXPORT-RECEIPT.md  @ 06b7763b  [via digest] (custody inventory, 26 lines — background)
+experiments/latent-lisp/mneme/portable-judge-0/PARCEL-B-EXEC-EXPORT-RECEIPT.md  @ 3e320b95  [via digest] (custody inventory, 83 lines — background)
+experiments/latent-lisp/mneme/portable-judge-0/PARCEL-B-EXEC-INTEGRATION-RECEIPT.md  @ a0d8932a  [via digest] (custody inventory, 56 lines — background)
+experiments/latent-lisp/mneme/portable-judge-0/MA0-EXPORT-CENSUS-0-EXPORT-RECEIPT.md  @ 4f645e62  [via digest] (custody inventory, 73 lines; Census /0 R0 has no separate integration receipt — recorded absence, not an omission here)
+experiments/latent-lisp/mneme/portable-judge-0/MA0-EXPORT-CENSUS-0-R1-EXPORT-RECEIPT.md  @ d73a50bd (chair: head read; also custody inventory, 110 lines [via digest] — background)
+experiments/latent-lisp/mneme/portable-judge-0/MA0-EXPORT-CENSUS-0-R1-INTEGRATION-RECEIPT.md  @ a963761a (the receipt commit at which the candidate lane is held)  [via digest] (custody inventory, 68 lines. THE COMMIT ITSELF IS AUTHENTICATED at R0.1: a963761a21cf8507b50562e9ba38443a24981832, confirmed ancestor of both the starting commit and the candidate commit — SOURCE-AUTHENTICATION-R0.1.md §1)
+experiments/latent-lisp/mneme/spec/lci0-review/FABLE-LCI0-CLOSURE-MERGE-RECEIPT.md  @ merge af22100c (as the receipt states of itself)  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 35/35 lines; blob 2bd86503; merge commit af22100cad4d6b9c125130a09d27634e8929c7d8 confirmed. 1 pass, 1 MISMATCH: the waiver sentence "owner-authorized and internally audited ... NOT claimed as independently verified by a wholly separate final reviewer" is byte-exact at L21+L25; but the phrase "Independently SEEDED under shared normative infrastructure", which the charter attributes to this receipt, IS ABSENT FROM IT — see M-2)
+experiments/latent-lisp/mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 55/55 lines; blob 5f511946; 2/2 quotation checks pass — the owner-variance disclosure verbatim L26-28 ("was not performed ... the owner waived that gate ... does not constitute independent validation"), and the stranger packet's SEALED, UNOPENED, NOT COURIERED, NOT ADJUDICATED status with "must never be represented as evidence of independent review" L33-36. Waived, not passed. Prior: [via digest], read in cited part)
+experiments/latent-lisp/mneme/language-surface-account-0/ADOPTION-RECEIPT-2026-08-06.md  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 73/73 lines; blob c8b8368b; 2/2 quotation checks pass — the adoption clause L4-7 (owner ruling "ACCEPT R4.3", R4 laboratory terminally closed, adoption/publication authorized from 718f9983) and the chair-executed/fresh-context-readback note L8-9. Prior: [via digest], read in cited part)
+
+
+# predecessor charter texts
+
+experiments/latent-lisp/mneme/LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-CANDIDATE.md  @ 12388ff9 (CHARTIST original; frozen, historical as candidate text)  [via digest] (read in full 618/618; separately grep hits only in the second digest — background: R0.1 cites P1, not this text)
+experiments/latent-lisp/mneme/LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-CANDIDATE-P1.md  @ ba2ffe8b (LATTICER, Round P revision; the last owner-directed candidate text)  (authenticated directly at R0.1 — SIGNATOR read the cited clauses AT SOURCE in full sections: §0.1a-0.3 (41-60), Art.1 head + §1.0 graph/edges (72-110), §1.L0.3-.5 (160-200), §1.CI.3-.5 (222-245), §1.PL.2-.6 (265-300), §1.DG.2-.4 (380-400), §1.LM.2-.5 (429-455), §1.COMP.2-.4 + §1.E preamble (465-495), §1.E.P4.4 + §1.E.P5.1-.4 (512-545), §1.E.P5.4-.5 + §2.1 (545-585), §2.2-2.4 + Art.3 (586-615), §4.2-4.6 (640-680), §11.6 (869-880), Art.12/13/14 head (881-930); full article map (17 articles) read. Blob ef599259. sha256 b437a70f09fbffe109e226785de8f9d0c6a309cca7e6d4c1ae2df7720e142476 COMPUTED THIS SESSION AND CONFIRMED against the charter header's claim and CROSSREF-P2 L14. 17/17 retained-clause checks pass. CRITICAL: §1.E.P5.5 (L552-554) is the ONLY locus of "Its sum with R-P4 is not an inhabitation claim at any weighting" — candidate text, which the charter cites as an owner-ruled cap; see mismatch M-1. Prior: chair grep-verified line 178; read in full 1168/1168 [via digest]; §§0-1 plus grepped P5/CI0 sections [via digest])
+experiments/latent-lisp/mneme/portable-judge-0/PROTOCOL-CHARTER-CROSSREF-P2.md  (authenticated directly at R0.1 — SIGNATOR read the identity table L11-14 and the H/G divergence rows L104-105; blob f6f26bfc; 1/1 check passes — L14 states P1's sha256 as b437a70f09fbffe109e226785de8f9d0c6a309cca7e6d4c1ae2df7720e142476, matching the file's actual hash computed this session. Prior: [via digest], read in part 1-40/204)
+
+
+# evidence records
+
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-RETURN.md  [via digest] (read in cited part — background: §2's seven sealed arms / closed head vocabulary, cited at rung 8 as context, controlling no ceiling)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-RETURN.md  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 84/84 lines; blob f55b9034. Searched for the P5 provenance correction: IT IS NOT IN THIS FILE (it lives in the P5 protocol, below). Variant-locus note O-1: this return's §1 claim (L21-22) omits "Many Acts /0" from the adopted Rider 1 wording; the charter correctly quotes the RULING's form, not this one. Prior: [via digest], read in cited part)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-STANDING.md  @ 3af17e51  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 104/104 lines; blob d89ec9c4; 3/3 quotation checks pass — §4's sentence L80-83 verbatim ("No consolidated, frozen, and published Many Acts /0 statute or portable-conformance standard has yet been adopted..."), §3's "A banner cannot answer the question." L51, and §1's immutable-identities rule L20-21 (which the charter GLOSSES rather than quotes — observation O-2, not a defect). Prior: [via digest], read in part 1-70; custody inventory, 104 lines)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-SUPERSESSIONS.md  @ 3af17e51  (authenticated directly at R0.1 — SIGNATOR read L1-40 in full, covering the banner and §0's five registry laws; blob a704fe0e; 2/2 quotation checks pass — "This file's path confers no standing on its bytes in either direction." L5-6, and "A superseded statement was not false when it was written." L27. THE LATTER IS HERE, not in integration-baseline-0/SUPERSESSION-MAP.md; the charter's attribution to "the supersession registry's law" is correct. Prior: [via digest], read in part 1-60 and last 30; custody inventory, 136 lines)
+experiments/latent-lisp/mneme/language-many-acts-0/p4/  [via digest] (P4 program/driver, read in cited part — background: the P4 record's ceiling is Rider 1's sentence, authenticated at the ruling)
+experiments/latent-lisp/mneme/language-many-acts-0/p5/  [via digest] (P5 program and driver header, read in cited part — background; the first-run transcript is broken out and authenticated on the next line)
+experiments/latent-lisp/mneme/language-many-acts-0/p5/p5-FIRST-RUN.txt  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 31/31 lines; blob fd571f80; 2/2 checks pass — the tally line L31 "ma0-p5-nonauthor: 10 checks, 0 failures" confirming the charter's 10/0, and the ten [PASS] prediction-match lines including the refusal code and arm D witnessed unexecuted)
+notes/2026-08-10-p5-sol-inhabitation-protocol.md  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 125/125 lines; blob b4ce3cdd. THE OWNER'S P5 PROVENANCE CORRECTION IS LOCATED HERE, §"P5 PROVENANCE CORRECTION (owner, 2026-08-10 — append-only)" at L101-125, and the file states it GOVERNS where the original record is looser. 4/4 quotation checks pass — the governing sentence verbatim L116-119, the channel cap L121-122, the DO-NOT-claim list L110-112, and Sol's classification as NON-IMPLEMENTATION AUTHOR "not a mind outside the project's construction/adjudication orbit" L104-108. The pre-registered bands' freeze commit d1f640e4 is separately authenticated as the file's INTRODUCING commit, Aug 10 03:43:16, i.e. genuinely before the packet shipped. Lives under notes/, not p5/ — chair-resolved 2026-08-11; filename carries pre-Ruling-8 vocabulary, read under charter §H.5. Prior: [via digest])
+experiments/latent-lisp/mneme/language-slice-0/LANGUAGE-SLICE-0-GUIDE.md  (authenticated directly at R0.1 — SIGNATOR read head 1-22/263; blob 43bb8561; 1/1 check passes — "Lisp+ Slice /0 is a small embedded language fragment for programs that..." L8. NOTE: under charter §C.8/W-05 this sentence is expressly demoted to a non-load-bearing terminology note (EV-15/45/46 carry no weight), so it now supports nothing ratifiable. Prior: chair head read 1-20; found by chair re-search 2026-08-11)
+experiments/latent-lisp/mneme/language-slice-0/de-promotione/DISPOSITION.md  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 104/104 lines; blob cb4b8f70; 2/2 checks pass. CORRECTION TO THE R0 MANIFEST LINE, anomaly A-7: this was described at R0 as "the banked four-way disposition"; at source the banked receipt (L20-27) is a SIX-KEY form — :semantic-model :validated / :public-surface :embedded-language-kernel / :governed-language-act :earned / :host-level-enforcement :not-earned / :standalone-language-claim :not-yet-earned / :escape-surface :common-lisp-package-internals. The charter §B.5 enumerates it correctly; only the R0 manifest miscounted. The host-bypass sentence L41-42 is byte-exact. Append-only, 2026-07-23; DPM-7 forbids citing it as a cryptographic/process-isolation/hostile-custody result. Prior: chair read banner + refined receipt + governing interpretation; found by chair re-search 2026-08-11)
+experiments/latent-lisp/mneme/portable-judge-0/one-act-recovery/RECOVERY-DETERMINATION.md  [via digest] (read in cited part — §0, Part I — background)
+experiments/latent-lisp/mneme/portable-judge-0/one-act-recovery/CITATION-RESOLUTION-TABLE.md  [via digest] (read in cited part — §1 — background)
+
+
+# specification / architecture / court machinery
+
+experiments/latent-lisp/mneme/portable-judge-0/PROTOCOL-CANDIDATE-P1.md  [via digest] (read in part 1-120/743 — background: cited for existence and unadopted status only)
+experiments/latent-lisp/mneme/portable-judge-0/ADJUDICATION-CANDIDATE-P1.md  [via digest] (read in part 1-95/388 — background: existence and unadopted status only)
+experiments/latent-lisp/mneme/portable-judge-0/FAILURE-TAXONOMY-CANDIDATE-P1.md  [via digest] (read in part 1-80/338 — background: cited at §F.0 for the five-divergence-class distinction and at §G.1; controls no ceiling)
+experiments/latent-lisp/mneme/portable-judge-0/NORMATIVE-OBSERVATION-FORMAT-0-CANDIDATE-P1.md  (authenticated directly at R0.1 — SIGNATOR read the doctrine sentence at L51 of 1279; blob 17fe1ba8; 1/1 check passes — "JSON is plumbing, not semantic jurisdiction." exact, matching the charter §B.0 evidential-kin citation. Candidate, unadopted. Prior: [via digest], read in part 1-75/1279)
+experiments/latent-lisp/mneme/portable-judge-0/CLEAN-ROOM-IMPLEMENTER-BRIEF-CANDIDATE-P1.md  (authenticated directly at R0.1 — SIGNATOR read the NOT ISSUABLE stamps at L13 and L350 of 359; blob 35f24bd1; 1/1 check passes — L13 "THIS BRIEF IS NOT ISSUABLE", L350 "NOT ISSUED. NOT ISSUABLE. NO RECIPIENT." Prior: [via digest], read in part 1-85/359; chair grep-confirmed the stamp at lines 13 and 350)
+experiments/latent-lisp/mneme/portable-judge-0/DG0-SKETCH-CANDIDATE-P1.md  [via digest] (read in full 271/271 — background: R1-R8 requirements consolidated at §G.3; the licensed phrase itself is authenticated at Ruling 8 and P1 §1.DG.2)
+experiments/latent-lisp/mneme/portable-judge-0/LM0-PREREGISTRATION-SKELETON-CANDIDATE-P1.md  [via digest] (read in part 1-90/271; header separately read in cited part by the second digest — background: cited for its NOT-TO-BE-RUN stamp and empty bands)
+experiments/latent-lisp/mneme/portable-judge-0/OG0-SKETCH-CANDIDATE.md  [via digest] (read in part 1-40/171; original — its P1 successor is DG0-SKETCH-CANDIDATE-P1.md — background)
+experiments/latent-lisp/mneme/portable-judge-0/SPEC-DEFICIT-REGISTER-CANDIDATE.md  (authenticated directly at R0.1 — SIGNATOR read §0 IN FULL (1-60), SD-13 IN FULL (81-100), and enumerated ALL 28 "### SD-" headings, of 664 lines; blob 041b6203; 2/2 checks pass. THE COUNT IS AUTHENTICATED: exactly 28 entries, SD-01 through SD-28, confirming the "28 places" figure the charter uses at §B.1.3, rung 1, §E.0, §G.1 and §J.1. SD-13's heading is byte-exact — "One Act /0 has no public specification in the published tree" — and its body confirms the _staging/oneact-candidate/ documents sit outside the mirrored subject tree. CANDIDATE, not adopted, prepared against a base that is itself not owner-adopted. Prior: [via digest], read in cited part §0, §2; chair grep-confirmed SD-13's heading at line 81)
+experiments/latent-lisp/mneme/integration-baseline-0/AUTHORITY-INDEX.md  (authenticated directly at R0.1 — SIGNATOR read head 1-30 and tail 95-107 of 107; blob 97cbee71; 1/1 check passes — L107 "Nothing in this index confers standing. It records where standing was conferred, and by whom." Prior: [via digest], read in part 1-45 and last 35)
+experiments/latent-lisp/mneme/integration-baseline-0/CLAIM-CEILING-0.md  (authenticated directly at R0.1 — SIGNATOR read head 1-40 of 274, covering §0's only-claim-earned statement and §1.1's verbatim AP0 Rider 2 quotation; blob bb206311; 1/1 check passes. Prior: [via digest], read in part 1-50)
+experiments/latent-lisp/mneme/integration-baseline-0/SUPERSESSION-MAP.md  (authenticated directly at R0.1 — SIGNATOR read head 1-25 of 96, covering the label legend and the marked-records table; blob b7b9c5f6; 1/1 check passes WITH a punctuation divergence, anomaly A-3: source L5-6 reads "Nothing here is deleted. History is marked, not removed: several of these documents are cited..." — the charter renders the colon as a period and truncates without ellipsis. Note also that "A superseded statement was not false when it was written" is NOT in this file; it is in MANY-ACTS-0-SUPERSESSIONS.md L27. Prior: [via digest], read in part 1-30)
+experiments/latent-lisp/mneme/architecture/ARCHITECTURE-0-STATUS.md  [via digest] (read in part 1-55 and last 40 — background)
+experiments/latent-lisp/mneme/architecture/adapter-protocol-0/AP0-ADOPTION-2026-07-18.md  (authenticated directly at R0.1 — SIGNATOR read IN FULL, 60/60 lines including the 2026-07-30 addendum; blob 35f78745; 1/1 check passes — Rider 2 verbatim at L29-31: "Stranger audit before independence language: ... no artifact may use the words 'independently verified/validated' of AP0 until a stranger's frozen report exists." Rider 1 marked SATISFIED 2026-07-30; RIDER 2 REMAINS BINDING. The addendum's permitted formulation (L48-50) is a third, Adapter/0-specific locus of "independently seeded" — relevant to mismatch M-2. Prior: [via digest], read in cited part)
+experiments/latent-lisp/mneme/MANIFEST.md  [via digest] (read in part 1-60 — background; itself marked SUPERSEDED by SUPERSESSION-MAP)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-GRAMMAR.md  [via digest] (header only — background)
+experiments/latent-lisp/mneme/language-many-acts-0/ma0-validate.lisp  [via digest] (header only — background)
+experiments/latent-lisp/mneme/language-many-acts-0/ma0-diseases.sh  [via digest] (header only — background)
+experiments/latent-lisp/mneme/language-act-0/act0.lisp  [via digest] (header only — background)
+_staging/oneact-candidate/  [via digest] (listed, not read — the five One Act /0 documents; in-tree, mirror-excluded, not normatively incorporated. SD-13 (authenticated above) is the governing statement about their location and effect)
+
+
+# voices
+
+corpus/voices/received/2026-08-10-sol-on-lisp-plus-languagehood.md  [via digest] (read in full or cited part — one strong outside reading under shared input, never a second witness. Background by construction: the charter itself caps it at rung 2 and rung 3, and no ratifiable sentence rests on it. Dated 2026-08-10, which is the date used to check anomaly M-4: the Slice /0 disposition is 2026-07-23, so the interval is EIGHTEEN days, not the "thirteen days" the charter states at §B.5 L205)
+corpus/voices/2026-08-10-reply-to-sol-languagehood.md  [via digest] (read in full or cited part — the chair's reply, which carries the shared-input cap — background)
+
+
+# campaign log & notes
+
+notes/2026-08-09-many-acts-0-campaign-log.md  (authenticated directly at R0.1 — SIGNATOR read the tail L448-456; the sentence the charter §G.0 quotes as "Campaign holding; next movement is the owner's" is byte-present at L455-456, spanning a line break. Observation O-3: it is the CHAIR'S OWN running log, not an owner instrument; the proposition it supports is independently true on Ruling 6B's authority. Prior: chair tail read; running log in the custody inventory, 456 lines [via digest]; grep-only in the evidence digest [via digest])
+notes/2026-08-10-incident-a14bb55d-sync-env-hijack.md  [via digest] (cited only as the adoption record cites it; not opened by the registrar — background)
+tools/latent-lisp/sync.sh (chair: read directly — the mirror publishes the committed subject tree; publication route and its sentinels)
+
+
+# working digests (uncommitted _staging, listed for transparency)
+
+_staging/charter0-r0/digest-rulings-custody.md (chair: read — TABELLIO, rulings and custody chain; its §10 records what it did not open. AT R0.1 THIS DIGEST CONTROLS NOTHING: every ruling it summarized has been opened at source above)
+_staging/charter0-r0/digest-predecessor-charter.md (chair: read — CONCORDATOR, predecessor charter mapped against the commission; its §A records what it did not open. AT R0.1 THIS DIGEST CONTROLS NOTHING: P1 has been opened at source above. Noted for the record: this digest attributes the "at any weighting" sentence correctly to §1.E.P5.5 at its L123 — the attribution degraded between digest and charter, which is mismatch M-1)
+_staging/charter0-r0/digest-evidence-base.md (chair: read — EXEGETA, evidence base; its §6 records NOT LOCATED items and §7 what it did not open. AT R0.1 THIS DIGEST CONTROLS NOTHING for ratification-bearing sources)
+
+
+# parcel-internal (read as governing structure, not consulted as evidence)
+
+experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.md (chair: read in full — §G gates, §I forks, and §J order govern SUCCESSION-DOCKET-R0.md)
+experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.1.md (SIGNATOR: read in full, 1238/1238 lines — the subject of this authentication; every quoted string checked in it was extracted from this reading, not from a digest or a summary)
+experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/SOL-HOSTILE-RETURN-R0.md (SIGNATOR: read in full, 431/431 lines — the commissioning finding set; sha256 d533a55b42000b655e6f534ca9c27475a1dc0555e4b424886193c9158e2d89d7 COMPUTED THIS SESSION and matching the charter header's claimed d533a55b)
+experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/SOURCE-AUTHENTICATION-R0.1.md (SIGNATOR: authored — the per-source detail, quotation checks, mismatch register, and F-1 subsumption table behind every authentication marker above)
+
+
+# NOT A SOURCE, BECAUSE IT IS NOT IN THE REPOSITORY
+
+The Charter /0 commission (original) and the 2026-08-11 R0.1 repair commission.
+Quoted at charter §A.0 ("commission §1.7: executable green is not adoption") and relied on
+at §D.1 ("commission §3"), §E.0, §F.1.3, §G.3, §G.4, and the rung 5 and rung 7 titles.
+SEARCHED THIS SESSION: the string "executable green is not adoption" appears in NO file in
+the repository, and `git ls-files | grep -i commission` returns no Charter /0 commission.
+Every other owner instrument in this lane is filed verbatim and append-only; this one is
+not. It cannot be authenticated by reading, only by filing. Detail: A-1, §5.2.
+
+
+# This is a source manifest, not an evidence hoard; listing confers no standing.
+# Authentication is not adoption. Byte-presence is not truth of content.
+# Nothing here was verified independently: the reads above were performed by a same-root
+# hand inside the lab harness, and are DIRECTLY AUTHENTICATED AT SOURCE BY A SAME-ROOT
+# HAND — never independent verification, never a stranger audit, never a second witness.

@@ -1,6 +1,9 @@
 ;;;; ma0-compose.lisp — THE PUBLIC ACT COMPOSITION (contract §4).
 ;;;;
-;;;; CANDIDATE.  Nothing here is adopted (contract §0).
+;;;; STANDING: attaches to immutable object identities and explicit
+;;;; dispositions, never to a filename or directory (Owner Ruling 6 §3 B1;
+;;;; MANY-ACTS-0-STANDING.md).  This file's path confers no standing on its
+;;;; bytes in either direction (contract §0).
 ;;;;
 ;;;; ---------------------------------------------------------------------------
 ;;;; WHAT THIS FILE IS, AND WHAT IT IS NOT

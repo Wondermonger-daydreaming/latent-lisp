@@ -1,0 +1,366 @@
+PORTABLE JUDGE /0 — HOLDOUT COMMITMENT SCHEME (CANDIDATE)
+====================================================================
+
+CANDIDATE — not adopted; owner disposition pending.  2026-08-10.
+Prepared against the R1 CANDIDATE BASE:
+  parcel sha256 54aa7783c494d8f32baa3c10eecd48590b88b13f07f0de6c8724831807a02803
+  patch base commit 76952ea4f278d269f98f158555e412a095a3da6f
+  R1 freeze lane subtree e94870bd9091e67f68e9cf238a6c5d0dcf302a05
+THE BASE IS NOT OWNER-ADOPTED.
+
+NAMING COLLISION (first use in this file): "Portable Judge /0" is NOT "PJ0".
+Bare "PJ0" is reserved for the ADOPTED Process Journal /0.  No abbreviation of
+this campaign to "PJ0" is authorized; the designation is pending owner
+ratification.
+
+
+====================================================================
+0.  THE STANDING FACT THIS FILE OPENS WITH
+====================================================================
+
+NO HIDDEN VECTORS EXIST YET.  NONE.  Not drafted, not sketched, not in any
+_staging file, not in any agent's head.  Authoring them is a POST-RATIFICATION
+step and has not begun.
+
+THIS FILE CONTAINS NO HIDDEN VECTOR BODIES AND NEVER WILL.  It is the scheme
+only: how a hidden bank would be committed, by whom it may be authored, under
+what review, where custody sits, and what inventory template gets filled at
+curation.  If a future hand finds a vector body in this file, the file has been
+corrupted and the commitment is void.
+
+
+====================================================================
+1.  WHY A COMMITMENT SCHEME AT ALL
+====================================================================
+
+A conformance bank that J2's implementers can read is not a conformance bank;
+it is a specification with extra steps.  The lab already owns the two rules
+that force this file's shape:
+
+  * PRE-REGISTER BEFORE READING RESULTS (CLAUDE.md §I-f).  The bands, the
+    falsifiers, and the void conditions are committed before the outcome is
+    seen, and the commit timestamp is the proof of ordering.
+
+  * THE PREREG IN THE TREE IS A PUBLISHED PREREG (CLAUDE.md §I-f, 2026-07-16).
+    A subject with file tools reads the tree.  A prereg committed where the
+    subject can read it has been handed to the subject.  This applies to
+    hidden vectors with full force: A HIDDEN BANK COMMITTED TO A TREE J2's
+    AUTHORS CAN READ IS NOT HIDDEN.  Commit only its HASH; publish the
+    plaintext after the run.
+
+  * THE HARNESS IS EXPOSURE (CLAUDE.md §I-f, 2026-07-01).  Enumerate what the
+    subject's boot documents and filesystem already hand it, and write that
+    into the void conditions.
+
+The lane's own W-P3-HOLDOUT (FAILURE-MATRIX §4) is the local precedent and the
+best instrument the lane owns: a program authored post-freeze against the
+author guide alone, which must run without evaluator or grammar change -- OR
+ITS FAILURE IS PRESERVED VERBATIM.  That last clause is the whole discipline.
+This scheme generalizes it.
+
+
+====================================================================
+2.  THE COMMITMENT — what is published, when, in what form
+====================================================================
+
+2.1  THE COMMITTED OBJECT
+
+At curation close, the curator produces exactly three artifacts:
+
+  (a) VECTOR FILES — one canonical file per vector, byte-frozen.
+  (b) COMMITMENT RECORD — the public artifact.  Contains ONLY:
+        * per-vector sha256, over the canonical vector file's exact bytes
+        * per-vector: an OPAQUE IDENTIFIER (see 2.3) and its CATEGORY
+          (1 normative / 2 disease-obligation / 3 adversarial / 4 metamorphic)
+        * the category/count inventory (template in section 5)
+        * the PACKAGE HASH: sha256 of the sorted per-vector-hash list
+        * the public-seed MANIFEST-HASH the bank was authored against
+        * the scoring rule, frozen (see 2.5)
+        * the void conditions, frozen (see 2.6)
+      IT CONTAINS NO VECTOR BODIES, NO VECTOR TITLES, NO EXPECTED
+      OBSERVATIONS, AND NO PROSE DESCRIPTION OF ANY INDIVIDUAL VECTOR.
+  (c) THE SEALED PACKAGE — the vector files, in custody per section 4.
+
+2.2  THE ORDER, WHICH IS THE INSTRUMENT
+
+    1. PUBLIC SEED PACKET FROZEN.  Owner ratifies; MANIFEST-HASH minted.
+    2. HIDDEN BANK AUTHORED against that frozen seed and nothing later.
+    3. ORACLE-CONTAMINATION REVIEW passes (section 3).
+    4. COMMITMENT RECORD PUBLISHED to the lab tree.  Package sealed to
+       out-of-band custody.
+    5. --- ONLY NOW --- J2 IMPLEMENTATION BEGINS.
+    6. J2 FREEZES.  Its artifact hash is recorded publicly BEFORE step 7.
+    7. THE PACKAGE IS OPENED.  Vectors run against the frozen J2.
+    8. Results published together with the plaintext bank.
+
+    A step performed out of order VOIDS the run (section 2.6).  The ordering
+    is enforced by publication timestamps in the lab's git history — the same
+    proof-of-ordering the prereg discipline already relies on.
+
+2.3  OPAQUE IDENTIFIERS
+
+Each vector carries an identifier that reveals nothing: PJV-0001, PJV-0002, …
+allocated in a shuffled order fixed before authoring, so that neither the index
+nor the category sequence leaks the bank's shape.  Category labels ARE
+published per identifier (they are needed for the inventory and for honest
+scoring), but nothing else is.
+
+2.4  HASH DISCIPLINE
+
+  * sha256 over the vector file's exact bytes.  No normalization, no
+    whitespace tolerance, no "canonical form" — a canonicalizer is a program
+    and programs have bugs.
+  * PACKAGE HASH = sha256 of the LC_ALL=C-sorted list of per-vector hashes,
+    one per line, no other content.
+  * The commitment record MAY NOT INCLUDE ITS OWN HASH (standing law, carried
+    from the vertical0/adapter0 closure).  The record's hash is published
+    separately, in the same commit, in a sibling file.
+
+2.5  THE SCORING RULE IS FROZEN AT COMMITMENT, NOT AFTER
+
+Frozen before J2 begins, in the commitment record:
+  * which categories score (candidate: 1, 3, 4 score as checks; 2 scores as
+    obligations, one verdict per disease, not per check);
+  * the pass threshold, or an explicit statement that NO THRESHOLD IS SET and
+    the result will be reported as a raw per-category tally;
+  * A PRE-COMMITTED PUBLISHABLE-NULL BRANCH.  "J2 fails a large fraction" and
+    "J2 passes everything, including vectors we expected to discriminate" are
+    BOTH publishable outcomes, and both are named in advance.
+  * ⚠ IF ANY BRANCH WILL BE READ AS A NULL ("the two implementations agree",
+    "no portable divergence detected"), IT NEEDS A PRE-DECLARED EQUIVALENCE
+    MARGIN δ, ANCHORED TO A FIXED EFFECT SCALE, IN CODE (CLAUDE.md §I-f, the
+    jspace δ-catch).  A straddle-zero result is "not detected", never "null
+    confirmed".  Do not skip this because the outcome feels binary: "J2
+    conforms" is a null claim wearing a pass's clothes.
+
+2.6  VOID CONDITIONS — frozen, and enforced mechanically where possible
+
+The run is VOID (distinct from J2 failing) if any of:
+  V-1  Any vector body, title, or expected observation appears in the lab tree,
+       a public mirror, or any artifact reachable by J2's authors before the
+       J2 freeze in step 6.
+  V-2  A vector is edited, added, or removed after the commitment record is
+       published.  (Detected by re-hashing at open.)
+  V-3  The public seed packet is edited after the MANIFEST-HASH is minted,
+       without a re-commitment of the whole bank.
+  V-4  J2's authors had access to any excluded artifact from the manifest's
+       section 3 exclusion list.  ENUMERATE THE ACTUAL EXPOSURE, do not assert
+       cleanliness: what filesystem did J2's authors have?  what did their
+       boot documents contain?  which of them read this repository?
+  V-5  A vector fails oracle-contamination review at open (i.e. review was
+       skipped or a contaminated vector reached scoring).  That vector is
+       struck and reported struck; if struck vectors exceed a pre-declared
+       fraction, the whole run is VOID.
+  V-6  The commitment record's PACKAGE HASH does not reproduce at open.
+
+  ⚠ THE VOID CONDITIONS MUST BE ENFORCED IN CODE, NOT IN THIS PROSE.  A gate
+    written as a paragraph is not a gate (CLAUDE.md §I-f).  V-2 and V-6 are
+    mechanically checkable at open and MUST be a script.  V-1 and V-4 are
+    human-attested and must be attested EXPLICITLY, in writing, by name, not
+    assumed.  A gate that has never fired is untested: plant a mismatched
+    vector hash and show V-2/V-6 fire before trusting a clean open.
+
+
+====================================================================
+3.  WHO MAY AUTHOR HIDDEN VECTORS — and the review they must pass
+====================================================================
+
+3.1  THE ELIGIBILITY RULE
+
+CONSTRUCTION-LOOP MEMBERS MAY AUTHOR HIDDEN VECTORS.
+
+The reasoning, stated so it can be attacked: a vector tests THE LAW, not the
+implementer.  A vector is a claim of the form "the published law entails this
+observation for this input".  Its correctness is decidable against the seed
+packet alone.  Someone who knows J1's internals does not thereby write a
+WRONG vector — the risk is different and sharper:
+
+  THE ACTUAL RISK IS NOT BIAS.  IT IS ORACLE CONTAMINATION.
+
+A construction-loop author knows what J1 does, and will unconsciously write
+the expected observation in J1's idiom -- CL print syntax, up-cased keywords,
+package-qualified condition class names, One Act frame magnitudes, the
+readtable's identifier case behaviour.  Such a vector CONVICTS A CORRECT J2.
+That is the failure this whole campaign exists to prevent, and it is why
+eligibility is broad but REVIEW IS MANDATORY AND NON-WAIVABLE.
+
+3.2  WHO MAY *NOT* AUTHOR
+
+  * Anyone who has seen, contributed to, or reviewed J2's implementation.
+    (Symmetric to the collation/blinding scarcity rule, CLAUDE.md §I-f:
+     uncontaminated attention is a scarce resource and spending it in one
+     seat spends it for the others.)
+  * Whoever will perform the oracle-contamination review of that same vector.
+    THE REVIEWER MAY NOT REVIEW THEIR OWN VECTORS.  A self-authored objection
+    is not survived criticism (CLAUDE.md §I-f, the LEASHED SKEPTIC).
+
+3.3  THE ORACLE-CONTAMINATION REVIEW — the gate every vector passes
+
+Each vector is reviewed by a hand that did not author it, against this
+checklist.  ANY "yes" REJECTS the vector back for re-expression.
+
+  OC-1  Does the expected observation contain Common Lisp print syntax?
+        (parenthesised forms, #(…), #\x, #p"…", #.…, a dotted pair)
+  OC-2  Does it contain an up-cased keyword or symbol whose case comes from a
+        readtable rather than from the source text?
+  OC-3  Does it name a host condition class, a package, or a package-qualified
+        symbol?  (e.g. LISP-PLUS-MANY-ACTS0:MA0-AUTHORITY-SLOT-UNFILLED)
+        Refusal CODES and requirement IDs are fine; CLASS NAMES are not.
+  OC-4  Does it depend on object identity, aliasing, mutation, or any host
+        memory-model property?
+  OC-5  Does it depend on a substrate magnitude with no public derivation?
+        (journal frame counts, store-id length, digest values, the
+        classify-act-frames vocabulary)
+  OC-6  Does it depend on filesystem or POSIX shape?  (directory listings,
+        file extensions, environment variables)
+  OC-7  Does it depend on identifier CASE behaviour that the seed packet does
+        not normatively state?  ⚠ THIS ONE WILL FIRE OFTEN.  The lane's case
+        behaviour is a readtable inheritance the public guide describes as a
+        rule (see VECTOR-CLASSIFICATION-CANDIDATE §3, C-1).  Until the packet
+        states a normative case rule, NO VECTOR MAY TURN ON CASE.
+  OC-8  Does it test a law the lane does not have?  (verified absences:
+        "support" as a concept; "unsupported-support disappearance";
+        "fabricated evidence"; rationals as an accepted literal type)
+  OC-9  Is the expected observation expressed in anything other than
+        NORMATIVE-OBSERVATION-FORMAT-0?
+  OC-10 Could this vector be derived from the seed packet alone by a
+        competent reader?  If NO, the vector is testing something unpublished,
+        and either the vector is struck or the packet is deficient.  EITHER
+        WAY IT IS A FINDING, and it must be recorded rather than quietly
+        resolved.
+
+  THE REVIEW IS SHOWN, NOT CLAIMED.  Per vector, the reviewer records the
+  checklist outcome.  "Reviewed, clean" without an exhibited checklist is a
+  conclusion wearing a check's costume (CLAUDE.md §I-f, PLUMB's rule).
+
+3.4  THE TEETH ON THE REVIEW ITSELF
+
+Before the review is trusted, PLANT CONTAMINATED VECTORS AND SHOW IT CATCHES
+THEM.  At minimum one plant per OC-1, OC-3, OC-5, OC-7.  A review that has
+never rejected anything is untested, not passing.  The plants and their
+rejections are recorded in the commitment record (they reveal nothing about
+the real bank, since they are discarded).
+
+
+====================================================================
+4.  CUSTODY
+====================================================================
+
+4.1  THE RULE
+
+THE SEALED PACKAGE LIVES OUT-OF-BAND AND NEVER ENTERS THE PUBLIC TREE, THE LAB
+TREE, OR ANY MIRROR.
+
+Precedent: the lab's cold-read-packet discipline (the Leibniz Wing standing
+term -- "cold-read packet OFF-mirror, out-of-band ONLY"), and the One Act /0
+stranger packet, which sits in ~/Downloads/ with a published sha256
+(05731799f811f6e4d675489fe80adcebe3f2b15e63fccc19238c5332068c6d0d) and is
+SEALED, UNOPENED, NOT COURIERED — a live demonstration that a hash-committed
+sealed artifact can sit outside the tree for months and retain its standing.
+
+4.2  MECHANISM
+
+  * Package: a single archive of the vector files.  Its sha256 published in
+    the commitment record; the archive itself stored off-mirror.
+  * THE MIRROR IS THE HAZARD.  experiments/latent-lisp/ publishes through
+    tools/latent-lisp/sync.sh to a public repository.  Since 2026-08-02 the
+    sync publishes the COMMITTED SUBJECT TREE (git archive, main-ancestry
+    guard, SYNC-PAUSED sentinel) rather than the working tree — but the
+    correct posture remains: DO NOT PUT THE PACKAGE ANYWHERE UNDER
+    experiments/latent-lisp/, committed or not.  Verify by content
+    (tools/latent-lisp/verify-sync.sh), never by a sync commit message.
+  * _staging/ IS NOT CUSTODY.  It is inside the repository, it is triaged by
+    other hands, and its exclusion from the mirror is a sync-script property,
+    not a guarantee.
+  * The commitment record IS committed to the lab tree — it is the public
+    half, and its publication timestamp is the proof of ordering.
+
+4.3  WHAT CUSTODY DOES NOT PROVIDE
+
+A sealed package proves the bank did not CHANGE.  It does not prove J2's
+authors never saw it.  That is V-4, and it is human attestation, not
+cryptography.  SAY SO IN THE RESULT.  "Committed before implementation began"
+is provable; "J2 never saw it" is testimony.  The two sentences are different
+and only the first is licensed by the hash.
+
+
+====================================================================
+5.  CATEGORY / COUNT INVENTORY — TEMPLATE, to be filled at curation
+====================================================================
+
+Filled ONLY at curation, published in the commitment record.  Counts reveal
+the bank's shape and nothing about its content — that is the intended
+trade: the reader learns HOW MUCH was tested, never WHAT.
+
+    PORTABLE JUDGE /0 — HIDDEN BANK INVENTORY
+    seed MANIFEST-HASH : ____________________________________________
+    curation date      : ____________
+    curator(s)         : ____________________  (name + model)
+    reviewer(s)        : ____________________  (name + model; disjoint from curators)
+    PACKAGE HASH       : ____________________________________________
+
+    BY CATEGORY
+      1 normative semantic vector .................. ____
+      2 disease obligation ......................... ____   (obligations, not checks)
+      3 adversarial / hostile semantic vector ...... ____
+      4 metamorphic vector ......................... ____
+      TOTAL SCORED VECTORS ......................... ____
+
+    BY COVERAGE CATEGORY  (from VECTOR-CLASSIFICATION-CANDIDATE §6;
+                           "n/a — law absent" is a COMPLETE and CORRECT entry)
+      valid grants ................................. ____
+      valid refusals ............................... ____
+      malformed forms .............................. ____
+      invalid authority ............................ ____
+      inadequate evidence .......................... ____
+      stale evidence (boundary-observable only) .... ____
+      inaccessible evidence (:absent-from-evidence)  ____   [public coverage: NONE]
+      malformed-in-evidence ........................ ____   [public coverage: NONE]
+      fabricated evidence .......................... n/a — LAW ABSENT, do not author
+      nested refusal detail ........................ ____
+      ordered summaries ............................ ____
+      provenance preservation ...................... ____
+      support preservation ......................... n/a — LAW ABSENT, do not author
+      unsupported-support disappearance ............ n/a — LAW ABSENT, do not author
+      prohibited-branch nonexecution ............... ____
+      replay stability ............................. ____
+      Unicode edge cases ........................... ____   [public coverage: NONE]
+      big integers ................................. ____   [public coverage: NONE]
+      rationals (REFUSAL vectors only) ............. ____
+      record ordering .............................. ____
+      identifier distinctions ...................... ____   [BLOCKED until the packet
+                                                             states a normative case rule]
+      empty / boundary cases ....................... ____   [empty :authority-slots:
+                                                             public coverage NONE]
+      metamorphic pairs ............................ ____   [public coverage: NONE]
+
+    REVIEW
+      vectors authored ............................. ____
+      vectors rejected at OC review ................ ____
+      rejections by clause: OC-1 __ OC-2 __ OC-3 __ OC-4 __ OC-5 __
+                            OC-6 __ OC-7 __ OC-8 __ OC-9 __ OC-10 __
+      planted contamination teeth: fired __ / planted __
+      OC-10 findings (packet deficiencies surfaced) . ____
+
+    FROZEN SCORING RULE  : ____________________________________________
+    EQUIVALENCE MARGIN δ : ____________  anchored to: ________________
+    VOID CONDITIONS      : V-1 … V-6 as published, unmodified?  [ Y / N ]
+    PUBLISHABLE NULL BRANCH NAMED IN ADVANCE?  [ Y / N ]
+
+
+====================================================================
+6.  STANDING CAPS
+====================================================================
+
+* NO HIDDEN VECTORS EXIST.  Authoring is post-ratification and has not begun.
+* This scheme is a CANDIDATE.  It has not been reviewed by any outside, and a
+  scheme reviewed only by its author is a scheme that has been agreed with,
+  not tested.
+* Nothing here is an audit, verification, or validation.  Rider 2 binds: the
+  phrases "independently verified" and "independently validated" may not
+  appear in any artifact of this lane, and do not appear here.
+* A J2 that passes this bank has passed THIS BANK.  It has not been shown
+  conformant, portable, or correct.  The claim ceiling is the bank's own size.
+
+
+— drafted by CENSITOR (Claude Opus), commissioned by the chair (Claude Fable 5), 2026-08-10

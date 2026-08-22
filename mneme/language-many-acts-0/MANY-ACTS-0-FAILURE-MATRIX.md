@@ -1,6 +1,11 @@
 # MANY ACTS /0 — FAILURE MATRIX (pre-code)
 
-STANDING: CANDIDATE. Laws to be tested, not merely examples. Counts will be reported as
+STANDING: standing in this lane attaches to immutable object identities and explicit
+dispositions, never merely to filenames, directories, or descent from an adopted commit
+(Owner Ruling 6 §3 B1; rule and coordinates in `MANY-ACTS-0-STANDING.md`). This file's path
+confers no standing on its bytes in either direction.
+
+Laws to be tested, not merely examples. Counts will be reported as
 mechanically enumerated; no round-number targets. Witness naming: `W-*` = a check that
 must be GREEN; `D-*` = a planted executable disease whose paired witness must go RED
 while the restored control stays GREEN.
@@ -17,7 +22,7 @@ while the restored control stays GREEN.
 | W-V-FIELD | binding-class confusion refused | `field` over act-result or ordinary value; `ref` over outcome |
 | W-V-AUTH | authority position closed | string/outcome/act/literal in `:authority-slot`; slot used as value |
 | W-V-ARM | arm vocabulary + once-per-program | unknown arm; same arm twice (static) |
-| W-V-PATTERN | closed patterns; mandatory otherwise; duplicate/shadowed clauses refused | Surface-/2-mirrored expansion laws at validation |
+| W-V-PATTERN | closed patterns; mandatory otherwise; duplicate/shadowed clauses refused | this lane's own closed expansion laws at validation (informed by similar principles; no equivalence claimed — owner ruling, Parcel B item B6) |
 | W-V-TERM | terminal discipline | missing terminal; steps after terminal |
 | W-V-FOOTPRINT | invalid source has NO footprint | any store/journal/mint effect from a refused validation |
 
@@ -42,7 +47,7 @@ while the restored control stays GREEN.
 
 | Witness | Law |
 |---|---|
-| W-CONCORD-A / -CI / -CII / -BR | for each arm MA0 uses: MA0-composed act vs canonical `run-all-arms` act (separate images/stores) agree on: frame kinds present+absent, `classify-act-frames` classification, agreement row+verdict, correspondence row+verdict (C-arms), unpaired shape (B-R) |
+| W-CONCORD-A / -BL1 / -BL2 / -BR / -CI / -CII / -D | for **each of the seven adopted arms** (the pre-code draft pinned four — A, C-i, C-ii, B-R — and R1 §7 closed the coverage to all seven): MA0-composed act vs canonical `run-all-arms` act (separate images/stores) agree on **18 enumerated facets** — frame kinds present+absent, `classify-act-frames` classification, class, act-id-hex, the F2 quartet, F3 ledger answer, F4 runtime resolution, correspondence row+verdict (C-arms), F5 execution standing + evidence class, agreement row+verdict, mint refusal. **7 × 18 = 126 comparisons.** A missing facet is RED, not skipped; the comparator carries its own planted-divergence tooth |
 | W-VF-UNCHANGED | One Act V-F digest `2b51b4df…` byte-unchanged after the whole campaign |
 | W-ONEACT-GREEN | One Act 173-check selftest green after the whole campaign |
 | W-FLOOR-UNTOUCHED | `verify-release.sh` executed table + authorized counts untouched (diff witness); reduced floor still 77/77 |
@@ -56,13 +61,26 @@ while the restored control stays GREEN.
 
 ## 5. Planted diseases (each: witness red under disease, green under restored control)
 
-| Disease | Plants |
+**Four counts, never interchangeable (R1 adoption Rider 6).** **Five** named disease
+FAMILIES — the five rows below. **Six** disease/control INVOCATIONS, because
+`D-SKIP-VALIDATE` is exhibited on both of its witnesses (`ma0-footprint-witness` and
+`ma0-selftest`). **Six** CONTROL arms, one per invocation — every diseased run is preceded
+by the same witness on an unmutated replica, so that a column of red proves the witness
+reddens rather than that the disease exists. **Twelve** witness executions in all, and
+twelve reported checks. `ma0-diseases.sh` reports the family count in the sentinel’s first
+field, the count of clean CONTROL ARMS in its second field, and `$PAIRS` on the following
+parenthetical line, so a green run prints `5 diseases detected, 6 controls clean`. Until
+Parcel B item B2 the second field reused `DISEASE_COUNT` and therefore printed
+`5 controls clean` although six controls ran; transcripts taken before that repair record
+the old output and are not regenerated.
+
+| Disease (family) | Plants |
 |---|---|
 | D-BOTH-ARMS | evaluator evaluates every branch arm → W-BRANCH-ONE red |
 | D-AMBIENT | evaluator fills an unoccupied authority slot from a dynamic variable → W-AUTH-EXPLICIT red |
 | D-AUTO-RETRY | evaluator re-invokes an act after an uncertain/refused act-result → W-NO-BLIND-REPLAY / adopted-lane refusal witnessed red |
-| D-SKIP-VALIDATE | evaluator runs unvalidated source → W-V-FOOTPRINT red (an invalid program reaches the store) |
-| D-SPECIAL-CASE | evaluator special-cases P1's name/hash (e.g., short-circuits its second derive) → W-GENERIC red + P1/P2 concordance drift |
+| D-SKIP-VALIDATE | the validator's atom scan and step check are skipped, so unvalidated source is evaluated → **two invocations**: `ma0-footprint-witness` red on "the invalid program appended NOTHING to the live store", and `ma0-selftest` red on "W-V-SHAPE dotted pair". ⚠ The named checks were chosen **by running, not by reading**: "W-V-SHAPE unknown program head" stays GREEN under this disease (the head test lives in `ma0-validate` itself, not in the two functions the mutation removes), and it is named here as surviving rather than quietly swapped out |
+| D-SPECIAL-CASE | evaluator dispatches on a program NAME and short-circuits P1's second derive → `ma0-selftest` red on the named check "W-GENERIC ma0-eval.lisp names no program and no fixture identity". (The pre-code draft also promised "P1/P2 concordance drift" as a second detector; the built disease asserts the W-GENERIC named check and nothing else) |
 
 ## 6. Error vs refusal boundary witnesses
 

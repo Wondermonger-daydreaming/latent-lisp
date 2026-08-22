@@ -1,0 +1,58 @@
+MA0 EXPORT CENSUS /0 — CLEAN RUN
+================================
+Date        : 2026-08-10T23:20:57Z
+Branch      : ma0-export-census
+Order       : this transcript was captured AFTER all three planted-fault
+              transcripts (01, 02, 03), each of which FIRED (exit 1).  A gate
+              that has never fired is untested, not passing; the teeth come
+              first so that this green means something.
+Subject state (both restored to their adopted-coordinate identities BEFORE
+this run, proven by blob identity, not asserted):
+  package.lisp        : a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+  ma0-structures.lisp : 7a2c093e62e260136bbd6c9dde04dd2df29b2848
+EXPECT      : exact set equality; every expected export bound in its
+              designated sense; exit 0.
+================================
+
+== operation check ==
+SBCL 2.4.6
+sbcl --script reports: 
+"2.4.6" 
+
+== expected table identity ==
+path : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+blob : 78592073905450ff9afcd22dea53afbf53764fa1
+rows : 38 (comment lines excluded)
+
+== ma0-export-census — SBCL 2.4.6 ==
+   subject tree : /home/gauss/ma0-census/experiments/latent-lisp/
+   expected table: /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+
+=== MA0 EXPORT CENSUS /0 — CANDIDATE ===
+package            : LISP-PLUS-MANY-ACTS0
+expected table     : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+expected cardinality (DERIVED from the set): 38
+actual   cardinality (DERIVED from the set): 38
+NOTE: cardinality is reported as an observation.  The test below
+is EXACT SET EQUALITY OF NAMES; no branch of this gate compares a
+count against a literal.
+
+--- [1/3] EXACT SET EQUALITY ---
+MISSING    : none
+UNEXPECTED : none
+SET EQUALITY: HOLDS (38 names)
+
+--- [2/3] BOUNDNESS IN THE DESIGNATED SENSE ---
+all 38 present expected export(s) bound in their designated sense
+
+--- [3/3] HOME-PACKAGE GUARD (additional) ---
+all external symbols homed in LISP-PLUS-MANY-ACTS0
+
+=== VERDICT ===
+  note: boundness checked for 38 name(s)
+ma0-export-census: exact set equality, 38 exports, 0 missing, 0 unexpected, 0 unbound
+CANDIDATE, branch-local.  No portability, independent
+implementation, or conformance claim is made or implied.
+
+==========================================================
+OBSERVED EXIT: 0   (captured directly from the gate process)

@@ -1,0 +1,328 @@
+== ma0-selftest — SBCL 2.4.6 ==
+   subject tree: /home/gauss/ma0-b-exec/experiments/latent-lisp/
+== MANY ACTS /0 — SELFTEST (candidate; adopts nothing) ==
+
+== VALIDATOR WITNESSES (all refusals typed, pre-act, footprint-free) ==
+  [PASS] W-V-BASELINE the lawful skeleton is accepted
+  [PASS] W-V-BASELINE name reads back
+  [PASS] W-V-SHAPE unknown program head  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-SHAPE dotted pair  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-SHAPE missing clause  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-SHAPE two forms in one file  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-SHAPE bare ident as a value  type=MA0-SOURCE-REFUSED code="V-SHAPE" (expected MA0-SOURCE-REFUSED "V-SHAPE")
+  [PASS] W-V-READ reader-eval cannot reach the validator  type=MA0-SOURCE-REFUSED code="V-READ" (expected MA0-SOURCE-REFUSED "V-READ")
+  [PASS] W-V-DATA a vector is not admitted  type=MA0-SOURCE-REFUSED code="V-DATA" (expected MA0-SOURCE-REFUSED "V-DATA")
+  [PASS] W-V-DATA a character is not admitted  type=MA0-SOURCE-REFUSED code="V-DATA" (expected MA0-SOURCE-REFUSED "V-DATA")
+  [PASS] W-V-DATA a float is not admitted  type=MA0-SOURCE-REFUSED code="V-DATA" (expected MA0-SOURCE-REFUSED "V-DATA")
+  [PASS] W-V-DATA a pathname is not admitted  type=MA0-SOURCE-REFUSED code="V-DATA" (expected MA0-SOURCE-REFUSED "V-DATA")
+  [PASS] W-V-PKG a host-package symbol is refused  type=MA0-SOURCE-REFUSED code="V-PKG" (expected MA0-SOURCE-REFUSED "V-PKG")
+  [PASS] W-V-PKG an uninterned symbol is refused  type=MA0-SOURCE-REFUSED code="V-PKG" (expected MA0-SOURCE-REFUSED "V-PKG")
+  [PASS] W-V-BIND use before define  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] W-V-BIND duplicate definition  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] W-V-BIND no shadowing across branch arms  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] W-V-FIELD field over an act-result  type=MA0-BINDING-REFUSED code="V-FIELD" (expected MA0-BINDING-REFUSED "V-FIELD")
+  [PASS] W-V-FIELD field over an ordinary value  type=MA0-BINDING-REFUSED code="V-FIELD" (expected MA0-BINDING-REFUSED "V-FIELD")
+  [PASS] W-V-FIELD ref over a derived outcome  type=MA0-BINDING-REFUSED code="V-FIELD" (expected MA0-BINDING-REFUSED "V-FIELD")
+  [PASS] W-V-FIELD branch head is an ordinary value  type=MA0-BINDING-REFUSED code="V-FIELD" (expected MA0-BINDING-REFUSED "V-FIELD")
+  [PASS] W-V-AUTH a string in authority position  type=MA0-BINDING-REFUSED code="V-RES-AUTH" (expected MA0-BINDING-REFUSED "V-RES-AUTH")
+  [PASS] W-V-AUTH an undeclared slot  type=MA0-BINDING-REFUSED code="V-AUTH" (expected MA0-BINDING-REFUSED "V-AUTH")
+  [PASS] W-V-AUTH an act-result in authority position  type=MA0-BINDING-REFUSED code="V-AUTH" (expected MA0-BINDING-REFUSED "V-AUTH")
+  [PASS] W-V-AUTH a slot is not a value  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] W-V-ARM an unknown arm  type=MA0-SOURCE-REFUSED code="V-ARM" (expected MA0-SOURCE-REFUSED "V-ARM")
+  [PASS] W-V-ARM the same arm twice, STATICALLY  type=MA0-SOURCE-REFUSED code="V-ARM" (expected MA0-SOURCE-REFUSED "V-ARM")
+  [PASS] W-V-PATTERN an unknown axis  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN an unknown axis value  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN a missing otherwise  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN a duplicate clause pattern  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN one axis named twice in a conjunction  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-PATTERN an outcome axis over an act-result  type=MA0-PATTERN-REFUSED code="V-PATTERN" (expected MA0-PATTERN-REFUSED "V-PATTERN")
+  [PASS] W-V-TERM a missing terminal  type=MA0-SOURCE-REFUSED code="V-TERM" (expected MA0-SOURCE-REFUSED "V-TERM")
+  [PASS] W-V-TERM a step after a terminal  type=MA0-SOURCE-REFUSED code="V-TERM" (expected MA0-SOURCE-REFUSED "V-TERM")
+  [PASS] W-V-TERM a branch arm that does not terminate  type=MA0-SOURCE-REFUSED code="V-TERM" (expected MA0-SOURCE-REFUSED "V-TERM")
+  [PASS] W-V-RETRY there is no retry step  type=MA0-SOURCE-REFUSED code="V-RETRY" (expected MA0-SOURCE-REFUSED "V-RETRY")
+  [PASS] W-V-RETRY there is no reconcile step  type=MA0-SOURCE-REFUSED code="V-RETRY" (expected MA0-SOURCE-REFUSED "V-RETRY")
+  [PASS] W-V-RETRY value computation is not admitted  type=MA0-SOURCE-REFUSED code="V-RETRY" (expected MA0-SOURCE-REFUSED "V-RETRY")
+
+== W-V-FOOTPRINT ==
+    scratch directory holds 38 entries
+  [PASS] W-V-FOOTPRINT no store or world directory exists  subdirectories: NIL
+  [PASS] W-V-FOOTPRINT every entry is a source file this suite wrote  entries: ("W-V-ARM an unknown arm.lisp"
+          "W-V-ARM the same arm twice, STATICALLY.lisp"
+          "W-V-AUTH a slot is not a value.lisp"
+          "W-V-AUTH a string in authority position.lisp"
+          "W-V-AUTH an act-result in authority position.lisp"
+          "W-V-AUTH an undeclared slot.lisp"
+          "W-V-BIND duplicate definition.lisp"
+          "W-V-BIND no shadowing across branch arms.lisp"
+          "W-V-BIND use before define.lisp"
+          "W-V-DATA a character is not admitted.lisp"
+          "W-V-DATA a float is not admitted.lisp"
+          "W-V-DATA a pathname is not admitted.lisp"
+          "W-V-DATA a vector is not admitted.lisp"
+          "W-V-FIELD branch head is an ordinary value.lisp"
+          "W-V-FIELD field over an act-result.lisp"
+          "W-V-FIELD field over an ordinary value.lisp"
+          "W-V-FIELD ref over a derived outcome.lisp"
+          "W-V-PATTERN a duplicate clause pattern.lisp"
+          "W-V-PATTERN a missing otherwise.lisp"
+          "W-V-PATTERN an outcome axis over an act-result.lisp"
+          "W-V-PATTERN an unknown axis value.lisp"
+          "W-V-PATTERN an unknown axis.lisp"
+          "W-V-PATTERN one axis named twice in a conjunction.lisp"
+          "W-V-PKG a host-package symbol is refused.lisp"
+          "W-V-PKG an uninterned symbol is refused.lisp"
+          "W-V-READ reader-eval cannot reach the validator.lisp"
+          "W-V-RETRY there is no reconcile step.lisp"
+          "W-V-RETRY there is no retry step.lisp"
+          "W-V-RETRY value computation is not admitted.lisp"
+          "W-V-SHAPE bare ident as a value.lisp" "W-V-SHAPE dotted pair.lisp"
+          "W-V-SHAPE missing clause.lisp"
+          "W-V-SHAPE two forms in one file.lisp"
+          "W-V-SHAPE unknown program head.lisp"
+          "W-V-TERM a branch arm that does not terminate.lisp"
+          "W-V-TERM a missing terminal.lisp"
+          "W-V-TERM a step after a terminal.lisp" "skeleton.lisp")
+
+== W-IMMUTABLE ==
+  [PASS] W-IMMUTABLE ma0-program-source hands out a fresh copy
+  [PASS] W-IMMUTABLE the two copies are equal
+  [PASS] W-IMMUTABLE mutating a returned copy leaves the original unchanged
+  [PASS] W-IMMUTABLE a later copy is unchanged by the mutation
+  [PASS] W-IMMUTABLE no (setf MA0-PROGRAM-NAME) exists
+  [PASS] W-IMMUTABLE no (setf MA0-PROGRAM-SOURCE) exists
+  [PASS] W-IMMUTABLE no (setf MA0-RESULT-DISPOSITION) exists
+  [PASS] W-IMMUTABLE no (setf MA0-RESULT-VALUE) exists
+  [PASS] W-IMMUTABLE no (setf MA0-RESULT-ACT-SUMMARIES) exists
+  [PASS] W-IMMUTABLE no (setf MA0-ACT-SUMMARY-CLASS) exists
+  [PASS] W-IMMUTABLE no (setf MA0-ENVIRONMENT-STORE-ID) exists
+
+== R1/D1 — OWNERSHIP (both directions, MUTABLE LEAVES) ==
+  [PASS] R1/D1 CONTRAST copy-tree shares mutable leaves (why %ma0-own exists)  original now "Xeaf"
+  [PASS] R1/D1 %ma0-own returns an EQUAL structure
+  [PASS] R1/D1 %ma0-own copies the spine
+  [PASS] R1/D1 %ma0-own copies a TOP-LEVEL string leaf
+  [PASS] R1/D1 %ma0-own copies a NESTED string leaf
+  [PASS] R1/D1 %ma0-own SHARES symbols (the binding table depends on EQ)
+  [PASS] R1/D1 direction i: mutating the ORIGINAL leaves the owned copy alone  owned="alpha"
+  [PASS] R1/D1 direction ii: mutating the OWNED copy leaves the original alone  original="beta"
+  [PASS] R1/D1 %ma0-own copies an admitted mutable BYTE VECTOR  original[0]=1 owned[0]=99
+  [PASS] R1/D1 TOOTH the ownership budget REFUSES an oversized datum  code="MA0-OWN-BOUND"
+
+== R1/D1 — THE SOURCE BOUNDARY, both directions ==
+  [PASS] R1/D1 the source readback contains a string to mutate  found "skeleton"
+  [PASS] R1/D1 mutating a returned SOURCE string leaves the retained source alone  was "skeleton"; fresh readback "skeleton"
+  [PASS] R1/D1 ma0-program-name hands out a FRESH string each call
+  [PASS] R1/D1 mutating a returned name leaves the program's name alone  now "skeleton"
+
+== R1/D2 — PATH-SENSITIVE BRANCH BINDING ==
+  [PASS] R1/D2 a later alternative may not see an earlier one's binding  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] R1/D2 the otherwise clause may not see an alternative's binding  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] R1/D2 CONTROL a pre-branch binding stays visible in every alternative
+  [PASS] R1/D2 the sealed define-once law still spans sibling alternatives  type=MA0-BINDING-REFUSED code="V-BIND" (expected MA0-BINDING-REFUSED "V-BIND")
+  [PASS] R1/D2 V-ARM still spans sibling alternatives (arms are not restored)  type=MA0-SOURCE-REFUSED code="V-ARM" (expected MA0-SOURCE-REFUSED "V-ARM")
+  [PASS] R1/D2 THE VACUITY WITNESS no step may follow a branch (V-TERM)  type=MA0-SOURCE-REFUSED code="V-TERM" (expected MA0-SOURCE-REFUSED "V-TERM")
+
+== R1/D3 — A LAWFUL SOURCE IS A TREE (bounded, terminating) ==
+  [PASS] R1/D3 a self-referential list is refused, and TERMINATES  code="V-SHAPE" detail names "a lawful source is a TREE"
+  [PASS] R1/D3 a cycle nested in an otherwise-lawful program is refused  code="V-SHAPE" detail names "a lawful source is a TREE"
+  [PASS] R1/D3 acyclic SHARED substructure is refused by the same law  code="V-SHAPE" detail names "a lawful source is a TREE"
+  [PASS] R1/D3 CONTROL a long FINITE source inside the node bound is accepted
+  [PASS] R1/D3 a source beyond the declared node bound is refused BY THE BOUND  code="V-SHAPE" detail names "node count exceeds the declared bound"
+  [PASS] R1/D3 CONTROL an ordinary lawful source is still accepted
+
+== R1/D5 — THE GENERATION: monotonic, never reset, never reused ==
+  [PASS] R1/D5 TOOTH the mutation detector FIRES on a planted decrement  ("decf")
+  [PASS] R1/D5 TOOTH the mutation detector FIRES on a planted reset  ("(setf *ma0-environment-generation*")
+  [PASS] R1/D5 TOOTH the detector does NOT fire on the lawful increment
+  [PASS] R1/D5 the gate is not vacuous — it saw the counter  6 mention(s)
+  [PASS] R1/D5 the counter has EXACTLY ONE increment site  found 1
+  [PASS] R1/D5 nothing decrements, resets, rebinds, or unbinds the counter  NIL
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [PASS] R1/D5 successive constructions get STRICTLY INCREASING generations  (1 2 3)
+  [PASS] R1/D5 each construction advances the counter by exactly one  (1 2 3)
+  [PASS] R1/D5 only the LAST environment is current; no older one revives  generations (1 2 3), installed 3
+
+== GREP GATES (each shown able to FIRE before its clean pass is reported) ==
+  [PASS] TOOTH the no-internals grep FIRES on a planted violation  hits=("lisp-plus-journal0")
+  [PASS] TOOTH the no-internals grep does NOT fire on a lawful single colon
+  [PASS] NO-INTERNALS package.lisp
+  [PASS] NO-INTERNALS ma0-structures.lisp
+  [PASS] NO-INTERNALS ma0-validate.lisp
+  [PASS] NO-INTERNALS ma0-environment.lisp
+  [PASS] NO-INTERNALS ma0-compose.lisp
+  [PASS] NO-INTERNALS ma0-eval.lisp
+  [PASS] NO-INTERNALS ma0-selftest-suite.lisp
+  [PASS] NO-INTERNALS load.lisp
+  [PASS] NO-INTERNALS ma0-driver.lisp
+  [PASS] NO-INTERNALS ma0-selftest.lisp
+  [PASS] NO-INTERNALS r1/D1-ownership.lisp
+  [PASS] NO-INTERNALS r1/D2-branch-binding.lisp
+  [PASS] NO-INTERNALS r1/D3-circular-source.lisp
+  [PASS] NO-INTERNALS r1/D4-env-crosswire.lisp
+  [PASS] NO-INTERNALS r1/D5-generation-seam.lisp
+  [PASS] NO-INTERNALS r1/run-r1-program.lisp
+  [PASS] TOOTH the W-GENERIC grep FIRES on a planted program name
+  [PASS] W-GENERIC ma0-eval.lisp names no program and no fixture identity  found=NIL
+  [PASS] W-GENERIC ma0-validate.lisp names no program and no fixture identity  found=NIL
+  [PASS] W-GENERIC ma0-compose.lisp names no program and no fixture identity  found=NIL
+  [PASS] W-GENERIC ma0-structures.lisp names no program and no fixture identity  found=NIL
+
+== SCENARIO p1 ==
+  [PASS] p1 exit code  exit=0 expected=0
+  [PASS] p1 reached its declared end  end line="DRIVER-END p1 reached-end"
+  [PASS] p1: program-name="editio"  nearest="program-name=\"editio\""
+  [PASS] p1: disposition=:COMPLETED  nearest="disposition=:COMPLETED"
+  [PASS] p1: value=(:ANNOUNCED "codex-sangallensis" :SETTLED)  nearest="value=(:ANNOUNCED \"codex-sangallensis\" :SETTLED)"
+  [PASS] p1: refusal-code=NIL  nearest="refusal-code=NIL"
+  [PASS] p1: summary-count=1  nearest="summary-count=1"
+  [PASS] p1: summary 0 arm="A" class=:A disposition=:RETURNED verdict="agree" hexlen=64  nearest="summary 0 arm=\"A\" class=:A disposition=:RETURNED verdict=\"agree\" hexlen=64"
+  [PASS] p1: prefix-status=:VALID  nearest="prefix-status=:VALID"
+  [PASS] p1: derived prima execution=:SETTLED evidence-class=:NONE provenance=:NONE  nearest="derived prima execution=:SETTLED evidence-class=:NONE provenance=:NONE"
+  [PASS] p1: frame prima F1 present=T  nearest="frame prima F1 present=T"
+  [PASS] p1: frame prima F2 present=T  nearest="frame prima F2 present=T"
+  [PASS] p1: frame prima F3 present=NIL  nearest="frame prima F3 present=NIL"
+  [PASS] p1: frame prima F4 present=NIL  nearest="frame prima F4 present=NIL"
+  [PASS] p1: frame prima F5 present=T  nearest="frame prima F5 present=T"
+  [PASS] p1: classification=:ACT-REPORTED  nearest="classification=:ACT-REPORTED"
+  [PASS] p1: store-id-length=74  nearest="store-id-length=74"
+
+== SCENARIO p2-alpha ==
+  [PASS] p2-alpha exit code  exit=0 expected=0
+  [PASS] p2-alpha reached its declared end  end line="DRIVER-END p2-alpha reached-end"
+  [PASS] p2-alpha: program-name="custodia"  nearest="program-name=\"custodia\""
+  [PASS] p2-alpha: disposition=:REFUSED  nearest="disposition=:REFUSED"
+  [PASS] p2-alpha: refusal-code=:UNCERTAINTY-HALTS-CHAIN  nearest="refusal-code=:UNCERTAINTY-HALTS-CHAIN"
+  [PASS] p2-alpha: refusal-detail="marcus"  nearest="refusal-detail=\"marcus\""
+  [PASS] p2-alpha: summary-count=2  nearest="summary-count=2"
+  [PASS] p2-alpha: summary 0 arm="A" class=:A disposition=:RETURNED verdict="agree" hexlen=64  nearest="summary 0 arm=\"A\" class=:A disposition=:RETURNED verdict=\"agree\" hexlen=64"
+  [PASS] p2-alpha: summary 1 arm="C-i" class=:C-I disposition=:INTERRUPTED verdict="agree" hexlen=64  nearest="summary 1 arm=\"C-i\" class=:C-I disposition=:INTERRUPTED verdict=\"agree\" hexlen=64"
+  [PASS] p2-alpha: frame revocata :F1 present=NIL  nearest="frame revocata :F1 present=NIL"
+  [PASS] p2-alpha: prefix-status=:VALID  nearest="prefix-status=:VALID"
+
+== SCENARIO p2-beta ==
+  [PASS] p2-beta exit code  exit=0 expected=0
+  [PASS] p2-beta reached its declared end  end line="DRIVER-END p2-beta reached-end"
+  [PASS] p2-beta: program-name="custodia"  nearest="program-name=\"custodia\""
+  [PASS] p2-beta: disposition=:REFUSED  nearest="disposition=:REFUSED"
+  [PASS] p2-beta: refusal-code=:AUTHORITY-REVOKED-BEFORE-DUTY-3  nearest="refusal-code=:AUTHORITY-REVOKED-BEFORE-DUTY-3"
+  [PASS] p2-beta: summary-count=3  nearest="summary-count=3"
+  [PASS] p2-beta: summary 2 arm="B-R" class=:UNPAIRED-F1 disposition=:MINT-REFUSED verdict=NIL hexlen=64  nearest="summary 2 arm=\"B-R\" class=:UNPAIRED-F1 disposition=:MINT-REFUSED verdict=NIL hexlen=64"
+  [PASS] p2-beta: frame revocata F1 present=T  nearest="frame revocata F1 present=T"
+  [PASS] p2-beta: frame revocata F2 present=NIL  nearest="frame revocata F2 present=NIL"
+  [PASS] p2-beta: frame revocata F3 present=NIL  nearest="frame revocata F3 present=NIL"
+  [PASS] p2-beta: frame revocata F4 present=NIL  nearest="frame revocata F4 present=NIL"
+  [PASS] p2-beta: frame revocata F5 present=NIL  nearest="frame revocata F5 present=NIL"
+  [PASS] p2-beta: classification revocata=:BINDING-DECLARED-UNPAIRED  nearest="classification revocata=:BINDING-DECLARED-UNPAIRED"
+  [PASS] p2-beta: prefix-status=:VALID  nearest="prefix-status=:VALID"
+
+== SCENARIO w-branch-one ==
+  [PASS] w-branch-one exit code  exit=0 expected=0
+  [PASS] w-branch-one reached its declared end  end line="DRIVER-END w-branch-one reached-end"
+  [PASS] w-branch-one: value=:TOOK-THE-QUIET-ARM  nearest="value=:TOOK-THE-QUIET-ARM"
+  [PASS] w-branch-one: summary-count=0  nearest="summary-count=0"
+  [PASS] w-branch-one: prefix-frames-before=1  nearest="prefix-frames-before=1"
+  [PASS] w-branch-one: prefix-frames-after=1  nearest="prefix-frames-after=1"
+  [PASS] w-branch-one: frame amissa :F1 present=NIL  nearest="frame amissa :F1 present=NIL"
+
+== SCENARIO w-branch-exact ==
+  [PASS] w-branch-exact exit code  exit=0 expected=0
+  [PASS] w-branch-exact reached its declared end  end line="DRIVER-END w-branch-exact reached-end"
+  [PASS] w-branch-exact: value=:EXACT-MATCHING-HELD  nearest="value=:EXACT-MATCHING-HELD"
+  [PASS] w-branch-exact: probe execution=:ABSENT provenance=:NONE evidence-class=:NONE  nearest="probe execution=:ABSENT provenance=:NONE evidence-class=:NONE"
+  [PASS] w-branch-exact: probe execution-standing-of-facet=:PRESENT  nearest="probe execution-standing-of-facet=:PRESENT"
+
+== SCENARIO w-derive-ne-perform ==
+  [PASS] w-derive-ne-perform exit code  exit=0 expected=0
+  [PASS] w-derive-ne-perform reached its declared end  end line="DRIVER-END w-derive-ne-perform reached-end"
+  [PASS] w-derive-ne-perform: prefix-frames-before=1  nearest="prefix-frames-before=1"
+  [PASS] w-derive-ne-perform: prefix-frames-after=1  nearest="prefix-frames-after=1"
+  [PASS] w-derive-ne-perform: value=:THREE-DERIVES-AND-NO-ACT  nearest="value=:THREE-DERIVES-AND-NO-ACT"
+
+== SCENARIO w-auth-unfilled ==
+  [PASS] w-auth-unfilled exit code  exit=0 expected=0
+  [PASS] w-auth-unfilled reached its declared end  end line="DRIVER-END w-auth-unfilled reached-end"
+  [PASS] w-auth-unfilled: refused type=LISP-PLUS-MANY-ACTS0:MA0-AUTHORITY-SLOT-UNFILLED code="MA0-AUTH-1"  nearest="refused type=LISP-PLUS-MANY-ACTS0:MA0-AUTHORITY-SLOT-UNFILLED code=\"MA0-AUTH-1\""
+  [PASS] w-auth-unfilled: frame prima :F1 present=NIL  nearest="frame prima :F1 present=NIL"
+  [PASS] w-auth-unfilled: prefix-frames=0  nearest="prefix-frames=0"
+
+== SCENARIO w-order-store ==
+  [PASS] w-order-store exit code  exit=0 expected=0
+  [PASS] w-order-store reached its declared end  end line="DRIVER-END w-order-store reached-end"
+  [PASS] w-order-store: first-completion verdict="agree" class=:A  nearest="first-completion verdict=\"agree\" class=:A"
+  [PASS] w-order-store: prefix-frames=8  nearest="prefix-frames=8"
+  [PASS] w-order-store: refused type=LISP-PLUS-MANY-ACTS0:MA0-COMPOSITION-DIVERGENCE code="ACT-ORDER-1"  nearest="refused type=LISP-PLUS-MANY-ACTS0:MA0-COMPOSITION-DIVERGENCE code=\"ACT-ORDER-1\""
+  [PASS] w-order-store: prefix-frames-after=8  nearest="prefix-frames-after=8"
+  [PASS] w-order-store: prefix-status=:VALID  nearest="prefix-status=:VALID"
+
+== SCENARIO w-no-erase ==
+  [PASS] w-no-erase exit code  exit=0 expected=0
+  [PASS] w-no-erase reached its declared end  end line="DRIVER-END w-no-erase reached-end"
+  [PASS] w-no-erase: composed arm="A" verdict="agree"  nearest="composed arm=\"A\" verdict=\"agree\""
+  [PASS] w-no-erase: composed arm="C-i" verdict="agree"  nearest="composed arm=\"A\" verdict=\"agree\""
+  [PASS] w-no-erase: before prefix-frames=21  nearest="before prefix-frames=21"
+  [PASS] w-no-erase: revoked-duty class=:UNPAIRED-F1 disposition=:MINT-REFUSED  nearest="revoked-duty class=:UNPAIRED-F1 disposition=:MINT-REFUSED"
+  [PASS] w-no-erase: after prefix-frames=22  nearest="after prefix-frames=22"
+  [PASS] w-no-erase: earlier-frames-unchanged=T  nearest="earlier-frames-unchanged=T"
+  [PASS] w-no-erase: earlier-frame-rows=10  nearest="earlier-frame-rows=10"
+  [PASS] w-no-erase: prefix-status=:VALID  nearest="prefix-status=:VALID"
+
+== SCENARIO w-error-propagates ==
+  [PASS] w-error-propagates exit code  exit=0 expected=0
+  [PASS] w-error-propagates reached its declared end  end line="DRIVER-END w-error-propagates reached-end"
+  [PASS] w-error-propagates: first disposition=:COMPLETED  nearest="first disposition=:COMPLETED"
+  [PASS] w-error-propagates: propagated type=LISP-PLUS-LANGUAGE-ACT0:ACT-IDENTITY-TAKEN requirement="ACT-9b"  nearest="propagated type=LISP-PLUS-LANGUAGE-ACT0:ACT-IDENTITY-TAKEN requirement=\"ACT-9b\""
+  [PASS] w-error-propagates: converted-to-completed=NIL  nearest="converted-to-completed=NIL"
+
+== SCENARIO w-error-uncaught ==
+  [PASS] w-error-uncaught exit code  exit=1 expected=1
+  [PASS] w-error-uncaught reached its declared end  end line="DRIVER-END w-error-uncaught propagated"
+  [PASS] w-error-uncaught: first disposition=:COMPLETED  nearest="first disposition=:COMPLETED"
+  [PASS] w-error-uncaught: PROPAGATED LISP-PLUS-LANGUAGE-ACT0:ACT-IDENTITY-TAKEN  nearest="PROPAGATED LISP-PLUS-LANGUAGE-ACT0:ACT-IDENTITY-TAKEN"
+
+== TALLY: 200 passed, 0 failed ==
+ma0-selftest: 200 checks, 0 failures
+exit=0

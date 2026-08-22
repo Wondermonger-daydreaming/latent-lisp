@@ -53,8 +53,32 @@
 # UNCONDITIONALLY whenever a repository exists ("no git repository" and "clean
 # git repository" are different states).
 #
-# Exit 0 iff all five diseases were DETECTED and all their controls were CLEAN.
-# Sentinel: ma0-diseases: 5 diseases detected, 5 controls clean
+# ⚠ FOUR COUNTS, NEVER INTERCHANGEABLE (R1 adoption Rider 6, 2026-08-10):
+#     FIVE   named disease FAMILIES — D-BOTH-ARMS, D-AMBIENT, D-AUTO-RETRY,
+#            D-SKIP-VALIDATE, D-SPECIAL-CASE (the rows above).
+#     SIX    disease/control INVOCATIONS ($PAIRS) — D-SKIP-VALIDATE is exhibited
+#            on BOTH of its witnesses, so it runs twice.
+#     SIX    CONTROL arms, one per invocation.
+#     TWELVE witness executions (6 control + 6 diseased), reported as 12 checks.
+#   The family count and the invocation count may never be substituted for each
+#   other, in this file or in any document that quotes it.
+#
+# Exit 0 iff ALL SIX invocations were DETECTED and ALL SIX of their controls were
+# CLEAN — the exit test is `DETECTED == PAIRS && CONTROLS == PAIRS', over
+# invocations, not over families.
+#
+# Sentinel: ma0-diseases: 5 diseases detected, 6 controls clean
+#           ( <PAIRS> disease/control PAIRS: D-SKIP-VALIDATE is exhibited on BOTH
+#             of its witnesses )
+#   ⚠ THE TWO NUMBERS ARE DIFFERENT QUANTITIES.  The FIRST is the disease FAMILY
+#   count (5, a constant).  The SECOND is the count of CONTROL ARMS that ran
+#   clean — one per INVOCATION, so 6 — and it is printed from the counter the run
+#   incremented, not from the family constant.  Until Parcel B item B2 it was
+#   printed from `DISEASE_COUNT' and therefore read "5 controls clean" while six
+#   control arms had in fact run clean.  The ten frozen R1 captures and every
+#   transcript taken before that repair record the old output and are NEVER
+#   regenerated: a repaired instrument and a frozen capture of its former output
+#   are permitted to differ.
 #
 # — DENS (Claude Opus 5, subagent), 2026-08-09
 
@@ -275,10 +299,13 @@ else
 fi
 
 echo
-# D-SKIP-VALIDATE is exhibited on two witnesses; the DISEASE count is five.
+# D-SKIP-VALIDATE is exhibited on two witnesses; the DISEASE FAMILY count is five
+# (a constant), and the CONTROL count is one per INVOCATION — counted, never
+# assumed, and printed from the counter the run incremented (Parcel B item B2;
+# R1 adoption Rider 6 forbids substituting either count for the other).
 DISEASE_COUNT=5
 if [ "$FAILED" -eq 0 ] && [ "$DETECTED" -eq "$PAIRS" ] && [ "$CONTROLS" -eq "$PAIRS" ]; then
-  echo "ma0-diseases: $DISEASE_COUNT diseases detected, $DISEASE_COUNT controls clean"
+  echo "ma0-diseases: $DISEASE_COUNT diseases detected, $CONTROLS controls clean"
   echo "  ($PAIRS disease/control PAIRS: D-SKIP-VALIDATE is exhibited on BOTH of its witnesses)"
   exit 0
 fi

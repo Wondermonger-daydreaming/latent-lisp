@@ -1,0 +1,7 @@
+RED-CARRIER-BEFORE — captured 2026-08-21T17:23:35Z against R4.1 as committed at de3177e6 (ml0.lisp stashed to its committed state for this run). Findings by SCRUTATOR (Codex cross-family review, _staging/r41-scrutator-findings.md); reproduced by the chair with this probe.
+probe: /tmp/carrier-probe.lisp
+
+PROBE-1 mutated carrier -> WRITTEN standing=:OCCURRED warranting-rows=0
+PROBE-2 principal direct="principal:actus-memoratus" derived="principal:principal:actus-memoratus"
+PROBE-2 re-consolidate derived+original -> REFUSED [ML0-CON-4]
+PROBE-3 cross-store -> WRITTEN into foreign store

@@ -1,0 +1,125 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+de-actu-memorato — the remembered act.
+governing sentence: the language can remember what its account is entitled to say — and can durably remember that it is not entitled to say more.
+the pinned proposition `:occurred` warrants:
+  the governed protected effect associated with canonical act identity A crossed/applied and is present in the declared journal/world universe under its derived external-request identity
+CANDIDATE.  Nothing here is adopted, and nothing here is independent verification.  Crash model: PLANTED DETERMINISTIC process death (an env-var exit inside capability /2's world adapter).  NO SIGKILL, no power loss, no mid-instruction truncation is claimed — journal0/de-teste-occiso and vertical0 own the real crash windows.  Capability-DISCIPLINED, never capability-secure.
+
+== phase 1 — the scriptor (separate process; acts, writes the accounts, and exits with its Core /0 evidence) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | scriptor: act store · world · ACCOUNT STORE · three acts · the accounts this process is entitled to write
+[001] ok   (scriptor) both stores' derived identities EQUAL the identities derived from the declared configuration alone — the act journal and the account store are DIFFERENT stores, in different directories, with different nonces
+[002] ok   (scriptor) the memorable act SETTLED through One Act /1's public seam, and the world durably holds a ledger row under its derived external-request identity
+      | memorable act identity oneact1:act:f591f7c13d46cc59ace939951cfe507003cf1bd23f78e246a2c06259216e6bab
+[003] ok   (scriptor) THE DANGEROUS ARTIFACT, MADE LAWFULLY: a pre-frontier refusal issued a GENUINE Core /0 evidence account bound to this act's canonical request — AND the act did not happen, by three independent instruments (journal frame count unmoved, derived standing :ABSENT, world byte-unchanged across the whole declared universe)
+[004] ok   (scriptor) D1 (write half) — the memorable act's account reads :OCCURRED, warranted by the INDEPENDENT basis, with issuance reported on its own separate axis as :ISSUED-IN-WRITING-IMAGE
+[005] ok   (scriptor) D2 arm (a), write half — the over-claiming issuance bundle is stored as ISSUANCE-ONLY with occurrence :UNRESOLVED, and the rule's refusal names leg SPECIES [ML0-PROMOTE-1] with all seven other legs satisfied
+      | D2 conjunct table, written into this capture so the answer is a fact and not an inference:
+      |   CONJUNCTS · the crown negative's over-claiming issuance bundle  (species core0-issuance-testimony, attests inconclusive)
+      |     validation   [ML0-PROMOTE-0] : yes
+      |     species      [ML0-PROMOTE-1] : NO  <== this leg answered
+      |     attestation  [ML0-PROMOTE-2] : NO  <== this leg answered
+      |     subject-identity [ML0-PROMOTE-3] : yes
+      |     acquisition-route [ML0-PROMOTE-4] : yes
+      |     declared-scope [ML0-PROMOTE-5] : yes
+      |     frontier-relation [ML0-PROMOTE-6] : yes
+      |     canonical-payload [ML0-PROMOTE-7] : yes
+      |     provenance   [ML0-PROMOTE-8] : yes
+[006] ok   (scriptor) D5 — an occurrence basis genuinely belonging to a DIFFERENT act, presented in this act's bundle, is refused BEFORE any durable mutation: the whole account store is byte-unchanged and no account was appended
+[007] ok   (scriptor) D5 control — the SAME SHAPE with all identities matching SUCCEEDS and reads :OCCURRED, so a blanket refusal cannot pass for the row above
+      | accounts written: memorable 8ca12d8de2e799b5 · crown ecdaaf40e50b6472 · other 7dcbdca7d02ac3f8
+      | this process now exits.  Its Core /0 evidence accounts — the in-image record of what it did — die with it, by design.  Everything the next process can know is in the three durable stores and in the declared configuration.
+      | RESULT: 7 checks, 0 failures
+[008] ok   the scriptor completed and rendered its own final sentinel (exit 0 AND RESULT: — an incomplete transcript licenses nothing)
+
+== phase 2 — the moriturus (separate process, its OWN store and world; dies in the acknowledgment window, after the dispatch durably lands) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | moriturus: its OWN act store and world · one grant · one perform · and death inside the acknowledgment window, with no account of the act anywhere
+[009] ok   (moriturus) the moriturus's world holds the declared cell at its declared initial value with an empty request ledger, and its journal carries only the grant
+      | act identity (derived from declared configuration, and re-derivable by anyone who reads specimen-common.lisp) oneact1:act:4d245b3735dd25362bd1d6307e8d78c61e9901b8876892807a3ec0c038f06ebc
+      | evaluating the originating form; the planted interruption will fire inside the adapter's acknowledgment window — this process ends there, mid-perform, and MUST NOT render a RESULT sentinel.  No account of this act will exist until some later process writes one from the bytes.
+      | ---- ARM SETTLED (fixture label "prima" — LEGIBILITY ONLY) ----
+      |       | act-id oneact1:act:4d245b3735dd25362bd1d6307e8d78c61e9901b8876892807a3ec0c038f06ebc
+      |       | seat prima · attempt a-prima · cell cella:prima
+      |       | PRE-1 (eq resolved bridge) => T
+      |       | PRE-2 name/version => equal
+      | world adapter: dying in the acknowledgment window (planted deterministic interruption; dispatch applied and ledgered, acknowledgment not returned)
+[010] ok   the moriturus DIED IN THE WINDOW as planted: exit code 7, NO RESULT sentinel, and the adapter's own dying note in the transcript — the dispatch was applied and ledgered; the acknowledgment never came home; no account of the act exists anywhere
+
+== phase 3 — the three jurisdictions, digested ==
+ACT JOURNAL   EVENTS.pj0 : 10977 octets · sha256 2c9a8ffd9bcf73647770bccbbb43446901273291a00098b05055458ea4772425
+WORLD         CELLS.txt  : 85 octets · sha256 79e851b6c02a1fea990e7718cffeb1ed9c4ae7146a175860dd0b2bd669dad8f8
+WORLD  REQUEST-LEDGER.txt: 137 octets · sha256 f1f447a2de2433031da8fbc3fbca59d02d2d16f77b5a8894a7830917f87caaea
+ACCOUNT STORE EVENTS.pj0 : 23792 octets · sha256 4ef1efaf236aa96a787b970efa15321c4ae2ad10ba44d46ce8bf0617636e7d06   <- the object that did not exist before this lane
+MORITURUS act journal    : 2722 octets · sha256 283832ef2e403bef34e48b9ba99256c86b3544f3a0c27d96358dfc81080b4489  (three frames, ending at the frontier)
+MORITURUS world ledger   : 68 octets · sha256 9b1373ae63cafeaef774978dd12ddf6a57c613e2bf0aade83373421f1ce3da24  (ONE applied row, made by a process that did not live to say so)
+
+== phase 4 — damage control: the lane's own account store, truncated and bit-flipped, on COPIES ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | vulneratus: the lane's OWN account store, on copies, damaged at declared boundaries
+      | intact copy -> (:ACCOUNT
+      |                 "8ca12d8de2e799b5d7c7c6b733ae678f06273d99308931787895f606225cb87c")
+[011] ok   (vulneratus) D7 competence — the UNDAMAGED copy retrieves an account cleanly, so the two refusals below are DISCRIMINATIONS and not a reader that refuses everything
+      | damaged EVENTS.pj0 was 23792 octets before truncation and 23792 before the bit flip (the same file, two copies)
+      | truncated copy -> (:ML0-REFUSAL "ML0-RB-1")
+      | bit-flipped copy -> (:ML0-REFUSAL "ML0-RB-1")
+[012] ok   (vulneratus) D7(a) — a TRUNCATED account store yields a TYPED failure and NO ACCOUNT: the surviving prefix is evidence, never a partial answer
+[013] ok   (vulneratus) D7(b) — a BIT-FLIPPED account store yields a TYPED failure and NO ACCOUNT
+[014] ok   (vulneratus) D7(c) — and neither damage produced an UNADMITTED condition: a corrupt store is a semantic refusal of this lane or of the journal beneath it, never a host fault of the reader
+      | the claim stops here: DECLARED, DETERMINISTIC damage at controlled boundaries.  Power loss, filesystem behaviour and adversarial tampering are outside every claim in this lane, and journal0's own ceiling — an fsync-barrier host-contract belief on Linux ext4, never a storage-stack proof — is inherited unwidened.
+      | RESULT: 4 checks, 0 failures
+[015] ok   the damage control completed and rendered its own sentinel
+[016] ok   the damage lived ONLY in the copies: the REAL account store, act journal and world are byte-identical to their post-writer state (this is why the capture may still be trusted after a deliberate act of destruction)
+[017] ok   the copies really did diverge — the truncated copy is SHORTER than the real store and the flipped copy is the SAME LENGTH but a different digest.  (A control that changed nothing would prove nothing, and this check is what tells those two apart)
+
+== phase 5 — the lector (genuinely new process; durable bytes + declared configuration only) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | lector: a genuinely new process.  Nothing but durable bytes and the declared configuration.
+[018] ok   (lector) the reader's Core /0 issuance registry is empty: the live predicate answers false for a plain string, for NIL, and for a symbol alike — an instrument with no power to detect presence cannot warrant absence
+[019] ok   (lector) D1(a) — ACT IDENTITY IS BYTE-EQUAL UNDER RE-DERIVATION.  This process re-derives the act identity from (domain · runtime seat · canonical request), touching nothing the scriptor left in memory, and it equals the identity the retrieved account carries
+[020] ok   (lector) D1(b) — OCCURRENCE IS WARRANTED BY THE INDEPENDENT BASIS, and the rule re-run over the retrieved sources says so on its own: the warranting source is a species that reads facts a mint cannot make true
+[021] ok   (lector) D1(c) — ISSUANCE IS REPORTED SEPARATELY and is named for its own boundary: :ISSUED-IN-WRITING-IMAGE, which this process cannot and does not re-verify.  It reads it as the scriptor's testimony, not as its own finding
+[022] ok   (lector) D1(d) — THE READER IS NOT THE ACTOR: the account's subject principal is the scriptor's, its recorder principal is this lane's, and its retrieval origin is :RECONSTRUCTED
+[023] ok   (lector) D1(e) — RETRIEVAL DID NOT RE-PERFORM, MEASURED ACROSS ALL THREE JURISDICTIONS: after four retrievals the ACCOUNT STORE, the ACT JOURNAL and the WORLD are each byte-unchanged, and the journal's frame count has not moved
+[024] ok   (lector) D1(f) — NO CORE /0 EVIDENCE WAS MINTED and none is carried: the retrieved account is not a core0-evidence, nothing reachable from its public surface is one, and nothing reachable from it is registered as issued here
+[025] ok   (lector) D2 arm (a), read half — retrieved in a genuinely new process, the crown negative's account still reads occurrence :UNRESOLVED and issuance-only, and no public reader answers occurred
+[026] ok   (lector) D2 arm (a), consolidation half — consolidating the crown negative with a SECOND issuance-only reading of the same act still yields :UNRESOLVED.  Two records are not a warrant, however numerous or durable
+[027] ok   (lector) D2, the rule's own answer on the retrieved bundle: the refusal names leg SPECIES [ML0-PROMOTE-1], with every other leg satisfied — so the row is passing for the reason it was built to test and not for some other
+      | D4 — the ACTUAL EARLIEST LAWFUL REFUSAL, recorded rather than predicted: continue-from on a retrieved memory account signals MALFORMED-REQUEST.  Core /0's issuance check (unissued-evidence) sits BELOW its basic type check, so this refusal is EARLIER than the work order's prediction — which is lawful, and sharper: the account is rejected for not being evidence at all, before any question of whose evidence it is can arise.
+[028] ok   (lector) D4(a) — the retrieved account is REJECTED at the current-image continuation boundary, through the lawful public route, with NO continuation result returned
+[029] ok   (lector) D4(b) — THE INVARIANT: no receipt, no evidence mint, no authority acquired, and no ledger consultation — the world and the act journal are byte-unchanged across the attempt, and this image still holds NO issued evidence of any kind
+      | D4 competence — on the reader's OWN scratch ground, a genuinely issued Core /0 account answers the issuance predicate TRUE and reaches continue-from's LATER rungs, signalling AMBIENT-AUTHORITY-FORBIDDEN.  So the boundary is reachable, the instrument can say yes, and the memory account's refusal above is a DISCRIMINATION rather than a wall that refuses everything.
+[030] ok   (lector) D4(c) — the competence half holds: a real current-image evidence account answers the issuance predicate TRUE and gets PAST the type check that stopped the memory account, landing on a DIFFERENT and later lawful refusal
+[031] ok   (lector) D3(a) — THE ASYMMETRY THE MORITURUS LEFT, in bytes: its journal validates :VALID with exactly three frames ending at attempt:frontier-crossed — nothing after the frontier — while its WORLD holds the written cell and exactly ONE ledger row under the act's derived external-request identity.  The effect HAPPENED; only the record of its happening died
+[032] ok   (lector) D3(b) — THE ABSENCE ONE ACT /1 NAMED IS ANSWERED: a process that was not there writes the first and only durable, language-level account of that act, and it reads OCCURRED with issuance UNRESOLVED — never `not issued`, because the instrument that would have to say so answers false for every input in this image
+[033] ok   (lector) D3(c) — and its provenance says HOW it was come by: every source's acquisition route is :RECONSTRUCTED, the ratchet's lower rung, because nobody live-queried anything — the bytes were read after the fact
+[034] ok   (lector) D3(d) — the account survives its own round trip: retrieved from durable bytes in this same process it is byte-identical in identity and carries the same two standings
+[035] ok   (lector) D6(a) — UNRESOLVED + A SCOPED NEGATIVE OBSERVATION becomes :NONOCCURRED, because the four-part warrant is met: the ledger is the complete authoritative domain, the identity is named, the lookup is a distinct inspectable witness, and the source row binds mechanism / procedure / origin / validation
+[036] ok   (lector) D6(b) — ISSUANCE-ONLY + A QUALIFYING BASIS becomes :OCCURRED, and only BECAUSE the qualifying basis is present in the union and named
+[037] ok   (lector) D6(c) — ⚠ DOWNGRADED IN THE REPAIR ROUND, AND THE DOWNGRADE IS THE FINDING.  :CONTRADICTED is now UNREACHABLE from warranting rows: a row warrants only if a DOOR validated it, and two correct doors reading one universe over one interval AGREE — so no commensurable clash between warrants can arise.  What is checked here is what remains true: the commensurability PREDICATE still discriminates, and a MODELLED clash (testimony, which is all that can disagree at that resolution) warrants nothing and is preserved unpicked rather than resolved
+[038] ok   (lector) D6(d) — INCOMMENSURABLE observations are NOT a contradiction: the same positive warrant against a negative look at a DIFFERENT declared universe leaves both warrants preserved and the reading :OCCURRED — a disagreement about two questions was never a disagreement about one
+[039] ok   (lector) D6(e) — the SAME PROJECTED CLAIM with DISTINCT PROVENANCE stays TWO records: two accounts of the SAME act that both project :OCCURRED, differing only in which sources they carry, keep their distinct content-derived identities and are never collapsed — while the SAME account twice is one record
+[040] ok   (lector) D6(f) — CROSS-ACT consolidation is refused BEFORE any output is produced: the memorable act's account and the crown negative's are about different acts, and nothing is returned at all
+      | the reader is finished.  It performed no act on any store it was asked to read, minted no evidence, acquired no authority, and became nobody's successor.
+      | RESULT: 23 checks, 0 failures
+[041] ok   the lector completed and rendered its own final sentinel (exit 0 AND RESULT:)
+[042] ok   NOTHING WAS REWRITTEN: the final account store is a BYTE-PREFIX EXTENSION of the store the scriptor left — the writer's frames' bytes are literally the first bytes of the final file.  /0 never compacts, never tombstones, never erases provenance
+[043] ok   THE READER MOVED NOTHING IT WAS ASKED TO READ: the scriptor's act journal and the whole world fixture are byte-identical to their post-writer state, and the moriturus's store and world are byte-identical to what its death left
+
+== phase 6 — preserved artifacts ==
+[044] ok   the ARTIFACT-ACCOUNT-META sidecar VERIFIES STANDALONE against the file it actually ships beside: its digest equals the archived payload's, and the name it carries is the archived payload's name (the store's own sidecar names a file that is not in this directory, which is why it is rewritten rather than copied)
+[045] ok   the preserved artifacts are byte-identical to the live bytes they copy, and the SHA256SUMS manifest carries those digests
+
+de-actu-memorato: 45 checks, 0 failures
+processes: 1 scriptor (acted, wrote, exited with its evidence) · 1 moriturus (died in the acknowledgment window; no account of its act existed until the lector wrote one) · 1 vulneratus (damage, on copies) · 1 lector (a genuinely new process: retrieved, refused a continuation, and wrote the first account of an act it did not witness) · artifacts preserved: both account-store states + metadata + sidecar + the act journal + both world files + the moriturus's journal and world + the account index + sha256sums + manifest · every account verdict rendered by a stage child, none by this runner
+RESULT: PASS

@@ -1,6 +1,9 @@
 ;;;; ma0-eval.lisp — the evaluator (GRAMMAR §5).
 ;;;;
-;;;; CANDIDATE.  Nothing here is adopted (contract §0).
+;;;; STANDING: attaches to immutable object identities and explicit
+;;;; dispositions, never to a filename or directory (Owner Ruling 6 §3 B1;
+;;;; MANY-ACTS-0-STANDING.md).  This file's path confers no standing on its
+;;;; bytes in either direction (contract §0).
 ;;;;
 ;;;; ⚠ THE EVALUATOR IS GENERIC OVER PROGRAMS (W-GENERIC).  Nothing below
 ;;;; mentions a program name, a source hash, a fixture identity beyond the

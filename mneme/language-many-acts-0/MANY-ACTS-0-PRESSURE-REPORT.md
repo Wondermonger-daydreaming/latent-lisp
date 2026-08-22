@@ -1,9 +1,11 @@
 # MANY ACTS /0 — PRESSURE REPORT (pre-code)
 
-STANDING: CANDIDATE. Nothing in this lane is adopted, accepted, frozen, audited, or on a
-governing floor. Nothing produced here is independent verification (AP0 adoption Rider 2,
-binding): the phrases "independently verified" and "independently validated" may not appear
-in any artifact of this lane.
+STANDING: standing in this lane attaches to immutable object identities and explicit
+dispositions, never merely to filenames, directories, or descent from an adopted commit
+(Owner Ruling 6 §3 B1; rule and coordinates in `MANY-ACTS-0-STANDING.md`). This file's path
+confers no standing on its bytes in either direction. Nothing produced here is independent
+verification (AP0 adoption Rider 2, binding): the phrases "independently verified" and
+"independently validated" may not appear in any artifact of this lane.
 
 Chair/author: Claude Fable 5, 2026-08-09, under the owner's opening commission
 "MANY ACTS /0 — PHASE A+B". Programs were designed BEFORE grammar; the grammar document
@@ -76,7 +78,7 @@ Briefs: `P1-EDITIO-BRIEF.md`, `P2-CUSTODIA-BRIEF.md` (beside this file).
 | source-as-data | S-expression program form + closed validator | CD/0-style plain data; no new codec |
 | derive ops | `derive` step binding a seat-outcome | Surface /2 `validated-store-events` + `derive-seat-outcome` |
 | perform ops | `act` step invoking one adopted arm | One Act `run-act` + the public composition |
-| inspect/branch | `branch` over closed outcome patterns, exact matching, mandatory `otherwise` | Surface /2 seat-outcome readers + its closed axis-value sets (law mirrored, heads NOT reused — see §5) |
+| inspect/branch | `branch` over closed outcome patterns, exact matching, mandatory `otherwise` | Surface /2 seat-outcome readers + its closed axis-value sets (this lane's own closed matching law, informed by similar principles and claiming no equivalence — see §5; heads NOT reused) |
 | untaken arm never executes | single-selected-clause evaluation law + journal-footprint witness | Journal /0 prefix reads as the witness |
 | carry value forward | `bind` + `(ref IDENT)` value expressions | — |
 | result-as-data-not-authority | `(field OUTCOME AXIS)` extraction into ordinary values; validator refuses outcome refs in authority position | Capability /1's recognition-not-fields law (already enforced upstream) |
@@ -108,10 +110,19 @@ Briefs: `P1-EDITIO-BRIEF.md`, `P2-CUSTODIA-BRIEF.md` (beside this file).
   admitting retry would counterfeit Core /0's restart discipline at program level.
 - **Reusing `with-outcome`/`match-outcome` as program syntax** — those are in-image macro
   heads in a CLOSED two-row construct table with no registration point. MA0's branch is
-  program-DATA validated by MA0's own closed pattern grammar whose matching law mirrors
-  Surface /2's (value match AND standing `:present`; absence keywords matchable; no
-  truthiness); the heads are not renamed, wrapped, or extended, and divergence teeth
-  compare MA0 matching against `match-outcome` on identical outcomes.
+  program-DATA validated by MA0's own closed pattern grammar, whose law is stated in
+  MANY-ACTS-0-GRAMMAR.md §4 (value match AND standing `:present`; absence keywords
+  matchable; no truthiness) and witnessed by this lane's own scenarios. The design was
+  informed by similar principles; no agreement or equivalence with Surface /2's matcher is
+  claimed (owner ruling, Parcel B item B6, 2026-08-10: the unwitnessed comparative phrase
+  that once stood here has been removed). The heads are not renamed, wrapped, or extended.
+  **What the divergence teeth
+  that were actually built compare** is the lane's act *composition*, not its matcher: the
+  concordance comparator (`ma0-concordance.lisp`) runs an MA0-composed act against the
+  canonical `run-all-arms` act over seven arms × 18 enumerated facets. *No tooth compares
+  MA0's matching against `match-outcome` on identical outcomes* — this pre-code line
+  proposed one and none was built; the matching law's witness is the selftest scenario
+  `w-branch-exact`. Whether a matcher-level comparator should exist is not decided here.
 - **A general `let`/nested scopes/shadowing** — P1/P2 need only define-once sequential
   binding; shadowing is refused statically.
 - **Value computation (arithmetic, string ops, host calls)** — nothing in P1/P2 needs it;

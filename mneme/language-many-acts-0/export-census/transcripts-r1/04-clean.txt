@@ -1,0 +1,74 @@
+MA0 EXPORT CENSUS /0 — R1 CLEAN RUN
+===================================
+CANDIDATE.  Run LAST, after every planted fault above was reverted and its blob
+identity proven restored.  Nothing here is independent verification, independent
+validation, a portability claim, or a conformance claim.
+
+Subject blob identities at the start of this run (both at baseline):
+  package.lisp       a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+  ma0-structures.lisp 7a2c093e62e260136bbd6c9dde04dd2df29b2848
+  baseline package.lisp        a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+  baseline ma0-structures.lisp 7a2c093e62e260136bbd6c9dde04dd2df29b2848
+----------------------------------------------------------------------
+LEG: repaired normative driver, clean subject — expect exit 0, sentinel PRESENT
+CMD: /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/ma0-export-census.sh
+----------------------------------------------------------------------
+== operation check ==
+SBCL 2.4.6
+sbcl --script reports: 
+"2.4.6" 
+
+== expected-table binding (Owner Ruling 6A items 2-3) ==
+path             : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+bound coordinate : 231873c7be8ba275cd5756c929efba2f9c807157
+bound pkg  blob  : a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+bound table blob : 78592073905450ff9afcd22dea53afbf53764fa1
+observed table blob : 78592073905450ff9afcd22dea53afbf53764fa1
+  [3a] table blob identity      : MATCH
+observed pkg blob at coordinate : a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+  [3b] coordinate package blob  : MATCH
+  [3c] byte-regeneration + cmp  : IDENTICAL (78592073905450ff9afcd22dea53afbf53764fa1)
+rows : 38 (comment lines excluded)
+expected side BOUND; proceeding to census evaluation.
+
+== ma0-export-census — SBCL 2.4.6 ==
+   subject tree : /home/gauss/ma0-census/experiments/latent-lisp/
+   expected table: /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+   table blob   : 78592073905450ff9afcd22dea53afbf53764fa1 (BOUND — matches 78592073905450ff9afcd22dea53afbf53764fa1)
+
+=== MA0 EXPORT CENSUS /0 — CANDIDATE (R1) ===
+package            : LISP-PLUS-MANY-ACTS0
+expected table     : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+expected table blob: 78592073905450ff9afcd22dea53afbf53764fa1  (BOUND, re-derived in-process)
+bound coordinate   : 231873c7be8ba275cd5756c929efba2f9c807157
+expected cardinality (DERIVED from the set): 38
+actual   cardinality (DERIVED from the set): 38
+NOTE: cardinality is reported as an observation.  The test below
+is EXACT SET EQUALITY OF NAMES; no branch of this gate compares a
+count against a literal.
+
+--- [1/3] EXACT SET EQUALITY ---
+MISSING    : none
+UNEXPECTED : none
+SET EQUALITY: HOLDS (38 names)
+
+--- [2/3] BOUNDNESS IN THE DESIGNATED SENSE ---
+all 38 present expected export(s) bound in their designated sense
+
+--- [3/3] HOME-PACKAGE GUARD (additional) ---
+all external symbols homed in LISP-PLUS-MANY-ACTS0
+
+=== VERDICT ===
+  note: boundness checked for 38 name(s)
+ma0-export-census: exact set equality, 38 exports, 0 missing, 0 unexpected, 0 unbound
+expected table bound to blob 78592073905450ff9afcd22dea53afbf53764fa1 (coordinate 231873c7be8ba275cd5756c929efba2f9c807157)
+CANDIDATE, branch-local.  No portability, independent
+implementation, or conformance claim is made or implied.
+
+OBSERVED EXIT: 0   (captured directly from the process)
+SENTINEL IN THIS LEG'S OUTPUT: PRESENT (1 matching line(s))
+
+Subject blob identities after the clean run:
+  package.lisp       a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+  ma0-structures.lisp 7a2c093e62e260136bbd6c9dde04dd2df29b2848
+OBSERVED GATE EXIT: 0

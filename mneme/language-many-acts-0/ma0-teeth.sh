@@ -11,22 +11,57 @@
 # W-NO-BLIND-REPLAY, and the program-level footprint.  This file runs that half
 # and reports a mechanical tally of it.
 #
-#   0  LANE SUITE        the lane's own 159 checks, so the teeth are never
-#                        reported green over a red lane
+#   0  LANE SUITE        the lane's own 200 checks, so the teeth are never
+#                        reported green over a red lane.  200 is the ADOPTED
+#                        count of check-lines this suite prints in one run (R1
+#                        raised it from 159: MANY-ACTS-0-R1-RETURN.md §2; the R1
+#                        adoption record §4 re-ran it twice at 200/0 with
+#                        byte-identical output bodies).  By printed section:
+#                          39 validator witnesses
+#                        +  2 W-V-FOOTPRINT
+#                        + 11 W-IMMUTABLE
+#                        + 35 R1 sections (D1 ownership 10 + D1 source boundary 4
+#                             + D2 6 + D3 6 + D5 9)
+#                        + 23 grep gates
+#                        + 90 scenarios (p1 17, p2-alpha 11, p2-beta 14,
+#                             w-no-erase 10, w-order-store 7, w-branch-one 7,
+#                             w-auth-unfilled 5, w-branch-exact 5,
+#                             w-derive-ne-perform 5, w-error-propagates 5,
+#                             w-error-uncaught 4)
+#                        = 200.  The regex below still reads whatever the suite
+#                        PRINTS; this comment names the count, it does not
+#                        authorize it (the suite's own header says why).
 #   1  NO-INTERNALS      the contract §3 grep, EXTENDED to these files, with a
 #                        planted violation shown firing first
 #   2  W-NO-BLIND-REPLAY a consumed arm re-invoked by hand; the ADOPTED lane's
 #                        identity/seat law witnessed firing
 #   3  W-V-FOOTPRINT     an invalid program against a LIVE store
-#   4  CONCORDANCE       the re-composition against the adopted composer, four
-#                        arms, plus the comparator's own planted-divergence tooth
-#   5  DISEASES          the five planted diseases and their controls
+#   4  CONCORDANCE       the re-composition against the adopted composer, ALL
+#                        SEVEN adopted arms x 18 enumerated facets = 126
+#                        comparisons (R1 §7 coverage closure; was 4 arms / 72)
+#   4b CONCORDANCE TOOTH the comparator's OWN planted divergence, which must make
+#                        it REFUSE — a comparator that has never reported a
+#                        divergence is untested, not agreeing
+#   5  DISEASES          FIVE named disease FAMILIES (D-BOTH-ARMS · D-AMBIENT ·
+#                        D-AUTO-RETRY · D-SKIP-VALIDATE · D-SPECIAL-CASE) run as
+#                        SIX disease/control INVOCATIONS — D-SKIP-VALIDATE is
+#                        exhibited on BOTH of its witnesses — i.e. 6 diseased arms
+#                        and 6 control arms, 12 witness executions.  The family
+#                        count and the invocation count are never interchangeable
+#                        (R1 adoption Rider 6)
 #   6  CAMPAIGN GATES    V-F digest, One Act /0 green, the floor untouched, and
 #                        the reduced floor
 #   7  W-RES-NOT-AUTH    a result object forced into authority position: MA0's
 #                        typed refusals where its surface can see it, and
 #                        CAPABILITY /1's unrecognized-object law where the
 #                        driver goes around MA0 to the recognition seam
+#   8-11 R1/D1..D4       the four repaired membrane defects, each witnessed by the
+#                        SAME script that produced its pre-repair red transcript
+#   12 R1 SEVEN-ARM COVERAGE  arms harvested from real runs: 7 arms, 7 traversed
+#   13 R1/D5 GENERATION SEAM  the owner's pre-freeze gate on the commit point
+#
+# FIFTEEN sections in all — 0, 1, 2, 3, 4, 4b, 5, 6, 7, 8, 9, 10, 11, 12, 13 —
+# and the adopted R1 record reports 15 attempted / 15 green / 0 red.
 #
 # ⚠ AN OMITTED SECTION IS REPORTED AS OMITTED AND NEVER COUNTED AS PASSED.
 #   MA0_TEETH_SKIP_DISEASES=1   omit section 5 (it costs several minutes)

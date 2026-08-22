@@ -1,0 +1,162 @@
+# OCCURRENCE ADJUDICATION — R0.17 (mechanical custody continuation)
+
+**CANDIDATE R0.17 — 2026-08-12.** Exhaustive per-occurrence inventory of every
+prior-version token (R0.1–R0.16) in the five R0.17 successors, per-occurrence
+context-window classification with ordinal column, two-digit-safe matcher.
+**The R0.16 census (138 · 113/25/0 — closed without residue) and every earlier
+census remain CLOSED**; this regeneration is ordinary successor custody only,
+same classifier, same fail-on-live rule — **zero live occurrences remain**.
+(The generator was validated before use by reproducing the closed R0.16 table
+byte-exact — 138 rows, classes and reasons identical — from the frozen R0.16
+successors, and its fail-on-live gate demonstrated able to fire on a planted
+current-identity operand. The readback's §7.18 cross-check anticipated
+139 · 113/26/0 if only ordinary identity moved; the totals below are the
+independent enumeration actually obtained — reported, not preordained.)
+
+| File | Line | Ordinal | Token | Classification | Reason |
+|---|---|---|---|---|---|
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 8 | 1 | R0.16 | FROZEN-ARTIFACT NAME | version token inside a filed readback filename (SOL-R0.x-READBACK.md) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 11 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 11 | 2 | R0.16 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 11 | 3 | R0.16 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 12 | 1 | R0.16 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 13 | 1 | R0.1 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 13 | 2 | R0.16 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 18 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 19 | 1 | R0.1 | FROZEN-ARTIFACT NAME | version-suffix of a frozen artifact filename or sums-file reference |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 20 | 1 | R0.2 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 20 | 2 | R0.3 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 20 | 3 | R0.4 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 21 | 1 | R0.5 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 21 | 2 | R0.6 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 21 | 3 | R0.7 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 21 | 4 | R0.8 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 22 | 1 | R0.9 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 22 | 2 | R0.10 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 22 | 3 | R0.11 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 22 | 4 | R0.12 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 23 | 1 | R0.13 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 23 | 2 | R0.14 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 23 | 3 | R0.15 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 24 | 1 | R0.16 | FROZEN-ARTIFACT NAME | abbreviated frozen-artifact suffix in backticks (sums/concordance list form) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 26 | 1 | R0.1 | FROZEN-ARTIFACT NAME | version-suffix of a frozen artifact filename or sums-file reference |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 26 | 2 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 75 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 93 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 224 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 313 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 334 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 421 | 1 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 491 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 595 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 626 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 668 | 1 | R0.1 | FROZEN-ARTIFACT NAME | version-suffix of a frozen artifact filename or sums-file reference |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 670 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 671 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 688 | 1 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 714 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 719 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 810 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 818 | 1 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 867 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 878 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 893 | 1 | R0.1 | FROZEN-ARTIFACT NAME | version-suffix of a frozen artifact filename or sums-file reference |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 913 | 1 | R0.3 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 913 | 2 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 927 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 965 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 997 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1041 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1142 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1248 | 1 | R0.1 | FROZEN-ARTIFACT NAME | version-suffix of a frozen artifact filename or sums-file reference |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1248 | 2 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1248 | 3 | R0.3 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1248 | 4 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1250 | 1 | R0.3 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1255 | 1 | R0.3 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1327 | 1 | R0.16 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.17.md | 1328 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| CLAIM-CEILING-R0.17.md | 5 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| CLAIM-CEILING-R0.17.md | 18 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| CLAIM-CEILING-R0.17.md | 18 | 2 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| CLAIM-CEILING-R0.17.md | 33 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| CLAIM-CEILING-R0.17.md | 42 | 1 | R0.3 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| CLAIM-CEILING-R0.17.md | 46 | 1 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| CLAIM-CEILING-R0.17.md | 64 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 8 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 24 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 49 | 1 | R0.1 | FROZEN-ARTIFACT NAME | version-suffix of a frozen artifact filename or sums-file reference |
+| SUCCESSION-DOCKET-R0.17.md | 49 | 2 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 125 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 132 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 156 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 169 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 190 | 1 | R0.3 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 205 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 224 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 233 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 264 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 281 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 285 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 309 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 320 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 321 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 343 | 1 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 348 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 406 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 473 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 473 | 2 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| SUCCESSION-DOCKET-R0.17.md | 477 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 3 | 1 | R0.3 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 3 | 2 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 3 | 3 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 35 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 68 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 69 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 74 | 1 | R0.1 | FROZEN-ARTIFACT NAME | version-suffix of a frozen artifact filename or sums-file reference |
+| OWNER-DOCKET-R0.17.md | 89 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 104 | 1 | R0.1 | FROZEN-ARTIFACT NAME | version-suffix of a frozen artifact filename or sums-file reference |
+| OWNER-DOCKET-R0.17.md | 293 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 353 | 1 | R0.3 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 368 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 372 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 416 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 470 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 619 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 632 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 671 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 700 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| OWNER-DOCKET-R0.17.md | 700 | 2 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 4 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 6 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 11 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 11 | 2 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 26 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 37 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 108 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 108 | 2 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 116 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 119 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 120 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 120 | 2 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 126 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 138 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 139 | 1 | R0.2 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 143 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 203 | 1 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 204 | 1 | R0.4 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 242 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 274 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 281 | 1 | R0.3 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 285 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 292 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 359 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 375 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 392 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+| EVIDENCE-LEDGER-R0.17.md | 403 | 1 | R0.1 | HISTORICAL/PROVENANCE | narrative/provenance reference to an earlier revision (dates a repair, quotes a defect, or cites a round) |
+
+**Totals (R0.17 regeneration, R0.1–R0.16 scope, five R0.17 successors):**
+139 occurrences — 113 HISTORICAL/PROVENANCE · 26
+FROZEN-ARTIFACT NAME · **0 LIVE**.
+
+*— generated at R0.17 seal; chair (Claude Fable 5), 2026-08-12.*

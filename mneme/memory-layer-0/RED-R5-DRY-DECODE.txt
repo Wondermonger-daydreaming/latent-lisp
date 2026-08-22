@@ -1,0 +1,18 @@
+RED-R5-DRY-DECODE — captured 2026-08-21T21:32:07Z: §5.A as amended (Sol disposition B), measured. CONTROLs 11–13 of ml0-controls.lisp, verbatim from one run (exit taken with $?):
+  11 = post-append HOST FAULT (modelled by the control seam): no account, no retraction, store grown, frame still validates
+  12 = planted DRY-DECODE failure (rendering version the decoder does not know): WR-8 BEFORE append, store unchanged; with the dry decode skipped the same frame lands and RB-7 fires post-append
+  13 = planted IDENTITY failure (minted hex ≠ body digest): WR-8 BEFORE append, store unchanged; skipped → RB-11 post-append, store grown
+
+[011] CAUGHT  TOOTH 11 · A POST-APPEND REFUSAL IS NOT NON-MUTATING.  The instrument is the same one TOOTH 7 uses — the whole declared account-store directory and every file's sha256 — read on both sides of ONE refused call
+        cured: holds · disease: caught
+        ⚑ R5 (§5.A as amended, Sol disposition B): THIS IS NOW THE GOVERNING SEMANTICS, AND THE RESIDUE IS HOST FAULT ONLY.  The forced readback refusal here MODELS a host fault between append and readback — the one thing the pre-append dry decode (CONTROLs 12–13) cannot move before the append.  Once append-event succeeds, a readback or identity refusal returns NO account and neither retracts nor rewrites durable bytes; the surviving frame acquires no standing by surviving — it is judged only through Journal /0 validation and Memory Layer /0 retrieval (the third conjunct above measures that it still validates).  No rollback exists or is wanted
+[012] CAUGHT  TOOTH 12 · A FRAME THE LANE'S OWN DECODER WOULD REFUSE IS REFUSED BEFORE THE APPEND (ML0-WR-8), store byte-unchanged — and the same planted frame REACHES the append when the dry decode is skipped
+        cured: holds · disease: caught
+        The planted fault is a body whose rendering version this decoder does not know (RB-7).  Cured: WR-8 before mutation, whole-store file set + sha256 unchanged.  Diseased (:skip-dry-decode): the frame lands, RB-7 fires from the readback, the store changed — the R4 behaviour, now unreachable except through this seam
+      | tooth 13 disease refused as ML0-ACCOUNT-READBACK-REFUSED [ML0-RB-11]
+[013] CAUGHT  TOOTH 13 · AN IDENTITY THAT IS NOT THE BODY'S CONTENT DIGEST IS REFUSED BEFORE THE APPEND (ML0-WR-8), store byte-unchanged — and reaches the append when the dry decode is skipped
+        cured: holds · disease: caught
+        The planted fault is a minted identity one hex digit off the body's digest.  Cured: the dry decode compares the decoded identity to the minted one and refuses WR-8 before mutation.  Diseased: the frame is appended under the wrong identity and the refusal arrives only from the readback, with the store changed
+
+ml0-controls: 13 controls, 13 caught, 0 missed
+exit=0

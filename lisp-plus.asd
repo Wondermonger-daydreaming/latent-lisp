@@ -753,6 +753,81 @@ Account /0).  This is the umbrella's whole implementation."
                                '#:lisp-plus-many-acts0
                                "mneme/language-many-acts-0/load.lisp")))
 
+;;; --------------------------------------------------------------------------
+;;; One Act /1 — perform across process death (UNADOPTED CANDIDATE).
+;;;
+;;; Registered 2026-08-20 as the chair's additive act, authorized by Sol's
+;;; cold-parcel-review disposition relayed by the owner ("add its
+;;; completeness-checked candidate registration rows in the same bounded
+;;; session").  Registration moves NO standing: the lane is a candidate —
+;;; not audited, not adopted, not frozen — and a loadable system is not a
+;;; ruling.
+;;;
+;;; COMPLETENESS-CHECKED class (the R2.2/R4.1 lesson: package existence is
+;;; not implementation readiness) — but unlike act0, the predicate machinery
+;;; lives in the LANE'S OWN loader (mneme/language-act-1/load.lisp, package
+;;; LISP-PLUS-LANGUAGE-ACT1-LOADER: 104 declared exports each :EXTERNAL and
+;;; bound as its kind requires, plus the final-source readiness carrier),
+;;; so this stanza carries no duplicate constant tables.  ENSURE-ACT1-LANE
+;;; is idempotent and predicate-first; the lane's Stack-A entry is guarded
+;;; on LISP-PLUS-CAPABILITY2 exactly as `lisp-plus/stack-a` guards it, so
+;;; loading this system after the umbrella does not re-enter the chain.
+;;; Deliberately NO edge on lisp-plus/act0 (the lane re-implements four
+;;; lexis predicates locally to avoid act0's Surface /2 pull — RETURN §6
+;;; fork F-6) and NO *lane-order* row (the act0 precedent: the standalone
+;;; door stays canonical; the umbrella's composed load is not widened by a
+;;; candidate).
+;;; --------------------------------------------------------------------------
+
+(defsystem "lisp-plus/act1"
+  :description "One Act /1 — perform across process death: durable refusal, runtime reconciliation, fresh act (candidate)."
+  :version "0"
+  :depends-on ("lisp-plus/stack-a" "lisp-plus/core0")
+  :perform (load-op (o c)
+             (declare (ignore o c))
+             (unless (find-package '#:lisp-plus-language-act1-loader)
+               (uiop:symbol-call '#:lisp-plus-system '#:lane
+                                 "mneme/language-act-1/load.lisp"))
+             (uiop:symbol-call '#:lisp-plus-language-act1-loader
+                               '#:ensure-act1-lane)))
+
+;;; --------------------------------------------------------------------------
+;;; MEMORY LAYER /0 — registered 2026-08-21 as the chair's integration-only act,
+;;; authorized by Sol's R5 REGISTRATION RULING (archived verbatim at
+;;; corpus/voices/received/2026-08-21-sol-ml0-r5-registration-ruling.md):
+;;; "R5 is ACCEPTABLE FOR REGISTRATION AS A CANDIDATE … Registration is
+;;; authorized.  Adoption and freeze are not."  Registration moves NO standing:
+;;; CANDIDATE-NOT-ADOPTED · REGISTERED · stranger audit owed · no independent
+;;; verification.  Sol did not independently rerun SBCL; a loadable system is
+;;; not a ruling.  This stanza is the exact lane whose bytes equal the accepted
+;;; R5 parcel (sha 5742b4f8…); it makes no Memory Layer /0 semantic, source,
+;;; specification, specimen or artifact change.
+;;;
+;;; COMPLETENESS-CHECKED class, the act1 shape exactly: the predicate machinery
+;;; lives in the LANE'S OWN loader (mneme/memory-layer-0/load.lisp, package
+;;; LISP-PLUS-MEMORY-LAYER0-LOADER: 195 declared exports — 148 functions,
+;;; 27 variables, 20 types — each :EXTERNAL and bound as its kind requires, plus
+;;; the final-source readiness carrier; the loader asserts the declared total
+;;; against the sum of its lists at load).  ENSURE-ML0-LANE is idempotent and
+;;; predicate-first.  The lane's substrate entry is One Act /1's own door,
+;;; guarded on LISP-PLUS-LANGUAGE-ACT1, so loading this system after
+;;; lisp-plus/act1 does not re-enter the Stack-A chain.  NO *lane-order* row
+;;; (the act0/act1 precedent: the standalone door stays canonical; the
+;;; umbrella's composed load is not widened by a candidate).
+;;; --------------------------------------------------------------------------
+
+(defsystem "lisp-plus/ml0"
+  :description "Memory Layer /0 — the language's durable account of its own act: write / retrieve / consolidate under ISSUED(evidence, act) does not imply OCCURRED(act) (candidate; registered, not adopted)."
+  :version "0"
+  :depends-on ("lisp-plus/act1")
+  :perform (load-op (o c)
+             (declare (ignore o c))
+             (unless (find-package '#:lisp-plus-memory-layer0-loader)
+               (uiop:symbol-call '#:lisp-plus-system '#:lane
+                                 "mneme/memory-layer-0/load.lisp"))
+             (uiop:symbol-call '#:lisp-plus-memory-layer0-loader
+                               '#:ensure-ml0-lane)))
+
 (defsystem "lisp-plus/vertical0"
   :description "Vertical Specimen /0 program — the durable process path (SIGKILL crash model only)."
   :version "0"

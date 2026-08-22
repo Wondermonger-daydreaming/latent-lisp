@@ -12,7 +12,10 @@
 # adopted lane's own runner for the setup audit).  This file only chooses the
 # image and carries the tooth through.
 #
-# Sentinel on the green path: ma0-concordance: 4 arms, 72 facets, 0 divergences
+# Sentinel on the green path: ma0-concordance: 7 arms, 126 facets, 0 divergences
+#   — ALL SEVEN adopted arms x 18 enumerated facets (R1 §7 coverage closure; this
+#     comment read "4 arms, 72 facets" before that closure).  The sentinel is
+#     PRINTED from `*dens-arms*' and `*dens-facets*', never from this line.
 #
 # — DENS (Claude Opus 5, subagent), 2026-08-09
 

@@ -1,0 +1,40 @@
+GUIDE-WALK — the §2 recipe, WALKED LITERALLY by a fresh process (R5 TRANSCRIPT).
+
+⚑ THE §2 BLOCK DID NOT CHANGE THIS ROUND, AND THE DIGEST IS HOW YOU KNOW.
+R5 amended the GUIDE's §4 (the ML0-WR-8 refusal row and the "what a failed write
+leaves" section), §5 (the controls count, 11 -> 13), the ML0-MAT-3 prose, and §7
+(one new bullet). It edited NOTHING inside the §2 recipe — neither code nor
+comments — and the extractor's own measurement says so:
+    3850 bytes, sha256 34f705b2eb12804bb40153fc3e888cc53c53d6ed842e2e2a806733250f64e0e0
+which is BYTE-IDENTICAL to the R4.1e capture (3850 / 34f705b2…).
+(R4 … R4.1d, before the boundary sweep: 3605 bytes, e4773cb6…)
+
+The walk is retaken anyway, in a genuinely fresh process, because THIS DOCUMENT
+CHANGED — a procedure is audited by simulation, not by inspection (GNOMON-II's
+rule), and "the part I edited was elsewhere" is an inspection claim.
+
+METHOD, STRONG EXTRACTOR (unchanged from R4.1e): the search is restricted to the
+text between the "## 2." and "## 3." headings of MEMORY-LAYER-0-GUIDE.md; the
+extractor ABORTS unless that span contains exactly ONE ```lisp fence; that fence is
+written UNCHANGED to /tmp/ml0-walk.lisp and run as
+    cd experiments/latent-lisp && sbcl --script /tmp/ml0-walk.lisp
+by SCRIBA-IV (Claude Opus 5, 1M context), records officer, 2026-08-21T21:40:50Z.
+Exit code taken with $? immediately after the process returned. SBCL 2.4.6.
+
+A passing walk is evidence about the RECIPE against a semantically unchanged lane
+and nothing more. It is NOT evidence for the R5 dry-decode narrowing: the dry decode
+is SILENT WHEN IT PASSES, so a lawful recipe cannot see it. The evidence for R5 is
+ml0-controls TOOTHs 11–13 (RED-R5-DRY-DECODE.txt), never here.
+
+---- FULL STDOUT (nothing elided; the three loader smoke lines included) ----
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+occurred?          T
+issuance standing  :ISSUED-IN-WRITING-IMAGE
+retrieval origin   :RECONSTRUCTED
+may continue?      NIL
+standing authority :VALIDATED-RETRIEVAL
+coverage finding   :ISSUANCE-RECORD-PRESENT-IN-ACCOUNT-STORE
+---- STDERR ----
+exit=0

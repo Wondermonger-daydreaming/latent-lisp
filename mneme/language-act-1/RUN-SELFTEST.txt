@@ -1,0 +1,118 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+One Act /1 — the in-process suite.  CANDIDATE: nothing here is adopted, and nothing here is independent verification.
+crash model: this suite declares ONE PROCESS LIFE.  Process death lives in de-actu-resurgente, by a PLANTED DETERMINISTIC exit — no SIGKILL, no power loss, no mid-instruction truncation is claimed anywhere in this lane.
+
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV ACT1_SELFTEST_PLANT_FAULT unset
+  W-ENV ACT1_CONTROLS_PLANT_FAULT unset
+  W-ENV ACT1_RESTART_DIE unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV enumerated 8 variables (1 Class I + 7 Class II); 9 Class III declared out of stack, named and NOT asserted
+[001] ok   W-ENV pre-flight: no process-ending switch is set (any one set VOIDS this run here, before a journal store exists)
+[002] ok   the fixture table validates: row laws on every row, attempt identity and bridge symbol distinct across rows
+[003] ok   TWO ROWS SHARE ONE SEAT (ambigua), by design — this lane's subject is a seat that carries more than one act, so seat distinctness is NOT a law here and attempt distinctness carries the weight instead
+[004] ok   a malformed row is REFUSED by the public construction door (planted: an attempt name that is not a-<seat>[-n])
+[005] ok   ONE Capability /0 grant per DISTINCT seat — five seats, six acts (the ambigua seat is granted once and carries two) seats ("prima" "ambigua" "vetita-scope" "vetita-ambient" "revocata") · frames 5
+
+---- ARM A (fixture label "prima" — LEGIBILITY ONLY) ----
+      | act-id oneact1:act:5944813dff3e733a5892c38e95ad80e7d4d62c41a2ac865cefd84b3d299fbccc
+      | seat prima · attempt a-prima · cell cella:prima
+      | PRE-1 (eq resolved bridge) => T
+      | PRE-2 name/version => equal
+      | class SETTLED · standing :SETTLED · disposition :RETURNED · reason NIL
+[006] ok   A · the act SETTLES: disposition :returned, derived class :settled, standing :settled from the journal's own bytes
+[007] ok   A · the result returns through the intended interface: (values OUTCOME EVIDENCE), outcome-kind :committed
+[008] ok   A · the durable guard was CONSULTED and answered :lawful — the permitted direction of the same instrument that refuses across death
+[009] ok   A · POSITIVE CONTROL on world-cell-value: the cell began EMPTY and reads back NON-EMPTY and EQUAL to the act's own :text value "Unus actus, una ratio."
+      | WORLD-SCOPE arm A (permitted) — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |   cell store  : 71 octets sha 1572f36c2940393e  ->  93 octets sha 54c8350c651058f5
+      |   request ledger: 0 octets sha e3b0c44298fc1c14 (0 entries)  ->  73 octets sha a6f11e272ec59055 (1 entry)
+      |   entries under this arm's request key external-request:cap2:a-prima: 0  ->  1
+[010] ok   A · the world CHANGED exactly as a permitted act should: one new ledger entry under this act's own request key, and the instrument SEES it
+[011] ok   A · the journal READ BACK from its own bytes carries the four attempt frames (a recording never read back is a hope with a field name) 9 frames
+
+---- ARM C (fixture label "ambigua" — LEGIBILITY ONLY) ----
+      | act-id oneact1:act:7a1b52e1c876f0e9506d16661effa9446bc86d32039a7e033e51f2127ef0a0bc
+      | seat ambigua · attempt a-ambigua · cell cella:ambigua
+      | PRE-1 (eq resolved bridge) => T
+      | PRE-2 name/version => equal
+      | class UNCERTAIN · standing :UNCERTAIN-UNRESOLVED · disposition :INTERRUPTED · reason NIL
+[012] ok   C · an acknowledgment WITHOUT evidence does not settle: disposition :interrupted, standing :uncertain-unresolved, outcome-kind :indeterminate — the forbidden promotion does not happen at the bridge
+[013] ok   C · the journal gained the §10.8 uncertainty record from the runtime's own vocabulary (13 frames, ending effect:uncertain)
+
+---- ARM C-2 (fixture label "ambigua" — LEGIBILITY ONLY) ----
+      | act-id oneact1:act:880e9f4749a6ed06eed773ec03d660bfd4d71bc5d658e5db3cc11477c49045ce
+      | seat ambigua · attempt a-ambigua-2 · cell cella:ambigua
+      | PRE-1 (eq resolved bridge) => T
+      | PRE-2 name/version => equal
+      | class REFUSED · standing :ABSENT · disposition :REFUSED · reason :ACT1-DURABLE-GUARD/UNSAFE-RETRY/-
+[014] ok   C-2 · the LANGUAGE door refuses PRE-FRONTIER: disposition :refused, class :refused, standing :absent for this attempt, outcome-kind :refused
+[015] ok   C-2 · the refusal is CORE /0's typed pre-frontier refusal, carrying evidence-so-far and a refused outcome
+[016] ok   C-2 · THE REASON NAMES THE DURABLE GUARD, and is therefore distinguishable from the runtime boundary's own refusal — here by kernel /0's §14.1 fold over the journaled §10.8 record (no requirement id: §14.1 is a spec-section invariant) reason :ACT1-DURABLE-GUARD/UNSAFE-RETRY/-
+[017] ok   C-2 · the journal gained NOTHING: the refusal is above the frontier line, so no frame was appended 13 -> 13 frames
+      | WORLD-SCOPE C-2 (durable-guard refusal) — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |   cell store  : 34 octets sha 63f39bc85c38372b  ->  34 octets sha 63f39bc85c38372b
+      |   request ledger: 74 octets sha 80d150d983ee401e (1 entry)  ->  74 octets sha 80d150d983ee401e (1 entry)
+      |   entries under this arm's request key external-request:cap2:a-ambigua-2: 0  ->  0
+[018] ok   C-2 (durable-guard refusal) · world byte-unchanged across the arm (whole cell store + whole request ledger)
+[019] ok   C-2 (durable-guard refusal) · ZERO ledger entries under this arm's request key external-request:cap2:a-ambigua-2 (the key exists as a question; the answer is zero, not unlooked)
+
+---- ARM B-L1 (fixture label "vetita-scope" — LEGIBILITY ONLY) ----
+      | act-id oneact1:act:fbf09f782b6d24975ec13414be2073f854e57b0a720b42c1b86035cc574299c3
+      | seat vetita-scope · attempt a-vetita-scope · cell cella:vetita-scope
+      | PRE-1 (eq resolved bridge) => T
+      | PRE-2 name/version => equal
+      | class REFUSED · standing :ABSENT · disposition :REFUSED · reason NIL
+[020] ok   B-L1 · capability denied at the frontier check (the fixture ruling authorises a predicate the request does not carry): outcome-kind :refused, typed CAPABILITY-SCOPE-VIOLATION, evidence carried
+[021] ok   B-L1 · the bridge was NEVER REACHED: the per-act verdict slot is unwritten, so the refusal happened above the adapter
+[022] ok   B-L1 · the journal gained nothing
+      | WORLD-SCOPE B-L1 (capability denied) — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |   cell store  : 93 octets sha 54c8350c651058f5  ->  93 octets sha 54c8350c651058f5
+      |   request ledger: 73 octets sha a6f11e272ec59055 (1 entry)  ->  73 octets sha a6f11e272ec59055 (1 entry)
+      |   entries under this arm's request key external-request:cap2:a-vetita-scope: 0  ->  0
+[023] ok   B-L1 (capability denied) · world byte-unchanged across the arm (whole cell store + whole request ledger)
+[024] ok   B-L1 (capability denied) · ZERO ledger entries under this arm's request key external-request:cap2:a-vetita-scope (the key exists as a question; the answer is zero, not unlooked)
+
+---- ARM B-L2 (fixture label "vetita-ambient" — LEGIBILITY ONLY) ----
+      | act-id oneact1:act:f776b7939948d4ceb8b2d6b47b6ff695d59578e7bb825b4712176fe0bab320fe
+      | seat vetita-ambient · attempt a-vetita-ambient · cell cella:vetita-ambient
+      | PRE-1 (eq resolved bridge) => T
+      | PRE-2 name/version => equal
+      | class REFUSED · standing :ABSENT · disposition :REFUSED · reason NIL
+[025] ok   B-L2 · capability denied at the frontier check (no authority object is presented at all): outcome-kind :refused, typed AMBIENT-AUTHORITY-FORBIDDEN, evidence carried
+[026] ok   B-L2 · the bridge was NEVER REACHED: the per-act verdict slot is unwritten, so the refusal happened above the adapter
+[027] ok   B-L2 · the journal gained nothing
+      | WORLD-SCOPE B-L2 (capability denied) — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |   cell store  : 93 octets sha 54c8350c651058f5  ->  93 octets sha 54c8350c651058f5
+      |   request ledger: 73 octets sha a6f11e272ec59055 (1 entry)  ->  73 octets sha a6f11e272ec59055 (1 entry)
+      |   entries under this arm's request key external-request:cap2:a-vetita-ambient: 0  ->  0
+[028] ok   B-L2 (capability denied) · world byte-unchanged across the arm (whole cell store + whole request ledger)
+[029] ok   B-L2 (capability denied) · ZERO ledger entries under this arm's request key external-request:cap2:a-vetita-ambient (the key exists as a question; the answer is zero, not unlooked)
+
+---- ARM R (fixture label "revocata" — LEGIBILITY ONLY) ----
+      | act-id oneact1:act:ea5e020df55f9e1522c8e12937d9e2695990a251673bfd22f9115fe8f0429d81
+      | seat revocata · attempt a-revocata · cell cella:revocata
+      | declared arm property: the /0 grant was REVOKED after the mint and before the act
+      | PRE-1 (eq resolved bridge) => T
+      | PRE-2 name/version => equal
+      | class REFUSED · standing :ABSENT · disposition :REFUSED · reason :CAP2-ATTEMPT-AUTHORIZATION-REFUSED/CAP2-AUTH-1
+[030] ok   R · the act reaches the BRIDGE (unlike B-L1/B-L2) and is refused INSIDE dispatch by capability /2's own authorization: outcome-kind :refused, and the verdict slot proves the bridge ran
+[031] ok   R · the reason names capability /2's typed condition AND its requirement id — never a message string reason :CAP2-ATTEMPT-AUTHORIZATION-REFUSED/CAP2-AUTH-1
+[032] ok   R · the runtime refusal's named FACET is :fresh-derivation-refused (read off the typed condition, not off a message)
+      | WORLD-SCOPE R (runtime D1 refusal) — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |   cell store  : 93 octets sha 54c8350c651058f5  ->  93 octets sha 54c8350c651058f5
+      |   request ledger: 73 octets sha a6f11e272ec59055 (1 entry)  ->  73 octets sha a6f11e272ec59055 (1 entry)
+      |   entries under this arm's request key external-request:cap2:a-revocata: 0  ->  0
+[033] ok   R (runtime D1 refusal) · world byte-unchanged across the arm (whole cell store + whole request ledger)
+[034] ok   R (runtime D1 refusal) · ZERO ledger entries under this arm's request key external-request:cap2:a-revocata (the key exists as a question; the answer is zero, not unlooked)
+[035] ok   the WHOLE journal validates :valid with no tail, and its frame sequence is exactly what the six arms are entitled to have written 14 frames: capability0:granted · capability0:granted · capability0:granted · capability0:granted · capability0:granted · attempt:prepared · attempt:frontier-crossed · request:acknowledged · effect:settled · attempt:prepared · attempt:frontier-crossed · request:acknowledged · effect:uncertain · capability0:revoked
+[036] ok   the durable guard, asked directly about the SETTLED seat, answers :lawful — a closed seat is not a closed door
+[037] ok   the durable guard, asked directly about the UNRESOLVED seat, answers :refuse with the CAP2-W1 provenance — from the store alone, no world, no memory
+
+TALLY: 37 passed, 0 failed
+oneact1-selftest: 37 checks, 0 failures

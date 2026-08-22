@@ -1,0 +1,148 @@
+One Act /1 — RUN RECIPE AND OBSERVED EXIT CODES
+================================================================================
+
+CANDIDATE.  Nothing in this lane is adopted, accepted, frozen, audited, or on a
+governing floor.  Nothing here is independent verification.  Capability-
+DISCIPLINED, never capability-secure.  Crash model: PLANTED DETERMINISTIC DEATH
+ONLY — no SIGKILL, no power loss, no mid-instruction truncation.
+
+THE LANE IS DELIBERATELY NOT REGISTERED in lisp-plus.asd or mneme/verify-
+release.sh.  Registration is an additive act for the chair after review; a
+candidate does not put itself on a floor.  The lane's door is
+mneme/language-act-1/load.lisp.
+
+HOST CONDITIONS OF THE RUNS BELOW (read from the machine, not remembered)
+--------------------------------------------------------------------------------
+  SBCL 2.4.6
+  Linux 6.18.33.2-microsoft-standard-WSL2 x86_64
+  working directory for every command: the latent-lisp root
+    (.../experiments/latent-lisp)
+  environment: no switch of the lane's Class I / Class II lists was set
+    (each suite prints its own W-ENV enumeration; the specimen's orchestrator
+    BUILDS each child's environment by filtering those switches out of the
+    parent's and adding back only what the phase intends)
+  in-process run roots: created with mkdtemp under /tmp, asserted OUTSIDE the
+    subject tree before a byte is written, removed on success AND on failure
+  specimen scratch: mneme/language-act-1/de-actu-resurgente/scratch-*/,
+    removed by the orchestrator on a completed run
+
+WALKED, NOT INSPECTED: every command below was executed in this order, from a
+fresh shell at the latent-lisp root, and the counts are transcribed from the
+captured output files in this directory — not from memory and not from an
+earlier run.
+
+--------------------------------------------------------------------------------
+THE LANE
+--------------------------------------------------------------------------------
+
+  sbcl --script mneme/language-act-1/act1-selftest.lisp
+      exit 0    oneact1-selftest: 37 checks, 0 failures
+      capture:  RUN-SELFTEST.txt
+      also printed: TALLY: 37 passed, 0 failed
+
+  sbcl --script mneme/language-act-1/act1-controls.lisp
+      exit 0    oneact1-controls: 14 controls, 14 caught, 0 missed
+                (11 before the 2026-08-20 repair round; CONTROL 3b added three)
+      capture:  RUN-CONTROLS.txt
+      NOTE: this run spawns the selftest with CAP2_WORLD_DIE_IN_WINDOW=1 as its
+      first plant; that child exits 4 (VOID) by design.  A VOID is not a
+      failure and is not a pass.
+
+  sbcl --script mneme/language-act-1/act1-mutants.lisp
+      exit 0    oneact1-mutants: 3 defects, 3 killed, 0 survivors
+      capture:  RUN-MUTANTS.txt
+
+  sbcl --script mneme/language-act-1/act1-red-proof.lisp
+      exit 0    oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites
+      capture:  RED-PROOF.txt
+      ⚠ THE "FAIL" IN THAT LINE IS THE POINT: the crown tooth is run against a
+      deliberately uncured bridge and must fail there.  Exit 0 means the tooth
+      bit; exit 1 would mean the uncured arm passed and the tooth licenses
+      nothing.
+
+  sbcl --script mneme/language-act-1/act1-host-fault-proof.lisp   [added 2026-08-20]
+      exit 0    oneact1-host-fault-proof: PASS
+      capture:  RED-PROOF-HOST-FAULT-AFTER.txt
+      ⚠ ITS RED CAPTURE IS KEPT AND IS NOT REPRODUCIBLE FROM THE CURRENT TREE:
+      RED-PROOF-HOST-FAULT-BEFORE.txt is the same script's output against the
+      UNREPAIRED handler (exit 1), and it is reproducible from git history at
+      commit c8a5f31a, which exists for exactly that reason.
+
+  sbcl --script mneme/language-act-1/de-actu-resurgente/run-specimen.lisp
+      exit 0    de-actu-resurgente: 49 checks, 0 failures / RESULT: PASS
+      captures: de-actu-resurgente/RUN-SPECIMEN.txt (first run)
+                de-actu-resurgente/RUN-SPECIMEN-SECOND.txt (second run)
+      DETERMINISM, OBSERVED: the two runs' transcripts are byte-identical
+      (diff clean) and all eleven preserved ARTIFACT-* files are byte-identical
+      between them (cmp clean, file by file).
+      Stage children and their expected exits, all asserted by the orchestrator:
+        stage-life-1.lisp        exit 7, NO RESULT sentinel   (planted death)
+        stage-restart.lisp       exit 3, NO RESULT sentinel   (ACT1_RESTART_DIE=1)
+        stage-control-leak.lisp  exit 0, RESULT sentinel      (on COPIES)
+        stage-restart.lisp       exit 0, RESULT sentinel      (the real restart)
+
+--------------------------------------------------------------------------------
+REGRESSIONS — the consumed lanes, re-run after this lane landed
+--------------------------------------------------------------------------------
+
+  sbcl --script mneme/language-act-0/act0-selftest.lisp
+      exit 0    oneact0-selftest: 173 checks, 0 failures
+                (also prints == TALLY: 173 passed, 0 failed ==)
+
+  bash mneme/language-act-0/act0-load-witnesses.sh
+      exit 0    act0-load-witnesses: 6/6 cases green, tooth caught
+
+  bash mneme/language-act-0/act0-loader-disease.sh
+      exit 0    act0-loader-disease: 3 diseases detected, 3 controls clean
+
+  sbcl --script mneme/capability2/capability2-selftest.lisp
+      exit 0    capability2-selftest: 29 checks, 0 failures / RESULT: PASS
+
+  sbcl --script mneme/capability2/capability2-controls.lisp
+      exit 0    capability2-controls: 27 checks, 0 failures / RESULT: PASS
+
+  sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+      exit 0    de-effectu-incerto: 29 checks, 0 failures
+
+  sbcl --script mneme/language-core-0/core0-selftest.lisp
+      exit 0    == Core /0 substrate teeth: 29 passed / 0 failed ==
+
+  ZERO EDITS OUTSIDE THIS LANE, verified rather than asserted:
+
+      git status --porcelain -- <consumed lanes>   ->  EMPTY
+      git diff --stat        -- <consumed lanes>   ->  EMPTY
+
+  where <consumed lanes> is: mneme/language-act-0, mneme/language-core-0,
+  mneme/journal0, mneme/capability0, mneme/capability1, mneme/capability2,
+  mneme/kernel0, mneme/canonical-datum, lisp-plus.asd, mneme/verify-release.sh.
+
+--------------------------------------------------------------------------------
+THE VOID PATH (a fourth exit code, and what it means)
+--------------------------------------------------------------------------------
+
+  CAP2_WORLD_DIE_IN_WINDOW=1 sbcl --script mneme/language-act-1/act1-selftest.lisp
+      exit 4    the run VOIDS: it names the variable and its value, creates NO
+                journal store, runs no arm, and does NOT report a pass.
+      This is exercised as the controls' first plant.  It caught a real defect
+      during the build: the selftest originally called the pre-flight in
+      advisory mode and went on to run arms with the death switch live, dying
+      at exit 7 inside the frontier window.  A gate that reports and continues
+      is not a gate.
+
+  Exit-code vocabulary of this lane:
+      0  green            1  at least one check failed
+         (exit 1 is the INTENDED result of the host-fault proof against the
+          unrepaired handler — the RED capture; see §11 of the RETURN)
+      3  refused to write a run root inside the subject tree
+      4  VOID (a process-ending switch was set; not a pass, not a failure)
+      7  capability /2's planted in-window death (a stage child only)
+
+--------------------------------------------------------------------------------
+READING THE COUNTS
+--------------------------------------------------------------------------------
+
+Counts are DERIVED by the harnesses from the verdicts actually rendered; none
+is hard-coded, and the specimen's total is the orchestrator's own count plus
+the renumbered CHECK lines its stage children emitted.  A stage child that dies
+without its RESULT sentinel contributes its CHECK lines and no sentinel — which
+is exactly what the truncation control proves is detectable.

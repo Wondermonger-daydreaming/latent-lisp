@@ -1,6 +1,10 @@
 # MANY ACTS /0 — GRAMMAR (pre-code)
 
-STANDING: CANDIDATE. Pre-code design artifact. This grammar admits ONLY constructs forced
+STANDING: standing in this lane attaches to immutable object identities and explicit
+dispositions, never merely to filenames, directories, or descent from an adopted commit
+(Owner Ruling 6 §3 B1; rule and coordinates in `MANY-ACTS-0-STANDING.md`). This file's path
+confers no standing on its bytes in either direction. Pre-code design artifact, amended
+prospectively by owner ruling. This grammar admits ONLY constructs forced
 by P1/P2 (see MANY-ACTS-0-PRESSURE-REPORT.md §3, §5). Seat strings in the briefs are
 placeholders; canonical seats are read from the adopted fixtures via the exported
 `act-fixture-runtime-seat`.
@@ -37,13 +41,75 @@ SEATD     := STRING | (ref IDENT)
 IDENT     := a symbol in the program's own flat namespace (see §3)
 ```
 
+## 1b. Datum ingestion (the reader law, by reference — owner ruling, PS/0 Cluster Sitting 1, Disposition 1, 2026-08-12)
+
+An MA0 source is ingested by **Common Lisp `read`** — the standard reader of
+ANSI Common Lisp — under exactly these bindings, which are law: the source
+file holds **exactly one form** (an empty file and a file with more than one
+form are both refused, V-SHAPE); `*read-eval*` is bound to **NIL**;
+`*package*` is bound to **the program namespace**
+(`lisp-plus-many-acts0.program`); `*read-default-float-format*` is bound to
+**`double-float`**; the file is opened with external format **UTF-8**; and
+the **standard readtable** applies, including its standard `readtable-case`
+of `:upcase`. Everything the standard reader does under those bindings —
+token grammar, symbol upcasing, keyword syntax, integer syntax (signs and
+radix markers), string escaping, character and comment syntax, dotted-pair
+reading — is thereby the datum-ingestion law of Many Acts /0, **by
+reference, not by restatement**.
+
+Three consequences are stated here so no reader must derive them:
+
+- **Keyword identity (spelling).** The observable identity of a keyword is
+  its **upcased symbol-name**: a source-authored
+  `(:code :earth-entry-quarantined)` is observed as
+  `:EARTH-ENTRY-QUARANTINED`. Wherever a keyword (including a program
+  refusal code) is compared or reported, the upcased form is the normative
+  form; lowercase source spellings are authoring convenience only.
+- **Integers.** `INTEGER` in §1 means Common Lisp integer syntax at
+  **arbitrary precision**. No magnitude bound exists or is implied; the
+  declared V-SHAPE bounds (§2) constrain source *structure* — depth and node
+  count — never numeric magnitude. (This matches the layer below: Canonical
+  Datum /0 pins integers as unbounded.)
+- **Floats and ratios.** The reader *reads* them (deterministically, under
+  the float-format binding above) and the validator then *refuses* them:
+  they are not `LITERAL` atoms, and they surface as V-DATA refusals. They
+  are readable, never lawful.
+- **Strings — content policy** *(owner ruling, PS/0 Cluster Sitting 2,
+  Dispositions III-2 and III-3, 2026-08-12; terminology confined by Parcel
+  3 Repair 1)*. A string is the **exact character sequence produced by the
+  admitted reader. No Unicode normalization is performed** — at ingestion
+  or anywhere else; canonically equivalent sequences (`U+00E9` vs
+  `U+0065 U+0301`) are **distinct strings**. This adopts **Canonical Datum
+  /0's frozen non-normalization rationale** — normalization could erase a
+  meaningful distinction, and this lane's payloads carry program-authored
+  evidence — **and does NOT adopt CD/0's repertoire**: CD/0 strings are
+  sequences of Unicode scalar values (surrogates excluded by definition);
+  MA0 /0's repertoire is deliberately the reader-admitted one. **Any
+  character the admitted reader accepts is lawful string content** — no
+  forbidden-character rule exists at /0. *Disclosed hazard, carried with
+  the rule:* such a string may lawfully contain a reader-admitted lone
+  surrogate code point (which is not a Unicode scalar value) or a Unicode
+  noncharacter; downstream serializers may reject these; a lawful MA0
+  datum is **not** thereby guaranteed universally serializable. A future
+  interchange profile may narrow its own repertoire explicitly; the core
+  string domain is not narrowed by that prospect.
+
 ## 2. Validation rules (the closed validator; all refusals are typed, pre-act, footprint-free)
 
 An MA0 source form is accepted only if ALL hold:
 - **V-SHAPE**: exact head symbols and clause shapes above; proper lists throughout; no
   dotted pairs; no vectors/pathnames/read-macros; depth and length finite and bounded
-  (declared constants).
-- **V-ATOMS**: atoms are drawn from: the closed head/keyword vocabulary above; STRINGs;
+  (declared constants — **normative values, published by owner ruling, PS/0 Cluster
+  Sitting 1, Disposition 2, 2026-08-12: maximum source depth 32; maximum source nodes
+  4096**. A third declared constant, the ownership walk's termination budget of 65536, is
+  **an implementation guard against an unbounded copy, not a policy bound on program
+  size** — it is published here as **non-normative and free**: a conforming
+  implementation is not required to reproduce it, and its behavior is excluded from
+  conformance comparison).
+- **V-ATOMS** *(UMBRELLA — a name for the group of obligations below; NEVER emitted as a
+  refusal code. At /0 it is an umbrella over the relevant V-DATA, V-PKG and V-SHAPE
+  obligations; owner ruling, Parcel B item B5, 2026-08-10)*: atoms are drawn from: the
+  closed head/keyword vocabulary above; STRINGs;
   INTEGERs; KEYWORDs from the closed pattern grammar or user `:code` keywords; and bare
   IDENT symbols. **Every symbol must be either a grammar head, a closed-grammar keyword,
   or an IDENT whose home package is the validator's designated program-symbol package**
@@ -65,7 +131,10 @@ An MA0 source form is accepted only if ALL hold:
   runtime; MA0 refuses it statically so the failure has no footprint).
 - **V-PATTERN**: patterns obey §4; a `branch` requires ≥1 clause and exactly one trailing
   `otherwise`; duplicate canonicalized patterns and patterns shadowed by an earlier equal
-  pattern are refused (mirroring Surface /2's expansion-time laws).
+  pattern are refused (this lane's own closed expansion-time laws, stated here and
+  witnessed by this lane's own scenarios; the design was informed by similar principles,
+  and no agreement or equivalence with another lane's laws is claimed — owner ruling,
+  Parcel B item B6, 2026-08-10).
 - **V-TERM**: the final step of `:steps` and of every branch arm is a TERMINAL; steps
   after a TERMINAL are refused (unreachable-code refusal).
 - **V-RETRY**: there is no retry/loop/recursion construct to validate; any unknown head is
@@ -73,6 +142,25 @@ An MA0 source form is accepted only if ALL hold:
 
 Validation is total before ANY environment contact: an invalid source touches no store,
 mints nothing, journals nothing.
+
+**Every name in this list is either OBSERVABLE or UMBRELLA** (owner ruling, Parcel B item
+B5, 2026-08-10). An **OBSERVABLE** name is carried by some refusal as
+`ma0-result-refusal-code`; at /0 those are V-SHAPE, V-DATA, V-PKG, V-READ, V-BIND, V-FIELD,
+V-AUTH, V-RES-AUTH, V-ARM, V-PATTERN, V-TERM and V-RETRY — twelve names, mechanically the
+twelve distinct codes named at the lane's 65 `ma0-refuse` emission sites. An **UMBRELLA**
+name groups rules and is never emitted; at /0 the only UMBRELLA name is V-ATOMS, and it
+carries zero emission sites. A name that is neither marked nor emitted is a defect in this
+document. No code was minted, retired, or re-emitted by this amendment, and nothing
+observable to a program author changed.
+
+Three counts are distinct and may not impersonate one another: **emission sites** (an
+`ma0-refuse` form naming the code), **code occurrences** (the literal code string anywhere
+in the lane's sources, including a selftest's or a witness's *expectation* of it), and
+**prose references** (the code named in lane prose). V-RES-AUTH, for one, has **1 emission
+site** and **3 code occurrences** — two different numbers for one code, and its prose
+references are a third number again, measurable but not fixed, since every document that
+names the code (including this sentence) moves it. Any count quoted for a code must say
+which of the three it is, and must be derived mechanically at the moment it is quoted.
 
 ## 3. Lexical scope and shadowing
 
@@ -94,12 +182,20 @@ in the contract): `:execution` ∈ {:absent :prepared-only :crossed-unsettled
 :malformed-in-evidence} as matchable PVALUEs on any axis. There is deliberately NO
 :success, :truth, :retry-safe, or :cost axis.
 
-**Matching law (mirrors Surface /2's `%atom-holds-p`, implemented over PUBLIC readers,
-with divergence teeth):** a value-atom holds iff the facet's standing is `:present` AND
+**Matching law (this lane's own closed law, implemented over PUBLIC readers, with
+divergence teeth; the design was informed by similar principles, and no agreement or
+equivalence with any other lane's matcher is claimed — owner ruling, Parcel B item B6,
+2026-08-10):** a value-atom holds iff the facet's standing is `:present` AND
 the facet value is exactly (`eql`/`equal`) the pattern value; an absence-keyword atom
 holds iff the facet's standing is exactly that keyword; `:and` holds iff every atom
-holds. **No truthiness participates anywhere** (disease D-TRUTHY plants it; the witness
-must go red).
+holds. **No truthiness participates anywhere.** The witness is the selftest scenario
+`w-branch-exact` (5 checks: a non-`NIL` facet holds nothing; the standing must be
+`:present` and the value exact), not a planted disease — **there is no `D-TRUTHY`.** This
+lane's planted-disease inventory is exactly five named families — `D-BOTH-ARMS` ·
+`D-AMBIENT` · `D-AUTO-RETRY` · `D-SKIP-VALIDATE` · `D-SPECIAL-CASE` — exercised through six
+disease/control invocations (`ma0-diseases.sh`; R1 adoption Rider 6 forbids substituting
+either count for the other). The pre-code draft of this line named a sixth disease that was
+never built.
 
 **Selection law:** clauses are tested in textual order; the FIRST holding clause is
 selected; `otherwise` is selected iff no clause holds; EXACTLY ONE arm's steps are

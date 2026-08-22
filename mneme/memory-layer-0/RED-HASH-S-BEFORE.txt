@@ -1,0 +1,24 @@
+RED-HASH-S-BEFORE — captured 2026-08-21T17:21:24Z (lab HEAD de3177e6): the CL #S structure reader constructs every lane struct from OUTSIDE the package, bypassing every internal constructor. Found by SCRUTATOR (Codex, cross-family static+executed review of R4.1); reproduced by the chair.
+probe: /tmp/hash-s-lane.lisp (inlined below)
+(load "mneme/memory-layer-0/load.lisp")
+(in-package :lisp-plus-memory-layer0)
+(dolist (form '("#S(LISP-PLUS-MEMORY-LAYER0:ML0-ACCOUNT :OCCURRENCE-STANDING :OCCURRED :STANDING-AUTHORITY :VALIDATED-RETRIEVAL)"
+                "#S(LISP-PLUS-MEMORY-LAYER0:ML0-SOURCE :VALIDATION-STANDING :VALIDATED-BY-DOOR :DOOR :WORLD-DOOR)"
+                "#S(LISP-PLUS-MEMORY-LAYER0:ML0-OBSERVATION :DOOR :WORLD-DOOR)"
+                "#S(LISP-PLUS-MEMORY-LAYER0:ML0-BUNDLE)"
+                "#S(LISP-PLUS-MEMORY-LAYER0:ML0-CONSOLIDATION :OCCURRENCE-STANDING :OCCURRED)"))
+  (format t "~a~%  -> ~a~%" (subseq form 0 (min 70 (length form)))
+          (handler-case (let ((x (read-from-string form))) (format nil "CONSTRUCTED ~a" (type-of x)))
+            (error (e) (format nil "ERROR ~a" (type-of e))))))
+
+---- output ----
+#S(LISP-PLUS-MEMORY-LAYER0:ML0-ACCOUNT :OCCURRENCE-STANDING :OCCURRED 
+  -> CONSTRUCTED ML0-ACCOUNT
+#S(LISP-PLUS-MEMORY-LAYER0:ML0-SOURCE :VALIDATION-STANDING :VALIDATED-
+  -> CONSTRUCTED ML0-SOURCE
+#S(LISP-PLUS-MEMORY-LAYER0:ML0-OBSERVATION :DOOR :WORLD-DOOR)
+  -> CONSTRUCTED ML0-OBSERVATION
+#S(LISP-PLUS-MEMORY-LAYER0:ML0-BUNDLE)
+  -> CONSTRUCTED ML0-BUNDLE
+#S(LISP-PLUS-MEMORY-LAYER0:ML0-CONSOLIDATION :OCCURRENCE-STANDING :OCC
+  -> CONSTRUCTED ML0-CONSOLIDATION

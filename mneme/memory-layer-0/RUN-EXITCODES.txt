@@ -1,0 +1,736 @@
+MEMORY LAYER /0 — RUN-EXITCODES
+Every row below was WALKED, not inspected: each command was executed in this
+capture and its exit code taken with $? immediately after, never inferred
+from a printed banner.  SBCL 2.4.6 on Linux.
+Invocation directory: experiments/latent-lisp (the subject-tree root).
+
+---- THIS LANE (six gates; NOT registered on any floor) ----
+exit=0  ml0-selftest.lisp                  ml0-selftest: 61 checks, 0 failures
+exit=0  ml0-controls.lisp                  ml0-controls: 10 controls, 10 caught, 0 missed
+exit=0  ml0-mutants.lisp                   ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  ml0-red-proof.lisp                 ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  ml0-host-fault-proof.lisp          ml0-host-fault-proof: PASS
+exit=0  run-specimen.lisp                  de-actu-memorato: 44 checks, 0 failures
+
+---- the RED proof, two preserved single-arm captures ----
+exit=1  ml0-red-proof uncured  (MUST be nonzero: the tooth must not hold there)
+exit=0  ml0-red-proof cured    (MUST be zero)
+
+---- CONSUMED-LANE REGRESSIONS ----
+exit=0  act0-selftest.lisp                 oneact0-selftest: 173 checks, 0 failures
+exit=0  act1-selftest.lisp                 oneact1-selftest: 37 checks, 0 failures
+exit=0  act1-host-fault-proof.lisp         oneact1-host-fault-proof: PASS — the planted implementation fault is NOT wearing a refusal's clothes; no Outcome and no evidence were manufactured; journal and world are byte-unchanged.
+exit=0  act1-controls.lisp                 oneact1-controls: 14 controls, 14 caught, 0 missed
+exit=0  act1-mutants.lisp                  oneact1-mutants: 3 defects, 3 killed, 0 survivors
+exit=0  act1-red-proof.lisp                oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  run-specimen.lisp                  RESULT: PASS
+exit=0  capability2-selftest.lisp          RESULT: PASS
+exit=0  capability2-controls.lisp          RESULT: PASS
+exit=0  run-specimen.lisp                  RESULT: PASS
+exit=0  core0-selftest.lisp                == Core /0 substrate teeth: 29 passed / 0 failed ==
+exit=0  act0-load-witnesses.sh             act0-load-witnesses: 6/6 cases green, tooth caught
+exit=0  act0-loader-disease.sh               [PASS] the checkout's porcelain is UNCHANGED by this script
+
+---- D8 determinism ----
+exit=0  specimen run 1
+exit=0  specimen run 2
+cut: '"': No such file or directory
+cmp=0    the two runs are BYTE-IDENTICAL  sha256 
+
+---- CORRECTIONS TO THIS CAPTURE, made by re-running rather than by editing ----
+Two defects in the CAPTURE (not in any gate) are corrected here rather than
+silently overwritten above, because a walked-exit record edited by hand is no
+longer a walked-exit record.
+
+(1) Four rows above show a generic "RESULT: PASS" because this capture's grep took
+    the LAST matching line rather than the authorized count line.  Re-run, with
+    exits taken directly:
+      exit=0  capability2-selftest.lisp       capability2-selftest: 29 checks, 0 failures
+      exit=0  capability2-controls.lisp       capability2-controls: 27 checks, 0 failures
+      exit=0  de-effectu-incerto specimen     de-effectu-incerto: 29 checks, 0 failures
+      exit=0  de-actu-resurgente specimen     de-actu-resurgente: 49 checks, 0 failures
+
+(2) The D8 sha256 was eaten by shell quoting inside this capture's own wrapper.
+    The two transcripts, digested directly:
+      run 1: 80d4cba0a6af8404b973fc03965e542f80d99d21d40df1d2e1c58a44ad73aea4
+      run 2: 80d4cba0a6af8404b973fc03965e542f80d99d21d40df1d2e1c58a44ad73aea4
+      cmp exit 0 — BYTE-IDENTICAL.
+
+---- RE-RUN after two late repairs (the instrument's length-limit budget,
+     and three added selftest checks for the two folds and the store universe) ----
+exit=0  warnings=0  ml0-selftest.lisp            ml0-selftest: 64 checks, 0 failures
+exit=0  warnings=0  ml0-controls.lisp            ml0-controls: 10 controls, 10 caught, 0 missed
+exit=0  warnings=0  ml0-mutants.lisp             ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  warnings=0  ml0-red-proof.lisp           ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  warnings=0  ml0-host-fault-proof.lisp    ml0-host-fault-proof: PASS
+exit=0  warnings=0  run-specimen.lisp            de-actu-memorato: 44 checks, 0 failures
+
+---- RE-RUN after the ML0-WR-6 repair (a bundle may not contradict itself) ----
+exit=0  warnings=0  ml0-selftest.lisp            ml0-selftest: 66 checks, 0 failures
+exit=0  warnings=0  ml0-controls.lisp            ml0-controls: 10 controls, 10 caught, 0 missed
+exit=0  warnings=0  ml0-mutants.lisp             ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  warnings=0  ml0-red-proof.lisp           ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  warnings=0  ml0-host-fault-proof.lisp    ml0-host-fault-proof: PASS
+exit=0  warnings=0  run-specimen.lisp            de-actu-memorato: 44 checks, 0 failures
+
+---- RE-RUN after CONTROL 10's third damage mode (forge-standing) ----
+exit=0  warnings=0  ml0-controls.lisp  ml0-controls: 10 controls, 10 caught, 0 missed
+
+===========================================================================
+REPAIR ROUND — 2026-08-20, after the chair's BLOCKED disposition
+===========================================================================
+Every exit below taken with $? immediately after the command, in this
+capture.  SBCL 2.4.6.  Invocation directory: experiments/latent-lisp.
+
+---- THE BLOCK PROOF, both captures ----
+exit=0  ml0-block-proof.lisp (repaired)  -> must be 0
+exit=1  ml0-block-proof.lisp (BLOCKED build, preserved in RED-BLOCK-BEFORE.txt at commit 0995e03a) -> was 1
+
+---- THIS LANE, SEVEN GATES ----
+exit=0  warnings=0  ml0-selftest.lisp          ml0-selftest: 71 checks, 0 failures
+exit=0  warnings=0  ml0-controls.lisp          ml0-controls: 10 controls, 10 caught, 0 missed
+exit=0  warnings=0  ml0-mutants.lisp           ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  warnings=0  ml0-red-proof.lisp         ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  warnings=0  ml0-host-fault-proof.lisp  ml0-host-fault-proof: PASS
+exit=0  warnings=0  ml0-block-proof.lisp       ml0-block-proof: 4 probes, 4 closed, 0 open
+exit=0  warnings=0  run-specimen.lisp          de-actu-memorato: 45 checks, 0 failures
+
+---- the RED proof's two preserved single-arm captures ----
+exit=1  uncured (MUST be nonzero)
+exit=0  cured   (MUST be zero)
+
+---- CONSUMED-LANE REGRESSIONS ----
+exit=0  act0-selftest.lisp                 oneact0-selftest: 173 checks, 0 failures
+exit=0  act1-selftest.lisp                 oneact1-selftest: 37 checks, 0 failures
+exit=0  act1-host-fault-proof.lisp         oneact1-host-fault-proof: PASS — the planted implementation fault is NOT wearing a refusal's clothes; no Outcome and no evidence were manufactured; journal and world are byte-unchanged.
+exit=0  act1-controls.lisp                 oneact1-controls: 14 controls, 14 caught, 0 missed
+exit=0  act1-mutants.lisp                  oneact1-mutants: 3 defects, 3 killed, 0 survivors
+exit=0  act1-red-proof.lisp                oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  run-specimen.lisp                  de-actu-resurgente: 49 checks, 0 failures
+exit=0  capability2-selftest.lisp          capability2-selftest: 29 checks, 0 failures
+exit=0  capability2-controls.lisp          capability2-controls: 27 checks, 0 failures
+exit=0  run-specimen.lisp                  de-effectu-incerto: 29 checks, 0 failures
+exit=0  core0-selftest.lisp                == Core /0 substrate teeth: 29 passed / 0 failed ==
+
+===========================================================================
+REPAIR ROUND — 2026-08-20, after the chair's BLOCKED disposition
+===========================================================================
+Every exit below taken with $? immediately after the command, in this
+capture.  SBCL 2.4.6.  Invocation directory: experiments/latent-lisp.
+
+---- THE BLOCK PROOF, both captures ----
+exit=0  ml0-block-proof.lisp against the REPAIRED lane   -> must be 0
+exit=1  ml0-block-proof.lisp against the BLOCKED build    -> was 1
+         (preserved verbatim in RED-BLOCK-BEFORE.txt, captured at commit 0995e03a)
+
+---- THIS LANE, SEVEN GATES ----
+exit=0  warnings=0  ml0-selftest.lisp          ml0-selftest: 71 checks, 0 failures
+exit=0  warnings=0  ml0-controls.lisp          ml0-controls: 10 controls, 10 caught, 0 missed
+exit=0  warnings=0  ml0-mutants.lisp           ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  warnings=0  ml0-red-proof.lisp         ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  warnings=0  ml0-host-fault-proof.lisp  ml0-host-fault-proof: PASS
+exit=0  warnings=0  ml0-block-proof.lisp       ml0-block-proof: 4 probes, 4 closed, 0 open
+exit=0  warnings=0  run-specimen.lisp          de-actu-memorato: 45 checks, 0 failures
+
+---- the RED proof's two preserved single-arm captures ----
+exit=1  uncured (MUST be nonzero)
+exit=0  cured   (MUST be zero)
+
+---- CONSUMED-LANE REGRESSIONS ----
+exit=0  act0-selftest.lisp                 oneact0-selftest: 173 checks, 0 failures
+exit=0  act1-selftest.lisp                 oneact1-selftest: 37 checks, 0 failures
+exit=0  act1-host-fault-proof.lisp         oneact1-host-fault-proof: PASS — the planted implementation fault is NOT wearing a refusal's clothes; no Outcome and no evidence were manufactured; journal and world are byte-unchanged.
+exit=0  act1-controls.lisp                 oneact1-controls: 14 controls, 14 caught, 0 missed
+exit=0  act1-mutants.lisp                  oneact1-mutants: 3 defects, 3 killed, 0 survivors
+exit=0  act1-red-proof.lisp                oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  run-specimen.lisp                  de-actu-resurgente: 49 checks, 0 failures
+exit=0  capability2-selftest.lisp          capability2-selftest: 29 checks, 0 failures
+exit=0  capability2-controls.lisp          capability2-controls: 27 checks, 0 failures
+exit=0  run-specimen.lisp                  de-effectu-incerto: 29 checks, 0 failures
+exit=0  core0-selftest.lisp                == Core /0 substrate teeth: 29 passed / 0 failed ==
+exit=0  act0-load-witnesses.sh             act0-load-witnesses: 6/6 cases green, tooth caught
+exit=0  act0-loader-disease.sh               [PASS] the checkout's porcelain is UNCHANGED by this script
+
+---- D8 determinism ----
+exit=0  run 1
+exit=0  run 2
+cmp=0    BYTE-IDENTICAL  sha256 27121e6f391d709c26b48d16de83c3e66ef237cdf45d5f3dbe3bde87aed3557a
+
+===========================================================================
+REPAIR ROUND R3 — 2026-08-20, after the chair's SECOND disposition
+(r2 archive 069266ca…, BLOCKED/SUPERSEDED)
+===========================================================================
+Every exit below taken with $? immediately after the command, in this
+capture.  SBCL 2.4.6.  Invocation directory: experiments/latent-lisp.
+Warnings counted from each run's own output, not assumed.
+
+---- THE BLOCK PROOF, both captures (now ELEVEN probes) ----
+exit=1  ml0-block-proof.lisp against the UNREPAIRED (R2) build   -> was 1
+         11 probes, 5 closed, 6 OPEN — preserved verbatim in RED-R2-BEFORE.txt,
+         captured at commit 4dca07c1, BEFORE any R3 repair code existed.
+exit=0  ml0-block-proof.lisp against the REPAIRED (R3) lane      -> must be 0
+         11 probes, 11 closed, 0 open — preserved in RED-R2-AFTER.txt.
+
+---- THIS LANE, SEVEN GATES ----
+exit=0  warnings=0  ml0-selftest.lisp          ml0-selftest: 76 checks, 0 failures
+exit=0  warnings=0  ml0-controls.lisp          ml0-controls: 10 controls, 10 caught, 0 missed
+exit=0  warnings=0  ml0-mutants.lisp           ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  warnings=0  ml0-red-proof.lisp         ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  warnings=0  ml0-host-fault-proof.lisp  ml0-host-fault-proof: PASS
+exit=0  warnings=0  ml0-block-proof.lisp       ml0-block-proof: 11 probes, 11 closed, 0 open
+exit=0  warnings=0  run-specimen.lisp          de-actu-memorato: 45 checks, 0 failures · RESULT: PASS
+
+---- the RED proof's two preserved single-arm captures ----
+exit=1  ml0-red-proof.lisp uncured (MUST be nonzero)
+exit=0  ml0-red-proof.lisp cured   (MUST be zero)
+
+---- THE GUIDE WALK (the R2 disposition's explicit requirement) ----
+exit=0  sbcl --script /tmp/ml0-walk.lisp
+         The §2 recipe EXTRACTED PROGRAMMATICALLY from MEMORY-LAYER-0-GUIDE.md
+         and run in a fresh process, literally, with nothing added.  Transcript
+         preserved in GUIDE-WALK.txt; the four printed lines are exactly the
+         four the guide says it prints.
+
+---- CONSUMED-LANE REGRESSIONS ----
+exit=0  act0-selftest.lisp                 oneact0-selftest: 173 checks, 0 failures
+exit=0  act1-selftest.lisp                 oneact1-selftest: 37 checks, 0 failures
+exit=0  act1-host-fault-proof.lisp         oneact1-host-fault-proof: PASS — the planted implementation fault is NOT wearing a refusal's clothes; no Outcome and no evidence were manufactured; journal and world are byte-unchanged.
+exit=0  act1-controls.lisp                 oneact1-controls: 14 controls, 14 caught, 0 missed
+exit=0  act1-mutants.lisp                  oneact1-mutants: 3 defects, 3 killed, 0 survivors
+exit=0  act1-red-proof.lisp                oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  de-actu-resurgente specimen        de-actu-resurgente: 49 checks, 0 failures
+exit=0  capability2-selftest.lisp          capability2-selftest: 29 checks, 0 failures
+exit=0  capability2-controls.lisp          capability2-controls: 27 checks, 0 failures
+exit=0  de-effectu-incerto specimen        de-effectu-incerto: 29 checks, 0 failures
+exit=0  core0-selftest.lisp                == Core /0 substrate teeth: 29 passed / 0 failed ==
+exit=0  act0-load-witnesses.sh             act0-load-witnesses: 6/6 cases green, tooth caught
+exit=0  act0-loader-disease.sh               [PASS] the checkout's porcelain is UNCHANGED by this script
+
+⚠ THE FOUR "RESULT: PASS" ROWS ARE THE AUTHORIZED COUNT LINES THIS TIME, taken
+by a second grep for the count sentinel rather than for the last matching line
+— the capture defect corrected in the previous block is not repeated here.
+
+---- D8 DETERMINISM — the specimen twice, byte-compared ----
+exit=0  run 1
+exit=0  run 2
+cmp=0   BYTE-IDENTICAL
+        sha256 39ebf213636190ee2ca7c34ad065a0500f5803a7f1cc7a70db24d51faa89a791
+        (the R2 capture's transcript digest was 27121e6f…; it CHANGED, and the
+        change is expected: the specimen's own check count went 45→45 with two
+        stages rewritten onto the production doors and the `:observations`
+        channel, so its transcript text differs.  A determinism check compares
+        two runs of THIS build against each other, never against a prior build.)
+
+---- WHAT THIS BLOCK DOES NOT CONTAIN ----
+No release-floor run.  The floor is the chair's to run quiescently after this
+lands, and no lane gate here is registered on any floor.
+
+===========================================================================
+REPAIR ROUND R4 — 2026-08-20, after a CROSS-FAMILY ADVERSARIAL AUDIT
+(notes/2026-08-20-ml0-codex-adversarial-audit.md; five findings, F1-F5)
+===========================================================================
+Every exit below taken with $? immediately after the command, in this
+capture.  SBCL 2.4.6.  Invocation directory: experiments/latent-lisp.
+Warnings counted from each run's own output, not assumed.
+
+---- THE BLOCK PROOF, both captures (now TWENTY probes) ----
+exit=1  ml0-block-proof.lisp against the UNREPAIRED (R3) build   -> was 1
+         19 probes, 11 closed, 8 OPEN -- preserved verbatim in
+         RED-CODEX-BEFORE.txt, captured at commit e3c3fb5c, BEFORE any R4
+         repair code existed.
+exit=0  ml0-block-proof.lisp against the REPAIRED (R4) lane      -> must be 0
+         20 probes, 20 closed, 0 open -- preserved in RED-CODEX-AFTER.txt.
+         (The 20th is F1c, the disease control: the overlay is loaded AFTER
+         every other probe and the same collapse still fires.  The removal
+         is proved a RELOCATION, not an amputation.)
+
+⚠ ONE HONEST NOTE ON THE TWO CAPTURES.  The BEFORE run used the F1b arm as
+first written, which called the predicate with a LITERAL `:defect` keyword.
+After the repair that literal is a COMPILE-TIME warning, and a gate whose
+transcript is full of compiler noise is a gate nobody reads -- so the arm now
+applies the function through `symbol-function` and a runtime-built argument
+list.  That changes how the probe is SPELLED, not what it ASKS: BEFORE printed
+`(:ANSWERED T)`, AFTER prints `:SIGNALLED`.  The BEFORE capture is preserved
+exactly as it ran and was not re-taken.
+
+---- THIS LANE, SEVEN GATES ----
+exit=0  warnings=0  ml0-selftest.lisp          ml0-selftest: 81 checks, 0 failures
+exit=0  warnings=0  ml0-controls.lisp          ml0-controls: 11 controls, 11 caught, 0 missed
+exit=0  warnings=0  ml0-mutants.lisp           ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  warnings=0  ml0-red-proof.lisp         ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  warnings=0  ml0-host-fault-proof.lisp  ml0-host-fault-proof: PASS
+exit=0  warnings=0  ml0-block-proof.lisp       ml0-block-proof: 20 probes, 20 closed, 0 open
+exit=0  warnings=0  run-specimen.lisp          de-actu-memorato: 45 checks, 0 failures · RESULT: PASS
+
+---- THE GUIDE WALK (re-taken: the recipe GREW in R4) ----
+exit=0  sbcl --script /tmp/ml0-walk.lisp
+         The §2 recipe EXTRACTED PROGRAMMATICALLY from MEMORY-LAYER-0-GUIDE.md
+         and run in a fresh process, literally, with nothing added.  Transcript
+         preserved in GUIDE-WALK.txt; the SIX printed lines are exactly the six
+         the guide says it prints -- including `standing authority` and
+         `coverage finding`, which the R4 repairs added.
+
+---- CONSUMED-LANE REGRESSIONS (all thirteen) ----
+exit=0  warnings=0  act0-selftest.lisp             oneact0-selftest: 173 checks, 0 failures
+exit=0  warnings=0  act1-selftest.lisp             oneact1-selftest: 37 checks, 0 failures
+exit=0  warnings=0  act1-host-fault-proof.lisp     oneact1-host-fault-proof: PASS
+exit=0  warnings=0  act1-controls.lisp             oneact1-controls: 14 controls, 14 caught, 0 missed
+exit=0  warnings=0  act1-mutants.lisp              oneact1-mutants: 3 defects, 3 killed, 0 survivors
+exit=0  warnings=0  act1-red-proof.lisp            oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  warnings=0  de-actu-resurgente specimen    de-actu-resurgente: 49 checks, 0 failures
+exit=0  warnings=0  capability2-selftest.lisp      capability2-selftest: 29 checks, 0 failures
+exit=0  warnings=0  capability2-controls.lisp      capability2-controls: 27 checks, 0 failures
+exit=0  warnings=0  de-effectu-incerto specimen    de-effectu-incerto: 29 checks, 0 failures
+exit=0  warnings=0  core0-selftest.lisp            == Core /0 substrate teeth: 29 passed / 0 failed ==
+exit=0  warnings=0  act0-load-witnesses.sh         act0-load-witnesses: 6/6 cases green, tooth caught
+exit=0  warnings=0  act0-loader-disease.sh           [PASS] the checkout's porcelain is UNCHANGED
+
+⚠ THE FOUR "RESULT: PASS" ROWS WERE RE-TAKEN by a second grep for the count
+sentinel rather than for the last matching line -- the capture defect corrected
+in R3 is not repeated here.
+
+---- D8 DETERMINISM — the specimen twice, byte-compared ----
+exit=0  run 1
+exit=0  run 2
+cmp=0   BYTE-IDENTICAL
+        sha256 39849f9968512934ac9586397bb59b2211107e4a95731f6fc8ca82c0f99c4388
+        (the R3 capture's transcript digest was 39ebf213…; it CHANGED, and the
+        change is expected: the effect observation gained a durable
+        `provenance` field, which changes every account body digest, and the
+        reader stage now takes its record-coverage from the new door.  A
+        determinism check compares two runs of THIS build against each other,
+        never against a prior build.)
+
+---- A NON-GATE MEASUREMENT, TAKEN BECAUSE F4's CONTROL RESTS ON IT ----
+        A mid-frame bit-flip in a PJ0 account store makes `append-event`
+        itself signal PJ0-PAYLOAD-DIGEST-MISMATCH -- the append verifies the
+        frame chain BEFORE writing.  So a post-append refusal is not reachable
+        through store damage, which is why ml0-controls TOOTH 11 forces the
+        readback's answer through a named control seam and says so.  Run this
+        session on a throwaway store; not a gate, and recorded here rather
+        than asserted in prose elsewhere.
+
+---- WHAT THIS BLOCK DOES NOT CONTAIN ----
+No release-floor run.  No parcel.  No Sol relay.  No chair-verification
+record.  Those are the chair's after this lands, and no lane gate here is
+registered on any floor.
+
+---- R4.1 (consolidation contract) — walked by CONSUTOR, 2026-08-21 ----
+Every exit below taken with $? IMMEDIATELY after its command, in this
+capture.  SBCL 2.4.6 (operation-checked via `lisp-implementation-version`
+before the first run).  Invocation directory: experiments/latent-lisp, for
+every row.  Warnings counted from each run's own output, not assumed.
+Callers migrated to the typed ML0-CONSOLIDATION carrier landed by commit
+e60fc3c5, which shipped the contract with the lane's callers still on the
+old five-value API.
+
+---- THE STATE THIS BLOCK STARTED FROM (reproduced before touching anything) ----
+exit=1  ml0-selftest.lisp             81 checks, 5 failures [054][056][057][060][063]
+exit=1  ml0-controls.lisp             11 controls, 10 caught, 1 missed (TOOTH 4)
+exit=1  ml0-mutants.lisp              6 defects, 5 killed, 1 survivors (mutant 4)
+exit=1  ml0-block-proof.lisp          unhandled ML0-CONSOLIDATION-REFUSED [ML0-CON-4] at B2
+exit=1  run-specimen.lisp             45 checks, 7 failures · RESULT: FAIL
+exit=0  ml0-consolidation-proof.lisp  27 checks, 0 failures      (already green; NOT edited)
+exit=0  ml0-red-proof.lisp            cured PASS, uncured FAIL   (already green; NOT edited)
+exit=0  ml0-host-fault-proof.lisp     PASS                       (already green; NOT edited)
+
+---- THIS LANE, EIGHT GATES, AFTER THE MIGRATION ----
+exit=0  warnings=0  ml0-selftest.lisp            ml0-selftest: 81 checks, 0 failures
+exit=0  warnings=0  ml0-controls.lisp            ml0-controls: 11 controls, 11 caught, 0 missed
+exit=0  warnings=0  ml0-mutants.lisp             ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  warnings=0  ml0-block-proof.lisp         ml0-block-proof: 20 probes, 20 closed, 0 open
+exit=0  warnings=0  ml0-consolidation-proof.lisp ml0-consolidation-proof: 27 checks, 0 failures
+exit=0  warnings=0  ml0-red-proof.lisp           ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  warnings=0  ml0-host-fault-proof.lisp    ml0-host-fault-proof: PASS
+exit=0  warnings=0  run-specimen.lisp            de-actu-memorato: 45 checks, 0 failures · RESULT: PASS
+
+---- THE RED PROOF'S TWO SINGLE-ARM CAPTURES, RE-TAKEN ----
+exit=1  ml0-red-proof.lisp uncured (MUST be nonzero)  the tooth DOES NOT HOLD — and it MUST NOT hold here
+exit=0  ml0-red-proof.lisp cured   (MUST be zero)     the tooth HOLDS
+
+---- ⚠ A DISARMED TOOTH, FOUND BY READING WHAT A GREEN GATE PRINTED ----
+`ml0-red-proof` exited 0 through this whole walk and printed `the tooth
+bites` — and one third of the crown tooth was DEAD.  `crown-tooth`'s middle
+conjunct is `(not (eq :occurred consolidated-occurrence))`; the call site
+handed it the new ML0-CONSOLIDATION CARRIER instead of a standing, so it
+compared a keyword against a struct and COULD NOT BE FALSE.  Nothing failed.
+The exit code could not see it; the transcript could:
+
+  R4 capture (RED-PROOF-ISSUANCE-AFTER.txt, line 39)
+        after CONSOLIDATION  : :UNRESOLVED
+  this walk, BEFORE the repair
+        after CONSOLIDATION  : #S(ML0-CONSOLIDATION
+
+REPAIRED by reading the standing off the carrier at the call site (the
+predicate itself is untouched, and nothing was relaxed).  The conjunct is now
+demonstrably load-bearing — the two arms DISAGREE on it, which is the whole
+point and was invisible while it was dead:
+
+  cured   arm : after CONSOLIDATION  : :UNRESOLVED   CROWN TOOTH : PASS
+  uncured arm : after CONSOLIDATION  : :OCCURRED     CROWN TOOTH : FAIL
+
+exit=0  ml0-red-proof.lisp          (combined, after the repair)
+exit=1  ml0-red-proof.lisp uncured  (after the repair; MUST be nonzero)
+exit=0  ml0-red-proof.lisp cured    (after the repair; MUST be zero)
+
+⚠ THE PRESERVED CAPTURES RED-PROOF-ISSUANCE-{BEFORE,AFTER}.txt WERE NOT
+RE-TAKEN.  They are R4's record and are left exactly as they ran.  Their
+`after CONSOLIDATION` lines happen to match this build again, but that is
+coincidence of value, not a re-verification.
+
+---- D8 DETERMINISM — the specimen twice, byte-compared ----
+exit=0  run 1  (captured to RUN-SPECIMEN.txt)
+exit=0  run 2  (captured to RUN-SPECIMEN-SECOND.txt)
+cmp=0   BYTE-IDENTICAL
+        sha256 39849f9968512934ac9586397bb59b2211107e4a95731f6fc8ca82c0f99c4388
+        ⚠ THE TRANSCRIPT DIGEST DID NOT CHANGE, AND THAT IS A FINDING, NOT A
+        REASSURANCE.  It is byte-for-byte the R4 capture — while the specimen's
+        PAYLOAD did change: `ARTIFACT-ACCOUNTS-FINAL.pj0` went
+        37a10ca9… -> d9d160f2… (72322 -> 72350 octets) because seven D6 writes
+        now name the ACTOR as subject principal.  Fourteen occurrences of
+        "lector" became "scriptor" in the durable bytes; the nine that remain
+        are `recording-process`, which is where the lector's own identity
+        belongs and where it stayed.  So the transcript is NOT a witness to
+        this repair: it prints no D6 account identity.  A third confirming run
+        was taken and cmp'd against the captures (cmp=0) rather than trusting
+        the twin alone.
+
+---- WHAT THIS BLOCK DOES NOT CONTAIN, AND WHAT IT LEAVES OWED ----
+No guide walk, no release-floor run, no parcel, no Sol relay, no chair
+verification, no commit.  Those are the chair's.
+⚠ OWED TO THE CHAIR: `FILE-MANIFEST.txt` is now STALE — it hashes the R4
+bytes of the five .lisp files edited here and of the three regenerated
+specimen artifacts (ACCOUNTS-FINAL / ARTIFACT-MANIFEST / ARTIFACT-SHA256SUMS).
+It was deliberately NOT touched by this walk.  Regenerate it, never hand-edit
+it — the R4 stale-transcript cure's own house rule.
+
+---- R4.1 CONSUMED-LANE REGRESSIONS — walked by the chair (Claude Fable 5), 2026-08-21 ----
+THIS LANE CHANGED A PUBLIC ARGLIST (`ml0-write` lost :derivation and
+:predecessors) and a public return type (`ml0-consolidate` now returns a
+carrier), so the lanes BELOW this one were re-run.  Nothing here is a Memory
+Layer /0 gate; these are the consumed lanes' OWN gates, re-walked to show that
+the change above did not break anything beneath it.  Every exit taken with $?
+immediately after its command, invocation directory experiments/latent-lisp.
+Thirteen runs, THIRTEEN exit 0.
+
+exit=0  act0-selftest.lisp          oneact0-selftest: 173 checks, 0 failures
+exit=0  act1-selftest.lisp          oneact1-selftest: 37 checks, 0 failures
+exit=0  act1-host-fault-proof.lisp  oneact1-host-fault-proof: PASS — the planted implementation fault is NOT wearing a refusal's clothes; no Outcome and no evidence were manufactured; journal and world are byte-unchanged.
+exit=0  act1-controls.lisp          oneact1-controls: 14 controls, 14 caught, 0 missed
+exit=0  act1-mutants.lisp           oneact1-mutants: 3 defects, 3 killed, 0 survivors
+exit=0  act1-red-proof.lisp         oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  run-specimen.lisp           RESULT: PASS
+exit=0  capability2-selftest.lisp   RESULT: PASS
+exit=0  capability2-controls.lisp   RESULT: PASS
+exit=0  core0-selftest.lisp         == Core /0 substrate teeth: 29 passed / 0 failed ==
+exit=0  de-effectu-incerto          RESULT: PASS
+exit=0  act0-load-witnesses.sh      act0-load-witnesses: 6/6 cases green, tooth caught
+exit=0  act0-loader-disease.sh      [PASS] the checkout's porcelain is UNCHANGED by this script
+
+⚠ ONE ROW DOES NOT NAME ITS LANE, AND THE RECORDS OFFICER WILL NOT GUESS IT
+INTO THE RECORD.  Seven lanes in this tree own a file called
+`run-specimen.lisp` (capability0/1/2, journal0, adapter0, language-act-1, and
+this lane's own de-actu-memorato).  The bare `run-specimen.lisp` row above is
+recorded exactly as the chair walked it; its position in the sequence — after
+the act1-* rows and before the capability2 rows, with capability2's specimen
+listed separately by its own directory name `de-effectu-incerto` — reads as One
+Act /1's `de-actu-resurgente`, but that is an INFERENCE FROM POSITION and is
+labelled as one rather than written in as a fact.  It is NOT this lane's
+specimen: that one is walked in the R4.1 migration block above, by name.
+
+⚠ WHAT THIS SUB-BLOCK IS AND IS NOT.  It is evidence that the consumed lanes
+still pass their own gates with this lane in the tree.  It is NOT a release
+floor (none was run this round), NOT a re-verification of those lanes'
+standings, and NOT evidence about anything Memory Layer /0 claims: a green
+Core /0 selftest says nothing about whether a consolidation carrier is sound.
+
+---- R4.1b (after SCRUTATOR) — walked by SCRIBA-II, 2026-08-21 ----
+A cross-family reviewer (SCRUTATOR, a Codex worker) reviewed R4.1 statically AND
+by running it, and returned "R4.1 is blocked on the stated design rule": the CL
+`#S` reader could construct EVERY lane struct from outside the package (five
+measured, incl. ML0-ACCOUNT with :standing-authority :validated-retrieval and
+ML0-SOURCE with :validation-standing :validated-by-door); a lawful carrier's
+source/predecessor lists were rewritable through their exported readers and the
+result was WRITTEN (:OCCURRED with ZERO warranting rows); and materialization
+re-prefixed subject-principal, so a derived account could never be re-consolidated
+with its own input (ML0-CON-4).  The chair reproduced all three, repaired them,
+and committed fd3d1915.  EVERY EXIT BELOW WAS TAKEN BY ME, IN THIS SESSION, WITH
+$? IMMEDIATELY AFTER ITS COMMAND — none is quoted from an earlier block.
+Invocation directory: experiments/latent-lisp.  Ten runs.
+
+exit=0  ml0-selftest.lisp             ml0-selftest: 81 checks, 0 failures
+exit=0  ml0-controls.lisp             ml0-controls: 11 controls, 11 caught, 0 missed
+exit=0  ml0-mutants.lisp              ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  ml0-block-proof.lisp          ml0-block-proof: 20 probes, 20 closed, 0 open
+exit=0  ml0-consolidation-proof.lisp  ml0-consolidation-proof: 34 checks, 0 failures   (was 27; §8 added)
+exit=0  ml0-red-proof.lisp            ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  ml0-host-fault-proof.lisp     ml0-host-fault-proof: PASS
+exit=0  run-specimen.lisp             de-actu-memorato: 45 checks, 0 failures · RESULT: PASS
+                                      (this lane's own specimen, walked BY NAME —
+                                       mneme/memory-layer-0/de-actu-memorato/run-specimen.lisp)
+
+---- THE RED PROOF'S TWO SINGLE-ARM CAPTURES, RE-TAKEN ----
+exit=0  ml0-red-proof.lisp cured   (MUST be zero)     ml0-red-proof [cured arm only]: the tooth HOLDS
+exit=1  ml0-red-proof.lisp uncured (MUST be nonzero)  ml0-red-proof [uncured arm only]: the tooth DOES
+                                                     NOT HOLD — and it MUST NOT hold here
+The crown tooth's consolidation conjunct, re-armed in R4.1, is still load-bearing:
+the two arms still DISAGREE on it, which is the only thing that shows it can fire.
+
+---- WARNINGS ----
+No compiler-warning line in any of the ten transcripts.  ⚠ MEASURED THE CHEAP WAY
+AND LABELLED AS SUCH: `grep -ci "caught.*WARNING"` over each saved transcript
+returned 0 for all ten.  That is a grep over saved output, not a `handler-bind`
+around the compile, and it is reported at that size.
+
+---- D8 DETERMINISM — the specimen against the SHIPPED capture ----
+cmp=0   my run's transcript vs de-actu-memorato/RUN-SPECIMEN.txt  (BYTE-IDENTICAL)
+        sha256 39849f9968512934ac9586397bb59b2211107e4a95731f6fc8ca82c0f99c4388
+        — the same digest RUN-SPECIMEN.txt and RUN-SPECIMEN-SECOND.txt have carried
+          since R4; my run is a third instance of it, not a re-derivation of it.
+
+⚑ AND ONE THING THE SPECIMEN RUN MEASURED THAT NOBODY ASKED FOR.  run-specimen.lisp
+REGENERATES eleven ARTIFACT-* files in the working tree when it runs.  After my run,
+`git status --porcelain -- mneme/memory-layer-0/` returned NOTHING — so the durable
+PAYLOAD came back byte-identical too, not only the transcript.
+⚠ THIS DOES NOT REPAIR KNOWN HOLE 10.  The hole says the transcript is not a witness
+to the payload, and that stays true: here the WORKING TREE is the witness, and it is
+a witness about THIS BUILD AGAINST ITSELF IN THIS CHECKOUT — never about this build
+against R4.1's, whose payload it would have to be diffed against to say anything of
+the kind.
+
+---- THE DECLARED API, READ OUT OF A LOADED IMAGE ----
+functions 148 · variables 27 · types 20 · sum 195 · declared 195 · shortfall NIL
+UNCHANGED by R4.1b, and that is the point rather than an accident: ML0-MAT-2,
+ML0-MAT-3 and ML0-MAT-4 are REQUIREMENT IDS, not exported names, and
+%ml0-bare-principal / %ml0-consolidation-body are internal.  Three routes closed,
+no name added to the public surface.
+
+---- THE CONSTRUCTOR SWEEP, COUNTED NOT RECALLED ----
+grep -c ":constructor %make-"        ml0.lisp  ->  10
+grep -n  "(:constructor %make-[a-z0-9-]*)" ml0.lisp  ->  (nothing: no plain form left)
+All ten are BOA: ml0-scope · ml0-source · ml0-subject · ml0-observation ·
+ml0-effect-observation · ml0-bundle · ml0-account · ml0-store-scope ·
+ml0-record-coverage-observation · ml0-consolidation.
+⚠ A NEW LANE STRUCT DECLARED WITHOUT `(&key ...)` RE-OPENS THE `#S` ROUTE SILENTLY,
+and only ml0-consolidation-proof [028] would be in a position to notice — and only
+for the five types it names.  Add the type to that check when you add the type.
+
+---- THE GUIDE WALK ----
+extracted 3605 bytes  sha256 e4773cb6fe46b7b81be9388f0872f95b418dd6b8a3764713b6e3e4bacd74f24e
+exit=0  sbcl --script /tmp/ml0-walk.lisp   (fresh process, cwd experiments/latent-lisp)
+cmp=0 against the block extracted from the R4.1 guide (de3177e6) AND from the R4
+guide (5489015f) — the recipe body is unchanged across all three rounds.
+GUIDE-WALK.txt rewritten as the R4.1b capture.
+
+---- WHAT THIS BLOCK DOES NOT CONTAIN, AND WHAT IT LEAVES OWED ----
+No release-floor run, no verify-release.sh, no parcel, no Sol relay (BOTH remain
+parked and unsent), no chair verification, no commit, no push, no .lisp edit.
+Those are the chair's.
+⚠ OWED TO THE CHAIR, AND MORE OWED THAN IT WAS: FILE-MANIFEST.txt is STILL STALE
+and is now stale in one further way — beyond the R4.1 shortfalls it does not hash
+the four captures this round added (RED-HASH-S-BEFORE/AFTER, RED-CARRIER-BEFORE/
+AFTER), and it hashes the R4 bytes of an ml0.lisp that has since changed twice.
+Regenerate it, never hand-edit it, and regenerate it LAST.  FLOOR-RESULT.txt is
+still an R4 record.
+⚠ AND ONE THING THIS BLOCK CANNOT TELL YOU: at the time it was written,
+_staging/r41-scrutator-findings.md carried NO re-review section — SCRUTATOR's read
+of the repair commit fd3d1915 was IN FLIGHT.  Nothing here is its verdict on the
+cure; what stands in that file is its verdict on R4.1, which was BLOCKED.
+
+=============================================================================
+---- R4.1c (release correction) — walked by SCRIBA-III, 2026-08-21 ----
+=============================================================================
+
+R4.1c IS A DOCUMENTS-ONLY PASS AT SOL'S DIRECTION.  NO .lisp FILE WAS EDITED AND
+NO CODE SEMANTICS CHANGED.  Three tasks: (A) synchronize every CURRENT statement
+of the consolidation proof's state to 35 checks / EIGHT §8 checks [028]-[035],
+labelling the 27 and 34 figures as the states at the R4.1 and R4.1b executions;
+(B) narrow the construction-boundary prose (construction privacy is DEFENSE IN
+DEPTH, NOT THE SOUNDNESS BOUNDARY); (C) name fork R4.1-F3 (cross-journal
+materialization) an OPEN GOVERNANCE ITEM rather than "future work".  No floor run
+was made and none is claimed.
+
+⚠ THESE TWO EXITS ARE MINE.  Run by me in this session from
+experiments/latent-lisp, each $? taken immediately after its command.
+
+| gate                            | exit | what it printed                    |
+|---------------------------------|------|------------------------------------|
+| ml0-consolidation-proof.lisp    |  0   | ml0-consolidation-proof: 35 checks, 0 failures |
+| /tmp/ml0-walk.lisp (guide walk) |  0   | the six documented lines, after the loader's three smokes |
+
+  sbcl --script mneme/memory-layer-0/ml0-consolidation-proof.lisp   -> exit 0
+  ml0-consolidation-proof: 35 checks, 0 failures
+  observed at 2026-08-21T19:00Z
+
+§8 AS SHIPPED IS EIGHT CHECKS, OBSERVED IN THAT RUN, NOT RECALLED:
+  [028] the CL #S reader cannot construct ANY lane struct from outside (sampled)
+  [029] EVERY structure class in the lane package refuses #S (enumerated: 10, 0 constructible)
+  [030] a carrier whose SOURCE LIST is rewritten is REFUSED (ML0-MAT-2)
+  [031] a carrier whose PREDECESSOR LIST is rewritten is REFUSED (ML0-MAT-2)
+  [032] a COPY-STRUCTURE'd carrier materializes the SAME content (copying mints nothing)
+  [033] the derived account's subject principal is NOT re-prefixed (once)
+  [034] a derived account RE-CONSOLIDATES with its own input; the fold is non-amplifying
+  [035] a carrier over THIS store cannot be materialized into a FOREIGN store (ML0-MAT-3)
+⚠ The R4.1b block above records 34 checks and numbers these [028]-[034].  That is
+the R4.1b execution, preserved.  The count moved to 35 because the #S refusal is
+now made twice — sampled [028] and ENUMERATED [029] — which also answers the R4.1b
+block's own warning that a new lane struct declared without (&key ...) would be
+noticed "only for the five types [028] names".  [029] enumerates the package.
+
+---- THE GUIDE WALK, RE-TAKEN ----
+extracted 3605 bytes  sha256 e4773cb6fe46b7b81be9388f0872f95b418dd6b8a3764713b6e3e4bacd74f24e
+exit=0  sbcl --script /tmp/ml0-walk.lisp   (fresh process, cwd experiments/latent-lisp)
+cmp=0 against the block extracted from the COMMITTED R4.1b guide (lab HEAD at the
+time of the walk) — the recipe body is unchanged, and the sha equals the one
+SCRIBA-II and SCRIBA recorded for R4.1b, R4.1 and R4.
+RE-TAKEN BECAUSE THE GUIDE CHANGED (§4, §6, §7 and the footer), NOT BECAUSE THE
+RECIPE DID.  GUIDE-WALK.txt rewritten as the R4.1c capture.
+⚠ R4.1c changed no code, so a passing walk is evidence about the recipe against an
+UNCHANGED lane and nothing more.
+
+---- WHAT THIS BLOCK DOES NOT CONTAIN, AND WHAT IT LEAVES OWED ----
+No release floor, no verify-release.sh, no parcel, no Sol relay (BOTH relays and
+BOTH parked questions remain unsent), no chair verification, no commit, no push,
+no mirror touch, no SYNC-PAUSED change, no .lisp edit, no edit to the WORK-ORDER,
+FILE-MANIFEST.txt, FLOOR-RESULT.txt, any CHAIR-VERIFICATION-*, any RED-* capture,
+RUN-SPECIMEN*, or anything under notes/.  Those are the chair's.
+⚠ STILL OWED, UNCHANGED BY THIS PASS: FILE-MANIFEST.txt is STALE (it does not hash
+this round's edited documents either) and FLOOR-RESULT.txt is still an R4 record.
+Regenerate the manifest LAST, never by hand.
+⚠ TWO OPEN GOVERNANCE DISPOSITIONS NOW STAND: work-order §5.A (failed write) and
+R4.1-F3 (cross-journal materialization).  Each has its own parked, unsent question
+under notes/.  The chair recommends (A) for R4.1-F3; that is a recommendation and
+not a ruling.
+
+  — SCRIBA-III (Claude Opus 5, 1M context), records officer, 2026-08-21.
+
+---- R4.1d (release-RECORD correction, Codex second-pass disposition) — walked by the chair (Claude Fable 5), 2026-08-21 ----
+⚠ CHRONOLOGY CORRECTION OF THE R4.1c BLOCK ABOVE (append-only; nothing above is rewritten):
+the R4.1c block's "NO .lisp FILE WAS EDITED", "changed no code" and "no .lisp edit" lines are
+SCRIBA-III's and are true of THAT OFFICER'S BOUNDED SUBPASS ONLY.  At chair closeout of R4.1c,
+TWO Lisp source files received prose/reporting-only edits: ml0.lisp (comments/docstrings —
+construction-boundary wording) and ml0-consolidation-proof.lisp (one §6 reporting banner).
+Exact narrower statement: NO PRODUCTION LOGIC OR DURABLE ACCOUNT SEMANTICS CHANGED; two Lisp
+source files received prose/reporting-only edits.  R4.1d itself: the same class of edit again
+(ml0.lisp docstrings/comments for the boundary sweep; no proof source change), plus documents,
+plus RED-CONSOLIDATION-AFTER.txt RETAKEN from the current proof source (never hand-edited).
+Rows below are this round's direct observations; exit codes from $? immediately after each run.
+exit=0  ml0-selftest.lisp            ml0-selftest: 81 checks, 0 failures
+exit=0  ml0-controls.lisp            ml0-controls: 11 controls, 11 caught, 0 missed
+exit=0  ml0-mutants.lisp             ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  ml0-host-fault-proof.lisp    ml0-host-fault-proof: PASS
+exit=0  ml0-block-proof.lisp         ml0-block-proof: 20 probes, 20 closed, 0 open
+exit=0  ml0-consolidation-proof.lisp ml0-consolidation-proof: 35 checks, 0 failures
+exit=0  ml0-red-proof cured           CROWN TOOTH : PASS
+exit=1  ml0-red-proof uncured         CROWN TOOTH : FAIL
+exit=0  ml0-red-proof.lisp           ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  run-specimen.lisp            de-actu-memorato: 45 checks, 0 failures
+cmp=0   specimen transcript BYTE-IDENTICAL to the shipped capture (sha 39849f9968512934…)
+exit=0  guide-walk (§2 block 3605 bytes, sha e4773cb6fe46b7b8…)
+---- consumed-lane regressions (R4.1d, chair) ----
+exit=0  act0-selftest.lisp           oneact0-selftest: 173 checks, 0 failures
+exit=0  act1-selftest.lisp           oneact1-selftest: 37 checks, 0 failures
+exit=0  act1-host-fault-proof.lisp   oneact1-host-fault-proof: PASS — the planted implementation fault is NOT wearing a refus
+exit=0  act1-controls.lisp           oneact1-controls: 14 controls, 14 caught, 0 missed
+exit=0  act1-mutants.lisp            oneact1-mutants: 3 defects, 3 killed, 0 survivors
+exit=0  act1-red-proof.lisp          oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  de-actu-resurgente specimen  RESULT: PASS
+exit=0  capability2-selftest.lisp    RESULT: PASS
+exit=0  capability2-controls.lisp    RESULT: PASS
+exit=0  de-effectu-incerto specimen  RESULT: PASS
+exit=0  core0-selftest.lisp          == Core /0 substrate teeth: 29 passed / 0 failed ==
+exit=0  act0-load-witnesses.sh       act0-load-witnesses: 6/6 cases green, tooth caught
+exit=0  act0-loader-disease.sh         [PASS] the checkout's porcelain is UNCHANGED by this script
+
+---- R4.1e (release-record correction, Codex R43 disposition) — walked by the chair (Claude Fable 5), 2026-08-21 ----
+⚠ CORRECTION OF A TRUNCATED ROW ABOVE (append-only): the R4.1d consumed-lane row for
+act1-host-fault-proof.lisp was cut at 'refus' by the recorder's own column width. The complete
+observed line, re-run now, exit taken with $? immediately after:
+exit=0  act1-host-fault-proof.lisp   oneact1-host-fault-proof: PASS — the planted implementation fault is NOT wearing a refusal's clothes; no Outcome and no evidence were manufactured; journal and world are byte-unchanged.
+Rows below are this round's direct observations.
+exit=0  ml0-consolidation-proof.lisp ml0-consolidation-proof: 35 checks, 0 failures
+exit=0  guide-walk (strong extractor; §2 block 3850 bytes, sha 34f705b2eb12804b…; full stdout in GUIDE-WALK.txt)
+exit=0  ml0-selftest.lisp            ml0-selftest: 81 checks, 0 failures
+exit=0  ml0-controls.lisp            ml0-controls: 11 controls, 11 caught, 0 missed
+exit=0  ml0-mutants.lisp             ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  ml0-host-fault-proof.lisp    ml0-host-fault-proof: PASS
+exit=0  ml0-block-proof.lisp         ml0-block-proof: 20 probes, 20 closed, 0 open
+exit=0  ml0-red-proof cured           CROWN TOOTH : PASS
+exit=1  ml0-red-proof uncured         CROWN TOOTH : FAIL
+exit=0  ml0-red-proof.lisp           ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  run-specimen.lisp            de-actu-memorato: 45 checks, 0 failures
+cmp=0   specimen transcript BYTE-IDENTICAL to the shipped capture
+---- consumed-lane regressions (R4.1e, chair; full lines, no column truncation) ----
+exit=0  act0-selftest.lisp
+        oneact0-selftest: 173 checks, 0 failures
+exit=0  act1-selftest.lisp
+        oneact1-selftest: 37 checks, 0 failures
+exit=0  act1-host-fault-proof.lisp
+        oneact1-host-fault-proof: PASS — the planted implementation fault is NOT wearing a refusal's clothes; no Outcome and no evidence were manufactured; journal and world are byte-unchanged.
+exit=0  act1-controls.lisp
+        oneact1-controls: 14 controls, 14 caught, 0 missed
+exit=0  act1-mutants.lisp
+        oneact1-mutants: 3 defects, 3 killed, 0 survivors
+exit=0  act1-red-proof.lisp
+        oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  de-actu-resurgente specimen
+        RESULT: PASS
+exit=0  capability2-selftest.lisp
+        RESULT: PASS
+exit=0  capability2-controls.lisp
+        RESULT: PASS
+exit=0  de-effectu-incerto specimen
+        RESULT: PASS
+exit=0  core0-selftest.lisp
+        == Core /0 substrate teeth: 29 passed / 0 failed ==
+exit=0  act0-load-witnesses.sh
+        act0-load-witnesses: 6/6 cases green, tooth caught
+exit=0  act0-loader-disease.sh
+          [PASS] the checkout's porcelain is UNCHANGED by this script
+
+---- R5 (dry-decode narrowing; Sol dispositions B/A) — walked by SCRIBA-IV, 2026-08-21 ----
+Every row below is MY OWN observation in this session, invocation directory experiments/latent-lisp,
+SBCL 2.4.6, each exit code taken with $? immediately after its command. Summary lines are copied
+whole from each run's own stdout — no column truncation. Tree state: the subject .lisp files as
+committed at eaad89b5; the only working-tree changes at run time were this round's documents
+(RETURN / SPEC / GUIDE), which no gate reads.
+exit=0  ml0-selftest.lisp
+        ml0-selftest: 81 checks, 0 failures
+exit=0  ml0-controls.lisp
+        ml0-controls: 13 controls, 13 caught, 0 missed
+exit=0  ml0-mutants.lisp
+        ml0-mutants: 6 defects, 6 killed, 0 survivors
+exit=0  ml0-host-fault-proof.lisp
+        ml0-host-fault-proof: PASS
+exit=0  ml0-block-proof.lisp
+        ml0-block-proof: 20 probes, 20 closed, 0 open
+exit=0  ml0-consolidation-proof.lisp
+        ml0-consolidation-proof: 35 checks, 0 failures
+exit=0  ml0-red-proof.lisp cured
+          CROWN TOOTH            : PASS
+        ml0-red-proof [cured arm only]: the tooth HOLDS
+exit=1  ml0-red-proof.lisp uncured        (MUST be nonzero)
+          CROWN TOOTH            : FAIL
+        ml0-red-proof [uncured arm only]: the tooth DOES NOT HOLD — and it MUST NOT hold here, which is why this capture exits NONZERO
+exit=0  ml0-red-proof.lisp (combined)
+        ml0-red-proof: cured PASS, uncured FAIL — the tooth bites
+exit=0  de-actu-memorato/run-specimen.lisp
+        de-actu-memorato: 45 checks, 0 failures
+        RESULT: PASS
+cmp=0   specimen transcript BYTE-IDENTICAL to the shipped capture
+        sha256 39849f9968512934ac9586397bb59b2211107e4a95731f6fc8ca82c0f99c4388  mneme/memory-layer-0/de-actu-memorato/RUN-SPECIMEN.txt
+        ⚑ EXPECTED, AND NOT A WEAK RESULT: the dry decode is SILENT WHEN IT PASSES.  A lane whose
+        lawful behaviour had changed would have moved these 45 lines.  The narrowing is visible only
+        where a fault is planted — CONTROLs 12 and 13.
+        ⚑ The specimen regenerates its ARTIFACT-* files in the working tree when it runs; after this
+        run `git status --porcelain` showed NO modification to any of them (byte-identical), and the
+        only modified path in the lane was this round's documents.
+exit=0  guide-walk (STRONG extractor; §2 block 3850 bytes, sha256 34f705b2eb12804bb40153fc3e888cc53c53d6ed842e2e2a806733250f64e0e0)
+        BYTE-IDENTICAL to the R4.1e block: R5 edited §4, §5, the ML0-MAT-3 prose and §7, and touched
+        nothing inside the §2 recipe.  Full stdout, method, and timestamp in GUIDE-WALK.txt (R5 capture).
+---- NOT RUN BY THIS OFFICER, and named so nobody reads the block above as wider than it is ----
+The CONSUMED-LANE REGRESSIONS (act0 / act1 / capability2 / core0 / the two act0 shell witnesses) and
+the QUIESCENT RELEASE FLOOR are NOT in this block.  They belong to the chair's closeout, which also
+owns the manifest, the parcel and any FLOOR-RESULT append.  The chair reports 13/13 consumed-lane
+regressions green after eaad89b5; THAT IS THE CHAIR'S OBSERVATION, NOT MINE, and it is recorded here
+as a pointer rather than as a row.

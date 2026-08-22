@@ -1,0 +1,31 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV DE_TESTE_OCCISO_DIE unset
+  W-ENV SURFACE2_SELFTEST_PLANT_FAULT unset
+  W-ENV SURFACE2_SELFTEST_DIE unset
+  W-ENV SURFACE2_CONTROLS_PLANT_FAULT unset
+  W-ENV SURFACE2_CONTROLS_DIE unset
+  W-ENV SURFACE2_ERRATUM_PLANT_FAULT unset
+  W-ENV SURFACE2_ERRATUM_DIE unset
+  W-ENV SURFACE2_INHABITED_PLANT_FAULT unset
+  W-ENV SURFACE2_INHABITED_DIE unset
+  W-ENV enumerated 14 variables (1 Class I + 13 Class II)
+  [PASS] validated through the public door
+  [PASS] PREDICTED disposition :refused  got :REFUSED
+  [PASS] PREDICTED refusal code :earth-entry-quarantined  got :EARTH-ENTRY-QUARANTINED
+  [PASS] PREDICTED detail: (("pelagia-7" "subglacial-ocean-sample" :PENDING-CLEARANCE) :RECONCILED :RECONCILED)  got (("pelagia-7" "subglacial-ocean-sample" :PENDING-CLEARANCE) :RECONCILED
+     :RECONCILED)
+  [PASS] PREDICTED act-summary-count 3  got 3
+  [PASS] PREDICTED: no summary names arm D (sterilization warranted, unexecuted)
+  [PASS] PREDICTED summary A/:RETURNED  got A/:RETURNED
+  [PASS] PREDICTED summary B-L1/:REFUSED  got B-L1/:REFUSED
+  [PASS] PREDICTED summary C-i/:INTERRUPTED  got C-i/:INTERRUPTED
+  [PASS] a store-id exists
+
+ma0-p5-nonauthor: 10 checks, 0 failures

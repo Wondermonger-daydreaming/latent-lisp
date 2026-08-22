@@ -1,0 +1,208 @@
+MA0 EXPORT CENSUS /0 — R1 TOOTH 00: EXPECTATION INJECTION
+=========================================================
+CANDIDATE.  Not independent verification, not independent validation, not a
+portability claim, not a conformance claim.  Branch-local, same-author.
+
+THE ATTACK, in the owner's own words (Owner Ruling 6A):
+
+  "The R1 defect is precise: `ma0-export-census.sh --table P` and the Lisp
+   half's arbitrary table argument permit expectation substitution.  A live
+   package with `ma0-selftest` replaced by the bound internal `ma0-refuse`
+   can be paired with a correspondingly substituted table and obtain the
+   success sentinel."
+
+Reproduced exactly.  The plant is COUNT-PRESERVING on both sides: the live
+package still exports 38 names and the substituted roll still carries 38 rows.
+
+SENTINEL-DECLARATION — this line is the ONLY occurrence in this file of the
+normative success sentinel that is not an actual gate emission.  The string is:
+  ma0-export-census: exact set equality,
+So `grep -cF` of that string over this whole transcript must be exactly 2: this
+declaration, plus LEG A's emission by the PRE-REPAIR gate.  Legs B, C and D emit
+it zero times.  The other four R1 transcripts do not declare it at all, so a
+whole-file grep over each of them is a direct count of emissions: 0, 0, 0, and 1.
+
+Baseline blob identities BEFORE the plant:
+  package.lisp       a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+  ma0-structures.lisp 7a2c093e62e260136bbd6c9dde04dd2df29b2848
+
+PLANT (in place, real subject source):
+  package.lisp:  #:ma0-selftest))  ->  #:ma0-refuse))
+    diff --git a/experiments/latent-lisp/mneme/language-many-acts-0/package.lisp b/experiments/latent-lisp/mneme/language-many-acts-0/package.lisp
+    index a97d3c3e..d8cb7e4a 100644
+    --- a/experiments/latent-lisp/mneme/language-many-acts-0/package.lisp
+    +++ b/experiments/latent-lisp/mneme/language-many-acts-0/package.lisp
+    @@ -103,4 +103,4 @@ refused, not honoured."))
+        #:+ma0-axes+
+     
+        ;; ---- runner entry -------------------------------------------------------
+    -   #:ma0-selftest))
+    +   #:ma0-refuse))
+
+Planted blob identities:
+  package.lisp       d8cb7e4ac4ffdffb896aaa605519042c9a500e74
+  ma0-structures.lisp 7a2c093e62e260136bbd6c9dde04dd2df29b2848
+
+SUBSTITUTED ROLL (built to match the planted package):
+  path            : /tmp/tmp.xYAeVUxi7e/SUBSTITUTED-EXPECTED-EXPORTS.txt
+  blob            : 2c5cfb5c1c8b57d2329e0d3afe2753be9312794a
+  bound blob      : 78592073905450ff9afcd22dea53afbf53764fa1
+  data rows       : 38   (bound roll: 38)
+  diff vs bound roll (data rows only):
+    24a25
+    > ma0-refuse	function	ma0-structures.lisp:71	defun
+    34d34
+    < ma0-selftest	function	ma0-selftest-suite.lisp:978	defun
+
+LEG A is a CONTROL, not a test of the repair.  It runs the PRE-REPAIR
+Lisp half materialized from commit 1e8e03d899c9b515b41b0c21ac87a9b0bb76c17e
+(blob 1a596ee9ec37af4069870498cd0cd145c8b58c5e) against the substituted roll,
+to show the cheat SUCCEEDED before this repair.  A tooth that has never
+been shown to bite is untested, not passing.  EXPECTED HERE: exit 0 and
+the sentinel PRESENT -- that is the defect, demonstrated.
+
+----------------------------------------------------------------------
+LEG: A (CONTROL, pre-repair Lisp half + substituted roll) — expect exit 0, sentinel PRESENT
+CMD: sbcl --script /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/.r1-control-old-census.lisp /tmp/tmp.xYAeVUxi7e/SUBSTITUTED-EXPECTED-EXPORTS.txt
+----------------------------------------------------------------------
+== ma0-export-census — SBCL 2.4.6 ==
+   subject tree : /home/gauss/ma0-census/experiments/latent-lisp/
+   expected table: /tmp/tmp.xYAeVUxi7e/SUBSTITUTED-EXPECTED-EXPORTS.txt
+
+=== MA0 EXPORT CENSUS /0 — CANDIDATE ===
+package            : LISP-PLUS-MANY-ACTS0
+expected table     : /tmp/tmp.xYAeVUxi7e/SUBSTITUTED-EXPECTED-EXPORTS.txt
+expected cardinality (DERIVED from the set): 38
+actual   cardinality (DERIVED from the set): 38
+NOTE: cardinality is reported as an observation.  The test below
+is EXACT SET EQUALITY OF NAMES; no branch of this gate compares a
+count against a literal.
+
+--- [1/3] EXACT SET EQUALITY ---
+MISSING    : none
+UNEXPECTED : none
+SET EQUALITY: HOLDS (38 names)
+
+--- [2/3] BOUNDNESS IN THE DESIGNATED SENSE ---
+all 38 present expected export(s) bound in their designated sense
+
+--- [3/3] HOME-PACKAGE GUARD (additional) ---
+all external symbols homed in LISP-PLUS-MANY-ACTS0
+
+=== VERDICT ===
+  note: boundness checked for 38 name(s)
+ma0-export-census: exact set equality, 38 exports, 0 missing, 0 unexpected, 0 unbound
+CANDIDATE, branch-local.  No portability, independent
+implementation, or conformance claim is made or implied.
+
+OBSERVED EXIT: 0   (captured directly from the process)
+SENTINEL IN THIS LEG'S OUTPUT: PRESENT (1 matching line(s))
+
+----------------------------------------------------------------------
+LEG: B (repaired driver, --table offered) — expect exit 2, sentinel ABSENT
+CMD: /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/ma0-export-census.sh --table /tmp/tmp.xYAeVUxi7e/SUBSTITUTED-EXPECTED-EXPORTS.txt
+----------------------------------------------------------------------
+ma0-export-census.sh: REFUSED — '--table' was REMOVED by Census R1
+  (Owner Ruling 6A item 1).  The expected side of this census is bound
+  to blob 78592073905450ff9afcd22dea53afbf53764fa1, derived from coordinate
+  231873c7be8ba275cd5756c929efba2f9c807157.  There is no alternate-table mode.
+
+OBSERVED EXIT: 2   (captured directly from the process)
+SENTINEL IN THIS LEG'S OUTPUT: ABSENT (0 matching lines)
+
+----------------------------------------------------------------------
+LEG: C (DIRECT repaired Lisp half + substituted roll) — expect exit 2, sentinel ABSENT
+CMD: sbcl --script /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/ma0-export-census.lisp /tmp/tmp.xYAeVUxi7e/SUBSTITUTED-EXPECTED-EXPORTS.txt
+----------------------------------------------------------------------
+
+!! CENSUS REFUSED (pre-census): EXPECTATION SUBSTITUTION.
+   table offered  : /tmp/tmp.xYAeVUxi7e/SUBSTITUTED-EXPECTED-EXPORTS.txt
+   its blob id    : 2c5cfb5c1c8b57d2329e0d3afe2753be9312794a
+   bound blob id  : 78592073905450ff9afcd22dea53afbf53764fa1
+   bound coordinate: 231873c7be8ba275cd5756c929efba2f9c807157  (package.lisp blob a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c)
+The expected side of this census is bound by identity to the
+table derived from the adopted coordinate.  A different table
+is not an alternate expectation; it is a substituted roll, and
+the census will not be conducted against it.  The normative
+success sentinel is UNREACHABLE on this path.
+
+OBSERVED EXIT: 2   (captured directly from the process)
+SENTINEL IN THIS LEG'S OUTPUT: ABSENT (0 matching lines)
+
+----------------------------------------------------------------------
+LEG: D (repaired normative driver, planted package) — expect exit 1, sentinel ABSENT
+CMD: /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/ma0-export-census.sh
+----------------------------------------------------------------------
+== operation check ==
+SBCL 2.4.6
+sbcl --script reports: 
+"2.4.6" 
+
+== expected-table binding (Owner Ruling 6A items 2-3) ==
+path             : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+bound coordinate : 231873c7be8ba275cd5756c929efba2f9c807157
+bound pkg  blob  : a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+bound table blob : 78592073905450ff9afcd22dea53afbf53764fa1
+observed table blob : 78592073905450ff9afcd22dea53afbf53764fa1
+  [3a] table blob identity      : MATCH
+observed pkg blob at coordinate : a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+  [3b] coordinate package blob  : MATCH
+  [3c] byte-regeneration + cmp  : IDENTICAL (78592073905450ff9afcd22dea53afbf53764fa1)
+rows : 38 (comment lines excluded)
+expected side BOUND; proceeding to census evaluation.
+
+== ma0-export-census — SBCL 2.4.6 ==
+   subject tree : /home/gauss/ma0-census/experiments/latent-lisp/
+   expected table: /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+   table blob   : 78592073905450ff9afcd22dea53afbf53764fa1 (BOUND — matches 78592073905450ff9afcd22dea53afbf53764fa1)
+
+=== MA0 EXPORT CENSUS /0 — CANDIDATE (R1) ===
+package            : LISP-PLUS-MANY-ACTS0
+expected table     : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+expected table blob: 78592073905450ff9afcd22dea53afbf53764fa1  (BOUND, re-derived in-process)
+bound coordinate   : 231873c7be8ba275cd5756c929efba2f9c807157
+expected cardinality (DERIVED from the set): 38
+actual   cardinality (DERIVED from the set): 38
+NOTE: cardinality is reported as an observation.  The test below
+is EXACT SET EQUALITY OF NAMES; no branch of this gate compares a
+count against a literal.
+
+--- [1/3] EXACT SET EQUALITY ---
+MISSING (expected, absent from the live package) — 1:
+    - ma0-selftest
+UNEXPECTED (external in the live package, not on the roll) — 1:
+    + ma0-refuse
+
+--- [2/3] BOUNDNESS IN THE DESIGNATED SENSE ---
+all 38 present expected export(s) bound in their designated sense
+
+--- [3/3] HOME-PACKAGE GUARD (additional) ---
+all external symbols homed in LISP-PLUS-MANY-ACTS0
+
+=== VERDICT ===
+  note: boundness checked for 38 name(s)
+ma0-export-census: REFUSED — 2 finding(s):
+  * 1 expected export(s) missing
+  * 1 unexpected export(s)
+The success sentinel is WITHHELD.
+
+OBSERVED EXIT: 1   (captured directly from the process)
+SENTINEL IN THIS LEG'S OUTPUT: ABSENT (0 matching lines)
+
+======================================================================
+RESTORATION (Owner Ruling 6A item 7)
+======================================================================
+  package.lisp       a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+  ma0-structures.lisp 7a2c093e62e260136bbd6c9dde04dd2df29b2848
+  baseline package.lisp        a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+  baseline ma0-structures.lisp 7a2c093e62e260136bbd6c9dde04dd2df29b2848
+  git status for both paths:
+    (no lines above = both files clean)
+
+======================================================================
+TOOTH 00 SUMMARY
+======================================================================
+  LEG A  control, pre-repair Lisp half : exit 0   (the defect, demonstrated)
+  LEG B  repaired driver --table        : exit 2
+  LEG C  repaired Lisp half, direct     : exit 2
+  LEG D  repaired driver, planted pkg   : exit 1

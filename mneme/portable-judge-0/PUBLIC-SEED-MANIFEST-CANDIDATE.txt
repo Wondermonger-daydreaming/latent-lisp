@@ -1,0 +1,348 @@
+PORTABLE JUDGE /0 — PUBLIC SEED MANIFEST (CANDIDATE)
+====================================================================
+
+CANDIDATE — not adopted; owner disposition pending.  2026-08-10.
+Prepared against the R1 CANDIDATE BASE:
+  parcel sha256 54aa7783c494d8f32baa3c10eecd48590b88b13f07f0de6c8724831807a02803
+  patch base commit 76952ea4f278d269f98f158555e412a095a3da6f
+  R1 freeze lane subtree e94870bd9091e67f68e9cf238a6c5d0dcf302a05
+THE BASE IS NOT OWNER-ADOPTED.  This is a candidate manifest of candidate
+materials against a candidate base.
+
+NAMING COLLISION (first use in this file): "Portable Judge /0" is NOT "PJ0".
+Bare "PJ0" is reserved for the ADOPTED Process Journal /0
+(mneme/architecture/process-journal-0/).  No abbreviation of this campaign to
+"PJ0" is authorized.  The campaign designation is pending owner ratification.
+
+
+--------------------------------------------------------------------
+0.  WHAT THIS FILE IS, AND WHAT ITS HASHES MEAN
+--------------------------------------------------------------------
+
+This is the candidate manifest of EVERYTHING a clean-room J2 implementer may
+see.  Anything not listed in section 1 is withheld.
+
+HASH PROVENANCE — stated exactly, because it is the load-bearing claim:
+
+  * Every sha256 and byte count below is of the CURRENT WORKING-TREE BYTES of
+    that path, read on 2026-08-10 at repository HEAD b358c52e on branch
+    many-acts-0-candidate.
+  * These are NOT frozen-packet hashes.  THE FROZEN PACKET IS MINTED ONLY AT
+    OWNER RATIFICATION.  Between this reading and that minting, any edit to any
+    listed file changes its hash and voids the line.
+  * A hash here is therefore a READING, not a seal.  It exists so that a later
+    freeze can be diffed against what the classification was performed over.
+
+Invocation used for every line in section 1 (run from
+/home/gauss/Claude-Code-Lab/experiments/latent-lisp):
+
+    for f in <paths>; do
+      printf "%s  %s  %s\n" \
+        "$(sha256sum "$f" | cut -d' ' -f1)" "$(wc -c < "$f")" "$f"
+    done | LC_ALL=C sort
+
+MANIFEST-HASH invocation (the sorted body of section 1, and nothing else,
+piped to sha256sum):
+
+    <the loop above> | LC_ALL=C sort | sha256sum
+
+A manifest may never include its own hash (standing law, vertical0/adapter0
+closure).  The MANIFEST-HASH line in section 2 is therefore OUTSIDE the body it
+hashes, and the body is exactly the eight-line block in section 1.
+
+
+--------------------------------------------------------------------
+1.  THE PACKET BODY  (sha256  bytes  path)
+--------------------------------------------------------------------
+
+--- 1a. Many Acts /0 public law (the lane under judgment) ---
+
+e68613f85423c1bd23be56eca6600d8602b50c0285a7ea9df8350c34ba036793  15945  mneme/language-many-acts-0/AUTHOR-GUIDE.md
+7cfab3478109828874595fb1d9b1a31728d13337f375f7242d76b47b0ee378c3   9972  mneme/language-many-acts-0/MANY-ACTS-0-GRAMMAR.md
+1acbfc64af9d803f612b201755e530f55221e06fb17af4815256257ad4cbd00d   8583  mneme/language-many-acts-0/MANY-ACTS-0-CONTRACT-CANDIDATE.md
+94e71824b48894f4ee06986a872265a36d43d71cbe3371455b429890d9d07201   5769  mneme/language-many-acts-0/MANY-ACTS-0-FAILURE-MATRIX.md
+
+--- 1b. One Act /0 public materials the lane depends on ---
+--- ⚠ SEE SECTION 4: these are ADMINISTRATIVE, NOT LAW.        ---
+
+86469cf0fc2565d0ec3109a6158950ec1045b71e2504dcf2ec40f50c3c0ed0aa   2828  mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md
+7dc7bbe77ca01a20cbd52345f1f378b7a7d98cd02b3811a534222d2ebb611874   1171  mneme/language-act-0/CLOSURE-TRANSCRIPT-2026-08-08.txt
+
+--- 1c. Drafted in parallel — PLACEHOLDERS, hash TBD-at-freeze ---
+
+TBD-AT-FREEZE                                                     TBD  mneme/portable-judge-0/NORMATIVE-OBSERVATION-FORMAT-0-CANDIDATE.md
+TBD-AT-FREEZE                                                     TBD  mneme/portable-judge-0/PROTOCOL-CANDIDATE.md          [final name pending]
+
+MANIFEST BODY = the six hashed lines of 1a + 1b, sorted.
+The two placeholder lines are NOT in the hashed body (they have no bytes yet)
+and MUST be folded in, with real hashes, at freeze — which mints a new
+MANIFEST-HASH.  The value in section 2 is therefore a hash of an INCOMPLETE
+packet and is provisional by construction.
+
+
+--------------------------------------------------------------------
+2.  MANIFEST-HASH
+--------------------------------------------------------------------
+
+MANIFEST-HASH  sha256  3eab4ceff582cee4a854526e5193cb2e4f2a48d17057f07b12fb807ba993f4f9
+               (of the sorted 6-line body of section 1a+1b, LC_ALL=C sort,
+                working-tree bytes at HEAD b358c52e, 2026-08-10)
+
+
+--------------------------------------------------------------------
+3.  EXPLICIT EXCLUSION LIST  (withheld from J2, and why)
+--------------------------------------------------------------------
+
+Everything below is EXCLUDED.  The list is explicit rather than implied,
+because "we only shipped the law" is a claim, and a claim needs its surface
+enumerated.
+
+EXCLUDED — all implementation source (*.lisp), both lanes:
+  mneme/language-many-acts-0/package.lisp
+  mneme/language-many-acts-0/load.lisp
+  mneme/language-many-acts-0/ma0-structures.lisp
+  mneme/language-many-acts-0/ma0-validate.lisp
+  mneme/language-many-acts-0/ma0-environment.lisp
+  mneme/language-many-acts-0/ma0-compose.lisp
+  mneme/language-many-acts-0/ma0-eval.lisp
+  mneme/language-many-acts-0/ma0-driver.lisp
+  mneme/language-act-0/package.lisp
+  mneme/language-act-0/act0.lisp
+  mneme/language-act-0/act0-fixtures.lisp
+    -> J1's answers.  A clean room that has read the implementation is a room
+       with a window.
+
+EXCLUDED — all harnesses and shell drivers:
+  mneme/language-many-acts-0/ma0-run.sh
+  mneme/language-many-acts-0/ma0-teeth.sh
+  mneme/language-many-acts-0/ma0-diseases.sh
+  mneme/language-many-acts-0/ma0-campaign-gates.sh
+  mneme/language-many-acts-0/ma0-concordance.sh
+  mneme/language-act-0/act0-load-witnesses.sh
+  mneme/language-act-0/act0-loader-disease.sh
+  mneme/language-act-0/act0-selftest.lisp
+    -> CL plumbing (classification categories 6 and 7).  Also: the harnesses
+       encode the expected sentinels.
+
+EXCLUDED — all private test bodies (the oracle itself):
+  mneme/language-many-acts-0/ma0-selftest.lisp
+  mneme/language-many-acts-0/ma0-selftest-suite.lisp      [the 200 checks]
+  mneme/language-act-0/act0-gates.lisp                    [the 173 checks]
+  mneme/language-act-0/act0-load-witnesses.lisp
+    -> ma0-selftest-suite.lisp §4/§5 contains the literal expected output
+       lines.  Shipping it IS shipping the answer key.
+
+EXCLUDED — disease witnesses (the conserved quantity):
+  the D-BOTH-ARMS / D-AMBIENT / D-AUTO-RETRY / D-SKIP-VALIDATE /
+  D-SPECIAL-CASE plants and controls inside ma0-diseases.sh
+  the D1/D2/D3 plants inside act0-loader-disease.sh
+    -> a J2 told which defects are planted can avoid exactly those.
+
+EXCLUDED — r1/ pre-repair witnesses and repair apparatus:
+  mneme/language-many-acts-0/r1/                          [entire directory]
+    incl. pre-repair/D{1..5}-red.txt, post-repair/D{1..5}-green.txt,
+    D{1..5}-*.lisp, ma0-coverage.sh, capture.sh, run-r1-program.lisp,
+    programs/, R1-REPAIR-NOTES.md, R1-ENV-GENERATION-CLARIFICATION.md,
+    R1-GENERATION-SEAM-FINAL-CHECK.md
+    -> frozen historical evidence; the reds are never regenerated, and they
+       name the exact defect classes.
+
+EXCLUDED — holdout programs and their transcripts:
+  mneme/language-many-acts-0/p3/                          [p3-peregrinatio, run-p3]
+  mneme/language-many-acts-0/p4/                          [p4-vindemia, run-p4]
+  mneme/language-many-acts-0/p5/                          [p5-xenobiological-quarantine,
+                                                           run-p5, p5-FIRST-RUN.txt]
+  mneme/language-many-acts-0/programs/p1-editio.lisp
+  mneme/language-many-acts-0/programs/p2-custodia.lisp
+    -> p1 and p2 are the scored scenarios; p3/p4/p5 are the holdout
+       instrument itself (W-P3-HOLDOUT).  A holdout shown in advance is not a
+       holdout.
+
+EXCLUDED — construction transcripts, RETURN docs, seal addenda, pressure
+reports, and briefs:
+  mneme/language-many-acts-0/MANY-ACTS-0-RETURN.md
+  mneme/language-many-acts-0/MANY-ACTS-0-R1-RETURN.md
+  mneme/language-many-acts-0/MANY-ACTS-0-PRESSURE-REPORT.md
+  mneme/language-many-acts-0/SEAL-ADDENDUM-1-SUBSTRATE-FINDINGS.md
+  mneme/language-many-acts-0/SEAL-ADDENDUM-2-PRESSURE-ACCOUNT-RULING.md
+  mneme/language-many-acts-0/P1-EDITIO-BRIEF.md
+  mneme/language-many-acts-0/P2-CUSTODIA-BRIEF.md
+  mneme/language-many-acts-0/ma0-concordance*.lisp
+  mneme/language-many-acts-0/ma0-footprint-witness.lisp
+  mneme/language-many-acts-0/ma0-no-blind-replay.lisp
+  mneme/language-many-acts-0/ma0-res-not-auth.lisp
+    -> RETURN docs carry counts, defect narratives, and the repair story;
+       the briefs carry P1/P2's intended shapes; the concordance and witness
+       sources carry the enumerated facet tables.
+
+EXCLUDED — and this one is a JUDGMENT, stated so it can be overturned:
+  mneme/canon/CANONICAL-SPEC-v0-DRAFT.md
+  mneme/canon/canonical.lisp
+  mneme/canon/md5-manifest.txt
+    -> the canon spec is checked and found NOT to be a dependency of this
+       lane.  It scopes "the Language-A judgment record grammar ONLY"
+       (CANONICAL-SPEC §0) — a different object.  Verified:
+         grep -rn 'canon\|CANONICAL' mneme/language-many-acts-0/*.md
+       returns only uses of the ordinary English word "canonical" (canonical
+       seats, the canonical composer, canonicalized patterns) — never a
+       citation of mneme/canon/.  Including it would hand J2 a specification
+       for a record type this lane does not have.
+
+EXCLUDED — the whole repository outside the listed paths, including
+verify-release.sh, the lisp-plus umbrella, every other lane, and _staging/.
+
+
+--------------------------------------------------------------------
+4.  JUDGMENT CALLS FLAGGED FOR THE CHAIR, NOT DECIDED HERE
+--------------------------------------------------------------------
+
+J-1.  DOES AUTHOR-GUIDE.md + GRAMMAR + CONTRACT SUFFICE FOR AN IMPLEMENTER?
+      Assessment: it is the best surface the lane has, and it is still not
+      sufficient.  AUTHOR-GUIDE.md is the strongest document in the packet —
+      it is the only one that states the observable boundary in full (§4
+      act-summary readers, §6 the matching law and the closed axes, §7 the
+      refusal/error boundary, §8 the environment declarations, §10 the caps).
+      Its opening claim -- "This guide plus the package's exports is the whole
+      surface" -- is close to true FOR AN AUTHOR.  For an IMPLEMENTER it is
+      not, because "the package's exports" is a Common Lisp package, and the
+      guide never states:
+        (a) the identifier CASE rule.  §8 says slot and input names are
+            "matched case-insensitively".  The implementation matches via
+            (symbol-name ident) after the CL reader has up-cased the text; no
+            explicit case-folding exists anywhere
+            (grep for string-equal/char-equal/equalp in ma0-eval.lisp,
+             ma0-environment.lisp, ma0-structures.lisp -> no hits).
+            The guide describes a READTABLE ARTIFACT as if it were a law.
+            J2 CANNOT IMPLEMENT THIS CORRECTLY FROM THE PACKET.
+        (b) the act-identity digest algorithm.  §4 says "the 64-character
+            act-identity digest segment" — length only.
+        (c) the store-id encoding (the suite asserts store-id-length=74).
+        (d) the classify-act-frames vocabulary (:ACT-REPORTED,
+            :BINDING-DECLARED-UNPAIRED appear in the private oracle and in no
+            public doc).
+        (e) any normative serialization of a program result.  Today the
+            observable is CL printed output.
+      => RECOMMENDATION (chair's call): the packet is INSUFFICIENT until
+         NORMATIVE-OBSERVATION-FORMAT-0 supplies (e) and adjudicates (a).
+         Items (b)(c)(d) may instead be declared OUT OF SCOPE for J2 — which
+         is a real and defensible option, and would shrink the portable bank.
+
+J-2.  ONE ACT /0 HAS NO PUBLIC PROSE LAW DOCUMENT AT ALL.
+      Searched and found nothing:
+        find mneme -iname '*ONE-ACT*' -o -iname '*act0*.md'   -> only the lane dir
+        grep -rln 'ONE ACT /0 — \(CONTRACT\|GRAMMAR\|SPEC\)' --include='*.md' .
+                                                             -> no matches
+        grep -rln 'ACT-9b\|BIND-6\|J-4b' --include='*.md' .
+              -> ONLY four Many Acts /0 files (CONTRACT, RETURN,
+                 r1/R1-REPAIR-NOTES, PRESSURE-REPORT)
+      mneme/language-act-0/ contains an adoption record, a closure transcript,
+      and implementation sources.  ITS LAW EXISTS ONLY IN LISP.
+      Consequently the two 1b entries are included as IDENTITY EVIDENCE (they
+      pin exactly which One Act /0 object the lane composes over: candidate
+      commit 461f2013…, tree 1123c3c3…) and NOT as law.  A J2 cannot implement
+      One Act /0 semantics from this packet.  The chair must choose one:
+        (i)  scope Portable Judge /0 to the MANY ACTS /0 LAYER ONLY, treating
+             act execution as an abstract oracle J2 is handed; or
+        (ii) commission a One Act /0 public law document first.
+      This is a fork, not a detail: option (i) removes roughly 135 candidate
+      vectors from the bank and is the only option achievable without new
+      authorship.
+
+J-3.  PEDAGOGICAL VECTORS — THERE ARE NO SEPARATE PUBLIC EXAMPLE FILES.
+      The only PUBLIC example programs are the snippets inline in
+      AUTHOR-GUIDE.md (§3 the act step; §6 the branch; §8 the full
+      load/validate/run sequence and the environment declaration table).
+      Every standalone program file in the tree (programs/p1-editio.lisp,
+      programs/p2-custodia.lisp, p3/, p4/, p5/) is either a SCORED SCENARIO or
+      a HOLDOUT, and all are excluded above.
+      => the pedagogical set travels INSIDE AUTHOR-GUIDE.md and needs no
+         separate manifest line.  If the chair wants a standalone vector file,
+         it must be MINTED (extracted from the guide, hashed at freeze) and
+         must NOT be drawn from programs/ or p3/p4/p5/.
+      ⚠ NOTE: the guide's §8 snippet is written in Common Lisp
+        (asdf:load-system, #p"my-program.lisp",
+         lisp-plus-many-acts0:ma0-validate).  It teaches the HOST BINDING, not
+        the language.  A J2 implementer will read it as normative unless the
+        packet says otherwise.  See REDACTION SUSPECT R-4.
+
+J-4.  REDACTION SUSPECTS — documents in the packet that leak implementation
+      detail, read with that eye.  Listed, not redacted; redaction is a freeze
+      decision.
+
+      R-1  MANY-ACTS-0-CONTRACT-CANDIDATE.md §4 — THE HEAVIEST LEAK.
+           It narrates MA0's internal re-composition in full: the names of the
+           exported ingredients it builds from (build-f2..f5, lane-envelope,
+           frame-event-id, declare-uncertain-effect, reconcile-uncertain-effect,
+           world-ledger-lookup, agreement-gate, correspondence-verdict,
+           find-event, decode-pjs0, record-field), the law-chain order
+           (BIND-6 -> J-4b -> F2 -> C-arms -> F3 -> reconcile -> F4 -> readback
+           -> agreement gate -> F5 -> O-8), and where finish-act reads internal
+           context.  This is a DESIGN, handed to a clean room.
+           => strong candidate for redaction, or for restatement as an
+              obligation ("the composition must honour the following ordering")
+              without the ingredient names.
+
+      R-2  MANY-ACTS-0-CONTRACT-CANDIDATE.md §6 — the full CL package/export
+           surface (#:lisp-plus-many-acts0, every exported symbol name, the
+           #:lisp-plus-many-acts0.program namespace).  Host-binding detail; a
+           J2 in another language must not be scored against symbol names.
+           => redact or relabel as "the CL binding, informative only".
+
+      R-3  MANY-ACTS-0-FAILURE-MATRIX.md §5 — NAMES ALL FIVE PLANTED DISEASES
+           AND WHAT EACH PLANTS.  The disease bank is the conserved quantity
+           (classification category 2), and this table hands over the list.
+           => the strongest argument for excluding the failure matrix
+              ENTIRELY, or shipping §§1-2 and §6 only.  Flagged rather than
+              decided because the matrix's §§1-2 are the cleanest statement of
+              the validator and runtime laws in the whole corpus.
+
+      R-4  AUTHOR-GUIDE.md §8 — the CL invocation snippet (see J-3).
+           => keep, but the PROTOCOL must state that host-binding syntax in
+              the guide is informative, not normative.
+
+      R-5  MANY-ACTS-0-CONTRACT-CANDIDATE.md §1 — commit hashes, tree hashes,
+           the V-F digest 2b51b4df…, the reduced-floor figure 77/77.
+           Harmless to a clean room (it cannot resolve them), but it is repo
+           state travelling in a law packet.  Low priority.
+
+      R-6  AUTHOR-GUIDE.md §10.9 IS STALE AND UNDERSTATES THE LANE.
+           It says the concordance teeth "have not been built" and that a green
+           suite "says nothing about whether this composition agrees with the
+           canonical one".  They HAVE been built (ma0-teeth.sh sections 4 and
+           4b; 7 arms x 18 facets = 126, 0 divergences per MANY-ACTS-0-R1-RETURN).
+           This is not a leak — it is an INACCURACY in the packet's front door.
+           => must be corrected or annotated before freeze.  A clean-room
+              implementer reading a false statement about the lane's own
+              evidence is being misinformed by the instrument.
+
+      R-7  MANY-ACTS-0-GRAMMAR.md §4 and §5.2 name Surface /2 internals
+           (%atom-holds-p, classify-act-frames' inputs) and disease names
+           (D-TRUTHY, D-BOTH-ARMS, D-AMBIENT).  Same class as R-3, lower
+           volume.  D-TRUTHY is named in the grammar and appears in NO current
+           disease bank (ma0-diseases.sh plants five, and D-TRUTHY is not one
+           of them) — a stale reference as well as a leak.
+
+J-5.  THE PACKET IS ALL CANDIDATE-STANDING PROSE.
+      Three of the four 1a documents carry "STANDING: CANDIDATE" headers and
+      the Rider-2 prohibition ("independently verified"/"independently
+      validated" may not appear in any artifact of this lane).  A clean-room
+      implementer will read those headers.  That is CORRECT and must be
+      preserved — but the PROTOCOL must make explicit that J2 is being asked to
+      implement a CANDIDATE law against a CANDIDATE base, and that a passing J2
+      produces a candidate result and never an adoption.
+
+
+--------------------------------------------------------------------
+5.  STANDING CAPS ON THIS MANIFEST
+--------------------------------------------------------------------
+
+* Nothing here is an audit, a verification, or a validation.  Rider 2 binds:
+  the phrases "independently verified" and "independently validated" may not
+  appear in any artifact of this lane, and do not appear here.
+* No file listed or excluded here was modified.  This manifest is a reading.
+* The hashes are working-tree readings at HEAD b358c52e, NOT a freeze.
+* The frozen packet is minted only at owner ratification, at which point the
+  two placeholders acquire bytes and the MANIFEST-HASH is re-minted.
+
+
+— drafted by CENSITOR (Claude Opus), commissioned by the chair (Claude Fable 5), 2026-08-10

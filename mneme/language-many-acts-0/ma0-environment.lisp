@@ -1,7 +1,10 @@
 ;;;; ma0-environment.lisp — the ONE door through which live state enters a run
 ;;;; (contract §7, GRAMMAR §6).
 ;;;;
-;;;; CANDIDATE.  Nothing here is adopted (contract §0).
+;;;; STANDING: attaches to immutable object identities and explicit
+;;;; dispositions, never to a filename or directory (Owner Ruling 6 §3 B1;
+;;;; MANY-ACTS-0-STANDING.md).  This file's path confers no standing on its
+;;;; bytes in either direction (contract §0).
 ;;;;
 ;;;; ⚠ THE DOOR ACCEPTS DECLARATIONS, NEVER LIVE OBJECTS.  Every argument of
 ;;;; `make-ma0-environment' is DATA — strings, keywords, integers, and plans
@@ -280,13 +283,34 @@ had landed (r1/pre-repair/D4-red.txt)."
             (owned-inputs (%ma0-own (%ma0-key-alist inputs))))
 
         ;; ===================================================================
-        ;; ⚠⚠ THE COMMIT POINT (R1/D5).  EVERY FALLIBLE STEP HAS SUCCEEDED.
+        ;; ⚠⚠ THE COMMIT POINT (R1/D5).  EVERY SPECIFIED FALLIBLE STEP HAS
+        ;; SUCCEEDED.
         ;;
-        ;; Nothing below this line can signal: an `incf' of a bound integer,
-        ;; five assignments, and one structure allocation.  That is the whole
-        ;; of the owner's PROPERTY 2 — "generation installation is committed
-        ;; only after every fallible construction step succeeds" — and it is a
-        ;; property of WHERE THESE FORMS SIT, not of a promise about them.
+        ;; Below this line stand an `incf' of a bound integer, five assignments,
+        ;; and one structure allocation.  That is the owner's PROPERTY 2 —
+        ;; "generation installation is committed only after every fallible
+        ;; construction step succeeds" — and it is a property of WHERE THESE
+        ;; FORMS SIT, not of a promise about them.
+        ;;
+        ;; ⚠ READ IT AT ITS ADOPTED CEILING, NOT ABSOLUTELY (R1 adoption Rider 2,
+        ;; 2026-08-10).  An earlier draft of this comment said "nothing below
+        ;; this line can signal", which is too absolute if read as a claim about
+        ;; arbitrary host-resource exhaustion, asynchronous process termination,
+        ;; or failure of allocation itself — `%make-ma0-environment' does still
+        ;; allocate a structure below this line.  The adopted reading is:
+        ;;
+        ;;   No specified Lisp+ refusal or ordinary project-level failure path
+        ;;   remains below the commit point under the /0 public-API threat model.
+        ;;   Host exhaustion, process death, asynchronous interruption, and
+        ;;   failures outside that threat model are NOT covered.
+        ;;
+        ;; The D5 instrument exercised six public construction-failure modes and
+        ;; found exactly one able to cross the old seam; the repair moved
+        ;; ownership and the other specified fallible operations above this line.
+        ;; A later hardening round MAY choose to allocate the environment object
+        ;; before committing the generation and the five specials; R1 does not
+        ;; require that additional host-failure guarantee, and this comment does
+        ;; not promise it.
         ;;
         ;; The counter and the specials move TOGETHER and in that order, so
         ;; there is no instant at which the specials point at one environment

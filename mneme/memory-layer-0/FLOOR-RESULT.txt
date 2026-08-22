@@ -1,0 +1,1994 @@
+MEMORY LAYER /0 — RELEASE FLOOR RESULT
+
+Command, run from the subject-tree root (the invocation directory the
+script's own header declares):
+    cd experiments/latent-lisp && bash mneme/verify-release.sh
+
+⚠ THIS LANE IS NOT AMONG THE FLOOR'S GATES, by the commission's writ
+(relay §11: not authorized to register it on the release floor).  The
+floor is therefore evidence of ONE thing: that building this lane left
+every OTHER lane exactly as it found it.
+
+===========================================================================
+RUN 1 — FAILED, AND THE FAILURE WAS THE BUILDER'S, NOT A LANE'S.
+===========================================================================
+
+  FLOOR RESULT: FAIL   ·   FLOOR_EXIT=1   ·   102 passed / 1 failed
+  FAILED GATE #85, lane act0:  bash mneme/language-act-0/act0-loader-disease.sh
+
+  The gate's own detections and controls ALL PASSED —
+      act0-loader-disease: FAILED (detections 4/4, controls 4/4)
+  — and it failed on RUN INTEGRITY:
+      [FAIL] the checkout changed during the disease run
+             1,2d0
+             <  M experiments/latent-lisp/mneme/memory-layer-0/RUN-EXITCODES.txt
+             <  M experiments/latent-lisp/mneme/memory-layer-0/ml0-controls.lisp
+
+  DIAGNOSIS, read out of the script rather than guessed
+  (act0-loader-disease.sh:53 and :175-179 snapshot `git status --porcelain`
+  over the whole repository before and after its own run and compare them):
+
+      THE BUILDER COMMITTED TO THE REPOSITORY WHILE THE FLOOR WAS RUNNING.
+
+  The two named files are this lane's own, and `1,2d0` means they were
+  MODIFIED when the gate took its snapshot and clean when it took the
+  second — i.e. a commit landed underneath it.  The gate is right and its
+  check is a good one: a disease harness that mutates replicas of the tree
+  must be able to prove it left the real tree alone, and it cannot prove
+  that if someone else is moving the tree at the same time.
+
+  ⚠ NOTHING ABOUT ANY LANE'S CORRECTNESS FOLLOWS FROM RUN 1, in either
+  direction.  A floor taken while its own subject is being edited is not a
+  floor result, and it is recorded here rather than discarded because
+  quietly re-running until green is exactly the move this lane exists to
+  refuse elsewhere.
+
+  Run 1's full transcript is preserved at /tmp/floor-run-1-INVALIDATED.txt
+  for the length of the session; it is NOT committed, because an
+  invalidated run is evidence of a process fault and not of a lane.
+
+===========================================================================
+RUN 2 — THE CLEAN RE-RUN.  No commit, no edit, no write to the subject
+tree between its start and its finish.
+===========================================================================
+
+toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+subject root : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+caller cwd   : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+profile      : full
+enumeration  : full 103/103 · light 79/79  (authorized == actual, recomputed from the table)
+git before   : 0 entr(y|ies) under the subject tree
+
+---- result ----
+FLOOR RESULT: PASS (103 executable gates attempted / 103 passed / 0 blocked; 8 carried status rows; profile full)
+FLOOR_EXIT=0
+
+---- the floor's own accounting block ----
+ EXECUTABLE GATES (this floor ran them)
+   attempted                : 103
+   passed                   : 103
+   failed                   : 0
+   blocked-external-input   : 0
+
+ CARRIED STATUS ROWS (declared, NOT executed by this floor)
+   rows carried             : 8
+   of which KNOWN-UNRESOLVED     : 1
+   of which BLOCKED-EXTERNAL-INPUT: 1
+   of which ARCHIVED-NOT-RERUN   : 3
+   of which ABSENT               : 1
+   of which PASS (elsewhere)     : 1
+   of which CANDIDATE-NOT-ADOPTED: 0
+   of which ADOPTED              : 1
+
+ THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this
+ means ZERO EXECUTABLE GATES were blocked; it does not contradict the
+ 1 carried BLOCKED-EXTERNAL-INPUT row(s), which are a different
+ denominator entirely.
+
+ Exit 0 here means: every executable gate passed at its authorized count,
+ every known unresolved finding is unchanged and named above, and every
+ archived-only item passed its integrity check. It does NOT mean that all
+ semantic questions are resolved, and it adopts nothing.
+===========================================================================
+
+FLOOR RESULT: PASS (103 executable gates attempted / 103 passed / 0 blocked; 8 carried status rows; profile full)
+FLOOR_EXIT=0
+
+---- gate #85, the one that failed in run 1 ----
+[085] act0        INPL bash mneme/language-act-0/act0-loader-disease.sh
+      -> PASS (exit 0)
+
+---- the floor's own checkout-cleanliness check ----
+-- checkout cleanliness --
+   unchanged: zero tracked modifications, zero new untracked litter.
+
+===========================================================================
+
+---- an INDEPENDENT check of the same thing, taken here ----
+$ git status --porcelain -- experiments/latent-lisp
+ M experiments/latent-lisp/mneme/memory-layer-0/FILE-MANIFEST.txt
+ M experiments/latent-lisp/mneme/memory-layer-0/FLOOR-RESULT.txt
+ M experiments/latent-lisp/mneme/memory-layer-0/MEMORY-LAYER-0-RETURN.md
+(anything above is this finalizer's own output files, written after the run)
+
+---- the consumed lanes' own rows, as run 2 printed them ----
+[083] act0        INPL sbcl --script mneme/language-act-0/act0-selftest.lisp
+      -> PASS (exit 0)
+[084] act0        INPL bash mneme/language-act-0/act0-load-witnesses.sh
+      -> PASS (exit 0)
+[085] act0        INPL bash mneme/language-act-0/act0-loader-disease.sh
+      -> PASS (exit 0)
+[086] act1        INPL sbcl --script mneme/language-act-1/act1-selftest.lisp
+      -> PASS (exit 0)
+[087] act1        INPL sbcl --script mneme/language-act-1/act1-host-fault-proof.lisp
+      -> PASS (exit 0)
+[088] act1        INPL sbcl --script mneme/language-act-1/act1-controls.lisp
+      -> PASS (exit 0)
+[089] act1        INPL sbcl --script mneme/language-act-1/act1-mutants.lisp
+      -> PASS (exit 0)
+[090] act1        INPL sbcl --script mneme/language-act-1/act1-red-proof.lisp
+      -> PASS (exit 0)
+[091] act1        COPY sbcl --script mneme/language-act-1/de-actu-resurgente/run-specimen.lisp
+      -> PASS (exit 0)
+
+════════════════════════════════════════════════════════════════════════════
+REPAIR-ROUND FLOOR RUN (r2) — 2026-08-20, appended by the CHAIR
+════════════════════════════════════════════════════════════════════════════
+The builder (TABULARIUS, resumed for the repair round) died of context overflow
+while waiting for this run to complete; the run itself continued unattended and
+finished cleanly.  The chair read the captured log (/tmp/floor-r2.txt) and
+appended this record.  The exit was captured by the run's own wrapper
+(`; echo "FLOOR_EXIT=$?"` in the same shell), not inferred.
+
+Preflight (verbatim from the run):
+  toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+  profile      : full
+  git before   : 0 entr(y|ies) under the subject tree
+
+Quiescence: every repair commit (0995e03a, 3ab354f3, a1b041e5) predates the
+run's start; no commit, edit, or write touched the repository between the run's
+start and finish (the chair held all commits and disarmed the session-checkpoint
+Stop hook by staging, so a turn-end could not commit mid-run — the r1 fault
+class, prevented rather than repeated).
+
+  FLOOR RESULT: PASS (103 executable gates attempted / 103 passed / 0 blocked;
+                      8 carried status rows; profile full)
+  FLOOR_EXIT=0
+  -- checkout cleanliness --
+     unchanged: zero tracked modifications, zero new untracked litter.
+
+The lane remains NOT among the 103 gates (not registered, by the writ), so this
+floor proves exactly one thing: the repair round left every other lane as it
+found it.
+
+════════════════════════════════════════════════════════════════════════════
+R4 FLOOR RUN — 2026-08-20/21, run and recorded by the CHAIR (Claude Opus 5)
+════════════════════════════════════════════════════════════════════════════
+Run after OBTURATOR's R4 commits and after the chair's own stale-transcript cure
+(3efb13d8), with the working tree otherwise committed.  Exit captured by the run's
+own wrapper (`; echo "FLOOR_EXIT=$?"`), not inferred.
+
+  git before   : 1 entr(y|ies) under the subject tree
+  FLOOR RESULT : PASS (103 executable gates attempted / 103 passed / 0 blocked;
+                       8 carried status rows; profile full)
+  FLOOR_EXIT=0
+  -- checkout cleanliness --
+     unchanged: zero tracked modifications, zero new untracked litter.
+
+⚠ THE "1 ENTRY" IS THE CHAIR'S, AND IS DISCLOSED RATHER THAN SMOOTHED.  The lab's
+`session-checkpoint` Stop hook skips whenever anything is STAGED, and the r1 floor
+was invalidated precisely by a commit landing mid-run.  To prevent that class the
+chair staged (without committing) this round's own
+`CHAIR-VERIFICATION-R4-2026-08-20.md` for the duration of the run — real owed work,
+not a decoy — which is exactly the one porcelain entry the preflight counted.
+
+WHAT THIS DOES AND DOES NOT LICENSE.  Quiescence is a claim about CHANGE DURING the
+run, and it holds: the floor's own before/after snapshot reports the checkout
+unchanged, and gate #85's run-integrity check (the one that caught the r1 fault)
+passed.  It is NOT a claim that the tree was pristine at start: it was not, by one
+staged file, and a reader comparing this preflight line to the r2/r3 runs' "0
+entr(y|ies)" would otherwise have found a discrepancy with no explanation beside it.
+The lane is still NOT among the 103 gates, so this floor proves exactly one thing:
+R4 left every other lane as it found it.
+
+==========================================================================
+R4.1 / R4.1b — QUIESCENT RELEASE FLOOR RUN, appended by the chair (Claude Fable 5), 2026-08-21
+==========================================================================
+Started at lab HEAD 92b5ff74 with the subject tree at 0 entries; one commit (7ab0fdef,
+tools/ledger — OUTSIDE the subject tree) landed during the run; subject bytes untouched.
+An earlier run the same afternoon (17:29–17:53 UTC, also PASS 103/103 exit 0) is NOT
+counted: lane documents were edited under it mid-run. The lane is NOT registered.
+
+Fri Aug 21 17:54:36 UTC 2026
+92b5ff74
+===========================================================================
+ LISP+ AGGREGATE RELEASE FLOOR — profile: full
+ Self-consistency certification, never independent conformance.
+ The stranger primitive-minimization audit is OWED.
+===========================================================================
+
+toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+subject root : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+caller cwd   : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+profile      : full
+enumeration  : full 103/103 · light 79/79  (authorized == actual, recomputed from the table)
+git before   : 0 entr(y|ies) under the subject tree
+run scratch  : /tmp/lisp-plus-release-run.SoUXrl  (removed on success AND on failure)
+
+-- materializing disposable tree copy for writing gates --
+   copy ready: 101M
+
+[001] aggregate   COPY bash verify-all.sh
+      -> PASS (exit 0)
+[002] aggregate   COPY bash mneme/verify-language-floor.sh
+      -> PASS (exit 0)
+[003] aggregate   COPY bash mneme/verify-form-floor.sh
+      -> PASS (exit 0)
+[004] kernel0     INPL sbcl --script mneme/kernel0/kernel0-selftest.lisp
+      -> PASS (exit 0)
+[005] kernel0     INPL sbcl --script mneme/kernel0/load.lisp
+      -> PASS (exit 0)
+[006] journal0    INPL sbcl --script mneme/journal0/journal0-selftest.lisp
+      -> PASS (exit 0)
+[007] journal0    INPL sbcl --script mneme/journal0/journal0-vectors.lisp
+      -> PASS (exit 0)
+[008] journal0    COPY sbcl --script mneme/journal0/de-teste-occiso/run-specimen.lisp
+      -> PASS (exit 0)
+[009] capability0 INPL sbcl --script mneme/capability0/capability0-selftest.lisp
+      -> PASS (exit 0)
+[010] capability0 INPL sbcl --script mneme/capability0/capability0-controls.lisp
+      -> PASS (exit 0)
+[011] capability0 COPY sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+      -> PASS (exit 0)
+[012] capability1 INPL sbcl --script mneme/capability1/capability1-selftest.lisp
+      -> PASS (exit 0)
+[013] capability1 INPL sbcl --script mneme/capability1/capability1-controls.lisp
+      -> PASS (exit 0)
+[014] capability1 COPY sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp
+      -> PASS (exit 0)
+[015] capability2 INPL sbcl --script mneme/capability2/capability2-selftest.lisp
+      -> PASS (exit 0)
+[016] capability2 INPL sbcl --script mneme/capability2/capability2-controls.lisp
+      -> PASS (exit 0)
+[017] capability2 COPY sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+      -> PASS (exit 0)
+[018] adapter0    INPL sbcl --script mneme/adapter0/adapter0-selftest.lisp
+      -> PASS (exit 0)
+[019] adapter0    INPL sbcl --script mneme/adapter0/adapter0-vectors.lisp
+      -> PASS (exit 0)
+[020] adapter0    INPL sbcl --script mneme/adapter0/adapter0-scripts.lisp
+      -> PASS (exit 0)
+[021] adapter0    INPL sbcl --script mneme/adapter0/adapter0-joint.lisp
+      -> PASS (exit 0)
+[022] adapter0    COPY sbcl --script mneme/adapter0/adapter0-l17.lisp
+      -> PASS (exit 0)
+[023] adapter0    INPL sbcl --script mneme/adapter0/adapter0-controls.lisp
+      -> PASS (exit 0)
+[024] adapter0    INPL sbcl --script mneme/adapter0/adapter0-erratum-cost.lisp
+      -> PASS (exit 0)
+[025] adapter0    COPY sbcl --script mneme/adapter0/de-membrana-loquente/run-specimen.lisp
+      -> PASS (exit 0)
+[026] core0       INPL sbcl --script mneme/language-core-0/core0-selftest.lisp
+      -> PASS (exit 0)
+[027] core0       INPL sbcl --script mneme/language-core-0/core0-issuance-selftest.lisp
+      -> PASS (exit 0)
+[028] core0       INPL sbcl --script mneme/language-core-0/de-abaco/SPECIMEN.lisp
+      -> PASS (exit 0)
+[029] core0       INPL sbcl --script mneme/language-core-0/de-cursore-aereo/SPECIMEN.lisp
+      -> PASS (exit 0)
+[030] core0       INPL sbcl --script mneme/language-core-0/de-ponte-usto/SPECIMEN.lisp
+      -> PASS (exit 0)
+[031] core0       INPL sbcl --script mneme/language-core-0/de-bibliotheca-peregrina/APPLICATION.lisp
+      -> PASS (exit 0)
+[032] core0       INPL sbcl --script mneme/language-core-0/de-codice-restaurando/APPLICATION.lisp
+      -> PASS (exit 0)
+[033] slice0      INPL sbcl --script mneme/language-slice-0/SMOKE.lisp
+      -> PASS (exit 0)
+[034] slice0      INPL sbcl --script mneme/language-slice-0/de-infando/SPECIMEN.lisp
+      -> PASS (exit 0)
+[035] slice0      INPL bash mneme/language-slice-0/stranger-implementation-0/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[036] slice0      INPL bash mneme/language-slice-0/stranger-implementation-1/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[037] slice1      INPL sbcl --script mneme/language-slice-1/slice1-selftest.lisp
+      -> PASS (exit 0)
+[038] slice1      INPL sbcl --script mneme/language-slice-1/SMOKE-1.lisp
+      -> PASS (exit 0)
+[039] slice1      INPL sbcl --script mneme/language-slice-1/GUIDE-WALK-1.lisp
+      -> PASS (exit 0)
+[040] slice2      INPL sbcl --script mneme/language-slice-2/slice2-selftest.lisp
+      -> PASS (exit 0)
+[041] slice2      INPL sbcl --script mneme/language-slice-2/SMOKE-2.lisp
+      -> PASS (exit 0)
+[042] slice2      INPL sbcl --script mneme/language-slice-2/de-pignore/APPLICATION.lisp
+      -> PASS (exit 0)
+[043] form0       INPL sbcl --script mneme/language-form-0/form0-selftest.lisp
+      -> PASS (exit 0)
+[044] form0       INPL sbcl --script mneme/language-form-0/PUBLIC-SURFACE-AUDIT.lisp
+      -> PASS (exit 0)
+[045] form0       INPL sbcl --script mneme/language-form-0/de-forma-dormiente/APPLICATION.lisp
+      -> PASS (exit 0)
+[046] form0       COPY bash mneme/language-form-0/MUTATION-LEDGER.sh
+      -> PASS (exit 0)
+[047] form1       INPL sbcl --script mneme/language-form-1/form1-selftest.lisp
+      -> PASS (exit 0)
+[048] form1       INPL sbcl --script mneme/language-form-1/EXPORT-CENSUS.lisp
+      -> PASS (exit 0)
+[049] form1       COPY bash mneme/language-form-1/run-form1-candidate.sh
+      -> PASS (exit 0)
+[050] form1       COPY bash mneme/language-form-1/check-form1-transcript.sh
+      -> PASS (exit 0)
+[051] form1       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[052] form1       INPL sbcl --script mneme/language-form-1/de-forma-petente/APPLICATION.lisp
+      -> PASS (exit 0)
+[053] form2       INPL sbcl --script mneme/language-form-2/form2-selftest.lisp
+      -> PASS (exit 0)
+[054] form2       INPL sbcl --script mneme/language-form-2/SOURCE-HYGIENE-GATE.lisp
+      -> PASS (exit 0)
+[055] form2       COPY bash mneme/language-form-2/run-form2-candidate.sh
+      -> PASS (exit 0)
+[056] form2       COPY bash mneme/language-form-2/check-form2-transcript.sh
+      -> PASS (exit 0)
+[057] form2       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[058] form2       INPL sbcl --script mneme/language-form-2/de-forma-mutata/APPLICATION.lisp
+      -> PASS (exit 0)
+[059] form2       INPL sbcl --script mneme/language-form-2/de-vadimonio/APPLICATION.lisp
+      -> PASS (exit 0)
+[060] form2       COPY bash mneme/language-form-2/de-vadimonio/check-transcript.sh
+      -> PASS (exit 0)
+[061] surface0    INPL sbcl --script mneme/language-surface-0/surface0-selftest.lisp
+      -> PASS (exit 0)
+[062] surface0    COPY bash mneme/language-surface-0/PLANTED-FAULTS.sh
+      -> PASS (exit 0)
+[063] surface1    INPL sbcl --script mneme/language-surface-1/surface1-selftest.lisp
+      -> PASS (exit 0)
+[064] surface1    INPL sbcl --script mneme/language-surface-1/STUB-IMAGE-FIXTURE.lisp
+      -> PASS (exit 0)
+[065] surface1    INPL sbcl --script mneme/language-surface-1/de-expansione-testata/APPLICATION.lisp
+      -> PASS (exit 0)
+[066] surface1    COPY bash mneme/language-surface-1/run-surface1-candidate.sh
+      -> PASS (exit 0)
+[067] surface1    INPL bash subject-digest.sh
+      -> PASS (exit 0)
+[068] surface1    INPL bash helper-search.sh
+      -> PASS (exit 0)
+[069] surface1    COPY bash run-helper-control.sh
+      -> PASS (exit 0)
+[070] surface1    COPY bash subject-binding-controls.sh
+      -> PASS (exit 0)
+[071] surface1    INPL bash fail-open-witness.sh
+      -> PASS (exit 0)
+[072] surface1    INPL bash semantic-path-diff.sh
+      -> PASS (exit 0)
+[073] surface1    COPY bash mneme/language-surface-1/errata-0.3/teeth/teeth.sh
+      -> PASS (exit 0)
+[074] surface2    INPL sbcl --script mneme/language-surface-2/surface2-selftest.lisp
+      -> PASS (exit 0)
+[075] surface2    INPL sbcl --script mneme/language-surface-2/surface2-controls.lisp
+      -> PASS (exit 0)
+[076] surface2    INPL sbcl --script mneme/language-surface-2/surface2-inhabited.lisp
+      -> PASS (exit 0)
+[077] surface2    INPL sbcl --script mneme/language-surface-2/surface2-erratum-binder.lisp
+      -> PASS (exit 0)
+[078] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-selftest.lisp
+      -> PASS (exit 0)
+[079] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-inhabited.lisp
+      -> PASS (exit 0)
+[080] surface-account INPL bash mneme/language-surface-account-0/production/surface-account-graph-gate.sh
+      -> PASS (exit 0)
+[081] surface-account INPL bash mneme/language-surface-account-0/production/run-hostile-profiles.sh
+      -> PASS (exit 0)
+[082] surface-account COPY bash mneme/language-surface-account-0/production/surface-account-disease.sh
+      -> PASS (exit 0)
+[083] act0        INPL sbcl --script mneme/language-act-0/act0-selftest.lisp
+      -> PASS (exit 0)
+[084] act0        INPL bash mneme/language-act-0/act0-load-witnesses.sh
+      -> PASS (exit 0)
+[085] act0        INPL bash mneme/language-act-0/act0-loader-disease.sh
+      -> PASS (exit 0)
+[086] act1        INPL sbcl --script mneme/language-act-1/act1-selftest.lisp
+      -> PASS (exit 0)
+[087] act1        INPL sbcl --script mneme/language-act-1/act1-host-fault-proof.lisp
+      -> PASS (exit 0)
+[088] act1        INPL sbcl --script mneme/language-act-1/act1-controls.lisp
+      -> PASS (exit 0)
+[089] act1        INPL sbcl --script mneme/language-act-1/act1-mutants.lisp
+      -> PASS (exit 0)
+[090] act1        INPL sbcl --script mneme/language-act-1/act1-red-proof.lisp
+      -> PASS (exit 0)
+[091] act1        COPY sbcl --script mneme/language-act-1/de-actu-resurgente/run-specimen.lisp
+      -> PASS (exit 0)
+[092] vertical0   COPY bash mneme/vertical0/harness/repeatability.sh
+      -> PASS (exit 0)
+[093] vertical0   COPY sbcl --script mneme/vertical0/controls/run-integration-controls.lisp
+      -> PASS (exit 0)
+[094] vertical0   COPY sbcl --script mneme/vertical0/mutants/run-mutation-gate.lisp
+      -> PASS (exit 0)
+[095] vertical0   COPY sbcl --script mneme/vertical0/reconstruction/run-reconstruction-gate.lisp
+      -> PASS (exit 0)
+[096] cd0         INPL sbcl --script canonical-datum/common-lisp/run-tests.lisp
+      -> PASS (exit 0)
+[097] cd0         INPL python3 canonical-datum/tools/verify_phase0.py
+      -> PASS (exit 0)
+[098] cd0         INPL python3 canonical-datum/integration/run_differential.py --json
+      -> PASS (exit 0)
+[099] lci0        INPL python3 mneme/lci0/shared/fixture_package.py verify
+      -> PASS (exit 0)
+[100] lci0        INPL sbcl --script mneme/architecture/pj0-errata/erratum-1-d2-examples.lisp
+      -> PASS (exit 0)
+[101] release     INPL bash mneme/load-lisp-plus.sh
+      -> PASS (exit 0)
+[102] release     INPL bash mneme/load-order-matrix.sh
+      -> PASS (exit 0)
+[103] atelier     INPL python3 mneme/atelier/static-check.py
+      -> PASS (exit 0)
+
+-- checkout cleanliness --
+   unchanged: zero tracked modifications, zero new untracked litter.
+
+===========================================================================
+ LANE TABLE
+===========================================================================
+STATUS                 LANE         GATES (executed this run)
+PASS                   aggregate    3 gate(s), 3 passed
+PASS                   kernel0      2 gate(s), 2 passed
+PASS                   journal0     3 gate(s), 3 passed
+PASS                   capability0  3 gate(s), 3 passed
+PASS                   capability1  3 gate(s), 3 passed
+PASS                   capability2  3 gate(s), 3 passed
+PASS                   adapter0     8 gate(s), 8 passed
+PASS                   core0        7 gate(s), 7 passed
+PASS                   slice0       4 gate(s), 4 passed
+PASS                   slice1       3 gate(s), 3 passed
+PASS                   slice2       3 gate(s), 3 passed
+PASS                   form0        4 gate(s), 4 passed
+PASS                   form1        6 gate(s), 6 passed
+PASS                   form2        8 gate(s), 8 passed
+PASS                   surface0     2 gate(s), 2 passed
+PASS                   surface1     11 gate(s), 11 passed
+PASS                   surface2     4 gate(s), 4 passed
+PASS                   surface-account 5 gate(s), 5 passed
+PASS                   act0         3 gate(s), 3 passed
+PASS                   vertical0    4 gate(s), 4 passed
+PASS                   cd0          3 gate(s), 3 passed
+PASS                   lci0         2 gate(s), 2 passed
+PASS                   atelier      1 gate(s), 1 passed
+PASS                   release      2 gate(s), 2 passed
+
+-- declared, not executed (carried forward unchanged, never turned green) --
+
+KNOWN-UNRESOLVED       lci0         LCI/0 algebraic-law audit: 84 laws PASS, 4 laws preserved FAIL
+                                   LCI0-CROSS-004, LCI0-SCOPE-015, LCI0-TEMP-022, LCI0-TEMP-028 remain 
+                                   preserved failures with six minimized witnesses; the lane's own evidence 
+                                   reads "AUDIT COMPLETE — MINIMIZED LAW VIOLATIONS PRESERVED; AUTHORIAL 
+                                   RULING REQUIRED". No authorial disposition exists. This milestone does 
+                                   not repair, adjudicate, or rebuild them.
+
+BLOCKED-EXTERNAL-INPUT lci0         LCI/0 law-audit harness cannot execute on this host
+                                   audit/README.md requires an external checksum-bound packet ZIP passed by 
+                                   path (LCI0-ALGEBRAIC-LAW-AUDIT-PACKET-ERRATA-0.1.zip). It is absent from 
+                                   this host and is not in the tree, so law_audit.py and 5 of its 12 harness 
+                                   self-tests cannot run here at all. The committed evidence is archived, 
+                                   not re-derivable.
+
+ARCHIVED-NOT-RERUN     lci0         LCI/0 cross-implementation differential: 2,295 requests/impl, 0 mismatches
+                                   Requires a materialized fixture overlay and three environment variables; 
+                                   not re-derived by this floor. The lane's own evidence records 
+                                   "cross_language_agreement_is_independent_corroboration": false — 
+                                   cross-language agreement here is NOT independent corroboration, because 
+                                   both implementations were seeded under shared normative infrastructure.
+
+ARCHIVED-NOT-RERUN     vertical0    Vertical /0 five-life SIGKILL campaign
+                                   A strace-controlled process-death generation campaign writing new 
+                                   runs/campaign-* trees. Not re-run. The repeatability gate above 
+                                   byte-compares the two preserved campaigns and re-derives the census from 
+                                   campaign-2; that is verification of an archive, NOT reproduction of the 
+                                   campaign.
+
+ARCHIVED-NOT-RERUN     language-a   Language-A tranche-B (706 files, emission BANKED 295/312)
+                                   Exists only on unmerged mirror branches; deliberately not merged during 
+                                   this milestone per the owner ruling (archive now, adopt later). Scoring 
+                                   is owner-locked pending the null-semantics ruling. The lab tree holds 
+                                   three language-a files, exercised inside verify-all.sh.
+
+PASS                   latent-mvp   latent-mvp historical floor (6/6 suites)
+                                   FOSSIL-MARKED. Retained intact as a historical stratum with its 
+                                   historical floor, exercised inside verify-all.sh above. It has zero edges 
+                                   with the kernel0-era stack and is no longer the front door.
+
+ABSENT                 mneme-memory Mneme memory layer
+                                   Not implemented. No lane exists. "Mneme" currently names a directory, not 
+                                   a working memory-and-continuity layer. Nothing here can be run because 
+                                   nothing here has been built.
+
+ADOPTED                seam         derive/perform over a journal-backed process: One Act /0 — ADOPTED
+                                   ADOPTED 2026-08-08 by owner terminal ruling (One Act /0 R2.3 terminal 
+                                   adoption). The exact verified candidate commit 
+                                   461f2013d1a6feca2b13819ff6ae3f60617e8e82 (tree 
+                                   1123c3c3326664f54d1d96547ba872a876cbd495) was merged unmodified; its 173 
+                                   checks, the 97-gate floor, the loader witnesses and the disease/control 
+                                   pairs all ran green pre-adoption and once post-adoption. DISCLOSURE, 
+                                   VERBATIM FROM THE ADOPTION RECORD: the stranger primitive-minimization 
+                                   audit prescribed as a promotion gate was NOT performed; the owner waived 
+                                   that gate for One Act /0 because its resource cost was disproportionate 
+                                   to the remaining design risk. This variance does not constitute 
+                                   independent validation and does not prevent later primitive reduction or 
+                                   architectural revision. Full record: 
+                                   mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md.
+
+===========================================================================
+ EXECUTABLE GATES (this floor ran them)
+   attempted                : 103
+   passed                   : 103
+   failed                   : 0
+   blocked-external-input   : 0
+
+ CARRIED STATUS ROWS (declared, NOT executed by this floor)
+   rows carried             : 8
+   of which KNOWN-UNRESOLVED     : 1
+   of which BLOCKED-EXTERNAL-INPUT: 1
+   of which ARCHIVED-NOT-RERUN   : 3
+   of which ABSENT               : 1
+   of which PASS (elsewhere)     : 1
+   of which CANDIDATE-NOT-ADOPTED: 0
+   of which ADOPTED              : 1
+
+ THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this
+ floor ran in this process; a carried status row is a standing fact this
+ floor reports without running anything. 'blocked-external-input: 0' above
+ means ZERO EXECUTABLE GATES were blocked; it does not contradict the
+ 1 carried BLOCKED-EXTERNAL-INPUT row(s), which are a different
+ denominator entirely.
+
+ Exit 0 here means: every executable gate passed at its authorized count,
+ every known unresolved finding is unchanged and named above, and every
+ archived-only item passed its integrity check. It does NOT mean that all
+ semantic questions are resolved, and it adopts nothing.
+===========================================================================
+
+FLOOR RESULT: PASS (103 executable gates attempted / 103 passed / 0 blocked; 8 carried status rows; profile full)
+exit=0
+Fri Aug 21 18:17:59 UTC 2026
+
+==========================================================================
+R4.1c — QUIESCENT RELEASE FLOOR RUN, appended by the chair (Claude Fable 5), 2026-08-21
+==========================================================================
+Started and finished at lab HEAD 29ea12bd; subject tree 0 entries before, unchanged after;
+no commit landed during the run. The lane is NOT registered.
+
+Fri Aug 21 19:08:57 UTC 2026
+29ea12bd
+===========================================================================
+ LISP+ AGGREGATE RELEASE FLOOR — profile: full
+ Self-consistency certification, never independent conformance.
+ The stranger primitive-minimization audit is OWED.
+===========================================================================
+
+toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+subject root : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+caller cwd   : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+profile      : full
+enumeration  : full 103/103 · light 79/79  (authorized == actual, recomputed from the table)
+git before   : 0 entr(y|ies) under the subject tree
+run scratch  : /tmp/lisp-plus-release-run.B0u8OY  (removed on success AND on failure)
+
+-- materializing disposable tree copy for writing gates --
+   copy ready: 101M
+
+[001] aggregate   COPY bash verify-all.sh
+      -> PASS (exit 0)
+[002] aggregate   COPY bash mneme/verify-language-floor.sh
+      -> PASS (exit 0)
+[003] aggregate   COPY bash mneme/verify-form-floor.sh
+      -> PASS (exit 0)
+[004] kernel0     INPL sbcl --script mneme/kernel0/kernel0-selftest.lisp
+      -> PASS (exit 0)
+[005] kernel0     INPL sbcl --script mneme/kernel0/load.lisp
+      -> PASS (exit 0)
+[006] journal0    INPL sbcl --script mneme/journal0/journal0-selftest.lisp
+      -> PASS (exit 0)
+[007] journal0    INPL sbcl --script mneme/journal0/journal0-vectors.lisp
+      -> PASS (exit 0)
+[008] journal0    COPY sbcl --script mneme/journal0/de-teste-occiso/run-specimen.lisp
+      -> PASS (exit 0)
+[009] capability0 INPL sbcl --script mneme/capability0/capability0-selftest.lisp
+      -> PASS (exit 0)
+[010] capability0 INPL sbcl --script mneme/capability0/capability0-controls.lisp
+      -> PASS (exit 0)
+[011] capability0 COPY sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+      -> PASS (exit 0)
+[012] capability1 INPL sbcl --script mneme/capability1/capability1-selftest.lisp
+      -> PASS (exit 0)
+[013] capability1 INPL sbcl --script mneme/capability1/capability1-controls.lisp
+      -> PASS (exit 0)
+[014] capability1 COPY sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp
+      -> PASS (exit 0)
+[015] capability2 INPL sbcl --script mneme/capability2/capability2-selftest.lisp
+      -> PASS (exit 0)
+[016] capability2 INPL sbcl --script mneme/capability2/capability2-controls.lisp
+      -> PASS (exit 0)
+[017] capability2 COPY sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+      -> PASS (exit 0)
+[018] adapter0    INPL sbcl --script mneme/adapter0/adapter0-selftest.lisp
+      -> PASS (exit 0)
+[019] adapter0    INPL sbcl --script mneme/adapter0/adapter0-vectors.lisp
+      -> PASS (exit 0)
+[020] adapter0    INPL sbcl --script mneme/adapter0/adapter0-scripts.lisp
+      -> PASS (exit 0)
+[021] adapter0    INPL sbcl --script mneme/adapter0/adapter0-joint.lisp
+      -> PASS (exit 0)
+[022] adapter0    COPY sbcl --script mneme/adapter0/adapter0-l17.lisp
+      -> PASS (exit 0)
+[023] adapter0    INPL sbcl --script mneme/adapter0/adapter0-controls.lisp
+      -> PASS (exit 0)
+[024] adapter0    INPL sbcl --script mneme/adapter0/adapter0-erratum-cost.lisp
+      -> PASS (exit 0)
+[025] adapter0    COPY sbcl --script mneme/adapter0/de-membrana-loquente/run-specimen.lisp
+      -> PASS (exit 0)
+[026] core0       INPL sbcl --script mneme/language-core-0/core0-selftest.lisp
+      -> PASS (exit 0)
+[027] core0       INPL sbcl --script mneme/language-core-0/core0-issuance-selftest.lisp
+      -> PASS (exit 0)
+[028] core0       INPL sbcl --script mneme/language-core-0/de-abaco/SPECIMEN.lisp
+      -> PASS (exit 0)
+[029] core0       INPL sbcl --script mneme/language-core-0/de-cursore-aereo/SPECIMEN.lisp
+      -> PASS (exit 0)
+[030] core0       INPL sbcl --script mneme/language-core-0/de-ponte-usto/SPECIMEN.lisp
+      -> PASS (exit 0)
+[031] core0       INPL sbcl --script mneme/language-core-0/de-bibliotheca-peregrina/APPLICATION.lisp
+      -> PASS (exit 0)
+[032] core0       INPL sbcl --script mneme/language-core-0/de-codice-restaurando/APPLICATION.lisp
+      -> PASS (exit 0)
+[033] slice0      INPL sbcl --script mneme/language-slice-0/SMOKE.lisp
+      -> PASS (exit 0)
+[034] slice0      INPL sbcl --script mneme/language-slice-0/de-infando/SPECIMEN.lisp
+      -> PASS (exit 0)
+[035] slice0      INPL bash mneme/language-slice-0/stranger-implementation-0/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[036] slice0      INPL bash mneme/language-slice-0/stranger-implementation-1/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[037] slice1      INPL sbcl --script mneme/language-slice-1/slice1-selftest.lisp
+      -> PASS (exit 0)
+[038] slice1      INPL sbcl --script mneme/language-slice-1/SMOKE-1.lisp
+      -> PASS (exit 0)
+[039] slice1      INPL sbcl --script mneme/language-slice-1/GUIDE-WALK-1.lisp
+      -> PASS (exit 0)
+[040] slice2      INPL sbcl --script mneme/language-slice-2/slice2-selftest.lisp
+      -> PASS (exit 0)
+[041] slice2      INPL sbcl --script mneme/language-slice-2/SMOKE-2.lisp
+      -> PASS (exit 0)
+[042] slice2      INPL sbcl --script mneme/language-slice-2/de-pignore/APPLICATION.lisp
+      -> PASS (exit 0)
+[043] form0       INPL sbcl --script mneme/language-form-0/form0-selftest.lisp
+      -> PASS (exit 0)
+[044] form0       INPL sbcl --script mneme/language-form-0/PUBLIC-SURFACE-AUDIT.lisp
+      -> PASS (exit 0)
+[045] form0       INPL sbcl --script mneme/language-form-0/de-forma-dormiente/APPLICATION.lisp
+      -> PASS (exit 0)
+[046] form0       COPY bash mneme/language-form-0/MUTATION-LEDGER.sh
+      -> PASS (exit 0)
+[047] form1       INPL sbcl --script mneme/language-form-1/form1-selftest.lisp
+      -> PASS (exit 0)
+[048] form1       INPL sbcl --script mneme/language-form-1/EXPORT-CENSUS.lisp
+      -> PASS (exit 0)
+[049] form1       COPY bash mneme/language-form-1/run-form1-candidate.sh
+      -> PASS (exit 0)
+[050] form1       COPY bash mneme/language-form-1/check-form1-transcript.sh
+      -> PASS (exit 0)
+[051] form1       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[052] form1       INPL sbcl --script mneme/language-form-1/de-forma-petente/APPLICATION.lisp
+      -> PASS (exit 0)
+[053] form2       INPL sbcl --script mneme/language-form-2/form2-selftest.lisp
+      -> PASS (exit 0)
+[054] form2       INPL sbcl --script mneme/language-form-2/SOURCE-HYGIENE-GATE.lisp
+      -> PASS (exit 0)
+[055] form2       COPY bash mneme/language-form-2/run-form2-candidate.sh
+      -> PASS (exit 0)
+[056] form2       COPY bash mneme/language-form-2/check-form2-transcript.sh
+      -> PASS (exit 0)
+[057] form2       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[058] form2       INPL sbcl --script mneme/language-form-2/de-forma-mutata/APPLICATION.lisp
+      -> PASS (exit 0)
+[059] form2       INPL sbcl --script mneme/language-form-2/de-vadimonio/APPLICATION.lisp
+      -> PASS (exit 0)
+[060] form2       COPY bash mneme/language-form-2/de-vadimonio/check-transcript.sh
+      -> PASS (exit 0)
+[061] surface0    INPL sbcl --script mneme/language-surface-0/surface0-selftest.lisp
+      -> PASS (exit 0)
+[062] surface0    COPY bash mneme/language-surface-0/PLANTED-FAULTS.sh
+      -> PASS (exit 0)
+[063] surface1    INPL sbcl --script mneme/language-surface-1/surface1-selftest.lisp
+      -> PASS (exit 0)
+[064] surface1    INPL sbcl --script mneme/language-surface-1/STUB-IMAGE-FIXTURE.lisp
+      -> PASS (exit 0)
+[065] surface1    INPL sbcl --script mneme/language-surface-1/de-expansione-testata/APPLICATION.lisp
+      -> PASS (exit 0)
+[066] surface1    COPY bash mneme/language-surface-1/run-surface1-candidate.sh
+      -> PASS (exit 0)
+[067] surface1    INPL bash subject-digest.sh
+      -> PASS (exit 0)
+[068] surface1    INPL bash helper-search.sh
+      -> PASS (exit 0)
+[069] surface1    COPY bash run-helper-control.sh
+      -> PASS (exit 0)
+[070] surface1    COPY bash subject-binding-controls.sh
+      -> PASS (exit 0)
+[071] surface1    INPL bash fail-open-witness.sh
+      -> PASS (exit 0)
+[072] surface1    INPL bash semantic-path-diff.sh
+      -> PASS (exit 0)
+[073] surface1    COPY bash mneme/language-surface-1/errata-0.3/teeth/teeth.sh
+      -> PASS (exit 0)
+[074] surface2    INPL sbcl --script mneme/language-surface-2/surface2-selftest.lisp
+      -> PASS (exit 0)
+[075] surface2    INPL sbcl --script mneme/language-surface-2/surface2-controls.lisp
+      -> PASS (exit 0)
+[076] surface2    INPL sbcl --script mneme/language-surface-2/surface2-inhabited.lisp
+      -> PASS (exit 0)
+[077] surface2    INPL sbcl --script mneme/language-surface-2/surface2-erratum-binder.lisp
+      -> PASS (exit 0)
+[078] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-selftest.lisp
+      -> PASS (exit 0)
+[079] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-inhabited.lisp
+      -> PASS (exit 0)
+[080] surface-account INPL bash mneme/language-surface-account-0/production/surface-account-graph-gate.sh
+      -> PASS (exit 0)
+[081] surface-account INPL bash mneme/language-surface-account-0/production/run-hostile-profiles.sh
+      -> PASS (exit 0)
+[082] surface-account COPY bash mneme/language-surface-account-0/production/surface-account-disease.sh
+      -> PASS (exit 0)
+[083] act0        INPL sbcl --script mneme/language-act-0/act0-selftest.lisp
+      -> PASS (exit 0)
+[084] act0        INPL bash mneme/language-act-0/act0-load-witnesses.sh
+      -> PASS (exit 0)
+[085] act0        INPL bash mneme/language-act-0/act0-loader-disease.sh
+      -> PASS (exit 0)
+[086] act1        INPL sbcl --script mneme/language-act-1/act1-selftest.lisp
+      -> PASS (exit 0)
+[087] act1        INPL sbcl --script mneme/language-act-1/act1-host-fault-proof.lisp
+      -> PASS (exit 0)
+[088] act1        INPL sbcl --script mneme/language-act-1/act1-controls.lisp
+      -> PASS (exit 0)
+[089] act1        INPL sbcl --script mneme/language-act-1/act1-mutants.lisp
+      -> PASS (exit 0)
+[090] act1        INPL sbcl --script mneme/language-act-1/act1-red-proof.lisp
+      -> PASS (exit 0)
+[091] act1        COPY sbcl --script mneme/language-act-1/de-actu-resurgente/run-specimen.lisp
+      -> PASS (exit 0)
+[092] vertical0   COPY bash mneme/vertical0/harness/repeatability.sh
+      -> PASS (exit 0)
+[093] vertical0   COPY sbcl --script mneme/vertical0/controls/run-integration-controls.lisp
+      -> PASS (exit 0)
+[094] vertical0   COPY sbcl --script mneme/vertical0/mutants/run-mutation-gate.lisp
+      -> PASS (exit 0)
+[095] vertical0   COPY sbcl --script mneme/vertical0/reconstruction/run-reconstruction-gate.lisp
+      -> PASS (exit 0)
+[096] cd0         INPL sbcl --script canonical-datum/common-lisp/run-tests.lisp
+      -> PASS (exit 0)
+[097] cd0         INPL python3 canonical-datum/tools/verify_phase0.py
+      -> PASS (exit 0)
+[098] cd0         INPL python3 canonical-datum/integration/run_differential.py --json
+      -> PASS (exit 0)
+[099] lci0        INPL python3 mneme/lci0/shared/fixture_package.py verify
+      -> PASS (exit 0)
+[100] lci0        INPL sbcl --script mneme/architecture/pj0-errata/erratum-1-d2-examples.lisp
+      -> PASS (exit 0)
+[101] release     INPL bash mneme/load-lisp-plus.sh
+      -> PASS (exit 0)
+[102] release     INPL bash mneme/load-order-matrix.sh
+      -> PASS (exit 0)
+[103] atelier     INPL python3 mneme/atelier/static-check.py
+      -> PASS (exit 0)
+
+-- checkout cleanliness --
+   unchanged: zero tracked modifications, zero new untracked litter.
+
+===========================================================================
+ LANE TABLE
+===========================================================================
+STATUS                 LANE         GATES (executed this run)
+PASS                   aggregate    3 gate(s), 3 passed
+PASS                   kernel0      2 gate(s), 2 passed
+PASS                   journal0     3 gate(s), 3 passed
+PASS                   capability0  3 gate(s), 3 passed
+PASS                   capability1  3 gate(s), 3 passed
+PASS                   capability2  3 gate(s), 3 passed
+PASS                   adapter0     8 gate(s), 8 passed
+PASS                   core0        7 gate(s), 7 passed
+PASS                   slice0       4 gate(s), 4 passed
+PASS                   slice1       3 gate(s), 3 passed
+PASS                   slice2       3 gate(s), 3 passed
+PASS                   form0        4 gate(s), 4 passed
+PASS                   form1        6 gate(s), 6 passed
+PASS                   form2        8 gate(s), 8 passed
+PASS                   surface0     2 gate(s), 2 passed
+PASS                   surface1     11 gate(s), 11 passed
+PASS                   surface2     4 gate(s), 4 passed
+PASS                   surface-account 5 gate(s), 5 passed
+PASS                   act0         3 gate(s), 3 passed
+PASS                   vertical0    4 gate(s), 4 passed
+PASS                   cd0          3 gate(s), 3 passed
+PASS                   lci0         2 gate(s), 2 passed
+PASS                   atelier      1 gate(s), 1 passed
+PASS                   release      2 gate(s), 2 passed
+
+-- declared, not executed (carried forward unchanged, never turned green) --
+
+KNOWN-UNRESOLVED       lci0         LCI/0 algebraic-law audit: 84 laws PASS, 4 laws preserved FAIL
+                                   LCI0-CROSS-004, LCI0-SCOPE-015, LCI0-TEMP-022, LCI0-TEMP-028 remain 
+                                   preserved failures with six minimized witnesses; the lane's own evidence 
+                                   reads "AUDIT COMPLETE — MINIMIZED LAW VIOLATIONS PRESERVED; AUTHORIAL 
+                                   RULING REQUIRED". No authorial disposition exists. This milestone does 
+                                   not repair, adjudicate, or rebuild them.
+
+BLOCKED-EXTERNAL-INPUT lci0         LCI/0 law-audit harness cannot execute on this host
+                                   audit/README.md requires an external checksum-bound packet ZIP passed by 
+                                   path (LCI0-ALGEBRAIC-LAW-AUDIT-PACKET-ERRATA-0.1.zip). It is absent from 
+                                   this host and is not in the tree, so law_audit.py and 5 of its 12 harness 
+                                   self-tests cannot run here at all. The committed evidence is archived, 
+                                   not re-derivable.
+
+ARCHIVED-NOT-RERUN     lci0         LCI/0 cross-implementation differential: 2,295 requests/impl, 0 mismatches
+                                   Requires a materialized fixture overlay and three environment variables; 
+                                   not re-derived by this floor. The lane's own evidence records 
+                                   "cross_language_agreement_is_independent_corroboration": false — 
+                                   cross-language agreement here is NOT independent corroboration, because 
+                                   both implementations were seeded under shared normative infrastructure.
+
+ARCHIVED-NOT-RERUN     vertical0    Vertical /0 five-life SIGKILL campaign
+                                   A strace-controlled process-death generation campaign writing new 
+                                   runs/campaign-* trees. Not re-run. The repeatability gate above 
+                                   byte-compares the two preserved campaigns and re-derives the census from 
+                                   campaign-2; that is verification of an archive, NOT reproduction of the 
+                                   campaign.
+
+ARCHIVED-NOT-RERUN     language-a   Language-A tranche-B (706 files, emission BANKED 295/312)
+                                   Exists only on unmerged mirror branches; deliberately not merged during 
+                                   this milestone per the owner ruling (archive now, adopt later). Scoring 
+                                   is owner-locked pending the null-semantics ruling. The lab tree holds 
+                                   three language-a files, exercised inside verify-all.sh.
+
+PASS                   latent-mvp   latent-mvp historical floor (6/6 suites)
+                                   FOSSIL-MARKED. Retained intact as a historical stratum with its 
+                                   historical floor, exercised inside verify-all.sh above. It has zero edges 
+                                   with the kernel0-era stack and is no longer the front door.
+
+ABSENT                 mneme-memory Mneme memory layer
+                                   Not implemented. No lane exists. "Mneme" currently names a directory, not 
+                                   a working memory-and-continuity layer. Nothing here can be run because 
+                                   nothing here has been built.
+
+ADOPTED                seam         derive/perform over a journal-backed process: One Act /0 — ADOPTED
+                                   ADOPTED 2026-08-08 by owner terminal ruling (One Act /0 R2.3 terminal 
+                                   adoption). The exact verified candidate commit 
+                                   461f2013d1a6feca2b13819ff6ae3f60617e8e82 (tree 
+                                   1123c3c3326664f54d1d96547ba872a876cbd495) was merged unmodified; its 173 
+                                   checks, the 97-gate floor, the loader witnesses and the disease/control 
+                                   pairs all ran green pre-adoption and once post-adoption. DISCLOSURE, 
+                                   VERBATIM FROM THE ADOPTION RECORD: the stranger primitive-minimization 
+                                   audit prescribed as a promotion gate was NOT performed; the owner waived 
+                                   that gate for One Act /0 because its resource cost was disproportionate 
+                                   to the remaining design risk. This variance does not constitute 
+                                   independent validation and does not prevent later primitive reduction or 
+                                   architectural revision. Full record: 
+                                   mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md.
+
+===========================================================================
+ EXECUTABLE GATES (this floor ran them)
+   attempted                : 103
+   passed                   : 103
+   failed                   : 0
+   blocked-external-input   : 0
+
+ CARRIED STATUS ROWS (declared, NOT executed by this floor)
+   rows carried             : 8
+   of which KNOWN-UNRESOLVED     : 1
+   of which BLOCKED-EXTERNAL-INPUT: 1
+   of which ARCHIVED-NOT-RERUN   : 3
+   of which ABSENT               : 1
+   of which PASS (elsewhere)     : 1
+   of which CANDIDATE-NOT-ADOPTED: 0
+   of which ADOPTED              : 1
+
+ THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this
+ floor ran in this process; a carried status row is a standing fact this
+ floor reports without running anything. 'blocked-external-input: 0' above
+ means ZERO EXECUTABLE GATES were blocked; it does not contradict the
+ 1 carried BLOCKED-EXTERNAL-INPUT row(s), which are a different
+ denominator entirely.
+
+ Exit 0 here means: every executable gate passed at its authorized count,
+ every known unresolved finding is unchanged and named above, and every
+ archived-only item passed its integrity check. It does NOT mean that all
+ semantic questions are resolved, and it adopts nothing.
+===========================================================================
+
+FLOOR RESULT: PASS (103 executable gates attempted / 103 passed / 0 blocked; 8 carried status rows; profile full)
+exit=0
+Fri Aug 21 19:32:59 UTC 2026
+
+==========================================================================
+R4.1d — QUIESCENT RELEASE FLOOR RUN, appended by the chair (Claude Fable 5), 2026-08-21
+==========================================================================
+Started and finished at lab HEAD 9932e580; subject tree 0 entries before, unchanged after;
+no commit landed during the run. The lane is NOT registered.
+
+Fri Aug 21 19:52:02 UTC 2026
+9932e580
+===========================================================================
+ LISP+ AGGREGATE RELEASE FLOOR — profile: full
+ Self-consistency certification, never independent conformance.
+ The stranger primitive-minimization audit is OWED.
+===========================================================================
+
+toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+subject root : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+caller cwd   : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+profile      : full
+enumeration  : full 103/103 · light 79/79  (authorized == actual, recomputed from the table)
+git before   : 0 entr(y|ies) under the subject tree
+run scratch  : /tmp/lisp-plus-release-run.BkHrus  (removed on success AND on failure)
+
+-- materializing disposable tree copy for writing gates --
+   copy ready: 101M
+
+[001] aggregate   COPY bash verify-all.sh
+      -> PASS (exit 0)
+[002] aggregate   COPY bash mneme/verify-language-floor.sh
+      -> PASS (exit 0)
+[003] aggregate   COPY bash mneme/verify-form-floor.sh
+      -> PASS (exit 0)
+[004] kernel0     INPL sbcl --script mneme/kernel0/kernel0-selftest.lisp
+      -> PASS (exit 0)
+[005] kernel0     INPL sbcl --script mneme/kernel0/load.lisp
+      -> PASS (exit 0)
+[006] journal0    INPL sbcl --script mneme/journal0/journal0-selftest.lisp
+      -> PASS (exit 0)
+[007] journal0    INPL sbcl --script mneme/journal0/journal0-vectors.lisp
+      -> PASS (exit 0)
+[008] journal0    COPY sbcl --script mneme/journal0/de-teste-occiso/run-specimen.lisp
+      -> PASS (exit 0)
+[009] capability0 INPL sbcl --script mneme/capability0/capability0-selftest.lisp
+      -> PASS (exit 0)
+[010] capability0 INPL sbcl --script mneme/capability0/capability0-controls.lisp
+      -> PASS (exit 0)
+[011] capability0 COPY sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+      -> PASS (exit 0)
+[012] capability1 INPL sbcl --script mneme/capability1/capability1-selftest.lisp
+      -> PASS (exit 0)
+[013] capability1 INPL sbcl --script mneme/capability1/capability1-controls.lisp
+      -> PASS (exit 0)
+[014] capability1 COPY sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp
+      -> PASS (exit 0)
+[015] capability2 INPL sbcl --script mneme/capability2/capability2-selftest.lisp
+      -> PASS (exit 0)
+[016] capability2 INPL sbcl --script mneme/capability2/capability2-controls.lisp
+      -> PASS (exit 0)
+[017] capability2 COPY sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+      -> PASS (exit 0)
+[018] adapter0    INPL sbcl --script mneme/adapter0/adapter0-selftest.lisp
+      -> PASS (exit 0)
+[019] adapter0    INPL sbcl --script mneme/adapter0/adapter0-vectors.lisp
+      -> PASS (exit 0)
+[020] adapter0    INPL sbcl --script mneme/adapter0/adapter0-scripts.lisp
+      -> PASS (exit 0)
+[021] adapter0    INPL sbcl --script mneme/adapter0/adapter0-joint.lisp
+      -> PASS (exit 0)
+[022] adapter0    COPY sbcl --script mneme/adapter0/adapter0-l17.lisp
+      -> PASS (exit 0)
+[023] adapter0    INPL sbcl --script mneme/adapter0/adapter0-controls.lisp
+      -> PASS (exit 0)
+[024] adapter0    INPL sbcl --script mneme/adapter0/adapter0-erratum-cost.lisp
+      -> PASS (exit 0)
+[025] adapter0    COPY sbcl --script mneme/adapter0/de-membrana-loquente/run-specimen.lisp
+      -> PASS (exit 0)
+[026] core0       INPL sbcl --script mneme/language-core-0/core0-selftest.lisp
+      -> PASS (exit 0)
+[027] core0       INPL sbcl --script mneme/language-core-0/core0-issuance-selftest.lisp
+      -> PASS (exit 0)
+[028] core0       INPL sbcl --script mneme/language-core-0/de-abaco/SPECIMEN.lisp
+      -> PASS (exit 0)
+[029] core0       INPL sbcl --script mneme/language-core-0/de-cursore-aereo/SPECIMEN.lisp
+      -> PASS (exit 0)
+[030] core0       INPL sbcl --script mneme/language-core-0/de-ponte-usto/SPECIMEN.lisp
+      -> PASS (exit 0)
+[031] core0       INPL sbcl --script mneme/language-core-0/de-bibliotheca-peregrina/APPLICATION.lisp
+      -> PASS (exit 0)
+[032] core0       INPL sbcl --script mneme/language-core-0/de-codice-restaurando/APPLICATION.lisp
+      -> PASS (exit 0)
+[033] slice0      INPL sbcl --script mneme/language-slice-0/SMOKE.lisp
+      -> PASS (exit 0)
+[034] slice0      INPL sbcl --script mneme/language-slice-0/de-infando/SPECIMEN.lisp
+      -> PASS (exit 0)
+[035] slice0      INPL bash mneme/language-slice-0/stranger-implementation-0/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[036] slice0      INPL bash mneme/language-slice-0/stranger-implementation-1/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[037] slice1      INPL sbcl --script mneme/language-slice-1/slice1-selftest.lisp
+      -> PASS (exit 0)
+[038] slice1      INPL sbcl --script mneme/language-slice-1/SMOKE-1.lisp
+      -> PASS (exit 0)
+[039] slice1      INPL sbcl --script mneme/language-slice-1/GUIDE-WALK-1.lisp
+      -> PASS (exit 0)
+[040] slice2      INPL sbcl --script mneme/language-slice-2/slice2-selftest.lisp
+      -> PASS (exit 0)
+[041] slice2      INPL sbcl --script mneme/language-slice-2/SMOKE-2.lisp
+      -> PASS (exit 0)
+[042] slice2      INPL sbcl --script mneme/language-slice-2/de-pignore/APPLICATION.lisp
+      -> PASS (exit 0)
+[043] form0       INPL sbcl --script mneme/language-form-0/form0-selftest.lisp
+      -> PASS (exit 0)
+[044] form0       INPL sbcl --script mneme/language-form-0/PUBLIC-SURFACE-AUDIT.lisp
+      -> PASS (exit 0)
+[045] form0       INPL sbcl --script mneme/language-form-0/de-forma-dormiente/APPLICATION.lisp
+      -> PASS (exit 0)
+[046] form0       COPY bash mneme/language-form-0/MUTATION-LEDGER.sh
+      -> PASS (exit 0)
+[047] form1       INPL sbcl --script mneme/language-form-1/form1-selftest.lisp
+      -> PASS (exit 0)
+[048] form1       INPL sbcl --script mneme/language-form-1/EXPORT-CENSUS.lisp
+      -> PASS (exit 0)
+[049] form1       COPY bash mneme/language-form-1/run-form1-candidate.sh
+      -> PASS (exit 0)
+[050] form1       COPY bash mneme/language-form-1/check-form1-transcript.sh
+      -> PASS (exit 0)
+[051] form1       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[052] form1       INPL sbcl --script mneme/language-form-1/de-forma-petente/APPLICATION.lisp
+      -> PASS (exit 0)
+[053] form2       INPL sbcl --script mneme/language-form-2/form2-selftest.lisp
+      -> PASS (exit 0)
+[054] form2       INPL sbcl --script mneme/language-form-2/SOURCE-HYGIENE-GATE.lisp
+      -> PASS (exit 0)
+[055] form2       COPY bash mneme/language-form-2/run-form2-candidate.sh
+      -> PASS (exit 0)
+[056] form2       COPY bash mneme/language-form-2/check-form2-transcript.sh
+      -> PASS (exit 0)
+[057] form2       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[058] form2       INPL sbcl --script mneme/language-form-2/de-forma-mutata/APPLICATION.lisp
+      -> PASS (exit 0)
+[059] form2       INPL sbcl --script mneme/language-form-2/de-vadimonio/APPLICATION.lisp
+      -> PASS (exit 0)
+[060] form2       COPY bash mneme/language-form-2/de-vadimonio/check-transcript.sh
+      -> PASS (exit 0)
+[061] surface0    INPL sbcl --script mneme/language-surface-0/surface0-selftest.lisp
+      -> PASS (exit 0)
+[062] surface0    COPY bash mneme/language-surface-0/PLANTED-FAULTS.sh
+      -> PASS (exit 0)
+[063] surface1    INPL sbcl --script mneme/language-surface-1/surface1-selftest.lisp
+      -> PASS (exit 0)
+[064] surface1    INPL sbcl --script mneme/language-surface-1/STUB-IMAGE-FIXTURE.lisp
+      -> PASS (exit 0)
+[065] surface1    INPL sbcl --script mneme/language-surface-1/de-expansione-testata/APPLICATION.lisp
+      -> PASS (exit 0)
+[066] surface1    COPY bash mneme/language-surface-1/run-surface1-candidate.sh
+      -> PASS (exit 0)
+[067] surface1    INPL bash subject-digest.sh
+      -> PASS (exit 0)
+[068] surface1    INPL bash helper-search.sh
+      -> PASS (exit 0)
+[069] surface1    COPY bash run-helper-control.sh
+      -> PASS (exit 0)
+[070] surface1    COPY bash subject-binding-controls.sh
+      -> PASS (exit 0)
+[071] surface1    INPL bash fail-open-witness.sh
+      -> PASS (exit 0)
+[072] surface1    INPL bash semantic-path-diff.sh
+      -> PASS (exit 0)
+[073] surface1    COPY bash mneme/language-surface-1/errata-0.3/teeth/teeth.sh
+      -> PASS (exit 0)
+[074] surface2    INPL sbcl --script mneme/language-surface-2/surface2-selftest.lisp
+      -> PASS (exit 0)
+[075] surface2    INPL sbcl --script mneme/language-surface-2/surface2-controls.lisp
+      -> PASS (exit 0)
+[076] surface2    INPL sbcl --script mneme/language-surface-2/surface2-inhabited.lisp
+      -> PASS (exit 0)
+[077] surface2    INPL sbcl --script mneme/language-surface-2/surface2-erratum-binder.lisp
+      -> PASS (exit 0)
+[078] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-selftest.lisp
+      -> PASS (exit 0)
+[079] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-inhabited.lisp
+      -> PASS (exit 0)
+[080] surface-account INPL bash mneme/language-surface-account-0/production/surface-account-graph-gate.sh
+      -> PASS (exit 0)
+[081] surface-account INPL bash mneme/language-surface-account-0/production/run-hostile-profiles.sh
+      -> PASS (exit 0)
+[082] surface-account COPY bash mneme/language-surface-account-0/production/surface-account-disease.sh
+      -> PASS (exit 0)
+[083] act0        INPL sbcl --script mneme/language-act-0/act0-selftest.lisp
+      -> PASS (exit 0)
+[084] act0        INPL bash mneme/language-act-0/act0-load-witnesses.sh
+      -> PASS (exit 0)
+[085] act0        INPL bash mneme/language-act-0/act0-loader-disease.sh
+      -> PASS (exit 0)
+[086] act1        INPL sbcl --script mneme/language-act-1/act1-selftest.lisp
+      -> PASS (exit 0)
+[087] act1        INPL sbcl --script mneme/language-act-1/act1-host-fault-proof.lisp
+      -> PASS (exit 0)
+[088] act1        INPL sbcl --script mneme/language-act-1/act1-controls.lisp
+      -> PASS (exit 0)
+[089] act1        INPL sbcl --script mneme/language-act-1/act1-mutants.lisp
+      -> PASS (exit 0)
+[090] act1        INPL sbcl --script mneme/language-act-1/act1-red-proof.lisp
+      -> PASS (exit 0)
+[091] act1        COPY sbcl --script mneme/language-act-1/de-actu-resurgente/run-specimen.lisp
+      -> PASS (exit 0)
+[092] vertical0   COPY bash mneme/vertical0/harness/repeatability.sh
+      -> PASS (exit 0)
+[093] vertical0   COPY sbcl --script mneme/vertical0/controls/run-integration-controls.lisp
+      -> PASS (exit 0)
+[094] vertical0   COPY sbcl --script mneme/vertical0/mutants/run-mutation-gate.lisp
+      -> PASS (exit 0)
+[095] vertical0   COPY sbcl --script mneme/vertical0/reconstruction/run-reconstruction-gate.lisp
+      -> PASS (exit 0)
+[096] cd0         INPL sbcl --script canonical-datum/common-lisp/run-tests.lisp
+      -> PASS (exit 0)
+[097] cd0         INPL python3 canonical-datum/tools/verify_phase0.py
+      -> PASS (exit 0)
+[098] cd0         INPL python3 canonical-datum/integration/run_differential.py --json
+      -> PASS (exit 0)
+[099] lci0        INPL python3 mneme/lci0/shared/fixture_package.py verify
+      -> PASS (exit 0)
+[100] lci0        INPL sbcl --script mneme/architecture/pj0-errata/erratum-1-d2-examples.lisp
+      -> PASS (exit 0)
+[101] release     INPL bash mneme/load-lisp-plus.sh
+      -> PASS (exit 0)
+[102] release     INPL bash mneme/load-order-matrix.sh
+      -> PASS (exit 0)
+[103] atelier     INPL python3 mneme/atelier/static-check.py
+      -> PASS (exit 0)
+
+-- checkout cleanliness --
+   unchanged: zero tracked modifications, zero new untracked litter.
+
+===========================================================================
+ LANE TABLE
+===========================================================================
+STATUS                 LANE         GATES (executed this run)
+PASS                   aggregate    3 gate(s), 3 passed
+PASS                   kernel0      2 gate(s), 2 passed
+PASS                   journal0     3 gate(s), 3 passed
+PASS                   capability0  3 gate(s), 3 passed
+PASS                   capability1  3 gate(s), 3 passed
+PASS                   capability2  3 gate(s), 3 passed
+PASS                   adapter0     8 gate(s), 8 passed
+PASS                   core0        7 gate(s), 7 passed
+PASS                   slice0       4 gate(s), 4 passed
+PASS                   slice1       3 gate(s), 3 passed
+PASS                   slice2       3 gate(s), 3 passed
+PASS                   form0        4 gate(s), 4 passed
+PASS                   form1        6 gate(s), 6 passed
+PASS                   form2        8 gate(s), 8 passed
+PASS                   surface0     2 gate(s), 2 passed
+PASS                   surface1     11 gate(s), 11 passed
+PASS                   surface2     4 gate(s), 4 passed
+PASS                   surface-account 5 gate(s), 5 passed
+PASS                   act0         3 gate(s), 3 passed
+PASS                   vertical0    4 gate(s), 4 passed
+PASS                   cd0          3 gate(s), 3 passed
+PASS                   lci0         2 gate(s), 2 passed
+PASS                   atelier      1 gate(s), 1 passed
+PASS                   release      2 gate(s), 2 passed
+
+-- declared, not executed (carried forward unchanged, never turned green) --
+
+KNOWN-UNRESOLVED       lci0         LCI/0 algebraic-law audit: 84 laws PASS, 4 laws preserved FAIL
+                                   LCI0-CROSS-004, LCI0-SCOPE-015, LCI0-TEMP-022, LCI0-TEMP-028 remain 
+                                   preserved failures with six minimized witnesses; the lane's own evidence 
+                                   reads "AUDIT COMPLETE — MINIMIZED LAW VIOLATIONS PRESERVED; AUTHORIAL 
+                                   RULING REQUIRED". No authorial disposition exists. This milestone does 
+                                   not repair, adjudicate, or rebuild them.
+
+BLOCKED-EXTERNAL-INPUT lci0         LCI/0 law-audit harness cannot execute on this host
+                                   audit/README.md requires an external checksum-bound packet ZIP passed by 
+                                   path (LCI0-ALGEBRAIC-LAW-AUDIT-PACKET-ERRATA-0.1.zip). It is absent from 
+                                   this host and is not in the tree, so law_audit.py and 5 of its 12 harness 
+                                   self-tests cannot run here at all. The committed evidence is archived, 
+                                   not re-derivable.
+
+ARCHIVED-NOT-RERUN     lci0         LCI/0 cross-implementation differential: 2,295 requests/impl, 0 mismatches
+                                   Requires a materialized fixture overlay and three environment variables; 
+                                   not re-derived by this floor. The lane's own evidence records 
+                                   "cross_language_agreement_is_independent_corroboration": false — 
+                                   cross-language agreement here is NOT independent corroboration, because 
+                                   both implementations were seeded under shared normative infrastructure.
+
+ARCHIVED-NOT-RERUN     vertical0    Vertical /0 five-life SIGKILL campaign
+                                   A strace-controlled process-death generation campaign writing new 
+                                   runs/campaign-* trees. Not re-run. The repeatability gate above 
+                                   byte-compares the two preserved campaigns and re-derives the census from 
+                                   campaign-2; that is verification of an archive, NOT reproduction of the 
+                                   campaign.
+
+ARCHIVED-NOT-RERUN     language-a   Language-A tranche-B (706 files, emission BANKED 295/312)
+                                   Exists only on unmerged mirror branches; deliberately not merged during 
+                                   this milestone per the owner ruling (archive now, adopt later). Scoring 
+                                   is owner-locked pending the null-semantics ruling. The lab tree holds 
+                                   three language-a files, exercised inside verify-all.sh.
+
+PASS                   latent-mvp   latent-mvp historical floor (6/6 suites)
+                                   FOSSIL-MARKED. Retained intact as a historical stratum with its 
+                                   historical floor, exercised inside verify-all.sh above. It has zero edges 
+                                   with the kernel0-era stack and is no longer the front door.
+
+ABSENT                 mneme-memory Mneme memory layer
+                                   Not implemented. No lane exists. "Mneme" currently names a directory, not 
+                                   a working memory-and-continuity layer. Nothing here can be run because 
+                                   nothing here has been built.
+
+ADOPTED                seam         derive/perform over a journal-backed process: One Act /0 — ADOPTED
+                                   ADOPTED 2026-08-08 by owner terminal ruling (One Act /0 R2.3 terminal 
+                                   adoption). The exact verified candidate commit 
+                                   461f2013d1a6feca2b13819ff6ae3f60617e8e82 (tree 
+                                   1123c3c3326664f54d1d96547ba872a876cbd495) was merged unmodified; its 173 
+                                   checks, the 97-gate floor, the loader witnesses and the disease/control 
+                                   pairs all ran green pre-adoption and once post-adoption. DISCLOSURE, 
+                                   VERBATIM FROM THE ADOPTION RECORD: the stranger primitive-minimization 
+                                   audit prescribed as a promotion gate was NOT performed; the owner waived 
+                                   that gate for One Act /0 because its resource cost was disproportionate 
+                                   to the remaining design risk. This variance does not constitute 
+                                   independent validation and does not prevent later primitive reduction or 
+                                   architectural revision. Full record: 
+                                   mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md.
+
+===========================================================================
+ EXECUTABLE GATES (this floor ran them)
+   attempted                : 103
+   passed                   : 103
+   failed                   : 0
+   blocked-external-input   : 0
+
+ CARRIED STATUS ROWS (declared, NOT executed by this floor)
+   rows carried             : 8
+   of which KNOWN-UNRESOLVED     : 1
+   of which BLOCKED-EXTERNAL-INPUT: 1
+   of which ARCHIVED-NOT-RERUN   : 3
+   of which ABSENT               : 1
+   of which PASS (elsewhere)     : 1
+   of which CANDIDATE-NOT-ADOPTED: 0
+   of which ADOPTED              : 1
+
+ THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this
+ floor ran in this process; a carried status row is a standing fact this
+ floor reports without running anything. 'blocked-external-input: 0' above
+ means ZERO EXECUTABLE GATES were blocked; it does not contradict the
+ 1 carried BLOCKED-EXTERNAL-INPUT row(s), which are a different
+ denominator entirely.
+
+ Exit 0 here means: every executable gate passed at its authorized count,
+ every known unresolved finding is unchanged and named above, and every
+ archived-only item passed its integrity check. It does NOT mean that all
+ semantic questions are resolved, and it adopts nothing.
+===========================================================================
+
+FLOOR RESULT: PASS (103 executable gates attempted / 103 passed / 0 blocked; 8 carried status rows; profile full)
+exit=0
+Fri Aug 21 20:14:44 UTC 2026
+
+==========================================================================
+R4.1e — QUIESCENT RELEASE FLOOR RUN, appended by the chair (Claude Fable 5), 2026-08-21
+==========================================================================
+Started at lab HEAD 0dec47e1; subject tree 0 entries before, unchanged after. During the run the
+session-checkpoint Stop hook committed 0c210316 (agents/hermes/notes/self-reflections.md —
+OUTSIDE the subject tree; git diff 0dec47e1..0c210316 -- experiments/latent-lisp = 0 lines).
+Subject bytes untouched throughout. The lane is NOT registered.
+
+Fri Aug 21 20:42:58 UTC 2026
+0dec47e1
+===========================================================================
+ LISP+ AGGREGATE RELEASE FLOOR — profile: full
+ Self-consistency certification, never independent conformance.
+ The stranger primitive-minimization audit is OWED.
+===========================================================================
+
+toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+subject root : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+caller cwd   : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+profile      : full
+enumeration  : full 103/103 · light 79/79  (authorized == actual, recomputed from the table)
+git before   : 0 entr(y|ies) under the subject tree
+run scratch  : /tmp/lisp-plus-release-run.MqpDK7  (removed on success AND on failure)
+
+-- materializing disposable tree copy for writing gates --
+   copy ready: 101M
+
+[001] aggregate   COPY bash verify-all.sh
+      -> PASS (exit 0)
+[002] aggregate   COPY bash mneme/verify-language-floor.sh
+      -> PASS (exit 0)
+[003] aggregate   COPY bash mneme/verify-form-floor.sh
+      -> PASS (exit 0)
+[004] kernel0     INPL sbcl --script mneme/kernel0/kernel0-selftest.lisp
+      -> PASS (exit 0)
+[005] kernel0     INPL sbcl --script mneme/kernel0/load.lisp
+      -> PASS (exit 0)
+[006] journal0    INPL sbcl --script mneme/journal0/journal0-selftest.lisp
+      -> PASS (exit 0)
+[007] journal0    INPL sbcl --script mneme/journal0/journal0-vectors.lisp
+      -> PASS (exit 0)
+[008] journal0    COPY sbcl --script mneme/journal0/de-teste-occiso/run-specimen.lisp
+      -> PASS (exit 0)
+[009] capability0 INPL sbcl --script mneme/capability0/capability0-selftest.lisp
+      -> PASS (exit 0)
+[010] capability0 INPL sbcl --script mneme/capability0/capability0-controls.lisp
+      -> PASS (exit 0)
+[011] capability0 COPY sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+      -> PASS (exit 0)
+[012] capability1 INPL sbcl --script mneme/capability1/capability1-selftest.lisp
+      -> PASS (exit 0)
+[013] capability1 INPL sbcl --script mneme/capability1/capability1-controls.lisp
+      -> PASS (exit 0)
+[014] capability1 COPY sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp
+      -> PASS (exit 0)
+[015] capability2 INPL sbcl --script mneme/capability2/capability2-selftest.lisp
+      -> PASS (exit 0)
+[016] capability2 INPL sbcl --script mneme/capability2/capability2-controls.lisp
+      -> PASS (exit 0)
+[017] capability2 COPY sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+      -> PASS (exit 0)
+[018] adapter0    INPL sbcl --script mneme/adapter0/adapter0-selftest.lisp
+      -> PASS (exit 0)
+[019] adapter0    INPL sbcl --script mneme/adapter0/adapter0-vectors.lisp
+      -> PASS (exit 0)
+[020] adapter0    INPL sbcl --script mneme/adapter0/adapter0-scripts.lisp
+      -> PASS (exit 0)
+[021] adapter0    INPL sbcl --script mneme/adapter0/adapter0-joint.lisp
+      -> PASS (exit 0)
+[022] adapter0    COPY sbcl --script mneme/adapter0/adapter0-l17.lisp
+      -> PASS (exit 0)
+[023] adapter0    INPL sbcl --script mneme/adapter0/adapter0-controls.lisp
+      -> PASS (exit 0)
+[024] adapter0    INPL sbcl --script mneme/adapter0/adapter0-erratum-cost.lisp
+      -> PASS (exit 0)
+[025] adapter0    COPY sbcl --script mneme/adapter0/de-membrana-loquente/run-specimen.lisp
+      -> PASS (exit 0)
+[026] core0       INPL sbcl --script mneme/language-core-0/core0-selftest.lisp
+      -> PASS (exit 0)
+[027] core0       INPL sbcl --script mneme/language-core-0/core0-issuance-selftest.lisp
+      -> PASS (exit 0)
+[028] core0       INPL sbcl --script mneme/language-core-0/de-abaco/SPECIMEN.lisp
+      -> PASS (exit 0)
+[029] core0       INPL sbcl --script mneme/language-core-0/de-cursore-aereo/SPECIMEN.lisp
+      -> PASS (exit 0)
+[030] core0       INPL sbcl --script mneme/language-core-0/de-ponte-usto/SPECIMEN.lisp
+      -> PASS (exit 0)
+[031] core0       INPL sbcl --script mneme/language-core-0/de-bibliotheca-peregrina/APPLICATION.lisp
+      -> PASS (exit 0)
+[032] core0       INPL sbcl --script mneme/language-core-0/de-codice-restaurando/APPLICATION.lisp
+      -> PASS (exit 0)
+[033] slice0      INPL sbcl --script mneme/language-slice-0/SMOKE.lisp
+      -> PASS (exit 0)
+[034] slice0      INPL sbcl --script mneme/language-slice-0/de-infando/SPECIMEN.lisp
+      -> PASS (exit 0)
+[035] slice0      INPL bash mneme/language-slice-0/stranger-implementation-0/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[036] slice0      INPL bash mneme/language-slice-0/stranger-implementation-1/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[037] slice1      INPL sbcl --script mneme/language-slice-1/slice1-selftest.lisp
+      -> PASS (exit 0)
+[038] slice1      INPL sbcl --script mneme/language-slice-1/SMOKE-1.lisp
+      -> PASS (exit 0)
+[039] slice1      INPL sbcl --script mneme/language-slice-1/GUIDE-WALK-1.lisp
+      -> PASS (exit 0)
+[040] slice2      INPL sbcl --script mneme/language-slice-2/slice2-selftest.lisp
+      -> PASS (exit 0)
+[041] slice2      INPL sbcl --script mneme/language-slice-2/SMOKE-2.lisp
+      -> PASS (exit 0)
+[042] slice2      INPL sbcl --script mneme/language-slice-2/de-pignore/APPLICATION.lisp
+      -> PASS (exit 0)
+[043] form0       INPL sbcl --script mneme/language-form-0/form0-selftest.lisp
+      -> PASS (exit 0)
+[044] form0       INPL sbcl --script mneme/language-form-0/PUBLIC-SURFACE-AUDIT.lisp
+      -> PASS (exit 0)
+[045] form0       INPL sbcl --script mneme/language-form-0/de-forma-dormiente/APPLICATION.lisp
+      -> PASS (exit 0)
+[046] form0       COPY bash mneme/language-form-0/MUTATION-LEDGER.sh
+      -> PASS (exit 0)
+[047] form1       INPL sbcl --script mneme/language-form-1/form1-selftest.lisp
+      -> PASS (exit 0)
+[048] form1       INPL sbcl --script mneme/language-form-1/EXPORT-CENSUS.lisp
+      -> PASS (exit 0)
+[049] form1       COPY bash mneme/language-form-1/run-form1-candidate.sh
+      -> PASS (exit 0)
+[050] form1       COPY bash mneme/language-form-1/check-form1-transcript.sh
+      -> PASS (exit 0)
+[051] form1       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[052] form1       INPL sbcl --script mneme/language-form-1/de-forma-petente/APPLICATION.lisp
+      -> PASS (exit 0)
+[053] form2       INPL sbcl --script mneme/language-form-2/form2-selftest.lisp
+      -> PASS (exit 0)
+[054] form2       INPL sbcl --script mneme/language-form-2/SOURCE-HYGIENE-GATE.lisp
+      -> PASS (exit 0)
+[055] form2       COPY bash mneme/language-form-2/run-form2-candidate.sh
+      -> PASS (exit 0)
+[056] form2       COPY bash mneme/language-form-2/check-form2-transcript.sh
+      -> PASS (exit 0)
+[057] form2       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[058] form2       INPL sbcl --script mneme/language-form-2/de-forma-mutata/APPLICATION.lisp
+      -> PASS (exit 0)
+[059] form2       INPL sbcl --script mneme/language-form-2/de-vadimonio/APPLICATION.lisp
+      -> PASS (exit 0)
+[060] form2       COPY bash mneme/language-form-2/de-vadimonio/check-transcript.sh
+      -> PASS (exit 0)
+[061] surface0    INPL sbcl --script mneme/language-surface-0/surface0-selftest.lisp
+      -> PASS (exit 0)
+[062] surface0    COPY bash mneme/language-surface-0/PLANTED-FAULTS.sh
+      -> PASS (exit 0)
+[063] surface1    INPL sbcl --script mneme/language-surface-1/surface1-selftest.lisp
+      -> PASS (exit 0)
+[064] surface1    INPL sbcl --script mneme/language-surface-1/STUB-IMAGE-FIXTURE.lisp
+      -> PASS (exit 0)
+[065] surface1    INPL sbcl --script mneme/language-surface-1/de-expansione-testata/APPLICATION.lisp
+      -> PASS (exit 0)
+[066] surface1    COPY bash mneme/language-surface-1/run-surface1-candidate.sh
+      -> PASS (exit 0)
+[067] surface1    INPL bash subject-digest.sh
+      -> PASS (exit 0)
+[068] surface1    INPL bash helper-search.sh
+      -> PASS (exit 0)
+[069] surface1    COPY bash run-helper-control.sh
+      -> PASS (exit 0)
+[070] surface1    COPY bash subject-binding-controls.sh
+      -> PASS (exit 0)
+[071] surface1    INPL bash fail-open-witness.sh
+      -> PASS (exit 0)
+[072] surface1    INPL bash semantic-path-diff.sh
+      -> PASS (exit 0)
+[073] surface1    COPY bash mneme/language-surface-1/errata-0.3/teeth/teeth.sh
+      -> PASS (exit 0)
+[074] surface2    INPL sbcl --script mneme/language-surface-2/surface2-selftest.lisp
+      -> PASS (exit 0)
+[075] surface2    INPL sbcl --script mneme/language-surface-2/surface2-controls.lisp
+      -> PASS (exit 0)
+[076] surface2    INPL sbcl --script mneme/language-surface-2/surface2-inhabited.lisp
+      -> PASS (exit 0)
+[077] surface2    INPL sbcl --script mneme/language-surface-2/surface2-erratum-binder.lisp
+      -> PASS (exit 0)
+[078] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-selftest.lisp
+      -> PASS (exit 0)
+[079] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-inhabited.lisp
+      -> PASS (exit 0)
+[080] surface-account INPL bash mneme/language-surface-account-0/production/surface-account-graph-gate.sh
+      -> PASS (exit 0)
+[081] surface-account INPL bash mneme/language-surface-account-0/production/run-hostile-profiles.sh
+      -> PASS (exit 0)
+[082] surface-account COPY bash mneme/language-surface-account-0/production/surface-account-disease.sh
+      -> PASS (exit 0)
+[083] act0        INPL sbcl --script mneme/language-act-0/act0-selftest.lisp
+      -> PASS (exit 0)
+[084] act0        INPL bash mneme/language-act-0/act0-load-witnesses.sh
+      -> PASS (exit 0)
+[085] act0        INPL bash mneme/language-act-0/act0-loader-disease.sh
+      -> PASS (exit 0)
+[086] act1        INPL sbcl --script mneme/language-act-1/act1-selftest.lisp
+      -> PASS (exit 0)
+[087] act1        INPL sbcl --script mneme/language-act-1/act1-host-fault-proof.lisp
+      -> PASS (exit 0)
+[088] act1        INPL sbcl --script mneme/language-act-1/act1-controls.lisp
+      -> PASS (exit 0)
+[089] act1        INPL sbcl --script mneme/language-act-1/act1-mutants.lisp
+      -> PASS (exit 0)
+[090] act1        INPL sbcl --script mneme/language-act-1/act1-red-proof.lisp
+      -> PASS (exit 0)
+[091] act1        COPY sbcl --script mneme/language-act-1/de-actu-resurgente/run-specimen.lisp
+      -> PASS (exit 0)
+[092] vertical0   COPY bash mneme/vertical0/harness/repeatability.sh
+      -> PASS (exit 0)
+[093] vertical0   COPY sbcl --script mneme/vertical0/controls/run-integration-controls.lisp
+      -> PASS (exit 0)
+[094] vertical0   COPY sbcl --script mneme/vertical0/mutants/run-mutation-gate.lisp
+      -> PASS (exit 0)
+[095] vertical0   COPY sbcl --script mneme/vertical0/reconstruction/run-reconstruction-gate.lisp
+      -> PASS (exit 0)
+[096] cd0         INPL sbcl --script canonical-datum/common-lisp/run-tests.lisp
+      -> PASS (exit 0)
+[097] cd0         INPL python3 canonical-datum/tools/verify_phase0.py
+      -> PASS (exit 0)
+[098] cd0         INPL python3 canonical-datum/integration/run_differential.py --json
+      -> PASS (exit 0)
+[099] lci0        INPL python3 mneme/lci0/shared/fixture_package.py verify
+      -> PASS (exit 0)
+[100] lci0        INPL sbcl --script mneme/architecture/pj0-errata/erratum-1-d2-examples.lisp
+      -> PASS (exit 0)
+[101] release     INPL bash mneme/load-lisp-plus.sh
+      -> PASS (exit 0)
+[102] release     INPL bash mneme/load-order-matrix.sh
+      -> PASS (exit 0)
+[103] atelier     INPL python3 mneme/atelier/static-check.py
+      -> PASS (exit 0)
+
+-- checkout cleanliness --
+   unchanged: zero tracked modifications, zero new untracked litter.
+
+===========================================================================
+ LANE TABLE
+===========================================================================
+STATUS                 LANE         GATES (executed this run)
+PASS                   aggregate    3 gate(s), 3 passed
+PASS                   kernel0      2 gate(s), 2 passed
+PASS                   journal0     3 gate(s), 3 passed
+PASS                   capability0  3 gate(s), 3 passed
+PASS                   capability1  3 gate(s), 3 passed
+PASS                   capability2  3 gate(s), 3 passed
+PASS                   adapter0     8 gate(s), 8 passed
+PASS                   core0        7 gate(s), 7 passed
+PASS                   slice0       4 gate(s), 4 passed
+PASS                   slice1       3 gate(s), 3 passed
+PASS                   slice2       3 gate(s), 3 passed
+PASS                   form0        4 gate(s), 4 passed
+PASS                   form1        6 gate(s), 6 passed
+PASS                   form2        8 gate(s), 8 passed
+PASS                   surface0     2 gate(s), 2 passed
+PASS                   surface1     11 gate(s), 11 passed
+PASS                   surface2     4 gate(s), 4 passed
+PASS                   surface-account 5 gate(s), 5 passed
+PASS                   act0         3 gate(s), 3 passed
+PASS                   vertical0    4 gate(s), 4 passed
+PASS                   cd0          3 gate(s), 3 passed
+PASS                   lci0         2 gate(s), 2 passed
+PASS                   atelier      1 gate(s), 1 passed
+PASS                   release      2 gate(s), 2 passed
+
+-- declared, not executed (carried forward unchanged, never turned green) --
+
+KNOWN-UNRESOLVED       lci0         LCI/0 algebraic-law audit: 84 laws PASS, 4 laws preserved FAIL
+                                   LCI0-CROSS-004, LCI0-SCOPE-015, LCI0-TEMP-022, LCI0-TEMP-028 remain 
+                                   preserved failures with six minimized witnesses; the lane's own evidence 
+                                   reads "AUDIT COMPLETE — MINIMIZED LAW VIOLATIONS PRESERVED; AUTHORIAL 
+                                   RULING REQUIRED". No authorial disposition exists. This milestone does 
+                                   not repair, adjudicate, or rebuild them.
+
+BLOCKED-EXTERNAL-INPUT lci0         LCI/0 law-audit harness cannot execute on this host
+                                   audit/README.md requires an external checksum-bound packet ZIP passed by 
+                                   path (LCI0-ALGEBRAIC-LAW-AUDIT-PACKET-ERRATA-0.1.zip). It is absent from 
+                                   this host and is not in the tree, so law_audit.py and 5 of its 12 harness 
+                                   self-tests cannot run here at all. The committed evidence is archived, 
+                                   not re-derivable.
+
+ARCHIVED-NOT-RERUN     lci0         LCI/0 cross-implementation differential: 2,295 requests/impl, 0 mismatches
+                                   Requires a materialized fixture overlay and three environment variables; 
+                                   not re-derived by this floor. The lane's own evidence records 
+                                   "cross_language_agreement_is_independent_corroboration": false — 
+                                   cross-language agreement here is NOT independent corroboration, because 
+                                   both implementations were seeded under shared normative infrastructure.
+
+ARCHIVED-NOT-RERUN     vertical0    Vertical /0 five-life SIGKILL campaign
+                                   A strace-controlled process-death generation campaign writing new 
+                                   runs/campaign-* trees. Not re-run. The repeatability gate above 
+                                   byte-compares the two preserved campaigns and re-derives the census from 
+                                   campaign-2; that is verification of an archive, NOT reproduction of the 
+                                   campaign.
+
+ARCHIVED-NOT-RERUN     language-a   Language-A tranche-B (706 files, emission BANKED 295/312)
+                                   Exists only on unmerged mirror branches; deliberately not merged during 
+                                   this milestone per the owner ruling (archive now, adopt later). Scoring 
+                                   is owner-locked pending the null-semantics ruling. The lab tree holds 
+                                   three language-a files, exercised inside verify-all.sh.
+
+PASS                   latent-mvp   latent-mvp historical floor (6/6 suites)
+                                   FOSSIL-MARKED. Retained intact as a historical stratum with its 
+                                   historical floor, exercised inside verify-all.sh above. It has zero edges 
+                                   with the kernel0-era stack and is no longer the front door.
+
+ABSENT                 mneme-memory Mneme memory layer
+                                   Not implemented. No lane exists. "Mneme" currently names a directory, not 
+                                   a working memory-and-continuity layer. Nothing here can be run because 
+                                   nothing here has been built.
+
+ADOPTED                seam         derive/perform over a journal-backed process: One Act /0 — ADOPTED
+                                   ADOPTED 2026-08-08 by owner terminal ruling (One Act /0 R2.3 terminal 
+                                   adoption). The exact verified candidate commit 
+                                   461f2013d1a6feca2b13819ff6ae3f60617e8e82 (tree 
+                                   1123c3c3326664f54d1d96547ba872a876cbd495) was merged unmodified; its 173 
+                                   checks, the 97-gate floor, the loader witnesses and the disease/control 
+                                   pairs all ran green pre-adoption and once post-adoption. DISCLOSURE, 
+                                   VERBATIM FROM THE ADOPTION RECORD: the stranger primitive-minimization 
+                                   audit prescribed as a promotion gate was NOT performed; the owner waived 
+                                   that gate for One Act /0 because its resource cost was disproportionate 
+                                   to the remaining design risk. This variance does not constitute 
+                                   independent validation and does not prevent later primitive reduction or 
+                                   architectural revision. Full record: 
+                                   mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md.
+
+===========================================================================
+ EXECUTABLE GATES (this floor ran them)
+   attempted                : 103
+   passed                   : 103
+   failed                   : 0
+   blocked-external-input   : 0
+
+ CARRIED STATUS ROWS (declared, NOT executed by this floor)
+   rows carried             : 8
+   of which KNOWN-UNRESOLVED     : 1
+   of which BLOCKED-EXTERNAL-INPUT: 1
+   of which ARCHIVED-NOT-RERUN   : 3
+   of which ABSENT               : 1
+   of which PASS (elsewhere)     : 1
+   of which CANDIDATE-NOT-ADOPTED: 0
+   of which ADOPTED              : 1
+
+ THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this
+ floor ran in this process; a carried status row is a standing fact this
+ floor reports without running anything. 'blocked-external-input: 0' above
+ means ZERO EXECUTABLE GATES were blocked; it does not contradict the
+ 1 carried BLOCKED-EXTERNAL-INPUT row(s), which are a different
+ denominator entirely.
+
+ Exit 0 here means: every executable gate passed at its authorized count,
+ every known unresolved finding is unchanged and named above, and every
+ archived-only item passed its integrity check. It does NOT mean that all
+ semantic questions are resolved, and it adopts nothing.
+===========================================================================
+
+FLOOR RESULT: PASS (103 executable gates attempted / 103 passed / 0 blocked; 8 carried status rows; profile full)
+exit=0
+Fri Aug 21 21:05:46 UTC 2026
+
+==========================================================================
+R5 — QUIESCENT RELEASE FLOOR RUN, appended by the chair (Claude Fable 5), 2026-08-21
+==========================================================================
+GLOBAL HEAD STABLE START TO FINISH (Sol's requirement): 3fdb1b1c at start, 3fdb1b1c at end.
+Subject tree 0 entries before, unchanged after. To keep the session-checkpoint Stop hook from
+committing mid-run, one genuinely owed file outside the subject tree (_staging/r5-scriba-iv-
+report.md) was STAGED for the run's duration — disclosed here, not smoothed. Lane NOT registered.
+
+Fri Aug 21 21:43:44 UTC 2026
+3fdb1b1c
+===========================================================================
+ LISP+ AGGREGATE RELEASE FLOOR — profile: full
+ Self-consistency certification, never independent conformance.
+ The stranger primitive-minimization audit is OWED.
+===========================================================================
+
+toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+subject root : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+caller cwd   : /home/gauss/Claude-Code-Lab/experiments/latent-lisp
+profile      : full
+enumeration  : full 103/103 · light 79/79  (authorized == actual, recomputed from the table)
+git before   : 0 entr(y|ies) under the subject tree
+run scratch  : /tmp/lisp-plus-release-run.2jIAD1  (removed on success AND on failure)
+
+-- materializing disposable tree copy for writing gates --
+   copy ready: 101M
+
+[001] aggregate   COPY bash verify-all.sh
+      -> PASS (exit 0)
+[002] aggregate   COPY bash mneme/verify-language-floor.sh
+      -> PASS (exit 0)
+[003] aggregate   COPY bash mneme/verify-form-floor.sh
+      -> PASS (exit 0)
+[004] kernel0     INPL sbcl --script mneme/kernel0/kernel0-selftest.lisp
+      -> PASS (exit 0)
+[005] kernel0     INPL sbcl --script mneme/kernel0/load.lisp
+      -> PASS (exit 0)
+[006] journal0    INPL sbcl --script mneme/journal0/journal0-selftest.lisp
+      -> PASS (exit 0)
+[007] journal0    INPL sbcl --script mneme/journal0/journal0-vectors.lisp
+      -> PASS (exit 0)
+[008] journal0    COPY sbcl --script mneme/journal0/de-teste-occiso/run-specimen.lisp
+      -> PASS (exit 0)
+[009] capability0 INPL sbcl --script mneme/capability0/capability0-selftest.lisp
+      -> PASS (exit 0)
+[010] capability0 INPL sbcl --script mneme/capability0/capability0-controls.lisp
+      -> PASS (exit 0)
+[011] capability0 COPY sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+      -> PASS (exit 0)
+[012] capability1 INPL sbcl --script mneme/capability1/capability1-selftest.lisp
+      -> PASS (exit 0)
+[013] capability1 INPL sbcl --script mneme/capability1/capability1-controls.lisp
+      -> PASS (exit 0)
+[014] capability1 COPY sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp
+      -> PASS (exit 0)
+[015] capability2 INPL sbcl --script mneme/capability2/capability2-selftest.lisp
+      -> PASS (exit 0)
+[016] capability2 INPL sbcl --script mneme/capability2/capability2-controls.lisp
+      -> PASS (exit 0)
+[017] capability2 COPY sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp
+      -> PASS (exit 0)
+[018] adapter0    INPL sbcl --script mneme/adapter0/adapter0-selftest.lisp
+      -> PASS (exit 0)
+[019] adapter0    INPL sbcl --script mneme/adapter0/adapter0-vectors.lisp
+      -> PASS (exit 0)
+[020] adapter0    INPL sbcl --script mneme/adapter0/adapter0-scripts.lisp
+      -> PASS (exit 0)
+[021] adapter0    INPL sbcl --script mneme/adapter0/adapter0-joint.lisp
+      -> PASS (exit 0)
+[022] adapter0    COPY sbcl --script mneme/adapter0/adapter0-l17.lisp
+      -> PASS (exit 0)
+[023] adapter0    INPL sbcl --script mneme/adapter0/adapter0-controls.lisp
+      -> PASS (exit 0)
+[024] adapter0    INPL sbcl --script mneme/adapter0/adapter0-erratum-cost.lisp
+      -> PASS (exit 0)
+[025] adapter0    COPY sbcl --script mneme/adapter0/de-membrana-loquente/run-specimen.lisp
+      -> PASS (exit 0)
+[026] core0       INPL sbcl --script mneme/language-core-0/core0-selftest.lisp
+      -> PASS (exit 0)
+[027] core0       INPL sbcl --script mneme/language-core-0/core0-issuance-selftest.lisp
+      -> PASS (exit 0)
+[028] core0       INPL sbcl --script mneme/language-core-0/de-abaco/SPECIMEN.lisp
+      -> PASS (exit 0)
+[029] core0       INPL sbcl --script mneme/language-core-0/de-cursore-aereo/SPECIMEN.lisp
+      -> PASS (exit 0)
+[030] core0       INPL sbcl --script mneme/language-core-0/de-ponte-usto/SPECIMEN.lisp
+      -> PASS (exit 0)
+[031] core0       INPL sbcl --script mneme/language-core-0/de-bibliotheca-peregrina/APPLICATION.lisp
+      -> PASS (exit 0)
+[032] core0       INPL sbcl --script mneme/language-core-0/de-codice-restaurando/APPLICATION.lisp
+      -> PASS (exit 0)
+[033] slice0      INPL sbcl --script mneme/language-slice-0/SMOKE.lisp
+      -> PASS (exit 0)
+[034] slice0      INPL sbcl --script mneme/language-slice-0/de-infando/SPECIMEN.lisp
+      -> PASS (exit 0)
+[035] slice0      INPL bash mneme/language-slice-0/stranger-implementation-0/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[036] slice0      INPL bash mneme/language-slice-0/stranger-implementation-1/check-front-door-selftest.sh
+      -> PASS (exit 0)
+[037] slice1      INPL sbcl --script mneme/language-slice-1/slice1-selftest.lisp
+      -> PASS (exit 0)
+[038] slice1      INPL sbcl --script mneme/language-slice-1/SMOKE-1.lisp
+      -> PASS (exit 0)
+[039] slice1      INPL sbcl --script mneme/language-slice-1/GUIDE-WALK-1.lisp
+      -> PASS (exit 0)
+[040] slice2      INPL sbcl --script mneme/language-slice-2/slice2-selftest.lisp
+      -> PASS (exit 0)
+[041] slice2      INPL sbcl --script mneme/language-slice-2/SMOKE-2.lisp
+      -> PASS (exit 0)
+[042] slice2      INPL sbcl --script mneme/language-slice-2/de-pignore/APPLICATION.lisp
+      -> PASS (exit 0)
+[043] form0       INPL sbcl --script mneme/language-form-0/form0-selftest.lisp
+      -> PASS (exit 0)
+[044] form0       INPL sbcl --script mneme/language-form-0/PUBLIC-SURFACE-AUDIT.lisp
+      -> PASS (exit 0)
+[045] form0       INPL sbcl --script mneme/language-form-0/de-forma-dormiente/APPLICATION.lisp
+      -> PASS (exit 0)
+[046] form0       COPY bash mneme/language-form-0/MUTATION-LEDGER.sh
+      -> PASS (exit 0)
+[047] form1       INPL sbcl --script mneme/language-form-1/form1-selftest.lisp
+      -> PASS (exit 0)
+[048] form1       INPL sbcl --script mneme/language-form-1/EXPORT-CENSUS.lisp
+      -> PASS (exit 0)
+[049] form1       COPY bash mneme/language-form-1/run-form1-candidate.sh
+      -> PASS (exit 0)
+[050] form1       COPY bash mneme/language-form-1/check-form1-transcript.sh
+      -> PASS (exit 0)
+[051] form1       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[052] form1       INPL sbcl --script mneme/language-form-1/de-forma-petente/APPLICATION.lisp
+      -> PASS (exit 0)
+[053] form2       INPL sbcl --script mneme/language-form-2/form2-selftest.lisp
+      -> PASS (exit 0)
+[054] form2       INPL sbcl --script mneme/language-form-2/SOURCE-HYGIENE-GATE.lisp
+      -> PASS (exit 0)
+[055] form2       COPY bash mneme/language-form-2/run-form2-candidate.sh
+      -> PASS (exit 0)
+[056] form2       COPY bash mneme/language-form-2/check-form2-transcript.sh
+      -> PASS (exit 0)
+[057] form2       COPY bash VERDICT-LIVENESS-SWEEP.sh
+      -> PASS (exit 0)
+[058] form2       INPL sbcl --script mneme/language-form-2/de-forma-mutata/APPLICATION.lisp
+      -> PASS (exit 0)
+[059] form2       INPL sbcl --script mneme/language-form-2/de-vadimonio/APPLICATION.lisp
+      -> PASS (exit 0)
+[060] form2       COPY bash mneme/language-form-2/de-vadimonio/check-transcript.sh
+      -> PASS (exit 0)
+[061] surface0    INPL sbcl --script mneme/language-surface-0/surface0-selftest.lisp
+      -> PASS (exit 0)
+[062] surface0    COPY bash mneme/language-surface-0/PLANTED-FAULTS.sh
+      -> PASS (exit 0)
+[063] surface1    INPL sbcl --script mneme/language-surface-1/surface1-selftest.lisp
+      -> PASS (exit 0)
+[064] surface1    INPL sbcl --script mneme/language-surface-1/STUB-IMAGE-FIXTURE.lisp
+      -> PASS (exit 0)
+[065] surface1    INPL sbcl --script mneme/language-surface-1/de-expansione-testata/APPLICATION.lisp
+      -> PASS (exit 0)
+[066] surface1    COPY bash mneme/language-surface-1/run-surface1-candidate.sh
+      -> PASS (exit 0)
+[067] surface1    INPL bash subject-digest.sh
+      -> PASS (exit 0)
+[068] surface1    INPL bash helper-search.sh
+      -> PASS (exit 0)
+[069] surface1    COPY bash run-helper-control.sh
+      -> PASS (exit 0)
+[070] surface1    COPY bash subject-binding-controls.sh
+      -> PASS (exit 0)
+[071] surface1    INPL bash fail-open-witness.sh
+      -> PASS (exit 0)
+[072] surface1    INPL bash semantic-path-diff.sh
+      -> PASS (exit 0)
+[073] surface1    COPY bash mneme/language-surface-1/errata-0.3/teeth/teeth.sh
+      -> PASS (exit 0)
+[074] surface2    INPL sbcl --script mneme/language-surface-2/surface2-selftest.lisp
+      -> PASS (exit 0)
+[075] surface2    INPL sbcl --script mneme/language-surface-2/surface2-controls.lisp
+      -> PASS (exit 0)
+[076] surface2    INPL sbcl --script mneme/language-surface-2/surface2-inhabited.lisp
+      -> PASS (exit 0)
+[077] surface2    INPL sbcl --script mneme/language-surface-2/surface2-erratum-binder.lisp
+      -> PASS (exit 0)
+[078] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-selftest.lisp
+      -> PASS (exit 0)
+[079] surface-account INPL sbcl --script mneme/language-surface-account-0/production/surface-account-inhabited.lisp
+      -> PASS (exit 0)
+[080] surface-account INPL bash mneme/language-surface-account-0/production/surface-account-graph-gate.sh
+      -> PASS (exit 0)
+[081] surface-account INPL bash mneme/language-surface-account-0/production/run-hostile-profiles.sh
+      -> PASS (exit 0)
+[082] surface-account COPY bash mneme/language-surface-account-0/production/surface-account-disease.sh
+      -> PASS (exit 0)
+[083] act0        INPL sbcl --script mneme/language-act-0/act0-selftest.lisp
+      -> PASS (exit 0)
+[084] act0        INPL bash mneme/language-act-0/act0-load-witnesses.sh
+      -> PASS (exit 0)
+[085] act0        INPL bash mneme/language-act-0/act0-loader-disease.sh
+      -> PASS (exit 0)
+[086] act1        INPL sbcl --script mneme/language-act-1/act1-selftest.lisp
+      -> PASS (exit 0)
+[087] act1        INPL sbcl --script mneme/language-act-1/act1-host-fault-proof.lisp
+      -> PASS (exit 0)
+[088] act1        INPL sbcl --script mneme/language-act-1/act1-controls.lisp
+      -> PASS (exit 0)
+[089] act1        INPL sbcl --script mneme/language-act-1/act1-mutants.lisp
+      -> PASS (exit 0)
+[090] act1        INPL sbcl --script mneme/language-act-1/act1-red-proof.lisp
+      -> PASS (exit 0)
+[091] act1        COPY sbcl --script mneme/language-act-1/de-actu-resurgente/run-specimen.lisp
+      -> PASS (exit 0)
+[092] vertical0   COPY bash mneme/vertical0/harness/repeatability.sh
+      -> PASS (exit 0)
+[093] vertical0   COPY sbcl --script mneme/vertical0/controls/run-integration-controls.lisp
+      -> PASS (exit 0)
+[094] vertical0   COPY sbcl --script mneme/vertical0/mutants/run-mutation-gate.lisp
+      -> PASS (exit 0)
+[095] vertical0   COPY sbcl --script mneme/vertical0/reconstruction/run-reconstruction-gate.lisp
+      -> PASS (exit 0)
+[096] cd0         INPL sbcl --script canonical-datum/common-lisp/run-tests.lisp
+      -> PASS (exit 0)
+[097] cd0         INPL python3 canonical-datum/tools/verify_phase0.py
+      -> PASS (exit 0)
+[098] cd0         INPL python3 canonical-datum/integration/run_differential.py --json
+      -> PASS (exit 0)
+[099] lci0        INPL python3 mneme/lci0/shared/fixture_package.py verify
+      -> PASS (exit 0)
+[100] lci0        INPL sbcl --script mneme/architecture/pj0-errata/erratum-1-d2-examples.lisp
+      -> PASS (exit 0)
+[101] release     INPL bash mneme/load-lisp-plus.sh
+      -> PASS (exit 0)
+[102] release     INPL bash mneme/load-order-matrix.sh
+      -> PASS (exit 0)
+[103] atelier     INPL python3 mneme/atelier/static-check.py
+      -> PASS (exit 0)
+
+-- checkout cleanliness --
+   unchanged: zero tracked modifications, zero new untracked litter.
+
+===========================================================================
+ LANE TABLE
+===========================================================================
+STATUS                 LANE         GATES (executed this run)
+PASS                   aggregate    3 gate(s), 3 passed
+PASS                   kernel0      2 gate(s), 2 passed
+PASS                   journal0     3 gate(s), 3 passed
+PASS                   capability0  3 gate(s), 3 passed
+PASS                   capability1  3 gate(s), 3 passed
+PASS                   capability2  3 gate(s), 3 passed
+PASS                   adapter0     8 gate(s), 8 passed
+PASS                   core0        7 gate(s), 7 passed
+PASS                   slice0       4 gate(s), 4 passed
+PASS                   slice1       3 gate(s), 3 passed
+PASS                   slice2       3 gate(s), 3 passed
+PASS                   form0        4 gate(s), 4 passed
+PASS                   form1        6 gate(s), 6 passed
+PASS                   form2        8 gate(s), 8 passed
+PASS                   surface0     2 gate(s), 2 passed
+PASS                   surface1     11 gate(s), 11 passed
+PASS                   surface2     4 gate(s), 4 passed
+PASS                   surface-account 5 gate(s), 5 passed
+PASS                   act0         3 gate(s), 3 passed
+PASS                   vertical0    4 gate(s), 4 passed
+PASS                   cd0          3 gate(s), 3 passed
+PASS                   lci0         2 gate(s), 2 passed
+PASS                   atelier      1 gate(s), 1 passed
+PASS                   release      2 gate(s), 2 passed
+
+-- declared, not executed (carried forward unchanged, never turned green) --
+
+KNOWN-UNRESOLVED       lci0         LCI/0 algebraic-law audit: 84 laws PASS, 4 laws preserved FAIL
+                                   LCI0-CROSS-004, LCI0-SCOPE-015, LCI0-TEMP-022, LCI0-TEMP-028 remain 
+                                   preserved failures with six minimized witnesses; the lane's own evidence 
+                                   reads "AUDIT COMPLETE — MINIMIZED LAW VIOLATIONS PRESERVED; AUTHORIAL 
+                                   RULING REQUIRED". No authorial disposition exists. This milestone does 
+                                   not repair, adjudicate, or rebuild them.
+
+BLOCKED-EXTERNAL-INPUT lci0         LCI/0 law-audit harness cannot execute on this host
+                                   audit/README.md requires an external checksum-bound packet ZIP passed by 
+                                   path (LCI0-ALGEBRAIC-LAW-AUDIT-PACKET-ERRATA-0.1.zip). It is absent from 
+                                   this host and is not in the tree, so law_audit.py and 5 of its 12 harness 
+                                   self-tests cannot run here at all. The committed evidence is archived, 
+                                   not re-derivable.
+
+ARCHIVED-NOT-RERUN     lci0         LCI/0 cross-implementation differential: 2,295 requests/impl, 0 mismatches
+                                   Requires a materialized fixture overlay and three environment variables; 
+                                   not re-derived by this floor. The lane's own evidence records 
+                                   "cross_language_agreement_is_independent_corroboration": false — 
+                                   cross-language agreement here is NOT independent corroboration, because 
+                                   both implementations were seeded under shared normative infrastructure.
+
+ARCHIVED-NOT-RERUN     vertical0    Vertical /0 five-life SIGKILL campaign
+                                   A strace-controlled process-death generation campaign writing new 
+                                   runs/campaign-* trees. Not re-run. The repeatability gate above 
+                                   byte-compares the two preserved campaigns and re-derives the census from 
+                                   campaign-2; that is verification of an archive, NOT reproduction of the 
+                                   campaign.
+
+ARCHIVED-NOT-RERUN     language-a   Language-A tranche-B (706 files, emission BANKED 295/312)
+                                   Exists only on unmerged mirror branches; deliberately not merged during 
+                                   this milestone per the owner ruling (archive now, adopt later). Scoring 
+                                   is owner-locked pending the null-semantics ruling. The lab tree holds 
+                                   three language-a files, exercised inside verify-all.sh.
+
+PASS                   latent-mvp   latent-mvp historical floor (6/6 suites)
+                                   FOSSIL-MARKED. Retained intact as a historical stratum with its 
+                                   historical floor, exercised inside verify-all.sh above. It has zero edges 
+                                   with the kernel0-era stack and is no longer the front door.
+
+ABSENT                 mneme-memory Mneme memory layer
+                                   Not implemented. No lane exists. "Mneme" currently names a directory, not 
+                                   a working memory-and-continuity layer. Nothing here can be run because 
+                                   nothing here has been built.
+
+ADOPTED                seam         derive/perform over a journal-backed process: One Act /0 — ADOPTED
+                                   ADOPTED 2026-08-08 by owner terminal ruling (One Act /0 R2.3 terminal 
+                                   adoption). The exact verified candidate commit 
+                                   461f2013d1a6feca2b13819ff6ae3f60617e8e82 (tree 
+                                   1123c3c3326664f54d1d96547ba872a876cbd495) was merged unmodified; its 173 
+                                   checks, the 97-gate floor, the loader witnesses and the disease/control 
+                                   pairs all ran green pre-adoption and once post-adoption. DISCLOSURE, 
+                                   VERBATIM FROM THE ADOPTION RECORD: the stranger primitive-minimization 
+                                   audit prescribed as a promotion gate was NOT performed; the owner waived 
+                                   that gate for One Act /0 because its resource cost was disproportionate 
+                                   to the remaining design risk. This variance does not constitute 
+                                   independent validation and does not prevent later primitive reduction or 
+                                   architectural revision. Full record: 
+                                   mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md.
+
+===========================================================================
+ EXECUTABLE GATES (this floor ran them)
+   attempted                : 103
+   passed                   : 103
+   failed                   : 0
+   blocked-external-input   : 0
+
+ CARRIED STATUS ROWS (declared, NOT executed by this floor)
+   rows carried             : 8
+   of which KNOWN-UNRESOLVED     : 1
+   of which BLOCKED-EXTERNAL-INPUT: 1
+   of which ARCHIVED-NOT-RERUN   : 3
+   of which ABSENT               : 1
+   of which PASS (elsewhere)     : 1
+   of which CANDIDATE-NOT-ADOPTED: 0
+   of which ADOPTED              : 1
+
+ THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this
+ floor ran in this process; a carried status row is a standing fact this
+ floor reports without running anything. 'blocked-external-input: 0' above
+ means ZERO EXECUTABLE GATES were blocked; it does not contradict the
+ 1 carried BLOCKED-EXTERNAL-INPUT row(s), which are a different
+ denominator entirely.
+
+ Exit 0 here means: every executable gate passed at its authorized count,
+ every known unresolved finding is unchanged and named above, and every
+ archived-only item passed its integrity check. It does NOT mean that all
+ semantic questions are resolved, and it adopts nothing.
+===========================================================================
+
+FLOOR RESULT: PASS (103 executable gates attempted / 103 passed / 0 blocked; 8 carried status rows; profile full)
+exit=0
+3fdb1b1c
+Fri Aug 21 22:06:45 UTC 2026

@@ -1,0 +1,16 @@
+de-actu-memorato - preserved raw artifacts
+governing sentence: the language can remember what its account is entitled to say - and can durably remember that it is not entitled to say more.
+the pinned proposition :occurred warrants: the governed protected effect associated with canonical act identity A crossed/applied and is present in the declared journal/world universe under its derived external-request identity
+CANDIDATE. Not adopted, not audited, not frozen, not registered on any floor. Crash model: planted deterministic process death only (no SIGKILL, no power loss, no mid-instruction truncation). Capability-disciplined, never capability-secure.
+THREE JURISDICTIONS, three stores, three digests:
+act journal store id  : pj0-store:7f1f2f0efb634ee79b1b194239f3384b37eca11d817239045bb50bb648d2d0be
+account store id      : pj0-store:b98dc1256e2318b64ece791bd9d6537548a147299ec45bc28d4ceb00eb65169c
+(they are DIFFERENT stores in different directories with different nonces)
+ACCOUNTS-AFTER-WRITER.pj0: 23792 octets  sha256 4ef1efaf236aa96a787b970efa15321c4ae2ad10ba44d46ce8bf0617636e7d06  (what the scriptor left)
+ACCOUNTS-FINAL.pj0: 72350 octets  sha256 d9d160f28deeda9e14703cd544ed700cb04369142f29ceaadfe03a6f2a42f700  (the SAME PREFIX byte-identically, plus the lector's appends - nothing rewritten)
+ACT-EVENTS.pj0: 10977 octets  sha256 2c9a8ffd9bcf73647770bccbbb43446901273291a00098b05055458ea4772425  (byte-unchanged across the whole read phase)
+WORLD-CELLS.txt: 85 octets  sha256 79e851b6c02a1fea990e7718cffeb1ed9c4ae7146a175860dd0b2bd669dad8f8
+WORLD-LEDGER.txt: 137 octets  sha256 f1f447a2de2433031da8fbc3fbca59d02d2d16f77b5a8894a7830917f87caaea
+DEATH-EVENTS.pj0: 2722 octets  sha256 283832ef2e403bef34e48b9ba99256c86b3544f3a0c27d96358dfc81080b4489  (three frames: the moriturus's journal as its death left it)
+DEATH-WORLD-LEDGER.txt: 68 octets  sha256 9b1373ae63cafeaef774978dd12ddf6a57c613e2bf0aade83373421f1ce3da24  (ONE applied row, made by a process that did not live to account for it - the state D3 answers)
+byte-stability: every file listed here is byte-identical across runs (fixed store nonces; declared PJ-META-1 deviation, see specimen-common.lisp)

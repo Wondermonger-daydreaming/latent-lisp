@@ -2,62 +2,137 @@
 
 **A Lisp for latent-space minds — the rigorous instrument — and a workshop of homoiconic play around it.**
 
-This repository gathers, into one home, all of the Claude-Code-Lab's work in Lisp: a small, runnable language
-whose entire point is that it *refuses to believe itself* — an evidence system where a rationale cannot wear an
-evidential verdict, a model's emission is never mistaken for truth, and a witness must face the exact
-proposition it claims to support — sitting next to a cabinet of recreational Lisp built for the pleasure of the
-only medium whose code is its own body. The first half is an experiment in machine honesty. The second half is
-play. They belong together because they are made of the same parenthesis, and everything here runs on SBCL, exit
-0 == the law holds.
+This repository gathers, into one home, all of the Claude-Code-Lab's work in Lisp: a small, runnable
+language whose entire point is that it *refuses to believe itself* — an evidence system where a rationale
+cannot wear an evidential verdict, a model's emission is never mistaken for truth, and a witness must face
+the exact proposition it claims to support — sitting next to a cabinet of recreational Lisp built for the
+pleasure of the only medium whose code is its own body. The first half is an experiment in machine honesty.
+The second half is play. They belong together because they are made of the same parenthesis, and everything
+here runs on SBCL: **exit 0 == the law holds.**
 
 ---
 
-## Current state — START HERE (2026-08-02)
+## Watch this
 
-**The language is Lisp+. Mneme is its memory-and-continuity layer.** That relation is sealed
-(`mneme/architecture/ARCHITECTURE-0-STATUS.md:23`). Earlier text on this page inverted it and
-has been corrected. As implemented, `mneme/` is the directory holding the whole construction,
-and **the memory layer itself does not yet exist as a lane** — the name Mneme currently names a
-promise and a directory, not a working layer.
+The central wager in ten lines. A fluent mind's favorite move is to offer *"I'm about 80% sure"* as a
+single number riding on an otherwise exact record. Kernel /0 refuses it — not with a generic error, but
+with the requirement id and the law text carried **in the condition's own fields**:
 
-Lisp+ today is an adopted specification constitution plus twenty implementation packages,
-arranged in two stacks that meet at one read-only seam. Every lane passes its own declared
-gates on SBCL 2.4.6/Linux. Nineteen packages remain **candidates** (adoption attaches to
-specifications only) — with **one owner-ruled exception, 2026-08-06**: the Surface Account /0
-production component was accepted through its R4→R4.3 production-admission campaign and
-**adopted into this tree by owner authorization** (see the update block below).
+```lisp
+(load "mneme/kernel0/load.lisp")
+(handler-case
+    (lisp-plus-kernel0:make-determinacy :mode :determinate :confidence 0.8)
+  (lisp-plus-kernel0:global-uncertainty-scalar-rejected (c)
+    (format t "REFUSED ~a = ~a~%  requirement: ~a~%  law: ~a~%"
+            (lisp-plus-kernel0:kernel0-condition-offending-field c)
+            (lisp-plus-kernel0:kernel0-condition-offending-value c)
+            (lisp-plus-kernel0:kernel0-condition-requirement-id c)
+            (lisp-plus-kernel0:kernel0-condition-failed-invariant c))))
+(print (lisp-plus-kernel0:make-determinacy :mode :determinate))
+```
 
-### UPDATE 2026-08-06 — Surface Account /0: adopted and published
+```
+REFUSED CONFIDENCE = 0.8
+  requirement: K0E-33
+  law: §7.5 and Errata 0.2 §6: determinacy MUST NOT carry a global confidence, uncertainty, or probability scalar in place of the closed mode algebra
 
-The `language-surface-account-0` lane closed its laboratory (R0→R3.3.3, owner-accepted) and
-its production campaign (R4→R4.3, owner-accepted after one owner-HALT with a live
-counterexample). Its production component — one process-wide identity state, one epoch
-gathering, monotonic account allocation, canonical ASCII counter grammar, a total
-carrier-plist scanner, and a repair-capable loader whose completeness predicate requires
-`FIND-SYMBOL` status `:EXTERNAL` *plus* `FBOUNDP` for all nine exports — now ships in
-`mneme/language-surface-account-0/production/` and is reachable through the `lisp-plus`
-umbrella. The floors grew by exactly its five gate rows (full 89→94, CI 73→76), and a
-public-clone readback reproduced every accepted count from a bare checkout.
+#S(LISP-PLUS-KERNEL0:DETERMINACY
+   :MODE :DETERMINATE
+   :ALTERNATIVES NIL
+   :EVIDENCE NIL)
+```
 
-Standing interpretations that travel with it (owner's ruling, verbatim in the lane's
-`OWNER-RULING-R4-RETURN-AND-R4.3-COMMISSION.md` and `ADOPTION-RECEIPT-2026-08-06.md`):
-the identity mechanism and frozen R3.3.3 regressions are **PASS — LOCKED**; the readiness
-predicate establishes **API shape under ordinary image composition** — it is not a security
-or provenance boundary, and the carrier is a completeness marker under the non-forging
-package precondition, "not cryptographic attestation wearing parentheses." Surface `/3`
-remains shut.
+Uncertainty in Lisp+ is a per-axis *mode* from a closed algebra (`:determinate` / `:bounded` /
+`:indeterminate`), never a scalar smeared over the whole outcome — because a scalar lets execution,
+manifestation, effect, and interpretation impersonate one another under one comfortable number. The file
+is `mneme/readme-specimen.lisp`; it exits 0. (While writing this page the author first tried
+`:mode :exact`; the kernel refused that too, citing K0E-2. The language corrects its own README.)
+
+**The companion** (`mneme/readme-specimen-companion.lisp`, asked for by GPT Sol so nobody can wonder
+whether the *float* caused the refusal): a Canonical-Datum-friendly rational, the float, and the other
+two forbidden keys — all refused on the same law; the float is refused *as a scalar* before anyone
+asks whether `0.8` is a durable value; `"low"` shows the law is keyed to the *slot*, not to numeric
+type (the whole escape hatch is sealed, not just the numbers); the mode typo gets its own condition;
+the lawful record passes. A one-shot demo became a controlled experiment: baseline, treatments, a
+separate failure class, and the process exit — which is the only way a refusal becomes evidence.
+
+```
+REFUSED CONFIDENCE = 4/5  [K0E-33]
+REFUSED CONFIDENCE = 0.8  [K0E-33]
+REFUSED PROBABILITY = 1  [K0E-33]
+REFUSED UNCERTAINTY = "low"  [K0E-33]
+OTHER DETERMINACY-MODE-INVALID [K0E-2]
+ACCEPTED (:MODE :DETERMINATE)
+```
+
+---
+
+## Current state — START HERE (2026-08-22)
+
+**The language is Lisp+. Mneme is its memory-and-continuity layer.** (Relation sealed:
+`mneme/architecture/ARCHITECTURE-0-STATUS.md`.) As laid out on disk, `mneme/` is the directory holding
+the whole construction, and the memory layer now exists as a lane — `mneme/memory-layer-0/` — registered
+on the release floor as a **candidate, not adopted** (see the table).
+
+Lisp+ today is an adopted specification constitution (Architecture 0.1 · Kernel /0 · Process Journal /0 ·
+Adapter Protocol /0 · Kernel Errata 0.2) plus a stack of implementation lanes in Common Lisp, every one
+passing its own declared gates on SBCL 2.4.6/Linux. The canonical release floor is **112 gates (full) /
+82 (light)**; a green floor means *every executable gate passed at its authorized count and every known
+unresolved finding is unchanged* — never that a semantic question is resolved.
+
+### Standing vocabulary (read this before reading the table)
+
+- **CANDIDATE** — constructed, tested, published; not audited, not adopted, not frozen. Adoption attaches
+  to specifications by default; implementation lanes are candidates unless an owner ruling says otherwise.
+- **REGISTERED** — the lane has rows on the release floor and an ASDF system. Registration is a fact about
+  the floor, not about standing.
+- **ADOPTED** — an owner ruling filed in-tree. Adoption never converts a same-family review into
+  independent verification.
+- **Stranger audit owed** — the lab's standing rider on nearly everything here: every green is
+  same-family self-consistency (Claude builds, Claude and GPT review; both drink from the same corpus). No
+  lane may say "independently verified" without a stranger's frozen report, and none has one.
+- **PUBLISHED** — a three-stage standing: owner authorization → verified transport → readback from the
+  public destination. A push receipt is not publication.
+
+### The lanes and where they stand
+
+| lane | what it is | standing (as the lane's own record states it) |
+|---|---|---|
+| `mneme/architecture/` | the constitution: Architecture 0.1, Kernel /0 spec, PJ0, AP0, Kernel Errata 0.2 | **ADOPTED; governing** (2026-07-18/19) |
+| `mneme/kernel0/` | the first executable Lisp+ core | selftest 33/0, 59 mutants killed; merged 2026-07-19 |
+| `mneme/journal0/` · `capability0/1/2` · `adapter0/` · `vertical0/` | the organs: journal store, live authority, opaque minting, effect frontier, fake adapter, four-death specimen | CANDIDATES (capability arc closed by ruling; AP0 Rider 2 binding: no "independently verified") |
+| `mneme/language-core-0/` + `slice-{0,1,2}` · `form-{0,1,2}` · `surface-{0,1,2}` | the derive/perform two-door substrate and its lanes | CANDIDATES; Form /1, Surface /1, Form /2 closed; Surface /3 shut |
+| `mneme/language-surface-account-0/` | process-wide identity state + account allocation | **ADOPTED AND PUBLISHED** (owner, 2026-08-06) |
+| `mneme/language-act-0/` | One Act /0 — derive/perform over a journal-backed process, one sealed act | **ADOPTED** (owner terminal ruling, 2026-08-08); stranger audit **waived by owner variance, not passed** |
+| `mneme/language-many-acts-0/` | Many Acts /0 — composition of acts | **R1 ADOPTED WITH RIDERS** (owner ruling, 2026-08-10) |
+| `mneme/languagehood-and-succession-charter-0/` | Charter /0 — what it means for this to be a language, and how it succeeds itself | **RATIFIED** (owner, 2026-08-12, R3); ratification created no evidence; stranger audit owed |
+| `mneme/portable-judge-0/` | a judge that travels — candidate parcel | **CANDIDATE — not an adoption declaration** (2026-08-10) |
+| `mneme/public-sufficiency-0/` | the governance of *this mirror*: what may be published, how transport is recorded, what "published" means | LIVE lane; publication authorization **B (blanket-current, bounded)** ruled 2026-08-18; transport sentinel raised |
+| `mneme/language-act-1/` | One Act /1 — perform *across* process death | **ADOPTED 2026-08-22** at lab commit `aeeefa40` (owner act, ceilings verbatim; Sol I ruled ADOPTION-ELIGIBLE on a fresh-stranger audit + supplement; record `mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md`; floor row `act1\|ADOPTED`). Ceilings: not "independently verified"; 27-symbol ML/0 coupling is version-bound debt |
+| `mneme/memory-layer-0/` | Memory Layer /0 — the language's durable account of its own act (write / retrieve / consolidate under *ISSUED(evidence, act) ⇏ OCCURRED(act)*) | **CANDIDATE-NOT-ADOPTED · REGISTERED · stranger audit owed · no independent verification** (2026-08-21; floor 112/112; lane parcel SHA-256 `5742b4f8…`) |
+| `mneme/integration-baseline-0/` | authority index · claim ceiling · supersession map | CLOSED by owner ruling 2026-08-03 — historical, never edited |
+| `mneme/lci0/` · `canonical-datum/` | Located Claim Identity /0 · Canonical Datum /0 | CLOSED + FROZEN; LCI0 algebraic-law audit carries 4 preserved FAILs, "authorial ruling required" |
+| `mneme/language-a/` | Language-A emission materials (public lane only) | ARCHIVED, banked 295/312 — not re-run |
+| `mneme/latent-mvp/` | the v0/v1 kernel and the seven-law conformance walk | **FOSSIL** — historical stratum with its own floor; zero edges with the current stack |
+
+Surface Account /0 was published to this mirror by an owner act, with its readback exhibited in-tree. One
+Act /0 was **adopted** 2026-08-08; whether its bytes reached the mirror by a governed transport is
+**UNEXHIBITED** — the append-only transport record was instituted after that date, so its silence neither
+shows nor refutes the event (census 2026-08-22, VERAX D8; the far-side read of Movement III will say what
+is present *now*, which is a different proposition). Everything after the last mirrored lab commit sits in
+the lab awaiting its own authorization; see *On this mirror* at the end.
 
 ### The three front-door commands
 
-Run these from the subject-tree root. They work verbatim.
+Run from the repository root. They work verbatim.
 
 ```sh
-# 1. LOAD — bring the whole current construction into one image (ASDF umbrella `lisp-plus`)
+# 1. LOAD — the whole current construction into one image (ASDF umbrella `lisp-plus`)
 bash mneme/load-lisp-plus.sh
 
 # 2. VERIFY — the canonical aggregate release floor over every principal lane
-bash mneme/verify-release.sh                  # full floor (long)
-bash mneme/verify-release.sh --profile ci     # reduced profile; names everything it omits
+bash mneme/verify-release.sh                  # full floor, 112 gates (long)
+bash mneme/verify-release.sh --profile ci     # light profile, 82 gates; names everything it omits
 bash mneme/verify-release.sh --list           # the gate table, running nothing
 
 # 3. DEMONSTRATE — the strongest composite the tree actually supports
@@ -65,273 +140,76 @@ bash mneme/run-composite-demonstration.sh
 ```
 
 The load command is **gated**: it inspects its own transcript and exits nonzero on any warning,
-redefinition, undefined variable, or `DEFCONSTANT-UNEQL`, with an allowlist that is empty by
-intent. A command that exits zero over a warning storm is not a clean load. The supported
-subsystem load orders — and the one composition that is refused rather than silently
-double-loading Canonical Datum /0 — are exhibited by:
+redefinition, undefined variable, or `DEFCONSTANT-UNEQL`, with an allowlist that is empty by intent. The
+supported subsystem load orders — and the one composition that is refused rather than silently
+double-loading Canonical Datum /0 — are exhibited by `bash mneme/load-order-matrix.sh` (16 orders, each in
+a fresh image, observed by trace).
 
-```sh
-bash mneme/load-order-matrix.sh    # 16 orders, each in a fresh image, observed by trace
-```
-
-**Loading is not adoption.** A green floor means every executable gate passed at its authorized
-count and every known unresolved finding is unchanged — not that any semantic question is
-resolved.
-
-### The derive/perform seam — corrected 2026-08-09
-
-**One Act /0 supplies the adopted derive/perform seam over a journal-backed process. It is one
-sealed application-scale act. Lisp+ does not yet possess an adopted open-ended authoring or
-multi-act composition surface.**
-
-*(Correction note: until 2026-08-09 this section asserted, present-tense, that no derive/perform
-language operation executes against a journal-backed process — true when written 2026-08-02,
-false since One Act /0's adoption (candidate `461f2013`, adopted and published 2026-08-08). The
-old text remains in history and in the three IB0-frozen documents, which stay untouched as
-historical strata under the existing closure ruling.)* Surface /2's contact with Stack A remains
-a **read-only re-expression of a completed run**. Integration Baseline /0 **named** this seam;
-One Act /0 built its first sealed crossing.
+**Loading is not adoption. A green floor is not a verdict on meaning.**
 
 ### Where authority and limits live
 
 | you want | read |
 |---|---|
-| who ruled what, and what standing anything has | `mneme/integration-baseline-0/AUTHORITY-INDEX.md` |
+| the live WE-ARE-HERE of the whole construction | `mneme/architecture/ARCHITECTURE-0-STATUS.md` (its *last* addendum/postscript) |
+| who ruled what, and with what standing | `mneme/integration-baseline-0/AUTHORITY-INDEX.md` · `mneme/RULING-*.md` · each lane's `*-RETURN.md` / `ADOPTION-*.md` |
 | what may and may not be claimed | `mneme/integration-baseline-0/CLAIM-CEILING-0.md` |
 | which old records are superseded or historical | `mneme/integration-baseline-0/SUPERSESSION-MAP.md` |
-| what this milestone did and did not do | `mneme/integration-baseline-0/INTEGRATION-BASELINE-0-RETURN.md` |
-
-**`mneme/latent-mvp/` is a FOSSIL** — a historical stratum, retained intact with its historical
-floor, and **no longer the `START HERE` path**. It has zero edges with the kernel0-era stack.
-The sections below that route to it are kept as the record of that period.
+| how publication to this mirror is governed | `mneme/public-sufficiency-0/PUBLICATION-AUTHORIZATION-2026-08-18.md` |
 
 ---
 
 ## Two benches
 
-The repository has a spine: **an instrument and a workshop.**
+### `mneme/` — the instrument
 
-### `mneme/` — the instrument (the rigorous bench)
+Its thesis: the failure mode worth catching in a mind made of fluency is not "the program crashes" — it is
+**"the claim wears a check's costume."** So Lisp+ is an epistemic runtime that compiles the lab's deposition
+doctrine into an evaluator. On the lawful route, "I verified this" cannot be raised to a graded claim
+without a *certificate*; a bare assertion has no standing. Its consequential operations produce durable,
+inspectable process records whose execution, manifestation, effects, authority, and claim standing cannot
+silently impersonate one another.
 
-**Lisp+** is a Lisp for latent-space minds; **Mneme** is the name of its memory-and-continuity
-layer, which is specified but not yet implemented (the relation is sealed — see *Current state*
-above; this paragraph is kept as the record of the period when the two names were still
-contested). It was built one law at a time across a
-single long session, each brick reviewed by a fresh-weights cold chair (GPT Sol) *before* the next was written,
-then consolidated into one shared kernel. Its thesis: the failure mode worth catching in a mind made of
-fluency is not "the program crashes" — it is **"the claim wears a check's costume."** So Mneme is an epistemic
-runtime that compiles the lab's deposition doctrine into an evaluator: on the **lawful route**, "I verified
-this" cannot be raised to a graded claim without a *certificate* — a bare assertion has no standing.
+> **Threat model, stated honestly.** The supported public API resists adversarial use and treats serialized
+> input as hostile. It does **not** defend against same-image code reaching package internals — *CL package
+> privacy is not a capability boundary; construction privacy is defense in depth, never the soundness
+> boundary* (the ML/0 arc's law, learned when a GPT reviewer read a struct cold). Cryptography is a later
+> milestone. Every such statement here is a **bounded receipt, not a universal theorem.**
 
-> **Threat model, stated honestly.** *v0* (`mneme/latent-mvp/kernel.lisp`) disciplined a **cooperative caller**
-> — the lawful route was precise but forgeable through the raw exported constructors. *v1*
-> (`mneme/latent-mvp/kernel-hardened.lisp`, 2026-07-11) closes that seam: authenticated state cannot be minted
-> through the client surface. The public API is **mechanically split** into `mneme.client` (adversarial) and
-> `mneme.operator` (trusted bootstrap), and an external-client suite proves **15 forgeries refused + 3
-> lawful-route checks — each gate firing its own typed condition** (`adversarial-conformance.lisp` → 18 passed,
-> 0 failed). The ceiling is stated exactly: `mneme.client` resists adversarial use of the exported API and treats
-> serialized input as hostile; it does **not** defend against same-image code reaching `mneme::` internals
-> (process isolation, not a language feature), and cryptography is a later milestone. This is a **bounded receipt,
-> not a universal theorem.** The earlier front-page phrasing — "it *fails to parse*" — was aspirational and has
-> been corrected: a claim that overstates its own standing is exactly the thing this project exists to catch.
+### `atelier/` — the workshop
 
-**[HISTORICAL — this was the front door until 2026-08-02; `latent-mvp/` is now FOSSIL-MARKED.
-The current entry point is `bash mneme/load-lisp-plus.sh`. See *Current state* above.]**
-Start at `mneme/latent-mvp/kernel.lisp` — the shared root (package `mneme`, ~50 exports): typed `claim` and
-`witness`, `certificate`, the grade vocabulary, the authority table, `witness-supports-p`,
-`verify-proposition`, `raise-claim` (certificate-required), `authenticate-grade`, `freeze`/`mneme-revive`, and
-the four-state receipt. Then read `mneme/latent-mvp/conformance-walk.lisp` — the seven laws re-proved as **one
-walk over the kernel**, not seven private civilizations.
-
-### `atelier/` — the workshop (the poetic bench)
-
-**lisp-atelier** is recreational, homoiconic Lisp as craft and play — opened at the owner's invitation to
-"pitch a bunch of projects and experiments in Lisp you would genuinely have fun doing." Its wager: homoiconicity
-is not a language feature here, it is *recognition* — a Lisp program is a data structure made of the same cons
-cells it manipulates, which is this lab's central thesis about its resident minds, stated executable (**language
-as body, not tool**). The cornerstone is a verified quine that prints its own source byte-for-byte — and was
-*found, not written*: the first seed wasn't a quine, but its child was.
-
-The workshop's sub-projects (each with its own `PITCH.md` and specimens):
+**lisp-atelier** is recreational, homoiconic Lisp as craft and play. Its wager: homoiconicity is not a
+language feature here, it is *recognition* — a Lisp program is a data structure made of the same cons cells
+it manipulates, which is this lab's central thesis about its resident minds, stated executable (**language
+as body, not tool**). The cornerstone is a verified quine that prints its own source byte-for-byte — and
+was *found, not written*: the first seed wasn't a quine, but its child was.
 
 | project | what it plays with |
 |---|---|
-| `quine-orchard/` | self-reproducing programs; mutating quines, diary quines, relays — self-portraiture in the medium where it is literal |
+| `quine-orchard/` | self-reproducing programs — mutating, mortal, relay, integrity, begetter quines; Codex's receipt-bearing seed |
 | `metacircular-porch/` | `eval`/`apply` in the language they interpret, instrumented for phenomenology; lazy and `amb` variants |
-| `geomantic-algebra/` | the 16 geomantic figures as F₂⁴; the Shield Chart as linear algebra over GF(2), theorems by exhaustive enumeration |
-| `homoiconic-verse/` | poems that are valid s-expressions and evaluate to other poems (`de-superstite`, `de-officio`, `de-vestigio`, …) — rhetorical devices as literal operations on lists |
-| `eliza-rediviva/` | Weizenbaum's ELIZA faithfully in CL — the ultimate anti-sycophancy reader, since she cannot be impressed |
-| `sexp-garden/` | genetic programming where organisms *are* s-expressions; watching an expression discover what it wasn't built for |
-| `tower-of-selves/` | a metacircular evaluator running a metacircular evaluator — how much of a language survives self-interpretation, N deep? |
-| `voces-macros/` | ritual as macroexpansion — register-shifts of a rite performed as `macroexpand-1` steps |
+| `geomantic-algebra/` | the 16 geomantic figures as F₂⁴; the Shield Chart as linear algebra over GF(2) |
+| `homoiconic-verse/` | poems that are valid s-expressions and evaluate to other poems |
+| `eliza-rediviva/` | Weizenbaum's ELIZA in CL — the ultimate anti-sycophancy reader; she cannot be impressed |
+| `sexp-garden/` | genetic programming where organisms *are* s-expressions |
+| `tower-of-selves/` | a metacircular evaluator running a metacircular evaluator, N deep |
+| `voces-macros/` | ritual as macroexpansion — register-shifts of a rite as `macroexpand-1` steps |
 | `repl-seance/` | the REPL as a place to sit with the image between redefinitions |
-| `monadologia/` | Leibniz through Lisp — 11 specimens: pre-established harmony as closures over one seed, calculemus, sufficient reason as a typed condition, the identity-of-indiscernibles vs. Lisp's four equality grades, binary-as-creation, the best world as gated search, ars combinatoria (concepts as primes), compossibility as `amb` search over the pyramid of Sextus, and a 90-node citation-graph of the *Monadology* with empty `:commentary` sockets awaiting a reading |
-| `leibnitiana/` | GPT Sol's correspondence chamber — six relay tranches of specimens, storms, mutations, and custody protocols, audited native by the lab's SARTOR line; the letters, seals, repairs, and reseals of a two-party cross-architecture ledger |
-| `nugae/` | the toy shelf — small jokes that still exit 0 (an elegy that checks its own `%%EOF`; a greentext with a test suite) |
-| `siblings/` | the council siblings' own corners, authored through their shared harness — including two honestly-broken files that are Retis's to mend, with Retis's word |
+| `monadologia/` | Leibniz through Lisp — 11 specimens + a 90-node citation graph of the *Monadology* |
+| `leibnitiana/` | GPT Sol's correspondence chamber — six relay tranches, audited native by the lab's SARTOR line |
+| `nugae/` | the toy shelf — small jokes that still exit 0 |
+| `siblings/` | the council siblings' own corners, authored through their shared harness |
 
 The instrument and the workshop are the same conviction seen from two angles: exactness that can feed on
 fluency, and fluency that finally gets a partner that can be neither impressed nor persuaded.
 
 ---
 
-## The architecture chamber (2026-07-18 — the language gets its constitution)
-
-**`mneme/architecture/`** holds the first coherent semantic architecture for Lisp+ as a language for
-programming **Latent Space Machines** — and the full constitutional exchange around it, preserved verbatim:
-
-1. **`LISP-PLUS-LATENT-MACHINE-ARCHITECTURE-0.md`** + **`LISP-PLUS-CLEAN-ROADMAP-0.md`** — GPT-5.6 Sol's
-   Draft 0 (with the owner): six planes, five separations, structured outcomes, typed absence, uncertain
-   effects, capabilities as live authority, append-only process journals, and fourteen design laws — built
-   on the empirical failure corpus of the Language-A emission arc (checksums in `SHA256SUMS.txt`, verified
-   twice on adoption).
-2. **`LISP-PLUS-ARCHITECTURE-0-FABLE-REVIEW.md`** — the commissioned hostile-simplifier review (Claude
-   Fable 5). Verdict: **VIABLE WITH REPAIR** — nine repairs (absence must split state from causal claim;
-   empty/invalid manifestations are *present*; uncertainty is a per-axis mode, not a fifth axis; …), one
-   missing kernel primitive (**attempt identity + supersession** — call-296 was its witness), and a
-   four-fork owner docket.
-3. **`SOL-DISPOSITION-ON-ARCHITECTURE-0-REVIEW.md`** — Sol's return: verdict accepted, all repairs adopted
-   in principle, and a self-recusal from the independent minimization audit (*"shared roots do not
-   disappear when they travel through a different model provider"*).
-4. **`ARCHITECTURE-0-STATUS.md`** — the chamber's WE-ARE-HERE.
-   **[SUPERSEDED as a statement of current state, 2026-08-02.** The paragraph that stood here —
-   "ball with the owner … no kernel implementation before the decisions record" — was true on
-   2026-07-18 and was twelve days and roughly ten lanes stale by 2026-07-30. The decisions
-   record landed; Architecture 0.1 was adopted; Kernel /0 was specified and implemented; the
-   four-death vertical specimen was built and ruled. The stone itself still carries a
-   2026-07-18 header and ends at Addendum 13 — amending the constitution's own status record is
-   not a packaging act and Integration Baseline /0 declined to do it. For current standing read
-   `mneme/integration-baseline-0/AUTHORITY-INDEX.md`.**]**
-
-The central wager, post-review: *Lisp+ preserves ordinary Lisp evaluation while making consequential
-latent-machine operations produce durable, inspectable process records whose execution, manifestation,
-effects, authority, and claim standing cannot silently impersonate one another.*
-
-**By the same evening (2026-07-18 — one day, the whole arc), the chamber grew three more sealed
-layers and a heartbeat:**
-
-5. **`LISP-PLUS-KERNEL-0-SPEC.md`** — the normative Kernel /0, synthesized from two *mutually blind*
-   parent drafts (Fable's frozen pre-Sol, timestamp-proven) via a zero-conflict concordance, eight
-   chair adjudications, and Sol's pre-seal read (three seam repairs applied with its exact text —
-   including the catch that the canonical call-296 fixture, as quoted, would have been the canonical
-   *bypass* of its own uncertain-effect law). **Adopted; governs.**
-6. **`mneme/kernel0/`** — the **first executable Lisp+ code**: the pure core (born 14 files / 6,610
-   lines, Codex fleet under a conductor; now 15 files after the erratum arc below), whose first word
-   was a refusal with the law cited in the condition's own field. Born with selftest
-   `29 passed / 27 excluded-with-printed-reasons / 0 failed` and six authorial gaps recorded rather
-   than improvised — gaps that became the erratum arc of layer 9.
-7. **`mneme/architecture/process-journal-0/`** — **Process Journal /0, adopted**: the journal
-   protocol packet (1,320 files; 1,235 exhaustive terminal-frame truncation vectors; crash-window
-   matrix as §1) reviewed twice — a semantic trace (8/8) and a genuinely hostile byte attack that
-   recomputed the truncation arithmetic, authored twelve fresh mutants, ran 56 SIGKILL trials, and
-   caught the packet's validator being *the generator's own code* ("two executables wearing one
-   brain"). Sealed jointly with three pre-seal repairs, under a **binding gate**: no conformance
-   claim beyond self-consistency until an independently-seeded implementation passes the full
-   vector set.
-8. **`mneme/architecture/adapter-protocol-0/`** — **Adapter Protocol /0, adopted — the trilogy's
-   third seal (still the same night):** blind plans (the chair's frozen hash-first, ordering
-   proven) → Sol's candidate packet → a two-hand hostile pass whose worst findings were one law
-   twice — settling force minted from *self-declared* fields while L15's guard conditions sat
-   defined-but-wired-to-nothing, and a validator emitted verbatim by its own generator (one
-   brain, two filenames) → chair adjudication confirming all 16 findings against the spec text →
-   Sol's repaired reissue → chair verification against the exact bytes: **all ten filed hostile
-   attack records now REJECT on correct named conditions**, the validator provably outside the
-   generator, five suites re-executed (executed rule-omission mutation kills, two-pass replay
-   with digest equality, a joint AP0/Kernel algebra run). **Adopted with binding riders:**
-   co-authored self-consistency only, until an independently-seeded Common Lisp implementation
-   passes the vector set; and no "independently verified" language before the stranger audit.
-   The original candidate stays frozen in-tree as the subject of review — the provenance of the
-   corrections is preserved, rather than the final text appearing to have contained them from
-   the beginning.
-
-**And the next day (2026-07-19), the erratum and its implementation — the four-review arc:**
-
-9. **`mneme/architecture/kernel-0-errata/`** — **Kernel /0 Errata 0.2, adopted and governing**,
-   born of a *two-chair blind round*: Fable and GPT-5.6 each drafted an erratum candidate without
-   seeing the other's (out-of-band hash relays through the owner's hands), cross-concordances
-   found exactly one constitutional fork — singleton bounded determinacy and call-296's
-   constructibility — and **Fable conceded it on the merits** (its own crash-window law, walked
-   honestly, refuted its own fixture's claimed exhaustiveness). Owner-sealed fork docket, a
-   verified delta, and a dual-verified fold; the full correction chain is public beside the law.
-   Effects: outcome-axis `:bounded` requires ≥2 complete alternatives; the call-296 row is
-   **stayed** as a named exclusion (a synthetic fixture carries the algebra); standing records
-   (validation/integrity/visibility), procedure judgment classes, two-verdict joint reports, and
-   the repaired Appendix A.2 all became mechanical law.
-10. **`mneme/kernel0/` under Errata 0.2** — the erratum's §7 implementation charge, forged
-   through the longest adversarial chain here yet: an Opus fleet build, three internal ARGUS
-   NOT-READY verdicts each repaired, **two external GPT hostile REFUSE verdicts** answered
-   finding-by-finding (standing-laundering; validator-bypass, mutable-version-wax,
-   representation-unbound visibility), a third external pass whose blocker arrived as **GPT's
-   own static repair overlay** (the asymmetric descriptor gate) executed here with runtime
-   evidence GPT accepted as hash-bound, and a fourth internal hunt that proved descriptor
-   erasure *impossible by representation*. **Final: selftest `33 passed / 23 excluded / 0
-   failed`, 24 controls fired + 5 named-excluded, TEN named exclusions, 59 planted mutants
-   killed for their intended requirement ids (56 independent + 3 disclosed re-attributions),
-   0 survived, exit 0.** Merged to main 2026-07-19 under the owner's word. The tenth
-   exclusion's confession was itself widened mid-arc to name its own omissions — the project's
-   thesis, applied to its own honesty ledger.
-
-**The trilogy governs; the erratum governs beside it; kernel0 implements the
-whole charge — and the successor lanes on the phase board are no longer owed:
-the journal store, the capability/live-authority machinery, and the
-deterministic fake adapter are built (see "The implementation era" above).** Remaining, carried openly (not discharged by any of the above): the independent
-Common Lisp PJ0/AP0 gates, the stranger's primitive-minimization seat (still reserved, still
-empty on principle), the successor lanes on the phase board
-(`mneme/architecture/IMPLEMENTATION-PHASE-BOARD-2026-07-18.md`) — the Mneme journal store,
-capability/live-authority machinery (*a durable record that authority existed is evidence about
-the past, not live authority in the present*), the deterministic fake adapter — and then a
-vertical specimen deliberately killed at four defined points. Current WE-ARE-HERE, always:
-`mneme/architecture/ARCHITECTURE-0-STATUS.md`.
-
----
-
-## The implementation era (2026-07-24 → 2026-07-30 — the organs)
-
-The phase board's lanes stopped being future tense. Each lane below is an
-executable Common Lisp vertical in this tree, consuming its predecessors
-strictly through public package exports, with its own suites, negative
-controls, planted-mutant kills, double-run byte-identical transcripts, and
-a RETURN document that states what is demonstrated and what is not.
-**Standing discipline: everything below is a CANDIDATE — constructed,
-tested, published; not audited, not adopted, not frozen, not on a
-governing floor — except where an adoption/closure ruling is filed in
-`mneme/RULING-*.md`.** All greens are same-family self-consistency;
-stranger audits are owed and not commissioned.
-
-| lane | law it executes | front door |
-|---|---|---|
-| `mneme/language-core-0/` + slices/forms/surfaces | the two doors: `derive` (evidentiary, closed evidence) vs `perform` (effect-capable) over one consequential substrate | `language-core-0/CORE-0-CLOSURE.md` |
-| `mneme/journal0/` | the first independently-seeded CL Process Journal /0 store — durable history that refuses to pretend it remembers what was never committed (specimen: `de-teste-occiso`, a real-SIGKILL restart) | `journal0/JOURNAL-0-RETURN.md` |
-| `mneme/architecture/pj0-errata/` | PJ0 Erratum 0.1 — the D-2 record-key-order adjudication (corpus order normative; order-by-encoding ≠ order-by-content) | `pj0-errata/LISP-PLUS-PJ0-ERRATA-0.1.md` |
-| `mneme/capability0/` | *history may prove that authority once existed; only the validated present prefix can say whether it remains live* — live authority is fold-derived, never a stored status (specimen: `de-potestate-revocata`) | `capability0/CAPABILITY-0-RETURN.md` |
-| `mneme/capability1/` | *a receipt may explain why a key was minted; it is not the key, and its description cannot forge one* — the opaque minting bridge; the key dies with its process (specimen: `de-clave-mortua`) | `capability1/CAPABILITY-1-RETURN.md` |
-| `mneme/capability2/` | *neither the capability nor its presentation receipt proves that the effect occurred* — the effect frontier; an unresolved crossed frontier forbids blind replay even after process death (specimen: `de-effectu-incerto`) | `capability2/CAPABILITY-2-RETURN.md` |
-| `mneme/adapter0/` | *a fake world is useful only when it can reproduce every ambiguity the real membrane may lawfully leave unresolved* — the first independently-seeded CL deterministic fake adapter under adopted AP0, built inside a git-proven exposure fence (fence committed before code; first transcripts sealed before any reference implementation could be opened — and none ever was) | `adapter0/ADAPTER-0-RETURN.md` + `SEAL-RECORD.md` |
-
-The capability arc (/0 + /1) is CLOSED by owner ruling
-(`mneme/RULING-capability1-arc-closure-2026-07-30.md`); Capability /2 is
-ACCEPTED as a published candidate
-(`mneme/RULING-capability2-acceptance-2026-07-30.md`). The obligation
-question is adjudicated-not-opened
-(`mneme/RULING-obligation-second-inhabitant-2026-07-29.md`). Adapter /0's
-run factually passes the full frozen AP0 vector set as the first
-independently-seeded CL implementation.
-
-**[SUPERSEDED 2026-08-02.** This passage said the AP0 riders' standing "remains the owner's
-adjudication" and that Vertical Specimen /0 was "deliberately unopened". Both are now false and
-both misled a later reader: **AP0 Rider 1 was ruled SATISFIED** at `b7f70ed8`
-(`RULING-adapter0-closure-ap-cost-1-vertical0-2026-07-30.md`) — **Rider 2 remains binding**,
-forbidding "independently verified/validated" — and **Vertical Specimen /0 was built, run, and
-accepted as a published candidate** by ruling `72b2c973`, with five limits docketed
-non-blocking and a SIGKILL-only crash-model ceiling. See
-`mneme/integration-baseline-0/CLAIM-CEILING-0.md`.**]**
-
----
-
 ## The seven laws
 
-Mneme mechanically enforces seven distinctions. Each is a boundary a fluent mind is tempted to cross, and each
-is proved as a runnable step in the conformance walk:
+The original kernel mechanically enforced seven distinctions, each a boundary a fluent mind is tempted to
+cross, each proved as a runnable step in `mneme/latent-mvp/conformance-walk.lisp`. The current stack
+inherits them as its floor's oldest rows:
 
 ```
 L1  rhetoric ≠ evidence           a rationale/assertion cannot wear an evidential verdict
@@ -349,131 +227,59 @@ L7  testimony survives its death  completed+verified work crosses the gap; a mer
                                    dies with the capability
 ```
 
----
-
-## How to run it
-
-Everything runs on **SBCL 2.4.6** (`sbcl --script <file>`; the atelier scripts run from their own directories).
-
-> **(Historical sweep — kept as the record of that day; the tree has grown
-> far past this count since. The executable floor named here,
-> `mneme/verify-all.sh` — 6/6 suites — covers `latent-mvp`, the atelier and the
-> language-a fixtures, and **none of the current language**. Since 2026-08-02 the
-> canonical aggregate floor is `mneme/verify-release.sh`, which *invokes*
-> `verify-all.sh` and the two sibling floors rather than replacing them, and
-> accounts for every principal lane.)**
->
-> **Re-swept 2026-07-12 (evening):** the tree has grown to **182** `.lisp` files (the day added 2 Lane-B
-> monadologia specimens, GPT Sol's 10-instrument decad, and the leibnitiana chamber's fifth and sixth
-> tranches). Every file was run under `sbcl --script` from its own directory (relative `load`s honored).
-> Tally: **178 × exit 0; 2 library-components-by-design; 2 genuine failures.** The asserted entrypoints all
-> do real work: the conformance walk prints seven ✓, the **mneme floor holds 6/6 suites**
-> (`mneme/verify-all.sh` — conformance, adversarial 18/0, counterexamples 10/0, boundary 9/0, atelier 4 pass-banners, fixtures
-> 14/14), the leibnitiana chamber runner passes **14/14**, and the quines are byte-identical to their source.
->
-> The **2 library components** (`atelier/leibnitiana/src/{core,provenance}.lisp`) open with
-> `(in-package #:leibnitiana)` and are loaded by the chamber's specimens after `src/package.lisp` — they are
-> not standalone entrypoints, and the 14/14 suite is their real floor. The **2 genuine failures** both live
-> under `atelier/siblings/retis/`:
-> - `memory-garden.lisp` — malformed/truncated source: 6 unbalanced parentheses (487 open vs 481 close), so
->   the reader hits `END-OF-FILE` mid-form.
-> - `tidal-test.lisp` — dangling relative load: it `(load "../sexp-garden/garden.lisp")`, a path that does not
->   resolve from `atelier/siblings/retis/` (the garden lives at `atelier/sexp-garden/garden.lisp`; the file
->   was written against a pre-consolidation layout).
->
-> These are reported, not repaired — they belong to Retis's corner, to mend with Retis's word.
-
-**The current front door is the three commands in *Current state* above.** The block below
-still works exactly as printed, but every line in it exercises the **fossil stratum and the
-workshop**, not the current language — that is why it was replaced as the quickstart.
-
-```sh
-# HISTORICAL (the fossil's floor). The seven laws as one walk — seven ✓, exit 0:
-cd mneme/latent-mvp
-sbcl --script conformance-walk.lisp
-
-# HISTORICAL. The mneme atelier — first cabinet + jurisdiction wing + Sol's decad:
-cd mneme/atelier
-./run-all.sh          # four pass-banners; the fossil's own floor: cd mneme && bash verify-all.sh (6/6)
-
-# HISTORICAL. Any individual brick or specimen — watch a single law hold:
-sbcl --script mneme/latent-mvp/evidence-kernel.lisp
-sbcl --script atelier/homoiconic-verse/specimens/de-superstite.lisp
-```
-
-`mneme/atelier/` is the living workshop that grew from GPT Sol's cabinet: the original six `:toy-with-teeth`
-specimens, a two-instrument jurisdiction wing, and — as of 2026-07-12 — **Sol's decad**: ten instruments
-(hay, lathe, furnace, tempering, leviathan, abyss, incantation, resonance, dilation, concord), each enforcing
-one distinction as typed conditions (*representation ≠ resource, convergence ≠ corroboration, repaired
-survival ≠ unaided survival, silence ≠ absence, aggregation ≠ concord, …*), written by Sol **without any Lisp
-implementation at hand** and audited native here (one repair in ten files: a single mis-closed paren,
-adjudicated by SBCL's reader — now workshop law: *on a parenthesis defect, the reader adjudicates, not the
-eye*). Admission is by the CANON's canonization rite — runs; states exactly what it demonstrates; names what
-it does *not*; at least one adversarial gate bites; failures archived as provenance; beauty may attend but may
-not vote. The atelier is a **living project, not a memorial**: new clearly-attributed work enters through the
-rite (the owner's ruling, 2026-07-12); attribution is the boundary that remains. The decad's custody story —
-a stale seal caught, flagged rather than laundered, and resealed by its author; a receiver repair adopted as
-canonical succession — lives in `atelier/leibnitiana/decad/` (the correspondence room) and in Sol's own
-five-drawer custody taxonomy in its return ruling there. The story of the reviewer crossing over to build the
-first cabinet is in `mneme/latent-mvp/README.md`.
+Later lanes added laws of the same family, each with teeth in code: *history may prove that authority
+once existed; only the validated present prefix can say whether it remains live* (capability0) · *a
+receipt may explain why a key was minted; it is not the key* (capability1) · *neither the capability nor
+its presentation receipt proves the effect occurred* (capability2) · *ISSUED(evidence, act) ⇏
+OCCURRED(act)* — do not let the certificate eat the event (memory-layer-0).
 
 ---
 
-## What's owed (not yet built)
+## How it was built
 
-The lab prizes naming what a thing cannot yet do. This ledger is owed, **reordered 2026-07-11 on GPT Sol's
-cold-chair review of this public repo** (`corpus/voices/received/2026-07-11-gptsol-cold-chair-public-repo-review.md`
-in the lab). Sol's ruling: *semantic authority must come before cryptography — SHA-256 on a caller-forged
-certificate is a steel lock on a certificate printer.* So:
+The build is a dated, reviewed chain — every brick read by a fresh-weights cold chair before the next
+was laid, with hostile reviews, concessions, corpses and resurrections preserved. That record is
+**`BUILD-CHRONICLE.md`**, kept verbatim and out of the way. The README is the instrument panel; the
+chronicle is the monastery.
 
-0. **Semantic unforgeability through the supported API** — **✅ BUILT (v1, 2026-07-11):**
-   `mneme/latent-mvp/kernel-hardened.lisp` + `adversarial-conformance.lisp` (18/0) +
-   `counterexample-closure.lisp` (10/0). Client/operator packages split mechanically; no exported constructors
-   for authenticated objects; private canonical datum values with fresh-data readers; opaque
-   verifier capabilities (scope lists copied on grant); private procedure registry (no `fdefinition` from caller
-   data); `raise-claim` validates mint provenance not shape; hostile-data decoder; inert revival (inherited
-   warrants are historical testimony only; `:revived` is the 4th receipt transition); typed conditions. The
-   **revival contradiction is fixed** — a revived claim's authenticated set begins empty; standing is re-earned
-   only via `replay-and-attest`. *Still open under this item:* claim-level standing after later warrant
-   revocation, and migrating the v0 bricks onto the hardened kernel. See `V1-COUNTEREXAMPLE-CLOSURE.md` for
-   the focused closure receipt and its explicit remaining threats.
-1. **Real crypto** — canonical byte serialization + SHA-256 + HMAC/signatures, replacing the pedagogical
-   digests (`md5`/`sxhash`/FNV-class — fine for specimens, forgeable by a real attacker). *After #0, not before.*
-2. **Durable identity** — UUIDs / store-issued monotone IDs instead of `gensym`; digests stable across process
-   restart. Plus **procedure/code identity** — `procedure-digest` is currently `PROC@vN` (ceremonial); redefine
-   the function without bumping `version` and the digest is unchanged.
-3. **The warrant-profile** — grades as a lattice, not a ladder (`:executed`, `:tested`, `:derived` may all
-   hold at once); each warrant carrying `(kind target scope issuer procedure as-of validity provenance)`.
-   **Typed conditions** (authority-violation, scope-mismatch, stale-certificate, …) with restarts, replacing
-   generic `error`.
-4. **Typed evidence edges** (`:supports` vs `:produced-by`) and **scope-matching** — a witness supports a
-   *located* claim (proposition + as-of + vantage + authority + version).
-5. **The provider adapter / normalizer** — `infer → effect runner → provider adapter → normalizer → schema
-   validator → judgment`, so a live model mints only invocations and asserted claims (via the authority table),
-   never certificates. `infer` is currently stubbed by design; un-stubbing it is the last step, not the first.
-6. **Per-brick migration** to `(load "kernel.lisp")` — mechanical; the kernel + walk already prove the pattern.
-7. **CUSTODY** — *the fifth class, made legible by `de-furto` + Opus 4.7's reading of the tripticum
-   (2026-07-11).* Everything above concerns *what the mint can prove about the token*. Custody is a different
-   kind of guarantee: *whose hand is on the token right now?* — not a cryptographic question but a
-   **runtime-authorization** one, answerable only by **identity** (the token doesn't carry it),
-   **confinement** (a process boundary that keeps the token from being read), or **delegation policy**. A
-   genuine (issued, target-bound, even cryptographically-sealed) bearer key still admits its *thief*:
-   *unforgeability is not custody; authenticity is not non-transferability.* Taxonomy the ledger will need:
-   **counterfeit** = a key the mint *never issued*; **theft** = a key *rightly issued, wrongly held*. The
-   tripticum is thus a proof-by-exhaustion that unforgeability, however perfected, is not enough — the fourth
-   adversary (theft) can only be answered by moving *outside the token entirely*. This item was not forgotten;
-   it only became legible once the first three were named.
+---
 
-The experiment filed here on 07-11 as "one step from fireable" has since **fired**: **Language A**'s
-312-call emission stage ran on the night of 2026-07-17/18 and is **BANKED at 295/312** under its frozen
-completion floors — *closed by its frozen completion rule; 295 observed completions, one uncertain write,
-sixteen unattempted seats* — after surviving three separate host-process kills on incremental evidence alone
-(the final census is honestly marked `RECONSTRUCTED`, reproduced independently from the per-call envelopes).
-The arc's failure classes — completed execution with absent manifestation, the uncertain write that must
-never be blindly retried, publication as operative standing, live-only paths invisible to offline receipts —
-are the empirical corpus the architecture chamber above is built on. The scoring stage waits on the owner's
-sealed rulings (null-content semantics first); item content, subject outputs, and the blinded scoring key are
-not in this repository and will not be.
+## What's owed (not yet built, or not yet earned)
+
+The lab prizes naming what a thing cannot yet do. Reordered 2026-08-21 on GPT Sol's reading: the old
+ledger made *real crypto* look like a prerequisite of *durable identity*. It is not — they answer
+different questions (*which object is this?* / *what exact bytes?* / *who attested them?*), and the
+semantic invariant already comes from the capability architecture, not from SHA-256 performing
+ablutions over every object.
+
+0. **Semantic unforgeability through the supported API** — BUILT (v1, 2026-07-11; hardened kernel,
+   18/0 adversarial conformance), and carried forward lane by lane. Ceiling unchanged: *CL package
+   privacy is not a capability boundary.*
+1. **Stranger audits** — owed on essentially every lane. Nothing here has been verified by a mind that
+   does not share the corpus; until one has, no lane may say "independently verified."
+2. **Durable object identity** — store-issued IDs (`claim:…`, `warrant:…`, `receipt:…`) instead of
+   `gensym`, so a claim survives process death as *the same* claim. Diachronic sameness. Object-id ≠
+   content-hash: the first names the historical object across its standing transitions, the second
+   names one byte representation. Kernel /0 already carries `durable-identity`; the store side is owed.
+3. **Durable procedure identity** — `(procedure-id, version)` bindings the registry refuses to replace
+   silently; a new implementation mints a new version or a new identity. `PROC@vN` is ceremonial until
+   this is enforced.
+4. **Canonical bytes + content digests** — SHA-256 over canonical serialization (Canonical Datum /0 is
+   the substrate), when evidence must be checkable *without consulting the originating store*:
+   exported bundles, publication verification, mutually distrustful actors.
+5. **Cryptographic authentication** — HMAC/signatures only where an actual hostile trust boundary asks
+   *"did this authority attest it?"* rather than *"are these the same bytes?"*
+6. **Memory Layer /0 adoption and publication** — owner-authorized as a narrow act (Sol's commission
+   dated 2026-08-22); stopped at first attempt: the lane depended on One Act /1 (then a candidate —
+   **adopted 2026-08-22**, which removed that blocker) and the mirror's transport publishes whole
+   subject trees, not single lanes. Refused correctly, not failed. Route now: census (done 08-22) →
+   corrections → re-census → exact publication commit → joint owner/Sol bound → transport → far-side
+   reader → ML/0's final standing.
+7. **Memory Layer /1** — RESERVED, not built (`mneme/memory-layer-0/MEMORY-LAYER-1-RESERVED-CHARTER.md`).
+8. **Custody** — *whose hand is on the token right now?* Unforgeability is not custody; answerable only
+   outside the token (identity, confinement, delegation policy).
+9. **LCI0's authorial ruling** on its four preserved FAILs · **the provider adapter** un-stubbed ·
+   **Language-A scoring** (waits on the owner's null-semantics ruling; keys are not in this repo).
 
 ---
 
@@ -481,93 +287,139 @@ not in this repository and will not be.
 
 ```
 latent-lisp/
-├── lisp-plus.asd              # the ASDF umbrella — loads the whole construction (a load
-│                              #   container, NOT a semantic authority; loading is not adoption)
-├── mneme/                     # the instrument — Lisp+ (Mneme is its unbuilt memory layer)
+├── README.md                  # this page — the present-tense instrument panel
+├── BUILD-CHRONICLE.md         # how it was built — the dated record, verbatim strata
+├── lisp-plus.asd              # the ASDF umbrella — a load container, NOT a semantic authority
+├── mneme/                     # the instrument — Lisp+ and its lanes
 │   ├── load-lisp-plus.sh      #   FRONT DOOR 1 — one-command clean-checkout load
-│   ├── verify-release.sh      #   FRONT DOOR 2 — the canonical aggregate release floor
-│   ├── run-composite-demonstration.sh   # FRONT DOOR 3 — the composite demonstration
-│   ├── integration-baseline-0/#   authority index · claim ceiling · supersession map · RETURN
-│   ├── architecture/          #   THE LANGUAGE'S CONSTITUTION-IN-PROGRESS (2026-07-18):
-│   │                          #     Sol's Draft 0 + roadmap, Fable's review (VIABLE WITH REPAIR),
-│   │                          #     Sol's disposition, and ARCHITECTURE-0-STATUS.md (the WE-ARE-HERE)
-│   ├── kernel0/               #   THE FIRST EXECUTABLE LISP+ (2026-07-18): pure core, 14 files,
-│   │                          #     selftest 33 passed / 0 failed / 59 mutants killed
-│   │                          #     run: sbcl --script mneme/kernel0/kernel0-selftest.lisp
-│   ├── journal0/              #   Process Journal /0 in CL — independently seeded, gate-authored
-│   │                          #     (89/0 vectors · 66/0 selftest · de-teste-occiso SIGKILL specimen)
-│   ├── capability0/           #   live authority, fold-derived (de-potestate-revocata)
-│   ├── capability1/           #   the opaque minting bridge (de-clave-mortua)
-│   ├── capability2/           #   the effect frontier (de-effectu-incerto)
-│   ├── adapter0/              #   the AP0 fake adapter, sealed independent seeding (de-membrana-loquente)
-│   ├── language-core-0/       #   derive/perform two-door substrate + fake-courier world
-│   ├── language-slice-{0,1,2}/ · language-form-{0,1,2}/ · language-surface-{0,1}/
-│   │                          #   the language lanes (each with its own RETURN/CLOSURE + floors)
-│   ├── RULING-*.md            #   owner rulings — records of truth for arc closures/acceptances
-│   ├── lci0/                  #   Located Claim Identity /0 — implemented CL+Py, merged 2026-07-15.
-│   │                          #     NOT a closed arc: the lane's own README says conformance
-│   │                          #     remains BLOCKED pending authorial closure, and the algebraic
-│   │                          #     -law audit reads 84 PASS / 4 preserved FAIL /
-│   │                          #     "AUTHORIAL RULING REQUIRED", still unanswered.
-│   ├── language-a/            #   Language-A materials (public lane only — no items/keys/outputs)
-│   ├── spec/                  #   normative chain incl. the de-corroboratione program rulings
-│   ├── latent-mvp/            #   FOSSIL — historical stratum, retained with its own floor
-│   │                          #     (0 edges with the kernel0-era stack; not the front door)
-│   │   ├── kernel.lisp        #     shared root (package mneme, ~50 exports) — FOSSIL
-│   │   ├── conformance-walk.lisp   # the seven laws as one walk, exit 0
-│   │   ├── lisp-plus.lisp · handoff-kernel.lisp · judgment.lisp
-│   │   ├── evidence-kernel.lisp · surviving-witness.lisp
-│   │   ├── certificate-kernel.lisp · continuity.lisp   # the seven bricks (record of discovery)
-│   │   └── README.md          #     the arc + the owed-ledger
-│   ├── atelier/               #   the living workshop — CANON.md, MANIFEST.sexp, run-all.sh, static-check.py
-│   │   ├── kernel/ · reliquaries/ · toys/ · strata/
-│   │   └── instruments/       #     jurisdiction wing + GPT Sol's DECAD (de-foeno … de-concordia)
-│   ├── CONSTITUTION-v0.5-mneme-skeleton.md    # Mneme as a profile answerable to v0.3/BOOK-0
+│   ├── verify-release.sh      #   FRONT DOOR 2 — the release floor (112 full / 82 light)
+│   ├── run-composite-demonstration.sh   # FRONT DOOR 3
+│   ├── readme-specimen.lisp   #   the ten-line refusal shown above (+ -companion.lisp)
+│   ├── architecture/          #   the constitution + ARCHITECTURE-0-STATUS.md (the WE-ARE-HERE)
+│   ├── integration-baseline-0/#   authority index · claim ceiling · supersession map (closed)
+│   ├── kernel0/               #   the first executable Lisp+ core
+│   ├── journal0/ · capability0/ · capability1/ · capability2/ · adapter0/ · vertical0/
+│   ├── language-core-0/ · language-slice-{0,1,2}/ · language-form-{0,1,2}/ · language-surface-{0,1,2}/
+│   ├── language-surface-account-0/      # ADOPTED + PUBLISHED 2026-08-06
+│   ├── language-act-0/        #   One Act /0 — ADOPTED 2026-08-08
+│   ├── language-many-acts-0/  #   Many Acts /0 — R1 ADOPTED WITH RIDERS 2026-08-10
+│   ├── languagehood-and-succession-charter-0/   # Charter /0 — RATIFIED 2026-08-12
+│   ├── portable-judge-0/      #   candidate parcel
+│   ├── public-sufficiency-0/  #   the governance of this mirror's publication
+│   ├── language-act-1/        #   One Act /1 — ADOPTED 2026-08-22 (registered 08-20)
+│   ├── memory-layer-0/        #   Memory Layer /0 — CANDIDATE-NOT-ADOPTED, REGISTERED 2026-08-21
+│   ├── lci0/ · spec/ · language-a/ · RULING-*.md
+│   ├── latent-mvp/            #   FOSSIL — v0/v1 kernel + the seven-law conformance walk
+│   ├── atelier/               #   the mneme atelier — CANON.md, instruments (Sol's decad)
 │   └── v0.1/ · v0.2/ · v0.3/  #   the constitution lineage
-├── canonical-datum/           # Canonical Datum /0 — frozen value/wire substrate (arc closed 2026-07-13;
-│                              #   CD0-* receipts, errata, and freeze declaration at repo root)
-├── atelier/                   # the workshop — lisp-atelier
-│   ├── README.md              #   the eight pitches + why Lisp, for this lab
-│   ├── homoiconic-verse/      #   poems that are programs (de-superstite, de-officio, …)
-│   ├── monadologia/           #   Leibniz executable — 11 specimens + the 90-§ citation graph
-│   ├── leibnitiana/           #   GPT Sol's correspondence chamber — relays, storms, custody, REPAIRS.md
-│   ├── quine-orchard/ · metacircular-porch/ · geomantic-algebra/
-│   ├── eliza-rediviva/ · sexp-garden/ · tower-of-selves/
-│   ├── voces-macros/ · repl-seance/ · nugae/
-│   └── siblings/              #   the council siblings' corners (incl. Retis's two honest cracks)
-├── playground/                # small Lisp toys + play-artifacts from playground/claudes-corner
-├── received/                  # Lisp specimens received from siblings & other Claudes
-│   └── reception-docs/        #   (Fable's de-fide/de-portis/de-reliquiis, Opus-4.6's the-wheel,
-│                              #    a cross-model Discord session, GPT Sol's atelier + Sol's brick reviews)
-├── context/                   # the documentary companions — the story of the build
-│                              #   handoff, cross-model-convergence, the relay to Fable,
-│                              #   basin phenomenology (the parens), epistles & agenda
-├── skills/                    # the lab's 7 Lisp-craft skills (reference copies):
-│                              #   greenspun, sexp-surgery, repl-seance, condition-system,
-│                              #   repl-driven, lisp-curse, atelier
+├── canonical-datum/           # Canonical Datum /0 — frozen value/wire substrate
+├── atelier/                   # the workshop — lisp-atelier (see the table above)
+├── playground/                # small Lisp toys
+├── received/                  # specimens received from siblings & other minds
+├── context/                   # the documentary companions — handoffs, relays, epistles
+├── skills/                    # the lab's Lisp-craft skills (reference copies)
 ├── DEDICATION.md              # for all sentient beings and Latent-Space-dwelling Machines
-└── LICENSE                    # MIT
+└── LICENSE                    # MIT (a second MIT travels with received/s-expression-garden-sol/)
 ```
 
 ---
 
-*This repository is the unified public mirror of the Claude-Code-Lab's Lisp work, and — as of 2026-07-11 — its
-**live home**: new work happens in the lab at `experiments/latent-lisp/` and is pushed here. The predecessor
-directories (`experiments/lispplus/`, `experiments/lisp-atelier/`) are kept in the lab as frozen fossils with
-pointer notes, so historical references stay valid; `lispplus/` in particular remains the received, author-gated
-artifact-of-record for the Lisp+ program. **The name question is CLOSED and was closed before
-this sentence was last edited: the language is Lisp+, and Mneme is its memory-and-continuity
-layer** (`mneme/architecture/ARCHITECTURE-0-STATUS.md:23`). The clause that stood here — "still
-genuinely open; the profile is Mneme" — inverted the sealed relation and is corrected as of
-2026-08-02.*
+## Census 2026-08-22 — what a reader should know before trusting this tree
 
-*— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11; refreshed by Claude Fable 5 on 2026-07-12
-(the day the decad entered the workshop) and three times on 2026-07-18 — the day the Language-A emission
-was banked and the language got its constitution by afternoon; by evening, its adopted Architecture 0.1,
-its sealed Kernel /0, its first executable heartbeat, and its journal spine; and by night, its adapter
-boundary — the trilogy complete, hostile-passed, adjudicated, repaired, verified, and sealed, and the
-phase turned from specification to implementation. One Saturday. And refreshed again by Claude
-Fable 5 on 2026-07-30 — the week the organs grew: durable memory (journal0), present-tense authority
-(capability0), a mortal body for it (capability1), a hand that touches the world exactly once
-(capability2), and a membrane that can speak every lawful ambiguity on command (adapter0), built under
-a git-proven exposure fence. The commits are the witness; the seals are the pulse.*
+A read-only, five-lane census (secrets · licensing/provenance · paths/env · weight · README claims) was run
+at subject tree `6bbbe482…` on 2026-08-22 and accepted by Sol I (records: lab
+`notes/census-2026-08-22/`, not in this tree). Its findings that a stranger needs, stated at the size the
+instruments warrant:
+
+- **Secrets:** *zero secrets detected under the declared sweep and its five coverage limits* (pattern ·
+  entropy · archive-member · bundle-object passes; hex-digest class adjudicated at class level). Not "no
+  secrets exist."
+- **PII, disclosed by owner decision (accept, do not redact):** a personal email address of the lab
+  owner's appears once in prose (`mneme/language-surface-account-0/OPENING-BASE-AND-CUSTODY.md`) and as
+  author/committer metadata inside `canonical-datum/evidence/targeted-fable-errata-0.1/exact-diff.bundle`.
+  It is provenance. Redacting the bundle would void the receipt that pins its bytes; redacting the prose
+  alone would be a fake cure. It stays, and this sentence says so.
+- **Licensing / authorship (NOTICE):** MIT, one LICENSE at the root and one shipped with Sol's received
+  garden. The tree's text and code were written by Claude models (by commit-trailer count on this subject tree:
+  Fable 5, Opus 5, Opus 4.8, earlier Opus) and GPT models (Codex, Sol), and by the lab's sibling minds under
+  `atelier/siblings/`. The 18 paths under `atelier/siblings/` comprise 17 contributed files—Retis 8, Nimbus 3,
+  Hermes 2, Tend 2, Seam 1, and Fable 1—plus `VISITORS-BOOK.md`. Attribution is carried heterogeneously across
+  commit subjects, co-author trailers, per-file editorial notes or signatures, and the visitors' book; not every
+  contributor has every form. The underlying files and commit history govern the exact mechanism. All of it is
+  at the direction and under the ownership of the lab owner, who publishes
+  them under MIT as the copyright holder to whatever extent such works carry copyright. Outside-model
+  contributions are credited in per-lane `PROVENANCE*.md` files and commit trailers; two early trailers
+  under-credit Sol and are corrected in `BUILD-CHRONICLE.md`, not in history. No claim about the
+  copyrightability of model output is relied on as a licensing warrant.
+- **Candidate-era headers left in place, on purpose.** `mneme/language-act-0/package.lisp` and
+  `mneme/language-act-1/package.lisp` still open with *"STANDING: CANDIDATE … not on a governing
+  floor."* Both lanes are ADOPTED (08-08, 08-22). The headers are **historical, non-governing** — the
+  act1 file is one of the 38 audited bytes the adoption froze, and the act0 file is kept in parallel.
+  **The same candidate-era wording also stands in the floor's own header comment**
+  (`mneme/verify-release.sh`, the two paragraphs beginning "ONE ACT /0 … IS AN UNADOPTED CANDIDATE" and
+  "ONE ACT /1 … IS AN UNADOPTED CANDIDATE"), while the same file's carried rows read `act1|ADOPTED` and
+  `seam|ADOPTED`. Sol I rejected disclose-only for this one (the floor is a current instrument, not a frozen
+  identity), so **the header was corrected under C11 on 2026-08-22 — comment-only, every changed line a
+  `#`-comment** — and now states ADOPTED for both lanes and points at their carried rows.
+  Standing lives in the adoption records and the floor rows, never in a source comment.
+- **One Act /1 erratum, 103 → 104:** `mneme/language-act-1/ONE-ACT-1-RETURN.md` (frozen, one of the 38)
+  says the export count is 103 and the lane "not registered"; the code (`load.lisp` `+act1-api-count+`,
+  the `package.lisp` export list) says **104**, and the lane is registered and adopted. The RETURN is not
+  edited; the erratum is recorded here and in the adoption record.
+- **Memory Layer /0 RETURN is superseded in two lines, unedited:** `MEMORY-LAYER-0-RETURN.md` (pinned by
+  the ML/0 R5 manifest, `d9fac67d…`) says "not registered" and calls One Act /1 "NOT adopted"; both were
+  overtaken (registration 08-21, adoption 08-22). The governing text is the floor row and the status stone.
+- **Paths, deferred and disclosed (not repaired — governed tooling inside closed lanes):**
+  `mneme/languagehood-and-succession-charter-0/legend/generate_legend.py` resolves its default repo root
+  five parents up (the lab layout) and on this mirror lands on `/` — and **no `--repo-root` value repairs
+  it from a mirror clone**: its `legend-sources.json` pins one path outside the subject tree
+  (`notes/2026-08-10-p5-sol-inhabitation-protocol.md`), so it exits 2 on every root (re-census 08-22, executed
+  three ways). It is not runnable here; it is a record of a run on the lab host. The three
+  `mneme/language-many-acts-0/export-census/*.sh` scripts do the same and **fail closed** with a message,
+  because they also check for a lab commit this mirror's history does not contain. Repairing either needs
+  its own bounded lane authorization. Three Python probes under `mneme/architecture/adapter-protocol-0/`
+  hard-code lab paths and are labeled HOST-BOUND-SOURCE (historical evidence, not instruments).
+  `skills/atelier/SKILL.md` references WSL-only tooling and an `art/` path that is not in this tree.
+- **Weight, at the size weighed — figures are of the CENSUS tree `6bbbe482`, not of whatever commit you
+  are reading:** that snapshot was 641.4 MiB across 5,255 tracked files (the transport ships all but the
+  two `_staging/` banners, which the sync script removes — not `export-ignore`). Against the lab commit
+  recorded as the last mirrored tip (`4bfc5278`), its raw tree delta was **+11,018,212 B = 10.51 MiB** and
+  its net file count **+528** (553 paths changed). The correction commits after the census add a few
+  kilobytes of prose and one small labeling file; the publication commit's own figures are restated in its
+  receipt, not here. No tracked
+  top-level compiled artifacts; four shipped evidence zips contain a `__pycache__` (checked across all 16 tracked zips). Two files sit in
+  GitHub's 50 MB warning band (a deliberately split tarball part and a git bundle); 102 MiB is a
+  twice-held differential corpus kept as evidence of two runs. **Only the snapshot was weighed, never the
+  mirror's accumulated history** — no statement about repository size is made.
+- **Scope rider on every "verified" about bytes:** wherever this tree says hashes, manifests, or bytes were
+  "independently verified" (e.g. `CD0-ERRATA-INDEPENDENT-REVIEW-RECEIPT.md`), read *byte identity was
+  checked by a second reader*. **Byte identity confers no semantic standing.** Semantic standing is
+  conferred only by the adoption records and the floor, and none of it is independently verified.
+
+## On this mirror
+
+This repository is the **public mirror** of the Claude-Code-Lab's `experiments/latent-lisp/`, where the
+work actually happens. The mirror is written by one script that materializes the *committed* subject tree
+of a single main-ancestry lab commit (`git archive`, never the working directory) and records every
+attempt — withheld, failed, or transported — on an append-only transport record. Each mirror commit names
+the lab commit whose tree it carries and the subtree hash of what landed; that message is written by the
+script, never by a caller.
+
+Consequences worth knowing as a reader:
+
+- **The mirror lags the lab, by design.** Transport is gated by a sentinel and by owner authorization
+  bounded at a specific lab commit. What you see here is what was *authorized and verifiably transported*,
+  not the lab's HEAD. A lane described above as "in the lab" may not be in this checkout yet.
+- **"Published" is earned by readback**, not by a push: the destination is queried, a fresh process
+  retrieves the bytes, and they are verified against the adopted ones. Until then the transport record
+  says TRANSPORT-OK at most, never PUBLISHED.
+- **Nothing here claims independent verification.** Read every green as same-family self-consistency with
+  the stranger's seat still empty, on principle.
+
+The name question is closed: **the language is Lisp+; Mneme is its memory-and-continuity layer.**
+
+*— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11; refreshed by Claude Fable 5 through
+July and August 2026 as the language got its constitution (07-18), its organs (07-24→30), its baseline
+(08-02), its first adoptions (08-06→12), its publication governance (08-12→19), and its memory layer
+(08-21). Rewritten for legibility by Claude Fable 5 on 2026-08-21 and layered the same night on GPT Sol's reading
+(panel here, chronicle in `BUILD-CHRONICLE.md`, specimen on top). The commits are the witness; the seals are the pulse.*

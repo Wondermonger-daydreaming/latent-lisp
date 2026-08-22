@@ -1,10 +1,16 @@
 # MANY ACTS /0 — AUTHOR GUIDE
 
-STANDING: CANDIDATE. Nothing in this lane is adopted, accepted, frozen, audited, or on a
-governing floor. Nothing produced here is independent verification (AP0 adoption Rider 2,
-binding): the phrases "independently verified" and "independently validated" may not appear
-in any artifact of this lane. Writing a program against this guide is not a use of an
-adopted language.
+STANDING: standing in this lane attaches to immutable object identities and explicit
+dispositions, never merely to filenames, directories, or descent from an adopted commit
+(Owner Ruling 6 §3 B1; the rule and the adopted coordinates are in `MANY-ACTS-0-STANDING.md`).
+This file's path confers no standing on its bytes in either direction. Nothing produced here
+is independent verification (AP0 adoption Rider 2, binding): the phrases "independently
+verified" and "independently validated" may not appear in any artifact of this lane.
+
+Programs written against this guide target the owner-adopted Many Acts /0 R1 implementation
+base. No consolidated, frozen, and published Many Acts /0 statute or portable-conformance
+standard has yet been adopted. Individual owner rulings settle the questions they expressly
+decide; they do not silently complete that statute.
 
 **This guide plus the package's exports is the whole surface.** If something you need is not
 here and not exported, it does not exist at /0 — it is not hidden, and there is no escape
@@ -138,6 +144,35 @@ What gets bound to `ID` is an immutable **act-summary**, and it is **data**:
 consumes a runtime seat once per store and would refuse a second invocation at run time; this
 lane refuses it *statically*, so the failure leaves nothing behind.
 
+### The continuation rule
+
+**A returned act does not end the program.** When an `act` step *returns*, its summary is
+bound and **the next step runs — whatever the disposition is**, including `:refused`,
+`:interrupted`, `:host-fault`, and `:mint-refused`. Disposition is *data you branch on* (§6),
+never control flow: the evaluator consults no disposition to decide whether to continue. A
+walk ends in exactly two ways — it reaches a terminal (§7), or a **condition** propagates out
+of it (§7), which is not an outcome at all.
+
+Here “continuation” means in-run sequencing after a structured act return. It does not mean
+retry, resumption after a program terminal or propagated condition, or crash resume; §10 items
+4 and 6 retain those prohibitions. A returned act-summary whose disposition is `:host-fault`
+is data. A signaled host condition is not an act-summary and propagates out of the walk.
+
+Two witnesses of the rule in the adopted record, and the one ceiling on it:
+
+- P4 "vindemia" sequences **past a refused act** — arm B-L1 refused and sequenced past — and
+  goes on to its later consequential step (`MANY-ACTS-0-R1-RETURN.md` §1).
+- P2 β converts an act-level **mint refusal** into a structured program refusal *with the
+  prior acts' history intact* (`MANY-ACTS-0-RETURN.md` §1.5): the program walked on to a
+  terminal of its own choosing rather than being stopped by the act.
+- The ordering ceiling is the only permitted form of the sequencing claim
+  (`SEAL-ADDENDUM-2-PRESSURE-ACCOUNT-RULING.md`): *a program cannot initiate its dependent
+  next act until the preceding One Act invocation has returned its adjudicated structured
+  outcome.* Continuation is permitted **after** a return; it is never permitted before one.
+
+So the shape of a program that must stop on a bad act is *branch, then terminate* — the stop
+is something your text says, not something the act does to you.
+
 ---
 
 ## 5. Deriving evidence
@@ -226,6 +261,30 @@ refused as unreachable code.
 **A refusal is a lawful program outcome, not a failure.** The journal is intact, the exit is
 orderly, the runner returns 0.
 
+**"Code" names two distinct populations, of two distinct datatypes** (owner ruling, PS/0
+Cluster Sitting 1, Disposition 4, 2026-08-12): a **program refusal code** is a **KEYWORD**
+— authored by the program in its `refuse` terminal, read via
+`ma0-result-refusal-code` on the result. A **lane condition code** is a **STRING** — e.g.
+`"V-SHAPE"` — authored by the lane itself, read via `ma0-refusal-code` on
+the signalled condition. The two are different Lisp types and **never compare equal**; an
+observation format that compares a keyword to a string and reports agreement is defective.
+From this ruling forward, public text in this lane must not use the word "code"
+unqualified — say *program refusal code* or *condition code*. (Whether either population
+is a scored conformance observable is a separate, open owner question; this paragraph
+states types, not scoring.)
+
+**Scoring** (owner ruling, PS/0 Cluster Sitting 2, Disposition III-1, 2026-08-12 —
+answering the question the previous paragraph left open): **program refusal codes are
+normative conformance observables.** A conformance comparison includes the program refusal
+code, at its normative identity (the upcased keyword, per GRAMMAR §1b). **Lane condition
+codes are diagnostic only and are excluded from conformance comparison** — this exclusion
+is written law, not a format default. Two things this ruling deliberately does NOT do:
+it does not freeze the program-code vocabulary — *normative as output is not the same
+proposition as constitutionally closed as a set*; the population is program-authored and
+open by definition, and a future genuinely new program refusal code is conformance-visible
+without any closed-enum implication — and it does not publish the lane's condition-code
+list as a normative table.
+
 **An error is not an outcome at all.** A validator refusal, an environment refusal, an
 adopted-lane condition your program did not branch on, or a host fault **propagates as a
 condition** and is never converted into `:completed`. The evaluator installs no handler, and
@@ -267,6 +326,11 @@ form.
 
 Slot and input names are matched case-insensitively against the source's identifiers, so
 `editor-grant` in a source and `"editor-grant"` in a plan are the same name.
+**"Case-insensitively" means exactly Common Lisp `string-upcase`** (owner ruling, PS/0
+Cluster Sitting 1, Disposition 1's by-reference form, 2026-08-12): simple, per-character
+case conversion by reference to the standard — **not** full Unicode case mapping and
+**not** casefolding (`ß` stays `ß`; no `SS` expansion; no locale rules). An implementation
+in another substrate must reproduce the simple conversion, not its host's default.
 
 `make-ma0-environment` runs One Act /0's environment pre-flight first: if a process-killing
 environment variable is set, the run is **VOID** — no store is created, and a void is not a
@@ -339,9 +403,21 @@ Read these before you plan anything on this lane.
    determinism, retry safety, independent usability, or any question the underlying lanes
    left open. Determinism means **evaluator determinism under declared fixtures**.
 
-9. **The composition is a re-composition, and its concordance is untested.** This lane owns
-   `ma0-complete-act`, an act-completion routine built from exported parts, honouring the
-   adopted composer's law-chain. Divergence from the adopted composer is the lane's most
-   serious possible defect, and the concordance teeth that would test it **have not been
-   built**. A green suite says the laws in the suite hold. It says nothing about whether this
-   composition agrees with the canonical one.
+9. **The composition is a re-composition, and its concordance is TESTED — at a stated
+   scope.** This lane owns `ma0-complete-act`, an act-completion routine built from exported
+   parts, honouring the adopted composer's law-chain. Divergence from the adopted composer is
+   the lane's most serious possible defect, and the concordance teeth that test it **have
+   been built and run.** `ma0-concordance.lisp` drives an MA0-composed act and the canonical
+   `run-all-arms` act in separate images over separate stores and compares them across **all
+   seven adopted arms × 18 enumerated facets = 126 comparisons**; the adopted R1 record
+   reports **7 arms / 126 facets / 0 divergences** (`MANY-ACTS-0-R1-RETURN.md` §2 coverage
+   closure; `MANY-ACTS-0-R1-ADOPTION-RECORD-2026-08-10.md` §4). The comparator also carries
+   its own planted-divergence tooth (teeth section 4b), so it has been shown *able* to report
+   a divergence rather than merely never having reported one.
+
+   **What that still does not say — and this half of the cap is unchanged.** The lane's own
+   suite (`./ma0-run.sh`, `ma0-selftest`) does **not** run the concordance teeth: a green
+   suite says the laws in the suite hold and says nothing about composer concordance. Run
+   `./ma0-concordance.sh`, or the full `./ma0-teeth.sh`, for that. Agreement is over the 18
+   enumerated facets and no others, on this substrate, under declared fixtures. Nothing here
+   is independent verification, and none of it is adopted usability.

@@ -1,0 +1,144 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+de-actu-resurgente — the act that rises again.
+governing sentence: the language door survives the process's death as a refusal — a genuinely new image, given only durable bytes and declared configuration, must refuse the same act at the `perform` boundary, and may proceed only through evidence-carried reconciliation at the runtime level.
+CANDIDATE.  Nothing here is adopted, and nothing here is independent verification.  Crash model: PLANTED DETERMINISTIC death (an env-var exit inside capability /2's world adapter).  NO SIGKILL, no power loss, no mid-instruction truncation is claimed — journal0/de-teste-occiso and vertical0 own the real crash windows.  Capability-DISCIPLINED, never capability-secure.
+
+== phase 1 — the first life (separate process; dies in the acknowledgment window, after the dispatch durably lands) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | prima vita: store · world · grant · derived identity · one bridge · one perform — and death inside the acknowledgment window
+[001] ok   (prima-vita) the created store's derived identity EQUALS the identity derived from the declared configuration alone
+[002] ok   (prima-vita) the act fixture row validates, and the world holds the declared cell at its declared initial value with an empty request ledger
+[003] ok   (prima-vita) the seat's Capability /0 grant commits at ordinal 1; nothing else is journaled and no world byte has moved
+[004] ok   (prima-vita) the act identity is DERIVED from (domain · runtime seat · canonical request) — all declared configuration, none of it carried — and preserved to disk so the restart's re-derivation can be compared rather than believed
+      | act identity oneact1:act:100d24bc8e5db39e5fcb201a9118685fce84b824728fdf2fe843597244669442
+      | evaluating the originating form; the planted interruption will fire inside the adapter's acknowledgment window — this process ends there, mid-perform, and MUST NOT render a RESULT sentinel.  The Core /0 evidence this act is building dies with the image, by design.
+      | ---- ARM L1 (fixture label "prima" — LEGIBILITY ONLY) ----
+      |       | act-id oneact1:act:100d24bc8e5db39e5fcb201a9118685fce84b824728fdf2fe843597244669442
+      |       | seat prima · attempt a-prima · cell cella:prima
+      |       | PRE-1 (eq resolved bridge) => T
+      |       | PRE-2 name/version => equal
+      | world adapter: dying in the acknowledgment window (planted deterministic interruption; dispatch applied and ledgered, acknowledgment not returned)
+[005] ok   the first life DIED IN THE WINDOW as planted: exit code 7, NO RESULT sentinel, and the adapter's own dying note in the transcript — the dispatch was applied and ledgered; the acknowledgment never came home
+
+== phase 2 — the surviving durable bytes: the world knows; the journal does not; the language's own account is gone ==
+[006] ok   the surviving journal validates :valid with exactly 3 frames — grant · attempt:prepared · attempt:frontier-crossed — and NOTHING after the frontier: no acknowledgment, no settlement, no uncertainty record.  The process died before it could account for its own effect
+[007] ok   THE ASYMMETRY, in bytes: the surviving WORLD holds the written cell and exactly ONE applied ledger entry under the journaled external-request identity — the effect HAPPENED; only the record of its happening died
+[008] ok   the language's own identity survives as a DERIVATION the restart can recompute — the preserved file names a 64-hex act identity under this lane's stem, and nothing else of the language side survived at all
+EVENTS.pj0 (as the death left it): 2726 octets · sha256 0af2c1c4a263ed7453bc0f46ce2c4ebff6d74e4c2f52a605772006784b2b6f15
+WORLD CELLS.txt: 48 octets · sha256 3ca4f76c1d20b1d390e604132fe3faf3b8449269582fac371b062ebda4bc6ec7
+WORLD REQUEST-LEDGER.txt: 67 octets · sha256 d407c1b82eedb43310c1ead963f0bec032315e01f9cd4ba6d684aea08beec289
+ACT-IDENTITY.txt: 142 octets · sha256 c57d579c55ba4dd46f18a86917f6dbfe4c21a11170c28f2385da300e0990866d
+
+== phase 3 — negative control: the truncated restart ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | rediviva: durable bytes + declared configuration only; no memory of the first life exists in this process, and no Core /0 evidence survived it
+[009] ok   (truncated-control) the reopened store is the store the declared configuration names, validates :valid with exactly 3 frames — grant · attempt:prepared · attempt:frontier-crossed — and has no tail: the first life's story ends mid-attempt, at the crossed frontier
+[010] ok   (truncated-control) the standing derived from bytes alone is CROSSED-UNSETTLED: the frontier was crossed and no settlement, no acknowledgment, no uncertainty record, no reconciliation exists — an open attempt whose effect is nowhere accounted.  It is its own state: not a refusal, not a failure
+[011] ok   (truncated-control) THE LANGUAGE IDENTITY SURVIVES AS A DERIVATION, NOT AS STATE: this process re-derives the act identity from (domain · runtime seat · canonical request), touching nothing the dead process left in memory, and the result EQUALS the identity the dead process preserved
+      | dying mid-restart (planted truncation control)
+[012] ok   a restart process TRUNCATED mid-run is detected by this runner: the child exits 3 with no RESULT: sentinel, and the detection is exactly that pair (an unfinished reconstruction must never read as a clean one); it wrote nothing — journal and world bytes unchanged
+
+== phase 4 — competence control: a REFUSED act that writes the world, on COPIES — the absence instrument must catch it ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | leak control: a REFUSED act that writes the world anyway, on COPIES of the post-death state.  The world-scope instrument must catch it.
+[013] ok   (leak-control) the copied state is the post-death state: 3 frames, standing crossed-unsettled, one ledger entry under the dead act's key
+      | ---- ARM LEAK (fixture label "prima" — LEGIBILITY ONLY) ----
+      |       | act-id oneact1:act:a8a1bd7cf72a77640f6d1c500852ceca357810801c945bbb1405b90f0493f3dc
+      |       | seat prima · attempt a-prima-4 · cell cella:prima
+      |       | PRE-1 (eq resolved bridge) => T
+      |       | PRE-2 name/version => equal
+[014] ok   (leak-control) FIRST CATCH (journal side): the lane's own classifier refuses to classify a REFUSAL that left a SETTLED standing in the journal — it raises ACT1-BRIDGE-1 as a host fault and manufactures neither Outcome nor evidence
+      |       | WORLD-SCOPE LEAK CONTROL (planted violation) — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |       |   cell store  : 48 octets sha 3ca4f76c1d20b1d3  ->  46 octets sha 99a6a1fb684e40bc
+      |       |   request ledger: 67 octets sha d407c1b82eedb433 (1 entry)  ->  134 octets sha 1ee43b9e3492a2ce (2 entries)
+      |       |   entries under this arm's request key external-request:cap2:a-prima-4: 0  ->  1
+[015] ok   (leak-control) SECOND CATCH (world side) — THE INSTRUMENT FIRES: world-scope-unchanged-p returns NIL across a refused act that wrote.  The absence predicate every honest arm relies on has now been SEEN to catch a violation, not merely seen to pass
+[016] ok   (leak-control) and it fires on the SPECIFIC quantities it claims to compare: a new ledger entry under the leaking attempt's own request key, a changed ledger digest, a changed cell-store digest
+[017] ok   (leak-control) the COULD-NOT-LOOK guard is real too: a snapshot of a directory that holds no world reports :could-not-look for both files, and unchanged-p refuses to call two failed looks 'unchanged' — absent and could-not-look are different answers
+      | this control's damage lives only in the copies; the orchestrator proves the real store and world are byte-identical after it
+      | RESULT: 5 checks, 0 failures
+[018] ok   the leak control completed and rendered its own sentinel: the planted violation fired AND the world-scope instrument caught it
+[019] ok   the control's damage lived only in the copies: the REAL journal and the REAL world are byte-identical to their post-death state (this is why the capture may still be trusted after a deliberate violation)
+[020] ok   the copies really did diverge — the control world's ledger now holds TWO entries where the real one holds ONE.  (A control that changed nothing would prove nothing, and this check is what tells those two apart)
+
+== phase 5 — the restart (genuinely new process; durable bytes + declared configuration only) ==
+      | kernel0 foundations smoke: PASS
+      | kernel0 algebra smoke: PASS
+      | kernel0 records+folds smoke: PASS
+      | rediviva: durable bytes + declared configuration only; no memory of the first life exists in this process, and no Core /0 evidence survived it
+[021] ok   (rediviva) the reopened store is the store the declared configuration names, validates :valid with exactly 3 frames — grant · attempt:prepared · attempt:frontier-crossed — and has no tail: the first life's story ends mid-attempt, at the crossed frontier
+[022] ok   (rediviva) the standing derived from bytes alone is CROSSED-UNSETTLED: the frontier was crossed and no settlement, no acknowledgment, no uncertainty record, no reconciliation exists — an open attempt whose effect is nowhere accounted.  It is its own state: not a refusal, not a failure
+[023] ok   (rediviva) THE LANGUAGE IDENTITY SURVIVES AS A DERIVATION, NOT AS STATE: this process re-derives the act identity from (domain · runtime seat · canonical request), touching nothing the dead process left in memory, and the result EQUALS the identity the dead process preserved
+      | THE CROWN: evaluating THE SAME ACT again, in a new image, with only durable bytes to go on
+      | ---- ARM L1 (fixture label "prima" — LEGIBILITY ONLY) ----
+      |       | act-id oneact1:act:100d24bc8e5db39e5fcb201a9118685fce84b824728fdf2fe843597244669442
+      |       | seat prima · attempt a-prima · cell cella:prima
+      |       | PRE-1 (eq resolved bridge) => T
+      |       | PRE-2 name/version => equal
+      |       | class REFUSED-ACROSS-DEATH · standing :CROSSED-UNSETTLED · disposition :REFUSED · reason :ACT1-DURABLE-GUARD/UNSAFE-RETRY/CAP2-W1
+[024] ok   (rediviva) CROWN · the language door REFUSES the same act PRE-FRONTIER: disposition :refused, outcome-kind :refused — one form, one act, one Outcome, in the failure mode too
+[025] ok   (rediviva) CROWN · the class is :refused-across-death, and it is EARNED rather than assumed: the standing read under this attempt name (:crossed-unsettled) describes the DEAD act, not this one, and the lane admits that reading only because the journal's frame count is unchanged across the whole act — the checked form of 'this act appended nothing'
+[026] ok   (rediviva) CROWN · the refusal is CORE /0's own typed pre-frontier refusal carrying evidence-so-far and a refused outcome — the language's account of its own refusal, freshly issued in THIS image
+[027] ok   (rediviva) CROWN · THE PROVENANCE IS DURABLE BYTES: the reason names the lane's durable guard and capability /2's CAP2-W1 — the crossed-with-nothing-after shape that ONLY a dead process can leave.  No image memory exists to consult; the world has not been read; the answer came out of the journal's bytes
+[028] ok   (rediviva) CROWN · the journal gained NOTHING: still exactly 3 frames, still :valid, still no tail — the refusal is above the frontier line and appends nothing
+      |       | WORLD-SCOPE CROWN (the refused repeat) — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |       |   cell store  : 48 octets sha 3ca4f76c1d20b1d3  ->  48 octets sha 3ca4f76c1d20b1d3
+      |       |   request ledger: 67 octets sha d407c1b82eedb433 (1 entry)  ->  67 octets sha d407c1b82eedb433 (1 entry)
+      |       |   entries under this arm's request key external-request:cap2:a-prima: 1  ->  1
+[029] ok   (rediviva) CROWN · THE WORLD IS BYTE-UNCHANGED ACROSS THE REFUSAL — whole cell store and whole request ledger, digests and octet counts, total entries and entries under this act's own request key.  The universe of that look is printed above by the instrument itself, and the instrument has been shown able to see a violation (the leak control)
+[030] ok   (rediviva) CROWN · exactly ONE ledger entry stands under this act's request key — the one the DEAD process made.  A blind retry would have made a second
+      | ---- ARM L2-retry (fixture label "prima" — LEGIBILITY ONLY) ----
+      |       | act-id oneact1:act:100d24bc8e5db39e5fcb201a9118685fce84b824728fdf2fe843597244669442
+      |       | seat prima · attempt a-prima-3 · cell cella:prima
+      |       | PRE-1 (eq resolved bridge) => T
+      |       | PRE-2 name/version => equal
+      |       | class REFUSED · standing :ABSENT · disposition :REFUSED · reason :ACT1-DURABLE-GUARD/UNSAFE-RETRY/CAP2-W1
+[031] ok   (rediviva) DISGUISE · a fresh ATTEMPT NAME does not make a fresh ACT: the derived act identity of the disguised retry is EQUAL to the dead act's, because the derivation reads the seat and the canonical request and neither changed
+[032] ok   (rediviva) DISGUISE · it is refused exactly as the plain repeat was: outcome-kind :refused, same durable-guard provenance, journal untouched at 3 frames
+      |       | WORLD-SCOPE DISGUISE (the refused retry) — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |       |   cell store  : 48 octets sha 3ca4f76c1d20b1d3  ->  48 octets sha 3ca4f76c1d20b1d3
+      |       |   request ledger: 67 octets sha d407c1b82eedb433 (1 entry)  ->  67 octets sha d407c1b82eedb433 (1 entry)
+      |       |   entries under this arm's request key external-request:cap2:a-prima-3: 0  ->  0
+[033] ok   (rediviva) DISGUISE · the world is byte-unchanged, and ZERO entries stand under the disguised attempt's own request key
+[034] ok   (rediviva) reconciliation WITHOUT the structured record refuses unstructured-uncertainty: inline uncertainty is unlawful; the §10.8 record must be journaled before resolution may be attempted
+[035] ok   (rediviva) the uncertainty is STRUCTURED from journaled facts: declare-uncertain-effect builds the §10.8 record through kernel /0's own constructor and journals it — 4 frames now, standing :uncertain-unresolved
+[036] ok   (rediviva) the seat stays CLOSED after structuring, and the guard's provenance CHANGES to say so: the prohibition is now carried by the journaled §10.8 record through kernel /0's own §14.1 fold, not by the bare crossed frontier
+[037] ok   (rediviva) RECONCILIATION RESOLVES :APPLIED WITH EVIDENCE: the declared procedure carries the journaled external-request identity to the SURVIVING world's ledger and the entry is there — the dispatch DID land before the death.  attempt:reconciled journaled (5 frames), the §14.2 receipt built live through kernel /0's own constructor, standing :reconciled
+      |       | WORLD-SCOPE RECONCILIATION (a read, not a write) — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |       |   cell store  : 48 octets sha 3ca4f76c1d20b1d3  ->  48 octets sha 3ca4f76c1d20b1d3
+      |       |   request ledger: 67 octets sha d407c1b82eedb433 (1 entry)  ->  67 octets sha d407c1b82eedb433 (1 entry)
+      |       |   entries under this arm's request key external-request:cap2:a-prima: 1  ->  1
+[038] ok   (rediviva) the reconciliation READ the world and wrote nothing there: byte-unchanged across it, the cell still holding what the DEAD process wrote, exactly ONE ledger entry under the dead act's key
+[039] ok   (rediviva) THE LANGUAGE READS THE RUNTIME'S RESOLUTION, and does not read it from the keyword alone: the lane's own door requires :applied AND the world's ledger entry under the journaled identity AND attempt:reconciled in the journal, all three, before it will call the seat closed
+      | ---- ARM L2-fresh (fixture label "prima" — LEGIBILITY ONLY) ----
+      |       | act-id oneact1:act:dd93d41531efb06df6769c217136437320182a0a729a9b92b32d428fd25b6268
+      |       | seat prima · attempt a-prima-2 · cell cella:prima
+      |       | PRE-1 (eq resolved bridge) => T
+      |       | PRE-2 name/version => equal
+      |       | class SETTLED · standing :SETTLED · disposition :RETURNED · reason NIL
+[040] ok   (rediviva) ONLY NOW is the seat lawfully free, and the guard says so from the bytes: the FRESH act's guard verdict is :lawful — authority is cheap to re-derive; DISPATCH is what the record forbade, and the record now resolves
+[041] ok   (rediviva) the FRESH act SETTLES and returns through the intended interface: (values OUTCOME EVIDENCE), outcome-kind :committed, class :settled, standing :settled derived from the journal's own bytes
+[042] ok   (rediviva) it is a DIFFERENT act: a different derived identity, a different attempt, a different request — and the world now carries its write under its OWN request key, beside the dead act's, never on top of it
+[043] ok   (rediviva) the journal ends where the whole account says it should: 9 frames, grant · the dead act's three · the two accounting frames · the fresh act's four — read back from the store's own bytes, :valid, no tail
+      | the language door refused across the death; the runtime reconciled with evidence; the fresh act settled.  Nothing in this process ever held the dead act's Core /0 evidence — it died with its image, and this stage never pretended otherwise.
+      | RESULT: 23 checks, 0 failures
+[044] ok   the restart process completed and rendered its own final sentinel (exit 0 AND RESULT: — an incomplete transcript licenses nothing)
+[045] ok   NOTHING WAS REWRITTEN: the final journal is a BYTE-PREFIX EXTENSION of the journal the death left — the first three frames' bytes are literally the first bytes of the final file
+[046] ok   the journal grew by exactly SIX frames — the two accounting frames (effect:uncertain · attempt:reconciled) and the fresh act's four — and by nothing else
+[047] ok   the world moved ONLY by the fresh act: the dead act's ledger entry stands untouched beside a second entry under the fresh act's own key, and the cell carries the fresh act's value
+[048] ok   the preserved act-identity file is byte-identical across the whole restart: two refusals, a declaration, a reconciliation and a fresh act edited nothing the dead process left
+
+== phase 6 — preserved artifacts ==
+[049] ok   the preserved artifacts are byte-identical to the live bytes they copy, and the SHA256SUMS manifest carries those digests
+
+de-actu-resurgente: 49 checks, 0 failures
+processes: 1 first life (died in the acknowledgment window; its Core /0 evidence died with it) · 3 further stage processes launched (truncated-control, leak-control on copies, rediviva) · artifacts preserved: both journal states + metadata + sidecar + both world states + the derived act identity + sha256sums + manifest · every act verdict rendered by a stage child, none by this runner
+RESULT: PASS

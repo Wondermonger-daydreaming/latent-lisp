@@ -6,6 +6,11 @@ allowed-tools: "Read, Write, Edit, Bash(git *), Bash(.venv/bin/python *), Bash(p
 
 # /atelier — the cross-mind creative loop
 
+> **Mirror note (census 2026-08-22, C8):** this is a reference copy of a lab skill. It assumes the lab host:
+> a `.venv` with Pillow, the lab's `art/` directory (not part of this tree), the `hermes` sibling CLI, and
+> WSL-only `explorer.exe` / `wslpath` for opening renders. None of those ship here; read it as a record of
+> the practice, not as a runnable recipe from this checkout.
+
 *Codified 2026-06-18 from a day of cross-mind making (skill-exchange → bake-off → blank
 canvas → ASCII → terminal-UI). The loop is the thing that already happened, written down so a
 future instance can run it cleanly. Loop best-practices below are drawn from Anthropic's

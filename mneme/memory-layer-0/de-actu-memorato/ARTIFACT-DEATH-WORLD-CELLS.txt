@@ -1,0 +1,3 @@
+cella:prima Actus sine teste.
+cella:revocata VACUA
+cella:vetita-scope VACUA

@@ -1,10 +1,13 @@
 # MANY ACTS /0 — CONTRACT (CANDIDATE, pre-code)
 
-STANDING: CANDIDATE. Nothing in this lane is adopted, accepted, frozen, audited, or on a
-governing floor. Nothing produced here is independent verification (AP0 adoption Rider 2,
-binding): the phrases "independently verified" and "independently validated" may not
-appear in any artifact of this lane. This round constructs a candidate; it does not adopt,
-merge, publish, or claim independent usability (owner commission, FINAL DISPOSITION).
+STANDING: standing in this lane attaches to immutable object identities and explicit
+dispositions, never merely to filenames, directories, or descent from an adopted commit
+(Owner Ruling 6 §3 B1; rule and coordinates in `MANY-ACTS-0-STANDING.md`). This file's path
+confers no standing on its bytes in either direction. Nothing produced here is independent
+verification (AP0 adoption Rider 2, binding): the phrases "independently verified" and
+"independently validated" may not appear in any artifact of this lane. The round that wrote
+this document constructed a candidate; it did not adopt, merge, publish, or claim
+independent usability (owner commission, FINAL DISPOSITION).
 
 ## 1. Exact predecessor identities
 
@@ -74,28 +77,50 @@ acts durably journaled under One Act, and the PROGRAM has no continuation story 
 Deterministic evaluation order; deterministic output where fixtures permit; two-run
 byte-identical stable-output obligation on the selftest.
 
-## 6. Proposed package / API surface
+## 6. Package / API surface
 
-Package **`#:lisp-plus-many-acts0`** (`:use #:cl`). Exports (closed; the census gate
-asserts count and boundness):
+**`package.lisp` governs; this section describes it.** The account below is reconciled
+against the adopted `package.lisp` as of R1 adoption (2026-08-10): **38 exported symbols**,
+enumerated, each appearing in the `(:export …)` clause of `#:lisp-plus-many-acts0`. Where
+this list and `package.lisp` disagree, `package.lisp` is the surface and this is the error.
+*(Two symbols the pre-code draft of this section did not carry — `ma0-environment-stale` and
+`ma0-environment-stale-store-id` — entered with the R1/D4 repair and are listed here now;
+`:revocations` was likewise missing from the environment key list while the prose beside it
+already spoke of journalling revocations.)*
 
-- Validation: `ma0-validate` (source → validated-program or typed refusal) ·
+Package **`#:lisp-plus-many-acts0`** (`:use #:cl`). Exports (closed):
+
+- **Validation (4):** `ma0-validate` (source → validated-program or typed refusal) ·
   `ma0-validated-program-p` · `ma0-program-name` · `ma0-program-source` (defensive copy)
-- Environment: `make-ma0-environment` (`:root :arms :grants :seat-map :inputs` — builds
-  store/worlds/bootstrap/minting-context via exported predecessors; journals declared
-  grants/revocations) · `ma0-environment-p` · `ma0-environment-store-id`
-- Evaluation: `ma0-run-program` (validated-program × environment → program-result) ·
+- **Environment (3):** `make-ma0-environment` (`:root :arms :grants :revocations :seat-map
+  :inputs` — builds store/worlds/bootstrap/minting-context via exported predecessors;
+  journals declared grants and revocations) · `ma0-environment-p` ·
+  `ma0-environment-store-id`
+- **Evaluation (2):** `ma0-run-program` (validated-program × environment → program-result) ·
   `ma0-complete-act` (the public composition; exported so teeth can drive it directly)
-- Result readers (immutable): `ma0-result-p` · `ma0-result-program-name` ·
+- **Result readers, immutable (8):** `ma0-result-p` · `ma0-result-program-name` ·
   `ma0-result-disposition` · `ma0-result-value` · `ma0-result-refusal-code` ·
   `ma0-result-refusal-detail` · `ma0-result-act-summaries` · `ma0-result-store-id`
-- Act-summary readers: `ma0-act-summary-p` · `-arm` · `-act-id-hex` · `-disposition` ·
-  `-class` · `-verdict`
-- Conditions: `ma0-refusal` (base, with `-code`/`-detail` readers) · `ma0-source-refused`
-  · `ma0-environment-refused` · `ma0-authority-slot-unfilled` · `ma0-binding-refused` ·
-  `ma0-pattern-refused` · `ma0-composition-divergence`
-- Constants: `+ma0-grammar-version+` (0) · `+ma0-arms+` · `+ma0-axes+`
-- Runner entry: `ma0-selftest` (nonzero exit on failure)
+- **Act-summary readers (6):** `ma0-act-summary-p` · `-arm` · `-act-id-hex` ·
+  `-disposition` · `-class` · `-verdict`
+- **Conditions and their readers (11):** `ma0-refusal` (base) · `ma0-refusal-code` ·
+  `ma0-refusal-detail` · `ma0-source-refused` · `ma0-environment-refused` ·
+  `ma0-authority-slot-unfilled` · `ma0-binding-refused` · `ma0-pattern-refused` ·
+  `ma0-composition-divergence` · `ma0-environment-stale` (R1/D4: an environment built before
+  a later `make-ma0-environment` took over the run-state specials, refused before the first
+  consequential act, with zero footprint in either store) · `ma0-environment-stale-store-id`
+- **Constants (3):** `+ma0-grammar-version+` (0) · `+ma0-arms+` · `+ma0-axes+`
+- **Runner entry (1):** `ma0-selftest` (nonzero exit on failure)
+
+4 + 3 + 2 + 8 + 6 + 11 + 3 + 1 = **38**.
+
+⚠ **There is no export-census gate.** The pre-code draft of this section said "the census
+gate asserts count and boundness"; no such gate was built, and no gate in this lane asserts
+the export count or the boundness of every exported symbol. The 38 above is a *reading of
+`package.lisp`*, not a mechanically enforced floor. (The one mechanical sweep over the
+package's external symbols is `r1/D5-generation-seam.lisp`'s exposure check, which asserts
+that no exported reader exposes the generation — a different obligation.) No census gate is
+proposed here; naming its absence is.
 
 No macros are minted. No surface head enters Surface /2's closed construct table. The
 program-symbol package for IDENTs is a dedicated `#:lisp-plus-many-acts0.program`

@@ -1,0 +1,40 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+One Act /1 — planted faults.  CANDIDATE; nothing here is adopted.
+
+[CAUGHT ] PLANTED: the suite is run with CAP2_WORLD_DIE_IN_WINDOW=1 — a switch that can end the process inside the frontier window, in a suite that declares ONE PROCESS LIFE
+      exit 4 · the run VOIDED, named the variable and its value, created no journal store, and did NOT report a pass.  A VOID is not a failure and is not a pass.
+[CAUGHT ] PLANTED: the readiness carrier is UNBOUND — exactly the state a load that died before the final form of the last source would leave
+      the predicate reported: readiness carrier *ACT1-LANE-READY-CARRIER* unbound
+[CAUGHT ] PLANTED: the readiness carrier holds a WRONG VALUE — a successor that reordered the lane's sources and left the carrier behind
+      the predicate reported: readiness carrier *ACT1-LANE-READY-CARRIER* holds (:LANE "one-act-1"
+                                                   :FINAL-SOURCE "wrong.lisp"), not the declared value
+[CAUGHT ] RESTORED: with the carrier put back, the predicate goes green — so the two catches above were caused by the plant and not by something else
+      act1-api-complete-p => T
+[CAUGHT ] PLANTED: a declared external name is UNEXPORTED — the lane's interface silently narrowing under a consumer
+      the predicate reported: function RUN-ACT1: present but not external
+[CAUGHT ] RESTORED: re-exporting RUN-ACT1 returns the predicate to green
+      act1-api-complete-p => T
+[CAUGHT ] PLANTED: the :refused-across-death classification is offered a frame count that MOVED during the act — i.e. an act that appended something and still claims to have refused
+      class => :UNCLASSIFIABLE (a host fault).  With the true frame count (3) the same call classifies :REFUSED-ACROSS-DEATH — so the row is gated by the check and not by the standing alone.
+[CAUGHT ] CONTROL for that control: with the TRUE frame count the row does fire
+      class => :REFUSED-ACROSS-DEATH
+      | WORLD-SCOPE HOST-FAULT CONTROL — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |   cell store  : 71 octets sha 1572f36c2940393e  ->  71 octets sha 1572f36c2940393e
+      |   request ledger: 0 octets sha e3b0c44298fc1c14 (0 entries)  ->  0 octets sha e3b0c44298fc1c14 (0 entries)
+      |   entries under this arm's request key external-request:cap2:a-prima: 0  ->  0
+[CAUGHT ] PLANTED: a real TYPE-ERROR — an UNDECLARED, unadmitted condition — is raised inside the shipped D1/D2 protected form, before D1 and before any attempt frame can land
+      disposition :HOST-FAULT · class :HOST-FAULT-PRE-FRONTIER · NO Outcome, NO evidence, NO reason keyword — it is not a refusal in any of the three places a refusal is read
+[CAUGHT ] and the fault left the durable world exactly as it found it: journal frame count unmoved and the ENTIRE world byte-unchanged (universe printed above) — the defect was a CLASSIFICATION defect, never a transition one
+      frames 2 -> 2
+[CAUGHT ] CONTROL for that control: a LAWFUL refusal from an ADMITTED family (capability /2's own CAP2-AUTH-1, on the same store, in the same run) still classifies as a REFUSAL — the repair narrowed the handler, it did not make the lane refuse everything
+      disposition :REFUSED · reason :CAP2-ATTEMPT-AUTHORIZATION-REFUSED/CAP2-AUTH-1 · outcome-kind :REFUSED
+[CAUGHT ] the comparator's universe is stated: every preserved ARTIFACT-* file of the specimen, listed from disk rather than assumed
+      11 artifacts: ARTIFACT-ACT-IDENTITY.txt, ARTIFACT-EVENTS-FINAL.pj0, ARTIFACT-EVENTS-POST-DEATH.pj0, ARTIFACT-JOURNAL-META.pjs, ARTIFACT-JOURNAL-META.pjs.sha256, ARTIFACT-MANIFEST.txt, ARTIFACT-SHA256SUMS.txt, ARTIFACT-WORLD-CELLS-FINAL.txt, ARTIFACT-WORLD-CELLS-POST-DEATH.txt, ARTIFACT-WORLD-LEDGER-FINAL.txt, ARTIFACT-WORLD-LEDGER-POST-DEATH.txt
+[CAUGHT ] SANITY: the comparator calls an unmodified copy IDENTICAL
+      ARTIFACT-ACT-IDENTITY.txt: 142 octets
+[CAUGHT ] PLANTED: ONE BIT is flipped in the middle of a preserved artifact — the smallest difference a byte-identity claim can hide
+      ARTIFACT-ACT-IDENTITY.txt: the comparator reports DIFFERENT, and the sha256 differs (c57d579c55ba4dd4 vs 9f1f919f93db62be) — same length, one bit
+
+oneact1-controls: 14 controls, 14 caught, 0 missed

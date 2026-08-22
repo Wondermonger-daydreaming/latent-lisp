@@ -102,14 +102,48 @@ case "$PROFILE" in full|ci) ;; *) echo "!! --profile must be full or ci" >&2; ex
 # a ruling is a defect, not a fix.
 #
 # ONE ACT /0 (lane `act0`, three rows, registered by owner ruling R2.3 item 3)
-# IS AN UNADOPTED CANDIDATE.  Its rows are here because the floor should be
-# able to RUN it, not because its standing has moved: adoption, merge and
-# publication are not authorized for that lane, and a green row is not a
-# ruling.  It acquires no umbrella row this round — the standalone
-# `lisp-plus/act0` door stays canonical.  (This file has no per-row adoption
-# marker and none is invented here: several other lanes in this table are
-# candidates too, and marking only one would silently imply the rest are
-# adopted.  The carried status row `seam` below states it in words instead.)
+# — standing: ADOPTED 2026-08-08 (owner act; record
+# mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md; carried row `seam`
+# below).  [Comment corrected 2026-08-22 under census correction C11, Sol I's
+# ruling: this paragraph previously read "IS AN UNADOPTED CANDIDATE" — true at
+# registration, false since 08-08.]  Its rows are here because the floor
+# should be able to RUN it; a green row is not a ruling.  It acquires no
+# umbrella row — the standalone `lisp-plus/act0` door stays canonical.  (This
+# file has no per-row adoption marker and none is invented here; the carried
+# status rows below state standing in words.)
+#
+# ONE ACT /1 (lane `act1`, six rows, registered 2026-08-20 as the chair's
+# additive act, authorized by Sol's cold-parcel-review disposition relayed by
+# the owner: "add its completeness-checked candidate registration rows in the
+# same bounded session") — standing: ADOPTED 2026-08-22 at lab commit
+# aeeefa40 (owner act, ceilings verbatim; record
+# mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md; carried row `act1`
+# below).  [Comment corrected 2026-08-22 under C11: previously "IS AN
+# UNADOPTED CANDIDATE".]  Same discipline as act0: its rows are here so the
+# floor can RUN it; a green row is not a ruling; publication is a separate act.
+# Counts are the POST-REPAIR authorized counts from the lane's committed
+# RUN-EXITCODES.txt (Sol's 2026-08-20 blocking finding repaired: controls
+# 11 -> 14, host-fault proof added).  The standalone door
+# mneme/language-act-1/load.lisp stays canonical; `lisp-plus/act1` exists as
+# a standalone system only (no umbrella lane-order row).
+#
+# MEMORY LAYER /0 (lane `ml0`, nine rows, registered 2026-08-21 as the chair's
+# integration-only act, authorized by Sol's R5 REGISTRATION RULING — archived
+# verbatim at corpus/voices/received/2026-08-21-sol-ml0-r5-registration-
+# ruling.md — "R5 is ACCEPTABLE FOR REGISTRATION AS A CANDIDATE … Registration
+# is authorized.  Adoption and freeze are not.") IS AN UNADOPTED CANDIDATE,
+# same discipline as act0 and act1 above.  Its standing, in Sol's words made
+# the floor's: CANDIDATE-NOT-ADOPTED · REGISTERED · stranger audit owed · no
+# independent verification.  Executed rows may read PASS; the lane's
+# governance standing does not thereby become PASS, adopted, audited, or
+# frozen (the carried status row `ml0` below says so in words).  Counts are
+# the R5 authorized counts from the lane's committed RUN-EXITCODES.txt / RETURN
+# (controls 13 after Sol's disposition B; consolidation proof 35; specimen 45).
+# The standalone door mneme/memory-layer-0/load.lisp stays canonical;
+# `lisp-plus/ml0` exists as a standalone system only (no umbrella lane-order
+# row).  The lane's bytes at registration equal the accepted R5 parcel
+# (sha 5742b4f8…); this act made no Memory Layer /0 semantic, source,
+# specification, specimen or artifact change.
 # ===========================================================================
 
 read -r -d '' GATES <<'TABLE' || true
@@ -198,6 +232,21 @@ full|surface-account|.|bash mneme/language-surface-account-0/production/surface-
 both|act0|.|sbcl --script mneme/language-act-0/act0-selftest.lisp|oneact0-selftest: 173 checks, 0 failures|no
 full|act0|.|bash mneme/language-act-0/act0-load-witnesses.sh|act0-load-witnesses: 6/6 cases green, tooth caught|no
 full|act0|.|bash mneme/language-act-0/act0-loader-disease.sh|act0-loader-disease: 3 diseases detected, 3 controls clean|no
+both|act1|.|sbcl --script mneme/language-act-1/act1-selftest.lisp|oneact1-selftest: 37 checks, 0 failures|no
+both|act1|.|sbcl --script mneme/language-act-1/act1-host-fault-proof.lisp|oneact1-host-fault-proof: PASS|no
+full|act1|.|sbcl --script mneme/language-act-1/act1-controls.lisp|oneact1-controls: 14 controls, 14 caught, 0 missed|no
+full|act1|.|sbcl --script mneme/language-act-1/act1-mutants.lisp|oneact1-mutants: 3 defects, 3 killed, 0 survivors|no
+full|act1|.|sbcl --script mneme/language-act-1/act1-red-proof.lisp|oneact1-red-proof: cured PASS, uncured FAIL — the tooth bites|no
+full|act1|.|sbcl --script mneme/language-act-1/de-actu-resurgente/run-specimen.lisp|de-actu-resurgente: 49 checks, 0 failures|yes
+both|ml0|.|sbcl --script mneme/memory-layer-0/load.lisp|kernel0 records+folds smoke: PASS|no
+both|ml0|.|sbcl --script mneme/memory-layer-0/ml0-selftest.lisp|ml0-selftest: 81 checks, 0 failures|no
+both|ml0|.|sbcl --script mneme/memory-layer-0/ml0-host-fault-proof.lisp|ml0-host-fault-proof: PASS|no
+full|ml0|.|sbcl --script mneme/memory-layer-0/ml0-controls.lisp|ml0-controls: 13 controls, 13 caught, 0 missed|no
+full|ml0|.|sbcl --script mneme/memory-layer-0/ml0-mutants.lisp|ml0-mutants: 6 defects, 6 killed, 0 survivors|no
+full|ml0|.|sbcl --script mneme/memory-layer-0/ml0-block-proof.lisp|ml0-block-proof: 20 probes, 20 closed, 0 open|no
+full|ml0|.|sbcl --script mneme/memory-layer-0/ml0-consolidation-proof.lisp|ml0-consolidation-proof: 35 checks, 0 failures|no
+full|ml0|.|sbcl --script mneme/memory-layer-0/ml0-red-proof.lisp|ml0-red-proof: cured PASS, uncured FAIL — the tooth bites|no
+full|ml0|.|sbcl --script mneme/memory-layer-0/de-actu-memorato/run-specimen.lisp|de-actu-memorato: 45 checks, 0 failures|yes
 full|vertical0|.|bash mneme/vertical0/harness/repeatability.sh|-|yes
 full|vertical0|.|sbcl --script mneme/vertical0/controls/run-integration-controls.lisp|vertical0 integration controls: 37 checks, 0 failures|yes
 full|vertical0|.|sbcl --script mneme/vertical0/mutants/run-mutation-gate.lisp|vertical0 mutation gate: 71 checks, 0 failures|yes
@@ -224,7 +273,8 @@ lci0|ARCHIVED-NOT-RERUN|LCI/0 cross-implementation differential: 2,295 requests/
 vertical0|ARCHIVED-NOT-RERUN|Vertical /0 five-life SIGKILL campaign|A strace-controlled process-death generation campaign writing new runs/campaign-* trees. Not re-run. The repeatability gate above byte-compares the two preserved campaigns and re-derives the census from campaign-2; that is verification of an archive, NOT reproduction of the campaign.
 language-a|ARCHIVED-NOT-RERUN|Language-A tranche-B (706 files, emission BANKED 295/312)|Exists only on unmerged mirror branches; deliberately not merged during this milestone per the owner ruling (archive now, adopt later). Scoring is owner-locked pending the null-semantics ruling. The lab tree holds three language-a files, exercised inside verify-all.sh.
 latent-mvp|PASS|latent-mvp historical floor (6/6 suites)|FOSSIL-MARKED. Retained intact as a historical stratum with its historical floor, exercised inside verify-all.sh above. It has zero edges with the kernel0-era stack and is no longer the front door.
-mneme-memory|ABSENT|Mneme memory layer|Not implemented. No lane exists. "Mneme" currently names a directory, not a working memory-and-continuity layer. Nothing here can be run because nothing here has been built.
+ml0|CANDIDATE-NOT-ADOPTED|Memory Layer /0 — the language's durable account of its own act: CANDIDATE-NOT-ADOPTED · REGISTERED · stranger audit owed · no independent verification|REGISTERED 2026-08-21 by Sol's R5 registration ruling (corpus/voices/received/2026-08-21-sol-ml0-r5-registration-ruling.md), lane bytes equal to the accepted R5 parcel sha 5742b4f8…. Nine executable rows above may read PASS; this standing does NOT thereby become PASS, adopted, audited or frozen. Sol did not independently rerun SBCL. Ceilings carried: D6 PARTIAL · demonstration D4 SHOWN-AS-AMENDED · package privacy is defense in depth · same-family execution is not independent audit · §5.A as amended (disposition B) · cross-journal disposition A, Memory Layer /1 reserved. The former row here read "mneme-memory|ABSENT|Not implemented" — superseded by this registration, not by adoption.
+act1|ADOPTED|perform ACROSS process death: One Act /1 — ADOPTED|ADOPTED 2026-08-22 by owner ruling (interview, "Adopt at aeeefa40, ceilings verbatim") on Sol's combined-record ruling ADOPTION-ELIGIBLE. Adopted object: lane mneme/language-act-1 at lab commit aeeefa40ffc51466dba09cfc0cc14e0055e69b6d, 38 files, specimen sha256 bf5751a6…, unchanged by the act. Evidence: a cold stranger audit (fresh Codex session, sealed cold order; terminal BLOCK on the VENUE — ptrace denied, history-free checkout — preserved unrevised) + a §VII execution supplement in a capable venue (112/112, 0 blocked, exit 0, HEAD stable, porcelain empty, PJ0-METADATA-INVALID absent). CEILINGS TRAVEL VERBATIM (record: mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md): SBCL 2.4.6/Linux only · frozen implementation, finite paths · deterministic planted death, no general SIGKILL/power-loss/mid-write guarantee · fake world, scripted adapter subset, one seat/effect family · no alternative Act1/Core implementation · heterogeneous observer shares the semantic implementation · audit-defined inherited certificate, no public evidence (de)serializer · package privacy is defense in depth, not a security boundary · the 104-name export surface is an implementation choice, not a normative interface · ML0's 27-symbol consumption is version-bound verification debt · DO NOT SAY "independently verified". Adoption removes ML0's dependency-standing blocker only; it adopts nothing else, freezes no publication commit, lifts no sentinel.
 seam|ADOPTED|derive/perform over a journal-backed process: One Act /0 — ADOPTED|ADOPTED 2026-08-08 by owner terminal ruling (One Act /0 R2.3 terminal adoption). The exact verified candidate commit 461f2013d1a6feca2b13819ff6ae3f60617e8e82 (tree 1123c3c3326664f54d1d96547ba872a876cbd495) was merged unmodified; its 173 checks, the 97-gate floor, the loader witnesses and the disease/control pairs all ran green pre-adoption and once post-adoption. DISCLOSURE, VERBATIM FROM THE ADOPTION RECORD: the stranger primitive-minimization audit prescribed as a promotion gate was NOT performed; the owner waived that gate for One Act /0 because its resource cost was disproportionate to the remaining design risk. This variance does not constitute independent validation and does not prevent later primitive reduction or architectural revision. Full record: mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md.
 TABLE
 
@@ -241,9 +291,24 @@ TABLE
 #
 #   94 -> 97 full   (+3: One Act /0's selftest, load witnesses, loader disease)
 #   76 -> 77 light  (+1: the selftest alone; the other two are full-profile)
+#   97 -> 103 full  (+6: One Act /1's selftest, host-fault proof, controls,
+#                    mutants, red-proof, specimen — registered 2026-08-20 with
+#                    the rows above, under Sol's cold-review disposition
+#                    relayed by the owner; the first run after adding the rows
+#                    WITHOUT these totals failed closed here, as designed)
+#   77 -> 79 light  (+2: the selftest and the host-fault proof; the other
+#                    four are full-profile)
+#   103 -> 112 full (+9: Memory Layer /0's canonical load, selftest, host-fault
+#                    proof, controls, mutants, block proof, consolidation proof,
+#                    combined red proof, specimen — registered 2026-08-21 under
+#                    Sol's R5 registration ruling; the totals below were
+#                    RECOMPUTED MECHANICALLY from the table by the same grep the
+#                    floor itself runs, not predicted or hand-entered)
+#   79 -> 82 light  (+3: canonical load, selftest, host-fault proof; the other
+#                    six are full-profile)
 # ===========================================================================
-AUTHORIZED_GATES_FULL=97
-AUTHORIZED_GATES_CI=77
+AUTHORIZED_GATES_FULL=112
+AUTHORIZED_GATES_CI=82
 
 COUNT_CI="$(printf '%s\n' "$GATES" | grep -c '^both|')"
 COUNT_FULL_ONLY="$(printf '%s\n' "$GATES" | grep -c '^full|')"
@@ -506,8 +571,8 @@ echo "   of which ADOPTED              : $N_D_ADOPTED"
 echo
 echo " THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this"
 echo " floor ran in this process; a carried status row is a standing fact this"
-echo " floor reports without running anything. 'blocked-external-input: 0' above"
-echo " means ZERO EXECUTABLE GATES were blocked; it does not contradict the"
+echo " floor reports without running anything. 'blocked-external-input: $N_BLOCKED' above"
+echo " counts EXECUTABLE GATES blocked in this run; it does not contradict the"
 echo " $N_D_BLOCKED carried BLOCKED-EXTERNAL-INPUT row(s), which are a different"
 echo " denominator entirely."
 if [ "$PROFILE" = "ci" ]; then

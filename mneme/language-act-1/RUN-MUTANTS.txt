@@ -1,0 +1,28 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+One Act /1 — planted defects.  CANDIDATE; nothing here is adopted.
+crash model: no process dies in this file.  The crossed-unsettled seat is produced by capability /2's :request-lost seam, which leaves the same DURABLE SHAPE a death leaves.
+
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV ACT1_SELFTEST_PLANT_FAULT unset
+  W-ENV ACT1_CONTROLS_PLANT_FAULT unset
+  W-ENV ACT1_RESTART_DIE unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV enumerated 8 variables (1 Class I + 7 Class II); 9 Class III declared out of stack, named and NOT asserted
+ground: the request was LOST in flight — frontier crossed, world never touched.  standing :CROSSED-UNSETTLED · frames 3 · ledger entries 0
+
+[KILLED  ] :bridge-skips-store-check — the bridge dispatches without consulting the durable bytes
+      killed by: REASON-NAMES-THE-DURABLE-GUARD (the crown tooth's own predicate)
+      cured reason :ACT1-DURABLE-GUARD/UNSAFE-RETRY/CAP2-W1 · UNCURED reason :UNSAFE-RETRY/CAP2-W1.  ⚠ HONESTY: the uncured act is STILL REFUSED — capability /2's authorization consults the same gate at the runtime boundary, so the refusal is OVER-DETERMINED and the world stayed byte-unchanged (verified) under BOTH.  This mutant is killed by WHICH BOUNDARY ANSWERED, not by a leaked write; the leaked write needs both defences down, which is the de-actu-resurgente leak control.
+[KILLED  ] :refusal-swallowed-to-success — the guard refuses and the bridge reports a clean commit anyway
+      killed by: ACT1-DERIVE-CLASS (the journal-read class table; a :returned disposition whose journal shows no settlement is :unclassifiable, and an unclassifiable act is a HOST FAULT, never an Outcome)
+      the lane refused to hand back an Outcome at all (requirement ACT1-BRIDGE-1; outcome view reached: :NONE), and the world stayed byte-unchanged — a swallowed refusal cannot buy a commit here because the class is read from the journal's bytes and not from the bridge's report.  Noted from the build: with a NIL ledger token this defect is killed one layer EARLIER, by Core /0's own manifestation constructor (kernel /0 UNRESOLVED-IDENTITY) — so the mutant forges a token precisely to reach the lane's own predicate and put IT under test
+[KILLED  ] :reconciliation-without-evidence — the seat is called closed on any resolution keyword, consulting neither the world nor the journal
+      killed by: ACT1-RECONCILIATION-CLOSES-SEAT-P (:applied AND the world's ledger entry under the journaled external-request identity AND attempt:reconciled in the journal — all three, or the seat is not closed)
+      resolution :NOT-APPLIED · mutant verdict T · honest verdict NIL — the world holds NO entry under this act's request key (0), and the honest door says so
+
+oneact1-mutants: 3 defects, 3 killed, 0 survivors

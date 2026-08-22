@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
 # capture.sh — run one defect witness in a fresh image and write its transcript
-# with a header naming the command, the UTC clock, and what the run proves.
+# with a header naming the command, the UTC clock, and what the run tests whether
+# holds.
 #
 #   ./capture.sh pre-repair D1
 #   ./capture.sh post-repair D3
@@ -13,6 +14,35 @@
 # D3 is run under an EXTERNAL WATCHDOG (`timeout`).  Before the repair the
 # validator does not terminate on circular structure, so exit 124 — the watchdog
 # killing the image — IS the red witness.
+#
+# ⚠ THE PRINTED LABEL WAS CHANGED FROM `PROVES     :' TO `TESTS WHETHER:' BY
+# PARCEL B ITEM B3 (OWNER RULING 6, 2026-08-10, §3 B3: "OPTION 1 ADOPTED,
+# MODIFIED"), completing Owner Ruling 2 §5 item 9 in the tool as well as in the
+# fixture headers.
+#
+# ⚠ A DIVERGENCE NOW EXISTS BETWEEN THIS TOOL AND THE EVIDENCE IT PRODUCED, AND
+# IT IS NOT REPAIRABLE.  The ten preserved captures in `pre-repair/' and
+# `post-repair/' carry `PROVES     :' verbatim and are BYTE-UNTOUCHED; they are
+# never regenerated and never annotated.  A transcript whose header reads
+# `PROVES' was written before this ruling: the difference is the repair, not
+# tampering.  Any future re-run of this script writes `TESTS WHETHER:' and will
+# therefore differ from those ten in that header field, forever.
+#
+# ⚠ NO EXACT PRODUCING INSTRUMENT WAS RECOVERED OR PRESERVED.  Ruling 6 §3 B3
+# rejected copying this script beside the captures, because Parcel A had already
+# changed its prospective commentary: "A replica wearing the old script's coat is
+# not the old script."  Nothing in this lane is the byte-state that produced the
+# ten captures, and nothing here may be described as though it were.
+#
+# Rider 6's holding is unchanged and still governs QUOTATION: the header names
+# the DEFECT CLASS the capture tests for, identically in red and green captures,
+# and the repeated "PROVES … reachable" header must never be quoted as though
+# the repaired version still exhibits the defect — the GREEN tally beside it
+# governs the post-repair result.
+#
+# The divergence is recorded in three places, as ordered: this header, the
+# Parcel-B execution return (MANY-ACTS-0-PARCEL-B-EXECUTION-RETURN.md §4, B3),
+# and the supersession registry (MANY-ACTS-0-SUPERSESSIONS.md, entry S-5).
 #
 # CANDIDATE.  Running a candidate is not adopting it, and nothing this script
 # prints is independent verification.
@@ -57,7 +87,7 @@ limit=300
   echo "head       : $(cd "$here" && git rev-parse HEAD)"
   echo "sbcl       : $(sbcl --version)"
   echo
-  echo "PROVES     : $proves"
+  echo "TESTS WHETHER: $proves"
   echo
   if [ "$phase" = pre-repair ]; then
     echo "READING    : a DEFECT-PRESENT line is the defect reproducing.  For D3 the red"

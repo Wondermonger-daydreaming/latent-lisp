@@ -1,0 +1,38 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+One Act /1 — HOST-FAULT CLASSIFICATION PROOF.  CANDIDATE; nothing here is adopted.
+
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV ACT1_SELFTEST_PLANT_FAULT unset
+  W-ENV ACT1_CONTROLS_PLANT_FAULT unset
+  W-ENV ACT1_RESTART_DIE unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV enumerated 8 variables (1 Class I + 7 Class II); 9 Class III declared out of stack, named and NOT asserted
+
+PLANT: a real TYPE-ERROR is raised inside the D1/D2 protected form of the SHIPPED dispatch, before D1 and before any attempt frame can land.
+
+WHAT THE LANE DID WITH IT:
+  DISPOSITION            : :REFUSED
+  CLASS                  : :REFUSED
+  STANDING               : :ABSENT
+  REASON                 : :TYPE-ERROR/-
+  OUTCOME-KIND           : :REFUSED
+  EVIDENCE-ISSUED        : T
+  JOURNAL-FRAMES-MOVED   : NIL
+  WORLD-BYTE-UNCHANGED   : T
+
+      | WORLD-SCOPE HOST-FAULT ARM — universe of the look: the ENTIRE world fixture, which is the file set {CELLS.txt, REQUEST-LEDGER.txt} in the declared world directory (listed by this instrument, not assumed)
+      |   cell store  : 71 octets sha 1572f36c2940393e  ->  71 octets sha 1572f36c2940393e
+      |   request ledger: 0 octets sha e3b0c44298fc1c14 (0 entries)  ->  0 octets sha e3b0c44298fc1c14 (0 entries)
+      |   entries under this arm's request key external-request:cap2:a-prima: 0  ->  0
+
+  LOOKED-LIKE-A-REFUSAL  : T
+  MANUFACTURED-OUTCOME-OR-EVIDENCE : T
+  JOURNAL-AND-WORLD-CLEAN : T
+  DISTINGUISHABLE-AS-HOST-FAULT : NIL
+
+oneact1-host-fault-proof: FAIL — THE DEFECT IS PRESENT: a planted implementation fault was reported as an ordinary pre-frontier refusal (or an Outcome/evidence was manufactured for it).  This transcript IS the RED proof.

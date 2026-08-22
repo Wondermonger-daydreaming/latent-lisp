@@ -2,7 +2,13 @@
 ;;;;
 ;;;; Fresh image.  PUBLIC EXPORTS ONLY.
 ;;;;
-;;;; WHAT IT PROVES.  The validator walks a branch's clauses SEQUENTIALLY against
+;;;; WHAT IT TESTS WHETHER HOLDS.  (Post-R1 wording, adoption Rider 6,
+;;;; 2026-08-10: this header read "WHAT IT PROVES", and the preserved red
+;;;; transcript quotes it with that word.  A fixture TESTS WHETHER a defect
+;;;; is present; it proves nothing about the repaired state, whose account
+;;;; is the GREEN capture beside the red one.)  The hypothesis under test:
+;;;;
+;;;; The validator walks a branch's clauses SEQUENTIALLY against
 ;;;; ONE mutable binding table (`%vctx-bindings', pushed to and never restored).
 ;;;; A name defined inside the FIRST alternative therefore stays in the table
 ;;;; while the SECOND alternative is checked, so a later alternative may

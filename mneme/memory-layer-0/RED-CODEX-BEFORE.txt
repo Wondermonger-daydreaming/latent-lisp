@@ -1,0 +1,125 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+Memory Layer /0 — BLOCK PROOF.  The chair's two blockers, probed against the code as it stands.  CANDIDATE; nothing here is adopted.
+
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV ML0_SELFTEST_PLANT_FAULT unset
+  W-ENV ML0_CONTROLS_PLANT_FAULT unset
+  W-ENV ML0_READER_DIE unset
+  W-ENV ACT1_SELFTEST_PLANT_FAULT unset
+  W-ENV ACT1_CONTROLS_PLANT_FAULT unset
+  W-ENV ACT1_RESTART_DIE unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV enumerated 11 variables (1 Class I + 10 Class II); 9 Class III declared out of stack, named and NOT asserted
+
+---- ground truth: the refused act genuinely did not happen ----
+      | derived effect standing for a-secunda : :ABSENT
+      | world ledger rows under its derived external-request key: 0
+      | and Core /0 DID issue evidence for it: T
+
+---- B1a: a forged public :world-bytes row ----
+  account            : 837e044515e468cf20ec35fda6bb99ed463f9093fb2553ec334902d6468718ae
+  act                : f87620bdb43d0dc15e36f31b79777cf594d17dda4f338d9ae7df5ba267fa7e4b
+  seat / attempt     : secunda / a-secunda
+  OCCURRENCE standing: :UNRESOLVED
+  ISSUANCE standing  : :UNRESOLVED   (a SEPARATE axis; never folded)
+  effect (observed)  : not-read / :INDETERMINATE
+  derivation         : :DIRECT-WRITE  (0 predecessors)
+  retrieval origin   : :RECONSTRUCTED
+  sources            : world-bytes
+  CONJUNCTS · the forged public row  (species world-bytes, attests frontier-crossed-for-this-identity)
+    validation   [ML0-PROMOTE-0] : NO  <== this leg answered
+    species      [ML0-PROMOTE-1] : yes
+    attestation  [ML0-PROMOTE-2] : yes
+    subject-identity [ML0-PROMOTE-3] : yes
+    acquisition-route [ML0-PROMOTE-4] : yes
+    declared-scope [ML0-PROMOTE-5] : yes
+    frontier-relation [ML0-PROMOTE-6] : yes
+    canonical-payload [ML0-PROMOTE-7] : yes
+    provenance   [ML0-PROMOTE-8] : yes
+[1] CLOSED  B1a · a forged public :world-bytes row over a lawfully-refused, absent act CANNOT mint :occurred
+      the account reads a standing other than :occurred
+
+---- B1b: an unwarranted :issued-in-writing-image claim ----
+[2] CLOSED  B1b · a bundle claiming :issued-in-writing-image without a validated current-image issuance observation cannot carry that standing
+      the write refused the unwarranted claim
+
+---- B2: consolidation and distinct provenance ----
+      | the two rows agree ONLY in species, payload digest and producer principal; they differ in coordinate, recorder, route, scope, frontier relation, interval and attestation
+      | canonical record bytes identical? NO — they are different rows
+      | source rows surviving consolidation: 2
+[3] CLOSED  B2 · two source rows with DISTINCT provenance but equal species/digest/producer both survive the consolidation union
+      both readings survive
+
+---- R2B1: the public decoder launders its own claim ----
+      | the two records differ in EXACTLY ONE FIELD: validation-standing "asserted-testimony" -> "validated-by-door"
+      | records byte-identical? no
+      | the decoded row's validation standing: :STORED-ASSERTION (recorded: :VALIDATED-BY-DOOR); warranting? no
+[4] CLOSED  R2B1 · a freely callable record decoder cannot produce a promotion-capable source
+      the account reads a standing other than :occurred
+
+---- R2B2a: world observation of B stamped toward A ----
+      | the door took ONE subject: its ledger key external-request:cap2:a-prima and its stamped identity come from the same row, so the pairing cannot be made
+      | the DISEASE ROW was synthesised through the internal constructor: act B's reading, act B's binding, act A's name
+[5] CLOSED  R2B2a · a world door cannot read one act's substrate and name another act
+      refused pre-mutation: ML0-SUBJECT-IDENTITY-MISMATCH [ML0-WR-7]
+
+---- R2B2b: journal observation of B stamped toward A ----
+[6] CLOSED  R2B2b · a journal door cannot fold one act's attempt and name another act
+      refused pre-mutation: ML0-SUBJECT-IDENTITY-MISMATCH [ML0-WR-7]
+
+---- R2B2c: absence of B stamped as nonoccurrence of A ----
+      | the honest absence row attests :NO-RECORD-FOR-THIS-IDENTITY over key external-request:cap2:a-secunda — a TRUE reading about the refused act, and it is the NAME that is being falsified
+[7] CLOSED  R2B2c · an absence door cannot look under one act's key and report the nonoccurrence of another
+      refused pre-mutation: ML0-SUBJECT-IDENTITY-MISMATCH [ML0-WR-7]
+
+---- R2B2d: B's issuance stamped as A's ----
+      | the issuance door now derives the canonical request FROM THE SUBJECT, so act A's subject against act B's evidence answers false
+[8] CLOSED  R2B2d · an issuance door cannot confirm one act's evidence and name another act
+      refused pre-mutation: ML0-SUBJECT-IDENTITY-MISMATCH [ML0-WR-7]
+
+---- R2B2e: issuance with NO request binding ----
+      | the honest reading is conjoined (yes) and issued-p answers TRUE; the synthesised unconjoined reading answers false
+[9] CLOSED  R2B2e · an unconjoined issuance reading (no request binding) cannot establish :issued-in-writing-image
+      the standing is :unresolved — the reading is recorded, the claim is not made
+
+---- P: the positive control ----
+[10] CLOSED  P · a LAWFUL reading of a genuinely occurred act still reaches :OCCURRED — the repair is a discrimination, not a wall
+      the lawful path is open
+
+---- P2: the issuance positive control ----
+[11] CLOSED  P2 · a LAWFUL conjoined issuance observation still reaches :ISSUED-IN-WRITING-IMAGE — the issuance repair is a discrimination, not a wall
+      the lawful issuance path is open
+
+---- F1: no mutant seam on the public arglists ----
+[12] OPEN    F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+      ⚠ 10 exported function(s) still take it: ML0-ACCOUNT-FROM-EVENT, ML0-CONSOLIDATE, ML0-DERIVE-OCCURRENCE-STANDING, ML0-NONOCCURRENCE-WARRANTED-P, ML0-OCCURRENCE-CONJUNCTS, ML0-OCCURRENCE-WARRANTED-P, ML0-PRINT-CONJUNCTS, ML0-RETRIEVE, ML0-SPECIES-MAY-WARRANT-OCCURRENCE-P, ML0-WRITE
+[13] OPEN    F1b · the crown predicate answers NIL for issuance testimony AND the `:defect :issuance-implies-occurrence` route no longer exists
+      normal => NIL · with the mutant keyword => (:ANSWERED T)
+
+---- F2: the raw decode may not carry a standing ----
+[14] OPEN    F2 · a RAW decode of a caller-held frame may not read :OCCURRED off the bytes — the standing is re-derived from the rows, which warrant nothing
+      occurred-p => T · occurrence :OCCURRED · issuance :ISSUED-IN-WRITING-IMAGE
+[15] OPEN    F2b · a frame whose event-id is not this lane's shape is REFUSED, never decoded with the identity check silently skipped
+      ⚠ decoded — RB-11 had nothing to compare and let it through
+
+---- F3: record coverage must come from a door ----
+[16] OPEN    F3 · a CALLER may not assert a record-coverage finding about this lane's own store — the assertion is refused, or normalized to :NOT-EXAMINED
+      the bundle's coverage reads :ISSUANCE-RECORD-PRESENT-IN-ACCOUNT-STORE
+[17] OPEN    F3b · a PRODUCTION DOOR reads this lane's own store and reports coverage on what it found there
+      ⚠ no ml0-observe-record-coverage exists: nothing ever scans the store
+
+---- F4: ml0-write's own account of itself ----
+[18] OPEN    F4 · `ml0-write` does NOT claim a failed write is non-mutating over the WHOLE store, and DOES name its verified-after-append semantics
+      the false universal claim is STILL PRESENT; the true semantics is ABSENT
+
+---- F5: the effect axis says whose word it is ----
+[19] OPEN    F5 · an effect observation is marked CALLER-ASSERTED in the type AND in the durable bytes — a reader can tell testimony from a door's reading
+      type reader ABSENT · durable field ABSENT
+
+ml0-block-proof: 19 probes, 11 closed, 8 open
+EXIT=1

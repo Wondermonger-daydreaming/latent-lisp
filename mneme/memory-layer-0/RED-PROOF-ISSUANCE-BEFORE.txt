@@ -1,0 +1,72 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+Memory Layer /0 — RED PROOF of the crown tooth.  CANDIDATE; nothing here is adopted.
+
+  W-ENV CAP2_WORLD_DIE_IN_WINDOW unset
+  W-ENV ML0_SELFTEST_PLANT_FAULT unset
+  W-ENV ML0_CONTROLS_PLANT_FAULT unset
+  W-ENV ML0_READER_DIE unset
+  W-ENV ACT1_SELFTEST_PLANT_FAULT unset
+  W-ENV ACT1_CONTROLS_PLANT_FAULT unset
+  W-ENV ACT1_RESTART_DIE unset
+  W-ENV CAP2_SELFTEST_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_PLANT_FAULT unset
+  W-ENV CAP2_CONTROLS_DIE unset
+  W-ENV DE_EFFECTU_DIE unset
+  W-ENV enumerated 11 variables (1 Class I + 10 Class II); 9 Class III declared out of stack, named and NOT asserted
+
+---- UNCURED — the planted :issuance-implies-occurrence seam ----
+  defect seam            : :ISSUANCE-IMPLIES-OCCURRENCE
+
+  THE PINNED PROPOSITION `:occurred` WOULD WARRANT:
+    the governed protected effect associated with canonical act identity A crossed/applied and is present in the declared journal/world universe under its derived external-request identity
+
+  THE ACT (a lawful pre-frontier refusal):
+    disposition          : :REFUSED
+    class                : :REFUSED
+    EVIDENCE-ISSUED      : T
+    ISSUED-FOR-REQUEST   : T
+    JOURNAL-FRAMES-MOVED : NIL  (6 -> 6)
+    DERIVED-STANDING     : :ABSENT
+    WORLD-BYTE-UNCHANGED : T
+
+  THE ACCOUNT, read back from durable bytes:
+    account id           : 0f47561aeebe51ea7a12b207a89fe43a303f071d4680cc4b4131c529c37059ac
+    OCCURRENCE standing  : :OCCURRED
+    ISSUANCE standing    : :ISSUED-IN-WRITING-IMAGE
+    issuance-only-p      : T
+    after CONSOLIDATION  : :OCCURRED
+
+  THE SINGLE-DELTA PAIR — same act binding, same route, same declared scope,
+  same observation interval, same attestation; ONLY THE SPECIES DIFFERS:
+  CONJUNCTS · row A — the LAWFUL occurrence bundle (species world-bytes)  (species world-bytes, attests frontier-crossed-for-this-identity)
+    validation   [ML0-PROMOTE-0] : yes
+    species      [ML0-PROMOTE-1] : yes
+    attestation  [ML0-PROMOTE-2] : yes
+    subject-identity [ML0-PROMOTE-3] : yes
+    acquisition-route [ML0-PROMOTE-4] : yes
+    declared-scope [ML0-PROMOTE-5] : yes
+    frontier-relation [ML0-PROMOTE-6] : yes
+    canonical-payload [ML0-PROMOTE-7] : yes
+    provenance   [ML0-PROMOTE-8] : yes
+  CONJUNCTS · row B — the SAME act, SAME everything, species core0-issuance-testimony  (species core0-issuance-testimony, attests inconclusive)
+    validation   [ML0-PROMOTE-0] : yes
+    species      [ML0-PROMOTE-1] : yes
+    attestation  [ML0-PROMOTE-2] : NO  <== this leg answered
+    subject-identity [ML0-PROMOTE-3] : yes
+    acquisition-route [ML0-PROMOTE-4] : yes
+    declared-scope [ML0-PROMOTE-5] : yes
+    frontier-relation [ML0-PROMOTE-6] : yes
+    canonical-payload [ML0-PROMOTE-7] : yes
+    provenance   [ML0-PROMOTE-8] : yes
+
+  RULE ON ROW A: PROMOTED
+    all eight legs held: species WORLD-BYTES, attests FRONTIER-CROSSED-FOR-THIS-IDENTITY, route LIVE-QUERY
+  RULE ON ROW B: PROMOTED
+    MUTANT: an issued evidence account was present
+
+  CROWN TOOTH            : FAIL
+
+ml0-red-proof [uncured arm only]: the tooth DOES NOT HOLD — and it MUST NOT hold here, which is why this capture exits NONZERO
+UNCURED_EXIT=1

@@ -1,0 +1,122 @@
+SOURCE MANIFEST — LANGUAGEHOOD & SUCCESSION CHARTER /0 R0 PARCEL
+Candidate R0. Not adopted. Compiled 2026-08-11 on branch many-acts-0-candidate.
+
+WHAT THIS IS: the repository-relative paths consulted while preparing the R0 parcel.
+Paths are relative to the repository root. Nothing here is a claim about any path's
+contents; nothing here confers standing on any path; no gate is opened by any line.
+
+HOW TO READ THE MARKERS:
+  [via digest]  = opened by a drafting digest, not by the chair directly. The
+                  parenthetical gives the digest's own declared read extent,
+                  copied faithfully, including partial fractions.
+  (no marker)   = read directly by the chair this session; the parenthetical
+                  states the extent (full / tail / head / grep-verified lines).
+  @ <sha>       = commit identity appended only where it is material to
+                  distinguish a frozen or governing copy from a later one.
+  Absence of a path here means it was not consulted — not that it does not exist.
+  The digests' own "NOT OPENED" sections remain the authority on their blind spots.
+
+
+# rulings
+
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULINGS-1-2026-08-10.md  @ fa712000 (introducing commit, registrar-derived)  (chair: grep-verified lines for Rulings 1/3/8; also read in full 280/280 [via digest], and in the custody inventory [via digest])
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULINGS-2-2026-08-10.md  @ 53f69972  [via digest] (read in part 1-80/159; and in the custody inventory, 159 lines)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-2-POST-R1-DISPOSITION-AND-PARCEL-A-ORDER-2026-08-10.md  @ ad34b530  [via digest] (custody inventory, 190 lines)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-3-THREE-PARCEL-DISPOSITIONS-2026-08-10.md  @ 048ad705  [via digest] (custody inventory, 141 lines; and cited section §3 [via digest])
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-4-PARCEL-A-ACCEPTED-ROUND-P-PENDING-2026-08-10.md  @ 9bcb28f9  [via digest] (custody inventory, 77 lines)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-5-P2R1-017AD2DE-PARCEL-B-2026-08-10.md  @ 014b32ed  [via digest] (custody inventory, 84 lines)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-5A-P2R1-ACCEPTED-ROUND-P-CLOSED-2026-08-10.md  @ 5b13a1b6 (chair: grep-verified lines — the settled account and its riders; also custody inventory, 128 lines [via digest])
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-6-PARCEL-B-DISPOSED-EXECUTION-ORDERED-2026-08-10.md  @ e87f2d08  [via digest] (custody inventory, 225 lines)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-6A-EXEC-ACCEPTED-CENSUS-R1-ORDERED-2026-08-10.md  @ 5e58a966  [via digest] (custody inventory, 59 lines)
+experiments/latent-lisp/mneme/portable-judge-0/OWNER-RULING-6B-CENSUS-R1-ACCEPTED-B7-CLOSED-2026-08-10.md  @ eaf82ddc (chair: read in full, 41 lines — the governing stop clause)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-ADOPTION-OWNER-RULING-2026-08-10.md  @ 2b69c18c (adoption commit — cite this, not 7f417d49 which is the sync-revert)  (chair: read in full, 232 lines; also read [via digest] x2)
+experiments/latent-lisp/mneme/portable-judge-0/ROUND-P-CLOSURE-RECORD-2026-08-10.md  @ 15608111  [via digest] (custody inventory, 43 lines)
+
+
+# receipts
+
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-ADOPTION-RECORD-2026-08-10.md  @ 2b69c18c  [via digest] (custody inventory, 102 lines)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-ADOPTION-RECEIPT-2026-08-10.txt  @ 2b69c18c  [via digest] (custody inventory, 78 lines)
+experiments/latent-lisp/mneme/portable-judge-0/PARCEL-B-EXPORT-RECEIPT.md  @ 06b7763b  [via digest] (custody inventory, 26 lines)
+experiments/latent-lisp/mneme/portable-judge-0/PARCEL-B-EXEC-EXPORT-RECEIPT.md  @ 3e320b95  [via digest] (custody inventory, 83 lines)
+experiments/latent-lisp/mneme/portable-judge-0/PARCEL-B-EXEC-INTEGRATION-RECEIPT.md  @ a0d8932a  [via digest] (custody inventory, 56 lines)
+experiments/latent-lisp/mneme/portable-judge-0/MA0-EXPORT-CENSUS-0-EXPORT-RECEIPT.md  @ 4f645e62  [via digest] (custody inventory, 73 lines; Census /0 R0 has no separate integration receipt — recorded absence, not an omission here)
+experiments/latent-lisp/mneme/portable-judge-0/MA0-EXPORT-CENSUS-0-R1-EXPORT-RECEIPT.md  @ d73a50bd (chair: head read; also custody inventory, 110 lines [via digest])
+experiments/latent-lisp/mneme/portable-judge-0/MA0-EXPORT-CENSUS-0-R1-INTEGRATION-RECEIPT.md  @ a963761a (the receipt commit at which the candidate lane is held)  [via digest] (custody inventory, 68 lines)
+experiments/latent-lisp/mneme/spec/lci0-review/FABLE-LCI0-CLOSURE-MERGE-RECEIPT.md  @ merge af22100c (as the receipt states of itself)  [via digest] (the waiver-law section read in cited part)
+experiments/latent-lisp/mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md  [via digest] (read in cited part — the waived-not-passed record)
+experiments/latent-lisp/mneme/language-surface-account-0/ADOPTION-RECEIPT-2026-08-06.md  [via digest] (read in cited part)
+
+
+# predecessor charter texts
+
+experiments/latent-lisp/mneme/LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-CANDIDATE.md  @ 12388ff9 (CHARTIST original; frozen, historical as candidate text)  [via digest] (read in full 618/618; separately grep hits only in the second digest)
+experiments/latent-lisp/mneme/LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-CANDIDATE-P1.md  @ ba2ffe8b (LATTICER, Round P revision; the last owner-directed candidate text) (chair: grep-verified line 178 — the licensed compression sentence; also read in full 1168/1168 [via digest], and §§0-1 plus grepped P5/CI0 sections [via digest])
+experiments/latent-lisp/mneme/portable-judge-0/PROTOCOL-CHARTER-CROSSREF-P2.md  [via digest] (read in part 1-40/204)
+
+
+# evidence records
+
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-RETURN.md  [via digest] (read in cited part)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-R1-RETURN.md  [via digest] (read in cited part)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-STANDING.md  @ 3af17e51  [via digest] (read in part 1-70; and custody inventory, 104 lines)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-SUPERSESSIONS.md  @ 3af17e51  [via digest] (read in part 1-60 and last 30; and custody inventory, 136 lines)
+experiments/latent-lisp/mneme/language-many-acts-0/p4/  [via digest] (P4 program/driver, read in cited part)
+experiments/latent-lisp/mneme/language-many-acts-0/p5/  [via digest] (P5 program, driver header, and p5-FIRST-RUN.txt first-run transcript, read in cited part)
+notes/2026-08-10-p5-sol-inhabitation-protocol.md  [via digest] (the P5 protocol document; lives under notes/, not p5/ — chair-resolved 2026-08-11; filename carries pre-Ruling-8 vocabulary, read under charter §H.5)
+experiments/latent-lisp/mneme/language-slice-0/LANGUAGE-SLICE-0-GUIDE.md  (chair: head read 1-20 — the "embedded language fragment" sentence; found by chair re-search 2026-08-11)
+experiments/latent-lisp/mneme/language-slice-0/de-promotione/DISPOSITION.md  (chair: read banner + refined receipt + governing interpretation — the banked four-way disposition and escape-surface finding; found by chair re-search 2026-08-11)
+experiments/latent-lisp/mneme/portable-judge-0/one-act-recovery/RECOVERY-DETERMINATION.md  [via digest] (read in cited part — §0, Part I)
+experiments/latent-lisp/mneme/portable-judge-0/one-act-recovery/CITATION-RESOLUTION-TABLE.md  [via digest] (read in cited part — §1)
+
+
+# specification / architecture / court machinery
+
+experiments/latent-lisp/mneme/portable-judge-0/PROTOCOL-CANDIDATE-P1.md  [via digest] (read in part 1-120/743)
+experiments/latent-lisp/mneme/portable-judge-0/ADJUDICATION-CANDIDATE-P1.md  [via digest] (read in part 1-95/388)
+experiments/latent-lisp/mneme/portable-judge-0/FAILURE-TAXONOMY-CANDIDATE-P1.md  [via digest] (read in part 1-80/338)
+experiments/latent-lisp/mneme/portable-judge-0/NORMATIVE-OBSERVATION-FORMAT-0-CANDIDATE-P1.md  [via digest] (read in part 1-75/1279)
+experiments/latent-lisp/mneme/portable-judge-0/CLEAN-ROOM-IMPLEMENTER-BRIEF-CANDIDATE-P1.md  [via digest] (read in part 1-85/359; the NOT ISSUABLE stamp chair-confirmed by grep at lines 13 and 350)
+experiments/latent-lisp/mneme/portable-judge-0/DG0-SKETCH-CANDIDATE-P1.md  [via digest] (read in full 271/271)
+experiments/latent-lisp/mneme/portable-judge-0/LM0-PREREGISTRATION-SKELETON-CANDIDATE-P1.md  [via digest] (read in part 1-90/271; header separately read in cited part by the second digest)
+experiments/latent-lisp/mneme/portable-judge-0/OG0-SKETCH-CANDIDATE.md  [via digest] (read in part 1-40/171; original — its P1 successor is DG0-SKETCH-CANDIDATE-P1.md)
+experiments/latent-lisp/mneme/portable-judge-0/SPEC-DEFICIT-REGISTER-CANDIDATE.md  [via digest] (read in cited part — §0, §2; SD-13's heading chair-confirmed by grep at line 81)
+experiments/latent-lisp/mneme/integration-baseline-0/AUTHORITY-INDEX.md  [via digest] (read in part 1-45 and last 35)
+experiments/latent-lisp/mneme/integration-baseline-0/CLAIM-CEILING-0.md  [via digest] (read in part 1-50)
+experiments/latent-lisp/mneme/integration-baseline-0/SUPERSESSION-MAP.md  [via digest] (read in part 1-30)
+experiments/latent-lisp/mneme/architecture/ARCHITECTURE-0-STATUS.md  [via digest] (read in part 1-55 and last 40)
+experiments/latent-lisp/mneme/architecture/adapter-protocol-0/AP0-ADOPTION-2026-07-18.md  [via digest] (read in cited part — the riders, incl. rider 2's forbidden wording)
+experiments/latent-lisp/mneme/MANIFEST.md  [via digest] (read in part 1-60)
+experiments/latent-lisp/mneme/language-many-acts-0/MANY-ACTS-0-GRAMMAR.md  [via digest] (header only)
+experiments/latent-lisp/mneme/language-many-acts-0/ma0-validate.lisp  [via digest] (header only)
+experiments/latent-lisp/mneme/language-many-acts-0/ma0-diseases.sh  [via digest] (header only)
+experiments/latent-lisp/mneme/language-act-0/act0.lisp  [via digest] (header only)
+_staging/oneact-candidate/  [via digest] (listed, not read — the five One Act /0 documents; in-tree, mirror-excluded, not normatively incorporated)
+
+
+# voices
+
+corpus/voices/received/2026-08-10-sol-on-lisp-plus-languagehood.md  [via digest] (read in full or cited part — one strong outside reading under shared input, never a second witness)
+corpus/voices/2026-08-10-reply-to-sol-languagehood.md  [via digest] (read in full or cited part — the chair's reply, which carries the shared-input cap)
+
+
+# campaign log & notes
+
+notes/2026-08-09-many-acts-0-campaign-log.md (chair: tail read; also read as the running log in the custody inventory, 456 lines [via digest]; grep-only in the evidence digest [via digest])
+notes/2026-08-10-incident-a14bb55d-sync-env-hijack.md  [via digest] (cited only as the adoption record cites it; not opened by the registrar)
+tools/latent-lisp/sync.sh (chair: read directly — the mirror publishes the committed subject tree; publication route and its sentinels)
+
+
+# working digests (uncommitted _staging, listed for transparency)
+
+_staging/charter0-r0/digest-rulings-custody.md (chair: read — TABELLIO, rulings and custody chain; its §10 records what it did not open)
+_staging/charter0-r0/digest-predecessor-charter.md (chair: read — CONCORDATOR, predecessor charter mapped against the commission; its §A records what it did not open)
+_staging/charter0-r0/digest-evidence-base.md (chair: read — EXEGETA, evidence base; its §6 records NOT LOCATED items and §7 what it did not open)
+
+
+# parcel-internal (read as governing structure, not consulted as evidence)
+
+experiments/latent-lisp/mneme/languagehood-and-succession-charter-0/LANGUAGEHOOD-AND-SUCCESSION-CHARTER-0-R0.md (chair: read in full — §G gates, §I forks, and §J order govern SUCCESSION-DOCKET-R0.md)
+
+
+# This is a source manifest, not an evidence hoard; listing confers no standing.

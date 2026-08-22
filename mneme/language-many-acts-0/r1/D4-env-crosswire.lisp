@@ -5,7 +5,13 @@
 ;;;; every file under each run root — deliberately, so the probe cannot be
 ;;;; accused of reaching inside an environment to find the crosswire it reports.
 ;;;;
-;;;; WHAT IT PROVES.  `make-ma0-environment' assigns the five exported One Act /0
+;;;; WHAT IT TESTS WHETHER HOLDS.  (Post-R1 wording, adoption Rider 6,
+;;;; 2026-08-10: this header read "WHAT IT PROVES", and the preserved red
+;;;; transcript quotes it with that word.  A fixture TESTS WHETHER a defect
+;;;; is present; it proves nothing about the repaired state, whose account
+;;;; is the GREEN capture beside the red one.)  The hypothesis under test:
+;;;;
+;;;; `make-ma0-environment' assigns the five exported One Act /0
 ;;;; run-state specials.  Constructing a SECOND environment overwrites them.  The
 ;;;; FIRST environment object remains a valid `ma0-environment' and
 ;;;; `ma0-run-program' still accepts it — but `run-act' now reaches the SECOND

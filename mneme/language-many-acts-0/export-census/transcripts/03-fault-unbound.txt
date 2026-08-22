@@ -1,0 +1,59 @@
+MA0 EXPORT CENSUS /0 — TOOTH (c): UNBOUND EXPECTED EXPORT
+=========================================================
+Date        : 2026-08-10T23:20:29Z
+Branch      : ma0-export-census
+Plant       : the defun of 'ma0-act-summary-verdict' (ma0-structures.lisp:319)
+              commented out.  The name REMAINS EXPORTED — package.lisp is
+              byte-untouched at a97d3c3e — so EXACT SET EQUALITY STILL HOLDS.
+              Only the designated-sense boundness check can catch this: the
+              symbol is external and present, and simply has no function.
+ma0-structures.lisp blob, baseline : 7a2c093e62e260136bbd6c9dde04dd2df29b2848
+ma0-structures.lisp blob, planted  : 06331f6966050faf8025b6f44758dd6c425a4e87
+package.lisp blob (UNCHANGED)      : a97d3c3e2f6baa21f21c52ae0c4986140eb1fa5c
+EXPECT      : set equality HOLDS; boundness check REFUSES and NAMES
+              ma0-act-summary-verdict as not bound as function; exit 1.
+=========================================================
+
+== operation check ==
+SBCL 2.4.6
+sbcl --script reports: 
+"2.4.6" 
+
+== expected table identity ==
+path : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+blob : 78592073905450ff9afcd22dea53afbf53764fa1
+rows : 38 (comment lines excluded)
+
+== ma0-export-census — SBCL 2.4.6 ==
+   subject tree : /home/gauss/ma0-census/experiments/latent-lisp/
+   expected table: /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+
+=== MA0 EXPORT CENSUS /0 — CANDIDATE ===
+package            : LISP-PLUS-MANY-ACTS0
+expected table     : /home/gauss/ma0-census/experiments/latent-lisp/mneme/language-many-acts-0/export-census/EXPECTED-EXPORTS.txt
+expected cardinality (DERIVED from the set): 38
+actual   cardinality (DERIVED from the set): 38
+NOTE: cardinality is reported as an observation.  The test below
+is EXACT SET EQUALITY OF NAMES; no branch of this gate compares a
+count against a literal.
+
+--- [1/3] EXACT SET EQUALITY ---
+MISSING    : none
+UNEXPECTED : none
+SET EQUALITY: HOLDS (38 names)
+
+--- [2/3] BOUNDNESS IN THE DESIGNATED SENSE ---
+UNBOUND / MISDESIGNATED — 1:
+    ! ma0-act-summary-verdict  (designated function) — NOT BOUND in this sense
+
+--- [3/3] HOME-PACKAGE GUARD (additional) ---
+all external symbols homed in LISP-PLUS-MANY-ACTS0
+
+=== VERDICT ===
+  note: boundness checked for 38 name(s)
+ma0-export-census: REFUSED — 1 finding(s):
+  * ma0-act-summary-verdict: not bound as function
+The success sentinel is WITHHELD.
+
+==========================================================
+OBSERVED EXIT: 1   (captured directly from the gate process)

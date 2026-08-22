@@ -1,0 +1,57 @@
+RED-CONSOLIDATION-AFTER — RETAKEN 2026-08-21T20:38:48Z at R4.1e from the final source state (ml0.lisp received prose-only edits in the boundary sweep; proof source unchanged since R4.1c). 35 checks incl. §8 [028]–[035]. Prior captures preserved in parcels r42/r43 and in git history, never hand-edited.
+command: cd experiments/latent-lisp && sbcl --script mneme/memory-layer-0/ml0-consolidation-proof.lisp
+
+---- §1 inputs ----
+[001] ok   both inputs are validated-retrieval accounts standing :OCCURRED; A issued, B issuance :unresolved
+---- §2 the gate: non-validated input declined, typed ----
+[002] ok   a RAW-DECODE account is declined with ML0-CONSOLIDATION-REFUSED / ML0-CON-3
+[003] ok   a non-account is declined (ML0-CON-1)
+---- §3 consolidate -> typed carrier ----
+  carrier: occurrence :OCCURRED issuance :ISSUED-IN-WRITING-IMAGE coverage :NOT-EXAMINED sources 4 predecessors 2 inputs 2
+[004] ok   the result is an ML0-CONSOLIDATION carrier
+[005] ok   the carrier's constructor is INTERNAL (not exported)
+[006] ok   carrier computes :OCCURRED over the union; issuance folded separately to :ISSUED-IN-WRITING-IMAGE
+[007] ok   exact source union: 4 distinct rows (world, issuance, journal, self-report), none collapsed
+[008] ok   inherited observation rows are NOT testimony in the carrier
+[009] ok   reversed input order: same predecessor order, same source order (content-ordered, not caller-ordered)
+---- §4 materialize -> durable derived account ----
+  derived 5340b21fb02b: occurrence :OCCURRED issuance :ISSUED-IN-WRITING-IMAGE derivation :CONSOLIDATION predecessors 2 sources 4
+[010] ok   the returned derived account is read back through a validated retrieval and stands :OCCURRED
+[011] ok   issuance remains a SEPARATE axis on the derived account
+[012] ok   BOTH predecessor identities survive, in content order
+[013] ok   EVERY distinct source row survives the write, by canonical digest
+[014] ok   inherited rows re-inherit on readback (not converted to testimony)
+[015] ok   REVERSED INPUT ORDER materializes BYTE-IDENTICAL derived content (same content-derived identity)
+[016] ok   two materializations of BYTE-IDENTICAL derived content land on ONE frame (PJ0 append idempotency on content-derived identity) (2 -> 3 frames)
+---- §5 FRESH-PROCESS retrieval of the derived account ----
+reader: 5340b21fb02b occurrence=:OCCURRED derivation=:CONSOLIDATION authority=:VALIDATED-RETRIEVAL predecessors=2 sources=4 row-standings=(:INHERITED-FROM-VALIDATED-RECORD
+                                                                                                                                           :STORED-ASSERTION)
+  reader exit=0
+[017] ok   a NEW process opens the store, retrieves the derived account, and reads :OCCURRED / :consolidation
+---- §6 the carrier route; no ordinary argument selects lineage (construction privacy is defense in depth) ----
+[018] ok   ml0-write no longer accepts :derivation (arglist = store bundle &key recording-process)
+[019] ok   materialization refuses anything that is not a carrier (ML0-MAT-1)
+[020] ok   the documented OLD route still normalizes inherited rows to testimony and writes :UNRESOLVED — the testimony channel is unchanged
+---- §7 the CONTROLLED contradiction (MODELLED, test-only) ----
+[021] ok   the modelled pair IS commensurable (same universe, same interval, both :looked)
+[022] ok   DIRECT WRITE of both in ONE bundle is still REFUSED (ML0-WR-6) — self-contradiction refusal unchanged
+  negative account stands :NONOCCURRED; carrier :CONTRADICTED; derived 1c1822431157 stands :CONTRADICTED
+[023] ok   the modelled negative writes :NONOCCURRED on its own (a door-validated scoped negative)
+[024] ok   consolidation of the validated positive and the validated negative computes :CONTRADICTED, naming the clash
+[025] ok   materialization writes :CONTRADICTED and reads it back
+[026] ok   both clashing warrants stand in the derived account's sources
+reader: 1c1822431157 occurrence=:CONTRADICTED derivation=:CONSOLIDATION authority=:VALIDATED-RETRIEVAL predecessors=2 sources=3 row-standings=(:INHERITED-FROM-VALIDATED-RECORD)
+  reader exit=0
+[027] ok   a NEW process reads the derived account as :CONTRADICTED / :consolidation
+---- §8 the carrier is not trusted; the store is re-read ----
+[028] ok   the CL #S reader cannot construct ANY lane struct from outside (BOA constructors): account, source, observation, bundle, carrier all READER-ERROR
+  structure classes enumerated: 10; #S-constructible: 0 NIL
+[029] ok   EVERY structure class in the lane package refuses #S (enumerated, not sampled)
+[030] ok   a lawful carrier whose SOURCE LIST is rewritten through its reader is REFUSED at materialization (ML0-MAT-2), never written
+[031] ok   a lawful carrier whose PREDECESSOR LIST is rewritten is REFUSED (ML0-MAT-2)
+[032] ok   a COPY-STRUCTURE'd lawful carrier materializes the SAME content as the original (copying mints nothing)
+[033] ok   the derived account's subject principal is NOT re-prefixed (principal:<name>, once)
+[034] ok   a derived account can be RE-CONSOLIDATED with its own input (no ML0-CON-4), and the fold is non-amplifying (same standing, same source union)
+[035] ok   a carrier computed over accounts of THIS store cannot be materialized into a FOREIGN store (ML0-MAT-3) — lineage must be checkable by the store that holds it
+ml0-consolidation-proof: 35 checks, 0 failures
+exit=0

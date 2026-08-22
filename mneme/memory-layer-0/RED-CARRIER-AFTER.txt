@@ -1,0 +1,6 @@
+RED-CARRIER-AFTER — captured 2026-08-21T17:23:46Z against the R4.1b repair (materializer re-reads the store; BOA constructors; bare principal). Same probe as BEFORE.
+
+PROBE-1 mutated carrier -> REFUSED ML0-CONSOLIDATION-REFUSED [ML0-MAT-2]
+PROBE-2 principal direct="principal:actus-memoratus" derived="principal:actus-memoratus"
+PROBE-2 re-consolidate derived+original -> ACCEPTED
+PROBE-3 cross-store -> REFUSED [ML0-MAT-3]
