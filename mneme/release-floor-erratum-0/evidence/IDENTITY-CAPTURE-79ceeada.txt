@@ -1,0 +1,20 @@
+=== ERRATUM /0 PHASE 3 — IDENTITY CAPTURE, taken BEFORE any other command ran in this clone
+captured at   : 2026-08-23T21:05:52Z
+clone         : /tmp/lector/evidence-clone
+clone source  : /home/gauss/Claude-Code-Lab (full clone, history-complete: 6807 commits reachable from HEAD)
+HEAD          : 79ceeadab8dc6ae188fcc8cc3a3d179fbed41e76
+HEAD tree     : 3748d6884d402fcea5a9dc38722776b54a1db209
+subject tree  : c37461a1a41f00ee9f538ef3ac4680a055825d65
+431fee16 known: commit
+porcelain     : 0 entr(y|ies)
+verify-release.sh sha256: f8b5af5477579ec835f8a9d921e26798aee98f3ce897d78e7ecfb1e25d945ad7
+
+=== POST-FLOOR IDENTITY (quiescence readback)
+captured at   : 2026-08-23T21:31:28Z
+HEAD-END      : 79ceeadab8dc6ae188fcc8cc3a3d179fbed41e76
+HEAD tree END : 3748d6884d402fcea5a9dc38722776b54a1db209
+subject tree  : c37461a1a41f00ee9f538ef3ac4680a055825d65
+PORCELAIN-END : 0 entr(y|ies)
+verify-release.sh sha256: f8b5af5477579ec835f8a9d921e26798aee98f3ce897d78e7ecfb1e25d945ad7
+EXIT line     : EXIT 0
+terminal      : FLOOR RESULT: PASS (112 executable gates attempted / 112 passed / 0 blocked; 9 carried status rows; profile full)

@@ -1,0 +1,65 @@
+===========================================================================
+ ERRATUM /0 SUCCESSOR TOOTH 13 — a checkout that begins dirty and stays
+ identically dirty must be refused, not called unchanged
+===========================================================================
+ Sol I requirement 4 (disposition of 2026-08-23, 'stable dirt')
+ subject   : the EXACT successor mneme/verify-release.sh, UNMODIFIED,
+             at its FULL 112-row authorized table (no reduced table: the
+             refusal is a preflight precondition and costs seconds)
+ venue     : /tmp/lector/succ-tooth-clone/experiments/latent-lisp
+ HEAD      : ad6c95e94d95deb408754e379d2ccf8cd625f497
+ script sha: ecb03c9d122cdf083b7bc72f5dd0eabd0527c8b2ae74ec47ad004851cab9b8d3
+ date      : 2026-08-23T22:08:39Z
+
+--- entry state, BEFORE the plant ---
+ porcelain : 0 entr(y|ies)
+
+--- the plant: ONE tracked subject file modified, then left alone ---
+ victim    : mneme/kernel0/kernel0-selftest.lisp
+ porcelain after the plant:
+      M experiments/latent-lisp/mneme/kernel0/kernel0-selftest.lisp
+ blob now  : 856bcc3e82868a7fe67d397e09d9bd6622965b4d7ae37ca69b83fe054f43d322
+
+ NOTE: the dirt is STABLE.  Nothing in this tooth writes again; the tree the
+ floor sees at entry is the tree it would see at exit.  Under the PREDECESSOR
+ script this is exactly the shape that satisfied before==after and printed
+ 'unchanged: zero tracked modifications, zero new untracked litter' — see the
+ preserved pre-cure control at teeth/10-synthetic-extra-lane.transcript.txt.
+
+=== RUN ===
+===========================================================================
+ LISP+ AGGREGATE RELEASE FLOOR — profile: full
+ Self-consistency certification, never independent conformance.
+ The stranger primitive-minimization audit is OWED.
+===========================================================================
+
+toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+subject root : /tmp/lector/succ-tooth-clone/experiments/latent-lisp
+caller cwd   : /tmp/lector/succ-tooth-clone/experiments/latent-lisp
+profile      : full
+enumeration  : full 112/112 · light 82/82  (authorized == actual, recomputed from the table)
+subject commit: ad6c95e94d95deb408754e379d2ccf8cd625f497
+subject tree : 9123ff2dbbad36fc3d778882afe8828a1b296965   (HEAD:experiments/latent-lisp/)
+git before   : 1 entr(y|ies) under the subject tree
+!! CHECKOUT-NOT-CLEAN: the subject tree is not clean at entry.
+      M experiments/latent-lisp/mneme/kernel0/kernel0-selftest.lisp
+   This is DISTINCT from CLEANLINESS-UNKNOWN: the probe worked, and it says the
+   tree is dirty.  A dirty entry would let this floor consume two subjects in one
+   run -- read-only rows read these working-tree bytes while writing rows read the
+   committed object -- and would let stable dirt be reported as an unchanged
+   checkout.  Commit or stash the subject tree, or run the floor in a clean clone.
+   NO GATE RAN.  Nothing was materialized.
+
+FLOOR RESULT: FAIL
+=== aggregator exit: 1
+
+--- the dirt is still there, unchanged, after the refusal ---
+      M experiments/latent-lisp/mneme/kernel0/kernel0-selftest.lisp
+
+--- VERDICT ---
+ exit code           : 1   (required: nonzero)
+ CHECKOUT-NOT-CLEAN  : 1 occurrence(s)
+ NO GATE RAN         : 1 occurrence(s)
+ executed row lines  : 0   (required: 0)
+ materialization line: 0   (required: 0)
+ terminal            : FLOOR RESULT: FAIL

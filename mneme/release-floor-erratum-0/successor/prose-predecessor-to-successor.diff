@@ -1,0 +1,39 @@
+--- /tmp/lector/successor-out/prose-pred.txt	2026-08-23 19:35:23.961727405 -0300
++++ /tmp/lector/successor-out/prose-succ.txt	2026-08-23 19:35:23.965746043 -0300
+@@ -22,7 +22,10 @@
+ 
+ 
+ -- checkout cleanliness --
+-   unchanged: zero tracked modifications, zero new untracked litter.
++   clean at both observed endpoints: the subject-tree porcelain was EMPTY before
++   this run and EMPTY after it, and both probes succeeded.  Two snapshots cannot
++   prove that nothing was written and reverted in between; this floor claims the
++   two endpoints it actually observed, and claims nothing about the interval.
+ 
+ ===========================================================================
+  LANE TABLE
+@@ -190,9 +193,10 @@
+  Exit 0 here means: every executable gate PASSED at its authorized count — no
+  executable row can be neither pass nor failure since RELEASE FLOOR ERRATUM /0 —
+  the copy was the committed subject object, the lane accounting closed, the
+- checkout was observably unchanged, every known unresolved finding is unchanged
+- and named above, and every archived-only item passed its integrity check. It
+- does NOT mean that all semantic questions are resolved, and it adopts nothing.
++ subject tree was observed empty at both endpoints, every known unresolved
++ finding is unchanged and named above, and every archived-only item passed its
++ integrity check. It does NOT mean that all semantic questions are resolved,
++ and it adopts nothing.
+ ===========================================================================
+ 
+  TERMINAL CONJUNCTION — every line must read [ok] for PASS
+@@ -202,8 +206,9 @@
+    [ok ] zero non-passing executable gates: 0
+    [ok ] zero executable blocks: 0  (no branch can set this status since ERRATUM /0)
+    [ok ] lane accounting: every executed row in exactly one printed lane, totals exact
+-   [ok ] caller's checkout unchanged across the run
+    [ok ] cleanliness was actually OBSERVABLE (both git status probes succeeded)
++   [ok ] subject-tree porcelain EMPTY at both observed endpoints (entry is a precondition)
++   [ok ] the two observed endpoints agree — nothing moved between them
+ 
+ FLOOR RESULT: PASS (112 executable gates attempted / 112 passed / 0 blocked; 9 carried status rows; profile full)
+ EXIT 0

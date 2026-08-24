@@ -1,0 +1,91 @@
+--- /tmp/lector/evidence/prose-baseline.txt	2026-08-23 18:31:52.849650953 -0300
++++ /tmp/lector/evidence/prose-candidate.txt	2026-08-23 18:31:52.855985468 -0300
+@@ -1,12 +1,3 @@
+-PROPAGATION CONSTANTS: CANDIDATE=afc532b3 SUBJECT_OID=4b40cf09 PREDECESSOR(published)=71d94fc2
+-2026-08-22T14:59:30-03:00
+-HEAD-START <OID>
+-SUBJECT-OID-START <OID>
+-PORCELAIN-START 0
+-=== VENUE PREFLIGHT
+-bash: tools/audit/venue-preflight.sh: No such file or directory
+-PREFLIGHT-EXIT 127
+-=== FLOOR
+ ===========================================================================
+  LISP+ AGGREGATE RELEASE FLOOR — profile: full
+  Self-consistency certification, never independent conformance.
+@@ -18,11 +9,16 @@
+ caller cwd <VOLATILE>
+ profile      : full
+ enumeration  : full 112/112 · light 82/82  (authorized == actual, recomputed from the table)
++subject commit: <OID>
++subject tree <VOLATILE>
+ git before <VOLATILE>
+ run scratch <VOLATILE>
+ 
+--- materializing disposable tree copy for writing gates --
+-   copy ready: 95M
++-- materializing disposable tree copy from the COMMITTED subject object --
++   source <VOLATILE>
++   exclusions   : canonical-datum/evidence, canonical-datum/generated  (symlinked, not materialized, and excluded from the manifest)
++   identity <VOLATILE>
++   copy ready <VOLATILE>
+ 
+ 
+ -- checkout cleanliness --
+@@ -51,11 +47,15 @@
+ PASS                   surface2     4 gate(s), 4 passed
+ PASS                   surface-account 5 gate(s), 5 passed
+ PASS                   act0         3 gate(s), 3 passed
++PASS                   act1         6 gate(s), 6 passed
++PASS                   ml0          9 gate(s), 9 passed
+ PASS                   vertical0    4 gate(s), 4 passed
+ PASS                   cd0          3 gate(s), 3 passed
+ PASS                   lci0         2 gate(s), 2 passed
+-PASS                   atelier      1 gate(s), 1 passed
+ PASS                   release      2 gate(s), 2 passed
++PASS                   atelier      1 gate(s), 1 passed
++
++lane accounting : 26 lane(s) derived from the selected table; 112 + 0 unaccounted == 112 attempted.
+ 
+ -- declared, not executed (carried forward unchanged, never turned green) --
+ 
+@@ -181,19 +181,29 @@
+  THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this
+  floor ran in this process; a carried status row is a standing fact this
+  floor reports without running anything. 'blocked-external-input: 0' above
+- counts EXECUTABLE GATES blocked in this run; it does not contradict the
++ counts EXECUTABLE GATES blocked in this run and is STRUCTURALLY ZERO since
++ RELEASE FLOOR ERRATUM /0 — no branch can set that status on an executable row,
++ and a nonzero value there fails this floor closed. It does not contradict the
+  1 carried BLOCKED-EXTERNAL-INPUT row(s), which are a different
+  denominator entirely.
+ 
+- Exit 0 here means: every executable gate passed at its authorized count,
+- every known unresolved finding is unchanged and named above, and every
+- archived-only item passed its integrity check. It does NOT mean that all
+- semantic questions are resolved, and it adopts nothing.
+-===========================================================================
++ Exit 0 here means: every executable gate PASSED at its authorized count — no
++ executable row can be neither pass nor failure since RELEASE FLOOR ERRATUM /0 —
++ the copy was the committed subject object, the lane accounting closed, the
++ checkout was observably unchanged, every known unresolved finding is unchanged
++ and named above, and every archived-only item passed its integrity check. It
++ does NOT mean that all semantic questions are resolved, and it adopts nothing.
++===========================================================================
++
++ TERMINAL CONJUNCTION — every line must read [ok] for PASS
++   [ok ] committed-tree materialization succeeded and its identity was proven
++   [ok ] exact authorized attempt count: attempted 112, profile full authorizes 112
++   [ok ] every executable gate passed: 112 passed of 112 authorized
++   [ok ] zero non-passing executable gates: 0
++   [ok ] zero executable blocks: 0  (no branch can set this status since ERRATUM /0)
++   [ok ] lane accounting: every executed row in exactly one printed lane, totals exact
++   [ok ] caller's checkout unchanged across the run
++   [ok ] cleanliness was actually OBSERVABLE (both git status probes succeeded)
+ 
+ FLOOR RESULT: PASS (112 executable gates attempted / 112 passed / 0 blocked; 9 carried status rows; profile full)
+ EXIT 0
+-2026-08-22T15:23:22-03:00
+-HEAD-END <OID>
+-SUBJECT-OID-END <OID>
+-PORCELAIN-END 0

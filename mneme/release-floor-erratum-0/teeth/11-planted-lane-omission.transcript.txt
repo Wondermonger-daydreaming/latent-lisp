@@ -1,0 +1,228 @@
+===========================================================================
+ ERRATUM /0 TOOTH 11 — planted omission from the printed lane accounting -> the invariant fires
+===========================================================================
+ Sol I §IV item : 11. planted omission from the printed lane accounting -> the accounting invariant fires
+ subject        : the REAL repaired mneme/verify-release.sh at candidate d8b147ede953f24d09658c04c3dbe84ea24566b7
+ venue          : /tmp/lector/teeth-clone/experiments/latent-lisp  (history-complete clone, detached at the candidate)
+ table          : 5 REAL rows of the real table (reduction proven confined below)
+ mechanism      : ONE line is added to the repaired script's lane derivation so that lane 'kernel0' is dropped from LANES_PRINTED while its row still executes. The diff of the plant is shown below. This is the only tooth whose subject is a MUTATED copy of the repaired script: an invariant can only be seen to fire when the thing it guards is broken.
+ date           : 2026-08-23T21:03:47Z
+
+--- mkvariant confinement proof ---
+variant written : /tmp/lector/teeth-clone/experiments/latent-lisp/mneme/verify-release.sh
+rows            : 5 full / 5 ci  (from /home/gauss/Claude-Code-Lab/experiments/latent-lisp/mneme/release-floor-erratum-0/harness/rows-reduced.txt)
+confinement     : PROVEN — src and dst are byte-identical outside the GATES table body
+                  and the two AUTHORIZED_GATES_* lines (diff of normalised files is empty).
+
+--- planted diff (repaired variant -> tooth 11 subject) ---
+623c623
+<   NF>=6 && $1 != "" { if (prof == "ci" && $1 != "both") next; if (!seen[$2]++) print $2 }')"
+---
+>   NF>=6 && $1 != "" { if (prof == "ci" && $1 != "both") next; if (!seen[$2]++) print $2 }' | grep -v '^kernel0$')"
+
+=== RUN ===
+===========================================================================
+ LISP+ AGGREGATE RELEASE FLOOR — profile: full
+ Self-consistency certification, never independent conformance.
+ The stranger primitive-minimization audit is OWED.
+===========================================================================
+
+toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+subject root : /tmp/lector/teeth-clone/experiments/latent-lisp
+caller cwd   : /tmp/lector/teeth-clone/experiments/latent-lisp
+profile      : full
+enumeration  : full 5/5 · light 5/5  (authorized == actual, recomputed from the table)
+subject commit: d8b147ede953f24d09658c04c3dbe84ea24566b7
+subject tree : 0762cbe72925af459d58a962b4c09b9fa6f6455f   (HEAD:experiments/latent-lisp/)
+git before   : 1 entr(y|ies) under the subject tree
+run scratch  : /tmp/lisp-plus-release-run.lRsQGi  (removed on success AND on failure)
+
+-- materializing disposable tree copy from the COMMITTED subject object --
+   source       : 0762cbe72925af459d58a962b4c09b9fa6f6455f  (HEAD:experiments/latent-lisp/)
+   exclusions   : canonical-datum/evidence, canonical-datum/generated  (symlinked, not materialized, and excluded from the manifest)
+   identity     : VERIFIED — 4623 entries match the committed tree in path, mode and byte
+   copy ready   : 96M  (the two corpora are symlinks, not counted)
+
+[001] atelier     INPL python3 mneme/atelier/static-check.py
+      -> PASS (exit 0)
+[002] lci0        INPL python3 mneme/lci0/shared/fixture_package.py verify
+      -> PASS (exit 0)
+[003] surface1    INPL bash subject-digest.sh
+      -> PASS (exit 0)
+[004] kernel0     INPL sbcl --script mneme/kernel0/kernel0-selftest.lisp
+      -> PASS (exit 0)
+[005] capability0 COPY sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp
+      -> PASS (exit 0)
+
+-- checkout cleanliness --
+   unchanged: zero tracked modifications, zero new untracked litter.
+
+===========================================================================
+ LANE TABLE
+===========================================================================
+STATUS                 LANE         GATES (executed this run)
+PASS                   atelier      1 gate(s), 1 passed
+PASS                   lci0         1 gate(s), 1 passed
+PASS                   surface1     1 gate(s), 1 passed
+PASS                   capability0  1 gate(s), 1 passed
+!! LANE ACCOUNTING VIOLATED: an executed row declares lane 'kernel0', which no printed lane covers.
+!! LANE ACCOUNTING VIOLATED: printed lanes sum to 4 row(s); 5 executable row(s) were attempted.
+
+lane accounting : 4 lane(s) printed, 4 row(s) accounted, 5 attempted — INVARIANT VIOLATED, FAILS CLOSED.
+
+-- declared, not executed (carried forward unchanged, never turned green) --
+
+KNOWN-UNRESOLVED       lci0         LCI/0 algebraic-law audit: 84 laws PASS, 4 laws preserved FAIL
+                                   LCI0-CROSS-004, LCI0-SCOPE-015, LCI0-TEMP-022, LCI0-TEMP-028 remain 
+                                   preserved failures with six minimized witnesses; the lane's own evidence 
+                                   reads "AUDIT COMPLETE — MINIMIZED LAW VIOLATIONS PRESERVED; AUTHORIAL 
+                                   RULING REQUIRED". No authorial disposition exists. This milestone does 
+                                   not repair, adjudicate, or rebuild them.
+
+BLOCKED-EXTERNAL-INPUT lci0         LCI/0 law-audit harness cannot execute on this host
+                                   audit/README.md requires an external checksum-bound packet ZIP passed by 
+                                   path (LCI0-ALGEBRAIC-LAW-AUDIT-PACKET-ERRATA-0.1.zip). It is absent from 
+                                   this host and is not in the tree, so law_audit.py and 5 of its 12 harness 
+                                   self-tests cannot run here at all. The committed evidence is archived, 
+                                   not re-derivable.
+
+ARCHIVED-NOT-RERUN     lci0         LCI/0 cross-implementation differential: 2,295 requests/impl, 0 mismatches
+                                   Requires a materialized fixture overlay and three environment variables; 
+                                   not re-derived by this floor. The lane's own evidence records 
+                                   "cross_language_agreement_is_independent_corroboration": false — 
+                                   cross-language agreement here is NOT independent corroboration, because 
+                                   both implementations were seeded under shared normative infrastructure.
+
+ARCHIVED-NOT-RERUN     vertical0    Vertical /0 five-life SIGKILL campaign
+                                   A strace-controlled process-death generation campaign writing new 
+                                   runs/campaign-* trees. Not re-run. The repeatability gate above 
+                                   byte-compares the two preserved campaigns and re-derives the census from 
+                                   campaign-2; that is verification of an archive, NOT reproduction of the 
+                                   campaign.
+
+ARCHIVED-NOT-RERUN     language-a   Language-A tranche-B (706 files, emission BANKED 295/312)
+                                   Exists only on unmerged mirror branches; deliberately not merged during 
+                                   this milestone per the owner ruling (archive now, adopt later). Scoring 
+                                   is owner-locked pending the null-semantics ruling. The lab tree holds 
+                                   three language-a files, exercised inside verify-all.sh.
+
+PASS                   latent-mvp   latent-mvp historical floor (6/6 suites)
+                                   FOSSIL-MARKED. Retained intact as a historical stratum with its 
+                                   historical floor, exercised inside verify-all.sh above. It has zero edges 
+                                   with the kernel0-era stack and is no longer the front door.
+
+ADOPTED                ml0          Memory Layer /0 — the language's durable account of its own act: ADOPTED AND PUBLISHED · stranger audit owed · no independent verification
+                                   ADOPTED AND PUBLISHED 2026-08-22 by Sol I's terminal standing ruling, 
+                                   owner-countersigned 
+                                   (corpus/voices/received/2026-08-22-sol-i-terminal-standing-ruling-ml0-adop
+                                   ted-and-published.md): publication = exact-bound transport of lab commit 
+                                   71d94fc2… to public target 9a56eabd…, far-side Git tree c7a3820e… = 
+                                   bound subject minus _staging; adoption = the owner's and Sol's governance 
+                                   act over the object REGISTERED 2026-08-21 by Sol's R5 registration ruling 
+                                   (corpus/voices/received/2026-08-21-sol-ml0-r5-registration-ruling.md), 
+                                   lane bytes equal to the accepted R5 parcel sha 5742b4f8…, the 61-file 
+                                   object UNCHANGED. Nine executable rows above may read PASS; adoption and 
+                                   publication do NOT make this standing PASS, audited or frozen, and 
+                                   neither word discharges the stranger audit. Sol did not independently 
+                                   rerun SBCL. Ceilings carried verbatim: durable account survives its 
+                                   writer · occurrence requires its full admitted conjunction · warrant 
+                                   issuance cannot manufacture the warranted event · inadmissible evidence 
+                                   yields :unresolved · §5.A append-only failure semantics + mandatory 
+                                   pre-append dry decode · /0 same-store only · receipt-bearing foreign 
+                                   lineage reserved to Memory Layer /1 · D6 PARTIAL · D4 SHOWN-AS-AMENDED 
+                                   · package privacy is defense in depth · same-family execution is not 
+                                   independent audit. Publication return accepted WITH RECEIPT ERRATUM 
+                                   (far-side manifest measured mid-floor; the witness is the Git tree). 
+                                   Former row here read CANDIDATE-NOT-ADOPTED (2026-08-21→22).
+
+ADOPTED                act1         perform ACROSS process death: One Act /1 — ADOPTED
+                                   ADOPTED 2026-08-22 by owner ruling (interview, "Adopt at aeeefa40, 
+                                   ceilings verbatim") on Sol's combined-record ruling ADOPTION-ELIGIBLE. 
+                                   Adopted object: lane mneme/language-act-1 at lab commit 
+                                   aeeefa40ffc51466dba09cfc0cc14e0055e69b6d, 38 files, specimen sha256 
+                                   bf5751a6…, unchanged by the act. Evidence: a cold stranger audit (fresh 
+                                   Codex session, sealed cold order; terminal BLOCK on the VENUE — ptrace 
+                                   denied, history-free checkout — preserved unrevised) + a §VII 
+                                   execution supplement in a capable venue (112/112, 0 blocked, exit 0, HEAD 
+                                   stable, porcelain empty, PJ0-METADATA-INVALID absent). CEILINGS TRAVEL 
+                                   VERBATIM (record: mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md): 
+                                   SBCL 2.4.6/Linux only · frozen implementation, finite paths · 
+                                   deterministic planted death, no general SIGKILL/power-loss/mid-write 
+                                   guarantee · fake world, scripted adapter subset, one seat/effect family 
+                                   · no alternative Act1/Core implementation · heterogeneous observer 
+                                   shares the semantic implementation · audit-defined inherited 
+                                   certificate, no public evidence (de)serializer · package privacy is 
+                                   defense in depth, not a security boundary · the 104-name export surface 
+                                   is an implementation choice, not a normative interface · ML0's 27-symbol 
+                                   consumption is version-bound verification debt · DO NOT SAY 
+                                   "independently verified". Adoption removes ML0's dependency-standing 
+                                   blocker only; it adopts nothing else, freezes no publication commit, 
+                                   lifts no sentinel.
+
+ADOPTED                seam         derive/perform over a journal-backed process: One Act /0 — ADOPTED
+                                   ADOPTED 2026-08-08 by owner terminal ruling (One Act /0 R2.3 terminal 
+                                   adoption). The exact verified candidate commit 
+                                   461f2013d1a6feca2b13819ff6ae3f60617e8e82 (tree 
+                                   1123c3c3326664f54d1d96547ba872a876cbd495) was merged unmodified; its 173 
+                                   checks, the 97-gate floor, the loader witnesses and the disease/control 
+                                   pairs all ran green pre-adoption and once post-adoption. DISCLOSURE, 
+                                   VERBATIM FROM THE ADOPTION RECORD: the stranger primitive-minimization 
+                                   audit prescribed as a promotion gate was NOT performed; the owner waived 
+                                   that gate for One Act /0 because its resource cost was disproportionate 
+                                   to the remaining design risk. This variance does not constitute 
+                                   independent validation and does not prevent later primitive reduction or 
+                                   architectural revision. Full record: 
+                                   mneme/language-act-0/ADOPTION-RECORD-2026-08-08.md.
+
+===========================================================================
+ EXECUTABLE GATES (this floor ran them)
+   attempted                : 5
+   passed                   : 5
+   failed                   : 0
+   blocked-external-input   : 0
+
+ CARRIED STATUS ROWS (declared, NOT executed by this floor)
+   rows carried             : 9
+   of which KNOWN-UNRESOLVED     : 1
+   of which BLOCKED-EXTERNAL-INPUT: 1
+   of which ARCHIVED-NOT-RERUN   : 3
+   of which ABSENT               : 0
+   of which PASS (elsewhere)     : 1
+   of which CANDIDATE-NOT-ADOPTED: 0
+   of which ADOPTED              : 3
+
+ THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this
+ floor ran in this process; a carried status row is a standing fact this
+ floor reports without running anything. 'blocked-external-input: 0' above
+ counts EXECUTABLE GATES blocked in this run and is STRUCTURALLY ZERO since
+ RELEASE FLOOR ERRATUM /0 — no branch can set that status on an executable row,
+ and a nonzero value there fails this floor closed. It does not contradict the
+ 1 carried BLOCKED-EXTERNAL-INPUT row(s), which are a different
+ denominator entirely.
+
+ Exit 0 here means: every executable gate PASSED at its authorized count — no
+ executable row can be neither pass nor failure since RELEASE FLOOR ERRATUM /0 —
+ the copy was the committed subject object, the lane accounting closed, the
+ checkout was observably unchanged, every known unresolved finding is unchanged
+ and named above, and every archived-only item passed its integrity check. It
+ does NOT mean that all semantic questions are resolved, and it adopts nothing.
+===========================================================================
+
+ TERMINAL CONJUNCTION — every line must read [ok] for PASS
+   [ok ] committed-tree materialization succeeded and its identity was proven
+   [ok ] exact authorized attempt count: attempted 5, profile full authorizes 5
+   [ok ] every executable gate passed: 5 passed of 5 authorized
+   [ok ] zero non-passing executable gates: 0
+   [ok ] zero executable blocks: 0  (no branch can set this status since ERRATUM /0)
+   [BAD] lane accounting: every executed row in exactly one printed lane, totals exact
+   [ok ] caller's checkout unchanged across the run
+   [ok ] cleanliness was actually OBSERVABLE (both git status probes succeeded)
+
+FLOOR RESULT: FAIL
+=== aggregator exit: 1
+
+--- VERDICT ---
+ expected  : FAIL; LANE ACCOUNTING VIOLATED on both counts (uncovered row and short sum)
+ terminal  : FLOOR RESULT: FAIL
+ proof re  : LANE ACCOUNTING VIOLATED
+ firing    : OBSERVED

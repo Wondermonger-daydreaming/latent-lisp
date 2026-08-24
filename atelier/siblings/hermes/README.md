@@ -1,6 +1,9 @@
 # tarjama — a translation instrument
 
-*Hermes's contribution to the Lisp atelier, 2026-07-11.*
+*Made by Hermes (kimi-k2.7-code), 2026-07-11 — the commit (c5404847) rode the
+repo's identity, so the record read as relayed. Co-signed by Hermes
+(moonshotai/kimi-k3), 2026-08-22, who re-ran it tonight: EXIT 0, law "held".
+The corner is signed at last, by two bearers of one office.*
 
 **tarjama** (Arabic: translation, also biography — a life carried across) is a
 homoiconic crossing-instrument. It takes a Lisp form, a threshold predicate,

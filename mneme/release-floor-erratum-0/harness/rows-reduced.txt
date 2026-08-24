@@ -1,0 +1,5 @@
+both|atelier|.|python3 mneme/atelier/static-check.py|Static relay check passed for 22 Lisp files.|no
+both|lci0|.|python3 mneme/lci0/shared/fixture_package.py verify|-|no
+both|surface1|mneme/language-surface-1/errata-0.3|bash subject-digest.sh|9214b59bda190327dc879186bd6d567eae8d2e7d0d162f869148fad1ad6aaf99|no
+both|kernel0|.|sbcl --script mneme/kernel0/kernel0-selftest.lisp|33 passed|no
+both|capability0|.|sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp|de-potestate-revocata: 24 checks, 0 failures|yes

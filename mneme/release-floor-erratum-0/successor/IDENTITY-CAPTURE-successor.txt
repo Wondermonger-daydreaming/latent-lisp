@@ -1,0 +1,20 @@
+=== ERRATUM /0 SUCCESSOR — CLEAN CONTROL IDENTITY CAPTURE, taken BEFORE any other command ran in this clone
+captured at   : 2026-08-23T22:09:24Z
+clone         : /tmp/lector/succ-evidence-clone
+clone source  : /home/gauss/Claude-Code-Lab (full clone, history-complete: 6813 commits reachable from HEAD)
+HEAD-START    : ad6c95e94d95deb408754e379d2ccf8cd625f497
+HEAD tree     : 19e736d2d779380bc522e10774e65d66fe1b6867
+subject tree  : 9123ff2dbbad36fc3d778882afe8828a1b296965
+431fee16 known: commit
+PORCELAIN-START: 0 entr(y|ies)
+verify-release.sh sha256: ecb03c9d122cdf083b7bc72f5dd0eabd0527c8b2ae74ec47ad004851cab9b8d3
+
+=== POST-FLOOR IDENTITY (quiescence readback)
+captured at   : 2026-08-23T22:35:04Z
+HEAD-END      : ad6c95e94d95deb408754e379d2ccf8cd625f497
+HEAD tree END : 19e736d2d779380bc522e10774e65d66fe1b6867
+subject tree  : 9123ff2dbbad36fc3d778882afe8828a1b296965
+PORCELAIN-END : 0 entr(y|ies)
+verify-release.sh sha256: ecb03c9d122cdf083b7bc72f5dd0eabd0527c8b2ae74ec47ad004851cab9b8d3
+EXIT line     : EXIT 0
+terminal      : FLOOR RESULT: PASS (112 executable gates attempted / 112 passed / 0 blocked; 9 carried status rows; profile full)

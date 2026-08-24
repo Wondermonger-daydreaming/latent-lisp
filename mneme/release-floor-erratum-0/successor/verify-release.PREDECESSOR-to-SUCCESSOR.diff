@@ -1,0 +1,158 @@
+diff --git a/experiments/latent-lisp/mneme/verify-release.sh b/experiments/latent-lisp/mneme/verify-release.sh
+index 012b3341..fb99a6b6 100755
+--- a/experiments/latent-lisp/mneme/verify-release.sh
++++ b/experiments/latent-lisp/mneme/verify-release.sh
+@@ -21,8 +21,10 @@
+ #       status that is neither pass nor failure;
+ #   (4) the lane accounting closed: every executed row fell in exactly one printed
+ #       lane and the lane totals summed to the attempt total;
+-#   (5) the caller's checkout was unchanged across the run, and that was actually
+-#       OBSERVABLE (both git status probes succeeded);
++#   (5) the subject-tree porcelain was OBSERVED EMPTY at both endpoints -- before the
++#       run and after it, both probes succeeding -- and the two observations agree.
++#       Two snapshots cannot establish the continuous absence of a transient write;
++#       this floor claims only the endpoints it observed;
+ #   (6) every KNOWN-UNRESOLVED finding is unchanged and reported below by name;
+ #   (7) every ARCHIVED-NOT-RERUN item passed its integrity check.
+ #
+@@ -57,11 +59,19 @@
+ #                          a count or verdict that moved away from its authorized
+ #                          value
+ #
+-# One further state belongs to the FLOOR, not to a row:
++# Two further states belong to the FLOOR, not to a row:
+ #
+ #   CLEANLINESS-UNKNOWN    a `git status` probe of the caller's checkout failed, so
+-#                          quiescence could be neither confirmed nor denied.  Fails
+-#                          closed; it is never printed as "unchanged".
++#                          the state could be neither confirmed nor denied.  Fails
++#                          closed; it is never printed as clean.
++#   CHECKOUT-NOT-CLEAN     the probe SUCCEEDED and the subject-tree porcelain is not
++#                          empty.  Distinct from CLEANLINESS-UNKNOWN in exactly the way
++#                          that matters: here we looked, and we saw dirt.  At entry this
++#                          is a PRECONDITION FAILURE -- nothing is materialized and no
++#                          gate runs.  (Equality of two dirty snapshots is not
++#                          cleanliness, and a dirty entry admits two subjects into one
++#                          run: read-only rows would read the working tree while writing
++#                          rows read the committed object.)
+ #
+ # The DECLARED table below (carried status rows, never executed here) uses one
+ # further status of its own:
+@@ -125,7 +135,10 @@
+ # copy of the tree under $TMPDIR, never in your checkout.  The copy is removed
+ # on success AND on failure.  The floor snapshots your checkout's git state
+ # before and after and FAILS CLOSED if a single byte moved -- and, since ERRATUM
+-# /0, fails closed just as hard if it could not take that snapshot at all.
++# /0, fails closed just as hard if it could not take that snapshot at all.  It also
++# REFUSES TO START if the subject tree is dirty when it begins: a floor entered dirty
++# would read the working tree for its read-only rows and the committed object for its
++# writing rows, and would then mistake stable dirt for an unchanged checkout.
+ #
+ # The disposable copy is materialized from the EXACT COMMITTED SUBJECT OBJECT
+ # (`git archive HEAD:<subject prefix>`), never from working-tree or ignored
+@@ -478,6 +491,7 @@ echo "subject tree : $SUBJECT_TREE   (HEAD:${SUBJECT_PREFIX:-<repository root>})
+ # exit status is carried: a probe that FAILED is CLEANLINESS-UNKNOWN, never the empty
+ # string meaning clean (ERRATUM /0, cure 5).
+ CLEAN_UNKNOWN=0
++NOT_CLEAN=0
+ GIT_BEFORE="$(git -C "$ROOT" status --porcelain -- "$ROOT" 2>/dev/null)"
+ GIT_BEFORE_RC=$?
+ if [ "$GIT_BEFORE_RC" -ne 0 ]; then
+@@ -485,7 +499,29 @@ if [ "$GIT_BEFORE_RC" -ne 0 ]; then
+   echo "git before   : CLEANLINESS-UNKNOWN — the probe itself failed (exit $GIT_BEFORE_RC)"
+   git -C "$ROOT" status --porcelain -- "$ROOT" 2>&1 >/dev/null | head -5 | sed 's/^/               /'
+ else
+-  echo "git before   : $(printf '%s' "$GIT_BEFORE" | grep -c . || true) entr(y|ies) under the subject tree"
++  GIT_BEFORE_N="$(printf '%s' "$GIT_BEFORE" | grep -c . || true)"
++  echo "git before   : $GIT_BEFORE_N entr(y|ies) under the subject tree"
++  # ERRATUM /0 SUCCESSOR (Sol I, 2026-08-23): a checkout that begins DIRTY and stays
++  # IDENTICALLY dirty used to satisfy the before/after comparison and print "unchanged".
++  # Equality is not cleanliness.  Worse, a dirty entry admits TWO SUBJECTS into one run:
++  # the read-only rows consume the working tree while the writing rows consume the
++  # committed copy.  A successful initial probe must therefore be EMPTY, and this is a
++  # PRECONDITION -- it fails before materialization and before any gate runs.
++  if [ "$GIT_BEFORE_N" -ne 0 ]; then
++    NOT_CLEAN=1
++    echo "!! CHECKOUT-NOT-CLEAN: the subject tree is not clean at entry."
++    printf '%s\n' "$GIT_BEFORE" | head -20 | sed 's/^/     /'
++    [ "$GIT_BEFORE_N" -gt 20 ] && echo "     … and $((GIT_BEFORE_N - 20)) more"
++    echo "   This is DISTINCT from CLEANLINESS-UNKNOWN: the probe worked, and it says the"
++    echo "   tree is dirty.  A dirty entry would let this floor consume two subjects in one"
++    echo "   run -- read-only rows read these working-tree bytes while writing rows read the"
++    echo "   committed object -- and would let stable dirt be reported as an unchanged"
++    echo "   checkout.  Commit or stash the subject tree, or run the floor in a clean clone."
++    echo "   NO GATE RAN.  Nothing was materialized."
++    echo
++    echo "FLOOR RESULT: FAIL"
++    exit 1
++  fi
+ fi
+ 
+ RUNDIR="$(mktemp -d "${TMPDIR:-/tmp}/lisp-plus-release-run.XXXXXX")"
+@@ -696,6 +732,7 @@ echo
+ echo "-- checkout cleanliness --"
+ # ERRATUM /0, cure 5: each probe carries its own exit status.  A probe that FAILED is
+ # CLEANLINESS-UNKNOWN and fails closed.  It is never the empty string meaning clean.
++# ERRATUM /0 SUCCESSOR: the final probe must ALSO be EMPTY, not merely equal to the first.
+ DIRTY=0
+ GIT_AFTER="$(git -C "$ROOT" status --porcelain -- "$ROOT" 2>/dev/null)"
+ GIT_AFTER_RC=$?
+@@ -705,14 +742,26 @@ if [ "$GIT_AFTER_RC" -ne 0 ]; then
+   git -C "$ROOT" status --porcelain -- "$ROOT" 2>&1 >/dev/null | head -5 | sed 's/^/   /'
+   echo "   A floor that cannot check quiescence must not print that it holds."
+ elif [ "$CLEAN_UNKNOWN" -ne 0 ]; then
+-  echo "!! CLEANLINESS-UNKNOWN: the INITIAL git status probe failed, so before and after"
+-  echo "   cannot be compared.  The final probe succeeded; that is not enough."
+-elif [ "$GIT_BEFORE" != "$GIT_AFTER" ]; then
+-  DIRTY=1
+-  echo "!! FAIL CLOSED: the caller's checkout changed during this run."
+-  diff <(printf '%s\n' "$GIT_BEFORE") <(printf '%s\n' "$GIT_AFTER") | sed 's/^/   /' || true
++  echo "!! CLEANLINESS-UNKNOWN: the INITIAL git status probe failed, so the entry state was"
++  echo "   never established.  The final probe succeeded; that is not enough."
+ else
+-  echo "   unchanged: zero tracked modifications, zero new untracked litter."
++  GIT_AFTER_N="$(printf '%s' "$GIT_AFTER" | grep -c . || true)"
++  if [ "$GIT_BEFORE" != "$GIT_AFTER" ]; then
++    DIRTY=1
++    echo "!! FAIL CLOSED: the caller's checkout changed during this run."
++    diff <(printf '%s\n' "$GIT_BEFORE") <(printf '%s\n' "$GIT_AFTER") | sed 's/^/   /' || true
++  fi
++  if [ "$GIT_AFTER_N" -ne 0 ]; then
++    NOT_CLEAN=1
++    echo "!! CHECKOUT-NOT-CLEAN: the subject tree is not clean at the final endpoint."
++    printf '%s\n' "$GIT_AFTER" | head -20 | sed 's/^/     /'
++  fi
++  if [ "$DIRTY" -eq 0 ] && [ "$NOT_CLEAN" -eq 0 ]; then
++    echo "   clean at both observed endpoints: the subject-tree porcelain was EMPTY before"
++    echo "   this run and EMPTY after it, and both probes succeeded.  Two snapshots cannot"
++    echo "   prove that nothing was written and reverted in between; this floor claims the"
++    echo "   two endpoints it actually observed, and claims nothing about the interval."
++  fi
+ fi
+ 
+ # --- report ----------------------------------------------------------------
+@@ -853,9 +902,10 @@ echo
+ echo " Exit 0 here means: every executable gate PASSED at its authorized count — no"
+ echo " executable row can be neither pass nor failure since RELEASE FLOOR ERRATUM /0 —"
+ echo " the copy was the committed subject object, the lane accounting closed, the"
+-echo " checkout was observably unchanged, every known unresolved finding is unchanged"
+-echo " and named above, and every archived-only item passed its integrity check. It"
+-echo " does NOT mean that all semantic questions are resolved, and it adopts nothing."
++echo " subject tree was observed empty at both endpoints, every known unresolved"
++echo " finding is unchanged and named above, and every archived-only item passed its"
++echo " integrity check. It does NOT mean that all semantic questions are resolved,"
++echo " and it adopts nothing."
+ echo "==========================================================================="
+ 
+ MAT_OK_BAD=$([ "${MAT_OK:-0}" -eq 1 ] && echo 0 || echo 1)
+@@ -880,8 +930,9 @@ conj "$([ "$N_FAIL" -eq 0 ] && echo 0 || echo 1)" \
+ conj "$([ "$N_BLOCKED" -eq 0 ] && echo 0 || echo 1)" \
+                           "zero executable blocks: $N_BLOCKED  (no branch can set this status since ERRATUM /0)"
+ conj "$LANE_BAD"          "lane accounting: every executed row in exactly one printed lane, totals exact"
+-conj "$DIRTY"             "caller's checkout unchanged across the run"
+ conj "$CLEAN_UNKNOWN"     "cleanliness was actually OBSERVABLE (both git status probes succeeded)"
++conj "$NOT_CLEAN"         "subject-tree porcelain EMPTY at both observed endpoints (entry is a precondition)"
++conj "$DIRTY"             "the two observed endpoints agree — nothing moved between them"
+ 
+ if [ "$FLOOR_BAD" -ne 0 ]; then
+   echo

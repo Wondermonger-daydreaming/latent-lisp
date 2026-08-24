@@ -1,0 +1,57 @@
+===========================================================================
+ ERRATUM /0 TOOTH 6 — failed archive/extraction -> NO GATE RUNS
+===========================================================================
+ Sol I §IV item : 6. failed archive/extraction -> no gate runs
+ subject        : the REAL repaired mneme/verify-release.sh at candidate d8b147ede953f24d09658c04c3dbe84ea24566b7
+ venue          : /tmp/lector/teeth-clone/experiments/latent-lisp  (history-complete clone, detached at the candidate)
+ table          : 5 REAL rows of the real table (reduction proven confined below)
+ mechanism      : a PATH-shadowed git wrapper fails the 'archive' verb only (wrapper source below)
+ date           : 2026-08-23T21:03:12Z
+
+   #!/usr/bin/env bash
+   # tooth 6: pass every git verb through to the real git EXCEPT 'archive', which fails.
+   for a in "$@"; do [ "$a" = archive ] && { echo "tooth-6: simulated archive failure" >&2; exit 1; }; done
+   exec "/usr/bin/git" "$@"
+
+--- mkvariant confinement proof ---
+variant written : /tmp/lector/teeth-clone/experiments/latent-lisp/mneme/verify-release.sh
+rows            : 5 full / 5 ci  (from /home/gauss/Claude-Code-Lab/experiments/latent-lisp/mneme/release-floor-erratum-0/harness/rows-reduced.txt)
+confinement     : PROVEN — src and dst are byte-identical outside the GATES table body
+                  and the two AUTHORIZED_GATES_* lines (diff of normalised files is empty).
+
+=== RUN ===
+===========================================================================
+ LISP+ AGGREGATE RELEASE FLOOR — profile: full
+ Self-consistency certification, never independent conformance.
+ The stranger primitive-minimization audit is OWED.
+===========================================================================
+
+toolchain    : SBCL 2.4.6  (supported: 2.4.6/Linux — nothing else tested)
+subject root : /tmp/lector/teeth-clone/experiments/latent-lisp
+caller cwd   : /tmp/lector/teeth-clone/experiments/latent-lisp
+profile      : full
+enumeration  : full 5/5 · light 5/5  (authorized == actual, recomputed from the table)
+subject commit: d8b147ede953f24d09658c04c3dbe84ea24566b7
+subject tree : 0762cbe72925af459d58a962b4c09b9fa6f6455f   (HEAD:experiments/latent-lisp/)
+git before   : 1 entr(y|ies) under the subject tree
+run scratch  : /tmp/lisp-plus-release-run.5Ix4Xt  (removed on success AND on failure)
+
+-- materializing disposable tree copy from the COMMITTED subject object --
+   source       : 0762cbe72925af459d58a962b4c09b9fa6f6455f  (HEAD:experiments/latent-lisp/)
+   exclusions   : canonical-datum/evidence, canonical-datum/generated  (symlinked, not materialized, and excluded from the manifest)
+!! FAIL CLOSED: could not materialize the committed subject object.
+   git archive exit : 1
+     tooth-6: simulated archive failure
+   tar extract exit : 2
+     tar: This does not look like a tar archive
+     tar: Exiting with failure status due to previous errors
+   NO GATE RAN.  A floor that cannot say which bytes it measured measures nothing.
+
+FLOOR RESULT: FAIL
+=== aggregator exit: 1
+
+--- VERDICT ---
+ expected  : FAIL before any gate; transcript contains NO '[001]' row
+ terminal  : FLOOR RESULT: FAIL
+ proof re  : NO GATE RAN
+ firing    : OBSERVED

@@ -1,0 +1,32 @@
+--- /tmp/lector/evidence/projection-baseline-afc532b3.txt	2026-08-23 18:07:30.902467761 -0300
++++ /tmp/lector/evidence/projection-candidate-79ceeada.txt	2026-08-23 18:31:37.668656541 -0300
+@@ -116,7 +116,7 @@
+ 112|atelier|INPL|python3 mneme/atelier/static-check.py|PASS|0
+ 
+ ## LANEORDER
+-aggregate|kernel0|journal0|capability0|capability1|capability2|adapter0|core0|slice0|slice1|slice2|form0|form1|form2|surface0|surface1|surface2|surface-account|act0|vertical0|cd0|lci0|atelier|release
++aggregate|kernel0|journal0|capability0|capability1|capability2|adapter0|core0|slice0|slice1|slice2|form0|form1|form2|surface0|surface1|surface2|surface-account|act0|act1|ml0|vertical0|cd0|lci0|release|atelier
+ 
+ ## LANES  lane|gates|passed|nonpassing|blocked
+ aggregate|3|3|0|0
+@@ -138,11 +138,13 @@
+ surface2|4|4|0|0
+ surface-account|5|5|0|0
+ act0|3|3|0|0
++act1|6|6|0|0
++ml0|9|9|0|0
+ vertical0|4|4|0|0
+ cd0|3|3|0|0
+ lci0|2|2|0|0
+-atelier|1|1|0|0
+ release|2|2|0|0
++atelier|1|1|0|0
+ 
+ ## CARRIED  status|lane|headline
+ KNOWN-UNRESOLVED|lci0|LCI/0 algebraic-law audit: 84 laws PASS, 4 laws preserved FAIL
+@@ -174,4 +176,4 @@
+ rows parsed|112
+ rows PASS|112
+ rows non-PASS|0
+-lane gate sum|97
++lane gate sum|112

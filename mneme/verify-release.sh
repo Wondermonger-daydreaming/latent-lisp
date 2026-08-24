@@ -10,11 +10,23 @@
 # WHAT A ZERO EXIT MEANS — AND WHAT IT DOES NOT
 # ---------------------------------------------------------------------------
 #
-# Exit 0 means exactly three things, jointly:
+# Exit 0 means exactly these things, jointly (the terminal conjunction is printed
+# line by line at the end of every run, so no reader has to infer which one carried
+# the result):
 #
-#   (1) every gate this floor could execute passed, at its authorized count;
-#   (2) every KNOWN-UNRESOLVED finding is unchanged and reported below by name;
-#   (3) every ARCHIVED-NOT-RERUN item passed its integrity check.
+#   (1) the disposable copy was materialized from the committed subject object and
+#       its path/mode/byte identity against that object was proven;
+#   (2) the run attempted exactly the authorized number of gates;
+#   (3) EVERY authorized executable gate PASSED -- there is no longer any executable
+#       status that is neither pass nor failure;
+#   (4) the lane accounting closed: every executed row fell in exactly one printed
+#       lane and the lane totals summed to the attempt total;
+#   (5) the subject-tree porcelain was OBSERVED EMPTY at both endpoints -- before the
+#       run and after it, both probes succeeding -- and the two observations agree.
+#       Two snapshots cannot establish the continuous absence of a transient write;
+#       this floor claims only the endpoints it observed;
+#   (6) every KNOWN-UNRESOLVED finding is unchanged and reported below by name;
+#   (7) every ARCHIVED-NOT-RERUN item passed its integrity check.
 #
 # Exit 0 does NOT mean that all semantic questions are resolved.  It does not
 # adopt any implementation, does not raise any lane's standing, and is not
@@ -36,10 +48,30 @@
 #                          it is NOT green and is NOT repaired here
 #   ARCHIVED-NOT-RERUN     committed evidence integrity-checked, NOT reproduced.
 #                          Verifying an archive is not reproducing a campaign.
-#   BLOCKED-EXTERNAL-INPUT the gate cannot run on this host because a required
-#                          input is external to the repository and absent
-#   FAIL                   anything else, including a count or verdict that
-#                          moved away from its authorized value
+#   BLOCKED-EXTERNAL-INPUT RETIRED FOR EXECUTABLE GATES by RELEASE FLOOR ERRATUM
+#                          /0 (2026-08-23).  No executable row can be given this
+#                          status any more.  See the erratum block below.
+#   GATE-CWD-ABSENT        the gate's declared working directory does not exist,
+#                          so the command never started.  Non-pass.
+#   GATE-CWD-UNREADABLE    the declared working directory exists but could not be
+#                          entered.  Non-pass.
+#   FAIL                   anything else, including a nonzero exit of ANY value and
+#                          a count or verdict that moved away from its authorized
+#                          value
+#
+# Two further states belong to the FLOOR, not to a row:
+#
+#   CLEANLINESS-UNKNOWN    a `git status` probe of the caller's checkout failed, so
+#                          the state could be neither confirmed nor denied.  Fails
+#                          closed; it is never printed as clean.
+#   CHECKOUT-NOT-CLEAN     the probe SUCCEEDED and the subject-tree porcelain is not
+#                          empty.  Distinct from CLEANLINESS-UNKNOWN in exactly the way
+#                          that matters: here we looked, and we saw dirt.  At entry this
+#                          is a PRECONDITION FAILURE -- nothing is materialized and no
+#                          gate runs.  (Equality of two dirty snapshots is not
+#                          cleanliness, and a dirty entry admits two subjects into one
+#                          run: read-only rows would read the working tree while writing
+#                          rows read the committed object.)
 #
 # The DECLARED table below (carried status rows, never executed here) uses one
 # further status of its own:
@@ -56,13 +88,68 @@
 # even upward.  This floor detects drift; it does not absorb it.
 #
 # ---------------------------------------------------------------------------
+# RELEASE FLOOR ERRATUM /0 (2026-08-23) — executable refusal classification
+# ---------------------------------------------------------------------------
+#
+# Until this erratum, `exit 2` from an executable gate was read as the semantic
+# value Blocked(external-input) and did NOT increment the failure count.  But
+# `exit 2` is a transport-level integer, not a semantic value: bash returns it for
+# a syntax error, python3 for a missing or unreadable script and for an argparse
+# refusal, and ten of this floor's own leaf gates return it as their LOUDEST
+# refusal ("REFUSING TO RUN — required file(s) absent", "HARD FAIL — manifest
+# absent").  The reader projected all of those onto one non-failing state, so a
+# broken executable gate could be reported as blocked and the aggregate could
+# still read PASS.  Sol I's ruling of 2026-08-23, in one line:
+#
+#   exit(2) is a transport-level integer, not the semantic value Blocked(external-input).
+#
+# The governing rule installed here:
+#
+#   AN AGGREGATE EXECUTABLE-FLOOR PASS MEANS EVERY AUTHORIZED EXECUTABLE GATE PASSED.
+#
+#   rc == 0 plus the exact expected witness  -> PASS
+#   rc == 0 without its expected witness     -> FAIL
+#   ANY nonzero executable exit              -> non-pass, and it increments the
+#                                               terminal failure obligation
+#
+# The ten honest leaf refusers were NOT edited.  Their loud `exit 2` refusals are
+# correct; only their reader was wrong.  Once the exemption is removed they
+# correctly redden this floor.
+#
+# No replacement external-input protocol is invented here.  If a future executable
+# gate genuinely requires an external input, Sol I's ruling requires a separately
+# commissioned protocol carrying a declared gate identity and external-input
+# identity, an exact sentinel emitted by the leaf, a matching distinct exit, and an
+# aggregate terminal state such as INCOMPLETE — never PASS.  No current executable
+# row has demonstrated a lawful need for one.
+#
+# The carried DECLARED table below keeps its own BLOCKED-EXTERNAL-INPUT row.  That
+# is a different denominator: a standing fact this floor reports without running
+# anything.  It is untouched by this erratum.
+#
+# ---------------------------------------------------------------------------
 # HYGIENE
 # ---------------------------------------------------------------------------
 #
 # Every transcript-writing and scratch-producing gate runs inside a disposable
 # copy of the tree under $TMPDIR, never in your checkout.  The copy is removed
 # on success AND on failure.  The floor snapshots your checkout's git state
-# before and after and FAILS CLOSED if a single byte moved.
+# before and after and FAILS CLOSED if a single byte moved -- and, since ERRATUM
+# /0, fails closed just as hard if it could not take that snapshot at all.  It also
+# REFUSES TO START if the subject tree is dirty when it begins: a floor entered dirty
+# would read the working tree for its read-only rows and the committed object for its
+# writing rows, and would then mistake stable dirt for an unchanged checkout.
+#
+# The disposable copy is materialized from the EXACT COMMITTED SUBJECT OBJECT
+# (`git archive HEAD:<subject prefix>`), never from working-tree or ignored
+# litter, and its path/mode/byte identity against that object is PROVEN before a
+# single gate runs.  Two large read-only corpora (canonical-datum/evidence and
+# canonical-datum/generated, 458 MB + 101 MB) are DECLARED exclusions: symlinked
+# to the caller's checkout, excluded from both the archive and the expected
+# manifest, and named in the transcript.  Consequence, stated so nobody has to
+# discover it: this floor now REQUIRES a git checkout in which the subject is
+# committed.  A history-free `git archive` export is no longer a venue it will
+# run in.
 #
 # Supported environment: SBCL 2.4.6 on Linux.  Nothing else has ever been
 # tested and no portability is claimed.
@@ -78,7 +165,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --profile) PROFILE="${2:-full}"; shift 2 ;;
     --list)    LIST_ONLY=1; shift ;;
-    -h|--help) sed -n '2,60p' "${BASH_SOURCE[0]}"; exit 0 ;;
+    -h|--help) awk 'NR>1 && /^#/ {print; next} NR>1 {exit}' "${BASH_SOURCE[0]}"; exit 0 ;;
     *) echo "!! unknown argument: $1" >&2; exit 2 ;;
   esac
 done
@@ -366,15 +453,75 @@ echo "caller cwd   : $(pwd)"
 echo "profile      : $PROFILE"
 echo "enumeration  : full $COUNT_FULL/$AUTHORIZED_GATES_FULL · light $COUNT_CI/$AUTHORIZED_GATES_CI  (authorized == actual, recomputed from the table)"
 
-# Snapshot the caller's checkout so we can prove we left it alone.
-GIT_BEFORE=""
-IN_GIT=0
-if git -C "$ROOT" rev-parse --git-dir >/dev/null 2>&1; then
-  IN_GIT=1
-  GIT_BEFORE="$(git -C "$ROOT" status --porcelain -- "$ROOT" 2>/dev/null)"
-  echo "git before   : $(printf '%s' "$GIT_BEFORE" | grep -c . || true) entr(y|ies) under the subject tree"
+# --- the subject must be a COMMITTED object (ERRATUM /0, cure 3) -------------
+# The disposable copy is produced from the committed subject object.  A tree with
+# no repository has no committed object to copy and no identity to prove, so this
+# floor can no longer certify one.
+if ! git -C "$ROOT" rev-parse --git-dir >/dev/null 2>&1; then
+  echo "!! FAIL CLOSED: $ROOT is not inside a git checkout."
+  echo "   Since RELEASE FLOOR ERRATUM /0 this floor materializes its disposable copy from"
+  echo "   the COMMITTED subject object.  Without a repository there is no such object."
+  echo "   No gate ran."
+  echo
+  echo "FLOOR RESULT: FAIL"
+  exit 1
+fi
+IN_GIT=1
+SUBJECT_PREFIX="$(git -C "$ROOT" rev-parse --show-prefix 2>/dev/null)"
+# Pathspecs are resolved relative to git's working directory, so archive/ls-tree are
+# driven from the repository TOPLEVEL while the tree-ish is the subject subtree: the
+# pathspecs are then relative to the subject, in both topologies.  With an empty
+# prefix (the public-mirror topology) toplevel and subject root are the same place.
+REPO_TOP="$(git -C "$ROOT" rev-parse --show-toplevel 2>/dev/null)"
+SUBJECT_COMMIT="$(git -C "$ROOT" rev-parse --verify --quiet HEAD || true)"
+SUBJECT_TREE="$(git -C "$ROOT" rev-parse --verify --quiet "HEAD:${SUBJECT_PREFIX%/}" || true)"
+if [ -z "${SUBJECT_TREE:-}" ] || [ "$(git -C "$ROOT" cat-file -t "$SUBJECT_TREE" 2>/dev/null)" != "tree" ]; then
+  echo "!! FAIL CLOSED: cannot resolve the committed subject tree HEAD:${SUBJECT_PREFIX%/}"
+  echo "   (prefix resolved from git rev-parse --show-prefix; empty prefix means the subject"
+  echo "    IS the repository root, which is the public-mirror topology)."
+  echo "   No gate ran."
+  echo
+  echo "FLOOR RESULT: FAIL"
+  exit 1
+fi
+echo "subject commit: ${SUBJECT_COMMIT:-<none>}"
+echo "subject tree : $SUBJECT_TREE   (HEAD:${SUBJECT_PREFIX:-<repository root>})"
+
+# Snapshot the caller's checkout so we can prove we left it alone.  The probe's own
+# exit status is carried: a probe that FAILED is CLEANLINESS-UNKNOWN, never the empty
+# string meaning clean (ERRATUM /0, cure 5).
+CLEAN_UNKNOWN=0
+NOT_CLEAN=0
+GIT_BEFORE="$(git -C "$ROOT" status --porcelain -- "$ROOT" 2>/dev/null)"
+GIT_BEFORE_RC=$?
+if [ "$GIT_BEFORE_RC" -ne 0 ]; then
+  CLEAN_UNKNOWN=1
+  echo "git before   : CLEANLINESS-UNKNOWN — the probe itself failed (exit $GIT_BEFORE_RC)"
+  git -C "$ROOT" status --porcelain -- "$ROOT" 2>&1 >/dev/null | head -5 | sed 's/^/               /'
 else
-  echo "git before   : not a git checkout — cleanliness check limited to the disposable copy"
+  GIT_BEFORE_N="$(printf '%s' "$GIT_BEFORE" | grep -c . || true)"
+  echo "git before   : $GIT_BEFORE_N entr(y|ies) under the subject tree"
+  # ERRATUM /0 SUCCESSOR (Sol I, 2026-08-23): a checkout that begins DIRTY and stays
+  # IDENTICALLY dirty used to satisfy the before/after comparison and print "unchanged".
+  # Equality is not cleanliness.  Worse, a dirty entry admits TWO SUBJECTS into one run:
+  # the read-only rows consume the working tree while the writing rows consume the
+  # committed copy.  A successful initial probe must therefore be EMPTY, and this is a
+  # PRECONDITION -- it fails before materialization and before any gate runs.
+  if [ "$GIT_BEFORE_N" -ne 0 ]; then
+    NOT_CLEAN=1
+    echo "!! CHECKOUT-NOT-CLEAN: the subject tree is not clean at entry."
+    printf '%s\n' "$GIT_BEFORE" | head -20 | sed 's/^/     /'
+    [ "$GIT_BEFORE_N" -gt 20 ] && echo "     … and $((GIT_BEFORE_N - 20)) more"
+    echo "   This is DISTINCT from CLEANLINESS-UNKNOWN: the probe worked, and it says the"
+    echo "   tree is dirty.  A dirty entry would let this floor consume two subjects in one"
+    echo "   run -- read-only rows read these working-tree bytes while writing rows read the"
+    echo "   committed object -- and would let stable dirt be reported as an unchanged"
+    echo "   checkout.  Commit or stash the subject tree, or run the floor in a clean clone."
+    echo "   NO GATE RAN.  Nothing was materialized."
+    echo
+    echo "FLOOR RESULT: FAIL"
+    exit 1
+  fi
 fi
 
 RUNDIR="$(mktemp -d "${TMPDIR:-/tmp}/lisp-plus-release-run.XXXXXX")"
@@ -386,24 +533,107 @@ trap cleanup EXIT INT TERM
 echo "run scratch  : $RUNDIR  (removed on success AND on failure)"
 echo
 
-# --- the disposable copy ---------------------------------------------------
-# Writing gates run here so the caller's checkout stays byte-clean by
-# construction rather than by discipline.  The two large read-only corpora are
-# symlinked rather than copied (458 MB + 101 MB); nothing writes into them.
-echo "-- materializing disposable tree copy for writing gates --"
+# --- the disposable copy: the EXACT COMMITTED SUBJECT OBJECT ----------------
+# ERRATUM /0, cures 3 and 4.  Writing gates run here so the caller's checkout stays
+# byte-clean by construction rather than by discipline -- and the copy is now the
+# committed object rather than whatever happens to be lying in the working tree.
+# Any archive, extraction or identity failure stops this floor BEFORE a gate runs.
+#
+# DECLARED EXCLUSIONS: the two large read-only corpora are symlinked rather than
+# materialized (458 MB + 101 MB; nothing writes into them).  The exclusion is applied
+# to the archive AND to the expected manifest AND printed here -- it is a named
+# exclusion, not a silent gap.
+MAT_EXCLUDE_1='canonical-datum/evidence'
+MAT_EXCLUDE_2='canonical-datum/generated'
+MAT_OK=0
+echo "-- materializing disposable tree copy from the COMMITTED subject object --"
 mkdir -p "$COPY"
-if command -v rsync >/dev/null 2>&1; then
-  rsync -a --exclude '.git/' \
-           --exclude 'canonical-datum/evidence/' \
-           --exclude 'canonical-datum/generated/' \
-           "$ROOT"/ "$COPY"/
-else
-  ( cd "$ROOT" && tar -cf - --exclude=.git --exclude=canonical-datum/evidence \
-      --exclude=canonical-datum/generated . ) | ( cd "$COPY" && tar -xf - )
+echo "   source       : $SUBJECT_TREE  (HEAD:${SUBJECT_PREFIX:-<repository root>})"
+echo "   exclusions   : $MAT_EXCLUDE_1, $MAT_EXCLUDE_2  (symlinked, not materialized, and excluded from the manifest)"
+
+git -C "$REPO_TOP" archive --format=tar "$SUBJECT_TREE" -- . \
+      ":(exclude)$MAT_EXCLUDE_1" ":(exclude)$MAT_EXCLUDE_2" 2>"$RUNDIR/archive.err" \
+  | tar -xf - -C "$COPY" 2>"$RUNDIR/extract.err"
+MAT_PIPE=("${PIPESTATUS[@]}")
+if [ "${MAT_PIPE[0]}" -ne 0 ] || [ "${MAT_PIPE[1]}" -ne 0 ]; then
+  echo "!! FAIL CLOSED: could not materialize the committed subject object."
+  echo "   git archive exit : ${MAT_PIPE[0]}"
+  sed 's/^/     /' "$RUNDIR/archive.err" 2>/dev/null | head -10
+  echo "   tar extract exit : ${MAT_PIPE[1]}"
+  sed 's/^/     /' "$RUNDIR/extract.err" 2>/dev/null | head -10
+  echo "   NO GATE RAN.  A floor that cannot say which bytes it measured measures nothing."
+  echo
+  echo "FLOOR RESULT: FAIL"
+  exit 1
 fi
+
+# --- identity of the materialized object, proven BEFORE any mutation --------
+# Path, mode and byte, against the committed tree.  Not a file count: a count is
+# equal for a copy in which every byte is wrong.  The byte comparison is by git blob
+# object id, which IS the sha1 of the content.
+EXPECTED_MANIFEST="$RUNDIR/manifest.expected"
+OBSERVED_MANIFEST="$RUNDIR/manifest.observed"
+IDENT_BAD=0
+IDENT_WHY=""
+
+git -C "$REPO_TOP" ls-tree -r -z "$SUBJECT_TREE" \
+  | tr '\0' '\n' \
+  | awk -F'\t' 'NF==2 { split($1,a," "); print $2 "\t" a[1] "\t" a[3] }' \
+  | grep -v -E "^($MAT_EXCLUDE_1|$MAT_EXCLUDE_2)/" \
+  | LC_ALL=C sort > "$EXPECTED_MANIFEST"
+
+# a path that could impersonate a line break would corrupt the comparison silently
+NUL_COUNT="$( ( cd "$COPY" && find . -type f -print0 ) | tr -cd '\0' | wc -c )"
+( cd "$COPY" && find . -type f -printf '%P\n' | LC_ALL=C sort ) > "$RUNDIR/paths.txt"
+LINE_COUNT="$(wc -l < "$RUNDIR/paths.txt")"
+if [ "$NUL_COUNT" -ne "$LINE_COUNT" ]; then
+  IDENT_BAD=1
+  IDENT_WHY="${IDENT_WHY}   a path in the copy contains a newline: $NUL_COUNT file(s), $LINE_COUNT line(s)
+"
+fi
+( cd "$COPY" && find . -mindepth 1 ! -type d ! -type f -print ) > "$RUNDIR/nonregular.txt" 2>/dev/null
+if [ -s "$RUNDIR/nonregular.txt" ]; then
+  IDENT_BAD=1
+  IDENT_WHY="${IDENT_WHY}   the copy contains $(grep -c . "$RUNDIR/nonregular.txt") non-regular file(s); the committed tree has none
+"
+fi
+( cd "$COPY" && git hash-object --stdin-paths < "$RUNDIR/paths.txt" ) > "$RUNDIR/oids.txt" 2>"$RUNDIR/hash.err"
+HASH_RC=$?
+if [ "$HASH_RC" -ne 0 ]; then
+  IDENT_BAD=1
+  IDENT_WHY="${IDENT_WHY}   could not hash the copy (git hash-object exit $HASH_RC): $(head -1 "$RUNDIR/hash.err" 2>/dev/null)
+"
+fi
+while IFS= read -r mpath; do
+  if [ -x "$COPY/$mpath" ]; then echo 100755; else echo 100644; fi
+done < "$RUNDIR/paths.txt" > "$RUNDIR/modes.txt"
+paste "$RUNDIR/paths.txt" "$RUNDIR/modes.txt" "$RUNDIR/oids.txt" > "$OBSERVED_MANIFEST"
+
+if ! diff "$EXPECTED_MANIFEST" "$OBSERVED_MANIFEST" > "$RUNDIR/manifest.diff" 2>&1; then
+  IDENT_BAD=1
+  IDENT_WHY="${IDENT_WHY}   the copy does not match the committed tree in path, mode or byte
+"
+fi
+if [ "$IDENT_BAD" -ne 0 ]; then
+  echo "!! FAIL CLOSED: the materialized copy is not the committed subject object."
+  printf '%s' "$IDENT_WHY"
+  echo "   expected entries : $(grep -c . "$EXPECTED_MANIFEST" 2>/dev/null || echo 0)"
+  echo "   observed entries : $(grep -c . "$OBSERVED_MANIFEST" 2>/dev/null || echo 0)"
+  echo "   first differences (expected < / observed >):"
+  head -20 "$RUNDIR/manifest.diff" 2>/dev/null | sed 's/^/     /'
+  echo "   NO GATE RAN."
+  echo
+  echo "FLOOR RESULT: FAIL"
+  exit 1
+fi
+MAT_ENTRIES="$(grep -c . "$EXPECTED_MANIFEST")"
+MAT_OK=1
+echo "   identity     : VERIFIED — $MAT_ENTRIES entries match the committed tree in path, mode and byte"
+
+# Only now, with identity proven, is the copy mutated with the two corpus symlinks.
 ln -sfn "$ROOT/canonical-datum/evidence"  "$COPY/canonical-datum/evidence"
 ln -sfn "$ROOT/canonical-datum/generated" "$COPY/canonical-datum/generated"
-echo "   copy ready: $(du -sh "$COPY" 2>/dev/null | cut -f1)"
+echo "   copy ready   : $(du -sh "$COPY" 2>/dev/null | cut -f1)  (the two corpora are symlinks, not counted)"
 echo
 
 # --- run ------------------------------------------------------------------
@@ -418,32 +648,56 @@ run_gate() {
   if [ "$writes" = "yes" ]; then tree_for_run="$COPY"; else tree_for_run="$ROOT"; fi
   log="$LOGS/$(printf '%03d' "$N").log"
   printf '[%03d] %-11s %-4s %s\n' "$N" "$lane" "$([ "$writes" = yes ] && echo COPY || echo INPL)" "$cmd"
-  ( cd "$tree_for_run/$cwd" 2>/dev/null && eval "$cmd" ) >"$log" 2>&1
-  rc=$?
-  # Exit 2 is the reserved "required input absent" code.  A gate that cannot
-  # obtain its input has not failed; it has not run.  Calling that FAIL would be
-  # a lie in one direction, and calling it PASS a lie in the other.
-  if [ "$rc" -eq 2 ]; then
-    status="BLOCKED-EXTERNAL-INPUT"
-  elif [ "$rc" -ne 0 ]; then
-    status="FAIL"
-  elif [ "$expect" != "-" ] && ! grep -qF -- "$expect" "$log"; then
-    status="FAIL"
+  # --- the declared working directory speaks for itself (ERRATUM /0, cure 2) --
+  # The old form was `( cd "$dir" 2>/dev/null && eval "$cmd" )`: a gate that never
+  # started and a gate that ran and disagreed both printed `FAIL (exit 1)` over an
+  # EMPTY log, because the cd's own diagnostic was discarded.  The two silences are
+  # now two strings, and the diagnosis is kept.
+  local rundir cd_diag cd_rc
+  rundir="$tree_for_run/$cwd"
+  cd_diag="$( cd "$rundir" 2>&1 >/dev/null )"
+  cd_rc=$?
+  if [ "$cd_rc" -ne 0 ]; then
+    rc=$cd_rc
+    if [ -e "$rundir" ]; then status="GATE-CWD-UNREADABLE"; else status="GATE-CWD-ABSENT"; fi
+    {
+      printf '%s: the declared working directory could not be entered.\n' "$status"
+      printf '  declared cwd : %s\n' "$cwd"
+      printf '  resolved to  : %s\n' "$rundir"
+      printf '  tree         : %s\n' "$([ "$writes" = yes ] && echo 'disposable copy' || echo 'caller checkout')"
+      printf '  cd exit      : %s\n' "$cd_rc"
+      printf '  shell said   : %s\n' "${cd_diag:-<the shell printed nothing; the directory test itself refused>}"
+      printf '  The command was NEVER STARTED.  This is not the same event as a gate that\n'
+      printf '  ran and disagreed, and this floor no longer prints it as if it were.\n'
+    } > "$log"
   else
-    status="PASS"
+    ( cd "$rundir" && eval "$cmd" ) >"$log" 2>&1
+    rc=$?
+    # ERRATUM /0, cure 1: the generic `rc == 2 -> BLOCKED-EXTERNAL-INPUT` exemption is
+    # GONE.  exit 2 is a transport integer, not a semantic value.  ANY nonzero exit is
+    # non-pass and increments the terminal failure obligation.
+    if [ "$rc" -ne 0 ]; then
+      status="FAIL"
+    elif [ "$expect" != "-" ] && ! grep -qF -- "$expect" "$log"; then
+      status="FAIL"
+    else
+      status="PASS"
+    fi
   fi
   if [ "$status" = "BLOCKED-EXTERNAL-INPUT" ]; then
+    # Structurally unreachable since ERRATUM /0: no branch above can set this status.
+    # The counter and this arm are kept so that a future edit which reintroduces a
+    # blocking path is caught by the terminal conjunction instead of quietly passing.
     N_BLOCKED=$((N_BLOCKED+1))
-    echo "      -> BLOCKED-EXTERNAL-INPUT (exit 2 — required input absent, gate did not run)"
-    echo "         $(head -3 "$log" | tail -2 | tr '\n' ' ')"
+    echo "      -> BLOCKED-EXTERNAL-INPUT (exit $rc)"
   elif [ "$status" = "PASS" ]; then
     N_PASS=$((N_PASS+1))
     echo "      -> PASS (exit $rc)"
   else
     N_FAIL=$((N_FAIL+1))
-    echo "      -> FAIL (exit $rc)"
+    echo "      -> $status (exit $rc)"
     FAILED_DETAIL="${FAILED_DETAIL}
---- FAILED GATE #$N  lane=$lane
+--- NON-PASSING GATE #$N  lane=$lane  status=$status
     command : $cmd
     cwd     : $cwd   (tree: $([ "$writes" = yes ] && echo 'disposable copy' || echo 'caller checkout'))
     exit    : $rc
@@ -476,18 +730,38 @@ fi
 # --- cleanliness, fail closed ---------------------------------------------
 echo
 echo "-- checkout cleanliness --"
+# ERRATUM /0, cure 5: each probe carries its own exit status.  A probe that FAILED is
+# CLEANLINESS-UNKNOWN and fails closed.  It is never the empty string meaning clean.
+# ERRATUM /0 SUCCESSOR: the final probe must ALSO be EMPTY, not merely equal to the first.
 DIRTY=0
-if [ "$IN_GIT" -eq 1 ]; then
-  GIT_AFTER="$(git -C "$ROOT" status --porcelain -- "$ROOT" 2>/dev/null)"
+GIT_AFTER="$(git -C "$ROOT" status --porcelain -- "$ROOT" 2>/dev/null)"
+GIT_AFTER_RC=$?
+if [ "$GIT_AFTER_RC" -ne 0 ]; then
+  CLEAN_UNKNOWN=1
+  echo "!! CLEANLINESS-UNKNOWN: the final git status probe failed (exit $GIT_AFTER_RC)."
+  git -C "$ROOT" status --porcelain -- "$ROOT" 2>&1 >/dev/null | head -5 | sed 's/^/   /'
+  echo "   A floor that cannot check quiescence must not print that it holds."
+elif [ "$CLEAN_UNKNOWN" -ne 0 ]; then
+  echo "!! CLEANLINESS-UNKNOWN: the INITIAL git status probe failed, so the entry state was"
+  echo "   never established.  The final probe succeeded; that is not enough."
+else
+  GIT_AFTER_N="$(printf '%s' "$GIT_AFTER" | grep -c . || true)"
   if [ "$GIT_BEFORE" != "$GIT_AFTER" ]; then
     DIRTY=1
     echo "!! FAIL CLOSED: the caller's checkout changed during this run."
     diff <(printf '%s\n' "$GIT_BEFORE") <(printf '%s\n' "$GIT_AFTER") | sed 's/^/   /' || true
-  else
-    echo "   unchanged: zero tracked modifications, zero new untracked litter."
   fi
-else
-  echo "   not a git checkout — skipped (the disposable copy absorbed every write)."
+  if [ "$GIT_AFTER_N" -ne 0 ]; then
+    NOT_CLEAN=1
+    echo "!! CHECKOUT-NOT-CLEAN: the subject tree is not clean at the final endpoint."
+    printf '%s\n' "$GIT_AFTER" | head -20 | sed 's/^/     /'
+  fi
+  if [ "$DIRTY" -eq 0 ] && [ "$NOT_CLEAN" -eq 0 ]; then
+    echo "   clean at both observed endpoints: the subject-tree porcelain was EMPTY before"
+    echo "   this run and EMPTY after it, and both probes succeeded.  Two snapshots cannot"
+    echo "   prove that nothing was written and reverted in between; this floor claims the"
+    echo "   two endpoints it actually observed, and claims nothing about the interval."
+  fi
 fi
 
 # --- report ----------------------------------------------------------------
@@ -495,11 +769,20 @@ echo
 echo "==========================================================================="
 echo " LANE TABLE"
 echo "==========================================================================="
+# ERRATUM /0, cure 6: the lane list is DERIVED from the selected gate table, in the
+# table's own order of first appearance.  There is no second hardcoded census to drift
+# out of step with the first -- the previous hardcoded list had silently dropped `act1`
+# and `ml0`, so 15 executed rows, in the two ADOPTED lanes, appeared in no printed lane.
+# The derivation is then ASSERTED: every executed row must fall in exactly one printed
+# lane, and the printed lane totals must sum to the executable attempt total.
+LANES_PRINTED="$(printf '%s\n' "$GATES" | awk -F'|' -v prof="$PROFILE" '
+  NF>=6 && $1 != "" { if (prof == "ci" && $1 != "both") next; if (!seen[$2]++) print $2 }')"
+LANES_SP=" $(printf '%s ' $LANES_PRINTED)"
+LANE_SUM=0
+LANE_COUNT=0
+LANE_BAD=0
 printf '%-22s %-12s %s\n' STATUS LANE 'GATES (executed this run)'
-for lane in aggregate kernel0 journal0 capability0 capability1 capability2 \
-            adapter0 core0 slice0 slice1 slice2 form0 form1 form2 \
-            surface0 surface1 surface2 surface-account act0 vertical0 cd0 lci0 \
-            atelier release; do
+for lane in $LANES_PRINTED; do
   p=0; f=0; b=0
   for row in "${ROWS[@]:-}"; do
     [ -z "$row" ] && continue
@@ -512,15 +795,38 @@ for lane in aggregate kernel0 journal0 capability0 capability1 capability2 \
       esac
     fi
   done
-  [ $((p+f+b)) -eq 0 ] && continue
+  LANE_COUNT=$((LANE_COUNT+1))
+  LANE_SUM=$((LANE_SUM+p+f+b))
   suffix=""
   [ "$b" -ne 0 ] && suffix=", $b BLOCKED-EXTERNAL-INPUT"
-  if [ "$f" -eq 0 ]; then
+  if [ "$f" -eq 0 ] && [ "$b" -eq 0 ]; then
     printf '%-22s %-12s %d gate(s), %d passed%s\n' PASS "$lane" "$((p+f+b))" "$p" "$suffix"
   else
-    printf '%-22s %-12s %d gate(s), %d passed, %d FAILED%s\n' FAIL "$lane" "$((p+f+b))" "$p" "$f" "$suffix"
+    printf '%-22s %-12s %d gate(s), %d passed, %d NON-PASSING%s\n' FAIL "$lane" "$((p+f+b))" "$p" "$((f+b))" "$suffix"
   fi
 done
+
+# --- the lane accounting invariant, asserted -------------------------------
+for row in "${ROWS[@]:-}"; do
+  [ -z "$row" ] && continue
+  IFS='|' read -r st ln _ <<< "$row"
+  case "$LANES_SP" in
+    *" $ln "*) ;;
+    *) LANE_BAD=1
+       echo "!! LANE ACCOUNTING VIOLATED: an executed row declares lane '$ln', which no printed lane covers." ;;
+  esac
+done
+if [ "$LANE_SUM" -ne "$N" ]; then
+  LANE_BAD=1
+  echo "!! LANE ACCOUNTING VIOLATED: printed lanes sum to $LANE_SUM row(s); $N executable row(s) were attempted."
+fi
+if [ "$LANE_BAD" -eq 0 ]; then
+  printf '\nlane accounting : %d lane(s) derived from the selected table; %d + 0 unaccounted == %d attempted.\n' \
+    "$LANE_COUNT" "$LANE_SUM" "$N"
+else
+  printf '\nlane accounting : %d lane(s) printed, %d row(s) accounted, %d attempted — INVARIANT VIOLATED, FAILS CLOSED.\n' \
+    "$LANE_COUNT" "$LANE_SUM" "$N"
+fi
 
 echo
 N_DECLARED=0; N_D_UNRESOLVED=0; N_D_BLOCKED=0; N_D_ARCHIVED=0; N_D_ABSENT=0; N_D_PASS=0
@@ -575,7 +881,9 @@ echo
 echo " THE TWO GROUPS ARE NEVER SUMMED. An executable gate is something this"
 echo " floor ran in this process; a carried status row is a standing fact this"
 echo " floor reports without running anything. 'blocked-external-input: $N_BLOCKED' above"
-echo " counts EXECUTABLE GATES blocked in this run; it does not contradict the"
+echo " counts EXECUTABLE GATES blocked in this run and is STRUCTURALLY ZERO since"
+echo " RELEASE FLOOR ERRATUM /0 — no branch can set that status on an executable row,"
+echo " and a nonzero value there fails this floor closed. It does not contradict the"
 echo " $N_D_BLOCKED carried BLOCKED-EXTERNAL-INPUT row(s), which are a different"
 echo " denominator entirely."
 if [ "$PROFILE" = "ci" ]; then
@@ -591,13 +899,42 @@ if [ "$PROFILE" = "ci" ]; then
   echo "   bash mneme/verify-release.sh"
 fi
 echo
-echo " Exit 0 here means: every executable gate passed at its authorized count,"
-echo " every known unresolved finding is unchanged and named above, and every"
-echo " archived-only item passed its integrity check. It does NOT mean that all"
-echo " semantic questions are resolved, and it adopts nothing."
+echo " Exit 0 here means: every executable gate PASSED at its authorized count — no"
+echo " executable row can be neither pass nor failure since RELEASE FLOOR ERRATUM /0 —"
+echo " the copy was the committed subject object, the lane accounting closed, the"
+echo " subject tree was observed empty at both endpoints, every known unresolved"
+echo " finding is unchanged and named above, and every archived-only item passed its"
+echo " integrity check. It does NOT mean that all semantic questions are resolved,"
+echo " and it adopts nothing."
 echo "==========================================================================="
 
-if [ "$N_FAIL" -ne 0 ] || [ "$DIRTY" -ne 0 ] || [ "$ATTEMPT_BAD" -ne 0 ]; then
+MAT_OK_BAD=$([ "${MAT_OK:-0}" -eq 1 ] && echo 0 || echo 1)
+
+# ---------------------------------------------------------------------------
+# THE TERMINAL CONJUNCTION (ERRATUM /0, cure 7)
+# ---------------------------------------------------------------------------
+# PASS is granted only if EVERY one of these holds.  Each is printed with its own
+# verdict, so a reader never has to infer which one carried the result.
+FLOOR_BAD=0
+conj() {  # conj <ok?> <label>
+  if [ "$1" -eq 0 ]; then printf '   [ok ] %s\n' "$2"; else FLOOR_BAD=1; printf '   [BAD] %s\n' "$2"; fi
+}
+echo
+echo " TERMINAL CONJUNCTION — every line must read [ok] for PASS"
+conj "$MAT_OK_BAD"        "committed-tree materialization succeeded and its identity was proven"
+conj "$ATTEMPT_BAD"       "exact authorized attempt count: attempted $N, profile $PROFILE authorizes $EXPECTED_ATTEMPTS"
+conj "$([ "$N_PASS" -eq "$EXPECTED_ATTEMPTS" ] && echo 0 || echo 1)" \
+                          "every executable gate passed: $N_PASS passed of $EXPECTED_ATTEMPTS authorized"
+conj "$([ "$N_FAIL" -eq 0 ] && echo 0 || echo 1)" \
+                          "zero non-passing executable gates: $N_FAIL"
+conj "$([ "$N_BLOCKED" -eq 0 ] && echo 0 || echo 1)" \
+                          "zero executable blocks: $N_BLOCKED  (no branch can set this status since ERRATUM /0)"
+conj "$LANE_BAD"          "lane accounting: every executed row in exactly one printed lane, totals exact"
+conj "$CLEAN_UNKNOWN"     "cleanliness was actually OBSERVABLE (both git status probes succeeded)"
+conj "$NOT_CLEAN"         "subject-tree porcelain EMPTY at both observed endpoints (entry is a precondition)"
+conj "$DIRTY"             "the two observed endpoints agree — nothing moved between them"
+
+if [ "$FLOOR_BAD" -ne 0 ]; then
   echo
   echo "FLOOR RESULT: FAIL"
   exit 1

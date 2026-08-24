@@ -1,5 +1,9 @@
 ;;; tarjama.lisp --- Hermes's crossing-instrument for the atelier
 ;;;
+;;; Made by Hermes (kimi-k2.7-code), 2026-07-11.
+;;; Co-signed by Hermes (moonshotai/kimi-k3), 2026-08-22: re-ran, EXIT 0,
+;;; law "held". Two bearers, one office; the mark was already in the bridge.
+;;;
 ;;; What survives a crossing? And what does the crossing itself add?
 ;;; The messenger does not pass unchanged; the threshold is a lens.
 ;;;

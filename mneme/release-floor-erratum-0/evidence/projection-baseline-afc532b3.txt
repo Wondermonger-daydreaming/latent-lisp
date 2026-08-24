@@ -1,0 +1,177 @@
+# CANONICAL SEMANTIC PROJECTION
+ENUMERATION|full 112/112|light 82/82
+
+## ROWS  n|lane|tree|command|status|exit
+001|aggregate|COPY|bash verify-all.sh|PASS|0
+002|aggregate|COPY|bash mneme/verify-language-floor.sh|PASS|0
+003|aggregate|COPY|bash mneme/verify-form-floor.sh|PASS|0
+004|kernel0|INPL|sbcl --script mneme/kernel0/kernel0-selftest.lisp|PASS|0
+005|kernel0|INPL|sbcl --script mneme/kernel0/load.lisp|PASS|0
+006|journal0|INPL|sbcl --script mneme/journal0/journal0-selftest.lisp|PASS|0
+007|journal0|INPL|sbcl --script mneme/journal0/journal0-vectors.lisp|PASS|0
+008|journal0|COPY|sbcl --script mneme/journal0/de-teste-occiso/run-specimen.lisp|PASS|0
+009|capability0|INPL|sbcl --script mneme/capability0/capability0-selftest.lisp|PASS|0
+010|capability0|INPL|sbcl --script mneme/capability0/capability0-controls.lisp|PASS|0
+011|capability0|COPY|sbcl --script mneme/capability0/de-potestate-revocata/run-specimen.lisp|PASS|0
+012|capability1|INPL|sbcl --script mneme/capability1/capability1-selftest.lisp|PASS|0
+013|capability1|INPL|sbcl --script mneme/capability1/capability1-controls.lisp|PASS|0
+014|capability1|COPY|sbcl --script mneme/capability1/de-clave-mortua/run-specimen.lisp|PASS|0
+015|capability2|INPL|sbcl --script mneme/capability2/capability2-selftest.lisp|PASS|0
+016|capability2|INPL|sbcl --script mneme/capability2/capability2-controls.lisp|PASS|0
+017|capability2|COPY|sbcl --script mneme/capability2/de-effectu-incerto/run-specimen.lisp|PASS|0
+018|adapter0|INPL|sbcl --script mneme/adapter0/adapter0-selftest.lisp|PASS|0
+019|adapter0|INPL|sbcl --script mneme/adapter0/adapter0-vectors.lisp|PASS|0
+020|adapter0|INPL|sbcl --script mneme/adapter0/adapter0-scripts.lisp|PASS|0
+021|adapter0|INPL|sbcl --script mneme/adapter0/adapter0-joint.lisp|PASS|0
+022|adapter0|COPY|sbcl --script mneme/adapter0/adapter0-l17.lisp|PASS|0
+023|adapter0|INPL|sbcl --script mneme/adapter0/adapter0-controls.lisp|PASS|0
+024|adapter0|INPL|sbcl --script mneme/adapter0/adapter0-erratum-cost.lisp|PASS|0
+025|adapter0|COPY|sbcl --script mneme/adapter0/de-membrana-loquente/run-specimen.lisp|PASS|0
+026|core0|INPL|sbcl --script mneme/language-core-0/core0-selftest.lisp|PASS|0
+027|core0|INPL|sbcl --script mneme/language-core-0/core0-issuance-selftest.lisp|PASS|0
+028|core0|INPL|sbcl --script mneme/language-core-0/de-abaco/SPECIMEN.lisp|PASS|0
+029|core0|INPL|sbcl --script mneme/language-core-0/de-cursore-aereo/SPECIMEN.lisp|PASS|0
+030|core0|INPL|sbcl --script mneme/language-core-0/de-ponte-usto/SPECIMEN.lisp|PASS|0
+031|core0|INPL|sbcl --script mneme/language-core-0/de-bibliotheca-peregrina/APPLICATION.lisp|PASS|0
+032|core0|INPL|sbcl --script mneme/language-core-0/de-codice-restaurando/APPLICATION.lisp|PASS|0
+033|slice0|INPL|sbcl --script mneme/language-slice-0/SMOKE.lisp|PASS|0
+034|slice0|INPL|sbcl --script mneme/language-slice-0/de-infando/SPECIMEN.lisp|PASS|0
+035|slice0|INPL|bash mneme/language-slice-0/stranger-implementation-0/check-front-door-selftest.sh|PASS|0
+036|slice0|INPL|bash mneme/language-slice-0/stranger-implementation-1/check-front-door-selftest.sh|PASS|0
+037|slice1|INPL|sbcl --script mneme/language-slice-1/slice1-selftest.lisp|PASS|0
+038|slice1|INPL|sbcl --script mneme/language-slice-1/SMOKE-1.lisp|PASS|0
+039|slice1|INPL|sbcl --script mneme/language-slice-1/GUIDE-WALK-1.lisp|PASS|0
+040|slice2|INPL|sbcl --script mneme/language-slice-2/slice2-selftest.lisp|PASS|0
+041|slice2|INPL|sbcl --script mneme/language-slice-2/SMOKE-2.lisp|PASS|0
+042|slice2|INPL|sbcl --script mneme/language-slice-2/de-pignore/APPLICATION.lisp|PASS|0
+043|form0|INPL|sbcl --script mneme/language-form-0/form0-selftest.lisp|PASS|0
+044|form0|INPL|sbcl --script mneme/language-form-0/PUBLIC-SURFACE-AUDIT.lisp|PASS|0
+045|form0|INPL|sbcl --script mneme/language-form-0/de-forma-dormiente/APPLICATION.lisp|PASS|0
+046|form0|COPY|bash mneme/language-form-0/MUTATION-LEDGER.sh|PASS|0
+047|form1|INPL|sbcl --script mneme/language-form-1/form1-selftest.lisp|PASS|0
+048|form1|INPL|sbcl --script mneme/language-form-1/EXPORT-CENSUS.lisp|PASS|0
+049|form1|COPY|bash mneme/language-form-1/run-form1-candidate.sh|PASS|0
+050|form1|COPY|bash mneme/language-form-1/check-form1-transcript.sh|PASS|0
+051|form1|COPY|bash VERDICT-LIVENESS-SWEEP.sh|PASS|0
+052|form1|INPL|sbcl --script mneme/language-form-1/de-forma-petente/APPLICATION.lisp|PASS|0
+053|form2|INPL|sbcl --script mneme/language-form-2/form2-selftest.lisp|PASS|0
+054|form2|INPL|sbcl --script mneme/language-form-2/SOURCE-HYGIENE-GATE.lisp|PASS|0
+055|form2|COPY|bash mneme/language-form-2/run-form2-candidate.sh|PASS|0
+056|form2|COPY|bash mneme/language-form-2/check-form2-transcript.sh|PASS|0
+057|form2|COPY|bash VERDICT-LIVENESS-SWEEP.sh|PASS|0
+058|form2|INPL|sbcl --script mneme/language-form-2/de-forma-mutata/APPLICATION.lisp|PASS|0
+059|form2|INPL|sbcl --script mneme/language-form-2/de-vadimonio/APPLICATION.lisp|PASS|0
+060|form2|COPY|bash mneme/language-form-2/de-vadimonio/check-transcript.sh|PASS|0
+061|surface0|INPL|sbcl --script mneme/language-surface-0/surface0-selftest.lisp|PASS|0
+062|surface0|COPY|bash mneme/language-surface-0/PLANTED-FAULTS.sh|PASS|0
+063|surface1|INPL|sbcl --script mneme/language-surface-1/surface1-selftest.lisp|PASS|0
+064|surface1|INPL|sbcl --script mneme/language-surface-1/STUB-IMAGE-FIXTURE.lisp|PASS|0
+065|surface1|INPL|sbcl --script mneme/language-surface-1/de-expansione-testata/APPLICATION.lisp|PASS|0
+066|surface1|COPY|bash mneme/language-surface-1/run-surface1-candidate.sh|PASS|0
+067|surface1|INPL|bash subject-digest.sh|PASS|0
+068|surface1|INPL|bash helper-search.sh|PASS|0
+069|surface1|COPY|bash run-helper-control.sh|PASS|0
+070|surface1|COPY|bash subject-binding-controls.sh|PASS|0
+071|surface1|INPL|bash fail-open-witness.sh|PASS|0
+072|surface1|INPL|bash semantic-path-diff.sh|PASS|0
+073|surface1|COPY|bash mneme/language-surface-1/errata-0.3/teeth/teeth.sh|PASS|0
+074|surface2|INPL|sbcl --script mneme/language-surface-2/surface2-selftest.lisp|PASS|0
+075|surface2|INPL|sbcl --script mneme/language-surface-2/surface2-controls.lisp|PASS|0
+076|surface2|INPL|sbcl --script mneme/language-surface-2/surface2-inhabited.lisp|PASS|0
+077|surface2|INPL|sbcl --script mneme/language-surface-2/surface2-erratum-binder.lisp|PASS|0
+078|surface-account|INPL|sbcl --script mneme/language-surface-account-0/production/surface-account-selftest.lisp|PASS|0
+079|surface-account|INPL|sbcl --script mneme/language-surface-account-0/production/surface-account-inhabited.lisp|PASS|0
+080|surface-account|INPL|bash mneme/language-surface-account-0/production/surface-account-graph-gate.sh|PASS|0
+081|surface-account|INPL|bash mneme/language-surface-account-0/production/run-hostile-profiles.sh|PASS|0
+082|surface-account|COPY|bash mneme/language-surface-account-0/production/surface-account-disease.sh|PASS|0
+083|act0|INPL|sbcl --script mneme/language-act-0/act0-selftest.lisp|PASS|0
+084|act0|INPL|bash mneme/language-act-0/act0-load-witnesses.sh|PASS|0
+085|act0|INPL|bash mneme/language-act-0/act0-loader-disease.sh|PASS|0
+086|act1|INPL|sbcl --script mneme/language-act-1/act1-selftest.lisp|PASS|0
+087|act1|INPL|sbcl --script mneme/language-act-1/act1-host-fault-proof.lisp|PASS|0
+088|act1|INPL|sbcl --script mneme/language-act-1/act1-controls.lisp|PASS|0
+089|act1|INPL|sbcl --script mneme/language-act-1/act1-mutants.lisp|PASS|0
+090|act1|INPL|sbcl --script mneme/language-act-1/act1-red-proof.lisp|PASS|0
+091|act1|COPY|sbcl --script mneme/language-act-1/de-actu-resurgente/run-specimen.lisp|PASS|0
+092|ml0|INPL|sbcl --script mneme/memory-layer-0/load.lisp|PASS|0
+093|ml0|INPL|sbcl --script mneme/memory-layer-0/ml0-selftest.lisp|PASS|0
+094|ml0|INPL|sbcl --script mneme/memory-layer-0/ml0-host-fault-proof.lisp|PASS|0
+095|ml0|INPL|sbcl --script mneme/memory-layer-0/ml0-controls.lisp|PASS|0
+096|ml0|INPL|sbcl --script mneme/memory-layer-0/ml0-mutants.lisp|PASS|0
+097|ml0|INPL|sbcl --script mneme/memory-layer-0/ml0-block-proof.lisp|PASS|0
+098|ml0|INPL|sbcl --script mneme/memory-layer-0/ml0-consolidation-proof.lisp|PASS|0
+099|ml0|INPL|sbcl --script mneme/memory-layer-0/ml0-red-proof.lisp|PASS|0
+100|ml0|COPY|sbcl --script mneme/memory-layer-0/de-actu-memorato/run-specimen.lisp|PASS|0
+101|vertical0|COPY|bash mneme/vertical0/harness/repeatability.sh|PASS|0
+102|vertical0|COPY|sbcl --script mneme/vertical0/controls/run-integration-controls.lisp|PASS|0
+103|vertical0|COPY|sbcl --script mneme/vertical0/mutants/run-mutation-gate.lisp|PASS|0
+104|vertical0|COPY|sbcl --script mneme/vertical0/reconstruction/run-reconstruction-gate.lisp|PASS|0
+105|cd0|INPL|sbcl --script canonical-datum/common-lisp/run-tests.lisp|PASS|0
+106|cd0|INPL|python3 canonical-datum/tools/verify_phase0.py|PASS|0
+107|cd0|INPL|python3 canonical-datum/integration/run_differential.py --json|PASS|0
+108|lci0|INPL|python3 mneme/lci0/shared/fixture_package.py verify|PASS|0
+109|lci0|INPL|sbcl --script mneme/architecture/pj0-errata/erratum-1-d2-examples.lisp|PASS|0
+110|release|INPL|bash mneme/load-lisp-plus.sh|PASS|0
+111|release|INPL|bash mneme/load-order-matrix.sh|PASS|0
+112|atelier|INPL|python3 mneme/atelier/static-check.py|PASS|0
+
+## LANEORDER
+aggregate|kernel0|journal0|capability0|capability1|capability2|adapter0|core0|slice0|slice1|slice2|form0|form1|form2|surface0|surface1|surface2|surface-account|act0|vertical0|cd0|lci0|atelier|release
+
+## LANES  lane|gates|passed|nonpassing|blocked
+aggregate|3|3|0|0
+kernel0|2|2|0|0
+journal0|3|3|0|0
+capability0|3|3|0|0
+capability1|3|3|0|0
+capability2|3|3|0|0
+adapter0|8|8|0|0
+core0|7|7|0|0
+slice0|4|4|0|0
+slice1|3|3|0|0
+slice2|3|3|0|0
+form0|4|4|0|0
+form1|6|6|0|0
+form2|8|8|0|0
+surface0|2|2|0|0
+surface1|11|11|0|0
+surface2|4|4|0|0
+surface-account|5|5|0|0
+act0|3|3|0|0
+vertical0|4|4|0|0
+cd0|3|3|0|0
+lci0|2|2|0|0
+atelier|1|1|0|0
+release|2|2|0|0
+
+## CARRIED  status|lane|headline
+KNOWN-UNRESOLVED|lci0|LCI/0 algebraic-law audit: 84 laws PASS, 4 laws preserved FAIL
+BLOCKED-EXTERNAL-INPUT|lci0|LCI/0 law-audit harness cannot execute on this host
+ARCHIVED-NOT-RERUN|lci0|LCI/0 cross-implementation differential: 2,295 requests/impl, 0 mismatches
+ARCHIVED-NOT-RERUN|vertical0|Vertical /0 five-life SIGKILL campaign
+ARCHIVED-NOT-RERUN|language-a|Language-A tranche-B (706 files, emission BANKED 295/312)
+PASS|latent-mvp|latent-mvp historical floor (6/6 suites)
+ADOPTED|ml0|Memory Layer /0 — the language's durable account of its own act: ADOPTED AND PUBLISHED · stranger audit owed · no independent verification
+ADOPTED|act1|perform ACROSS process death: One Act /1 — ADOPTED
+ADOPTED|seam|derive/perform over a journal-backed process: One Act /0 — ADOPTED
+
+## TERMINAL
+attempted|112
+passed|112
+failed|0
+blocked-external-input|0
+rows carried|9
+of which KNOWN-UNRESOLVED|1
+of which BLOCKED-EXTERNAL-INPUT|1
+of which ARCHIVED-NOT-RERUN|3
+of which ABSENT|0
+of which PASS (elsewhere)|1
+of which CANDIDATE-NOT-ADOPTED|0
+of which ADOPTED|3
+RESULT|PASS
+
+## TOTALS-CHECK
+rows parsed|112
+rows PASS|112
+rows non-PASS|0
+lane gate sum|97
