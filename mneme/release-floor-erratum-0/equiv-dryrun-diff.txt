@@ -1,0 +1,7 @@
+Files /tmp/ferry-mirror-pre/README.md and /tmp/ferry-mat/README.md differ
+Files /tmp/ferry-mirror-pre/atelier/siblings/VISITORS-BOOK.md and /tmp/ferry-mat/atelier/siblings/VISITORS-BOOK.md differ
+Files /tmp/ferry-mirror-pre/atelier/siblings/hermes/README.md and /tmp/ferry-mat/atelier/siblings/hermes/README.md differ
+Files /tmp/ferry-mirror-pre/atelier/siblings/hermes/tarjama.lisp and /tmp/ferry-mat/atelier/siblings/hermes/tarjama.lisp differ
+Files /tmp/ferry-mirror-pre/mneme/architecture/ARCHITECTURE-0-STATUS.md and /tmp/ferry-mat/mneme/architecture/ARCHITECTURE-0-STATUS.md differ
+Only in /tmp/ferry-mat/mneme: release-floor-erratum-0
+Files /tmp/ferry-mirror-pre/mneme/verify-release.sh and /tmp/ferry-mat/mneme/verify-release.sh differ

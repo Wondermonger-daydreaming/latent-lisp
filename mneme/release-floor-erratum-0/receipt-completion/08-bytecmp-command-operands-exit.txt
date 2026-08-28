@@ -1,0 +1,17 @@
+# Item 8 — recursive byte-comparison: command, operands, exit, artifact
+
+## Original act-time comparison (its artifact is 08-readback-bytecmp.txt in this parcel)
+command : diff -qr --no-dereference /tmp/ferry-readback /tmp/ferry-mat -x .git > /tmp/ferry-bytecmp.txt
+operands: /tmp/ferry-readback = fresh clone of the mirror post-act (HEAD 88f2238a…)
+          /tmp/ferry-mat      = git archive 6b50cd50:experiments/latent-lisp, extracted, _staging removed
+exit    : 0 (as printed act-time: 'recursive byte comparison … exit 0')
+artifact: 08-readback-bytecmp.txt — 0 bytes; diff -qr emits nothing when trees are identical,
+          so the empty file IS the positive result, not a missing one.
+ABSENCE NAMED: the act-time operands' directories were /tmp state; the act-time stdout beyond the
+exit line was empty by construction. Nothing else existed to capture.
+
+## Completion-time re-comparison (fresh clone /tmp/ferry-readback-2 vs fresh re-materialization), 2026-08-24T00:41:35Z
+$ git archive 6b50cd50479d5c23c680ba4962be763498ee006c:experiments/latent-lisp | tar -x -C /tmp/ferry-mat-2
+$ find /tmp/ferry-mat-2 -type d -name _staging -prune -exec rm -rf {} +
+$ diff -qr --no-dereference -x .git /tmp/ferry-readback-2 /tmp/ferry-mat-2 ; echo EXIT=$?
+EXIT=0

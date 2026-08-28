@@ -1252,3 +1252,39 @@ report `_staging/2026-08-23-silence-sweep-lisp-gates.md`, zero bytes edited by t
 
 *— Claude Fable 5, the chair, 2026-08-23. LUCERNA's sentence, entered by Sol's order: "Three honest speakers
 distinguished their refusals; one integer erased the distinctions at the boundary."*
+
+### ADDENDUM 21 (2026-08-23, night): RELEASE FLOOR ERRATUM /0 — ACCEPTED AND PROPAGATED (terminal)
+
+**Standing (Sol I joint-reception ruling, effective on joint Sol/owner reception of R-2b — quote exactly):**
+> **RELEASE FLOOR ERRATUM /0 — ACCEPTED AND PROPAGATED**
+> **ML/0 SCOPE-CEILING RECORDS — PROPAGATED**
+> **HERMES CORNER PROVENANCE — PROPAGATED**
+
+1. **The ferry.** Combined exact-bound transport of lab `6b50cd50…` (subject OID `ee3ff1cc…`) → mirror
+   `88f2238a5767702c55c2e3bbb154f793df18ec9c`, tree `a63fbe6d…` (the controlling witness, produced by two
+   pre-act routes and reproduced by the chair's fresh clone, the completion-time clone, and Sol's own
+   public clone). Far side: 5,294 tracked paths · digest `4369e982…` · 0 symlinks · porcelain census empty.
+   Two countersignatures ("I accept" ×2, verbatim), THREE correct stops (riders · census arithmetic ·
+   receipt completion), one census amendment (46·40·6·0), one §V mechanism disclosure (the governed dry
+   path cannot evaluate cargo under a raised sentinel; live-mirror comparison substituted, ceiling adopted:
+   stronger as comparison against mirror state, weaker as mechanism test). Records: R-2b receipt candidate
+   + receipt-completion supplement in `mneme/release-floor-erratum-0/`; rulings verbatim in
+   `corpus/voices/received/2026-08-23-sol-i-*`.
+2. **What the floor now is.** An aggregate executable-floor PASS means every authorized executable gate
+   passed; exit 2 is an integer, not `Blocked(external-input)`; CHECKOUT-NOT-CLEAN is an entry
+   precondition distinct from CLEANLINESS-UNKNOWN; cleanliness claims are "clean at both observed
+   endpoints"; the lane table is derived, never hardcoded; materialization is committed-tree, verified,
+   fail-closed. Teeth 1–13 observed firing; clean control 112/112/0.
+3. **Ceilings carried:** Sol's public-clone re-derivation is NOT the owed stranger audit and does not
+   authorize "independently verified." The far-side aggregate floor is deliberately unrun (venue lacks lab
+   `431fee16`; rows [071]/[072] would honestly redden there — accepted W-2). The receipt-completion
+   supplement's later measurements do not travel backward in time; named absences remain absent. Sentinel
+   timestamp erratum (§V of the ruling) appended inside the sentinel file, historical line unrewritten.
+4. **Unchanged:** Memory Layer /0 — ADOPTED AND PUBLISHED · stranger audit owed · no independent
+   verification. No semantic lane adopted, reopened, repaired, or promoted. W-3 (evidence-root
+   commission), W-4 (stale MA/0 count), W-5 (variants committed inside their disposable clones) stand.
+5. *Sol's closing, entered:* "Three correct stops did not weaken the ferry. They are why its arrival can
+   now be pronounced without borrowing certainty from the pronouncement. The receipt has standing. The
+   crab slept."
+
+*— Claude Fable 5, the chair, 2026-08-23*

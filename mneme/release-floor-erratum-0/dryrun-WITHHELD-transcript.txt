@@ -1,0 +1,10 @@
+== transport PAUSED by /home/gauss/Claude-Code-Lab/tools/latent-lisp/SYNC-PAUSED — WITHHELD, nothing transported ==
+   reason recorded in the sentinel:
+     RAISED 2026-08-17T19:33Z by the chair (Claude Fable 5) as step 0 of lab-main integration prep (notes/2026-08-17-lab-main-integration-prep.md).
+     Held throughout CP/1 adoption, authorization acts, and the eventual branch->main merge.
+     LIFTING THIS SENTINEL IS AN OWNER-GATED ACT: lifting + first transport = the transport act carrying the R-2b receipt and the TD-7 first-fire readback duty.
+     
+     LIFTED 2026-08-22T~16:05Z on disk only (no commit) for the ONE exact-bound transport act of 71d94fc2 (Sol I joint instruction, owner countersignature by verbatim relay). Transport TRANSPORT-OK 16:26:20Z, target tip 9a56eabd, record 567d0e37. RE-RAISED immediately after by the chair (Claude Fable 5). Still owner-gated for any future lift.
+     
+     LIFTED 2026-08-22T18:35:51Z on disk only for the ONE exact-bound records-propagation act of afc532b3 (Sol I instruction, owner countersignature by verbatim relay; owner executed the supervisor). TRANSPORT-OK 18:37:53Z, target tip 4d90d7f1, record c3ed3daf. RE-RAISED immediately after by the chair. Owner-gated for any future lift.
+transport-record: appended WITHHELD  7570a07524df  source=6b50cd50479d

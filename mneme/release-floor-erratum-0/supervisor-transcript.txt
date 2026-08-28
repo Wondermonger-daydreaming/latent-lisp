@@ -1,0 +1,16 @@
+[2026-08-24T00:20:56Z] transport-supervisor: run 20260824T002056Z-727364-81951454 via manual for commit 6b50cd50479d5c23c680ba4962be763498ee006c — PENDING
+== transporting COMMITTED tree ==
+   lab commit : 6b50cd50479d5c23c680ba4962be763498ee006c
+   subtree    : ee3ff1cc9b436f82a2fcb27627b133de09fa1027  (experiments/latent-lisp)
+HEAD is now at 4d90d7f sync: materialized committed tree of lab commit afc532b3
+To https://github.com/Wondermonger-daydreaming/latent-lisp.git
+   4d90d7f..88f2238  HEAD -> main
+== TRANSPORT-OK — pushed to https://github.com/Wondermonger-daydreaming/latent-lisp.git ==
+   target tip : 88f2238a5767702c55c2e3bbb154f793df18ec9c
+   NOT PUBLICATION: transport success is TRANSPORT-OK. PUBLISHED standing
+   requires authorization → verified transport → PUBLISHED, and is not
+   created, evidenced, or claimed by this line.
+transport-record: appended TRANSPORT-OK  e61bfb30f80c  source=6b50cd50479d
+[2026-08-24T00:21:24Z] transport-supervisor: terminal event already recorded by the transport itself:
+   {"schema":"latent-lisp/transport-record/1","event":"TRANSPORT-OK","source_commit":"6b50cd50479d5c23c680ba4962be763498ee006c","attempted_ref":"https://github.com/Wondermonger-daydreaming/latent-lisp.git#refs/heads/main","subject_subtree":"ee3ff1cc9b436f82a2fcb27627b133de09fa1027","exit_code":0,"reason":"pushed HEAD:main; target tip 88f2238a5767702c55c2e3bbb154f793df18ec9c; subject subtree ee3ff1cc9b436f82a2fcb27627b133de09fa1027","tool":"sync.sh","run_id":"20260824T002056Z-727364-81951454","utc_time":"2026-08-24T00:21:20Z"}
+[2026-08-24T00:21:24Z] transport-supervisor: sync exit=0 (run 20260824T002056Z-727364-81951454) — harvest complete

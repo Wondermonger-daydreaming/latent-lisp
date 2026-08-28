@@ -1,0 +1,13 @@
+# Item 6b — post-act chain verification, run at completion time 2026-08-24T00:40:28Z:
+$ bash tools/latent-lisp/transport-record.sh verify
+== transport-record verify ==
+   repo      : /home/gauss/Claude-Code-Lab
+   ref       : refs/latent-lisp/transport-record
+   validator : python3
+   tip       : ce8cd3e7a9ef9d5b7a4b2713dc719ca124f8eeb0
+   records   : 130
+   append-only (reflog): GREEN — 129 journalled movement(s), continuous over the retained suffix beginning at 901f584ec86b8458a95027c9fc60f5f7b434f51b, every one a fast-forward, and the last one leads to the ref's current value
+   guards    : 0 under refs/latent-lisp/transport-reconciled/ — nothing to audit (vacuous pass, stated)
+   custody   : fully enumerated — 0 unresolved gap(s)
+
+== transport-record: GREEN — 130 record(s), chain linear, every record valid ==

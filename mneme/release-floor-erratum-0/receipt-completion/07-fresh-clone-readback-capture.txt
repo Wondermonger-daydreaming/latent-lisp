@@ -1,0 +1,20 @@
+# Item 7 — fresh-clone readback capture
+# NOTE (absence named first, per the order): the ORIGINAL readback of ~00:2xZ was emitted to the
+# session's tool-result stream and never written to a file; it is quoted in the receipt §7 and is
+# otherwise ABSENT. THIS capture is a completion-time readback on a BRAND-NEW fresh clone,
+# 2026-08-24T00:40:38Z; the mirror ref has not been pushed to since the act (chain in 06b shows the
+# TRANSPORT-OK as the terminal movement).
+
+$ git clone -q https://github.com/Wondermonger-daydreaming/latent-lisp.git /tmp/ferry-readback-2
+$ git rev-parse HEAD
+88f2238a5767702c55c2e3bbb154f793df18ec9c
+$ git rev-parse 'HEAD^{tree}'
+a63fbe6d2054a1821794b0c226f1470cc9838984
+$ git status --porcelain --ignored | wc -c   # complete porcelain census (0 = empty)
+0
+$ git ls-files | wc -l
+5294
+$ git ls-files | LC_ALL=C sort | sha256sum
+4369e9824e6b8058762ab1508708336e7254638a1f67d04506f266284ce64db2  -
+$ git ls-files -s | awk '$1=="120000"' | wc -l   # symlink count
+0

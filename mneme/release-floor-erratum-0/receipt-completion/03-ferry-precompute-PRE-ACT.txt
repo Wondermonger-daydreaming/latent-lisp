@@ -1,0 +1,5 @@
+PRE-ACT PRECOMPUTATION — combined transport 6b50cd50 (2026-08-24T00:16:13Z)
+expected_far_side_tree=a63fbe6d2054a1821794b0c226f1470cc9838984
+expected_path_count=5294
+sorted_path_digest=4369e9824e6b8058762ab1508708336e7254638a1f67d04506f266284ce64db2
+symlink_count=0

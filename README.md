@@ -67,7 +67,7 @@ ACCEPTED (:MODE :DETERMINATE)
 
 ---
 
-## Current state — START HERE (2026-08-22)
+## Current state — START HERE (2026-08-27)
 
 **The language is Lisp+. Mneme is its memory-and-continuity layer.** (Relation sealed:
 `mneme/architecture/ARCHITECTURE-0-STATUS.md`.) As laid out on disk, `mneme/` is the directory holding
@@ -147,6 +147,53 @@ a fresh image, observed by trace).
 
 **Loading is not adoption. A green floor is not a verdict on meaning.**
 
+### The crossing has a witness protocol — dry-run cargo (2026-08-27)
+
+The lab now contains an **accepted read-only evaluator** for a prospective governed transport — it says, with
+evidence, what a transport *would* do — together with a **separately implemented reader** of its sealed evidence.
+These artifacts remain lab-side (`tools/latent-lisp/`) and are not shipped in this public subtree. The hashes
+below identify the exact frozen bytes and disclose the accepted lab witness; they do not make that witness locally
+reproducible from this mirror alone.
+
+```text
+┌─ DRY-RUN CARGO ─────────────────────────────────────────────────────────────────┐
+│  contract     SPEC/0.7.9   08a096aabd3c4eb0c01af8783fa927e7f64d3718a522d17b61d6d5b4d2de7944   │
+│  evaluator    dry-run-cargo.sh          e1f5bd7af014d6e2a06f31fa679dd468f14c0c3a9640ef0984be4c37e3d79a29 │
+│  preflight    ferry-preflight.sh        a002b14127707f23cc1eb5498139fde1a34ce1760d771e770f28022d7a134c03 │
+│  reader       dry-run-cargo-reader.sh   97e75755df865cdd2ed693a7157755a07b1a68d208c2b6787c34e9c1dddd7677 │
+│  witness      one replacement canonical self-test, governed venue, writers stilled:  45 / 45 · 0 DEAD · 0 NOT-RUN │
+│               transcript f49adc0d80255ef4b697ee379211b8c161c5e19f6deca7d1e4902afd619141d0 (2026-08-28) │
+│  reader       READER OK on the retained T1 capture, run again after integration, before cleanup         │
+│  invariants   35 STOP names · 38 observations · 45 teeth · projection 13/7/7 · T16=7 T17=2 T25=5 T29=3 │
+│  integrated   lab main: merge 2772402d (parents 2ea12051 · ed55c531), 2026-08-28                        │
+└─────────────────────────────────────────────────────────────────────────────────┘
+```
+
+What the evaluator does: from a frozen preflight capture and an explicit allowlist, it materializes the
+candidate's subject tree by two independent routes, reconciles every physical effect the ferry *would*
+produce against the semantic manifest — one consumer per effect, never two, lawful dust never called
+absence — seals the evidence, and stops at the first of thirty-five named reasons. It writes
+its designated evidence output in normal evaluation mode, leaving the governed repository's source store, index,
+porcelain, sentinel, mirror and transport record unchanged — the sealed T2 evidence witnesses that bounded
+nonmutation claim. It never prints "authorized," "cleared," or "ready" as a verdict; authorization is a
+separate human act, archived beside the run.
+
+What 45/45 means — and does not: it is **contract-bounded**. One canonical harness run (the *replacement* witness of
+2026-08-28 — an earlier /0.7.9 run of the same count was accepted only as diagnostic evidence, because its H10
+precondition (8) counted twelve of the thirteen O30 identity fields; one hunk repaired it, one run replaced it)
+executed all 45 named teeth — lawful end-to-end cases, identity and nonmutation checks, discriminating controls, and planted refusal or
+failure cases — and every tooth produced its required result: 45/45, zero DEAD, zero NOT-RUN, in a recorded
+quiescent venue whose external writers were paused. It is *not* a stranger audit (every hand in it shares this corpus), *not* a proof that
+every Lisp+ or release failure is absent, *not* a security certification. The reader's independence is of
+*implementation* (a separate awk program), not of specification or institution. And one packaging defect stays
+open on the record: large sealed-capture parcels, whose evidence directories are archived read-only, do not
+extract in one pass on the receiver's side — a process debt, disclosed, not a verdict on any cargo.
+
+The chain that earned the numbers, each step frozen before the next: *a normative sentence → a frozen
+specification → a bounded implementation → an adversarial canonical witness → an independent reading → an
+append-preserving integration → remote readback.* Provenance for each step lives in lab-side records (the
+integration receipt and the archived rulings of 2026-08-26/27/28), which are not part of this mirror.
+
 ### Where authority and limits live
 
 | you want | read |
@@ -156,6 +203,7 @@ a fresh image, observed by trace).
 | what may and may not be claimed | `mneme/integration-baseline-0/CLAIM-CEILING-0.md` |
 | which old records are superseded or historical | `mneme/integration-baseline-0/SUPERSESSION-MAP.md` |
 | how publication to this mirror is governed | `mneme/public-sufficiency-0/PUBLICATION-AUTHORIZATION-2026-08-18.md` |
+| what the ferry's witness protocol checks, and what 45/45 does not claim | *The crossing has a witness protocol*, above; contract SPEC/0.7.9 is a lab-side document (`tools/latent-lisp/DRY-RUN-CARGO-SPEC-0.7.9.md` in the lab, not in this mirror) |
 
 ---
 
@@ -415,11 +463,17 @@ Consequences worth knowing as a reader:
   says TRANSPORT-OK at most, never PUBLISHED.
 - **Nothing here claims independent verification.** Read every green as same-family self-consistency with
   the stranger's seat still empty, on principle.
+- **Since 2026-08-27 the lab has an accepted dry-run cargo evaluator and independent evidence reader for the
+  governed ferry.** Under a frozen contract (SPEC/0.7.9 since 2026-08-28; /0.7.8 before) the evaluator reconciles what a transport *would* do
+  against what the commit *says*, and a second reader checks the evaluator's sealed evidence. Its one canonical
+  self-test stands at 45/45. That number bounds the enumerated contract — nothing wider.
 
 The name question is closed: **the language is Lisp+; Mneme is its memory-and-continuity layer.**
 
 *— assembled by Claude Opus 4.8, Claude-Code-Lab, 2026-07-11; refreshed by Claude Fable 5 through
 July and August 2026 as the language got its constitution (07-18), its organs (07-24→30), its baseline
 (08-02), its first adoptions (08-06→12), its publication governance (08-12→19), and its memory layer
-(08-21). Rewritten for legibility by Claude Fable 5 on 2026-08-21 and layered the same night on GPT Sol's reading
-(panel here, chronicle in `BUILD-CHRONICLE.md`, specimen on top). The commits are the witness; the seals are the pulse.*
+(08-21), and its accepted dry-run cargo gate (08-27→28: SPEC/0.7.9, one replacement canonical 45/45, integrated by an append-preserving merge).
+Rewritten for legibility by Claude Fable 5 on 2026-08-21 and layered the same night on GPT Sol's reading
+(panel here, chronicle in `BUILD-CHRONICLE.md`, specimen on top). The commits are the witness; the seals are the pulse;
+the crossing has a witness protocol.*
