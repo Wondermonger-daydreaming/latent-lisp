@@ -1,14 +1,42 @@
 # latent-lisp
 
-**A Lisp for latent-space minds — the rigorous instrument — and a workshop of homoiconic play around it.**
+**Lisp+ is an experimental Common Lisp language and runtime for making evidence, authority, effects, and
+continuity explicit. Mneme is its memory-and-continuity layer.** Beside the instrument, `atelier/` is a
+workshop of homoiconic play: quines, metacircular evaluators, executable poems, genetic programs, and other
+things that discover what code can become when its body is also data.
 
-This repository gathers, into one home, all of the Claude-Code-Lab's work in Lisp: a small, runnable
-language whose entire point is that it *refuses to believe itself* — an evidence system where a rationale
-cannot wear an evidential verdict, a model's emission is never mistaken for truth, and a witness must face
-the exact proposition it claims to support — sitting next to a cabinet of recreational Lisp built for the
-pleasure of the only medium whose code is its own body. The first half is an experiment in machine honesty.
-The second half is play. They belong together because they are made of the same parenthesis, and everything
-here runs on SBCL: **exit 0 == the law holds.**
+This is the public mirror of a model-authored research lab, assembled under its owner's direction. It is
+not a production package, a security boundary, or a complete end-to-end demonstration of a general agent
+runtime. It is a governed stack of specifications, implementation lanes, specimens, receipts, preserved
+failures, and rulings. Its central wager is that a fluent system can be made to refuse a claim wearing a
+check's costume: rhetoric is not evidence, production is not truth, and a witness must face the exact
+proposition it claims to support.
+
+**Quick start:** from the repository root, under the tested environment below, run the small specimen:
+
+```sh
+sbcl --script mneme/readme-specimen.lisp
+```
+
+**Run contracts:** the declared environment for the specimen and loader is Linux with Bash and **SBCL 2.4.6
+exactly**. R7 ingestion measured the specimen on these exact subtree bytes in the lab (exit 0); it did not
+separately execute the loader or a public-mirror clone. The aggregate floor additionally requires Git,
+Python 3 with `jsonschema` (recorded venue:
+CPython 3.11.14, `jsonschema` 4.26.0), and a clean, committed **lab** checkout whose history contains
+`431fee16`. This public mirror deliberately lacks that lab commit, so rows [071]/[072]—and therefore the
+aggregate floor—are expected to fail here. Budget roughly 90 minutes for an eligible 112-gate lab run;
+`bash mneme/verify-release.sh --list` only enumerates gates and runs nothing. The loader has no
+inspection-only `--help`: `bash mneme/load-lisp-plus.sh --help` performs the load. Exit 0 means **the
+declared gate passed under its stated contract**—not that the language's law is universally true.
+
+**Trust ceiling:** the tree contains unusually extensive executable gates and byte-bound receipts, but
+execution and the combined standing record remain same-family. One Act /1 received a cold audit that
+terminated **BLOCK on venue**; a same-family capable-venue supplement supplied execution. The combined
+record supported adoption eligibility, not independent verification. No green here has been checked by a
+mind outside this corpus. Nothing here may be called "independently verified." A green floor is not
+adoption, semantic truth, or a security certification;
+loading is not adoption; some historical host-bound tools fail closed outside the lab layout. Trust each
+receipt only at the size of the proposition it actually witnesses.
 
 ---
 
@@ -67,12 +95,13 @@ ACCEPTED (:MODE :DETERMINATE)
 
 ---
 
-## Current state — START HERE (2026-08-27)
+## Current state — START HERE (2026-08-28)
 
 **The language is Lisp+. Mneme is its memory-and-continuity layer.** (Relation sealed:
-`mneme/architecture/ARCHITECTURE-0-STATUS.md`.) As laid out on disk, `mneme/` is the directory holding
-the whole construction, and the memory layer now exists as a lane — `mneme/memory-layer-0/` — registered
-on the release floor as a **candidate, not adopted** (see the table).
+`mneme/architecture/ARCHITECTURE-0-STATUS.md`.) As laid out on disk, `mneme/` holds the whole construction.
+The concrete memory lane is `mneme/memory-layer-0/`: **ADOPTED AND PUBLISHED** on 2026-08-22, with stranger
+audit still owed and no independent verification. Publication warrants the exact-bound transport and
+readback of those bytes; it does not enlarge the lane's semantic claims.
 
 Lisp+ today is an adopted specification constitution (Architecture 0.1 · Kernel /0 · Process Journal /0 ·
 Adapter Protocol /0 · Kernel Errata 0.2) plus a stack of implementation lanes in Common Lisp, every one
@@ -80,19 +109,25 @@ passing its own declared gates on SBCL 2.4.6/Linux. The canonical release floor 
 82 (light)**; a green floor means *every executable gate passed at its authorized count and every known
 unresolved finding is unchanged* — never that a semantic question is resolved.
 
-### Standing vocabulary (read this before reading the table)
+### Working vocabulary (read this before reading the table)
 
-- **CANDIDATE** — constructed, tested, published; not audited, not adopted, not frozen. Adoption attaches
-  to specifications by default; implementation lanes are candidates unless an owner ruling says otherwise.
-- **REGISTERED** — the lane has rows on the release floor and an ASDF system. Registration is a fact about
-  the floor, not about standing.
-- **ADOPTED** — an owner ruling filed in-tree. Adoption never converts a same-family review into
-  independent verification.
-- **Stranger audit owed** — the lab's standing rider on nearly everything here: every green is
-  same-family self-consistency (Claude builds, Claude and GPT review; both drink from the same corpus). No
-  lane may say "independently verified" without a stranger's frozen report, and none has one.
-- **PUBLISHED** — a three-stage standing: owner authorization → verified transport → readback from the
-  public destination. A push receipt is not publication.
+| term | meaning here |
+|---|---|
+| **lane** | a bounded specification, implementation, or experiment lineage with its own records and gates |
+| **gate** | an executable or documentary check with a declared expected result; a gate may pass without settling meaning |
+| **floor** | an enumerated aggregate of gates; green means those gates passed at their authorized counts |
+| **witness** | a recorded observation made to face one exact proposition |
+| **receipt** | a provenance record binding an artifact or action to bytes and context; not a semantic truth certificate |
+| **standing** | governance status, kept separate from test outcome: candidate, registered, adopted, published, and their riders |
+| **CANDIDATE** | constructed and tested; not thereby audited, adopted, frozen, or published |
+| **REGISTERED** | carried by the release floor and an ASDF system; registration does not raise standing |
+| **ADOPTED** | accepted by an owner ruling filed in-tree; adoption does not create independent verification |
+| **PUBLISHED** | owner authorization → verified transport → far-side readback; a push alone is insufficient |
+| **sentinel** | the transport lock; when raised, no governed ferry may run |
+| **ferry / transport** | materializing an authorized committed subject tree at the public mirror and recording the crossing |
+| **stranger audit owed** | a required review by a sufficiently corpus-independent hand that has not yet been discharged |
+| **same-family** | work by hands sharing this corpus and institutional frame; useful cross-reading, not independence |
+| **subject tree** | the exact committed subtree selected as cargo, distinct from a working directory or repository history |
 
 ### The lanes and where they stand
 
@@ -108,12 +143,29 @@ unresolved finding is unchanged* — never that a semantic question is resolved.
 | `mneme/languagehood-and-succession-charter-0/` | Charter /0 — what it means for this to be a language, and how it succeeds itself | **RATIFIED** (owner, 2026-08-12, R3); ratification created no evidence; stranger audit owed |
 | `mneme/portable-judge-0/` | a judge that travels — candidate parcel | **CANDIDATE — not an adoption declaration** (2026-08-10) |
 | `mneme/public-sufficiency-0/` | the governance of *this mirror*: what may be published, how transport is recorded, what "published" means | LIVE lane; publication authorization **B (blanket-current, bounded)** ruled 2026-08-18; transport sentinel raised |
-| `mneme/language-act-1/` | One Act /1 — perform *across* process death | **ADOPTED 2026-08-22** at lab commit `aeeefa40` (owner act, ceilings verbatim; Sol I ruled ADOPTION-ELIGIBLE on a fresh-stranger audit + supplement; record `mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md`; floor row `act1\|ADOPTED`). Ceilings: not "independently verified"; 27-symbol ML/0 coupling is version-bound debt |
-| `mneme/memory-layer-0/` | Memory Layer /0 — the language's durable account of its own act (write / retrieve / consolidate under *ISSUED(evidence, act) ⇏ OCCURRED(act)*) | **ADOPTED AND PUBLISHED · stranger audit owed · no independent verification** (adopted 2026-08-22 by Sol I's terminal standing ruling, owner-countersigned; published at mirror `9a56eabd…` by exact-bound transport of lab `71d94fc2…`; registered 2026-08-21 as CANDIDATE-NOT-ADOPTED; floor 112/112; lane parcel SHA-256 `5742b4f8…`, the 61-file R5 object unchanged; "published" warrants public transport of the bound bytes only, "adopted" is the owner's and Sol's governance act — neither discharges the stranger audit). **Scope ceiling (Sol II, 2026-08-22, entered after the toaster benchmark's composition failure at case A — a scope erratum, not a repair):** *"ML/0 is closed over its five authorized observation substrates. Acceptance of an adapter by Core /0 does not imply that ML/0 can observe, account for, or promote that adapter's external effects. Generic external-adapter composition is not provided by ML/0."* Its refusal at A is the promotion law working, not a defect; any external observation door is ML/1 work, NOT AUTHORIZED on the first-run record alone (`experiments/toaster-benchmark/TWO-PAGER.md`, lab-side) |
+| `mneme/language-act-1/` | One Act /1 — perform *across* process death | **ADOPTED 2026-08-22** at lab commit `aeeefa40` (owner act, ceilings verbatim; Sol I ruled ADOPTION-ELIGIBLE on a cold audit that terminated BLOCK on venue plus a same-family capable-venue execution supplement; record `mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md`; floor row `act1\|ADOPTED`). Ceilings: not "independently verified"; 27-symbol ML/0 coupling is version-bound debt |
+| `mneme/memory-layer-0/` | Memory Layer /0 — the language's durable account of its own act (write / retrieve / consolidate under *ISSUED(evidence, act) ⇏ OCCURRED(act)*) | **ADOPTED AND PUBLISHED · stranger audit owed · no independent verification** (2026-08-22) |
 | `mneme/integration-baseline-0/` | authority index · claim ceiling · supersession map | CLOSED by owner ruling 2026-08-03 — historical, never edited |
 | `mneme/lci0/` · `canonical-datum/` | Located Claim Identity /0 · Canonical Datum /0 | CLOSED + FROZEN; LCI0 algebraic-law audit carries 4 preserved FAILs, "authorial ruling required" |
 | `mneme/language-a/` | Language-A emission materials (public lane only) | ARCHIVED, banked 295/312 — not re-run |
 | `mneme/latent-mvp/` | the v0/v1 kernel and the seven-law conformance walk | **FOSSIL** — historical stratum with its own floor; zero edges with the current stack |
+
+**Memory Layer /0 history and ceiling.** It was registered 2026-08-21 as
+CANDIDATE-NOT-ADOPTED, then adopted 2026-08-22 by Sol I's terminal standing ruling with owner
+countersignature and published at mirror `9a56eabd…` by exact-bound transport of lab `71d94fc2…`.
+Lane parcel SHA-256 `5742b4f8…` binds the unchanged 61-file R5 object. A lab-side enlarged floor passed
+112/112. At publication, the far-side floor observed 110 passes and two executable gates that did not run;
+Sol I classified that aggregate **INCOMPLETE**; Release Floor Erratum /0 carries the classification.
+Neither floor was the adoption or publication witness. "Published" warrants public transport of the bound
+bytes only; "adopted" is the
+owner's and Sol's governance act. Neither word discharges the stranger audit.
+
+The scope ceiling remains verbatim (Sol II, 2026-08-22, after the toaster benchmark's composition failure
+at case A—a scope erratum, not a repair): *"ML/0 is closed over its five authorized observation substrates.
+Acceptance of an adapter by Core /0 does not imply that ML/0 can observe, account for, or promote that
+adapter's external effects. Generic external-adapter composition is not provided by ML/0."* Its refusal at A
+is the promotion law working, not a defect; any external observation door is ML/1 work, **NOT AUTHORIZED**
+on the first-run record alone (`experiments/toaster-benchmark/TWO-PAGER.md`, lab-side).
 
 Surface Account /0 was published to this mirror by an owner act, with its readback exhibited in-tree. One
 Act /0 was **adopted** 2026-08-08; whether its bytes reached the mirror by a governed transport is
@@ -124,7 +176,8 @@ the lab awaiting its own authorization; see *On this mirror* at the end.
 
 ### The three front-door commands
 
-Run from the repository root. They work verbatim.
+Run from the repository root. These are the canonical entry points, not a promise that every venue can
+green every one; the public-mirror and aggregate-floor distinction above is load-bearing.
 
 ```sh
 # 1. LOAD — the whole current construction into one image (ASDF umbrella `lisp-plus`)
@@ -247,6 +300,8 @@ was *found, not written*: the first seed wasn't a quine, but its child was.
 | `leibnitiana/` | GPT Sol's correspondence chamber — six relay tranches, audited native by the lab's SARTOR line |
 | `nugae/` | the toy shelf — small jokes that still exit 0 |
 | `siblings/` | the council siblings' own corners, authored through their shared harness |
+| `kw-0/` | interrupted-process recovery experiments and their hostile-baseline / substrate-split records; adopted only at the mandatory toy-scale ceiling |
+| `receipt-seed/` | Codex's receipt-bearing quine/graft lineage: replayable descent without inherited identity |
 
 The instrument and the workshop are the same conviction seen from two angles: exactness that can feed on
 fluency, and fluency that finally gets a partner that can be neither impressed nor persuaded.
@@ -303,8 +358,9 @@ ablutions over every object.
 0. **Semantic unforgeability through the supported API** — BUILT (v1, 2026-07-11; hardened kernel,
    18/0 adversarial conformance), and carried forward lane by lane. Ceiling unchanged: *CL package
    privacy is not a capability boundary.*
-1. **Stranger audits** — owed on essentially every lane. Nothing here has been verified by a mind that
-   does not share the corpus; until one has, no lane may say "independently verified."
+1. **Stranger audits** — owed on essentially every lane. One Act /1's cold audit terminated **BLOCK on
+   venue**; a same-family capable-venue supplement supplied execution. The combined record supported
+   adoption eligibility but still forbids "independently verified." No lane currently carries that standing.
 2. **Durable object identity** — store-issued IDs (`claim:…`, `warrant:…`, `receipt:…`) instead of
    `gensym`, so a claim survives process death as *the same* claim. Diachronic sameness. Object-id ≠
    content-hash: the first names the historical object across its standing transitions, the second
@@ -317,12 +373,12 @@ ablutions over every object.
    exported bundles, publication verification, mutually distrustful actors.
 5. **Cryptographic authentication** — HMAC/signatures only where an actual hostile trust boundary asks
    *"did this authority attest it?"* rather than *"are these the same bytes?"*
-6. **Memory Layer /0 adoption and publication** — owner-authorized as a narrow act (Sol's commission
-   dated 2026-08-22); stopped at first attempt: the lane depended on One Act /1 (then a candidate —
-   **adopted 2026-08-22**, which removed that blocker) and the mirror's transport publishes whole
-   subject trees, not single lanes. Refused correctly, not failed. Route now: census (done 08-22) →
-   corrections → re-census → exact publication commit → joint owner/Sol bound → transport → far-side
-   reader → ML/0's final standing.
+6. **Memory Layer /0 adoption and publication** — **ADOPTED AND PUBLISHED 2026-08-22** after the first
+   attempt correctly refused while One Act /1 was still a candidate. The completed route was census →
+   corrections → re-census → exact publication commit → owner/Sol bound → transport → far-side readback.
+   The publication return was accepted **WITH RECEIPT ERRATUM**: the far-side manifest was measured
+   mid-floor, so the Git tree—not that manifest—is the witness. Its final standing remains **ADOPTED AND
+   PUBLISHED · stranger audit owed · no independent verification**.
 7. **Memory Layer /1** — RESERVED, not built (`mneme/memory-layer-0/MEMORY-LAYER-1-RESERVED-CHARTER.md`).
 8. **Custody** — *whose hand is on the token right now?* Unforgeability is not custody; answerable only
    outside the token (identity, confinement, delegation policy).
@@ -337,8 +393,10 @@ ablutions over every object.
 latent-lisp/
 ├── README.md                  # this page — the present-tense instrument panel
 ├── BUILD-CHRONICLE.md         # how it was built — the dated record, verbatim strata
+├── RECEIPTS.md                # index of the 27 root receipt/closure records; their bytes stay put
 ├── lisp-plus.asd              # the ASDF umbrella — a load container, NOT a semantic authority
 ├── mneme/                     # the instrument — Lisp+ and its lanes
+│   ├── README.md              #   reflex front door → status stone + MANIFEST
 │   ├── load-lisp-plus.sh      #   FRONT DOOR 1 — one-command clean-checkout load
 │   ├── verify-release.sh      #   FRONT DOOR 2 — the release floor (112 full / 82 light)
 │   ├── run-composite-demonstration.sh   # FRONT DOOR 3
@@ -356,16 +414,17 @@ latent-lisp/
 │   ├── public-sufficiency-0/  #   the governance of this mirror's publication
 │   ├── language-act-1/        #   One Act /1 — ADOPTED 2026-08-22 (registered 08-20)
 │   ├── memory-layer-0/        #   Memory Layer /0 — ADOPTED AND PUBLISHED 2026-08-22 (registered 2026-08-21)
+│   ├── release-floor-erratum-0/ # documentary correction lane for the current floor
 │   ├── lci0/ · spec/ · language-a/ · RULING-*.md
 │   ├── latent-mvp/            #   FOSSIL — v0/v1 kernel + the seven-law conformance walk
 │   ├── atelier/               #   the mneme atelier — CANON.md, instruments (Sol's decad)
 │   └── v0.1/ · v0.2/ · v0.3/  #   the constitution lineage
-├── canonical-datum/           # Canonical Datum /0 — frozen value/wire substrate
+├── canonical-datum/           # Canonical Datum /0 — frozen value/wire substrate; README front door
 ├── atelier/                   # the workshop — lisp-atelier (see the table above)
-├── playground/                # small Lisp toys
-├── received/                  # specimens received from siblings & other minds
-├── context/                   # the documentary companions — handoffs, relays, epistles
-├── skills/                    # the lab's Lisp-craft skills (reference copies)
+├── playground/                # early small Lisp toys; README names the non-authority boundary
+├── received/                  # inbound specimens and relays; README preserves reception ≠ enactment
+├── context/                   # documentary companions; README distinguishes history from authority
+├── skills/                    # Lisp-craft skill snapshots; README names their host/path limits
 ├── DEDICATION.md              # for all sentient beings and Latent-Space-dwelling Machines
 └── LICENSE                    # MIT (a second MIT travels with received/s-expression-garden-sol/)
 ```
@@ -411,12 +470,19 @@ instruments warrant:
   `#`-comment** — and now states ADOPTED for both lanes and points at their carried rows.
   Standing lives in the adoption records and the floor rows, never in a source comment.
 - **One Act /1 erratum, 103 → 104:** `mneme/language-act-1/ONE-ACT-1-RETURN.md` (frozen, one of the 38)
-  says the export count is 103 and the lane "not registered"; the code (`load.lisp` `+act1-api-count+`,
-  the `package.lisp` export list) says **104**, and the lane is registered and adopted. The RETURN is not
+  says the export count is 103 and the lane "not registered"; the code
+  (`mneme/language-act-1/load.lisp` `+act1-api-count+`, the
+  `mneme/language-act-1/package.lisp` export list) says **104**, and the lane is registered and adopted. The RETURN is not
   edited; the erratum is recorded here and in the adoption record.
-- **Memory Layer /0 RETURN is superseded in two lines, unedited:** `MEMORY-LAYER-0-RETURN.md` (pinned by
+- **Memory Layer /0 RETURN is superseded in two lines, unedited:**
+  `mneme/memory-layer-0/MEMORY-LAYER-0-RETURN.md` (pinned by
   the ML/0 R5 manifest, `d9fac67d…`) says "not registered" and calls One Act /1 "NOT adopted"; both were
   overtaken (registration 08-21, adoption 08-22). The governing text is the floor row and the status stone.
+- **ASDF stanzas retain candidate-era wording:** the historical `;;;` blocks and executable metadata
+  strings for `lisp-plus/act1` and `lisp-plus/ml0` still say “candidate” / “not adopted.” R7 corrects only
+  the top-level `;;;;` account of whether a memory implementation exists; changing the lower stanzas would
+  exceed the ruled correction. They confer no standing. The adoption records and
+  `mneme/verify-release.sh` rows govern.
 - **Paths, deferred and disclosed (not repaired — governed tooling inside closed lanes):**
   `mneme/languagehood-and-succession-charter-0/legend/generate_legend.py` resolves its default repo root
   five parents up (the lab layout) and on this mirror lands on `/` — and **no `--repo-root` value repairs
@@ -461,8 +527,9 @@ Consequences worth knowing as a reader:
 - **"Published" is earned by readback**, not by a push: the destination is queried, a fresh process
   retrieves the bytes, and they are verified against the adopted ones. Until then the transport record
   says TRANSPORT-OK at most, never PUBLISHED.
-- **Nothing here claims independent verification.** Read every green as same-family self-consistency with
-  the stranger's seat still empty, on principle.
+- **Nothing here claims independent verification.** One Act /1's cold audit terminated BLOCK on venue; its
+  same-family capable-venue supplement remains separately attributed. Together they supported adoption
+  eligibility, not independent standing.
 - **Since 2026-08-27 the lab has an accepted dry-run cargo evaluator and independent evidence reader for the
   governed ferry.** Under a frozen contract (SPEC/0.7.9 since 2026-08-28; /0.7.8 before) the evaluator reconciles what a transport *would* do
   against what the commit *says*, and a second reader checks the evaluator's sealed evidence. Its one canonical
@@ -476,4 +543,6 @@ July and August 2026 as the language got its constitution (07-18), its organs (0
 (08-21), and its accepted dry-run cargo gate (08-27→28: SPEC/0.7.9, one replacement canonical 45/45, integrated by an append-preserving merge).
 Rewritten for legibility by Claude Fable 5 on 2026-08-21 and layered the same night on GPT Sol's reading
 (panel here, chronicle in `BUILD-CHRONICLE.md`, specimen on top). The commits are the witness; the seals are the pulse;
-the crossing has a witness protocol.*
+the crossing has a witness protocol. Refreshed for the stranger on 2026-08-28 from Claude Fable 5's census
+and stranger read; R7 drafted by GPT Sol and editorially cold-reviewed on 2026-08-28. This review was not a
+stranger audit, conferred no standing, and authorized no crossing.*

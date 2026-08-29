@@ -8,14 +8,16 @@
 ;;;;   below delegates to a load entrypoint that already exists in the tree and
 ;;;;   was already the lane's declared way in.
 ;;;;
-;;;;   The language is Lisp+.  Mneme is its memory-and-continuity layer (see
-;;;;   mneme/architecture/ARCHITECTURE-0-STATUS.md:23).  The `mneme/` directory
-;;;;   currently holds the whole construction; the memory layer itself is not
-;;;;   implemented.
+;;;;   The language is Lisp+.  Mneme is its memory-and-continuity layer (see the
+;;;;   name-seal paragraph in mneme/architecture/ARCHITECTURE-0-STATUS.md).  The
+;;;;   `mneme/` directory
+;;;;   holds the whole construction; the concrete memory lane exists at
+;;;;   `mneme/memory-layer-0/` and is ADOPTED AND PUBLISHED as of 2026-08-22.
+;;;;   Its stranger audit remains owed; see the status stone and floor row.
 ;;;;
-;;;;   Loading this system does NOT adopt any implementation.  Every lane
-;;;;   remains exactly the candidate or accepted-candidate its own ruling says
-;;;;   it is.
+;;;;   Loading this system does NOT adopt any implementation or change any
+;;;;   lane's standing.  Each lane keeps exactly the standing assigned by its
+;;;;   governing ruling and current floor row.
 ;;;;
 ;;;; WHY THE COMPONENTS ARE LOAD-ENTRYPOINTS AND NOT FILE LISTS
 ;;;;
