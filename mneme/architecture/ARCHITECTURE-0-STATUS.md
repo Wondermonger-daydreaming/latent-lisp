@@ -1288,3 +1288,76 @@ distinguished their refusals; one integer erased the distinctions at the boundar
    crab slept."
 
 *— Claude Fable 5, the chair, 2026-08-23*
+
+### ADDENDUM 22 (2026-08-30, afternoon, raining): THE HOUSE AFTER THE CROSSING — records-only reconciliation under the joint return
+
+*Entered by Claude Fable 5 under `JOINT RETURN → FABLE` (Owner Tomás Pavan · GPT-5.6 Sol, 2026-08-30; archived verbatim at
+`corpus/voices/received/2026-08-30-joint-return-owner-and-sol-succession-census-01-ACCEPTED-q1-o1-o3-ruled.md`). Controlling report:
+`POST-CROSSING SUCCESSION CENSUS /0.1` (lab `_staging/2026-08-30-succession-census/`, sha `1972cf6d…`, commit `30a3ec4d`). This
+addendum RECORDS; it rules nothing and changes no normative sentence.*
+
+1. **Publication 0.7.9 — PUBLISHED.** SPEC/0.7.9 `08a096aa…` → merge `2772402d` → README succession `40f47260` → one governed ferry →
+   mirror **`e717969f`**, transport record 134 (TRANSPORT-OK). Sol I, 2026-08-28: *published* in the three-stage sense (authorization ∧
+   governed transport ∧ fresh far-side readback).
+2. **README R7 → R7.1 — ACCEPTED AND PUBLISHED; crossing CLOSED.** R7 ingested `bd2d2508` (record 135 WITHHELD); R7.1 `a8d7f9ba`
+   (README `1495f553…`, RECEIPTS `caf2a177…`; record 136 WITHHELD) → one ferry → mirror **`1281b979`**, record **137 TRANSPORT-OK**
+   (2026-08-29T00:38:08Z), fresh-clone readback 5,324/5,324 (= 5,326 tracked − 2 `_staging/`). Sol I terminal ruling 2026-08-29.
+   Nothing on this crossing awaits Sol.
+3. **Records 138–139 — WITHHELD** (2026-08-30; sentinel `SYNC-PAUSED` held): two lab-side atelier commits (`ad1d3c1c`, `38763356`)
+   added `atelier/tower-of-selves/PITCH-MIXED.md` and `mixed-tower.lisp` to the subject tree. **Parked** under O3 (below).
+4. **Q1 (Sol):** TD-7 first-fire readback — **DISCHARGED** by the first governed transport `71d94fc2 → 9a56eabd` (record commit
+   `567d0e37…`, far-side tree `c7a3820e…`; ADDENDUM 18); the missing token in later summaries is a records scar. PS/0 far-side
+   readback — **DISCHARGED** by the same act. R-2b — split: the first-transport receipt instance **RECEIVED AND DISCHARGED**; the
+   Channel Policy /1 residual R-2b **STILL OPEN**. The `6b50cd50 → 88f2238a` receipt (ADDENDUM 21) neither reopens nor retroactively
+   discharges the first fire.
+5. **O1 (owner):** sentinel authority — **OWNER-GATED EVERY FERRY.** `SYNC-PAUSED`'s sentence governs; "lift PRE-AUTHORIZED at next
+   natural transport" is stale and corrected in memory. Lawful practice confirmed: RAISED by default · fresh owner countersignature per
+   exact-bound transport · lowered on disk only inside the supervisor window · re-raised under the trap · no natural transport, standing
+   authorization, or hook activity substitutes.
+6. **O2 (owner):** **LCI/0 remains CLOSED; D2 DEFERRED INDEFINITELY.** The four preserved violations stay preserved as findings.
+   "AUTHORIAL RULING REQUIRED" = a gate on any future reopening/promotion/repair, not a live commission.
+7. **O3 (owner):** the two tower files **PARKED** byte-identically at `experiments/latent-lisp/_staging/tower-of-selves/`
+   (PITCH-MIXED.md `01928811…`, mixed-tower.lisp `cfde76b2…`, before = after). Reversible custody; out of prospective cargo under the
+   governed `_staging/` exclusion. Not run, repaired, evaluated, or closed.
+8. **ML/1 prereg successor — AUTHORIZED document-only · OWED · run gate CLOSED** (Sol II 2026-08-23: *AMEND — RUN GATE REMAINS
+   CLOSED*; seven amendments; hash + change ledger against the 08-23 prereg). No ML/1 execution, no fresh-reader run.
+9. **Housekeeping fact, restored to the record:** the `act1-readiness.lisp` date-cap was discharged 2026-08-20 (`61d440cf`); memory
+   carried it as owed for ten days. Corrected.
+
+**WE ARE HERE:** the crossing is closed; the house is reconciled to it; the sentinel is RAISED; the only authorized work is a
+document — the ML/1 prereg successor. Next act after it: none, until Sol returns it.
+
+*— Claude Fable 5, the chair, 2026-08-30 (the joint return's words, entered; the chair's only sentence is this one)*
+
+### ADDENDUM 23 (2026-08-30, evening): THE NAVIGATION REPAIR — Addendum 22's closing WE-ARE-HERE superseded; the ML/1 lineage's closure entered
+
+*Entered by Claude Fable 5 under Sol II's return "NEXT RECORDS-ONLY CARGO /0.1" (2026-08-30; archived verbatim at
+`corpus/voices/received/2026-08-30-sol-ii-cargo-01-evidence-ACCEPTED-transport-object-SUPERSEDED-addendum-23-commissioned.md`).
+Append-only; ADDENDUM 22 above is preserved verbatim as historical evidence. This addendum records standing only; it authorizes no
+experiment, implementation, adoption, or transport.*
+
+1. **Addendum 22's final WE-ARE-HERE was accurate at entry (afternoon) and is SUPERSEDED for current navigation.** Between its
+   entry and the evening, the document it pointed forward to was authored, returned, and closed. A dated historical statement may
+   remain; a WE-ARE-HERE may not knowingly point backward (Sol II §II).
+2. **The ML/1 fresh-reader prereg lineage, entered:** successor v2 authored + hashed, NOT run — commit `0edae7e3`, SHA-256
+   `8ffba23e0c3306b02c1392d2eb5a544de9598465149a4f006a2e9c2810e97b98`. The ingress survey (accepted by Sol II at its read-only
+   ceiling) established: no authorized ML/0 door observes an arbitrary external target; the effect axis is `:caller-asserted` by
+   construction; therefore **Arm M's unrestricted axis-C affected-object coverage is zero by construction.** Sol II returned the
+   prereg without a run. Terminal disposition: commit `9b4779c8`, SHA-256
+   `7795bf28064783d7dae8623d34b2cb166d536162c5c118862f75c530c09556ab`. Lineage standing, verbatim:
+   **RECEIVED AND RETURNED · STRUCTURAL INELIGIBILITY DISCOVERED BEFORE RUN · NO TRIAL WARRANTED.**
+3. **Nothing ran:** no FREEZE act, no harness, no episode, no packet, no reader call, no scorer call, no new door, no ML/1
+   implementation. The result was established from source before any call was spent.
+4. **The unrestricted episode universe governs the closed lineage**, and the zero-by-construction result stands within it.
+5. **§1-D** (episodes confined to the capability /2 fixture world) is recorded only as the **reserved, separately scoped
+   fixture-world fork — uncommissioned**; if ever opened it requires a new name, proposition, preregistration, answer-key ontology,
+   and consequence, and may not carry MNEME-EARNS-ML/1 for generic external effects.
+6. **Four dormant defects** of the returned v2 text are preserved uncured, by pointer: terminal disposition §7 (effect-ontology
+   ambiguity · the D-class form-2 denominator · non-exhaustive crossed-class bands · the unfrozen calibration-replacement chain).
+7. **WE ARE HERE:** R7.1 remains ACCEPTED AND PUBLISHED, crossing CLOSED. The ML/1 fresh-reader prereg lineage is CLOSED —
+   STRUCTURAL INELIGIBILITY DISCOVERED BEFORE RUN · NO TRIAL WARRANTED. The run gate remains CLOSED; the §1-D fixture-world fork is
+   reserved and uncommissioned; ML/0's stranger audit remains owed but is not commissioned by this addendum; Channel Policy /1
+   residual R-2b remains OPEN; LCI/0 D2 remains DEFERRED INDEFINITELY; the tower files remain PARKED under `_staging/`; the sentinel
+   remains OWNER-GATED EVERY FERRY. No substantive implementation or experiment is authorized here.
+
+*— Claude Fable 5, the chair, 2026-08-30, evening. Records only.*
