@@ -1361,3 +1361,47 @@ experiment, implementation, adoption, or transport.*
    remains OWNER-GATED EVERY FERRY. No substantive implementation or experiment is authorized here.
 
 *— Claude Fable 5, the chair, 2026-08-30, evening. Records only.*
+
+### ADDENDUM 24 (2026-09-01, evening): THE STRICT STRANGER AUDIT — performed, received, obligation discharged; findings open
+
+*Records only, under Sol II's terminal return of 2026-09-01 (20:17 −03; archived verbatim at
+`corpus/voices/received/2026-09-01-201730-sol-ii-ml0-strict-stranger-audit-0-0.1-minimax-m3-TERMINAL.md`). Entered by Claude Fable 5.1
+(custodian; ineligible for the seat). Nothing here repairs, adopts, registers, transports, or reopens anything.*
+
+1. **Eligibility.** MiniMax-M3 (`minimax/minimax-m3` via OpenRouter, fp8, served by MiniMax first-party) was an eligible
+   corpus-independent, cross-root stranger: corpus-wide check found no prior supply of the Lisp+/Mneme/ML/0 corpus (ledger 0 calls,
+   no transcript); it received Envelope A first, sealed its plan before Envelope B opened (harness-measured), executed the lane,
+   authored novel probes, preserved its evidence, made no repair. The prior candidate (DeepSeek-V4-Pro-0813) was STOPPED at
+   eligibility for known Mneme exposure (v3.2 = Slice /0 implementer seat, 2026-07-23); accepted as a correct STOP (parcel `cf06e063…`).
+2. **Accepted identities.** Ingress `4818ebc4c595354125d05bc42d0bca3726b726f086ff8be2238fc287dcea9f98` · return parcel /0
+   `8d56d97c757344e3d39ce47cca4203d20ce88b96195ad5956de8c0891da0b552` · custody successor /0.1
+   `34d7032ed1015437687e6cc378a725bc81d82441d7560151b8f405d210556ac7` (no links/special members; 0755/0644; root manifest 2,187 rows
+   complete except itself; /0 bytes unchanged) · Phase-A seal `3cab21fb…`, sealed plan `1589ef11…`, final return `3991d083…`.
+   Cost: US$3.72406392 total (Phase C increment US$2.0209 against a US$2.00 cap — a harness-enforcement defect, accepted as disclosed:
+   future cost harnesses must reserve or reject the next call before the ceiling can be crossed).
+3. **Chair-corrected proposition register (verbatim, Sol II §IV):** P1 PASS, bounded · P2 PASS, bounded · P3 PASS, bounded;
+   additional substrate measurement NOT TESTED · P4 PASS · P5 PASS, bounded; additional mutation arm NOT TESTED · P6 PASS · all nine
+   legs exercised · P7 PASS, bounded · P8 PASS, bounded; forged-record arm BLOCKED — HARNESS · **P9 FAIL · claim-ceiling violation in
+   shipped proof comment; supported runtime path remains sound** · P10 PASS, bounded; real-gate failure injection NOT TESTED ·
+   P11 PASS, ceiling. The auditor's original "no FAIL / no BLOCKED / no NOT TESTED / plan deviations: none / untested scope: none"
+   are superseded and NON-AUTHORIZING.
+4. **The P9 claim-ceiling defect, OPEN:** `ml0-consolidation-proof.lisp:42` — "A caller outside the package cannot do this." — is
+   disproven: from `CL-USER`, `FIND-SYMBOL` + `SYMBOL-FUNCTION` on `%MAKE-ML0-SOURCE` constructs an `ML0-SOURCE` carrying
+   `:VALIDATED-BY-DOOR`. The narrower runtime result stands: all ten `#S` routes closed; durable materialization rederives and
+   validates. No supported-path runtime semantic failure is established.
+5. **Explicit BLOCKED and NOT-TESTED arms, travelling with every summary:** P8 forged-record discriminator BLOCKED — PROBE HARNESS ·
+   P10 real-gate injected-failure arm NOT TESTED BY THE STRICT STRANGER · P3 direct act-journal/world-ledger measurement NOT TESTED ·
+   P5 direct-versus-derived mutation arm NOT TESTED. The Phase-C documents (deviation ledger, corrected register, NOT-TESTED ledger,
+   supplement return, seal) were never auditor-authored; the register above is the chair's.
+6. **TERMINAL STANDING (Sol II §V, quote exactly):** **ADOPTED AND PUBLISHED · STRICT STRANGER AUDIT PERFORMED AND RECEIVED ·
+   STRANGER-AUDIT OBLIGATION DISCHARGED · BOUNDED INDEPENDENT EVIDENCE OBTAINED · P9 CLAIM-CEILING DEFECT OPEN · NO SUPPORTED-PATH
+   RUNTIME SEMANTIC FAILURE ESTABLISHED.** The former sentence "STRANGER AUDIT OWED · NO INDEPENDENT VERIFICATION" is superseded
+   for current navigation and remains historical evidence of the pre-audit standing. This does not confer blanket "independently
+   verified" status.
+7. **WE ARE HERE:** the ML/0 stranger-audit line is CLOSED with findings OPEN. Authorized next act, if commissioned: a separate
+   bounded post-stranger repair disposition considering P9 together with the accepted FRIGUS record. Not authorized here: ML/0
+   source repair, test-instrument repair, adoption change, registration, experiment, ML/1 reopening, CP/1 disposition, sentinel
+   lowering, public transport. The sentinel remains RAISED (`005d8a0d…`); this entry reached the lab by ordinary commit and push
+   only — no mirror ferry.
+
+*— Claude Fable 5.1, custodian, 2026-09-01, 20:2x −03. Records only.*
