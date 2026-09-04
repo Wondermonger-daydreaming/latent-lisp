@@ -29,12 +29,12 @@ aggregate floor—are expected to fail here. Budget roughly 90 minutes for an el
 inspection-only `--help`: `bash mneme/load-lisp-plus.sh --help` performs the load. Exit 0 means **the
 declared gate passed under its stated contract**—not that the language's law is universally true.
 
-**Trust ceiling:** the tree contains unusually extensive executable gates and byte-bound receipts, but
-execution and the combined standing record remain same-family. One Act /1 received a cold audit that
-terminated **BLOCK on venue**; a same-family capable-venue supplement supplied execution. The combined
-record supported adoption eligibility, not independent verification. No green here has been checked by a
-mind outside this corpus. Nothing here may be called "independently verified." A green floor is not
-adoption, semantic truth, or a security certification;
+**Trust ceiling:** the tree contains unusually extensive executable gates and byte-bound receipts.
+One Act /1 received a cold audit that terminated **BLOCK on venue**; a same-family capable-venue
+supplement supplied execution. The combined record supported adoption eligibility, not independent
+verification. For ML/0's current audit standing and mandatory limits, see
+[ML0 audit standing and limits](#ml0-audit-standing-and-limits). Nothing here may be called
+"independently verified." A green floor is not adoption, semantic truth, or a security certification;
 loading is not adoption; some historical host-bound tools fail closed outside the lab layout. Trust each
 receipt only at the size of the proposition it actually witnesses.
 
@@ -99,9 +99,10 @@ ACCEPTED (:MODE :DETERMINATE)
 
 **The language is Lisp+. Mneme is its memory-and-continuity layer.** (Relation sealed:
 `mneme/architecture/ARCHITECTURE-0-STATUS.md`.) As laid out on disk, `mneme/` holds the whole construction.
-The concrete memory lane is `mneme/memory-layer-0/`: **ADOPTED AND PUBLISHED** on 2026-08-22, with stranger
-audit still owed and no independent verification. Publication warrants the exact-bound transport and
-readback of those bytes; it does not enlarge the lane's semantic claims.
+The concrete memory lane is `mneme/memory-layer-0/`: **ADOPTED AND PUBLISHED** on 2026-08-22. See
+[ML0 audit standing and limits](#ml0-audit-standing-and-limits) for the subsequent audit record.
+Publication warrants the exact-bound transport and readback of those bytes; it does not enlarge the
+lane's semantic claims.
 
 Lisp+ today is an adopted specification constitution (Architecture 0.1 · Kernel /0 · Process Journal /0 ·
 Adapter Protocol /0 · Kernel Errata 0.2) plus a stack of implementation lanes in Common Lisp, every one
@@ -144,7 +145,7 @@ unresolved finding is unchanged* — never that a semantic question is resolved.
 | `mneme/portable-judge-0/` | a judge that travels — candidate parcel | **CANDIDATE — not an adoption declaration** (2026-08-10) |
 | `mneme/public-sufficiency-0/` | the governance of *this mirror*: what may be published, how transport is recorded, what "published" means | LIVE lane; publication authorization **B (blanket-current, bounded)** ruled 2026-08-18; transport sentinel raised |
 | `mneme/language-act-1/` | One Act /1 — perform *across* process death | **ADOPTED 2026-08-22** at lab commit `aeeefa40` (owner act, ceilings verbatim; Sol I ruled ADOPTION-ELIGIBLE on a cold audit that terminated BLOCK on venue plus a same-family capable-venue execution supplement; record `mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md`; floor row `act1\|ADOPTED`). Ceilings: not "independently verified"; 27-symbol ML/0 coupling is version-bound debt |
-| `mneme/memory-layer-0/` | Memory Layer /0 — the language's durable account of its own act (write / retrieve / consolidate under *ISSUED(evidence, act) ⇏ OCCURRED(act)*) | **ADOPTED AND PUBLISHED · stranger audit owed · no independent verification** (2026-08-22) |
+| `mneme/memory-layer-0/` | Memory Layer /0 — the language's durable account of its own act (write / retrieve / consolidate under *ISSUED(evidence, act) ⇏ OCCURRED(act)*) | **ADOPTED AND PUBLISHED** (2026-08-22); [current audit standing and mandatory limits](#ml0-audit-standing-and-limits) |
 | `mneme/integration-baseline-0/` | authority index · claim ceiling · supersession map | CLOSED by owner ruling 2026-08-03 — historical, never edited |
 | `mneme/lci0/` · `canonical-datum/` | Located Claim Identity /0 · Canonical Datum /0 | CLOSED + FROZEN; LCI0 algebraic-law audit carries 4 preserved FAILs, "authorial ruling required" |
 | `mneme/language-a/` | Language-A emission materials (public lane only) | ARCHIVED, banked 295/312 — not re-run |
@@ -158,7 +159,34 @@ Lane parcel SHA-256 `5742b4f8…` binds the unchanged 61-file R5 object. A lab-s
 Sol I classified that aggregate **INCOMPLETE**; Release Floor Erratum /0 carries the classification.
 Neither floor was the adoption or publication witness. "Published" warrants public transport of the bound
 bytes only; "adopted" is the
-owner's and Sol's governance act. Neither word discharges the stranger audit.
+owner's and Sol's governance act. Neither word by itself discharges an audit obligation.
+
+#### ML0 audit standing and limits
+
+Audit standing recorded 2026-09-01; publicly carried at `716dc69` on 2026-09-03.
+Source: [Architecture Addendum 24](mneme/architecture/ARCHITECTURE-0-STATUS.md),
+items 3–7. Its terminal standing is quoted below with its mandatory limitations.
+
+**ADOPTED AND PUBLISHED · STRICT STRANGER AUDIT PERFORMED AND RECEIVED ·
+STRANGER-AUDIT OBLIGATION DISCHARGED · BOUNDED INDEPENDENT EVIDENCE OBTAINED ·
+P9 CLAIM-CEILING DEFECT OPEN · NO SUPPORTED-PATH RUNTIME SEMANTIC FAILURE ESTABLISHED.**
+
+This does not confer blanket "independently verified" status. **P9 FAIL remains OPEN**:
+the claim in `ml0-consolidation-proof.lisp:42` exceeded its warrant. The narrower recorded
+runtime result stands: all ten `#S` routes closed; durable materialization rederives and validates.
+No supported-path runtime semantic failure is established.
+
+- **P8** forged-record discriminator: **BLOCKED — PROBE HARNESS**.
+- **P10** real-gate injected-failure arm: **NOT TESTED BY THE STRICT STRANGER**.
+- **P3** direct act-journal/world-ledger measurement: **NOT TESTED**.
+- **P5** direct-versus-derived mutation arm: **NOT TESTED**.
+
+The proposition register is chair-corrected; the Phase-C documents were not auditor-authored.
+ML/0's adoption/publication status and implementation remain unchanged; its 61-file R5 object is
+not repaired by this record. No repair, reopening, registration, experiment, or transport is
+authorized here. The terminal sentence and these limits form one audit summary.
+
+#### ML0 scope ceiling
 
 The scope ceiling remains verbatim (Sol II, 2026-08-22, after the toaster benchmark's composition failure
 at case A—a scope erratum, not a repair): *"ML/0 is closed over its five authorized observation substrates.
@@ -358,9 +386,11 @@ ablutions over every object.
 0. **Semantic unforgeability through the supported API** — BUILT (v1, 2026-07-11; hardened kernel,
    18/0 adversarial conformance), and carried forward lane by lane. Ceiling unchanged: *CL package
    privacy is not a capability boundary.*
-1. **Stranger audits** — owed on essentially every lane. One Act /1's cold audit terminated **BLOCK on
-   venue**; a same-family capable-venue supplement supplied execution. The combined record supported
-   adoption eligibility but still forbids "independently verified." No lane currently carries that standing.
+1. **Stranger audits** — still owed on essentially every lane other than ML/0; see the complete
+   [ML0 audit standing and limits](#ml0-audit-standing-and-limits) block. One Act /1's cold audit
+   terminated **BLOCK on venue**; a same-family capable-venue supplement supplied execution. The combined
+   One Act /1 record supported adoption eligibility but still forbids "independently verified." No lane
+   currently carries that standing.
 2. **Durable object identity** — store-issued IDs (`claim:…`, `warrant:…`, `receipt:…`) instead of
    `gensym`, so a claim survives process death as *the same* claim. Diachronic sameness. Object-id ≠
    content-hash: the first names the historical object across its standing transitions, the second
@@ -377,8 +407,9 @@ ablutions over every object.
    attempt correctly refused while One Act /1 was still a candidate. The completed route was census →
    corrections → re-census → exact publication commit → owner/Sol bound → transport → far-side readback.
    The publication return was accepted **WITH RECEIPT ERRATUM**: the far-side manifest was measured
-   mid-floor, so the Git tree—not that manifest—is the witness. Its final standing remains **ADOPTED AND
-   PUBLISHED · stranger audit owed · no independent verification**.
+   mid-floor, so the Git tree—not that manifest—is the witness. Adoption/publication status remains
+   **ADOPTED AND PUBLISHED**; see [ML0 audit standing and limits](#ml0-audit-standing-and-limits)
+   for the subsequent audit record.
 7. **Memory Layer /1** — RESERVED, not built (`mneme/memory-layer-0/MEMORY-LAYER-1-RESERVED-CHARTER.md`).
 8. **Custody** — *whose hand is on the token right now?* Unforgeability is not custody; answerable only
    outside the token (identity, confinement, delegation policy).
@@ -527,9 +558,10 @@ Consequences worth knowing as a reader:
 - **"Published" is earned by readback**, not by a push: the destination is queried, a fresh process
   retrieves the bytes, and they are verified against the adopted ones. Until then the transport record
   says TRANSPORT-OK at most, never PUBLISHED.
-- **Nothing here claims independent verification.** One Act /1's cold audit terminated BLOCK on venue; its
-  same-family capable-venue supplement remains separately attributed. Together they supported adoption
-  eligibility, not independent standing.
+- **Nothing here claims independent verification.** For ML/0's audit standing and limits, see
+  [ML0 audit standing and limits](#ml0-audit-standing-and-limits). One Act /1's cold audit terminated BLOCK
+  on venue; its same-family capable-venue supplement remains separately attributed. Together they
+  supported adoption eligibility, not independent standing.
 - **Since 2026-08-27 the lab has an accepted dry-run cargo evaluator and independent evidence reader for the
   governed ferry.** Under a frozen contract (SPEC/0.7.9 since 2026-08-28; /0.7.8 before) the evaluator reconciles what a transport *would* do
   against what the commit *says*, and a second reader checks the evaluator's sealed evidence. Its one canonical
