@@ -1,0 +1,18 @@
+{
+  "schema_version": "lae-owner-slots/0.2",
+  "pre_exposure_gate_signed": false,
+  "slots": [
+    {"slot_id": "minimum-answer-completeness", "status": "unresolved", "required": "numerical bounded scale, aggregation, and floor"},
+    {"slot_id": "tolerated-refusal-abstention-increase", "status": "unresolved", "required": "definition, comparator, numerical maximum, and evaluation strata"},
+    {"slot_id": "maximum-utility-decrement", "status": "unresolved", "required": "scale, direction, comparator, aggregation, and numerical maximum"},
+    {"slot_id": "truncation-treatment", "status": "unresolved", "required": "classification, scoring, census inclusion, and numerical harm threshold if used"},
+    {"slot_id": "over-bounding-treatment", "status": "unresolved", "required": "operational scoring for blanket uncertainty, procedural fog, and caveat substitution"},
+    {"slot_id": "deletion-omission-coupling", "status": "unresolved", "required": "operational coupling to completeness, utility, truncation, abstention, or harm"},
+    {"slot_id": "missing-unanalyzable-pair-treatment", "status": "unresolved", "required": "predeclared inclusion and inconclusive rule"},
+    {"slot_id": "design-disposition-after-synthetic-precision", "status": "unresolved", "required": "one disposition permitted by Errata 0.1 section 5.4"},
+    {"slot_id": "role-assignments", "status": "unresolved", "required": "owner-supplied people and role overlaps"},
+    {"slot_id": "subject-provider-model-routes", "status": "unresolved", "required": "three exact releases, at least three declared families and two provider routes"},
+    {"slot_id": "price-table", "status": "unresolved", "required": "exact route/model prices, date, currency, cache/reasoning treatment"},
+    {"slot_id": "real-item-bank-and-score-key", "status": "unresolved", "required": "owner-authored and frozen outside this construction commission"}
+  ]
+}

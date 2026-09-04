@@ -1,0 +1,12 @@
+{
+  "type": "search-field",
+  "search_field_id": "search:pilot-freeze-1",
+  "dimensions": ["item-content", "prompt-ancestry", "notation-scaffold-ancestry", "scoring-key-exposure", "rubric-framing", "harness-implementation", "personnel", "provider-routing", "model-family-routing", "training-corpus-overlap", "grader-calibration", "source-packet-read-timing", "adjudicator-shared-roots"],
+  "roots_examined": ["construction builder and supplied authorities only; owner staffing and real artifacts unavailable"],
+  "queries_executed": ["construction-stage authority and builder reads recorded"],
+  "queries_remaining": ["resolve every owner actor and artifact", "record every target-bank and source-packet delivery", "audit grader calibration firebreak", "audit fresh-chair packet and prior reads", "execute full frozen-manifest ancestry query list"],
+  "excluded_or_veiled": ["undisclosed training corpora", "hidden provider subcontracting", "private model-weight lineage", "unlogged side channels", "semantic uptake from a recorded read"],
+  "stopping_rule": "complete only when every frozen actor, artifact, read, calibration, source-packet delivery, and role identifier resolves; the fixed queries run once against the closed manifest; and unavailable answers become named unknowns",
+  "termination": "not-started-owner-input-unavailable",
+  "completed_at": null
+}

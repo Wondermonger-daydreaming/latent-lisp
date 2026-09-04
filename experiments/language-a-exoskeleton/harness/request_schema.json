@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:language-a-emission-pilot:request:0.2",
+  "type": "object",
+  "required": ["run_id", "call_id", "item_id", "item_version", "arm", "prompt_artifact_version", "subject_slot", "provider_id", "model_id_requested", "parameters", "schedule_index", "randomization_seed_digest", "request_bytes_sha256", "attempt", "retry_parent"],
+  "properties": {
+    "arm": {"enum": ["NL", "PERSONA", "SCAFFOLD", "LANG-A", "SHAM"]},
+    "attempt": {"type": "integer", "minimum": 1},
+    "parameters": {"type": "object", "required": ["temperature", "top_p", "max_output_tokens", "seed", "tools"]}
+  },
+  "additionalProperties": true
+}
