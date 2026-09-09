@@ -12,7 +12,7 @@ document that carries it, and named with its file and section so a reader can ch
 |---|---|---|
 | [`WARRANT-CALCULUS-0.md`](WARRANT-CALCULUS-0.md) | the first extraction: twenty-one epistemic moves of one proof record, sixteen candidate names tested, **nine** forms surviving | **history** — superseded on its counts and on several definitions; kept whole |
 | [`WARRANT-CALCULUS-0.1.md`](WARRANT-CALCULUS-0.1.md) | the repair under eight errata (E1–E8): `boundary` promoted, so **ten** forms; minimality claim withdrawn | **history** — superseded on its status rule and on one accounting sentence; kept whole |
-| [`WARRANT-CALCULUS-0.2.md`](WARRANT-CALCULUS-0.2.md) | the repair under four further corrections (R1–R4) and one qualification (Q6), **plus ADDENDUM A and ADDENDUM B appended in the reviewer's own text** | **the governing document** |
+| [`WARRANT-CALCULUS-0.2.md`](WARRANT-CALCULUS-0.2.md) | the repair under four further corrections (R1–R4) and one qualification (Q6), **plus ADDENDUM A and ADDENDUM B appended in the reviewer's own text** | **the governing document** (of this documentary reading; see §10) |
 | [`WARRANT-CALCULUS-0.2-ADDENDUM-B-DRAFT.md`](WARRANT-CALCULUS-0.2-ADDENDUM-B-DRAFT.md) | the author's proposed ADDENDUM B, which the reviewer replaced | **history, explicitly not adopted** — kept byte-unchanged |
 | [`LATENT-MACHINE-PRIMITIVES-0.md`](LATENT-MACHINE-PRIMITIVES-0.md) | a document-only collision test of the calculus against four existing language contracts, followed by dated CORRECTIONS C-0…C-7 | **the reading is history; the CORRECTIONS govern it** |
 | [`LMP0-clauses-CD-LCI.md`](LMP0-clauses-CD-LCI.md) | one clerk's verbatim extraction of the Canonical Datum /0 and Located Claim Identity /0 clauses, with path, commit and blob for every source | evidence |
@@ -168,7 +168,7 @@ collapses (b) into (a) will believe an implementation was adopted. Neither is tr
 ## 7. Reading order
 
 1. **[`WARRANT-CALCULUS-0.2.md`](WARRANT-CALCULUS-0.2.md), whole, including ADDENDUM A and ADDENDUM B.** This is the
-   governing text. ADDENDUM A carries the adoption sentence and two binding corrections;
+   governing text of this documentary reading. ADDENDUM A carries the adoption sentence and two binding corrections;
    ADDENDUM B is the reviewer's own corrected text, appended verbatim, and it carries the
    final standing sentence in §B.7.
 2. **[`LATENT-MACHINE-PRIMITIVES-0.md`](LATENT-MACHINE-PRIMITIVES-0.md), CORRECTIONS FIRST (C-0…C-7), then the reading above
@@ -253,6 +253,9 @@ ClaimId cache is never an input to projection.**
 ## 10. Where to check anything on this page
 
 Every quotation above is in one of the files in this directory. If a sentence here and a
-sentence in one of those files disagree, **the file governs and this page is wrong.** Where two
-adopted sentences appear to conflict, the later dated adjudication governs; the companion index
-[`governing-statements-index.md`](governing-statements-index.md) lists each statement with its date and what it supersedes.
+sentence in one of those files disagree, **the file governs and this page is wrong.** Where adopted
+passages appear to conflict, follow the identified adjudication that authorizes one to supersede the
+other, within its stated scope. A later timestamp by itself is not authority. The companion index
+[`governing-statements-index.md`](governing-statements-index.md) identifies those adjudications and their
+scopes. "Governing" here concerns this documentary reading; it confers no authority over Lisp+/Mneme
+language contracts.
