@@ -1,0 +1,2 @@
+encoded target=parity4 V=7 K=12 vars=4984 clauses=11017 -> evidence/ctrl_parity4_K12/parity4_K12_V7.cnf
+decoded 12 contacts -> evidence/ctrl_parity4_K12/parity4_K12_V7.net.json

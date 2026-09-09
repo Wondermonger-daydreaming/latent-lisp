@@ -1,0 +1,1 @@
+encoded target=A V=9 K=12 symbreak=lex varsym=True cube=7,2,1,1 vars=14376 clauses=38374 -> evidence/A_K12_V9_cubes/A_K12_V9_cube7-2-1-1.cnf

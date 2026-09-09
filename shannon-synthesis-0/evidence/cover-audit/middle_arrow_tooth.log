@@ -1,0 +1,29 @@
+F fidelity: 129 archived instances re-encoded with the current encoder, 129 byte-identical, 0 differ
+X exhaustive V=3 E<=4: 9968 NF4-respecting subsets, 6656 in NF at exactly V, 6448 non-constant; plain CNF all-clauses 6448/6448; through breakers 6448/6448; failures 0
+X exhaustive V=4 E<=3: 17344 NF4-respecting subsets, 2048 in NF at exactly V, 688 non-constant; plain CNF all-clauses 688/688; through breakers 688/688; failures 0
+X exhaustive V=4 E<=4: 187360 NF4-respecting subsets, 57344 in NF at exactly V, 44568 non-constant; plain CNF all-clauses 44568/44568; through breakers 0/0; failures 0
+X exhaustive V=5 E<=3: 82240 NF4-respecting subsets, 0 in NF at exactly V, 0 non-constant; plain CNF all-clauses 0/0; through breakers 0/0; failures 0
+  B V=2 single contact w                                         V= 2 K=12 clauses=   190 all-satisfied=True (ok)
+  B V=2 single contact w'                                        V= 2 K=12 clauses=   190 all-satisfied=True (ok)
+  B V=2 single contact x                                         V= 2 K=12 clauses=   190 all-satisfied=True (ok)
+  B V=2 single contact x'                                        V= 2 K=12 clauses=   190 all-satisfied=True (ok)
+  B V=2 single contact y                                         V= 2 K=12 clauses=   190 all-satisfied=True (ok)
+  B V=2 single contact y'                                        V= 2 K=12 clauses=   190 all-satisfied=True (ok)
+  B V=2 single contact z                                         V= 2 K=12 clauses=   190 all-satisfied=True (ok)
+  B V=2 single contact z'                                        V= 2 K=12 clauses=   190 all-satisfied=True (ok)
+  B V=2 parallel w,x,y,z                                         V= 2 K=12 clauses=   225 all-satisfied=True (ok)
+  B V=2 parallel w',x',y',z'                                     V= 2 K=12 clauses=   225 all-satisfied=True (ok)
+  B V=13 twelve-contact chain (longest path, reach level 12)     V=13 K=12 clauses= 29624 all-satisfied=True (ok)
+  B twin internals (lex tie) — plain                             V= 4 K=12 clauses=  2273 all-satisfied=True (ok)
+  B twin internals (lex tie) — lex breaker                       V= 4 K=12 clauses=  2368 all-satisfied=True (ok)
+  B the 13: R6 tie (w=x=4), cube (4,4,3,2), lex+varsym+cube      canonical=((0, 1, 3, 2), (3, 4, 5, 6, 2), (4, 4, 3, 2)) clauses=21612 (ok)
+  B parity4 12-contact net: cube boundary (sum 12), lex+varsym+cube canonical=((0, 2, 3, 1), (4, 6, 2, 5, 3), (4, 4, 2, 2)) clauses=20104 (ok)
+  B two disjoint paths (negative rows with many cuts)            V= 4 K=12 clauses=  2498 all-satisfied=True (ok)
+B boundary: failures 0
+  R r1 reach ignores k               caught=True
+  R r2 cut = all-but-b               caught=True
+  R r3 Sinz ignores prefix           caught=True
+  R r4 lex eq always true            caught=True
+  R r5 counter of wrong variable     caught=True
+R red arms: base construction ok=True; planted wrong constructors caught 5/5
+PASS

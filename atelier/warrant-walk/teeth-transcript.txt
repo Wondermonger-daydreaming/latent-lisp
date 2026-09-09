@@ -1,0 +1,7 @@
+plant-A-defect-hidden: caught for the intended reason (exit 1; /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/warrant-walk/teeth-out/plant-A-defect-hidden.txt)
+plant-C-silent-substitution: caught for the intended reason (exit 1; /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/warrant-walk/teeth-out/plant-C-silent-substitution.txt)
+plant-D-label-repairs-result: caught for the intended reason (exit 1; /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/warrant-walk/teeth-out/plant-D-label-repairs-result.txt)
+plant-E-no-correspondence-check: caught for the intended reason (exit 1; /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/warrant-walk/teeth-out/plant-E-no-correspondence-check.txt)
+plant-F-completed-never-released: caught for the intended reason (exit 1; /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/warrant-walk/teeth-out/plant-F-completed-never-released.txt)
+baseline (no plant): PASS 15/15, no crash
+teeth: 0 failure(s); outputs retained under /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/warrant-walk/teeth-out

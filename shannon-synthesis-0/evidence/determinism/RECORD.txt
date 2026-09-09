@@ -1,0 +1,9 @@
+determinism record (2026-09-07 21:2x): V=7 K=12 lex, cadical 3.0.1 sha 5647d9a9…, run twice → identical proofs
+8cca0553d11182b761635b3a017c4c947775fde58db760578f8c92f031becbd7  V7.run1.drat
+8cca0553d11182b761635b3a017c4c947775fde58db760578f8c92f031becbd7  V7.run2.drat
+de15f7529e9b5f8d6f29489fcf9bee548a02e099cc3d2c521d9f93ba1cd5814c  V7.core.lrat
+a44bb300ee3f0b8b924c7bc5243ec5d374cf17d35b9fe4633ac77ff8c1d1f5c1  V7.run1.drat.zst
+059f01fe67cbeca5ae10275e01219176822aa8a5e4763b9790fdd402cc68a17d  V7.cnf
+83928315 V7.core.lrat
+138344154 V7.run1.drat
+23666835 V7.run1.drat.zst

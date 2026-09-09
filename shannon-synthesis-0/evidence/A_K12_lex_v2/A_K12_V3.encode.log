@@ -1,0 +1,1 @@
+encoded target=A V=3 K=12 symbreak=lex varsym=False vars=570 clauses=1222 -> evidence/A_K12_lex_v2/A_K12_V3.cnf

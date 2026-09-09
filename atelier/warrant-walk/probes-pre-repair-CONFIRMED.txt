@@ -1,0 +1,10 @@
+# Astra's R1/R2 probes measured against the PRE-REPAIR walker (warrant-walk.lisp at d8c4d860), 2026-09-08T17:07:41-03:00 by `date`
+# Astra's review gave these as source-inspection conclusions (no SBCL there); this is the measurement. All four confirmed.
+== R1 shared dependency (DC->D2, DC->DR->D2) ==
+(:CLAIM C :ROUTE DC :RESULT :CYCLE :FOLLOWED ((P :VIA D2) (S :VIA E-S) (R :VIA DR) (P :VIA D2)) :EVIDENCE (E-S) :UNRESOLVED NIL :MISSING NIL :INADEQUATE NIL :NOT-ENTERED NIL :CARRIED-STATUS-TESTIMONY NIL :RULES (:WW-R2 :WW-R1 :WW-R6) :EXPLANATION "the fixture violated EA-7 (acyclic); the walk stopped rather than loop")
+== R2a root: (assess S0 q :via dc) ==
+(:CLAIM Q :ROUTE DC :RESULT :ESTABLISHED :FOLLOWED ((P :VIA D2) (S :VIA E-S)) :EVIDENCE (E-S) :UNRESOLVED NIL :MISSING NIL :INADEQUATE NIL :NOT-ENTERED NIL :CARRIED-STATUS-TESTIMONY NIL :RULES (:WW-R2 :WW-R1 :WW-R6) :EXPLANATION "every premise of DC was followed through the support it named to adequate evidence; nothing unresolved, nothing missing")
+== R2b leaf e-s :for q ==
+(:CLAIM C :ROUTE DC :RESULT :ESTABLISHED :FOLLOWED ((P :VIA D2) (S :VIA E-S)) :EVIDENCE (E-S) :UNRESOLVED NIL :MISSING NIL :INADEQUATE NIL :NOT-ENTERED NIL :CARRIED-STATUS-TESTIMONY NIL :RULES (:WW-R2 :WW-R1 :WW-R6) :EXPLANATION "every premise of DC was followed through the support it named to adequate evidence; nothing unresolved, nothing missing")
+== R2c subordinate d2 :for q ==
+(:CLAIM C :ROUTE DC :RESULT :ESTABLISHED :FOLLOWED ((P :VIA D2) (S :VIA E-S)) :EVIDENCE (E-S) :UNRESOLVED NIL :MISSING NIL :INADEQUATE NIL :NOT-ENTERED NIL :CARRIED-STATUS-TESTIMONY NIL :RULES (:WW-R2 :WW-R1 :WW-R6) :EXPLANATION "every premise of DC was followed through the support it named to adequate evidence; nothing unresolved, nothing missing")

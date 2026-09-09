@@ -1,0 +1,2 @@
+encoded target=A V=8 K=14 vars=7968 clauses=17272 -> evidence/ctrl_A_K14/A_K14_V8.cnf
+decoded 14 contacts -> evidence/ctrl_A_K14/A_K14_V8.net.json

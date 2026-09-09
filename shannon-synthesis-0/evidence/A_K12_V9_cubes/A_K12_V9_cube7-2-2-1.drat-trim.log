@@ -1,0 +1,10 @@
+c turning on binary mode checking
+c parsing input formula with 14376 variables and 38374 clauses
+c WARNING: backward mode ignores deletion of (pseudo) unit clause [0] -6879 0
+c finished parsing, read 5534149 bytes from proof file
+c detected empty clause; start verification via backward checking
+c 9368 of 38374 clauses in core                            
+c 16021 of 59003 lemmas in core using 1065581 resolution steps
+c 0 RAT lemmas in core; 3565 redundant literals in core lemmas
+s VERIFIED
+c verification time: 1.460 seconds

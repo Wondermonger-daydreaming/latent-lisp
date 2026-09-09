@@ -1,0 +1,21 @@
+V=3 E<=4: 424269 networks enumerated in 75s; 230800 non-constant; 224272 of those violate >=1 NF clause
+functions seen (non-constant): 804; functions whose min cost is NOT attained by an NF network: 0 (must be 0)
+failures of the theorem's clauses: 0 (must be 0)
+PASS
+EXIT 0
+V=4 E<=3: 129765 networks enumerated in 18s; 41696 non-constant; 39056 of those violate >=1 NF clause
+functions seen (non-constant): 312; functions whose min cost is NOT attained by an NF network: 0 (must be 0)
+failures of the theorem's clauses: 0 (must be 0)
+PASS
+EXIT 0
+V=3 E<=5: 5006385 networks enumerated in 1189s; 3058512 non-constant; 3032048 of those violate >=1 NF clause
+functions seen (non-constant): 1332; functions whose min cost is NOT attained by an NF network: 0 (must be 0)
+failures of the theorem's clauses: 0 (must be 0)
+PASS
+EXIT 0
+V=4 E<=4: 3049500 networks enumerated in 574s; 1334312 non-constant; 1276768 of those violate >=1 NF clause
+functions seen (non-constant): 1236; functions whose min cost is NOT attained by an NF network: 0 (must be 0)
+failures of the theorem's clauses: 0 (must be 0)
+PASS
+EXIT 0
+Tue Sep  8 01:24:55 PM -03 2026

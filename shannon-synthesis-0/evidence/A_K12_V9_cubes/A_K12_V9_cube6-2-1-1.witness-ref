@@ -1,0 +1,11 @@
+cube 6,2,1,1
+proof_sha256 74761dcbe75b8cac8554a17586e65bc08d92b8e580bed8c8b88d5c4839ea629d
+proof_bytes 21925800
+proof_format binary-drat
+cnf_sha256 2461044b1d61c144cd0378a7e922bfe89ab9e8cb0d00e127cbc51a8fbf467fc7
+solver_sha256 5647d9a938011635fb32443bcfaed58b3eab031346b9bee77d42a790d6683243
+solver_version 3.0.1
+checker_sha256 92f0aa9575ed519d66a99b8b1b3dde6ece4618ae4c202a3a4b200265dda0aa7a
+command /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/425d5d75-232c-4287-aa85-0027288927c1/scratchpad/sat/cadical/build/cadical --binary=true evidence/A_K12_V9_cubes/A_K12_V9_cube6-2-1-1.cnf evidence/A_K12_V9_cubes/A_K12_V9_cube6-2-1-1.drat
+seconds 22.84
+verified_at 2026-09-08T08:32:17-03:00

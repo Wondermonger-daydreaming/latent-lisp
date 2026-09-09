@@ -95,6 +95,61 @@ ACCEPTED (:MODE :DETERMINATE)
 
 ---
 
+## Update 2026-09-08 — a 13-contact network, a documentary warrant calculus, and a runnable dependency walker
+
+*Three connected additions, each at a different standing. Read this block first if you came for them; each links to its own front door.*
+
+**What was established.** Shannon's 1938 thesis draws a 14-contact two-terminal contact network for the selective circuit
+A = S₄(1,3,4) — the symmetric function of four variables that is 1 when exactly 1, 3 or 4 inputs are 1 — and calls it
+"probably the most economical circuit of any sort" (typescript p. 53, antecedent Fig. 33). **A 13-contact network exists**
+(found by exact SAT search, checked 0/16 disagreements by four evaluators with the stated provenance — the encoder's own semantics, the author's evaluator, the lab museum's evaluator, and one written blind to every prior implementation), and **within the
+model M₂ — ordinary two-terminal contact networks, no auxiliary relays, no multi-terminal outputs, no transfer-contact cost
+conventions — no network of 12 or fewer contacts realizes A.** The ≤12 exhaustion is machine-checked: every audited UNSAT instance
+over 2…13 vertices was refuted by a DRAT certificate checked by `drat-trim` (V=9 as 53 cube instances); the checker's transcripts are published, the certificates themselves are not. Two steps are **prose theorems,
+not machine-checked**: that a normal form covers every network (the "cover", exhaustively checked on 8,670,642 small
+networks) and that every normal-form realizer yields a satisfying assignment of the encoding (the "bridge", 51,704
+realizers). Both passed an outside prose audit. The standing sentence, as adjudicated, is quoted verbatim in
+[`shannon-synthesis-0/README.md`](shannon-synthesis-0/README.md); its last clause is the trust boundary: *"No part of the cover or
+completeness bridge is claimed kernel-proved. Auxiliary relays, multi-terminal outputs, and transfer-contact cost conventions
+remain outside M₂ and outside the theorem."* Historical priority of the 13 is **open** (no literature search recorded);
+uniqueness is **open** (not asserted).
+
+**What can be run or checked.**
+- The 13-contact network (`shannon-synthesis-0/evidence/A13.net.json`) can be evaluated on all sixteen inputs with the
+  included blind evaluator; the K=13 SAT instance regenerates and solves in seconds with the included encoder and CaDiCaL.
+- Any single K=12 UNSAT instance can be regenerated and re-proved with the encoder, CaDiCaL and drat-trim (costs recorded in
+  the account); the raw DRAT certificates are **not** published — for the audited chain each was checked, hashed, and deleted, with a
+  witness-ref (hash + recipe + verification record) and the checker's transcript retained. Do not read a witness-ref as a proof;
+  it is a reference plus a regeneration promise, and the *transcript* beside it is what records that a checker accepted the proof.
+- **WARRANT WALK /0** ([`atelier/warrant-walk/`](atelier/warrant-walk/README.md)) — a one-file Common Lisp specimen
+  (SBCL 2.4.6): `sbcl --script warrant-walk.lisp --check` answers *which support did this conclusion actually use?* on
+  fifteen pre-registered fixtures, refuses an unused route's obligation, a substituted route, a mistargeted record, and a
+  carried label, and reports when history cannot be reconstructed; a labelled defective walker beside it imports the wrong
+  obligation. `bash teeth.sh` plants five defects on copies and requires the checker to fail for each one's stated reason.
+
+**What remains assumed, experimental, or open.**
+- [`warrant-calculus/`](warrant-calculus/README.md) — **WARRANT CALCULUS /0.2** (ten forms extracted from the proof's record)
+  and **LATENT MACHINE PRIMITIVES /0** (a document-only comparison against this tree's four language contracts) are
+  **documentary adoptions**: readings of a record, adjudicated by an outside reviewer (Astra, GPT-6), with the reviewer's
+  corrections appended verbatim. They are *not* an executable standing policy and *not* the governing derivation policy of
+  Lisp+/Mneme — a "documentary candidate for part of the derivation policy that LCI/0 deliberately leaves to another
+  specification." No adopted contract in `mneme/` was changed. The directory's README keeps the three-way distinction
+  (documentary adoption · experimental implementation · governing contracts) and a governing-statements index so a reader
+  need not reconstruct the correction history to find which sentence governs — including one clause both author and
+  reviewer misread and the reviewer corrected against itself.
+- WARRANT WALK /0's semantics are **experimental** by declaration (its rules WW-R1…R9 and assumptions EA-1…EA-8 are named,
+  promoted nowhere); its first review found two failures its original fixtures did not exercise (false cycle on shared
+  support; no claim/support correspondence check) — repaired with pre-registered expectations, the failures preserved.
+  **Status (2026-09-08, reviewer's public-update adjudication): the substantive walker repairs are accepted at their
+  experimental ceiling on source review plus the retained execution record; the reviewer did not rerun SBCL.** Two
+  packaging items it named — the harness's default output directory was deleted by its own cleanup; the specimen's manifest
+  predated a README note — are repaired in this tree (`teeth.sh` v3; manifest regenerated). See
+  [`atelier/warrant-walk/RETURN.md`](atelier/warrant-walk/RETURN.md) ADDENDUM 1–2.
+- Nothing here may be called "independently verified"; the reviewer's own limit travels with all of it: *"My verification
+  concerns the supplied bytes and their changes; it is not an independent repository readback."*
+
+---
+
 ## Current state — START HERE (2026-08-28)
 
 **The language is Lisp+. Mneme is its memory-and-continuity layer.** (Relation sealed:
@@ -451,7 +506,10 @@ latent-lisp/
 │   ├── atelier/               #   the mneme atelier — CANON.md, instruments (Sol's decad)
 │   └── v0.1/ · v0.2/ · v0.3/  #   the constitution lineage
 ├── canonical-datum/           # Canonical Datum /0 — frozen value/wire substrate; README front door
+├── shannon-synthesis-0/       # 2026-09-08 — the 13-contact network for Shannon's S₄(1,3,4); minimality in M₂; evidence + tools
+├── warrant-calculus/          # 2026-09-08 — WARRANT CALCULUS /0.2 (+A, +B) and LMP/0 — DOCUMENTARY adoptions, not policy
 ├── atelier/                   # the workshop — lisp-atelier (see the table above)
+│   └── warrant-walk/          #   2026-09-08 — WARRANT WALK /0, EXPERIMENTAL dependency walker (15 fixtures, 5 planted defects)
 ├── playground/                # early small Lisp toys; README names the non-authority boundary
 ├── received/                  # inbound specimens and relays; README preserves reception ≠ enactment
 ├── context/                   # documentary companions; README distinguishes history from authority

@@ -1,0 +1,2 @@
+encoded target=A V=7 K=13 vars=5446 clauses=11862 -> evidence/A_K13/A_K13_V7.cnf
+decoded 13 contacts -> evidence/A_K13/A_K13_V7.net.json

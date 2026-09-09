@@ -1,0 +1,257 @@
+WARRANT WALK /0 — transcript. SBCL 2.4.6. Rules WW-R1..R7, EA-1..EA-7 per EXPECTATIONS-0.md.
+
+=== E1 — Baseline: C selects complete D2 for P
+  :claim C
+  :route DC
+  :result :ESTABLISHED
+  :followed ((P :VIA D2) (S :VIA E-S))
+  :evidence (E-S)
+  :unresolved NIL
+  :missing NIL
+  :inadequate NIL
+  :not-entered NIL
+  :mistargeted NIL
+  :shared NIL
+  :cycle NIL
+  :carried-status-testimony NIL
+  :rules (:WW-R2 :WW-R1 :WW-R6)
+  :explanation "every premise of DC was followed through the support it named to adequate evidence; nothing unresolved, nothing missing"
+
+=== E2 — Add unused D1 requiring unresolved Q
+  :claim C
+  :route DC
+  :result :ESTABLISHED
+  :followed ((P :VIA D2) (S :VIA E-S))
+  :evidence (E-S)
+  :unresolved NIL
+  :missing NIL
+  :inadequate NIL
+  :not-entered ((D1 :FOR P))
+  :mistargeted NIL
+  :shared NIL
+  :cycle NIL
+  :carried-status-testimony NIL
+  :rules (:WW-R2 :WW-R1 :WW-R6)
+  :explanation "every premise of DC was followed through the support it named to adequate evidence; nothing unresolved, nothing missing"
+
+=== E2-D — SAME store, DEFECTIVE walker (gathers every warrant)
+  :walker :DEFECTIVE
+  :claim C
+  :route DC
+  :result :CONDITIONAL
+  :followed ((P :VIA D2) (S :VIA E-S) (P :VIA D1))
+  :evidence (E-S)
+  :unresolved ((Q :ON D1))
+  :missing NIL
+  :not-entered NIL
+  :rules (:WW-DEFECTIVE)
+  :explanation "DEFECTIVE: gathered every warrant attached to each premise regardless of route selection"
+
+=== E3 — Switch C's selection to D1
+  :claim C
+  :route DC
+  :result :CONDITIONAL
+  :followed ((P :VIA D1))
+  :evidence NIL
+  :unresolved ((Q :ON D1))
+  :missing NIL
+  :inadequate NIL
+  :not-entered ((D2 :FOR P))
+  :mistargeted NIL
+  :shared NIL
+  :cycle NIL
+  :carried-status-testimony NIL
+  :rules (:WW-R2 :WW-R3 :WW-R1 :WW-R6)
+  :explanation "the selected route names an explicitly unresolved premise: Q; the conclusion is conditional on it and on nothing outside the selected closure"
+
+=== E4 — Supply adequate fixture support e-q for Q
+  :claim C
+  :route DC
+  :result :ESTABLISHED
+  :followed ((P :VIA D1) (Q :VIA E-Q))
+  :evidence (E-Q)
+  :unresolved NIL
+  :missing NIL
+  :inadequate NIL
+  :not-entered ((D2 :FOR P))
+  :mistargeted NIL
+  :shared NIL
+  :cycle NIL
+  :carried-status-testimony NIL
+  :rules (:WW-R2 :WW-R1 :WW-R6)
+  :explanation "every premise of DC was followed through the support it named to adequate evidence; nothing unresolved, nothing missing"
+
+=== E5 — Remove selected supporting record e-s
+  :claim C
+  :route DC
+  :result :BLOCKED
+  :followed ((P :VIA D2))
+  :evidence NIL
+  :unresolved NIL
+  :missing ((E-S :FOR S :ON D2))
+  :inadequate NIL
+  :not-entered ((D1 :FOR P))
+  :mistargeted NIL
+  :shared NIL
+  :cycle NIL
+  :carried-status-testimony NIL
+  :rules (:WW-R2 :WW-R4 :WW-R1 :WW-R6)
+  :explanation "selected support could not be found in the store: E-S; no alternative route was substituted (routes not entered: D1)"
+
+=== E6 — Carried :established label on C after removing support
+  :claim C
+  :route DC
+  :result :BLOCKED
+  :followed ((P :VIA D2))
+  :evidence NIL
+  :unresolved NIL
+  :missing ((E-S :FOR S :ON D2))
+  :inadequate NIL
+  :not-entered ((D1 :FOR P))
+  :mistargeted NIL
+  :shared NIL
+  :cycle NIL
+  :carried-status-testimony ((C :ESTABLISHED))
+  :rules (:WW-R2 :WW-R4 :WW-R1 :WW-R6)
+  :explanation "selected support could not be found in the store: E-S; no alternative route was substituted (routes not entered: D1)"
+
+=== E7 — Historical reassessment at tick 0, no snapshot retained
+  :claim C
+  :route DC
+  :at 0
+  :result :CANNOT-RECONSTRUCT
+  :reason "no snapshot with :id 0 is retained in the store; the historical policy and state cannot be reconstructed from the present store or from timestamps; the earlier assessment, if any, stands as testimony"
+  :rules (:WW-R7)
+  :carried-status-testimony NIL
+
+=== E7-C — Positive control: reassessment at tick 1, snapshot retained
+  :claim C
+  :route DC
+  :result :ESTABLISHED
+  :followed ((P :VIA D2) (S :VIA E-S))
+  :evidence (E-S)
+  :unresolved NIL
+  :missing NIL
+  :inadequate NIL
+  :not-entered NIL
+  :mistargeted NIL
+  :shared NIL
+  :cycle NIL
+  :carried-status-testimony NIL
+  :rules (:WW-R2 :WW-R1 :WW-R6)
+  :explanation "every premise of DC was followed through the support it named to adequate evidence; nothing unresolved, nothing missing"
+  :at 1
+  :policy WW-R-0
+  :state-scope (:SNAPSHOT 1)
+  :bounded-to "ww-r-0 = this pinned implementation; the label is a symbol, not retained executable semantics"
+
+=== E8 — Shared acyclic support: DC->D2 and DC->DR->D2 (was a false :cycle)
+  :claim C
+  :route DC
+  :result :CYCLE
+  :followed ((P :VIA D2) (S :VIA E-S) (R :VIA DR) (P :VIA D2))
+  :evidence (E-S)
+  :unresolved NIL
+  :missing NIL
+  :inadequate NIL
+  :not-entered NIL
+  :mistargeted NIL
+  :shared NIL
+  :cycle ((D2 :ON-PATH (DC DR)))
+  :carried-status-testimony NIL
+  :rules (:WW-R2 :WW-R1 :WW-R6)
+  :explanation "a route on the current recursion path was reached again: D2 on path (DC DR) — a genuine back-edge (EA-7 violated); the walk stopped rather than loop"
+
+=== E9 — Genuine back-edge: DC->D2->DX->DC
+  :claim C
+  :route DC
+  :result :CYCLE
+  :followed ((P :VIA D2) (S :VIA DX) (C :VIA DC))
+  :evidence NIL
+  :unresolved NIL
+  :missing NIL
+  :inadequate NIL
+  :not-entered ((E-S :FOR S))
+  :mistargeted NIL
+  :shared NIL
+  :cycle ((DC :ON-PATH (DC D2 DX)))
+  :carried-status-testimony NIL
+  :rules (:WW-R2 :WW-R9 :WW-R1 :WW-R6)
+  :explanation "a route on the current recursion path was reached again: DC on path (DC D2 DX) — a genuine back-edge (EA-7 violated); the walk stopped rather than loop"
+
+=== E10 — Root mistarget: assess Q via DC, a route for C
+  :claim Q
+  :route DC
+  :result :MISTARGETED
+  :mistargeted ((:REQUESTED Q :VIA DC :TARGET C :ON :CALL))
+  :followed NIL
+  :unresolved NIL
+  :missing NIL
+  :not-entered NIL
+  :carried-status-testimony NIL
+  :rules (:WW-R8 :WW-R1 :WW-R6)
+  :explanation "the route named at the call is for C, not Q; nothing was walked"
+
+=== E11 — Leaf mistarget: e-s is for Q, asked to support S
+  :claim C
+  :route DC
+  :result :MISTARGETED
+  :followed ((P :VIA D2))
+  :evidence NIL
+  :unresolved NIL
+  :missing NIL
+  :inadequate NIL
+  :not-entered NIL
+  :mistargeted ((:REQUESTED S :VIA E-S :TARGET Q :ON D2))
+  :shared NIL
+  :cycle NIL
+  :carried-status-testimony NIL
+  :rules (:WW-R2 :WW-R8 :WW-R1 :WW-R6)
+  :explanation "selected support exists but is for another claim: S asked of E-S which is for Q — an adequate record for another claim cannot establish this one"
+
+=== E12 — Subordinate mistarget: d2 is for Q, asked to support P
+  :claim C
+  :route DC
+  :result :MISTARGETED
+  :followed NIL
+  :evidence NIL
+  :unresolved NIL
+  :missing NIL
+  :inadequate NIL
+  :not-entered NIL
+  :mistargeted ((:REQUESTED P :VIA D2 :TARGET Q :ON DC))
+  :shared NIL
+  :cycle NIL
+  :carried-status-testimony NIL
+  :rules (:WW-R8 :WW-R1 :WW-R6)
+  :explanation "selected support exists but is for another claim: P asked of D2 which is for Q — an adequate record for another claim cannot establish this one"
+
+=== E13 — Snapshot with policy label ww-r-99: refused, not run
+  :claim C
+  :route DC
+  :at 2
+  :result :UNSUPPORTED-POLICY
+  :policy WW-R-99
+  :reason "the retained snapshot's policy label WW-R-99 is not ww-r-0; this pinned implementation implements ww-r-0 only and will not run present code under another label"
+  :rules (:WW-R7)
+  :carried-status-testimony NIL
+
+=== CHECK against expectations.lisp (pre-registered) ===
+  E1 PASS
+  E2 PASS
+  E2-D PASS
+  E3 PASS
+  E4 PASS
+  E5 PASS
+  E6 PASS
+  E7 PASS
+  E7-C PASS
+  E8 FAIL (:RESULT :EXPECTED :ESTABLISHED :GOT :CYCLE) (:SHARED :EXPECTED ((D2 :REACHED-AGAIN-VIA DR)) :GOT NIL)
+  E9 PASS
+  E10 PASS
+  E11 PASS
+  E12 PASS
+  E13 PASS
+  PASS 14/15 — FAIL 1
+  DECISIVE E2 vs E2-D: corrected :ESTABLISHED with unresolved NIL and not-entered ((D1 :FOR P)) | defective :CONDITIONAL with unresolved ((Q :ON D1)) — DEFECT EXPOSED
+exit=1

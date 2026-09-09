@@ -1,0 +1,10 @@
+proof_sha256 a3b8717a5753574fbb5b75566870052653285f30fa9a05ad99d51de85025a637
+proof_bytes 6536042836
+cnf_sha256 67422618e74275a9d3636623a49a17099a490d513252a45439d73082dc710e21
+solver_sha256 5647d9a938011635fb32443bcfaed58b3eab031346b9bee77d42a790d6683243
+solver_version 3.0.1
+checker_sha256 92f0aa9575ed519d66a99b8b1b3dde6ece4618ae4c202a3a4b200265dda0aa7a
+command /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/425d5d75-232c-4287-aa85-0027288927c1/scratchpad/sat/cadical/build/cadical --binary=false evidence/A_K12_lex_v2/A_K12_V8.cnf evidence/A_K12_lex_v2/A_K12_V8.drat
+seconds 3781.13
+verified_at 2026-09-08T06:27:33-03:00
+core_lrat_zst /home/gauss/freezer/shannon-synthesis-0/A_K12_V8.core.lrat.zst
