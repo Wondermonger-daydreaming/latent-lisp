@@ -1,0 +1,5 @@
+SEC-OK B0-I: interposer calls = 314
+SEC-OK B0-I: target injections = 0
+SEC-OK B0-I: [12] line identical to B0's = [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+SEC-OK B0-I: [12] note identical to B0's = walked every external fbound symbol's compiled lambda list
+SEC-OK B0-I: sentinel identical to B0's = ml0-block-proof: 20 probes, 20 closed, 0 open

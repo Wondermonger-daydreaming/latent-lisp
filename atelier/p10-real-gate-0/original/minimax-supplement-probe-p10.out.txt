@@ -1,0 +1,24 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+=== SUPPLEMENT P10: F1 introspection failure injection ===
+declared external functions: 148
+--- (a) injection target: ML0-NOTE ---
+  original function: #<FUNCTION ML0-NOTE>
+  original lambda list (before injection): (CONTROL &REST ARGUMENTS)
+  post-injection lambda list: INJECTED-FAILURE: The function LISP-PLUS-MEMORY-LAYER0:ML0-NOTE is undefined.
+--- (b) running the F1 measurement ---
+--- (c) introspection counts ---
+  attempted:  148
+  succeeded:  147
+  failed:     1
+  injected failures (introspection errors):
+    ML0-NOTE: The function LISP-PLUS-MEMORY-LAYER0:ML0-NOTE is undefined.
+  defect rows (defect or defect-payload in lambda list):
+--- (d) gate behaviour with the injection ---
+  gate passes vacuously (failed=0): NIL
+  gate exposes the failure (failed>0): T
+  => the F1 measurement CORRECTLY counts the failure.
+  => the original P10 probe would silently report PASS; this supplement EXPOSES the failure.
+=== SUPPLEMENT P10: VERDICT ===
+SUPPLEMENT P10: PASS — 1 counted failure exposed; 147/148 introspections succeeded; no defect leak

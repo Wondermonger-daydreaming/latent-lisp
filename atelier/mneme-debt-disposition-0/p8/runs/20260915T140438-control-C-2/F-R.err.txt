@@ -1,0 +1,13 @@
+
+; file: /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/mneme-debt-disposition-0/p8/harness/p8-case.lisp
+; in: DEFUN P8-PRINT-FIXTURE-PROPERTY
+;     (LISP-PLUS-MEMORY-LAYER0::P8-DIFF-FIELDS LISP-PLUS-MEMORY-LAYER0::*P8-BODY*
+;                                              LISP-PLUS-MEMORY-LAYER0::BODY)
+; 
+; caught WARNING:
+;   undefined variable: LISP-PLUS-MEMORY-LAYER0::*P8-BODY*
+; 
+; compilation unit finished
+;   Undefined variable:
+;     *P8-BODY*
+;   caught 1 WARNING condition

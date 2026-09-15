@@ -1,0 +1,1 @@
+INVALID B0: gate exit record must be exactly one line, found 2 non-empty line(s): EXIT 1|EXIT 0

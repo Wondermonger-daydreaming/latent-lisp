@@ -1,0 +1,17 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+=== Probe P8 / SPEC §5 R4: effect axis is :caller-asserted ===
+--- 1) default provenance ---
+default provenance: :CALLER-ASSERTED
+is :caller-asserted? T
+--- 2) public door refuses :provenance ---
+REFUSED (UNKNOWN-KEYWORD-ARGUMENT): Unknown &KEY argument: :PROVENANCE
+--- 3) durable bytes carry :caller-asserted ---
+account written: "1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504"
+retrieved effect provenance: :CALLER-ASSERTED
+=== VERDICT ===
+  default :caller-asserted: T
+  forge :provenance refused: T
+  durable :caller-asserted: T
+P8: PASS

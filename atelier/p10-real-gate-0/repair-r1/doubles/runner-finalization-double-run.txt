@@ -1,0 +1,16 @@
+SHELL DOUBLE — the runner with its case loop cut out (every case pretends to match) and the identity root pointed at the TAMPERED disposable copy; NOT an experiment, NOT a gate run; diff beside this file — 2026-09-15T16:18:10-03:00
+IDENTITY-AFTER exit 1 (0 = all pinned files unchanged; 1 = mismatch/missing; 2 = check could not be made)
+P10-RUNNER: matched=9 fail=0 invalid=0 unexpected-blocked=0 exploratory=0   (matched = the classifier's PASS lines: expectation met, NOT 'F1 checks passed')
+P10-RUNNER: reachability: F1-reached=9 loader-block=0 (M1-C: the EXPECTED loader block is a completed observation and still a block) crash-before-F1=0 other=0
+P10-RUNNER: identity-after exit=1
+P10-RUNNER: B0       -> GATE-GREEN
+P10-RUNNER: B0-I     -> GATE-GREEN
+P10-RUNNER: M1-C     -> GATE-GREEN
+P10-RUNNER: M1-U     -> GATE-GREEN
+P10-RUNNER: M1-U-I   -> GATE-GREEN
+P10-RUNNER: M2-P     -> GATE-GREEN
+P10-RUNNER: M2-X     -> GATE-GREEN
+P10-RUNNER: U1       -> GATE-GREEN
+P10-RUNNER: U1-M     -> GATE-GREEN
+P10-RUNNER: VOID — identity-after exit 1: the pinned subject could not be shown unchanged after the runs (see /tmp/p10-double-out/IDENTITY-AFTER.txt); the case tallies above do not stand as a success
+DOUBLE RUNNER EXIT 6

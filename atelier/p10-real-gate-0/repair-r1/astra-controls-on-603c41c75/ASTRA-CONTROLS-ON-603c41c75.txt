@@ -1,0 +1,25 @@
+ASTRA'S CONTROLS REPRODUCED ON THE SHIPPED CLASSIFIER (commit 603c41c75) — 2026-09-15T16:14:42-03:00
+classifier sha256 f85351e948daa4c7b1b0b2668195bc112fed153ee74427b47283a86e4e22bc5f
+
+=== R1a: real M1-U case dir with witness.out.txt DELETED, classified against GATE-GREEN
+CLASS R1a-M1-U: GATE-GREEN
+SENTINEL R1a-M1-U: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL R1a-M1-U: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 R1a-M1-U: walked every external fbound symbol's compiled lambda list
+EXIT R1a-M1-U: 0
+PASS R1a-M1-U: GATE-GREEN
+CLASSIFIER EXIT 0
+
+=== R1b: real B0 case dir with gate.exit.txt = 'EXIT 1' newline 'EXIT 0', classified against GATE-GREEN
+CLASS R1b-B0: GATE-GREEN
+SENTINEL R1b-B0: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL R1b-B0: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 R1b-B0: walked every external fbound symbol's compiled lambda list
+EXIT R1b-B0: 0
+PASS R1b-B0: GATE-GREEN
+CLASSIFIER EXIT 0
+
+=== R1b': witness.exit.txt duplicated the same way on real M2-P, against GATE-OPEN-F1
+WEXIT R1b-M2-P: 0
+PASS R1b-M2-P: GATE-OPEN-F1
+CLASSIFIER EXIT 0

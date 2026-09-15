@@ -1,0 +1,74 @@
+# evidence-roles.txt — the DECLARED required evidence roles of MNEME DEBT DISPOSITION /0 (attachment §5). tools/check-roles.sh compares an
+# extracted parcel against THIS list, never against a manifest of whatever survived. One role per line: <role> <glob relative to this dir>.
+# A role whose glob matches no file is MISSING and the parcel is rejected for its declared retention contract.
+# --- the commission and the subject
+debt-map                DEBT-MAP.md
+return                  RETURN.md
+readme                  README.md
+p3-p5-p10-note          P3-P5-P10-UNCHANGED.md
+# --- Part A (P9)
+p9-erratum              p9/ERRATUM-P9-0.md
+p9-before-file          p9/before/ml0-consolidation-proof.lisp
+p9-form-identity-tool   p9/form-identity.lisp
+p9-form-identity-result p9/form-identity-result.txt
+p9-proof-rerun          p9/consolidation-proof-run.txt
+p9-manifest-diff        p9/manifest-diff.txt
+p9-manifest-verify      p9/manifest-verify.txt
+p9-identity-table       p9/IDENTITY-PRESERVATION.txt
+p9-3002-patch-unapplied p9/ml0-3002.patch
+p9-census-report        p9/census/CENSUS-REPORT.md
+p9-census-overclaim     p9/census/overclaim-census.md
+p9-census-pins          p9/census/pin-census.md
+# --- Part B (P8): the original block, retained
+p8-original-probe       p8/original/probe-p8-supplement.lisp
+p8-original-stdout      p8/original/probe-p8-supplement.out.txt
+p8-original-stderr      p8/original/probe-p8-supplement.err.txt
+p8-original-invocation  p8/original/auditor-invocation-0309.cmd.txt
+p8-phaseB-probe         p8/original/probe-p8-effect-axis-phaseB.lisp
+p8-phaseB-stdout        p8/original/probe-p8-effect-axis-phaseB.out.txt
+p8-repro-report         p8/original/repro/REPRO-REPORT.md
+p8-repro-venue          p8/original/repro/VENUE-IDENTITY.txt
+p8-repro-lane-compare   p8/original/repro/A-comparison.txt
+p8-repro-C2-err         p8/original/repro/C2.err.txt
+p8-repro-C2-out         p8/original/repro/C2.out.txt
+p8-repro-C2-exit        p8/original/repro/C2.exit.txt
+p8-repro-C3-out         p8/original/repro/C3.out.txt
+# --- Part B: the prospective delta and the repaired harness
+p8-prereg               p8/PREREG-P8-DELTA-0.md
+p8-prereg-sha           p8/PREREG-P8-DELTA-0.sha256
+p8-prereg-note-1        p8/PREREG-P8-DELTA-0-NOTE-1.md
+p8-case-script          p8/harness/p8-case.lisp
+p8-runner               p8/harness/p8-runner.sh
+p8-expectations         p8/harness/EXPECTATIONS-P8.txt
+p8-closure-report       p8/closure/TRACER-REPORT.md
+p8-closure-paths        p8/closure/paths.txt
+p8-closure-pinned       p8/closure/PINNED-CLOSURE-SHA256.txt
+# --- Part B: failed attempts and the builder's report (retained under distinct paths)
+p8-dev-runs-report      p8/dev-runs/SMITH-REPORT.md
+p8-dev-run-002-vj       p8/dev-runs/002-all-cases/*
+p8-dev-run-003-diag     p8/dev-runs/003-vj-diagnosis/*
+# --- Part B: the recorded run (per case) and the three verdict controls
+p8-real-header          p8/runs/*-real/RUNNER-HEADER.txt
+p8-real-summary         p8/runs/*-real/SUMMARY.txt
+p8-real-venue           p8/runs/*-real/VENUE-IDENTITY.txt
+p8-real-closure-check   p8/runs/*-real/CLOSURE-CHECK.txt
+p8-real-EL-diff         p8/runs/*-real/venue-path-substitution.diff.txt
+p8-real-V-R             p8/runs/*-real/V-R.out.txt
+p8-real-V-D             p8/runs/*-real/V-D.out.txt
+p8-real-V-J             p8/runs/*-real/V-J.out.txt
+p8-real-F-D             p8/runs/*-real/F-D.out.txt
+p8-real-F-R             p8/runs/*-real/F-R.out.txt
+p8-real-F-W             p8/runs/*-real/F-W.out.txt
+p8-real-E-J             p8/runs/*-real/E-J.out.txt
+p8-real-E-R             p8/runs/*-real/E-R.out.txt
+p8-real-E-L-out         p8/runs/*-real/E-L.out.txt
+p8-real-E-L-err         p8/runs/*-real/E-L.err.txt
+p8-real-exits           p8/runs/*-real/E-L.exit.txt
+p8-real-transcript      p8/runs/*-real/runner-transcript.txt
+p8-control-C1           p8/runs/*-control-C-1/SUMMARY.txt
+p8-control-C2           p8/runs/*-control-C-2/SUMMARY.txt
+p8-control-C3           p8/runs/*-control-C-3/SUMMARY.txt
+# --- tools
+tool-check-roles        tools/check-roles.sh
+tool-validate           tools/validate-parcel.sh
+tool-repro              tools/repro.sh

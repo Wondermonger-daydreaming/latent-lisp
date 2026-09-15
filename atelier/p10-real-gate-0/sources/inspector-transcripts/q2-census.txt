@@ -1,0 +1,26 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+(a) external symbols: 205
+(b) fboundp externals (what F1 walks): 157
+    declared +ml0-external-functions+: 148
+    declared vars 27  types 20  sum 195
+(c) fboundp externals NOT in the loader list: 9
+      ML0-SUBJECT-ACT-ID
+      ML0-SUBJECT-ACT-ID-HEX
+      ML0-SUBJECT-ATTEMPT
+      ML0-SUBJECT-CANONICAL-REQUEST
+      ML0-SUBJECT-EXTERNAL-REQUEST-KEY
+      ML0-SUBJECT-FIXTURE-ROW
+      ML0-SUBJECT-FROM-FIXTURE-ROW
+      ML0-SUBJECT-P
+      ML0-SUBJECT-SEAT
+(d) declared names NOT fboundp: 0
+(e) fboundp externals that are MACROS: 0
+
+--- function-lambda-list behaviour over every fboundp external ---
+odd/empty/signalling: 0
+
+--- macro arglists explicitly ---
+
+(f) current DEFECT offenders: 0 NIL

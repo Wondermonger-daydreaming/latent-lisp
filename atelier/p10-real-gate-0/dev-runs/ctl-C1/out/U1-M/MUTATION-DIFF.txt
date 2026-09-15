@@ -1,0 +1,17 @@
+# P10 REAL GATE /0 mutation diff
+# case: U1-M   mutation: M2-P
+# subject root: /tmp/p10-rg0-20260915T153041/U1-M
+# pristine provenance: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+# pristine sha256: 784bc7f6e6d0b7c40485c23e994fb455934cac30682b7a58f22b3942cac4c6df
+# mutated  sha256: e9f43b677b43ff4b39b145a54f3d2efdc36470076a80ea8f4ca4848a9edd31b5
+--- a/mneme/memory-layer-0/ml0.lisp (pristine)
++++ b/mneme/memory-layer-0/ml0.lisp (U1-M)
+@@ -3092,7 +3092,7 @@
+ ;;; TESTIMONY row, and testimony is the only thing it can ever support.
+ ;;; ===========================================================================
+ 
+-(defun ml0-evidence-projection-digest (evidence)
++(defun ml0-evidence-projection-digest (evidence &key defect)
+   "A digest over a CD/0 projection of PUBLIC Core /0 readers.  Returns
+ (values HEX PROJECTION-RECORD)."
+   (unless (lisp-plus-core0:core0-evidence-p evidence)

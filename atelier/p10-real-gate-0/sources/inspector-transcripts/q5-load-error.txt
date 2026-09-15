@@ -1,0 +1,31 @@
+before load
+caught: lane incomplete
+Unhandled MY-BAD in thread #<SB-THREAD:THREAD tid=1830126 "main thread" RUNNING
+                              {1000A88003}>:
+  lane incomplete
+
+Backtrace for: #<SB-THREAD:THREAD tid=1830126 "main thread" RUNNING {1000A88003}>
+0: (SB-DEBUG::DEBUGGER-DISABLED-HOOK #<MY-BAD {1000B65383}> #<unused argument> :QUIT T)
+1: (SB-DEBUG::RUN-HOOK *INVOKE-DEBUGGER-HOOK* #<MY-BAD {1000B65383}>)
+2: (INVOKE-DEBUGGER #<MY-BAD {1000B65383}>)
+3: (ERROR MY-BAD)
+4: (SB-INT:SIMPLE-EVAL-IN-LEXENV (ERROR (QUOTE MY-BAD)) #<NULL-LEXENV>)
+5: (EVAL-TLF (ERROR (QUOTE MY-BAD)) 4 NIL)
+6: ((LABELS SB-FASL::EVAL-FORM :IN SB-INT:LOAD-AS-SOURCE) (ERROR (QUOTE MY-BAD)) 4)
+7: ((LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) (ERROR (QUOTE MY-BAD)) :CURRENT-INDEX 4)
+8: (SB-C::%DO-FORMS-FROM-INFO #<FUNCTION (LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) {7B01D20873DB}> #<SB-C::SOURCE-INFO {1000AACAA3}> SB-C::INPUT-ERROR-IN-LOAD)
+9: (SB-INT:LOAD-AS-SOURCE #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/inspector/probes/p-q5-load-error.lisp" {1000164903}> :VERBOSE NIL :PRINT NIL :CONTEXT "loading")
+10: ((LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/inspector/probes/p-q5-load-error.lisp" {1000164903}> NIL)
+11: (SB-FASL::CALL-WITH-LOAD-BINDINGS #<FUNCTION (LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) {7B01D208779B}> #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/inspector/probes/p-q5-load-error.lisp" {1000164903}> NIL #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/inspector/probes/p-q5-load-error.lisp" {1000164903}>)
+12: (LOAD #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/inspector/probes/p-q5-load-error.lisp" {1000164903}> :VERBOSE NIL :PRINT NIL :IF-DOES-NOT-EXIST :ERROR :EXTERNAL-FORMAT :DEFAULT)
+13: ((FLET SB-IMPL::LOAD-SCRIPT :IN SB-IMPL::PROCESS-SCRIPT) #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/inspector/probes/p-q5-load-error.lisp" {1000164903}>)
+14: ((FLET SB-UNIX::BODY :IN SB-IMPL::PROCESS-SCRIPT))
+15: ((FLET "WITHOUT-INTERRUPTS-BODY-" :IN SB-IMPL::PROCESS-SCRIPT))
+16: (SB-IMPL::PROCESS-SCRIPT "/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/inspector//probes/p-q5-load-error.lisp")
+17: (SB-IMPL::TOPLEVEL-INIT)
+18: ((FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP))
+19: ((FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP))
+20: (SB-IMPL::%START-LISP)
+
+unhandled condition in --disable-debugger mode, quitting
+EXIT 1

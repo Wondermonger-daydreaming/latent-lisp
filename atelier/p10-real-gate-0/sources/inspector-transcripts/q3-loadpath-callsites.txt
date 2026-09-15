@@ -1,0 +1,42 @@
+--- ml0-check (BLOCK-PROOF LOAD PATH only) ---
+ml0.lisp:53:(defun ml0-check (name ok &optional (control "") &rest arguments)
+    [whole lane count: 117]
+--- ml0-print-store-universe (BLOCK-PROOF LOAD PATH only) ---
+ml0.lisp:1846:(defun ml0-print-store-universe (label before after)
+    [whole lane count: 2]
+--- ml0-print-conjuncts (BLOCK-PROOF LOAD PATH only) ---
+ml0-mutant-overlay.lisp:15:;;;; `ml0-print-conjuncts`, `ml0-occurrence-warranted-p`,
+ml0-block-proof.lisp:275:               (ml0-print-conjuncts "the forged public row" *refused-id* forged)
+ml0.lisp:1537:(defun ml0-print-conjuncts (label act-id source &key (stream *standard-output*))
+    [whole lane count: 6]
+--- ml0-warrants-commensurable-p (BLOCK-PROOF LOAD PATH only) ---
+ml0.lisp:2511:          (when (ml0-warrants-commensurable-p p n)
+ml0.lisp:2684:(defun ml0-warrants-commensurable-p (a b)
+ml0.lisp:2721:BLOCK-2 bullet, which directs that `ml0-warrants-commensurable-p` `must also
+ml0.lisp:2888:                                 thereis (and (ml0-warrants-commensurable-p p n)
+    [whole lane count: 12]
+--- ml0-failing-leg (BLOCK-PROOF LOAD PATH only) ---
+ml0.lisp:1529:(defun ml0-failing-leg (conjuncts)
+ml0.lisp:1596:        (multiple-value-bind (leg requirement) (ml0-failing-leg best-conjuncts)
+    [whole lane count: 5]
+--- ml0-store-scope-unchanged-p (BLOCK-PROOF LOAD PATH only) ---
+ml0.lisp:1836:(defun ml0-store-scope-unchanged-p (before after)
+    [whole lane count: 19]
+--- ml0-list-account-ids (BLOCK-PROOF LOAD PATH only) ---
+ml0.lisp:2218:(defun ml0-list-account-ids (store)
+ml0.lisp:2286:  (multiple-value-bind (hexes frame-count status tail-sha) (ml0-list-account-ids store)
+    [whole lane count: 9]
+--- ml0-render-account (BLOCK-PROOF LOAD PATH only) ---
+ml0-block-proof.lisp:274:               (ml0-render-account account)
+ml0.lisp:3134:(defun ml0-render-account (account &optional (stream *standard-output*))
+    [whole lane count: 4]
+--- ml0-acquisition-route-identifier (BLOCK-PROOF LOAD PATH only) ---
+ml0.lisp:133:(defun ml0-acquisition-route-identifier (route)
+ml0.lisp:269:  (ml0-acquisition-route-identifier acquisition-route)
+    [whole lane count: 5]
+--- ml0-evidence-projection-digest (BLOCK-PROOF LOAD PATH only) ---
+ml0.lisp:937:    (multiple-value-bind (hex projection) (ml0-evidence-projection-digest evidence)
+ml0.lisp:3095:(defun ml0-evidence-projection-digest (evidence)
+    [whole lane count: 2]
+--- ml0-subject-fixture-row (BLOCK-PROOF LOAD PATH only) ---
+    [whole lane count: 0]

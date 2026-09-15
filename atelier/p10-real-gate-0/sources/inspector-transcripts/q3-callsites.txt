@@ -1,0 +1,125 @@
+=== ml0-note ===
+ml0-suite-ground.lisp:66:    (ml0-note "act store   : ~a" (journal-store-store-id *ml0-act-store*))
+ml0-suite-ground.lisp:67:    (ml0-note "account store: ~a (durability ~s)"
+ml0-controls.lisp:957:                     (ml0-note "tooth 13 disease refused as ~a [~a]"
+ml0-block-proof.lisp:215:       (ml0-note "derived effect standing for ~a : ~s"
+ml0-block-proof.lisp:217:       (ml0-note "world ledger rows under its derived external-request key: ~d"
+ml0-block-proof.lisp:221:       (ml0-note "and Core /0 DID issue evidence for it: ~a"
+ml0-block-proof.lisp:268:             (progn (ml0-note "ml0-write REFUSED the forged row: ~a [~a]"
+ml0-block-proof.lisp:373:         (ml0-note "the two rows agree ONLY in species, payload digest and ~
+ml0-block-proof.lisp:376:         (ml0-note "canonical record bytes identical? ~a"
+ml0-block-proof.lisp:380:         (ml0-note "the two accounts' identities: ~a / ~a — ~a"
+ml0-block-proof.lisp:386:         (ml0-note "source rows surviving consolidation: ~d" (length union))
+ml0-block-proof.lisp:435:         (ml0-note "the two records differ in EXACTLY ONE FIELD: ~
+ml0-block-proof.lisp:441:         (ml0-note "records byte-identical? ~a"
+ml0-block-proof.lisp:458:               (ml0-note "the decoded row's validation standing: ~s (recorded: ~s); ~
+ml0-block-proof.lisp:498:         (ml0-note "the door took ONE subject: its ledger key ~a and its stamped ~
+ml0-block-proof.lisp:501:         (ml0-note "the DISEASE ROW was synthesised through the internal ~
+ml0-block-proof.lisp:552:         (ml0-note "the honest absence row attests ~s over key ~a — a TRUE reading ~
+ml0-block-proof.lisp:587:         (ml0-note "the issuance door now derives the canonical request FROM THE ~
+ml0-block-proof.lisp:654:         (ml0-note "the honest reading is conjoined (~a) and issued-p answers ~a; ~
+ml0.lisp:50:(defun ml0-note (control &rest arguments)
+ml0.lisp:1849:  (ml0-note "STORE-SCOPE ~a — universe of the look: the ENTIRE declared account ~
+ml0.lisp:1854:      (ml0-note "  ~a: ~a -> ~a" (car pair)
+=== ml0-check ===
+ml0-consolidation-proof.lisp:148:             (ml0-check "both inputs are validated-retrieval accounts standing :OCCURRED; A issued, B issuance :unresolved"
+ml0-consolidation-proof.lisp:157:             (ml0-check "a RAW-DECODE account is declined with ML0-CONSOLIDATION-REFUSED / ML0-CON-3"
+ml0-consolidation-proof.lisp:165:             (ml0-check "a non-account is declined (ML0-CON-1)"
+ml0-consolidation-proof.lisp:180:               (ml0-check "the result is an ML0-CONSOLIDATION carrier" (ml0-consolidation-p c))
+ml0-consolidation-proof.lisp:181:               (ml0-check "the carrier's constructor is INTERNAL (not exported)"
+ml0-consolidation-proof.lisp:184:               (ml0-check "carrier computes :OCCURRED over the union; issuance folded separately to :ISSUED-IN-WRITING-IMAGE"
+ml0-consolidation-proof.lisp:187:               (ml0-check "exact source union: 4 distinct rows (world, issuance, journal, self-report), none collapsed"
+ml0-consolidation-proof.lisp:189:               (ml0-check "inherited observation rows are NOT testimony in the carrier"
+ml0-consolidation-proof.lisp:193:               (ml0-check "reversed input order: same predecessor order, same source order (content-ordered, not caller-ordered)"
+ml0-consolidation-proof.lisp:210:                 (ml0-check "the returned derived account is read back through a validated retrieval and stands :OCCURRED"
+ml0-consolidation-proof.lisp:214:                 (ml0-check "issuance remains a SEPARATE axis on the derived account"
+ml0-consolidation-proof.lisp:220:                 (ml0-check "BOTH predecessor identities survive, in content order"
+ml0-consolidation-proof.lisp:225:                 (ml0-check "EVERY distinct source row survives the write, by canonical digest"
+ml0-consolidation-proof.lisp:230:                 (ml0-check "inherited rows re-inherit on readback (not converted to testimony)"
+ml0-consolidation-proof.lisp:233:                 (ml0-check "REVERSED INPUT ORDER materializes BYTE-IDENTICAL derived content (same content-derived identity)"
+ml0-consolidation-proof.lisp:242:                 (ml0-check "two materializations of BYTE-IDENTICAL derived content land on ONE frame (PJ0 append idempotency on content-derived identity)"
+ml0-consolidation-proof.lisp:254:                   (ml0-check "a NEW process opens the store, retrieves the derived account, and reads :OCCURRED / :consolidation"
+ml0-consolidation-proof.lisp:258:                 (ml0-check "ml0-write no longer accepts :derivation (arglist = store bundle &key recording-process)"
+ml0-consolidation-proof.lisp:267:                 (ml0-check "materialization refuses anything that is not a carrier (ML0-MAT-1)"
+ml0-consolidation-proof.lisp:271:                 (ml0-check "the documented OLD route still normalizes inherited rows to testimony and writes :UNRESOLVED — the testimony channel is unchanged"
+ml0-consolidation-proof.lisp:285:               (ml0-check "the modelled pair IS commensurable (same universe, same interval, both :looked)"
+ml0-consolidation-proof.lisp:287:               (ml0-check "DIRECT WRITE of both in ONE bundle is still REFUSED (ML0-WR-6) — self-contradiction refusal unchanged"
+ml0-consolidation-proof.lisp:309:                 (ml0-check "the modelled negative writes :NONOCCURRED on its own (a door-validated scoped negative)"
+ml0-consolidation-proof.lisp:311:                 (ml0-check "consolidation of the validated positive and the validated negative computes :CONTRADICTED, naming the clash"
+ml0-consolidation-proof.lisp:314:                 (ml0-check "materialization writes :CONTRADICTED and reads it back"
+ml0-consolidation-proof.lisp:318:                 (ml0-check "both clashing warrants stand in the derived account's sources"
+ml0-consolidation-proof.lisp:326:                   (ml0-check "a NEW process reads the derived account as :CONTRADICTED / :consolidation"
+ml0-consolidation-proof.lisp:343:           (ml0-check "the CL #S reader cannot construct ANY lane struct from outside (BOA constructors): account, source, observation, bundle, carrier all READER-ERROR"
+ml0-consolidation-proof.lisp:356:           (ml0-check "EVERY structure class in the lane package refuses #S (enumerated, not sampled)"
+ml0-consolidation-proof.lisp:372:           (ml0-check "a lawful carrier whose SOURCE LIST is rewritten through its reader is REFUSED at materialization (ML0-MAT-2), never written"
+ml0-consolidation-proof.lisp:378:           (ml0-check "a lawful carrier whose PREDECESSOR LIST is rewritten is REFUSED (ML0-MAT-2)"
+ml0-consolidation-proof.lisp:384:           (ml0-check "a COPY-STRUCTURE'd lawful carrier materializes the SAME content as the original (copying mints nothing)"
+ml0-consolidation-proof.lisp:389:           (ml0-check "the derived account's subject principal is NOT re-prefixed (principal:<name>, once)"
+ml0-consolidation-proof.lisp:392:           (ml0-check "a derived account can be RE-CONSOLIDATED with its own input (no ML0-CON-4), and the fold is non-amplifying (same standing, same source union)"
+ml0-consolidation-proof.lisp:397:           (ml0-check "a carrier computed over accounts of THIS store cannot be materialized into a FOREIGN store (ML0-MAT-3) — lineage must be checkable by the store that holds it"
+ml0-selftest.lisp:82:       (ml0-check "the source-species set has exactly SEVEN members, counted"
+ml0-selftest.lisp:84:       (ml0-check "exactly THREE species may warrant occurrence, and they are ~
+ml0-selftest.lisp:89:       (ml0-check "the occurrence species are a SUBSET of the closed species set"
+ml0-selftest.lisp:92:       (ml0-check "core0 issuance testimony is NOT an occurrence species — the ~
+ml0-selftest.lisp:95:       (ml0-check "a lane self-report is NOT an occurrence species either: the ~
+ml0-selftest.lisp:98:       (ml0-check "the acquisition ratchet is exactly {:live-query :reconstructed}"
+ml0-selftest.lisp:100:       (ml0-check "the issuance vocabulary is exactly TWO — ~
+ml0-selftest.lisp:108:       (ml0-check "record coverage is a SEPARATE vocabulary on a SEPARATE field, ~
+ml0-selftest.lisp:115:       (ml0-check "the :OCCURRED proposition is PINNED as a declared constant, and ~
+ml0-selftest.lisp:121:       (ml0-check "the promotion rule has NINE legs, each with its own requirement ~
+ml0-selftest.lisp:129:       (ml0-check "record coverage is a SEPARATE vocabulary on a SEPARATE field, ~
+ml0-selftest.lisp:136:       (ml0-check "the :OCCURRED proposition is PINNED as a declared constant, and ~
+ml0-selftest.lisp:142:       (ml0-check "the occurrence vocabulary is exactly four, with :unresolved ~
+ml0-selftest.lisp:146:       (ml0-check "the effect determinacies are Architecture 0.1 §6.8's three, ~
+ml0-selftest.lisp:156:       (ml0-check "origin/observed is UNMINTABLE by this lane: the identifier ~
+ml0-selftest.lisp:161:       (ml0-check "origin/self-reported IS mintable — the gate is narrow, not a ~
+ml0-selftest.lisp:164:       (ml0-check "the ratchet renders both lawful routes"
+ml0-selftest.lisp:169:       (ml0-check "the ratchet REFUSES :observed as a caller error, in code — a ~
+ml0-selftest.lisp:191:       (ml0-check "the settled act SETTLED, and the identity this lane ~
+ml0-selftest.lisp:200:       (ml0-check "re-derivation PERFORMED NOTHING: the journal's frame count and ~
+ml0-selftest.lisp:219:       (ml0-check "the FOUR VALIDATION STANDINGS are closed, and only a DOOR (or a ~
+ml0-selftest.lisp:245:       (ml0-check "and a row from the PUBLIC TESTIMONY DOOR cannot warrant ~
+ml0-selftest.lisp:271:       (ml0-check "a WORLD-BYTES source warrants occurrence: the ledger row under ~
+ml0-selftest.lisp:274:       (ml0-check "a KERNEL-MEDIATED-JOURNAL source warrants occurrence"
+ml0-selftest.lisp:276:       (ml0-check "a LANE-SELF-REPORT source does NOT warrant occurrence, alone or ~
+ml0-selftest.lisp:281:       (ml0-check "the rule NAMES the source that warranted, so a reader never has ~
+ml0-selftest.lisp:288:       (ml0-check "the rule refuses a source whose SUBJECT IDENTITY is another ~
+ml0-selftest.lisp:292:       (ml0-check "the rule refuses an admitted species whose scope status is ~
+ml0-selftest.lisp:312:       (ml0-check "an EMPTY source list warrants nothing, and says so without ~
+ml0-selftest.lisp:342:       (ml0-check "WRITE produced an account whose occurrence standing is ~
+ml0-selftest.lisp:347:       (ml0-check "the account's ISSUANCE standing is :ISSUED and sits in its OWN ~
+ml0-selftest.lisp:352:       (ml0-check "the account's act identity is the RE-DERIVED one, byte-equal"
+ml0-selftest.lisp:354:       (ml0-check "the account identity is 64 hex and lives in kernel domain ~
+ml0-selftest.lisp:359:       (ml0-check "recorder and subject principals are DIFFERENT and both present"
+ml0-selftest.lisp:364:       (ml0-check "the account carries all four sources, with their species intact ~
+ml0-selftest.lisp:370:       (ml0-check "and the three occurrence-capable rows carry a DOOR stamp while ~
+ml0-selftest.lisp:387:       (ml0-check "the effect observation is a SCOPED OBSERVATION of the adopted ~
+ml0-selftest.lisp:396:       (ml0-check "the durable frame's envelope carries origin:self-reported and ~
+ml0-selftest.lisp:409:       (ml0-check "the durable frame's recorder principal is memorylayer0 and its ~
+ml0-selftest.lisp:443:       (ml0-check "THE DANGEROUS ARTIFACT EXISTS, LAWFULLY: a pre-frontier ~
+ml0-selftest.lisp:454:       (ml0-check "AND THE ACT DID NOT HAPPEN, measured by three independent ~
+ml0-selftest.lisp:479:       (ml0-check "PRESENTED TO WRITE AS THOUGH IT WARRANTED OCCURRENCE, the ~
+ml0-selftest.lisp:488:       (ml0-check "the SAME identity is on both sides of the refusal — the crown ~
+ml0-selftest.lisp:494:       (ml0-check "the issuance coordinate now records THE DOOR'S OWN READING — the ~
+ml0-selftest.lisp:510:       (ml0-check "and with the MUTANT rule, the very same sources DO promote — so ~
+ml0-selftest.lisp:516:       (ml0-check "the issuance source attests :INCONCLUSIVE, honestly — a mint is ~
+ml0-selftest.lisp:532:       (ml0-check "the retrieved account is byte-identical in identity to the one ~
+ml0-selftest.lisp:540:       (ml0-check "provenance survived intact: same species, same routes, same ~
+ml0-selftest.lisp:556:       (ml0-check "RETRIEVAL RETURNS AN ACCOUNT AND NOTHING ELSE: it is not a ~
+ml0-selftest.lisp:562:       (ml0-check "THE ORIGIN RATCHET HELD: the retrieval's own origin is ~
+ml0-selftest.lisp:569:       (ml0-check "reading changed nothing: the account store, the act journal and ~
+ml0-selftest.lisp:585:       (ml0-check "the store lists exactly the two accounts written so far, in ~
+ml0-selftest.lisp:592:       (ml0-check "a retrieval for an identity that is not in the store REFUSES ~
+ml0-selftest.lisp:619:       (ml0-check "ISSUANCE-ONLY + ISSUANCE-ONLY consolidates to :UNRESOLVED — two ~
+ml0-selftest.lisp:629:       (ml0-check "consolidation ORDERS BY CONTENT-DERIVED IDENTITY, not by ~
+ml0-selftest.lisp:644:       (ml0-check "the SAME account twice is ONE record — an exact duplicate is an ~
+ml0-selftest.lisp:650:       (ml0-check "two accounts with DISTINCT PROVENANCE are never collapsed, ~
+ml0-selftest.lisp:658:       (ml0-check "CROSS-ACT consolidation is refused BEFORE any output is produced"
+ml0-selftest.lisp:664:       (ml0-check "consolidation is EFFECT-FREE: the account store is byte-unchanged ~
+ml0-selftest.lisp:671:       (ml0-check "a KERNEL-MEDIATED-JOURNAL source over the REFUSED act attests ~
+ml0-selftest.lisp:687:       (ml0-check "a SCOPED NEGATIVE OBSERVATION over the refused act's complete, ~
+ml0-selftest.lisp:695:       (ml0-check "the SAME scoped negative with status :COULD-NOT-LOOK warrants ~
+ml0-selftest.lisp:704:       (ml0-check "ISSUANCE-ONLY + A QUALIFYING BASIS becomes :OCCURRED — and only ~
+ml0-selftest.lisp:747:       (ml0-check "the instrument LISTS the account store's file set rather than ~
+ml0-selftest.lisp:755:       (ml0-check "COMPETENCE: the instrument SEES a lawful write between two ~
+ml0-selftest.lisp:778:       (ml0-check "the COMMENSURABILITY PREDICATE still discriminates, exercised ~

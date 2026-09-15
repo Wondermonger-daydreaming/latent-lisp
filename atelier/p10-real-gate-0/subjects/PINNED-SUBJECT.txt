@@ -1,0 +1,4 @@
+PINNED SUBJECT — computed 2026-09-15T15:04:36-03:00 from lab commit 244580e81a9002ea61a435ed185e85133a994fd9 (main at the branch cut)
+latent-lisp tree e148d8a5344cd0bef88d0a8d5eba77684577d9f3
+lane tree        9458616a438fbce1de0433d439b458f83d76fbac
+gate file        18215c6c0b11b7e18368bef2ecac757b92abc22aef94cc80ef6100d34bc0cb10  mneme/memory-layer-0/ml0-block-proof.lisp

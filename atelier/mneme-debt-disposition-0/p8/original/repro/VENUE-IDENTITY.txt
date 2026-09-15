@@ -1,0 +1,9 @@
+VENUE IDENTITY
+built: 2026-09-15T13:39:35-03:00
+HEAD:            8f41eee133555ee47e2d4d3c1eb7a6bb9427b212
+HEAD tree:       6f19ade14cbd7ade14b5ef95bd5875e05dfff764
+subject subtree: e148d8a5344cd0bef88d0a8d5eba77684577d9f3
+ml0 lane dir:    9458616a438fbce1de0433d439b458f83d76fbac
+expected subject e148d8a5344cd0bef88d0a8d5eba77684577d9f3
+expected ml0dir  9458616a438fbce1de0433d439b458f83d76fbac
+venue file count: 5905

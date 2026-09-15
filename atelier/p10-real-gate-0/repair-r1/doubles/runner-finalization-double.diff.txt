@@ -1,0 +1,152 @@
+--- experiments/latent-lisp/atelier/p10-real-gate-0/harness/p10-runner.sh	2026-09-15 16:16:42.212931869 -0300
++++ experiments/latent-lisp/atelier/p10-real-gate-0/repair-r1/doubles/runner-finalization-double.sh	2026-09-15 16:18:10.857038003 -0300
+@@ -28,12 +28,12 @@
+ 
+ set -u
+ 
+-HARNESS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
++HARNESS_DIR="/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/p10-real-gate-0/harness"   # DOUBLE: the real harness dir, hard-set (this double lives under repair-r1/doubles)
+ ARC_DIR="$(cd "$HARNESS_DIR/.." && pwd)"
+ PREREG_SHA_EXPECTED=0835d5db9f44a27f68ec29b993e2ca97e247200bc197569cc5a66250ffab7165
+ SUBJECT_COMMIT=244580e81a9002ea61a435ed185e85133a994fd9
+ CASES="B0 B0-I M1-C M1-U M1-U-I M2-P M2-X U1 U1-M"
+-LOCKDIR=/tmp/p10-rg0-runner.lock
++LOCKDIR=/tmp/p10-rg0-runner-DOUBLE.lock
+ 
+ refuse() { echo "P10-RUNNER: REFUSED — $*"; exit 5; }
+ void()   { echo "P10-RUNNER: VOID — $*";    exit 6; }
+@@ -89,7 +89,7 @@
+   git -C "$LAB_REPO" cat-file -e "${SUBJECT_COMMIT}^{commit}" 2>/dev/null || \
+     refuse "commit $SUBJECT_COMMIT not found in $LAB_REPO"
+   SUBJECT_MODE="git archive ${SUBJECT_COMMIT}:experiments/latent-lisp from $LAB_REPO"
+-  IDENTITY_ROOT="$LAB_REPO/experiments/latent-lisp"
++  IDENTITY_ROOT="/tmp/p10-identity-demo/tampered"   # DOUBLE: the identity root is the TAMPERED disposable copy
+ fi
+ 
+ # ------------------------------------------------------------- one runner only
+@@ -225,123 +225,8 @@
+   return $n
+ }
+ 
+-# ---------------------------------------------------------------- the case loop
+-for c in $CASES; do
+-  echo "================ $c ================"
+-  D="$OUT/$c"; mkdir -p "$D"
+-  S="$SUBJECT_BASE/$c"
+-  rm -rf "$S"; mkdir -p "$S"
+-
+-  # ---- fresh disposable subject
+-  if [ -n "${P10_SUBJECT_TREE:-}" ]; then
+-    cp -a "$SUBJECT_TREE"/. "$S"/ || void "$c: subject copy failed"
+-  else
+-    git -C "$LAB_REPO" archive "${SUBJECT_COMMIT}:experiments/latent-lisp" \
+-      | tar -x -C "$S" || void "$c: git archive extraction failed"
+-  fi
+-  echo "$c: subject at $S"
+-
+-  # ---- the pinned 70 shas, BEFORE mutation
+-  if ( cd "$S" && sha256sum -c "$PINNED" ) > "$D/pinned-check.txt" 2>&1; then
+-    echo "$c: pinned closure verified ($PINNED_ROWS files OK)"
+-  else
+-    tail -n 20 "$D/pinned-check.txt"
+-    void "$c: pinned closure MISMATCH before mutation (see $D/pinned-check.txt)"
+-  fi
+-
+-  # ---- the mutation
+-  P10_PINNED="$PINNED" P10_LAB_REPO="${P10_LAB_REPO:-$LAB_REPO}" \
+-    python3 "$HARNESS_DIR/mutate.py" "$c" "$S" > "$D/mutate.out.txt" 2>&1
+-  MRC=$?
+-  cat "$D/mutate.out.txt"
+-  if [ "$MRC" -ne 0 ]; then void "$c: mutate.py refused (exit $MRC)"; fi
+-  cp "$S/MUTATION-DIFF.txt" "$D/MUTATION-DIFF.txt"
+-
+-  # ---- the witness (fresh process, same subject)
+-  WT="$(witness_target "$c")"
+-  if [ -n "$WT" ]; then
+-    ( cd "$S" && "$SBCL" --script "$HARNESS_DIR/witness.lisp" \
+-        mneme/memory-layer-0 "$WT" ) \
+-      > "$D/witness.out.txt" 2> "$D/witness.err.txt"
+-    echo "EXIT $?" > "$D/witness.exit.txt"
+-    witness_expect "$c" > "$D/WITNESS-EXPECT.txt"
+-    witness_expect_loader "$c" > "$D/WITNESS-EXPECT-LOADER.txt"
+-    grep -E '^(LOADER|WITNESS): ' "$D/witness.out.txt" || true
+-  fi
+-
+-  # ---- the gate (fresh process, strictly one at a time)
+-  case "$c" in
+-    B0|M1-C|M1-U|M2-P|M2-X)
+-      ( cd "$S" && "$SBCL" --script mneme/memory-layer-0/ml0-block-proof.lisp ) \
+-        > "$D/gate.out.txt" 2> "$D/gate.err.txt"
+-      echo "EXIT $?" > "$D/gate.exit.txt"
+-      echo "$c: gate entry = normal (sbcl --script mneme/memory-layer-0/ml0-block-proof.lisp)" \
+-        > "$D/gate.entry.txt" ;;
+-    B0-I|M1-U-I)
+-      ( cd "$S" && env -u P10_TARGET "$SBCL" --script "$HARNESS_DIR/interposer.lisp" ) \
+-        > "$D/gate.out.txt" 2> "$D/gate.err.txt"
+-      echo "EXIT $?" > "$D/gate.exit.txt"
+-      echo "$c: gate entry = interposer, NO target (counting control)" > "$D/gate.entry.txt" ;;
+-    U1)
+-      ( cd "$S" && P10_TARGET=ML0-WRITE "$SBCL" --script "$HARNESS_DIR/interposer.lisp" ) \
+-        > "$D/gate.out.txt" 2> "$D/gate.err.txt"
+-      echo "EXIT $?" > "$D/gate.exit.txt"
+-      echo "$c: gate entry = interposer, P10_TARGET=ML0-WRITE" > "$D/gate.entry.txt" ;;
+-    U1-M)
+-      ( cd "$S" && P10_TARGET=ML0-EVIDENCE-PROJECTION-DIGEST \
+-          "$SBCL" --script "$HARNESS_DIR/interposer.lisp" ) \
+-        > "$D/gate.out.txt" 2> "$D/gate.err.txt"
+-      echo "EXIT $?" > "$D/gate.exit.txt"
+-      echo "$c: gate entry = interposer, P10_TARGET=ML0-EVIDENCE-PROJECTION-DIGEST" \
+-        > "$D/gate.entry.txt" ;;
+-  esac
+-  cat "$D/gate.entry.txt"
+-
+-  # ---- classify
+-  EXP="$(expected_for "$c")"
+-  bash "$HARNESS_DIR/p10-classify.sh" "$D" "$EXP" > "$D/classify.txt" 2>&1
+-  CRC=$?
+-  cat "$D/classify.txt"
+-  CLS="$(sed -n "s/^CLASS $c: //p" "$D/classify.txt" | tail -n1)"
+-  CLASS_OF[$c]="$CLS"
+-
+-  if [ "$c" = "B0" ]; then
+-    B0_B12="$(grep -E '^\[12\] ' "$D/gate.out.txt" | tail -n1 || true)"
+-    B0_B12NOTE="$(grep -A1 -E '^\[12\] ' "$D/gate.out.txt" | sed -n '2p' | sed 's/^ *//' || true)"
+-    B0_SENT="$(grep -E '^ml0-block-proof: ' "$D/gate.out.txt" | tail -n1 || true)"
+-  fi
+-
+-  # ---- secondary checks (a failed secondary check is a FAIL line)
+-  SECN=0
+-  secondary "$c" "$D" > "$D/secondary.txt" 2>&1 || SECN=$?
+-  cat "$D/secondary.txt"
+-
+-  # ---- the verdict for this case
+-  if [ "$EXP" = "EXPLORATORY" ] && [ "$CRC" -ne 3 ]; then
+-    exploratory=$((exploratory+1))
+-    if [ "$SECN" -gt 0 ]; then
+-      echo "FAIL $c: $SECN secondary check(s) failed"; fail=$((fail+1))
+-    fi
+-  elif [ "$CRC" -eq 3 ]; then
+-    invalid=$((invalid+1))
+-  elif [ "$CRC" -eq 0 ] && [ "$SECN" -eq 0 ]; then
+-    pass=$((pass+1))
+-  else
+-    if [ "$CRC" -eq 0 ] && [ "$SECN" -gt 0 ]; then
+-      echo "FAIL $c: class $CLS matched but $SECN secondary check(s) failed"
+-    fi
+-    fail=$((fail+1))
+-    case "$CLS" in
+-      BLOCKED-AT-LOADER|VOID-ENV|CRASH-MID-GATE)
+-        if [ "$CLS" != "$EXP" ]; then
+-          echo "BLOCKED $c: $CLS before the gate's first probe, and not this case's expectation ($EXP)"
+-          blocked=$((blocked+1))
+-        fi ;;
+-    esac
+-  fi
+-  echo
+-done
+-
++# ---------------------------------------------------------------- the case loop — CUT OUT IN THIS SHELL DOUBLE (no gate runs)
++for c in $CASES; do CLASS_OF[$c]="GATE-GREEN"; pass=$((pass+1)); done   # DOUBLE: pretend every expectation matched
+ # --------------------------------------------------- IDENTITY-AFTER (the restore) — R2: the verifier's STATUS is consumed
+ bash "$HARNESS_DIR/identity-after.sh" "$IDENTITY_ROOT" "$PINNED" > "$OUT/IDENTITY-AFTER.txt" 2>&1; IDRC=$?
+ echo "IDENTITY-AFTER exit $IDRC (0 = all pinned files unchanged; 1 = mismatch/missing; 2 = check could not be made)" | tee -a "$OUT/IDENTITY-AFTER.txt"

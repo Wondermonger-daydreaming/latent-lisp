@@ -1,0 +1,28 @@
+# P10 REAL GATE /0 mutation diff
+# case: M1-U-I   mutation: M1-U
+# subject root: /tmp/p10-rg0-20260915T154008/M1-U-I
+# pristine provenance: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+# pristine sha256: 784bc7f6e6d0b7c40485c23e994fb455934cac30682b7a58f22b3942cac4c6df
+# mutated  sha256: 8bceda0783e459d7c761f04294678166d2573abb83dd4b985d2e4123eb6df7a8
+--- a/mneme/memory-layer-0/ml0.lisp (pristine)
++++ b/mneme/memory-layer-0/ml0.lisp (M1-U-I)
+@@ -508,10 +508,9 @@
+ ;;; capability-SECURE — unchanged, and the R3 repair does not touch it.
+ ;;; ===========================================================================
+ 
+-(defstruct (ml0-subject (:constructor %make-ml0-subject (&key fixture-row act-id act-id-hex seat attempt external-request-key canonical-request)) (:copier nil))
++(defstruct (ml0-subject (:constructor %make-ml0-subject (&key act-id act-id-hex seat attempt external-request-key canonical-request)) (:copier nil))
+   "THE ONE CANONICAL SUBJECT CARRIER a door is given.  Every field is DERIVED
+ together from the one declared fixture row; none is accepted separately."
+-  (fixture-row nil :read-only t)
+   (act-id nil :read-only t)
+   (act-id-hex nil :read-only t)
+   (seat nil :read-only t)
+@@ -535,7 +534,6 @@
+      (let* ((record (make-act1-record fixture-row :register nil))
+             (attempt (act1-fixture-attempt-name fixture-row)))
+        (%make-ml0-subject
+-        :fixture-row fixture-row
+         :act-id (act1-record-act-id record)
+         :act-id-hex (act1-record-act-id-hex record)
+         :seat (act1-fixture-runtime-seat fixture-row)

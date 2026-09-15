@@ -1,0 +1,12 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+LAWFUL-ACCOUNT-HEX: 1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504
+LAWFUL-PROVENANCE: caller-asserted
+LAWFUL-ENVELOPE-FIELDS: attempt="a-prima" subject-principal="the actor" process="tabularius"
+STORE-BEFORE frames=1 hexes=1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504 events-sha256=8ebf08fc2548c2659c69f32be00b665217409b494b84f2b63c96d9be4187f225 status=VALID tail-sha256=NIL
+DETAIL: the effect observation's provenance reads "observed"; this slice mints exactly one value, "caller-asserted", because it has no world-reading door on this axis — bytes claiming another provenance were not written by this lane
+CONDITION-TYPE: ml0-account-readback-refused
+STORE-AFTER frames=1 hexes=1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504 events-sha256=8ebf08fc2548c2659c69f32be00b665217409b494b84f2b63c96d9be4187f225 status=VALID tail-sha256=NIL
+RESULT-CLASS: REFUSED ML0-RB-5 provenance-reads
+RUN-ROOT-REMOVED: YES

@@ -1,0 +1,6 @@
+after the dynamic extent => ~s" cured diseased restored)))
+
+(format t "~&ml0-block-proof: ~d probes, ~d closed, ~d open~%"
+        *probes* *closed* *open-holes*)
+(finish-output)
+(sb-ext:exit :code (if (zerop *open-holes*) 0 1))

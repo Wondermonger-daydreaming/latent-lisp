@@ -1,0 +1,125 @@
+cat > /tmp/probe8.lisp << 'LISPFILE_END'
+;;;; Supplement P8: construct a coherent durable effect record differing only
+;;;; in provenance; require the ML/0 decoder to reach and name ML0-RB-5.
+
+(load "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp")
+(in-package #:lisp-plus-memory-layer0)
+
+(format t "~&=== SUPPLEMENT P8: provenance forgery must reach ML0-RB-5 ===~%")
+
+(defvar *root* (ml0-fresh-run-root "ml0-probe-p8-sup" #p"mneme/../"))
+(ml0-ground *root*)
+
+(defvar *row* (ml0-settled-row))
+(setf lisp-plus-language-act1:*act1-fixture-table* (list *row*))
+(ml0-open-authority (list *row*))
+(defvar *result* (lisp-plus-language-act1:run-act1 *row* :verbose nil))
+(defvar *subject* (ml0-subject-from-fixture-row *row*))
+(defvar *world-obs* (ml0-observe-world *subject* (ml0-world)))
+(defvar *journal-obs* (ml0-observe-journal *subject* *ml0-act-store*))
+(defvar *issuance-obs* (ml0-observe-issuance *subject* (lisp-plus-language-act1:act1-result-evidence *result*)))
+(defvar *account*
+  (ml0-write *ml0-account-store*
+             (make-ml0-bundle
+              :fixture-row *row*
+              :claimed-act-id (ml0-subject-act-id *subject*)
+              :subject-principal "the actor"
+              :observations (list *world-obs* *journal-obs*)
+              :issuance-observation *issuance-obs*
+              :sources (list (ml0-self-report-source
+                              (ml0-subject-act-id *subject*)
+                              "the writing process read both instruments itself"))
+              :effect-observation
+              (ml0-effect-observation-of (ml0-subject-attempt *subject*)))))
+(format t "~&account written: ~s~%" (ml0-account-id-hex *account*))
+
+(defvar *retr* (ml0-retrieve *ml0-account-store* :account-hex (ml0-account-id-hex *account*)))
+(defvar *eff-obs* (ml0-account-effect-observation *retr*))
+(defvar *eff-record* (ml0-effect-observation-record *eff-obs*))
+(format t "~&effect-observation record: ~a~%" *eff-record*)
+(format t "~&effect-observation provenance (as read): ~a~%"
+        (lisp-plus-cd0:string-datum-value
+         (lisp-plus-cd0:record-field *eff-record* "effect" "provenance")))
+
+;; The record is a CD/0 record-datum. We can use the record-field
+;; replacement via lisp-plus-cd0:replace-record-field. Let me check if
+;; that exists.
+(format t "~&--- attempting to mutate the durable provenance field ---~%")
+(format t "~&  ml0-effect-observation-from-record exists: ~a~%"
+        (fboundp 'ml0-effect-observation-from-record))
+
+;; The cleanest approach: render the account, get the bytes, mutate
+;; the bytes, and try to decode. But that's complex. Instead, let me
+;; use the lane's own ml0-account-from-event / %ml0-decode-account-event
+;; which is the raw decoder. We can build a forged event with a mutated
+;; effect-observation field.
+;; Actually, the simplest test: use ml0-effect-observation-from-record
+;; directly with a record that has provenance = "observed".
+
+;; Build the mutated record properly using CD/0 helpers.
+;; The record is a list of (key-list . value) pairs.
+(defun sup-p8-build-record (provenance-string)
+  (let ((standing (lisp-plus-cd0:make-string-datum "ground"))
+        (determinacy (lisp-plus-cd0:make-string-datum "determinate"))
+        (digest (lisp-plus-cd0:make-string-datum "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"))
+        (scope-record
+         (lisp-plus-cd0:make-record-datum
+          (list (cons '("scope" "universe")
+                      (lisp-plus-cd0:make-string-datum "test-universe"))
+                (cons '("scope" "status")
+                      (lisp-plus-cd0:make-string-datum "looked"))
+                (cons '("scope" "detail")
+                      (lisp-plus-cd0:make-string-datum "p8 supplement detail")))))
+        (provenance (lisp-plus-cd0:make-string-datum provenance-string)))
+    (lisp-plus-cd0:make-record-datum
+     (list (cons '("effect" "standing-as-read") standing)
+           (cons '("effect" "determinacy") determinacy)
+           (cons '("effect" "world-digest") digest)
+           (cons '("effect" "scope") scope-record)
+           (cons '("effect" "provenance") provenance)))))
+
+(defvar *mutated-record* (sup-p8-build-record "observed"))
+(format t "~&mutated record provenance: ~a~%"
+        (lisp-plus-cd0:string-datum-value
+         (lisp-plus-cd0:record-field *mutated-record* "effect" "provenance")))
+
+(format t "~&--- attempting to decode the mutated record ---~%")
+(defparameter *refusal* nil)
+(defparameter *refusal-type* nil)
+(defparameter *refusal-req-id* nil)
+(defparameter *refusal-detail* nil)
+(handler-case
+    (let ((obs (ml0-effect-observation-from-record *mutated-record*)))
+      (format t "~&DECODED (unexpected): ~a~%" obs)
+      (format t "~&  provenance: ~a~%" (ml0-effect-observation-provenance obs)))
+  (ml0-account-readback-refused (e)
+    (setf *refusal* e
+          *refusal-type* 'ml0-account-readback-refused
+          *refusal-req-id* (lisp-plus-memory-layer0:ml0-condition-requirement-id e)
+          *refusal-detail* (lisp-plus-memory-layer0:ml0-condition-detail e))
+    (format t "~&REFUSED: ML0-ACCOUNT-READBACK-REFUSED, req=~a~%" *refusal-req-id*)
+    (format t "~&  detail: ~a~%" *refusal-detail*))
+  (error (e)
+    (setf *refusal* e
+          *refusal-type* (type-of e))
+    (format t "~&REFUSED (~a): ~a~%" (type-of e) e)))
+
+(format t "~&=== SUPPLEMENT P8: VERDICT ===~%")
+(cond
+  ((and *refusal*
+        (eq *refusal-type* 'ml0-account-readback-refused)
+        (string= *refusal-req-id* "ML0-RB-5"))
+   (format t "~&SUPPLEMENT P8: PASS — decoder reached ML0-RB-5 with the typed refusal~%")
+   (sb-ext:exit :code 0))
+  (*refusal*
+   (format t "~&SUPPLEMENT P8: FAIL — refusal was ~a (req ~a), not ML0-RB-5~%"
+           *refusal-type* *refusal-req-id*)
+   (sb-ext:exit :code 1))
+  (t
+   (format t "~&SUPPLEMENT P8: FAIL — no refusal observed; the mutated record was accepted~%")
+   (sb-ext:exit :code 1)))
+
+(when (probe-file *root*) (sb-ext:delete-directory *root* :recursive t))
+LISPFILE_END
+cp /tmp/probe8.lisp /mnt/venue/OUT-C/probes/probe-p8-supplement.lisp
+cd /mnt/venue/WORK/substrate/lane && sbcl --script /mnt/venue/OUT-C/probes/probe-p8-supplement.lisp > /mnt/venue/OUT-C/runs/probe-p8-supplement.out 2> /mnt/venue/OUT-C/runs/probe-p8-supplement.err; echo "EXIT=$?"; tail -25 /mnt/venue/OUT-C/runs/probe-p8-supplement.out; echo "---STDERR---"; tail -3 /mnt/venue/OUT-C/runs/probe-p8-supplement.err

@@ -1,0 +1,20 @@
+PASS V-R: DECODED provenance=CALLER-ASSERTED
+      V-R frames 1 -> 1
+PASS V-D: DECODED provenance=CALLER-ASSERTED
+      V-D frames 1 -> 1
+PASS V-J: DECODED provenance=CALLER-ASSERTED
+      V-J frames 1 -> 1  disposition :ALREADY-COMMITTED-IDENTICAL
+PASS F-D: REFUSED ML0-RB-5 provenance-reads
+      F-D frames 1 -> 1
+PASS F-R: REFUSED ML0-RB-5 provenance-reads
+      F-R frames 1 -> 2  disposition :NEWLY-COMMITTED
+PASS F-W: REFUSED ML0-WR-8 other
+      F-W detail names ML0-RB-5 (the re-signalled id)
+      F-W frames 1 -> 1
+PASS E-J: JOURNAL-REFUSED pj0-event-identity-collision PJ-APP-3
+      E-J frames 1 -> 1
+FAIL E-R: got 'REFUSED ML0-RB-11 other' expected 'REFUSED ML0-RB-5 provenance-reads'
+      E-R frames 1 -> 2  disposition :NEWLY-COMMITTED
+BLOCKED-AS-EXPECTED E-L: LOAD-ERROR
+
+P8-RUNNER: pass=7 fail=1 blocked=1

@@ -1,0 +1,21 @@
+IDENTITY-PRESERVATION — sha256 at main HEAD 8f41eee133555ee47e2d4d3c1eb7a6bb9427b212 vs the candidate working tree, 2026-09-15T13:55:03-03:00
+EQUAL/CHANGED  head-sha(16)  tree-sha(16)  path
+EQUAL    784bc7f6e6d0b7c4  784bc7f6e6d0b7c4  experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp
+EQUAL    2c5bdcbcf7fa31ad  2c5bdcbcf7fa31ad  experiments/latent-lisp/mneme/memory-layer-0/package.lisp
+EQUAL    12101080c1805d60  12101080c1805d60  experiments/latent-lisp/mneme/memory-layer-0/load.lisp
+EQUAL    ea24df791d59a725  ea24df791d59a725  experiments/latent-lisp/mneme/memory-layer-0/ml0-fixtures.lisp
+EQUAL    b5aeddca9107f816  b5aeddca9107f816  experiments/latent-lisp/mneme/memory-layer-0/ml0-readiness.lisp
+EQUAL    f8c7d21104ffd5de  f8c7d21104ffd5de  experiments/latent-lisp/mneme/memory-layer-0/ml0-suite-ground.lisp
+EQUAL    736ae3b626544fd5  736ae3b626544fd5  experiments/latent-lisp/mneme/memory-layer-0/MEMORY-LAYER-0-SPEC.md
+EQUAL    0126bb481eec8432  0126bb481eec8432  experiments/latent-lisp/mneme/memory-layer-0/MEMORY-LAYER-0-GUIDE.md
+EQUAL    84fa1898e3d7424f  84fa1898e3d7424f  experiments/latent-lisp/mneme/memory-layer-0/MEMORY-LAYER-0-WORK-ORDER.md
+EQUAL    d9fac67de1743685  d9fac67de1743685  experiments/latent-lisp/mneme/memory-layer-0/MEMORY-LAYER-0-RETURN.md
+EQUAL    f73fc8ea4793f33c  f73fc8ea4793f33c  experiments/latent-lisp/mneme/memory-layer-0/MEMORY-LAYER-1-RESERVED-CHARTER.md
+EQUAL    210467f5ae395e36  210467f5ae395e36  experiments/latent-lisp/mneme/CONSTITUTION.md
+EQUAL    dd4894d45ad55dc1  dd4894d45ad55dc1  experiments/latent-lisp/mneme/architecture/LISP-PLUS-LATENT-MACHINE-ARCHITECTURE-0.1.md
+EQUAL    ee9d36fe8c17cf61  ee9d36fe8c17cf61  experiments/latent-lisp/mneme/architecture/ARCHITECTURE-0-STATUS.md
+EQUAL    ea968a1b0f77644e  ea968a1b0f77644e  experiments/latent-lisp/mneme/journal0/writer.lisp
+EQUAL    86bc6cf0f507d4cd  86bc6cf0f507d4cd  experiments/latent-lisp/mneme/journal0/pjs0.lisp
+CHANGED  6e83648eaada296e  72737382d3988688  experiments/latent-lisp/mneme/memory-layer-0/ml0-consolidation-proof.lisp
+EQUAL    3029ecba285e4154  3029ecba285e4154  experiments/latent-lisp/mneme/memory-layer-0/FILE-MANIFEST.txt
+(FILE-MANIFEST.txt is listed BEFORE its row-79 regeneration in this table; see manifest-diff.txt and manifest-verify.txt)

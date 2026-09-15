@@ -1,0 +1,12 @@
+command: cd experiments/latent-lisp && sbcl --script mneme/memory-layer-0/ml0-consolidation-proof.lisp
+date: 2026-09-15T13:54:12-03:00
+branch: candidate/mneme-debt-disposition-0 tree-dirty-proof-sha: 72737382d3988688
+[029] ok   EVERY structure class in the lane package refuses #S (enumerated, not sampled)
+[030] ok   a lawful carrier whose SOURCE LIST is rewritten through its reader is REFUSED at materialization (ML0-MAT-2), never written
+[031] ok   a lawful carrier whose PREDECESSOR LIST is rewritten is REFUSED (ML0-MAT-2)
+[032] ok   a COPY-STRUCTURE'd lawful carrier materializes the SAME content as the original (copying mints nothing)
+[033] ok   the derived account's subject principal is NOT re-prefixed (principal:<name>, once)
+[034] ok   a derived account can be RE-CONSOLIDATED with its own input (no ML0-CON-4), and the fold is non-amplifying (same standing, same source union)
+[035] ok   a carrier computed over accounts of THIS store cannot be materialized into a FOREIGN store (ML0-MAT-3) — lineage must be checkable by the store that holds it
+ml0-consolidation-proof: 35 checks, 0 failures
+EXIT 0

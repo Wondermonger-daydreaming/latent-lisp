@@ -1,0 +1,7 @@
+CLASS M2-P: GATE-OPEN-F1
+REACHED M2-P: F1-reached
+SENTINEL M2-P: ml0-block-proof: 20 probes, 19 closed, 1 open
+DETAIL M2-P: [12] OPEN    F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 M2-P: ⚠ 1 exported function(s) still take it: ML0-EVIDENCE-PROJECTION-DIGEST
+EXIT M2-P: 1
+INVALID M2-P: mandatory witness evidence absent or empty for a mutant case: witness.exit.txt

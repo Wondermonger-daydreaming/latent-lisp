@@ -1,0 +1,20 @@
+PASS V-R: DECODED provenance=CALLER-ASSERTED
+      V-R frames 1 -> 1
+PASS V-D: DECODED provenance=CALLER-ASSERTED
+      V-D frames 1 -> 1
+PASS V-J: DECODED provenance=CALLER-ASSERTED
+      V-J frames 1 -> 1  disposition :ALREADY-COMMITTED-IDENTICAL  differing-paths: 0
+PASS F-D: REFUSED ML0-RB-5 provenance-reads
+      F-D frames 1 -> 1  differing-paths: 1 · account:effect-observation / effect:provenance
+PASS F-R: REFUSED ML0-RB-5 provenance-reads
+      F-R frames 1 -> 2  disposition :NEWLY-COMMITTED  differing-paths: 1 · account:effect-observation / effect:provenance
+PASS F-W: REFUSED ML0-WR-8 other
+      F-W detail names ML0-RB-5 (re-signalled under WR-8)
+      F-W frames 1 -> 1  differing-paths: 1 · account:effect-observation / effect:provenance
+PASS E-J: JOURNAL-REFUSED pj0-event-identity-collision PJ-APP-3
+      E-J frames 1 -> 1
+PASS E-R: REFUSED ML0-RB-11 other
+      E-R frames 1 -> 2  disposition :NEWLY-COMMITTED
+BLOCKED E-L: LOAD-ERROR (no RESULT-CLASS line; exit 1)
+
+P8-RUNNER: pass=8 fail=0 blocked=1

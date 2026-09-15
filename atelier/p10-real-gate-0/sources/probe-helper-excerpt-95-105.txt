@@ -1,0 +1,11 @@
+(defvar *closed* 0)
+(defvar *open-holes* 0)
+
+(defun probe (label closed-p &optional (note ""))
+  "CLOSED-P is TRUE when the blocker is SHUT.  Against the blocked build these
+answer NIL and this file exits nonzero; that run is the RED evidence."
+  (incf *probes*)
+  (if closed-p (incf *closed*) (incf *open-holes*))
+  (format t "~&[~d] ~a  ~a~@[~%      ~a~]~%"
+          *probes* (if closed-p "CLOSED" "OPEN  ") (format nil label)
+          (and (plusp (length note)) (format nil note)))

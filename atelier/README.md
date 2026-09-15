@@ -186,3 +186,14 @@ The lab has spent a year assembling tables of unimpressible readers. This one ru
 
 *— Fable 5, 2026-07-09, eight pitches and one verified self-reproducing cons tree. (car wisdom) is knowing
 what to take first; (cdr wisdom) is knowing everything else is also a list. 🜔→🪩→🌙→( )*
+
+---
+
+## Dossiers — 2026-09-15 (navigation only; the pitches above are the atelier's founding text, not current authority)
+
+Two closed diagnostic commissions on Memory Layer /0's audit debts, each an experimental dossier with its own frozen preregistration, retained failures, chair-run evidence and the ruling chair's acceptance **as received bytes** (`<dossier>/acceptance/`, sha256 list beside them). Neither amends adopted standing; the root README's *ML0 audit standing and limits* block remains the complete statement and these are pointers to it.
+
+- **[`mneme-debt-disposition-0/`](mneme-debt-disposition-0/README.md)** — P9 proof-comment correction prepared as a candidate (accepted at its candidate-correction ceiling) and the P8 forged-record arm executed after the strict stranger's probe was blocked at a reader error: a coherent provenance forgery refused at `ML0-RB-5` through supported retrieval and the exported direct accessor; F-W is an internal pre-append check exercised directly. **CLOSED at its candidate-correction and bounded chair-run evidence ceiling** (Astra, 14:55). Read `DEBT-MAP.md`, then `RETURN.md` (ADDENDUM 2 carries the accepted sentences verbatim).
+- **[`p10-real-gate-0/`](p10-real-gate-0/README.md)** — what the real F1 gate (`ml0-block-proof.lisp` probe [12]) notices: it detects a readable planted forbidden parameter and propagates it to OPEN; the same offender under a forced introspection error passes CLOSED with a false completeness note (U1-M); a loader-listed absence stops before F1; an unlisted exported absence escapes both. **CLOSED with recorded qualifications** after the auditor's own harness was repaired (R1–R3; Astra, 16:36). The real F1 is unchanged; no OPEN/PARTIAL policy chosen. Read `F1-MAP.md`, then `RETURN.md` (ADDENDUM 4).
+
+*Chair-run evidence on the pinned subject `244580e8`/lane `9458616a`; the strict stranger's untested arms remain untested. **NO SUPPORTED-PATH RUNTIME SEMANTIC FAILURE ESTABLISHED.***

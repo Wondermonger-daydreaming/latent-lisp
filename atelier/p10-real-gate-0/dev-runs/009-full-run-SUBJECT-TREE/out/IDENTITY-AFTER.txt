@@ -1,0 +1,77 @@
+IDENTITY AFTER — the pinned closure re-verified against the read-only
+identity root, after all runs (PREREG §0, 'the restore').
+root : /tmp/p10-rg0-tree
+list : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/subjects/PINNED-SUBJECT-SHA256.txt (70 rows)
+date : 2026-09-15T15:35:04-03:00
+---- sha256sum -c ----
+canonical-datum/common-lisp/cd0.lisp: OK
+canonical-datum/common-lisp/package.lisp: OK
+mneme/capability0/conditions.lisp: OK
+mneme/capability0/fold.lisp: OK
+mneme/capability0/load.lisp: OK
+mneme/capability0/mutants.lisp: OK
+mneme/capability0/package.lisp: OK
+mneme/capability0/query.lisp: OK
+mneme/capability0/receipts.lisp: OK
+mneme/capability0/schema.lisp: OK
+mneme/capability1/conditions.lisp: OK
+mneme/capability1/context.lisp: OK
+mneme/capability1/load.lisp: OK
+mneme/capability1/mint.lisp: OK
+mneme/capability1/mutants.lisp: OK
+mneme/capability1/object.lisp: OK
+mneme/capability1/package.lisp: OK
+mneme/capability1/present.lisp: OK
+mneme/capability2/attempt.lisp: OK
+mneme/capability2/authorize.lisp: OK
+mneme/capability2/conditions.lisp: OK
+mneme/capability2/events.lisp: OK
+mneme/capability2/load.lisp: OK
+mneme/capability2/mutants.lisp: OK
+mneme/capability2/package.lisp: OK
+mneme/capability2/reconcile.lisp: OK
+mneme/capability2/rehydrate.lisp: OK
+mneme/capability2/world.lisp: OK
+mneme/journal0/conditions.lisp: OK
+mneme/journal0/fold.lisp: OK
+mneme/journal0/frame.lisp: OK
+mneme/journal0/load.lisp: OK
+mneme/journal0/meta.lisp: OK
+mneme/journal0/mutants.lisp: OK
+mneme/journal0/package.lisp: OK
+mneme/journal0/pjs0.lisp: OK
+mneme/journal0/reader.lisp: OK
+mneme/journal0/salvage.lisp: OK
+mneme/journal0/sha256.lisp: OK
+mneme/journal0/writer.lisp: OK
+mneme/kernel0/boundary.lisp: OK
+mneme/kernel0/conditions.lisp: OK
+mneme/kernel0/determinacy.lisp: OK
+mneme/kernel0/folds.lisp: OK
+mneme/kernel0/identity.lisp: OK
+mneme/kernel0/load.lisp: OK
+mneme/kernel0/manifestation.lisp: OK
+mneme/kernel0/outcome.lisp: OK
+mneme/kernel0/package.lisp: OK
+mneme/kernel0/procedure.lisp: OK
+mneme/kernel0/records.lisp: OK
+mneme/kernel0/uncertain-effect.lisp: OK
+mneme/language-act-1/act1-fixtures.lisp: OK
+mneme/language-act-1/act1.lisp: OK
+mneme/language-act-1/act1-readiness.lisp: OK
+mneme/language-act-1/load.lisp: OK
+mneme/language-act-1/package.lisp: OK
+mneme/language-core-0/core0.lisp: OK
+mneme/language-slice-0/slice0.lisp: OK
+mneme/language-slice-0/slice0-projection.lisp: OK
+mneme/language-slice-0/slice0-transmissibility.lisp: OK
+mneme/language-slice-1/slice1.lisp: OK
+mneme/memory-layer-0/load.lisp: OK
+mneme/memory-layer-0/ml0-block-proof.lisp: OK
+mneme/memory-layer-0/ml0-fixtures.lisp: OK
+mneme/memory-layer-0/ml0.lisp: OK
+mneme/memory-layer-0/ml0-mutant-overlay.lisp: OK
+mneme/memory-layer-0/ml0-readiness.lisp: OK
+mneme/memory-layer-0/ml0-suite-ground.lisp: OK
+mneme/memory-layer-0/package.lisp: OK
+EXIT 0

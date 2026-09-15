@@ -1,0 +1,41 @@
+CONTROL C-1 — 2026-09-15T14:04:15-03:00
+P8 RUNNER — PREREG-P8-DELTA-0.md
+date            : 2026-09-15T14:04:15-03:00
+lane-dir        : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/final-venue/mneme/memory-layer-0
+venue-root(cwd) : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/final-venue
+out-dir         : /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/mneme-debt-disposition-0/p8/runs/20260915T140415-control-C-1
+sbcl            : SBCL 2.4.6
+prereg          : /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/mneme-debt-disposition-0/p8/PREREG-P8-DELTA-0.md
+prereg sha256   : 295bab9fc390dc0a1beac5cc85fbb361ed4c0bfe65f7ed7618f04e5bc4f81c98 (expected 295bab9fc390dc0a1beac5cc85fbb361ed4c0bfe65f7ed7618f04e5bc4f81c98)
+harness sha256  :
+    8112025a38ef95545e8251efa3cef499f10201d40b311f87097a3ca6b8cfb10f  /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/mneme-debt-disposition-0/p8/harness/p8-case.lisp
+    9d48b6192ab3a2b3a6244ebfb9e85b2c5bed9eedc32956961b7fb25ef39dafad  /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/mneme-debt-disposition-0/p8/harness/p8-runner.sh
+    92c967bb631378e3fb8492bc142c64bd140b4007fa4b283346d3509e8db11137  /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/mneme-debt-disposition-0/p8/harness/EXPECTATIONS-P8.txt
+    cc6a0eaa276c6abdc0bd8d7b1d2ac12bc84410977a84b14cc662cf1da50e2cc8  /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/mneme-debt-disposition-0/p8/original/probe-p8-supplement.lisp
+CLOSURE-PINNED: OK (68 files equal to main HEAD 8f41eee13)
+P8_EXPECT_OVERRIDE (verbatim): F-R=REFUSED ML0-RB-4 other
+  override: F-R  'REFUSED ML0-RB-5 provenance-reads'  ->  'REFUSED ML0-RB-4 other'
+
+E-L source: cc6a0eaa276c6abd… (original) → venue path substituted; 2 changed line(s), diff in out-dir
+
+PASS V-R: DECODED provenance=CALLER-ASSERTED
+      V-R frames 1 -> 1
+PASS V-D: DECODED provenance=CALLER-ASSERTED
+      V-D frames 1 -> 1
+PASS V-J: DECODED provenance=CALLER-ASSERTED
+      V-J frames 1 -> 1  disposition :ALREADY-COMMITTED-IDENTICAL  differing-paths: 0
+PASS F-D: REFUSED ML0-RB-5 provenance-reads
+      F-D frames 1 -> 1  differing-paths: 1 · account:effect-observation / effect:provenance
+FAIL F-R: got 'REFUSED ML0-RB-5 provenance-reads' expected 'REFUSED ML0-RB-4 other'
+      F-R frames 1 -> 2  disposition :NEWLY-COMMITTED  differing-paths: 1 · account:effect-observation / effect:provenance
+PASS F-W: REFUSED ML0-WR-8 other
+      F-W detail names ML0-RB-5 (re-signalled under WR-8)
+      F-W frames 1 -> 1  differing-paths: 1 · account:effect-observation / effect:provenance
+PASS E-J: JOURNAL-REFUSED pj0-event-identity-collision PJ-APP-3
+      E-J frames 1 -> 1
+PASS E-R: REFUSED ML0-RB-11 other
+      E-R frames 1 -> 2  disposition :NEWLY-COMMITTED
+BLOCKED-AS-EXPECTED E-L: LOAD-ERROR — the ORIGINAL reader error (Line: 41, Column: 36), fixture ran first (exit 1)
+
+P8-RUNNER: pass=7 fail=1 blocked=1
+RUNNER EXIT 1

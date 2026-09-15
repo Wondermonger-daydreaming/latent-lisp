@@ -1,0 +1,5 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+LOADER: ok
+WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE EXTRA)

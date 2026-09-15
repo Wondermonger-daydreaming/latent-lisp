@@ -1,0 +1,18 @@
+
+; file: /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/inspector/venue/mneme/memory-layer-0/ml0-mutant-overlay.lisp
+; in: DEFUN ML0-MINT-ACCOUNT-IDENTITY
+;     (SETF LISP-PLUS-MEMORY-LAYER0::*ML0-IDENTITY-SEAM-ARMED* NIL)
+; 
+; caught WARNING:
+;   undefined variable: LISP-PLUS-MEMORY-LAYER0::*ML0-IDENTITY-SEAM-ARMED*
+
+;     (AND (EQ LISP-PLUS-MEMORY-LAYER0::*ML0-MUTANT* :IDENTITY-MISMATCH)
+;          LISP-PLUS-MEMORY-LAYER0::*ML0-IDENTITY-SEAM-ARMED*)
+; 
+; caught WARNING:
+;   undefined variable: LISP-PLUS-MEMORY-LAYER0::*ML0-IDENTITY-SEAM-ARMED*
+; 
+; compilation unit finished
+;   Undefined variable:
+;     *ML0-IDENTITY-SEAM-ARMED*
+;   caught 2 WARNING conditions

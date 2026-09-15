@@ -1,0 +1,1 @@
+U1-M: gate entry = interposer, P10_TARGET=ML0-EVIDENCE-PROJECTION-DIGEST

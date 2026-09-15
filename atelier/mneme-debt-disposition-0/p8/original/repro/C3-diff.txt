@@ -1,0 +1,10 @@
+--- /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-phaseB-unchanged.lisp	2026-09-15 13:42:19.434586738 -0300
++++ /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-phaseB-venue-path.lisp	2026-09-15 13:42:19.434719369 -0300
+@@ -1,6 +1,6 @@
+ ;;;; Probe P8 / SPEC §5, R4 amendment: the effect axis is :caller-asserted.
+ 
+-(load "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp")
++(load "/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/venue/mneme/memory-layer-0/ml0-suite-ground.lisp")
+ 
+ (in-package #:lisp-plus-memory-layer0)
+ 

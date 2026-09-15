@@ -1,0 +1,13 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+=== Probe P10 / F1: sb-introspect scan ===
+external functions declared: 148
+external functions fbound: 148
+external functions with defect or defect-payload: 0
+=== F1c: load overlay, re-check ===
+ml0-mutant-overlay: six defects installed OUTSIDE the lane; *ml0-mutant* is NIL (production behaviour) until a `with-ml0-mutant` binds it.
+with overlay loaded, external functions fbound: 148
+with overlay loaded, external functions with defect or defect-payload: 0
+=== VERDICT ===
+P10: PASS — no external function carries defect or defect-payload, with or without the overlay

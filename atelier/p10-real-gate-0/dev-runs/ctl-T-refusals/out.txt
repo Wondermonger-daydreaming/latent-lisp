@@ -1,0 +1,23 @@
+### T1 prereg sha MISMATCH -> REFUSE 5
+P10-RUNNER: REFUSED — prereg sha256 MISMATCH: got f994c6fde52509a0f9928e2bec954bd4987ca79654b5b79b3746823c7294b3a4, frozen 0835d5db9f44a27f68ec29b993e2ca97e247200bc197569cc5a66250ffab7165
+EXIT 5
+
+### T2 pinned list ABSENT -> REFUSE 5
+P10-RUNNER: REFUSED — pinned subject list absent: /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/dev-runs/ctl-T-refusals/mirror/subjects/PINNED-SUBJECT-SHA256.txt
+EXIT 5
+
+### T3 duplicate expectation row -> REFUSE 5
+P10-RUNNER: REFUSED — EXPECTATIONS-P10.txt has 2 rows for case B0, expected exactly 1
+EXIT 5
+
+### T4 unknown case row -> REFUSE 5
+P10-RUNNER: REFUSED — EXPECTATIONS-P10.txt names unknown case 'M9-Z'
+EXIT 5
+
+### T5 process-ending switch set -> REFUSE 5
+P10-RUNNER: REFUSED — process-ending switch ML0_READER_DIE is set; every gate would VOID (exit 4)
+EXIT 5
+
+### T6 two runners at once -> VOID 6
+P10-RUNNER: VOID — another p10-runner holds /tmp/p10-rg0-runner.lock (two runner processes at once)
+EXIT 6

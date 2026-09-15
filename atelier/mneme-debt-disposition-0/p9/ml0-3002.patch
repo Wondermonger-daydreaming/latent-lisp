@@ -1,0 +1,15 @@
+--- a/experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp	2026-09-15 13:55:26.976238460 -0300
++++ b/experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp	2026-09-15 13:55:26.988237951 -0300
+@@ -2999,7 +2999,11 @@
+   ;; STORE.  A carrier computed over accounts of store A cannot be materialized
+   ;; into store B (ML0-MAT-3) — a derived account whose predecessors the reading
+   ;; store cannot produce would be a lineage claim the store cannot check.  This
+-  ;; narrows the cross-journal case to future work, deliberately (fork R4.1-F3).
++  ;; narrows the cross-journal case, deliberately (fork R4.1-F3 — RULED, disposition
++  ;; A: Sol, 2026-08-21, WORK-ORDER AMENDMENT 3 — same-store-only for /0, MAT-3
++  ;; stays, Architecture 0.1 D4 unamended; Memory Layer /1 RESERVED for
++  ;; receipt-bearing cross-journal materialization and NOT built —
++  ;; MEMORY-LAYER-1-RESERVED-CHARTER.md).
+   (let* ((hexes (mapcar (lambda (input)
+                           (unless (ml0-account-p input)
+                             (ml0-refuse 'ml0-consolidation-refused "ML0-MAT-1"

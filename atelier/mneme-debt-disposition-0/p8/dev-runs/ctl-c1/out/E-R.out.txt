@@ -1,0 +1,14 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+LAWFUL-ACCOUNT-HEX: 1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504
+LAWFUL-PROVENANCE: caller-asserted
+LAWFUL-ENVELOPE-FIELDS: attempt="a-prima" subject-principal="the actor" process="tabularius"
+WRONG-HEX: 7a00e8d7cebe87ca06fbd70f8e885bbf23d82058c5a5a8a0b4eb5bef203c19b4
+STORE-BEFORE frames=1 hexes=1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504 events-sha256=8ebf08fc2548c2659c69f32be00b665217409b494b84f2b63c96d9be4187f225 status=VALID tail-sha256=NIL
+APPEND-DISPOSITION: :NEWLY-COMMITTED
+DETAIL: the frame's event-id names account 7a00e8d7cebe87ca06fbd70f8e885bbf23d82058c5a5a8a0b4eb5bef203c19b4 but the body digests to 49332c1d565f20098065f1e87a27e47021a36ddf2b9414e055ef47a42a5fc9dc — the identity and the content disagree
+CONDITION-TYPE: ml0-account-readback-refused
+STORE-AFTER frames=2 hexes=1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504,7a00e8d7cebe87ca06fbd70f8e885bbf23d82058c5a5a8a0b4eb5bef203c19b4 events-sha256=538223c06a360f85f614c599e6fcf087ba8e97b2da3fa442b02a32549479b3d5 status=VALID tail-sha256=NIL
+RESULT-CLASS: REFUSED ML0-RB-11 other
+RUN-ROOT-REMOVED: YES

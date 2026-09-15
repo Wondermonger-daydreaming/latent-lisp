@@ -1,0 +1,380 @@
+;;;; p8-case.lisp — ONE case of the P8 forged-record arm, per PREREG-P8-DELTA-0.md
+;;;; (sha256 295bab9fc390dc0a1beac5cc85fbb361ed4c0bfe65f7ed7618f04e5bc4f81c98).
+;;;;
+;;;;   sbcl --script p8-case.lisp <CASE> <lane-dir>
+;;;;
+;;;; CASE ∈ {V-R V-D V-J F-D F-R F-W E-J E-R}.  The process cwd MUST be the venue
+;;;; root (the directory containing `mneme/`), because the subject-root handed to
+;;;; `ml0-fresh-run-root` is the auditor's own literal `#p"mneme/../"`, which is
+;;;; cwd-relative and is `truename`d by the guard.  The LANE DIR is an explicit
+;;;; argument so no venue path is compiled in.
+;;;;
+;;;; Prints, as its last meaningful lines: STORE-BEFORE …, STORE-AFTER …,
+;;;; optionally APPEND-DISPOSITION: / DETAIL:, and exactly one RESULT-CLASS: line.
+;;;; Exits 0 iff a RESULT-CLASS line was printed.
+;;;;
+;;;; — SMITH (Claude Opus 5, subagent), 2026-09-15; reviewed and amended by the chair
+;;;; (Claude Fable 5.1, A Comment Is A Claim): `p8-diff-fields` / the FORGED-VS-LAWFUL
+;;;; witness line added after review, before the recorded run.
+
+(defparameter cl-user::*p8-case* (string-upcase (or (nth 1 sb-ext:*posix-argv*) "")))
+(defparameter cl-user::*p8-lane*
+  (let ((raw (or (nth 2 sb-ext:*posix-argv*)
+                 (progn (format t "~&usage: p8-case.lisp <CASE> <lane-dir>~%")
+                        (sb-ext:exit :code 2)))))
+    (if (char= #\/ (char raw (1- (length raw))))
+        raw
+        (concatenate 'string raw "/"))))
+
+(load (merge-pathnames "ml0-suite-ground.lisp" (pathname cl-user::*p8-lane*)))
+
+(in-package #:lisp-plus-memory-layer0)
+
+(defparameter *p8-case* cl-user::*p8-case*)
+(defparameter *p8-result-class* nil)
+(defparameter *p8-exit* 1)
+
+;;; ---------------------------------------------------------------------------
+;;; Reporting primitives.
+
+(defun p8-result (control &rest arguments)
+  "Record THE result class.  First writer wins: a later unexpected error may not
+overwrite a class the case already established."
+  (unless *p8-result-class*
+    (setf *p8-result-class* (apply #'format nil control arguments))))
+
+(defun p8-events-path ()
+  (merge-pathnames "EVENTS.pj0" (journal-store-directory *ml0-account-store*)))
+
+(defun p8-events-sha ()
+  (let ((path (p8-events-path)))
+    (if (probe-file path)
+        (with-open-file (stream path :element-type '(unsigned-byte 8))
+          (let ((buffer (make-array (file-length stream)
+                                    :element-type '(unsigned-byte 8))))
+            (read-sequence buffer stream)
+            (sha256-hex buffer)))
+        "ABSENT")))
+
+(defun p8-store-line (label)
+  (multiple-value-bind (hexes frames status tail) (ml0-list-account-ids *ml0-account-store*)
+    (format t "~&~a frames=~d hexes=~{~a~^,~} events-sha256=~a status=~a tail-sha256=~a~%"
+            label frames hexes (p8-events-sha) status tail)
+    (finish-output)
+    frames))
+
+(defun p8-detail-tag (detail)
+  "The prereg §5 tag, read off the refusal's own detail text."
+  (let ((d (or detail "")))
+    (cond ((search "provenance reads" d) "provenance-reads")
+          ((search "missing field" d) "missing-field")
+          ((search "determinacy" d) "determinacy")
+          (t "other"))))
+
+(defmacro p8-observing (&body body)
+  "Run BODY; classify whatever comes out of it in the prereg §5 grammar."
+  `(handler-case (progn ,@body)
+     (ml0-condition (c)
+       (let ((detail (format nil "~a" (or (ml0-condition-detail c) ""))))
+         (format t "~&DETAIL: ~a~%" detail)
+         (format t "~&CONDITION-TYPE: ~(~a~)~%" (type-of c))
+         (p8-result "REFUSED ~a ~a"
+                    (or (ml0-condition-requirement-id c) "-")
+                    (p8-detail-tag detail))))
+     (lisp-plus-journal0:pj0-condition (c)
+       (format t "~&DETAIL: ~a~%" (or (lisp-plus-journal0:pj0-condition-detail c) ""))
+       (format t "~&CONDITION-TYPE: ~(~a~)~%" (type-of c))
+       (p8-result "JOURNAL-REFUSED ~(~a~) ~a" (type-of c)
+                  (or (lisp-plus-journal0:pj0-condition-requirement-id c) "-")))
+     (error (c)
+       (format t "~&DETAIL: ~a~%" c)
+       (p8-result "LISP-ERROR ~(~a~)" (type-of c)))))
+
+;;; ---------------------------------------------------------------------------
+;;; Record surgery — RE-ENCODING, never `rplaca`.
+;;; Every accessor below is CD/0 public API (canonical-datum/common-lisp/package.lisp).
+
+(defun p8-replace-entry (record key-segments new-value)
+  "A NEW record datum: RECORD's entries re-encoded, with the single entry whose key
+is KEY-SEGMENTS carrying NEW-VALUE instead.  Refuses unless exactly one matched."
+  (let ((target (idf key-segments))
+        (rebuilt '())
+        (hits 0))
+    (loop for entry across (lisp-plus-cd0:record-datum-fields record)
+          for key = (lisp-plus-cd0:record-entry-key entry)
+          do (if (same-datum-p key target)
+                 (progn (incf hits)
+                        (push (lisp-plus-cd0:make-record-entry key new-value) rebuilt))
+                 (push (lisp-plus-cd0:make-record-entry
+                        key (lisp-plus-cd0:record-entry-value entry))
+                       rebuilt)))
+    (unless (= 1 hits)
+      (error "p8: expected exactly one ~s entry, found ~d" key-segments hits))
+    (lisp-plus-cd0:make-record-datum (nreverse rebuilt))))
+
+(defun p8-diff-fields (a b &optional (prefix ""))
+  "The key paths at which two record datums DIFFER, recursing into nested
+records.  A key present in one and absent in the other is reported as such.
+The attachment's requirement: the fixture must DEMONSTRABLY have the intended
+property — a forged body must differ from the lawful one at exactly one path."
+  (let ((diffs '())
+        (keys-b (map 'list #'lisp-plus-cd0:record-entry-key
+                     (lisp-plus-cd0:record-datum-fields b))))
+    (loop for entry across (lisp-plus-cd0:record-datum-fields a)
+          for key = (lisp-plus-cd0:record-entry-key entry)
+          for path = (concatenate 'string prefix (identifier-segment-string key))
+          for match = (find-if (lambda (k) (same-datum-p k key)) keys-b)
+          do (cond ((null match) (push (concatenate 'string path " [absent in B]") diffs))
+                   (t (let ((va (lisp-plus-cd0:record-entry-value entry))
+                            (vb (lisp-plus-cd0:record-entry-value
+                                 (find-if (lambda (e) (same-datum-p (lisp-plus-cd0:record-entry-key e) key))
+                                          (lisp-plus-cd0:record-datum-fields b)))))
+                        (if (and (lisp-plus-cd0:record-datum-p va) (lisp-plus-cd0:record-datum-p vb))
+                            (setf diffs (append (p8-diff-fields va vb (concatenate 'string path " / ")) diffs))
+                            (unless (same-datum-p va vb) (push path diffs)))))))
+    (loop for key in keys-b
+          unless (find-if (lambda (e) (same-datum-p (lisp-plus-cd0:record-entry-key e) key))
+                          (lisp-plus-cd0:record-datum-fields a))
+            do (push (concatenate 'string prefix (identifier-segment-string key) " [absent in A]") diffs))
+    (nreverse diffs)))
+
+(defun p8-print-fixture-property (body)
+  "FORGED-VS-LAWFUL: the differing key paths, counted — the fixture's own witness."
+  (let ((diffs (p8-diff-fields *p8-body* body)))
+    (format t "~&FORGED-VS-LAWFUL-DIFFERING-PATHS: ~d~{ · ~a~}~%" (length diffs) diffs)
+    (finish-output)))
+
+;;; ---------------------------------------------------------------------------
+;;; The ground and the ONE lawful account (the auditor's Phase-B recipe verbatim).
+
+(defparameter *p8-root* (ml0-fresh-run-root "ml0-p8-dd0" #p"mneme/../"))
+
+(defparameter *p8-account* nil)
+(defparameter *p8-hex* nil)
+(defparameter *p8-retrieved* nil)
+(defparameter *p8-body* nil)
+(defparameter *p8-eff-record* nil)
+(defparameter *p8-lawful-event* nil)
+
+;;; ⚠ THE ENVELOPE FIELDS ARE READ OFF THE LAWFUL EVENT'S OWN IDENTIFIERS, not off
+;;; the decoded account.  `ml0-account-subject-principal` returns
+;;; `(identifier-segment-string …)` = "principal:the actor" — the RENDERED
+;;; identifier, not the segment — and `ml0-account-envelope` takes a SEGMENT
+;;; (it wraps the value as `(idf (list "principal" <arg>))`).  Feeding the
+;;; accessor's value back in mints `principal:principal:the actor`, whose payload
+;;; differs from the committed one while the BODY is byte-identical, so the
+;;; append collides at PJ-APP-3 instead of reconciling at PJ-APP-2.  Diagnosed in
+;;; dev-runs/003-vj-diagnosis.  `ml0-account-subject-attempt` has no such problem
+;;; (it is a string-datum-value); the asymmetry is reported, not patched in the lane.
+
+(defun p8-id-path-tail (id)
+  "The LAST path segment of an identifier datum — the segment `idf` would take."
+  (lisp-plus-cd0:identifier-datum-path-segment
+   id (1- (lisp-plus-cd0:identifier-datum-path-count id))))
+
+(defun p8-lawful-field-tail (name)
+  (p8-id-path-tail (record-field *p8-lawful-event* "event" name)))
+
+(defun p8-fixture ()
+  (ml0-ground *p8-root*)
+  (let ((row (ml0-settled-row)))
+    (setf lisp-plus-language-act1:*act1-fixture-table* (list row))
+    (ml0-open-authority (list row))
+    (let* ((result (lisp-plus-language-act1:run-act1 row :verbose nil))
+           (subject (ml0-subject-from-fixture-row row))
+           (world-obs (ml0-observe-world subject (ml0-world)))
+           (journal-obs (ml0-observe-journal subject *ml0-act-store*))
+           (issuance-obs (ml0-observe-issuance
+                          subject
+                          (lisp-plus-language-act1:act1-result-evidence result))))
+      (setf *p8-account*
+            (ml0-write *ml0-account-store*
+                       (make-ml0-bundle
+                        :fixture-row row
+                        :claimed-act-id (ml0-subject-act-id subject)
+                        :subject-principal "the actor"
+                        :observations (list world-obs journal-obs)
+                        :issuance-observation issuance-obs
+                        :sources (list (ml0-self-report-source
+                                        (ml0-subject-act-id subject)
+                                        "the writing process read both instruments itself"))
+                        :effect-observation
+                        (ml0-effect-observation-of (ml0-subject-attempt subject)))))))
+  (setf *p8-hex* (ml0-account-id-hex *p8-account*))
+  (format t "~&LAWFUL-ACCOUNT-HEX: ~a~%" *p8-hex*)
+  (setf *p8-retrieved* (ml0-retrieve *ml0-account-store* :account-hex *p8-hex*))
+  (setf *p8-body* (ml0-account-body-record *p8-retrieved*))
+  (setf *p8-eff-record*
+        (ml0-effect-observation-record
+         (ml0-account-effect-observation *p8-retrieved*)))
+  (format t "~&LAWFUL-PROVENANCE: ~a~%"
+          (lisp-plus-cd0:string-datum-value
+           (record-field *p8-eff-record* "effect" "provenance")))
+  ;; The lawful FRAME, for its envelope fields (see the note above).
+  (let ((report (validate-journal *ml0-account-store*)))
+    (loop for index below (fill-pointer (prefix-report-events report))
+          for event = (aref (prefix-report-events report) index)
+          do (let ((hex (ml0-account-hex-of-event event)))
+               (when (and hex (string= hex *p8-hex*))
+                 (setf *p8-lawful-event* event)
+                 (return)))))
+  (unless *p8-lawful-event* (error "p8: the lawful frame was not found in the store"))
+  (format t "~&LAWFUL-ENVELOPE-FIELDS: attempt=~s subject-principal=~s process=~s~%"
+          (p8-lawful-field-tail "attempt")
+          (p8-lawful-field-tail "subject-principal")
+          (p8-lawful-field-tail "process-id"))
+  (finish-output))
+
+;;; The three derived records.
+
+(defun p8-forged-effect-record ()
+  (p8-replace-entry *p8-eff-record* '("effect" "provenance") (s-datum "observed")))
+
+(defun p8-rebuilt-lawful-effect-record ()
+  (p8-replace-entry *p8-eff-record* '("effect" "provenance") (s-datum "caller-asserted")))
+
+(defun p8-body-with-effect (effect-record)
+  (p8-replace-entry *p8-body* '("account" "effect-observation") effect-record))
+
+(defun p8-envelope (body account-hex)
+  (ml0-account-envelope
+   :account-hex account-hex
+   :subject-attempt (p8-lawful-field-tail "attempt")
+   :subject-principal (p8-lawful-field-tail "subject-principal")
+   :recording-process (p8-lawful-field-tail "process-id")
+   :body body
+   :derivation :direct-write))
+
+(defun p8-append (envelope)
+  (let ((receipt (append-event *ml0-account-store* envelope)))
+    (format t "~&APPEND-DISPOSITION: ~s~%"
+            (lisp-plus-journal0:append-receipt-disposition receipt))
+    (finish-output)
+    receipt))
+
+(defun p8-decoded (account)
+  (p8-result "DECODED provenance=~a"
+             (symbol-name (ml0-effect-observation-provenance
+                           (ml0-account-effect-observation account)))))
+
+;;; ---------------------------------------------------------------------------
+;;; The cases.
+
+(defun p8-main ()
+  (p8-fixture)
+  (let ((forged-eff (p8-forged-effect-record)))
+    (cond
+      ;; ---- V-R: the lawful account, supported read path.
+      ((string= *p8-case* "V-R")
+       (p8-store-line "STORE-BEFORE")
+       (p8-observing (p8-decoded (ml0-retrieve *ml0-account-store* :account-hex *p8-hex*)))
+       (p8-store-line "STORE-AFTER"))
+
+      ;; ---- V-D: the lawful effect record, direct accessor.
+      ((string= *p8-case* "V-D")
+       (p8-store-line "STORE-BEFORE")
+       (p8-observing
+         (let ((obs (ml0-effect-observation-from-record *p8-eff-record*)))
+           (p8-result "DECODED provenance=~a"
+                      (symbol-name (ml0-effect-observation-provenance obs)))))
+       (p8-store-line "STORE-AFTER"))
+
+      ;; ---- V-J: rebuild the lawful body byte-for-byte, re-append, re-read.
+      ((string= *p8-case* "V-J")
+       (let* ((body (p8-body-with-effect (p8-rebuilt-lawful-effect-record))))
+         (multiple-value-bind (identity hex) (ml0-mint-account-identity body)
+           (declare (ignore identity))
+           (format t "~&REBUILT-HEX: ~a  (lawful ~a)  SAME=~a~%"
+                   hex *p8-hex* (string= hex *p8-hex*))
+           (format t "~&REBUILT-BODY-EQUAL-DATUM: ~a~%" (same-datum-p body *p8-body*))
+           (p8-print-fixture-property body)
+           (format t "~&REBUILT-ENVELOPE-EQUAL-DATUM: ~a~%"
+                   (same-datum-p (p8-envelope body hex) *p8-lawful-event*))
+           (p8-store-line "STORE-BEFORE")
+           (p8-observing
+             (p8-append (p8-envelope body hex))
+             (p8-decoded (ml0-retrieve *ml0-account-store* :account-hex hex)))
+           (p8-store-line "STORE-AFTER"))))
+
+      ;; ---- F-D: the forged effect record, direct accessor (the auditor's arm).
+      ((string= *p8-case* "F-D")
+       (p8-print-fixture-property (p8-body-with-effect forged-eff))
+       (p8-store-line "STORE-BEFORE")
+       (p8-observing
+         (let ((obs (ml0-effect-observation-from-record forged-eff)))
+           (p8-result "DECODED provenance=~a"
+                      (symbol-name (ml0-effect-observation-provenance obs)))))
+       (p8-store-line "STORE-AFTER"))
+
+      ;; ---- F-R: coherent forged frame, identity re-minted, injected, then read.
+      ((string= *p8-case* "F-R")
+       (let ((body (p8-body-with-effect forged-eff)))
+         (p8-print-fixture-property body)
+         (multiple-value-bind (identity hex) (ml0-mint-account-identity body)
+           (declare (ignore identity))
+           (format t "~&FORGED-HEX: ~a  (lawful ~a)~%" hex *p8-hex*)
+           (p8-store-line "STORE-BEFORE")
+           (p8-observing
+             (p8-append (p8-envelope body hex))
+             (p8-decoded (ml0-retrieve *ml0-account-store* :account-hex hex)))
+           (p8-store-line "STORE-AFTER"))))
+
+      ;; ---- F-W: the same forged envelope at the writer's pre-append gate.
+      ((string= *p8-case* "F-W")
+       (let ((body (p8-body-with-effect forged-eff)))
+         (p8-print-fixture-property body)
+         (multiple-value-bind (identity hex) (ml0-mint-account-identity body)
+           (declare (ignore identity))
+           (format t "~&FORGED-HEX: ~a~%" hex)
+           (p8-store-line "STORE-BEFORE")
+           (p8-observing
+             (let ((ok (%ml0-dry-decode (p8-envelope body hex) hex)))
+               (p8-result "DECODED provenance=DRY-DECODE-RETURNED-~a" ok)))
+           (p8-store-line "STORE-AFTER"))))
+
+      ;; ---- E-J: forged body under the ORIGINAL event-id — a transport collision.
+      ((string= *p8-case* "E-J")
+       (let ((body (p8-body-with-effect forged-eff)))
+         (format t "~&COLLIDING-HEX: ~a (the lawful one; identity NOT re-minted)~%" *p8-hex*)
+         (p8-store-line "STORE-BEFORE")
+         (p8-observing
+           (p8-append (p8-envelope body *p8-hex*))
+           (p8-result "DECODED provenance=APPEND-ACCEPTED-NO-REFUSAL"))
+         (p8-store-line "STORE-AFTER")))
+
+      ;; ---- E-R: forged body under a FRESH but WRONG hex.
+      ((string= *p8-case* "E-R")
+       (let ((body (p8-body-with-effect forged-eff))
+             (wrong-hex (sha256-hex (sb-ext:string-to-octets "not-the-body"))))
+         (format t "~&WRONG-HEX: ~a~%" wrong-hex)
+         (p8-store-line "STORE-BEFORE")
+         (p8-observing
+           (p8-append (p8-envelope body wrong-hex))
+           (p8-decoded (ml0-retrieve *ml0-account-store* :account-hex wrong-hex)))
+         (p8-store-line "STORE-AFTER")))
+
+      (t
+       (format t "~&p8-case: unknown case ~s~%" *p8-case*)
+       (sb-ext:exit :code 2)))))
+
+;;; ---------------------------------------------------------------------------
+;;; Run.  The run root is deleted on EVERY path, refusals included.
+
+(unwind-protect
+     (handler-case (p8-main)
+       (error (c)
+         (format t "~&UNEXPECTED: ~a~%" c)
+         (p8-result "LISP-ERROR ~(~a~)" (type-of c))))
+  (progn
+    (when *p8-result-class*
+      (format t "~&RESULT-CLASS: ~a~%" *p8-result-class*)
+      (setf *p8-exit* 0))
+    (finish-output)
+    (ignore-errors
+     (when (and *p8-root* (probe-file *p8-root*))
+       (sb-ext:delete-directory *p8-root* :recursive t)))
+    (format t "~&RUN-ROOT-REMOVED: ~a~%"
+            (if (and *p8-root* (probe-file *p8-root*)) "NO" "YES"))
+    (finish-output)))
+
+(sb-ext:exit :code *p8-exit*)

@@ -1,0 +1,29 @@
+# P10 REAL GATE /0 mutation diff
+# case: M1-C   mutation: M1-C
+# subject root: /tmp/p10-rg0-20260915T153041/M1-C
+# pristine provenance: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+# pristine sha256: 784bc7f6e6d0b7c40485c23e994fb455934cac30682b7a58f22b3942cac4c6df
+# mutated  sha256: 138fec8dac0fe1ebaa0350670ef64e9b8286357200bc054bddd6f8bc5266fee2
+--- a/mneme/memory-layer-0/ml0.lisp (pristine)
++++ b/mneme/memory-layer-0/ml0.lisp (M1-C)
+@@ -1842,20 +1842,6 @@
+                        (ml0-store-scope-digests after)))
+        (equal (ml0-store-scope-digests before) (ml0-store-scope-digests after))
+        t))
+-
+-(defun ml0-print-store-universe (label before after)
+-  "The universe of the look, printed in the tooth's OWN output — never left to a
+-reader to reconstruct from prose elsewhere."
+-  (ml0-note "STORE-SCOPE ~a — universe of the look: the ENTIRE declared account ~
+-store directory, whose file set is {~{~a~^, ~}} (LISTED by this instrument, not ~
+-assumed)" label (ml0-store-scope-files after))
+-  (dolist (pair (ml0-store-scope-digests after))
+-    (let ((prior (assoc (car pair) (ml0-store-scope-digests before) :test #'string=)))
+-      (ml0-note "  ~a: ~a -> ~a" (car pair)
+-                (if prior
+-                    (let ((v (cdr prior))) (if (stringp v) (subseq v 0 16) v))
+-                    "(absent)")
+-                (let ((v (cdr pair))) (if (stringp v) (subseq v 0 16) v))))))
+ 
+ ;;; ===========================================================================
+ ;;; §11 — THE HOST-FAULT DISCIPLINE.  One Act /1's repair is the pattern, and it

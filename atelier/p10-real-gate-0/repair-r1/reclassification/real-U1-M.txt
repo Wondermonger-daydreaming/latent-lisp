@@ -1,0 +1,11 @@
+CLASS U1-M: GATE-GREEN
+REACHED U1-M: F1-reached
+SENTINEL U1-M: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL U1-M: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 U1-M: walked every external fbound symbol's compiled lambda list
+EXIT U1-M: 0
+COUNTS U1-M: calls=313 injections=1
+WITNESS U1-M: WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE &KEY DEFECT)
+WLOADER U1-M: LOADER: ok
+WEXIT U1-M: 0
+PASS U1-M: GATE-GREEN

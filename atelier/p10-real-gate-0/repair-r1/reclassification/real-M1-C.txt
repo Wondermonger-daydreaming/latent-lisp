@@ -1,0 +1,9 @@
+CLASS M1-C: BLOCKED-AT-LOADER
+REACHED M1-C: loader-block
+SENTINEL M1-C: (none)
+DETAIL M1-C: (no [12] line)
+EXIT M1-C: 1
+WITNESS M1-C: WITNESS: symbol=ML0-PRINT-STORE-UNIVERSE status=:EXTERNAL fboundp=NIL lambda-list=ERROR:The function LISP-PLUS-MEMORY-LAYER0:ML0-PRINT-STORE-UNIVERSE is undefined.
+WLOADER M1-C: LOADER: refused ML0-LANE-INCOMPLETE: Memory Layer /0: LANE LOAD DID NOT COMPLETE.  The lane's declared external API is not fully present and bound, or the readiness carrier is missing.  A package existing is NOT the lane being ready.  Sh
+WEXIT M1-C: 0
+PASS M1-C: BLOCKED-AT-LOADER

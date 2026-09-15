@@ -1,0 +1,7 @@
+CLASS M1-U: GATE-GREEN
+REACHED M1-U: F1-reached
+SENTINEL M1-U: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL M1-U: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 M1-U: walked every external fbound symbol's compiled lambda list
+EXIT M1-U: 0
+INVALID M1-U: mandatory witness evidence absent or empty for a mutant case: witness.out.txt

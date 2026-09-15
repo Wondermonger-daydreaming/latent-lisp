@@ -1,0 +1,59 @@
+--- experiments/latent-lisp/atelier/p10-real-gate-0/repair-r1/p10-runner.sh.before	2026-09-15 16:15:24.602121202 -0300
++++ experiments/latent-lisp/atelier/p10-real-gate-0/harness/p10-runner.sh	2026-09-15 16:16:42.212931869 -0300
+@@ -23,7 +23,8 @@
+ #   P10_EXPECT_OVERRIDE   "CASE=CLASS[;CASE=CLASS]" -- printed verbatim
+ #   P10_SUBJECT_BASE      where disposable subjects go (default /tmp/p10-rg0-<stamp>)
+ #
+-# Exit: 0 iff fail=0 and invalid=0.  5 = REFUSED (a precondition).  6 = VOID.
++# Exit: 0 iff fail=0 and invalid=0 AND identity-after exit 0.  5 = REFUSED (a precondition).  6 = VOID (incl. a failed/unmade identity-after check).
++# REPAIRED per Astra's adjudication R2/R3 (2026-09-15): identity-after.sh's status is consumed; summary separates matched expectations from reached gates.
+ 
+ set -u
+ 
+@@ -341,26 +342,30 @@
+   echo
+ done
+ 
+-# --------------------------------------------------- IDENTITY-AFTER (the restore)
+-{
+-  echo "IDENTITY AFTER — the pinned closure re-verified against the read-only"
+-  echo "identity root, after all runs (PREREG §0, 'the restore')."
+-  echo "root : $IDENTITY_ROOT"
+-  echo "list : $PINNED ($PINNED_ROWS rows)"
+-  echo "date : $(date --iso-8601=seconds)"
+-  echo "---- sha256sum -c ----"
+-  ( cd "$IDENTITY_ROOT" && sha256sum -c "$PINNED" ) 2>&1
+-  echo "EXIT $?"
+-} > "$OUT/IDENTITY-AFTER.txt"
+-IDENT_FAILS="$(grep -c 'FAILED' "$OUT/IDENTITY-AFTER.txt" || true)"
+-echo "IDENTITY-AFTER: $( [ "$IDENT_FAILS" -eq 0 ] && echo 'all pinned files unchanged' || echo "MISMATCH ($IDENT_FAILS lines)" )"
++# --------------------------------------------------- IDENTITY-AFTER (the restore) — R2: the verifier's STATUS is consumed
++bash "$HARNESS_DIR/identity-after.sh" "$IDENTITY_ROOT" "$PINNED" > "$OUT/IDENTITY-AFTER.txt" 2>&1; IDRC=$?
++echo "IDENTITY-AFTER exit $IDRC (0 = all pinned files unchanged; 1 = mismatch/missing; 2 = check could not be made)" | tee -a "$OUT/IDENTITY-AFTER.txt"
+ 
+-# ------------------------------------------------------------------- the summary
++# ------------------------------------------------------------------- the summary (R3: matched expectations ≠ reached gates)
++reached_f1=0; loader_block=0; crash_before=0; other_reach=0
++for c in $CASES; do
++  case "${CLASS_OF[$c]:-}" in
++    GATE-GREEN|GATE-OPEN-F1|GATE-OPEN-OTHER) reached_f1=$((reached_f1+1));;
++    BLOCKED-AT-LOADER) loader_block=$((loader_block+1));;
++    CRASH-MID-GATE) crash_before=$((crash_before+1));;
++    *) other_reach=$((other_reach+1));;
++  esac
++done
+ {
+-  echo "P10-RUNNER: pass=$pass fail=$fail invalid=$invalid blocked=$blocked"
+-  echo "P10-RUNNER: exploratory=$exploratory (M2-X, neither PASS nor FAIL)"
++  echo "P10-RUNNER: matched=$pass fail=$fail invalid=$invalid unexpected-blocked=$blocked exploratory=$exploratory   (matched = the classifier's PASS lines: expectation met, NOT 'F1 checks passed')"
++  echo "P10-RUNNER: reachability: F1-reached=$reached_f1 loader-block=$loader_block (M1-C: the EXPECTED loader block is a completed observation and still a block) crash-before-F1=$crash_before other=$other_reach"
++  echo "P10-RUNNER: identity-after exit=$IDRC"
+   for c in $CASES; do printf 'P10-RUNNER: %-8s -> %s\n' "$c" "${CLASS_OF[$c]:-(none)}"; done
+ } | tee "$OUT/SUMMARY.txt"
+ 
++if [ "$IDRC" -ne 0 ]; then
++  echo "P10-RUNNER: VOID — identity-after exit $IDRC: the pinned subject could not be shown unchanged after the runs (see $OUT/IDENTITY-AFTER.txt); the case tallies above do not stand as a success" | tee -a "$OUT/SUMMARY.txt"
++  exit 6
++fi
+ [ "$fail" -eq 0 ] && [ "$invalid" -eq 0 ] && exit 0
+ exit 1

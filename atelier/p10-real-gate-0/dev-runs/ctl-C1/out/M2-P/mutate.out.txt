@@ -1,0 +1,3 @@
+mutate.py: PRISTINE PROVENANCE: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+mutate.py: GUARD OK  M2-P lambda list (l.3095)  (unique; at line 3095)
+mutate.py: M2-P: applied M2-P; mutated sha256 e9f43b677b43ff4b39b145a54f3d2efdc36470076a80ea8f4ca4848a9edd31b5; diff -> /tmp/p10-rg0-20260915T153041/M2-P/MUTATION-DIFF.txt

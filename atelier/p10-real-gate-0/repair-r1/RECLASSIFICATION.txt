@@ -1,0 +1,28 @@
+RECLASSIFICATION — 2026-09-15T16:18:39-03:00 · classifier sha256 e080a0e763a76a04… · source run 20260915T153841-real (transcripts copied, never modified)
+--- 1. the nine retained real cases (copies)
+OK   real-B0: PASS (exit 0) — CLASS B0: GATE-GREEN
+OK   real-B0-I: PASS (exit 0) — CLASS B0-I: GATE-GREEN
+OK   real-M1-C: PASS (exit 0) — CLASS M1-C: BLOCKED-AT-LOADER
+OK   real-M1-U: PASS (exit 0) — CLASS M1-U: GATE-GREEN
+OK   real-M1-U-I: PASS (exit 0) — CLASS M1-U-I: GATE-GREEN
+OK   real-M2-P: PASS (exit 0) — CLASS M2-P: GATE-OPEN-F1
+OK   real-M2-X: EXPLORATORY (exit 0) — CLASS M2-X: CRASH-MID-GATE
+OK   real-U1: PASS (exit 0) — CLASS U1: GATE-GREEN
+OK   real-U1-M: PASS (exit 0) — CLASS U1-M: GATE-GREEN
+--- 2. the existing synthetic controls (retained dirs)
+OK   C-3-green-sentinel-exit-1: FAIL (exit 1) — CLASS B0: INCOHERENT
+OK   C-4-witness-line-removed: INVALID (exit 3) — CLASS M1-U: GATE-GREEN
+--- 3. Astra's specimens and their twins (each a disposable copy of a REAL case dir)
+OK   R1a-witness-file-deleted: INVALID (exit 3) — CLASS M1-U: GATE-GREEN
+OK   R1b-two-gate-exit-records: INVALID (exit 3) — INVALID B0: gate exit record must be exactly one line, found 2 non-empty line(s): EXIT 1|EXIT 0
+OK   R1b-two-witness-exit-records: INVALID (exit 3) — CLASS M2-P: GATE-OPEN-F1
+OK   witness-exit-file-absent: INVALID (exit 3) — CLASS M2-P: GATE-OPEN-F1
+OK   witness-expect-file-absent: INVALID (exit 3) — CLASS U1-M: GATE-GREEN
+OK   loader-expect-file-absent: INVALID (exit 3) — CLASS M1-C: BLOCKED-AT-LOADER
+OK   gate-exit-file-absent: INVALID (exit 3) — INVALID B0: gate exit record absent (gate.exit.txt)
+OK   unknown-case-name: INVALID (exit 3) — INVALID R1a-B0: unknown case name (directory basename must be one of: B0 B0-I M1-C M1-U M1-U-I M2-P M2-X U1 U1-M )
+--- 4. legitimately witness-free baselines must still be accepted
+OK   baseline-no-witness-B0: PASS (exit 0) — CLASS B0: GATE-GREEN
+OK   baseline-no-witness-B0-I: PASS (exit 0) — CLASS B0-I: GATE-GREEN
+OK   baseline-no-witness-U1: PASS (exit 0) — CLASS U1: GATE-GREEN
+RECLASSIFICATION: ok=22 bad=0

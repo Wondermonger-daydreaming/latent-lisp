@@ -1,0 +1,3 @@
+mutate.py: PRISTINE PROVENANCE: pre-mutation copy of the subject's own file, sha256 784bc7f6e6d0b7c40485c23e994fb455934cac30682b7a58f22b3942cac4c6df asserted equal to the pinned row in /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/subjects/PINNED-SUBJECT-SHA256.txt
+mutate.py: GUARD OK  M2-X lambda list (l.3095)  (unique; at line 3095)
+mutate.py: M2-X: applied M2-X; mutated sha256 06eccb2cb1a8dc6118c04683c128470f4088bc70908b55bbad10121665694dae; diff -> /tmp/p10-rg0-20260915T153417/M2-X/MUTATION-DIFF.txt

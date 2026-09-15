@@ -1,0 +1,1 @@
+SEC-OK B0: [12] note is the literal = walked every external fbound symbol's compiled lambda list

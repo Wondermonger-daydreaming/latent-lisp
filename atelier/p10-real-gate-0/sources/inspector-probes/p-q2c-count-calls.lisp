@@ -1,0 +1,18 @@
+;;;; Counting shim over sb-introspect:function-lambda-list — NO error injected.
+(require :sb-introspect)
+(defparameter *orig* (symbol-function 'sb-introspect:function-lambda-list))
+(defparameter *calls* 0)
+(defparameter *seen* (make-hash-table :test #'eq))
+(setf (symbol-function 'sb-introspect:function-lambda-list)
+      (lambda (thing) (incf *calls*) (when (symbolp thing) (incf (gethash thing *seen* 0)))
+        (funcall *orig* thing)))
+(push (lambda ()
+        (format t "~&INSPECTOR-FLL-CALLS: ~d~%" *calls*)
+        (format t "INSPECTOR-FLL-DISTINCT-SYMBOLS: ~d~%" (hash-table-count *seen*))
+        (let ((dups 0))
+          (maphash (lambda (k v) (declare (ignore k)) (when (> v 1) (incf dups))) *seen*)
+          (format t "INSPECTOR-FLL-SYMBOLS-SEEN-MORE-THAN-ONCE: ~d~%" dups))
+        (finish-output))
+      sb-ext:*exit-hooks*)
+;; raw do-external-symbols iteration count, for comparison
+(load "mneme/memory-layer-0/ml0-block-proof.lisp")

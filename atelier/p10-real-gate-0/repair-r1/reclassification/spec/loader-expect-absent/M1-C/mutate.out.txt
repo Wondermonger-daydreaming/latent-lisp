@@ -1,0 +1,3 @@
+mutate.py: PRISTINE PROVENANCE: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+mutate.py: GUARD OK  M1-C form boundaries verified by reader-aware scan: l.1846-1858 (784 bytes) + 1 blank line
+mutate.py: M1-C: applied M1-C; mutated sha256 138fec8dac0fe1ebaa0350670ef64e9b8286357200bc054bddd6f8bc5266fee2; diff -> /tmp/p10-rg0-20260915T153841/M1-C/MUTATION-DIFF.txt

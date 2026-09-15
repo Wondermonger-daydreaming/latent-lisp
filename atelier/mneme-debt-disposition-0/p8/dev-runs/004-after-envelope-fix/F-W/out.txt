@@ -1,0 +1,13 @@
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+LAWFUL-ACCOUNT-HEX: 1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504
+LAWFUL-PROVENANCE: caller-asserted
+LAWFUL-ENVELOPE-FIELDS: attempt="a-prima" subject-principal="the actor" process="tabularius"
+FORGED-HEX: 49332c1d565f20098065f1e87a27e47021a36ddf2b9414e055ef47a42a5fc9dc
+STORE-BEFORE frames=1 hexes=1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504 events-sha256=8ebf08fc2548c2659c69f32be00b665217409b494b84f2b63c96d9be4187f225 status=VALID tail-sha256=NIL
+DETAIL: dry decode: the exact account decoder refuses this frame (ML0-ACCOUNT-READBACK-REFUSED [ML0-RB-5]) — refused BEFORE any durable mutation
+CONDITION-TYPE: ml0-account-encoding-refused
+STORE-AFTER frames=1 hexes=1b6345aa050e20c18b5f6f00a68629e1538fb8ad097d188e386dd775562b0504 events-sha256=8ebf08fc2548c2659c69f32be00b665217409b494b84f2b63c96d9be4187f225 status=VALID tail-sha256=NIL
+RESULT-CLASS: REFUSED ML0-WR-8 other
+RUN-ROOT-REMOVED: YES

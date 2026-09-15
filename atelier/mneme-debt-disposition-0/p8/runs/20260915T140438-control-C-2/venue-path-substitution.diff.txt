@@ -1,0 +1,11 @@
+--- /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/mneme-debt-disposition-0/p8/original/probe-p8-supplement.lisp	2026-09-15 13:55:42.045793870 -0300
++++ /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/mneme-debt-disposition-0/p8/runs/20260915T140438-control-C-2/probe-p8-supplement-venue-path.lisp	2026-09-15 14:04:39.013424760 -0300
+@@ -1,7 +1,7 @@
+ ;;;; Supplement P8: construct a coherent durable effect record differing only
+ ;;;; in provenance; require the ML/0 decoder to reach and name ML0-RB-5.
+ 
+-(load "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp")
++(load "/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/final-venue/mneme/memory-layer-0/ml0-suite-ground.lisp")
+ (in-package #:lisp-plus-memory-layer0)
+ 
+ (format t "~&=== SUPPLEMENT P8: provenance forgery must reach ML0-RB-5 ===~%")

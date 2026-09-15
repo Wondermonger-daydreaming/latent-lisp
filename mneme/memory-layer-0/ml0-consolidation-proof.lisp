@@ -38,10 +38,18 @@
 ;;;; so since R2).  This probe MODELS the case :contradicted exists for — one
 ;;;; door's row is WRONG or TAMPERED — by re-copying a real absence door's row
 ;;;; (door-validated, subject-bound) onto the positive row's universe and
-;;;; interval, through the lane's INTERNAL row constructor from inside the lane
-;;;; package.  A caller outside the package cannot do this.  What the probe then
-;;;; proves is the CARRIER'S contract: if consolidation lawfully computes
-;;;; :contradicted, materialization writes it and retrieval returns it.
+;;;; interval, through the lane's INTERNAL row constructor (`%make-ml0-source`)
+;;;; from inside the lane package.  This is not a construction boundary: package
+;;;; privacy is defense in depth, not the soundness boundary (SPEC §6b/§6c) — an
+;;;; internal constructor remains callable from outside the package through
+;;;; package-internal access (`FIND-SYMBOL` + `SYMBOL-FUNCTION` from `CL-USER`
+;;;; did exactly this: 2026-09-01 strict stranger audit, P9); what is closed is
+;;;; the SUPPORTED route — exported constructors normalize to non-warranting
+;;;; testimony and BOA closes the `#S` reader route (§8), not every possible
+;;;; call.  [P9 erratum 2026-09-15: atelier/mneme-debt-disposition-0/p9/ERRATUM-P9-0.md]
+;;;; What the probe then proves is the CARRIER'S contract: if consolidation
+;;;; lawfully computes :contradicted, materialization writes it and retrieval
+;;;; returns it.
 ;;;;
 ;;;; FRESH PROCESS: the reader arm is this same file re-invoked under
 ;;;; `sb-ext:run-program` with `--read <account-dir> <hex> <expected>`; it opens

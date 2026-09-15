@@ -1,0 +1,7 @@
+CLASS B0: GATE-GREEN
+REACHED B0: F1-reached
+SENTINEL B0: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL B0: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 B0: walked every external fbound symbol's compiled lambda list
+EXIT B0: 0
+PASS B0: GATE-GREEN

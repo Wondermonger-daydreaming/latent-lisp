@@ -1,0 +1,6 @@
+CLASS M1-C: BLOCKED-AT-LOADER
+REACHED M1-C: loader-block
+SENTINEL M1-C: (none)
+DETAIL M1-C: (no [12] line)
+EXIT M1-C: 1
+INVALID M1-C: mandatory witness evidence absent or empty for a mutant case: WITNESS-EXPECT-LOADER.txt

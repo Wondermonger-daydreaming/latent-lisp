@@ -1,0 +1,4 @@
+mutate.py: PRISTINE PROVENANCE: pre-mutation copy of the subject's own file, sha256 784bc7f6e6d0b7c40485c23e994fb455934cac30682b7a58f22b3942cac4c6df asserted equal to the pinned row in /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/subjects/PINNED-SUBJECT-SHA256.txt
+mutate.py: GUARD OK  M1-U/1+2 BOA constructor key + slot (l.511,514), anchored on the ml0-subject docstring  (unique; at line 511)
+mutate.py: GUARD OK  M1-U/3 constructor argument (l.538), anchored on %make-ml0-subject (l.537)  (unique; at line 536)
+mutate.py: M1-U: applied M1-U; mutated sha256 8bceda0783e459d7c761f04294678166d2573abb83dd4b985d2e4123eb6df7a8; diff -> /tmp/p10-rg0-20260915T153417/M1-U/MUTATION-DIFF.txt

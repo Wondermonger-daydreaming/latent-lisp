@@ -1,0 +1,15 @@
+### after-supplement : identical=59 differing=0 only-in-auditor=0 only-in-venue=3
+--- differing ---
+--- only in auditor ---
+--- only in venue ---
+FILE-MANIFEST.txt
+MEMORY-LAYER-0-SPEC.md
+MEMORY-LAYER-0-WORK-ORDER.md
+
+### phaseB : identical=59 differing=0 only-in-auditor=0 only-in-venue=3
+--- differing ---
+--- only in auditor ---
+--- only in venue ---
+FILE-MANIFEST.txt
+MEMORY-LAYER-0-SPEC.md
+MEMORY-LAYER-0-WORK-ORDER.md

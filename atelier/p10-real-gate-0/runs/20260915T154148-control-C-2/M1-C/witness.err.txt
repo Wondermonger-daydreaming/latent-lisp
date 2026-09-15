@@ -1,0 +1,4 @@
+While evaluating the form starting at line 273, column 0
+  of #P"/tmp/p10-rg0-20260915T154148/M1-C/mneme/memory-layer-0/load.lisp":
+While evaluating the form starting at line 25, column 0
+  of #P"/tmp/p10-rg0-20260915T154148/M1-C/mneme/memory-layer-0/ml0-suite-ground.lisp":

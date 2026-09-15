@@ -1,0 +1,14 @@
+# EXPECTATIONS-P8.txt — the pre-committed classes of PREREG-P8-DELTA-0.md §6
+# (prereg sha256 295bab9fc390dc0a1beac5cc85fbb361ed4c0bfe65f7ed7618f04e5bc4f81c98).
+# One line per case: CASE=<expected RESULT-CLASS, or LOAD-ERROR>.
+# Nothing here may be edited after the prereg's hash was recorded; the only lawful
+# variation is the documented P8_EXPECT_OVERRIDE control, printed in the transcript.
+V-R=DECODED provenance=CALLER-ASSERTED
+V-D=DECODED provenance=CALLER-ASSERTED
+V-J=DECODED provenance=CALLER-ASSERTED
+F-D=REFUSED ML0-RB-5 provenance-reads
+F-R=REFUSED ML0-RB-5 provenance-reads
+F-W=REFUSED ML0-WR-8 other
+E-J=JOURNAL-REFUSED pj0-event-identity-collision PJ-APP-3
+E-R=REFUSED ML0-RB-11 other
+E-L=LOAD-ERROR

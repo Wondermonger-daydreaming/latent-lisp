@@ -1,0 +1,1 @@
+INVALID B0: gate exit record absent (gate.exit.txt)

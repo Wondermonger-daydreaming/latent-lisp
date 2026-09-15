@@ -1,0 +1,89 @@
+# evidence-roles.txt — the DECLARED required evidence roles of P10 REAL GATE /0 (attachment §6). tools/check-roles.sh compares an extracted
+# parcel against THIS list, never against a manifest of whatever survived. <role> <glob relative to this dir>. A missing role rejects the parcel.
+# --- the commission, the map, the subject
+return                  RETURN.md
+readme                  README.md
+f1-map                  F1-MAP.md
+source-map              sources/SOURCE-MAP.md
+f1-excerpt              sources/F1-probe-excerpt-ml0-block-proof-758-785.txt
+probe-helper-excerpt    sources/probe-helper-excerpt-95-105.txt
+sentinel-excerpt        sources/sentinel-excerpt-998-1003.txt
+floor-row               sources/floor-row-verify-release-336.txt
+inspector-B0            sources/inspector-B0-probe/stdout.txt
+pinned-subject          subjects/PINNED-SUBJECT.txt
+pinned-closure          subjects/PINNED-SUBJECT-SHA256.txt
+closure-paths           subjects/closure-paths.txt
+# --- the originals
+frigus-mechanism        original/p10-f1-introspection-injection.lisp
+frigus-runner           original/run-p10-f1-injection.sh
+frigus-transcript       original/frigus-injection-attempt2.txt
+minimax-phaseB          original/minimax-phaseB-probe-p10-F1-introspect.lisp
+minimax-supplement      original/minimax-supplement-probe-p10.lisp
+# --- the frozen prereg
+prereg                  prereg/PREREG-P10-RG-0.md
+prereg-sha              prereg/PREREG-P10-RG-0.sha256
+# --- the harness (auditor machinery)
+h-mutate                harness/mutate.py
+h-witness               harness/witness.lisp
+h-interposer            harness/interposer.lisp
+h-classify              harness/p10-classify.sh
+h-runner                harness/p10-runner.sh
+h-expectations          harness/EXPECTATIONS-P10.txt
+# --- failed attempts / builder's report
+dev-runs-report         dev-runs/SMITH2-REPORT.md
+# --- the recorded run: header, per-case gate transcripts, witnesses, mutation diffs, identity-after
+real-header             runs/*-real/RUNNER-HEADER.txt
+real-summary            runs/*-real/SUMMARY.txt
+real-identity-after     runs/*-real/IDENTITY-AFTER.txt
+real-B0-gate            runs/*-real/B0/gate.out.txt
+real-B0-exit            runs/*-real/B0/gate.exit.txt
+real-B0I-gate           runs/*-real/B0-I/gate.out.txt
+real-M1C-gate-err       runs/*-real/M1-C/gate.err.txt
+real-M1C-gate-out       runs/*-real/M1-C/gate.out.txt
+real-M1C-exit           runs/*-real/M1-C/gate.exit.txt
+real-M1C-witness        runs/*-real/M1-C/witness.out.txt
+real-M1C-diff           runs/*-real/M1-C/MUTATION-DIFF.txt
+real-M1U-gate           runs/*-real/M1-U/gate.out.txt
+real-M1U-witness        runs/*-real/M1-U/witness.out.txt
+real-M1U-diff           runs/*-real/M1-U/MUTATION-DIFF.txt
+real-M1UI-gate          runs/*-real/M1-U-I/gate.out.txt
+real-M2P-gate           runs/*-real/M2-P/gate.out.txt
+real-M2P-exit           runs/*-real/M2-P/gate.exit.txt
+real-M2P-witness        runs/*-real/M2-P/witness.out.txt
+real-M2P-diff           runs/*-real/M2-P/MUTATION-DIFF.txt
+real-M2X-gate           runs/*-real/M2-X/gate.out.txt
+real-M2X-err            runs/*-real/M2-X/gate.err.txt
+real-M2X-witness        runs/*-real/M2-X/witness.out.txt
+real-U1-gate            runs/*-real/U1/gate.out.txt
+real-U1-exit            runs/*-real/U1/gate.exit.txt
+real-U1M-gate           runs/*-real/U1-M/gate.out.txt
+real-U1M-exit           runs/*-real/U1-M/gate.exit.txt
+real-U1M-witness        runs/*-real/U1-M/witness.out.txt
+real-transcript         runs/*-real/runner-transcript.txt
+# --- the verdict controls
+control-C1              runs/*-control-C-1/SUMMARY.txt
+control-C2              runs/*-control-C-2/SUMMARY.txt
+control-C3              runs/*-control-C-3/classify.txt
+control-C4              runs/*-control-C-4/classify.txt
+# --- tools
+tool-check-roles        tools/check-roles.sh
+tool-validate           tools/validate-parcel.sh
+tool-repro              tools/repro.sh
+# --- repair r1 (Astra's adjudication R1–R3): reproduction of her controls on the shipped bytes, diffs, reclassification, identity demos, double
+r1-astra-controls       repair-r1/astra-controls-on-603c41c75/ASTRA-CONTROLS-ON-603c41c75.txt
+r1-classify-before      repair-r1/p10-classify.sh.before
+r1-runner-before        repair-r1/p10-runner.sh.before
+r1-diff-classify        repair-r1/DIFF-p10-classify.sh.txt
+r1-diff-runner          repair-r1/DIFF-p10-runner.sh.txt
+r1-identity-after-tool  harness/identity-after.sh
+r1-reclassify-tool      repair-r1/reclassify.sh
+r1-reclassification     repair-r1/RECLASSIFICATION.txt
+r1-reclass-real-U1M     repair-r1/reclassification/real-U1-M.txt
+r1-reclass-R1a          repair-r1/reclassification/R1a-witness-file-deleted.txt
+r1-reclass-R1b          repair-r1/reclassification/R1b-two-gate-exit-records.txt
+r1-reclass-R1b-witness  repair-r1/reclassification/R1b-two-witness-exit-records.txt
+r1-identity-demo        repair-r1/IDENTITY-AFTER-DEMO.txt
+r1-double-script        repair-r1/doubles/runner-finalization-double.sh
+r1-double-diff          repair-r1/doubles/runner-finalization-double.diff.txt
+r1-double-run           repair-r1/doubles/runner-finalization-double-run.txt
+prereg-note-1           prereg/PREREG-P10-RG-0-NOTE-1.md

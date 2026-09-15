@@ -241,6 +241,32 @@ ML/0's adoption/publication status and implementation remain unchanged; its 61-f
 not repaired by this record. No repair, reopening, registration, experiment, or transport is
 authorized here. The terminal sentence and these limits form one audit summary.
 
+#### Subsequent evidence — 2026-09-15; adopted standing unchanged
+
+Two diagnostic commissions closed on this date, each an experimental dossier under `atelier/` with its frozen
+preregistration, retained failures, chair-run evidence and the ruling chair's acceptance as received bytes
+([`atelier/mneme-debt-disposition-0/`](atelier/mneme-debt-disposition-0/README.md),
+[`atelier/p10-real-gate-0/`](atelier/p10-real-gate-0/README.md)). The block above is the complete statement of
+adopted standing and limits; this note is a pointer to new evidence, not a replacement status.
+
+MNEME DEBT DISPOSITION /0 is closed at its candidate-correction and bounded chair-run evidence ceiling. The P9
+proof-comment correction, accepted in candidate `015c9d17d`, is carried in this tree: `mneme/memory-layer-0/ml0-consolidation-proof.lisp`
+sha256 `72737382…` (comment bytes only; 11 = 11 reader-level forms; proof re-run 35/0) and one regenerated row of `FILE-MANIFEST.txt`;
+the R5 identity `6e83648e…` is historical, and this lane is no longer byte-identical to the original 61-file adopted object. Whether the adopted P9 OPEN entry is then amended is a distinct recorded disposition. The repaired P8 experiment refused the tested coherent provenance forgery at
+ML0-RB-5 through supported retrieval and the exported direct accessor. Its original strict-stranger supplement
+remains historically blocked; F-W exercised an internal pre-append function directly.
+
+P10 REAL GATE /0 is closed with recorded qualifications. The real F1 detects the readable planted forbidden
+parameter, but passes the same offender when its inspection is forced to fail. The auditor's requested R1–R3
+repairs are accepted; the real F1 behavior remains unchanged. Eight expectations matched and one outcome was
+exploratory: seven cases reached F1, one stopped at the loader, and one crashed earlier. This is chair-run
+evidence, not completion of MiniMax's untested arm.
+
+The accepted P9 candidate does not amend the adopted P9 OPEN entry. P3's additional direct act-journal/world-ledger
+measurement and P5's additional direct-versus-derived mutation arm remain NOT TESTED. **NO SUPPORTED-PATH RUNTIME
+SEMANTIC FAILURE ESTABLISHED.** No blanket "independently verified" claim follows. The acceptance records
+distinguish Fable's retained Lisp execution from Astra's direct byte, source and shell checks.
+
 #### ML0 scope ceiling
 
 The scope ceiling remains verbatim (Sol II, 2026-08-22, after the toaster benchmark's composition failure

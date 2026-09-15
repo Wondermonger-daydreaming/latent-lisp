@@ -1,0 +1,8 @@
+### T7 pinned closure MISMATCH on the subject -> VOID 6
+mneme/memory-layer-0/ml0-mutant-overlay.lisp: OK
+mneme/memory-layer-0/ml0-readiness.lisp: OK
+mneme/memory-layer-0/ml0-suite-ground.lisp: OK
+mneme/memory-layer-0/package.lisp: OK
+sha256sum: WARNING: 1 computed checksum did NOT match
+P10-RUNNER: VOID — B0: pinned closure MISMATCH before mutation (see /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/dev-runs/ctl-T7-void-pinned/out/B0/pinned-check.txt)
+EXIT 6

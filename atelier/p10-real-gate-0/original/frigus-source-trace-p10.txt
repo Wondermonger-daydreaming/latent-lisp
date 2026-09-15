@@ -1,0 +1,87 @@
+COMMAND: bash evidence/source-trace.sh P10
+WORKDIR: /home/gauss/ml0-sameroot-audit-2026-09-01
+UTC-START: 2026-09-01T18:16:20Z
+P10 SOURCE TRACE — F1 introspection accounting
+
+SOURCE substrate/mneme/memory-layer-0/ml0-block-proof.lisp LINES 758,808
+   758	       ;;; ---- F1 — TRUTH-MINTING: the `defect` mutant seam is a public runtime
+   759	       ;;; ---- parameter on the exported production surface.
+   760	       ;;;
+   761	       ;;; ⚑ THIS PROBE ASKS THE IMAGE, NOT THE SOURCE.  It walks every EXTERNAL
+   762	       ;;; symbol of the lane's package in an image loaded through the canonical
+   763	       ;;; `load.lisp` and reads the arglist SBCL actually compiled.  A grep can
+   764	       ;;; be fooled by a macro; `function-lambda-list` cannot.
+   765	       (format t "~&~%---- F1: no mutant seam on the public arglists ----~%")
+   766	       (let* ((package (find-package '#:lisp-plus-memory-layer0))
+   767	              (offenders '()))
+   768	         (do-external-symbols (symbol package)
+   769	           (when (fboundp symbol)
+   770	             (let ((arglist (handler-case (sb-introspect:function-lambda-list symbol)
+   771	                              (error () nil))))
+   772	               (when (some (lambda (item)
+   773	                             (and (symbolp item)
+   774	                                  (member (symbol-name item)
+   775	                                          '("DEFECT" "DEFECT-PAYLOAD")
+   776	                                          :test #'string=)))
+   777	                           arglist)
+   778	                 (push (symbol-name symbol) offenders)))))
+   779	         (probe "F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` ~
+   780	PARAMETER — the mutant seam is not a public runtime lever"
+   781	                (null offenders)
+   782	                (if offenders
+   783	                    (format nil "⚠ ~d exported function(s) still take it: ~{~a~^, ~}"
+   784	                            (length offenders) (sort offenders #'string<))
+   785	                    "walked every external fbound symbol's compiled lambda list")))
+   786	
+   787	       ;;; ---- F1b — AND THE PREDICATE ITSELF NO LONGER FLIPS.  The audit's own
+   788	       ;;; ---- confirmed probe, run here: normal NIL, and the keyword route must
+   789	       ;;; ---- be GONE rather than merely unused.
+   790	       (let* ((normal (ml0-species-may-warrant-occurrence-p :core0-issuance-testimony))
+   791	              ;; ⚠ APPLIED THROUGH `symbol-function` AND A RUNTIME-BUILT LIST,
+   792	              ;; deliberately: a literal call with the old keyword is a
+   793	              ;; COMPILE-TIME warning now, and a gate transcript full of compiler
+   794	              ;; noise is a gate nobody reads.  The question is what the FUNCTION
+   795	              ;; does at run time, and this asks it that way.
+   796	              (arguments (list* :core0-issuance-testimony
+   797	                                (list :defect :issuance-implies-occurrence)))
+   798	              (flipped (handler-case
+   799	                           (list :answered
+   800	                                 (apply (symbol-function
+   801	                                         'ml0-species-may-warrant-occurrence-p)
+   802	                                        arguments))
+   803	                         (error () :signalled))))
+   804	         (probe "F1b · the crown predicate answers NIL for issuance testimony AND ~
+   805	the `:defect :issuance-implies-occurrence` route no longer exists"
+   806	                (and (null normal) (eq :signalled flipped))
+   807	                (format nil "normal => ~s · with the mutant keyword => ~s"
+   808	                        normal flipped)))
+
+SOURCE substrate/mneme/memory-layer-0/ml0-selftest.lisp LINES 1041,1066
+  1041	       ;;; ==================================================================
+  1042	       ;;; §K — THE R4 REPAIR'S OWN SEAMS.  Five checks over the Codex audit's
+  1043	       ;;; five findings, exercising the MECHANISMS DIRECTLY, so a refusal that
+  1044	       ;;; happened for a neighbouring reason cannot pass for the repair.
+  1045	       ;;; ==================================================================
+  1046	       (format t "~&~%---- §K the R4 repair's seams ----~%")
+  1047	
+  1048	       (ml0-check "F1 · NO EXTERNAL FUNCTION of this lane carries a `defect` or ~
+  1049	`defect-payload` parameter, read out of the COMPILED LAMBDA LISTS rather than out ~
+  1050	of the source text.  ⚠ THIS PROCESS HAS THE MUTANT OVERLAY LOADED, and the answer ~
+  1051	is still none — the overlay redefines whole functions and widens no arglist"
+  1052	                  (let ((offenders '()))
+  1053	                    (do-external-symbols (symbol (find-package
+  1054	                                                  '#:lisp-plus-memory-layer0))
+  1055	                      (when (fboundp symbol)
+  1056	                        (when (some (lambda (item)
+  1057	                                      (and (symbolp item)
+  1058	                                           (member (symbol-name item)
+  1059	                                                   '("DEFECT" "DEFECT-PAYLOAD")
+  1060	                                                   :test #'string=)))
+  1061	                                    (handler-case
+  1062	                                        (sb-introspect:function-lambda-list symbol)
+  1063	                                      (error () nil)))
+  1064	                          (push symbol offenders))))
+  1065	                    (null offenders)))
+  1066	
+DIRECT-EXIT: 0
+UTC-END: 2026-09-01T18:16:20Z

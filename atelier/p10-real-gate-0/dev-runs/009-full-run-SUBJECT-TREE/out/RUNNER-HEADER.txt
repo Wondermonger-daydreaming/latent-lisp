@@ -1,0 +1,22 @@
+P10 REAL GATE /0 — RUNNER HEADER
+date            : 2026-09-15T15:34:17-03:00
+host            : gauss-VJFE69F11X-B0221H Linux 7.0.0-28-generic
+sbcl            : /home/gauss/.local/bin/sbcl  (SBCL 2.4.6)
+subject commit  : 244580e81a9002ea61a435ed185e85133a994fd9
+subject mode    : cp -a from P10_SUBJECT_TREE=/tmp/p10-rg0-tree (no git)
+subject base    : /tmp/p10-rg0-20260915T153417
+prereg          : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/prereg/PREREG-P10-RG-0.md
+prereg sha256   : 0835d5db9f44a27f68ec29b993e2ca97e247200bc197569cc5a66250ffab7165  (== frozen)
+pinned list     : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/subjects/PINNED-SUBJECT-SHA256.txt
+pinned rows     : 70
+pinned list sha : 7ed240a9bd77add49542879f94ce60bc62e66083b5271f74f641fd16c653184a
+identity root   : /tmp/p10-rg0-tree (read-only; the restore check)
+out dir         : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/dev-runs/009-full-run-SUBJECT-TREE/out
+expect override : (none)
+harness shas    :
+  3c8b3bd1621a7ea226ee613334db6080dbd5db8230c4b0a33176ee35106ce7ed  mutate.py
+  deb6924b65c7fc92873232309d8cf99d9d18052e47aec7f1f938f761110c6633  witness.lisp
+  d021aa4e668ecb4925ec60793c3ac3e6811a4eb2f29df6f2662363a21d36fef3  interposer.lisp
+  f85351e948daa4c7b1b0b2668195bc112fed153ee74427b47283a86e4e22bc5f  p10-classify.sh
+  5d7bba937f14d34e76e1d91f8e195c2ae253c46dd081fafb59f745d7776ca16d  p10-runner.sh
+  0cfc65e812392f3f89f20d9b5192574e82da1f2ba38550291a3fa2d6779ea6c1  EXPECTATIONS-P10.txt

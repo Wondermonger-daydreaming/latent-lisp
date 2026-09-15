@@ -1,0 +1,37 @@
+Unhandled SB-INT:SIMPLE-FILE-ERROR in thread #<SB-THREAD:THREAD tid=1776536 "main thread" RUNNING
+                                                {1001018313}>:
+  Failed to find the TRUENAME of /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/venue/mneme/memory-layer-0/mneme/../:
+
+    No such file or directory
+
+Backtrace for: #<SB-THREAD:THREAD tid=1776536 "main thread" RUNNING {1001018313}>
+0: (SB-DEBUG::DEBUGGER-DISABLED-HOOK #<SB-INT:SIMPLE-FILE-ERROR "Failed to find the ~A of ~A" {1000F55AF3}> #<unused argument> :QUIT T)
+1: (SB-DEBUG::RUN-HOOK SB-EXT:*INVOKE-DEBUGGER-HOOK* #<SB-INT:SIMPLE-FILE-ERROR "Failed to find the ~A of ~A" {1000F55AF3}>)
+2: (INVOKE-DEBUGGER #<SB-INT:SIMPLE-FILE-ERROR "Failed to find the ~A of ~A" {1000F55AF3}>)
+3: (ERROR SB-INT:SIMPLE-FILE-ERROR :PATHNAME #P"/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/venue/mneme/memory-layer-0/mneme/../" :MESSAGE "No such file or directory" :FORMAT-CONTROL "Failed to find the ~A of ~A" :FORMAT-ARGUMENTS (:TRUENAME #P"/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/venue/mneme/memory-layer-0/mneme/../"))
+4: (SB-IMPL::FILE-PERROR #P"/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/venue/mneme/memory-layer-0/mneme/../" 2 "Failed to find the ~A of ~A" :TRUENAME #P"/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/venue/mneme/memory-layer-0/mneme/../")
+5: (SB-IMPL::QUERY-FILE-SYSTEM #P"mneme/../" :TRUENAME T)
+6: (TRUENAME #P"mneme/../")
+7: (ML0-FRESH-RUN-ROOT "ml0-probe-p8-sup" #P"mneme/../")
+8: (SB-INT:SIMPLE-EVAL-IN-LEXENV (ML0-FRESH-RUN-ROOT "ml0-probe-p8-sup" #P"mneme/../") #<NULL-LEXENV>)
+9: (SB-INT:SIMPLE-EVAL-IN-LEXENV (UNLESS (SB-INT:%BOUNDP (QUOTE *ROOT*)) (ML0-FRESH-RUN-ROOT "ml0-probe-p8-sup" #P"mneme/../")) #<NULL-LEXENV>)
+10: (SB-INT:SIMPLE-EVAL-IN-LEXENV (SB-IMPL::%DEFVAR (QUOTE *ROOT*) (SB-C:SOURCE-LOCATION) (UNLESS (SB-INT:%BOUNDP (QUOTE *ROOT*)) (ML0-FRESH-RUN-ROOT "ml0-probe-p8-sup" #P"mneme/../"))) #<NULL-LEXENV>)
+11: (SB-INT:SIMPLE-EVAL-IN-LEXENV (DEFVAR *ROOT* (ML0-FRESH-RUN-ROOT "ml0-probe-p8-sup" #P"mneme/../")) #<NULL-LEXENV>)
+12: (SB-EXT:EVAL-TLF (DEFVAR *ROOT* (ML0-FRESH-RUN-ROOT "ml0-probe-p8-sup" #P"mneme/../")) 3 NIL)
+13: ((LABELS SB-FASL::EVAL-FORM :IN SB-INT:LOAD-AS-SOURCE) (DEFVAR *ROOT* (ML0-FRESH-RUN-ROOT "ml0-probe-p8-sup" #P"mneme/../")) 3)
+14: ((LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) (DEFVAR *ROOT* (ML0-FRESH-RUN-ROOT "ml0-probe-p8-sup" #P"mneme/../")) :CURRENT-INDEX 3)
+15: (SB-C::%DO-FORMS-FROM-INFO #<FUNCTION (LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) {7ED02E5873DB}> #<SB-C::SOURCE-INFO {1000AACAA3}> SB-C::INPUT-ERROR-IN-LOAD)
+16: (SB-INT:LOAD-AS-SOURCE #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-venue-path.lisp" {1000164E33}> :VERBOSE NIL :PRINT NIL :CONTEXT "loading")
+17: ((LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-venue-path.lisp" {1000164E33}> NIL)
+18: (SB-FASL::CALL-WITH-LOAD-BINDINGS #<FUNCTION (LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) {7ED02E58779B}> #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-venue-path.lisp" {1000164E33}> NIL #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-venue-path.lisp" {1000164E33}>)
+19: (LOAD #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-venue-path.lisp" {1000164E33}> :VERBOSE NIL :PRINT NIL :IF-DOES-NOT-EXIST :ERROR :EXTERNAL-FORMAT :DEFAULT)
+20: ((FLET SB-IMPL::LOAD-SCRIPT :IN SB-IMPL::PROCESS-SCRIPT) #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-venue-path.lisp" {1000164E33}>)
+21: ((FLET SB-UNIX::BODY :IN SB-IMPL::PROCESS-SCRIPT))
+22: ((FLET "WITHOUT-INTERRUPTS-BODY-" :IN SB-IMPL::PROCESS-SCRIPT))
+23: (SB-IMPL::PROCESS-SCRIPT "/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-venue-path.lisp")
+24: (SB-IMPL::TOPLEVEL-INIT)
+25: ((FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP))
+26: ((FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP))
+27: (SB-IMPL::%START-LISP)
+
+unhandled condition in --disable-debugger mode, quitting

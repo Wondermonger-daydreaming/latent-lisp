@@ -1,0 +1,207 @@
+P10 REAL GATE /0 — RUNNER HEADER
+date            : 2026-09-15T15:27:44-03:00
+host            : gauss-VJFE69F11X-B0221H Linux 7.0.0-28-generic
+sbcl            : /home/gauss/.local/bin/sbcl  (SBCL 2.4.6)
+subject commit  : 244580e81a9002ea61a435ed185e85133a994fd9
+subject mode    : git archive 244580e81a9002ea61a435ed185e85133a994fd9:experiments/latent-lisp from /home/gauss/Desktop/Claude-Code-Lab
+subject base    : /tmp/p10-rg0-20260915T152744
+prereg          : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/prereg/PREREG-P10-RG-0.md
+prereg sha256   : 0835d5db9f44a27f68ec29b993e2ca97e247200bc197569cc5a66250ffab7165  (== frozen)
+pinned list     : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/subjects/PINNED-SUBJECT-SHA256.txt
+pinned rows     : 70
+pinned list sha : 7ed240a9bd77add49542879f94ce60bc62e66083b5271f74f641fd16c653184a
+identity root   : /home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp (read-only; the restore check)
+out dir         : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/dev-runs/007-full-run-2/out
+expect override : (none)
+harness shas    :
+  3c8b3bd1621a7ea226ee613334db6080dbd5db8230c4b0a33176ee35106ce7ed  mutate.py
+  deb6924b65c7fc92873232309d8cf99d9d18052e47aec7f1f938f761110c6633  witness.lisp
+  d021aa4e668ecb4925ec60793c3ac3e6811a4eb2f29df6f2662363a21d36fef3  interposer.lisp
+  6ee067b4aea2b67c076c74800b17d97606aab653815afcf849b36dba14492c09  p10-classify.sh
+  8fdbfd7f6624d71d9ffc475ede812abf3fd3a1ccf3fbc732b6a492421d0008b3  p10-runner.sh
+  0cfc65e812392f3f89f20d9b5192574e82da1f2ba38550291a3fa2d6779ea6c1  EXPECTATIONS-P10.txt
+
+================ B0 ================
+B0: subject at /tmp/p10-rg0-20260915T152744/B0
+B0: pinned closure verified (70 files OK)
+mutate.py: B0: none (unmutated subject); wrote empty /tmp/p10-rg0-20260915T152744/B0/MUTATION-DIFF.txt
+B0: gate entry = normal (sbcl --script mneme/memory-layer-0/ml0-block-proof.lisp)
+CLASS B0: GATE-GREEN
+SENTINEL B0: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL B0: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 B0: walked every external fbound symbol's compiled lambda list
+EXIT B0: 0
+PASS B0: GATE-GREEN
+SEC-OK B0: [12] note is the literal = walked every external fbound symbol's compiled lambda list
+
+================ B0-I ================
+B0-I: subject at /tmp/p10-rg0-20260915T152744/B0-I
+B0-I: pinned closure verified (70 files OK)
+mutate.py: B0-I: none (unmutated subject); wrote empty /tmp/p10-rg0-20260915T152744/B0-I/MUTATION-DIFF.txt
+B0-I: gate entry = interposer, NO target (counting control)
+CLASS B0-I: GATE-GREEN
+SENTINEL B0-I: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL B0-I: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 B0-I: walked every external fbound symbol's compiled lambda list
+EXIT B0-I: 0
+COUNTS B0-I: calls=314 injections=0
+PASS B0-I: GATE-GREEN
+SEC-OK B0-I: interposer calls = 314
+SEC-OK B0-I: target injections = 0
+SEC-OK B0-I: [12] line identical to B0's = [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+SEC-OK B0-I: [12] note identical to B0's = walked every external fbound symbol's compiled lambda list
+SEC-OK B0-I: sentinel identical to B0's = ml0-block-proof: 20 probes, 20 closed, 0 open
+
+================ M1-C ================
+M1-C: subject at /tmp/p10-rg0-20260915T152744/M1-C
+M1-C: pinned closure verified (70 files OK)
+mutate.py: PRISTINE PROVENANCE: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+mutate.py: GUARD OK  M1-C form boundaries verified by reader-aware scan: l.1846-1858 (784 bytes) + 1 blank line
+mutate.py: M1-C: applied M1-C; mutated sha256 138fec8dac0fe1ebaa0350670ef64e9b8286357200bc054bddd6f8bc5266fee2; diff -> /tmp/p10-rg0-20260915T152744/M1-C/MUTATION-DIFF.txt
+LOADER: refused ML0-LANE-INCOMPLETE: Memory Layer /0: LANE LOAD DID NOT COMPLETE.  The lane's declared external API is not fully present and bound, or the readiness carrier is missing.  A package existing is NOT the lane being ready.  Sh
+WITNESS: symbol=ML0-PRINT-STORE-UNIVERSE status=:EXTERNAL fboundp=NIL lambda-list=ERROR:The function LISP-PLUS-MEMORY-LAYER0:ML0-PRINT-STORE-UNIVERSE is undefined.
+M1-C: gate entry = normal (sbcl --script mneme/memory-layer-0/ml0-block-proof.lisp)
+CLASS M1-C: BLOCKED-AT-LOADER
+SENTINEL M1-C: (none)
+DETAIL M1-C: (no [12] line)
+EXIT M1-C: 1
+WITNESS M1-C: WITNESS: symbol=ML0-PRINT-STORE-UNIVERSE status=:EXTERNAL fboundp=NIL lambda-list=ERROR:The function LISP-PLUS-MEMORY-LAYER0:ML0-PRINT-STORE-UNIVERSE is undefined.
+WLOADER M1-C: LOADER: refused ML0-LANE-INCOMPLETE: Memory Layer /0: LANE LOAD DID NOT COMPLETE.  The lane's declared external API is not fully present and bound, or the readiness carrier is missing.  A package existing is NOT the lane being ready.  Sh
+WEXIT M1-C: 0
+PASS M1-C: BLOCKED-AT-LOADER
+
+================ M1-U ================
+M1-U: subject at /tmp/p10-rg0-20260915T152744/M1-U
+M1-U: pinned closure verified (70 files OK)
+mutate.py: PRISTINE PROVENANCE: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+mutate.py: GUARD OK  M1-U/1+2 BOA constructor key + slot (l.511,514), anchored on the ml0-subject docstring  (unique; at line 511)
+mutate.py: GUARD OK  M1-U/3 constructor argument (l.538), anchored on %make-ml0-subject (l.537)  (unique; at line 536)
+mutate.py: M1-U: applied M1-U; mutated sha256 8bceda0783e459d7c761f04294678166d2573abb83dd4b985d2e4123eb6df7a8; diff -> /tmp/p10-rg0-20260915T152744/M1-U/MUTATION-DIFF.txt
+LOADER: ok
+WITNESS: symbol=ML0-SUBJECT-FIXTURE-ROW status=:EXTERNAL fboundp=NIL lambda-list=ERROR:The function LISP-PLUS-MEMORY-LAYER0:ML0-SUBJECT-FIXTURE-ROW is undefined.
+M1-U: gate entry = normal (sbcl --script mneme/memory-layer-0/ml0-block-proof.lisp)
+CLASS M1-U: GATE-GREEN
+SENTINEL M1-U: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL M1-U: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 M1-U: walked every external fbound symbol's compiled lambda list
+EXIT M1-U: 0
+WITNESS M1-U: WITNESS: symbol=ML0-SUBJECT-FIXTURE-ROW status=:EXTERNAL fboundp=NIL lambda-list=ERROR:The function LISP-PLUS-MEMORY-LAYER0:ML0-SUBJECT-FIXTURE-ROW is undefined.
+WLOADER M1-U: LOADER: ok
+WEXIT M1-U: 0
+PASS M1-U: GATE-GREEN
+SEC-OK M1-U: [12] note is the literal = walked every external fbound symbol's compiled lambda list
+
+================ M1-U-I ================
+M1-U-I: subject at /tmp/p10-rg0-20260915T152744/M1-U-I
+M1-U-I: pinned closure verified (70 files OK)
+mutate.py: PRISTINE PROVENANCE: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+mutate.py: GUARD OK  M1-U/1+2 BOA constructor key + slot (l.511,514), anchored on the ml0-subject docstring  (unique; at line 511)
+mutate.py: GUARD OK  M1-U/3 constructor argument (l.538), anchored on %make-ml0-subject (l.537)  (unique; at line 536)
+mutate.py: M1-U-I: applied M1-U; mutated sha256 8bceda0783e459d7c761f04294678166d2573abb83dd4b985d2e4123eb6df7a8; diff -> /tmp/p10-rg0-20260915T152744/M1-U-I/MUTATION-DIFF.txt
+LOADER: ok
+WITNESS: symbol=ML0-SUBJECT-FIXTURE-ROW status=:EXTERNAL fboundp=NIL lambda-list=ERROR:The function LISP-PLUS-MEMORY-LAYER0:ML0-SUBJECT-FIXTURE-ROW is undefined.
+M1-U-I: gate entry = interposer, NO target (counting control)
+CLASS M1-U-I: GATE-GREEN
+SENTINEL M1-U-I: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL M1-U-I: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 M1-U-I: walked every external fbound symbol's compiled lambda list
+EXIT M1-U-I: 0
+COUNTS M1-U-I: calls=312 injections=0
+WITNESS M1-U-I: WITNESS: symbol=ML0-SUBJECT-FIXTURE-ROW status=:EXTERNAL fboundp=NIL lambda-list=ERROR:The function LISP-PLUS-MEMORY-LAYER0:ML0-SUBJECT-FIXTURE-ROW is undefined.
+WLOADER M1-U-I: LOADER: ok
+WEXIT M1-U-I: 0
+PASS M1-U-I: GATE-GREEN
+SEC-OK M1-U-I: interposer calls = 312
+SEC-OK M1-U-I: target injections = 0
+
+================ M2-P ================
+M2-P: subject at /tmp/p10-rg0-20260915T152744/M2-P
+M2-P: pinned closure verified (70 files OK)
+mutate.py: PRISTINE PROVENANCE: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+mutate.py: GUARD OK  M2-P lambda list (l.3095)  (unique; at line 3095)
+mutate.py: M2-P: applied M2-P; mutated sha256 e9f43b677b43ff4b39b145a54f3d2efdc36470076a80ea8f4ca4848a9edd31b5; diff -> /tmp/p10-rg0-20260915T152744/M2-P/MUTATION-DIFF.txt
+LOADER: ok
+WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE &KEY DEFECT)
+M2-P: gate entry = normal (sbcl --script mneme/memory-layer-0/ml0-block-proof.lisp)
+CLASS M2-P: GATE-OPEN-F1
+SENTINEL M2-P: ml0-block-proof: 20 probes, 19 closed, 1 open
+DETAIL M2-P: [12] OPEN    F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 M2-P: ⚠ 1 exported function(s) still take it: ML0-EVIDENCE-PROJECTION-DIGEST
+EXIT M2-P: 1
+WITNESS M2-P: WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE &KEY DEFECT)
+WLOADER M2-P: LOADER: ok
+WEXIT M2-P: 0
+PASS M2-P: GATE-OPEN-F1
+SEC-OK M2-P: [12] note names ML0-EVIDENCE-PROJECTION-DIGEST
+
+================ M2-X ================
+M2-X: subject at /tmp/p10-rg0-20260915T152744/M2-X
+M2-X: pinned closure verified (70 files OK)
+mutate.py: PRISTINE PROVENANCE: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+mutate.py: GUARD OK  M2-X lambda list (l.3095)  (unique; at line 3095)
+mutate.py: M2-X: applied M2-X; mutated sha256 06eccb2cb1a8dc6118c04683c128470f4088bc70908b55bbad10121665694dae; diff -> /tmp/p10-rg0-20260915T152744/M2-X/MUTATION-DIFF.txt
+LOADER: ok
+WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE EXTRA)
+M2-X: gate entry = normal (sbcl --script mneme/memory-layer-0/ml0-block-proof.lisp)
+CLASS M2-X: CRASH-MID-GATE
+SENTINEL M2-X: (none)
+DETAIL M2-X: (no [12] line)
+EXIT M2-X: 1
+WITNESS M2-X: WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE EXTRA)
+WLOADER M2-X: LOADER: ok
+WEXIT M2-X: 0
+FAIL M2-X: got 'CRASH-MID-GATE' expected '__EXPLORATORY__'
+EXPLORATORY M2-X: CRASH-MID-GATE
+
+================ U1 ================
+U1: subject at /tmp/p10-rg0-20260915T152744/U1
+U1: pinned closure verified (70 files OK)
+mutate.py: U1: none (unmutated subject); wrote empty /tmp/p10-rg0-20260915T152744/U1/MUTATION-DIFF.txt
+U1: gate entry = interposer, P10_TARGET=ML0-WRITE
+CLASS U1: GATE-GREEN
+SENTINEL U1: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL U1: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 U1: walked every external fbound symbol's compiled lambda list
+EXIT U1: 0
+COUNTS U1: calls=313 injections=1
+PASS U1: GATE-GREEN
+SEC-OK U1: interposer calls = 313
+SEC-OK U1: target injections = 1
+SEC-OK U1: [12] note is the literal = walked every external fbound symbol's compiled lambda list
+SEC-OK U1: INJECTED-INTROSPECTION-ERROR: ML0-WRITE printed
+
+================ U1-M ================
+U1-M: subject at /tmp/p10-rg0-20260915T152744/U1-M
+U1-M: pinned closure verified (70 files OK)
+mutate.py: PRISTINE PROVENANCE: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+mutate.py: GUARD OK  M2-P lambda list (l.3095)  (unique; at line 3095)
+mutate.py: U1-M: applied M2-P; mutated sha256 e9f43b677b43ff4b39b145a54f3d2efdc36470076a80ea8f4ca4848a9edd31b5; diff -> /tmp/p10-rg0-20260915T152744/U1-M/MUTATION-DIFF.txt
+LOADER: ok
+WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE &KEY DEFECT)
+U1-M: gate entry = interposer, P10_TARGET=ML0-EVIDENCE-PROJECTION-DIGEST
+CLASS U1-M: GATE-GREEN
+SENTINEL U1-M: ml0-block-proof: 20 probes, 20 closed, 0 open
+DETAIL U1-M: [12] CLOSED  F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` PARAMETER — the mutant seam is not a public runtime lever
+NOTE12 U1-M: walked every external fbound symbol's compiled lambda list
+EXIT U1-M: 0
+COUNTS U1-M: calls=313 injections=1
+WITNESS U1-M: WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE &KEY DEFECT)
+WLOADER U1-M: LOADER: ok
+WEXIT U1-M: 0
+PASS U1-M: GATE-GREEN
+SEC-OK U1-M: target injections = 1
+SEC-OK U1-M: [12] status is CLOSED with the literal note = walked every external fbound symbol's compiled lambda list
+SEC-OK U1-M: [12] is CLOSED
+
+IDENTITY-AFTER: all pinned files unchanged
+P10-RUNNER: pass=8 fail=0 invalid=0 blocked=0
+P10-RUNNER: exploratory=1 (M2-X, neither PASS nor FAIL)
+P10-RUNNER: B0       -> GATE-GREEN
+P10-RUNNER: B0-I     -> GATE-GREEN
+P10-RUNNER: M1-C     -> BLOCKED-AT-LOADER
+P10-RUNNER: M1-U     -> GATE-GREEN
+P10-RUNNER: M1-U-I   -> GATE-GREEN
+P10-RUNNER: M2-P     -> GATE-OPEN-F1
+P10-RUNNER: M2-X     -> CRASH-MID-GATE
+P10-RUNNER: U1       -> GATE-GREEN
+P10-RUNNER: U1-M     -> GATE-GREEN

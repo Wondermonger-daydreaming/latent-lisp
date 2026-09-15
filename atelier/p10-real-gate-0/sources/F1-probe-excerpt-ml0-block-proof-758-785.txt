@@ -1,0 +1,28 @@
+       ;;; ---- F1 — TRUTH-MINTING: the `defect` mutant seam is a public runtime
+       ;;; ---- parameter on the exported production surface.
+       ;;;
+       ;;; ⚑ THIS PROBE ASKS THE IMAGE, NOT THE SOURCE.  It walks every EXTERNAL
+       ;;; symbol of the lane's package in an image loaded through the canonical
+       ;;; `load.lisp` and reads the arglist SBCL actually compiled.  A grep can
+       ;;; be fooled by a macro; `function-lambda-list` cannot.
+       (format t "~&~%---- F1: no mutant seam on the public arglists ----~%")
+       (let* ((package (find-package '#:lisp-plus-memory-layer0))
+              (offenders '()))
+         (do-external-symbols (symbol package)
+           (when (fboundp symbol)
+             (let ((arglist (handler-case (sb-introspect:function-lambda-list symbol)
+                              (error () nil))))
+               (when (some (lambda (item)
+                             (and (symbolp item)
+                                  (member (symbol-name item)
+                                          '("DEFECT" "DEFECT-PAYLOAD")
+                                          :test #'string=)))
+                           arglist)
+                 (push (symbol-name symbol) offenders)))))
+         (probe "F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` ~
+PARAMETER — the mutant seam is not a public runtime lever"
+                (null offenders)
+                (if offenders
+                    (format nil "⚠ ~d exported function(s) still take it: ~{~a~^, ~}"
+                            (length offenders) (sort offenders #'string<))
+                    "walked every external fbound symbol's compiled lambda list")))

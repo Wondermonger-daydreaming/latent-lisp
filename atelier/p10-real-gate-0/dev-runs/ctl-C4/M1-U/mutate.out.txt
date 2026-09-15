@@ -1,0 +1,4 @@
+mutate.py: PRISTINE PROVENANCE: git show 244580e81:experiments/latent-lisp/mneme/memory-layer-0/ml0.lisp  (repo /home/gauss/Desktop/Claude-Code-Lab)
+mutate.py: GUARD OK  M1-U/1+2 BOA constructor key + slot (l.511,514), anchored on the ml0-subject docstring  (unique; at line 511)
+mutate.py: GUARD OK  M1-U/3 constructor argument (l.538), anchored on %make-ml0-subject (l.537)  (unique; at line 536)
+mutate.py: M1-U: applied M1-U; mutated sha256 8bceda0783e459d7c761f04294678166d2573abb83dd4b985d2e4123eb6df7a8; diff -> /tmp/p10-rg0-20260915T152938/M1-U/MUTATION-DIFF.txt

@@ -1,0 +1,30 @@
+Unhandled SB-INT:SIMPLE-FILE-ERROR in thread #<SB-THREAD:THREAD tid=1775214 "main thread" RUNNING
+                                                {1000A88003}>:
+  Couldn't load "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp": file
+  does not exist.
+
+Backtrace for: #<SB-THREAD:THREAD tid=1775214 "main thread" RUNNING {1000A88003}>
+0: (SB-DEBUG::DEBUGGER-DISABLED-HOOK #<SB-INT:SIMPLE-FILE-ERROR "~@<Couldn't load ~S: file does not exist.~@:>" {1000167313}> #<unused argument> :QUIT T)
+1: (SB-DEBUG::RUN-HOOK *INVOKE-DEBUGGER-HOOK* #<SB-INT:SIMPLE-FILE-ERROR "~@<Couldn't load ~S: file does not exist.~@:>" {1000167313}>)
+2: (INVOKE-DEBUGGER #<SB-INT:SIMPLE-FILE-ERROR "~@<Couldn't load ~S: file does not exist.~@:>" {1000167313}>)
+3: (ERROR SB-INT:SIMPLE-FILE-ERROR :PATHNAME "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp" :FORMAT-CONTROL "~@<Couldn't load ~S: file does not exist.~@:>" :FORMAT-ARGUMENTS ("/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp"))
+4: (LOAD "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp" :VERBOSE NIL :PRINT NIL :IF-DOES-NOT-EXIST :ERROR :EXTERNAL-FORMAT :DEFAULT)
+5: (SB-INT:SIMPLE-EVAL-IN-LEXENV (LOAD "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp") #<NULL-LEXENV>)
+6: (EVAL-TLF (LOAD "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp") 0 NIL)
+7: ((LABELS SB-FASL::EVAL-FORM :IN SB-INT:LOAD-AS-SOURCE) (LOAD "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp") 0)
+8: ((LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) (LOAD "/mnt/venue/WORK/substrate/lane/ml0-suite-ground.lisp") :CURRENT-INDEX 0)
+9: (SB-C::%DO-FORMS-FROM-INFO #<FUNCTION (LAMBDA (SB-KERNEL:FORM &KEY :CURRENT-INDEX &ALLOW-OTHER-KEYS) :IN SB-INT:LOAD-AS-SOURCE) {7334621873DB}> #<SB-C::SOURCE-INFO {1000AACAA3}> SB-C::INPUT-ERROR-IN-LOAD)
+10: (SB-INT:LOAD-AS-SOURCE #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-unchanged.lisp" {1000164E13}> :VERBOSE NIL :PRINT NIL :CONTEXT "loading")
+11: ((LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-unchanged.lisp" {1000164E13}> NIL)
+12: (SB-FASL::CALL-WITH-LOAD-BINDINGS #<FUNCTION (LABELS SB-FASL::LOAD-STREAM-1 :IN LOAD) {73346218779B}> #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-unchanged.lisp" {1000164E13}> NIL #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-unchanged.lisp" {1000164E13}>)
+13: (LOAD #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-unchanged.lisp" {1000164E13}> :VERBOSE NIL :PRINT NIL :IF-DOES-NOT-EXIST :ERROR :EXTERNAL-FORMAT :DEFAULT)
+14: ((FLET SB-IMPL::LOAD-SCRIPT :IN SB-IMPL::PROCESS-SCRIPT) #<SB-SYS:FD-STREAM for "file /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-unchanged.lisp" {1000164E13}>)
+15: ((FLET SB-UNIX::BODY :IN SB-IMPL::PROCESS-SCRIPT))
+16: ((FLET "WITHOUT-INTERRUPTS-BODY-" :IN SB-IMPL::PROCESS-SCRIPT))
+17: (SB-IMPL::PROCESS-SCRIPT "/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/repro/probe-original-unchanged.lisp")
+18: (SB-IMPL::TOPLEVEL-INIT)
+19: ((FLET SB-UNIX::BODY :IN SB-IMPL::START-LISP))
+20: ((FLET "WITHOUT-INTERRUPTS-BODY-3" :IN SB-IMPL::START-LISP))
+21: (SB-IMPL::%START-LISP)
+
+unhandled condition in --disable-debugger mode, quitting

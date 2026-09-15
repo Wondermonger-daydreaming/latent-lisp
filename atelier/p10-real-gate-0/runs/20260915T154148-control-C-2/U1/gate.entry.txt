@@ -1,0 +1,1 @@
+U1: gate entry = interposer, P10_TARGET=ML0-WRITE

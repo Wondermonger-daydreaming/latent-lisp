@@ -1,0 +1,17 @@
+IDENTITY-AFTER DEMONSTRATION — 2026-09-15T16:18:02-03:00 (R2; the governing subject untouched — the tampered copy is a disposable 70-file extraction under /tmp; second run after the script was made to resolve a relative list path)
+=== a pristine checkout root
+identity-after: root=experiments/latent-lisp list=/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/p10-real-gate-0/subjects/PINNED-SUBJECT-SHA256.txt rows=70 date=2026-09-15T16:18:02-03:00
+identity-after: sha256sum -c exit 0
+IDENTITY-AFTER.SH EXIT 0
+=== b disposable tampered copy (one comment line appended to ml0.lisp)
+identity-after: root=/tmp/p10-identity-demo/tampered list=/home/gauss/Desktop/Claude-Code-Lab/experiments/latent-lisp/atelier/p10-real-gate-0/subjects/PINNED-SUBJECT-SHA256.txt rows=70 date=2026-09-15T16:18:03-03:00
+mneme/memory-layer-0/ml0.lisp: FAILED
+sha256sum: WARNING: 1 computed checksum did NOT match
+identity-after: sha256sum -c exit 1
+IDENTITY-AFTER.SH EXIT 1
+=== c pinned list absent
+identity-after: pinned list absent/unreadable: /nonexistent/PINNED.txt
+IDENTITY-AFTER.SH EXIT 2
+=== d pinned list empty
+identity-after: pinned list has 0 rows — refusing (a vacuous check is not a check)
+IDENTITY-AFTER.SH EXIT 2

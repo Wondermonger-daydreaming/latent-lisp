@@ -1,0 +1,34 @@
+### M1-C / ML0-PRINT-STORE-UNIVERSE
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+LOADER: refused ML0-LANE-INCOMPLETE: Memory Layer /0: LANE LOAD DID NOT COMPLETE.  The lane's declared external API is not fully present and bound, or the readiness carrier is missing.  A package existing is NOT the lane being ready.  Sh
+WITNESS: symbol=ML0-PRINT-STORE-UNIVERSE status=:EXTERNAL fboundp=NIL lambda-list=ERROR:The function LISP-PLUS-MEMORY-LAYER0:ML0-PRINT-STORE-UNIVERSE is undefined.
+EXIT 0
+-- stderr tail --
+  of #P"/tmp/p10-rg0-dev001/M1-C/mneme/memory-layer-0/load.lisp":
+While evaluating the form starting at line 25, column 0
+  of #P"/tmp/p10-rg0-dev001/M1-C/mneme/memory-layer-0/ml0-suite-ground.lisp":
+### M2-P / ML0-EVIDENCE-PROJECTION-DIGEST
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+LOADER: ok
+WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE &KEY DEFECT)
+EXIT 0
+
+### M2-X
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+LOADER: ok
+WITNESS: symbol=ML0-EVIDENCE-PROJECTION-DIGEST status=:EXTERNAL fboundp=T lambda-list=(EVIDENCE EXTRA)
+EXIT 0
+
+### M1-U (dev002) / ML0-SUBJECT-FIXTURE-ROW
+kernel0 foundations smoke: PASS
+kernel0 algebra smoke: PASS
+kernel0 records+folds smoke: PASS
+LOADER: ok
+WITNESS: symbol=ML0-SUBJECT-FIXTURE-ROW status=:EXTERNAL fboundp=NIL lambda-list=ERROR:The function LISP-PLUS-MEMORY-LAYER0:ML0-SUBJECT-FIXTURE-ROW is undefined.
+EXIT 0

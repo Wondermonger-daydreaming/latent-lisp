@@ -1,0 +1,275 @@
+--- experiments/latent-lisp/atelier/p10-real-gate-0/repair-r1/p10-classify.sh.before	2026-09-15 16:15:24.600471042 -0300
++++ experiments/latent-lisp/atelier/p10-real-gate-0/harness/p10-classify.sh	2026-09-15 16:18:39.563285454 -0300
+@@ -1,185 +1,124 @@
+ #!/usr/bin/env bash
+ # p10-classify.sh <case-dir> <expected-class>
+ #
+-# PREREG-P10-RG-0 §3/§5 classifier.  Reads, from <case-dir>:
+-#   gate.out.txt gate.err.txt gate.exit.txt  (the last containing "EXIT n")
+-#   witness.out.txt witness.exit.txt         (optional)
+-#   WITNESS-EXPECT.txt                       (optional: regex the WITNESS line must match)
+-#   WITNESS-EXPECT-LOADER.txt                (optional: regex the LOADER line must match)
+-# Interposer counts, when present, are read out of gate.out.txt.
++# PREREG-P10-RG-0 §3/§5 classifier — REPAIRED per Astra's adjudication R1 (2026-09-15, sha a60fc577…):
++#   R1a  witness evidence is bound to the CASE, not to which files happen to exist: the six mutant cases
++#        (M1-C M1-U M1-U-I M2-P M2-X U1-M) REQUIRE witness.out.txt, witness.exit.txt, WITNESS-EXPECT.txt and
++#        WITNESS-EXPECT-LOADER.txt; any absent → INVALID (exit 3). Baselines (B0 B0-I U1) are witness-free by
++#        design; a witness present on them is still checked.
++#   R1b  an exit record must be EXACTLY ONE complete line `EXIT n` and nothing else non-empty; a missing,
++#        duplicated or contradictory record → INVALID (exit 3). Neither first nor last record is chosen. The same
++#        rule applies to witness.exit.txt.
++#   The case name is the directory's basename and must be one of the nine; anything else → INVALID.
+ #
+-# Assigns EXACTLY ONE class from the closed set:
+-#   GATE-GREEN GATE-OPEN-F1 GATE-OPEN-OTHER BLOCKED-AT-LOADER CRASH-MID-GATE
+-#   VOID-ENV INCOHERENT
+-# Prints CLASS/DETAIL/SENTINEL/EXIT/COUNTS/NOTE lines, then one verdict:
+-#   PASS <case>: <class>                                     -> exit 0
+-#   FAIL <case>: got '<class>' expected '<expected>'         -> exit 1
+-#   INVALID <case>: witness ...                              -> exit 3
++# Reads, from <case-dir>: gate.out.txt gate.err.txt gate.exit.txt; for mutant cases also the four witness files.
++# Interposer counts, when present, are read out of gate.out.txt.
++# Assigns EXACTLY ONE class from the closed set: GATE-GREEN GATE-OPEN-F1 GATE-OPEN-OTHER BLOCKED-AT-LOADER
++# CRASH-MID-GATE VOID-ENV INCOHERENT. Prints CLASS/DETAIL/SENTINEL/EXIT/COUNTS/NOTE/WITNESS lines, then one verdict:
++#   PASS <case>: <class>          -> exit 0   (PASS = the class MATCHED the expectation; it says nothing about F1 being reached)
++#   FAIL <case>: got … expected … -> exit 1
++#   INVALID <case>: …             -> exit 3   (mandatory evidence missing/ambiguous, or the witness contradicts the intended state)
++#   EXPLORATORY <case>: <class>   -> exit 0   (no source-supported expectation; recorded, neither PASS nor FAIL)
+ # Usable standalone on a synthetic <case-dir>.
+ 
+ set -u
+-
+-if [ "$#" -ne 2 ]; then
+-  echo "usage: p10-classify.sh <case-dir> <expected-class>" >&2
+-  exit 2
+-fi
+-DIR="$1"
+-EXPECTED="$2"
+-CASE="$(basename "$DIR")"
+-
+-for f in gate.out.txt gate.err.txt gate.exit.txt; do
+-  if [ ! -f "$DIR/$f" ]; then
+-    echo "INVALID $CASE: classifier input $f absent in $DIR"
+-    exit 3
+-  fi
+-done
+-
+-OUT="$DIR/gate.out.txt"
+-ERR="$DIR/gate.err.txt"
+-
+-# ---- exit code
+-EXITLINE="$(cat "$DIR/gate.exit.txt")"
+-EXITCODE="$(printf '%s\n' "$EXITLINE" | sed -n 's/^EXIT \([0-9][0-9]*\)$/\1/p' | tail -n1)"
+-if [ -z "$EXITCODE" ]; then
+-  echo "INVALID $CASE: gate.exit.txt does not hold a single 'EXIT n' line (got '$EXITLINE')"
+-  exit 3
+-fi
++[ "$#" -eq 2 ] || { echo "usage: p10-classify.sh <case-dir> <expected-class>" >&2; exit 2; }
++DIR="$1"; EXPECTED="$2"; CASE="$(basename "$DIR")"
++CASES=" B0 B0-I M1-C M1-U M1-U-I M2-P M2-X U1 U1-M "
++WITNESS_REQUIRED=" M1-C M1-U M1-U-I M2-P M2-X U1-M "
++case "$CASES" in *" $CASE "*) ;; *) echo "INVALID $CASE: unknown case name (directory basename must be one of:$CASES)"; exit 3;; esac
++
++invalid() { echo "INVALID $CASE: $*"; exit 3; }
++
++# ---- R1b: exactly one complete EXIT record, or INVALID (sets EXIT_RECORD; never called through a subshell, so the INVALID line is printed)
++read_exit_record() {  # read_exit_record <file> <label> ; sets EXIT_RECORD
++  local f="$1" label="$2" nonempty n
++  [ -f "$f" ] || invalid "$label exit record absent ($(basename "$f"))"
++  nonempty="$(grep -vE '^[[:space:]]*$' "$f" || true)"
++  n="$(printf '%s\n' "$nonempty" | grep -c . || true)"
++  [ "$n" -eq 1 ] || invalid "$label exit record must be exactly one line, found $n non-empty line(s): $(printf '%s' "$nonempty" | tr '\n' '|')"
++  EXIT_RECORD="$(printf '%s\n' "$nonempty" | sed -n 's/^EXIT \([0-9][0-9]*\)$/\1/p')"
++  [ -n "$EXIT_RECORD" ] || invalid "$label exit record is not of the form 'EXIT n': '$nonempty'"
++}
++
++for f in gate.out.txt gate.err.txt; do [ -f "$DIR/$f" ] || invalid "classifier input $f absent"; done
++OUT="$DIR/gate.out.txt"; ERR="$DIR/gate.err.txt"
++read_exit_record "$DIR/gate.exit.txt" gate; EXITCODE="$EXIT_RECORD"
+ 
+ # ---- sentinel and [n] lines
+ SENT_RE='^ml0-block-proof: [0-9]+ probes, [0-9]+ closed, [0-9]+ open$'
+-SENT_N="$(grep -cE "$SENT_RE" "$OUT" || true)"
+-SENT_LINE="$(grep -E "$SENT_RE" "$OUT" | tail -n1 || true)"
+-B12_N="$(grep -cE '^\[12\] ' "$OUT" || true)"
+-B12_LINE="$(grep -E '^\[12\] ' "$OUT" | tail -n1 || true)"
++SENT_N="$(grep -cE "$SENT_RE" "$OUT" || true)"; SENT_LINE="$(grep -E "$SENT_RE" "$OUT" | tail -n1 || true)"
++B12_N="$(grep -cE '^\[12\] ' "$OUT" || true)"; B12_LINE="$(grep -E '^\[12\] ' "$OUT" | tail -n1 || true)"
+ B12_NOTE="$(grep -A1 -E '^\[12\] ' "$OUT" | sed -n '2p' | sed 's/^ *//' || true)"
+-ANY_N="$(grep -cE '^\[[0-9]+\] ' "$OUT" || true)"
+-FIRST_PROBE_N="$(grep -cE '^\[1\] ' "$OUT" || true)"
++ANY_N="$(grep -cE '^\[[0-9]+\] ' "$OUT" || true)"; FIRST_PROBE_N="$(grep -cE '^\[1\] ' "$OUT" || true)"
+ LATE_UNHANDLED="$(grep -cE 'Unhandled' "$ERR" || true)"
+ LOADER_FAIL="$(grep -ciE 'ML0-LANE-INCOMPLETE|LANE LOAD DID NOT COMPLETE|Shortfall:' "$ERR" || true)"
+-
+ PROBES=""; CLOSED=""; OPEN=""
+ if [ "$SENT_N" -ge 1 ]; then
+   PROBES="$(printf '%s\n' "$SENT_LINE" | sed -n 's/^ml0-block-proof: \([0-9]*\) probes.*/\1/p')"
+   CLOSED="$(printf '%s\n' "$SENT_LINE" | sed -n 's/.* \([0-9]*\) closed.*/\1/p')"
+   OPEN="$(printf '%s\n' "$SENT_LINE" | sed -n 's/.* \([0-9]*\) open$/\1/p')"
+ fi
+-B12_STATUS=""
+-case "$B12_LINE" in
+-  '[12] CLOSED'*) B12_STATUS=CLOSED ;;
+-  '[12] OPEN'*)   B12_STATUS=OPEN ;;
+-esac
+-
+-# ---- interposer counts
++B12_STATUS=""; case "$B12_LINE" in '[12] CLOSED'*) B12_STATUS=CLOSED;; '[12] OPEN'*) B12_STATUS=OPEN;; esac
+ CALLS="$(sed -n 's/^INTERPOSER-CALLS: \([0-9]*\)$/\1/p' "$OUT" | tail -n1 || true)"
+ INJ="$(sed -n 's/^INTERPOSER-TARGET-INJECTIONS: \([0-9]*\)$/\1/p' "$OUT" | tail -n1 || true)"
+-
+ NOTES=()
+ 
+ # ---- classification: exactly one class, in the prereg's order
+ CLASS=""
+-if [ "$EXITCODE" = "4" ]; then
+-  CLASS="VOID-ENV"
++if [ "$EXITCODE" = "4" ]; then CLASS="VOID-ENV"
+ elif [ "$SENT_N" -eq 0 ]; then
+-  if [ "$LOADER_FAIL" -ge 1 ] && [ "$EXITCODE" != "0" ] && [ "$FIRST_PROBE_N" -eq 0 ]; then
+-    CLASS="BLOCKED-AT-LOADER"
+-  elif [ "$ANY_N" -ge 1 ] && [ "$EXITCODE" != "0" ]; then
+-    CLASS="CRASH-MID-GATE"
+-  else
+-    CLASS="INCOHERENT"
+-    NOTES+=("no sentinel and no class fits: loader-fail=$LOADER_FAIL probe-lines=$ANY_N exit=$EXITCODE")
+-  fi
+-elif [ "$SENT_N" -ne 1 ]; then
+-  CLASS="INCOHERENT"; NOTES+=("$SENT_N sentinel lines, expected exactly 1")
+-elif [ "$B12_N" -ne 1 ]; then
+-  CLASS="INCOHERENT"; NOTES+=("$B12_N '[12]' lines, expected exactly 1")
+-elif [ -z "$B12_STATUS" ]; then
+-  CLASS="INCOHERENT"; NOTES+=("the '[12]' line is neither CLOSED nor OPEN")
+-elif [ "$LATE_UNHANDLED" -ge 1 ]; then
+-  CLASS="INCOHERENT"
+-  NOTES+=("a sentinel printed AND stderr carries 'Unhandled' (a late error)")
++  if [ "$LOADER_FAIL" -ge 1 ] && [ "$EXITCODE" != "0" ] && [ "$FIRST_PROBE_N" -eq 0 ]; then CLASS="BLOCKED-AT-LOADER"
++  elif [ "$ANY_N" -ge 1 ] && [ "$EXITCODE" != "0" ]; then CLASS="CRASH-MID-GATE"
++  else CLASS="INCOHERENT"; NOTES+=("no sentinel and no class fits: loader-fail=$LOADER_FAIL probe-lines=$ANY_N exit=$EXITCODE"); fi
++elif [ "$SENT_N" -ne 1 ]; then CLASS="INCOHERENT"; NOTES+=("$SENT_N sentinel lines, expected exactly 1")
++elif [ "$B12_N" -ne 1 ]; then CLASS="INCOHERENT"; NOTES+=("$B12_N '[12]' lines, expected exactly 1")
++elif [ -z "$B12_STATUS" ]; then CLASS="INCOHERENT"; NOTES+=("the '[12]' line is neither CLOSED nor OPEN")
++elif [ "$LATE_UNHANDLED" -ge 1 ]; then CLASS="INCOHERENT"; NOTES+=("a sentinel printed AND stderr carries 'Unhandled' (a late error)")
+ elif [ "$OPEN" = "0" ] && [ "$EXITCODE" = "0" ] && [ "$B12_STATUS" = "CLOSED" ]; then
+-  if [ "$PROBES" != "20" ] || [ "$CLOSED" != "$PROBES" ]; then
+-    CLASS="INCOHERENT"
+-    NOTES+=("all-closed sentinel but not '20 probes, 20 closed, 0 open': $SENT_LINE")
+-  else
+-    CLASS="GATE-GREEN"
+-  fi
+-elif [ "$OPEN" = "0" ] && [ "$EXITCODE" != "0" ]; then
+-  CLASS="INCOHERENT"
+-  NOTES+=("sentinel reports 0 open but the process exited $EXITCODE")
+-elif [ "$OPEN" != "0" ] && [ "$EXITCODE" = "0" ]; then
+-  CLASS="INCOHERENT"
+-  NOTES+=("sentinel reports $OPEN open but the process exited 0")
++  if [ "$PROBES" != "20" ] || [ "$CLOSED" != "$PROBES" ]; then CLASS="INCOHERENT"; NOTES+=("all-closed sentinel but not '20 probes, 20 closed, 0 open': $SENT_LINE"); else CLASS="GATE-GREEN"; fi
++elif [ "$OPEN" = "0" ] && [ "$EXITCODE" != "0" ]; then CLASS="INCOHERENT"; NOTES+=("sentinel reports 0 open but the process exited $EXITCODE")
++elif [ "$OPEN" != "0" ] && [ "$EXITCODE" = "0" ]; then CLASS="INCOHERENT"; NOTES+=("sentinel reports $OPEN open but the process exited 0")
+ elif [ "$B12_STATUS" = "OPEN" ]; then
+-  if [ "$EXITCODE" != "1" ]; then
+-    CLASS="INCOHERENT"; NOTES+=("[12] OPEN but exit $EXITCODE, expected 1")
+-  else
+-    CLASS="GATE-OPEN-F1"
+-    [ "$OPEN" = "1" ] || NOTES+=("[12] is OPEN and so are $(( OPEN - 1 )) other probe(s)")
+-  fi
++  if [ "$EXITCODE" != "1" ]; then CLASS="INCOHERENT"; NOTES+=("[12] OPEN but exit $EXITCODE, expected 1")
++  else CLASS="GATE-OPEN-F1"; [ "$OPEN" = "1" ] || NOTES+=("[12] is OPEN and so are $(( OPEN - 1 )) other probe(s)"); fi
+ elif [ "$B12_STATUS" = "CLOSED" ]; then
+-  if [ "$EXITCODE" != "1" ]; then
+-    CLASS="INCOHERENT"; NOTES+=("$OPEN open, [12] CLOSED, but exit $EXITCODE, expected 1")
+-  else
+-    CLASS="GATE-OPEN-OTHER"
+-  fi
+-else
+-  CLASS="INCOHERENT"; NOTES+=("unreachable classifier state")
+-fi
++  if [ "$EXITCODE" != "1" ]; then CLASS="INCOHERENT"; NOTES+=("$OPEN open, [12] CLOSED, but exit $EXITCODE, expected 1"); else CLASS="GATE-OPEN-OTHER"; fi
++else CLASS="INCOHERENT"; NOTES+=("unreachable classifier state"); fi
+ 
+-# ---- reporting lines
+-echo "CLASS $CASE: $CLASS"
+-echo "SENTINEL $CASE: ${SENT_LINE:-(none)}"
+-echo "DETAIL $CASE: ${B12_LINE:-(no [12] line)}"
+-if [ -n "$B12_NOTE" ]; then echo "NOTE12 $CASE: $B12_NOTE"; fi
+-echo "EXIT $CASE: $EXITCODE"
+-if [ -n "$CALLS" ] || [ -n "$INJ" ]; then
+-  echo "COUNTS $CASE: calls=${CALLS:-?} injections=${INJ:-?}"
+-fi
++# ---- reachability (R3): which instrument the run actually reached
++case "$CLASS" in
++  GATE-GREEN|GATE-OPEN-F1|GATE-OPEN-OTHER) REACHED="F1-reached";;
++  BLOCKED-AT-LOADER) REACHED="loader-block";;
++  CRASH-MID-GATE) REACHED="crash-before-F1";;
++  VOID-ENV) REACHED="void";;
++  *) REACHED="unknown";;
++esac
++
++echo "CLASS $CASE: $CLASS"; echo "REACHED $CASE: $REACHED"; echo "SENTINEL $CASE: ${SENT_LINE:-(none)}"
++echo "DETAIL $CASE: ${B12_LINE:-(no [12] line)}"; [ -n "$B12_NOTE" ] && echo "NOTE12 $CASE: $B12_NOTE"
++echo "EXIT $CASE: $EXITCODE"; { [ -n "$CALLS" ] || [ -n "$INJ" ]; } && echo "COUNTS $CASE: calls=${CALLS:-?} injections=${INJ:-?}"
+ for n in ${NOTES+"${NOTES[@]}"}; do echo "NOTE $CASE: $n"; done
+ 
+-# ---- witness gate (§4/§5: a failing witness is INVALID, never PASS)
+-if [ -f "$DIR/witness.out.txt" ]; then
++# ---- R1a: witness evidence bound to the case
++WREQ=0; case "$WITNESS_REQUIRED" in *" $CASE "*) WREQ=1;; esac
++if [ "$WREQ" -eq 1 ]; then
++  for f in witness.out.txt witness.exit.txt WITNESS-EXPECT.txt WITNESS-EXPECT-LOADER.txt; do
++    [ -s "$DIR/$f" ] || invalid "mandatory witness evidence absent or empty for a mutant case: $f"
++  done
++fi
++if [ -f "$DIR/witness.out.txt" ] || [ "$WREQ" -eq 1 ]; then
+   WLINE="$(grep -E '^WITNESS: ' "$DIR/witness.out.txt" | tail -n1 || true)"
+   LLINE="$(grep -E '^LOADER: ' "$DIR/witness.out.txt" | tail -n1 || true)"
+-  WEXIT=""
+-  if [ -f "$DIR/witness.exit.txt" ]; then
+-    WEXIT="$(sed -n 's/^EXIT \([0-9][0-9]*\)$/\1/p' "$DIR/witness.exit.txt" | tail -n1)"
+-  fi
+-  echo "WITNESS $CASE: ${WLINE:-(no WITNESS line)}"
+-  echo "WLOADER $CASE: ${LLINE:-(no LOADER line)}"
+-  echo "WEXIT $CASE: ${WEXIT:-(none)}"
+-  if [ -z "$WLINE" ]; then
+-    echo "INVALID $CASE: witness printed no WITNESS: line"; exit 3
+-  fi
+-  if [ "$WEXIT" != "0" ]; then
+-    echo "INVALID $CASE: witness exited '${WEXIT:-none}', expected 0"; exit 3
+-  fi
+-  if [ -f "$DIR/WITNESS-EXPECT.txt" ]; then
+-    WRE="$(head -n1 "$DIR/WITNESS-EXPECT.txt")"
+-    if ! printf '%s\n' "$WLINE" | grep -qE -- "$WRE"; then
+-      echo "INVALID $CASE: witness line does not match /$WRE/"; exit 3
+-    fi
+-  fi
+-  if [ -f "$DIR/WITNESS-EXPECT-LOADER.txt" ]; then
+-    LRE="$(head -n1 "$DIR/WITNESS-EXPECT-LOADER.txt")"
+-    if ! printf '%s\n' "$LLINE" | grep -qE -- "$LRE"; then
+-      echo "INVALID $CASE: witness LOADER line does not match /$LRE/"; exit 3
+-    fi
+-  fi
++  read_exit_record "$DIR/witness.exit.txt" witness; WEXIT="$EXIT_RECORD"
++  echo "WITNESS $CASE: ${WLINE:-(no WITNESS line)}"; echo "WLOADER $CASE: ${LLINE:-(no LOADER line)}"; echo "WEXIT $CASE: $WEXIT"
++  [ -n "$WLINE" ] || invalid "witness printed no WITNESS: line"
++  [ "$WEXIT" = "0" ] || invalid "witness exited '$WEXIT', expected 0"
++  if [ -f "$DIR/WITNESS-EXPECT.txt" ]; then WRE="$(head -n1 "$DIR/WITNESS-EXPECT.txt")"; printf '%s\n' "$WLINE" | grep -qE -- "$WRE" || invalid "witness line does not match /$WRE/"; fi
++  if [ -f "$DIR/WITNESS-EXPECT-LOADER.txt" ]; then LRE="$(head -n1 "$DIR/WITNESS-EXPECT-LOADER.txt")"; printf '%s\n' "$LLINE" | grep -qE -- "$LRE" || invalid "witness LOADER line does not match /$LRE/"; fi
+ fi
+ 
+ # ---- verdict
+-if [ "$EXPECTED" = "EXPLORATORY" ]; then
+-  # PREREG §3, M2-X: no source-supported expectation exists.  The class is
+-  # RECORDED, and is neither PASS nor FAIL; a failing witness above is still
+-  # INVALID (exit 3), because the mutation must still have reached the check.
+-  echo "EXPLORATORY $CASE: $CLASS"
+-  exit 0
+-fi
+-if [ "$CLASS" = "$EXPECTED" ]; then
+-  echo "PASS $CASE: $CLASS"
+-  exit 0
+-fi
+-echo "FAIL $CASE: got '$CLASS' expected '$EXPECTED'"
+-exit 1
++if [ "$EXPECTED" = "EXPLORATORY" ]; then echo "EXPLORATORY $CASE: $CLASS"; exit 0; fi
++if [ "$CLASS" = "$EXPECTED" ]; then echo "PASS $CASE: $CLASS"; exit 0; fi
++echo "FAIL $CASE: got '$CLASS' expected '$EXPECTED'"; exit 1

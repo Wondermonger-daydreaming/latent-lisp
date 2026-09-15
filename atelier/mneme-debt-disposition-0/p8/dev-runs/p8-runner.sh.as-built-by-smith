@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+# p8-runner.sh — the P8 auditor harness runner (PREREG-P8-DELTA-0.md §5-§7).
+#
+#   p8-runner.sh <lane-dir> <out-dir>
+#
+# Runs each case of §6 in a FRESH `sbcl --script` process, SEQUENTIALLY (§8: two
+# concurrent processes of this harness VOID the run).  Classifies each against
+# EXPECTATIONS-P8.txt.  `P8_EXPECT_OVERRIDE` (format "CASE=<class>", repeatable
+# with ";") replaces a single expectation for a control run and is printed
+# verbatim into the transcript.
+#
+# A case whose process printed no RESULT-CLASS line is LOAD-ERROR and is reported
+# BLOCKED — never PASS, even when the expectation says LOAD-ERROR (prereg C-2: a
+# crash must never read as a catch).
+#
+# — SMITH (Claude Opus 5, subagent), 2026-09-15.  Scratchpad only.
+
+set -u
+
+HARNESS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PREREG_DEFAULT="/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/draft/PREREG-P8-DELTA-0.md"
+PREREG="${P8_PREREG:-$PREREG_DEFAULT}"
+PREREG_SHA_EXPECTED="295bab9fc390dc0a1beac5cc85fbb361ed4c0bfe65f7ed7618f04e5bc4f81c98"
+
+if [ $# -ne 2 ]; then
+  echo "usage: p8-runner.sh <lane-dir> <out-dir>" >&2
+  exit 2
+fi
+
+LANE_DIR="$(cd "$1" && pwd)"          # .../mneme/memory-layer-0
+OUT_DIR="$2"
+VENUE_ROOT="$(cd "$LANE_DIR/../.." && pwd)"   # the dir holding `mneme/`
+mkdir -p "$OUT_DIR"
+
+CASES="V-R V-D V-J F-D F-R F-W E-J E-R E-L"
+
+# ---------------------------------------------------------------------------
+# Header.
+
+{
+echo "P8 RUNNER — PREREG-P8-DELTA-0.md"
+echo "date            : $(date -Is)"
+echo "lane-dir        : $LANE_DIR"
+echo "venue-root(cwd) : $VENUE_ROOT"
+echo "out-dir         : $OUT_DIR"
+echo "sbcl            : $(sbcl --version)"
+echo "prereg          : $PREREG"
+echo "prereg sha256   : $(sha256sum "$PREREG" 2>/dev/null | cut -d' ' -f1) (expected $PREREG_SHA_EXPECTED)"
+echo "harness sha256  :"
+for f in "$HARNESS_DIR/p8-case.lisp" "$HARNESS_DIR/p8-runner.sh" "$HARNESS_DIR/EXPECTATIONS-P8.txt"; do
+  echo "    $(sha256sum "$f")"
+done
+} | tee "$OUT_DIR/RUNNER-HEADER.txt"
+
+# ---------------------------------------------------------------------------
+# Expectations + the documented override.
+
+declare -A EXPECT
+while IFS= read -r line; do
+  case "$line" in
+    ''|'#'*) continue ;;
+  esac
+  EXPECT["${line%%=*}"]="${line#*=}"
+done < "$HARNESS_DIR/EXPECTATIONS-P8.txt"
+
+if [ -n "${P8_EXPECT_OVERRIDE:-}" ]; then
+  echo "P8_EXPECT_OVERRIDE (verbatim): ${P8_EXPECT_OVERRIDE}"
+  OLD_IFS="$IFS"; IFS=';'
+  for clause in $P8_EXPECT_OVERRIDE; do
+    IFS="$OLD_IFS"
+    [ -z "$clause" ] && continue
+    ocase="${clause%%=*}"; oclass="${clause#*=}"
+    echo "  override: $ocase  '${EXPECT[$ocase]:-<none>}'  ->  '$oclass'"
+    EXPECT["$ocase"]="$oclass"
+    IFS=';'
+  done
+  IFS="$OLD_IFS"
+else
+  echo "P8_EXPECT_OVERRIDE: (unset — this is a real run)"
+fi
+echo
+
+# ---------------------------------------------------------------------------
+# E-L: the auditor's ORIGINAL probe, venue path substituted ONLY.
+
+ORIG_SRC="${P8_ORIGINAL_SRC:-/tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/minimax-0.1/supplement/auditor/OUT-C/probes/probe-p8-supplement.lisp}"
+ORIG_DST="$HARNESS_DIR/original/probe-p8-supplement-venue-path.lisp"
+mkdir -p "$HARNESS_DIR/original"
+if [ ! -f "$ORIG_DST" ]; then
+  if [ -f "$ORIG_SRC" ]; then
+    sed "s|/mnt/venue/WORK/substrate/lane/|${LANE_DIR}/|g" "$ORIG_SRC" > "$ORIG_DST"
+    cp "$ORIG_SRC" "$HARNESS_DIR/original/probe-p8-supplement.ORIGINAL.lisp"
+    diff -u "$HARNESS_DIR/original/probe-p8-supplement.ORIGINAL.lisp" "$ORIG_DST" \
+      > "$HARNESS_DIR/original/venue-path-substitution.diff.txt"
+    echo "E-L source generated from $ORIG_SRC by sed; diff in original/venue-path-substitution.diff.txt"
+  else
+    echo "E-L source ABSENT and no parcel copy at $ORIG_SRC — E-L will be BLOCKED." >&2
+  fi
+else
+  echo "E-L source present (chair-supplied or previously generated): $ORIG_DST"
+fi
+cp -f "$HARNESS_DIR/original/venue-path-substitution.diff.txt" "$OUT_DIR/" 2>/dev/null || true
+echo
+
+# ---------------------------------------------------------------------------
+# Run.
+
+pass=0; fail=0; blocked=0
+declare -a LINES
+
+field_after() {  # field_after <file> <STORE-BEFORE|STORE-AFTER>
+  grep "^$2 " "$1" 2>/dev/null | tail -1 | sed -n 's/.*frames=\([0-9]*\).*/\1/p'
+}
+
+for C in $CASES; do
+  OUT="$OUT_DIR/$C.out.txt"; ERR="$OUT_DIR/$C.err.txt"; EX="$OUT_DIR/$C.exit.txt"
+  if [ "$C" = "E-L" ]; then
+    if [ -f "$ORIG_DST" ]; then
+      ( cd "$VENUE_ROOT" && sbcl --script "$ORIG_DST" ) >"$OUT" 2>"$ERR"
+    else
+      : >"$OUT"; echo "E-L source file absent" >"$ERR"; ( exit 127 )
+    fi
+  else
+    ( cd "$VENUE_ROOT" && sbcl --script "$HARNESS_DIR/p8-case.lisp" "$C" "$LANE_DIR" ) >"$OUT" 2>"$ERR"
+  fi
+  echo "EXIT $?" > "$EX"
+
+  expected="${EXPECT[$C]:-<no expectation>}"
+  got="$(grep -m1 '^RESULT-CLASS: ' "$OUT" 2>/dev/null | sed 's/^RESULT-CLASS: //')"
+  nlines="$(grep -c '^RESULT-CLASS: ' "$OUT" 2>/dev/null || true)"
+
+  if [ -z "$got" ]; then
+    if [ "$expected" = "LOAD-ERROR" ]; then
+      LINES+=("BLOCKED-AS-EXPECTED $C: LOAD-ERROR")
+    else
+      LINES+=("BLOCKED $C: LOAD-ERROR (no RESULT-CLASS line)")
+    fi
+    blocked=$((blocked+1))
+    [ "$expected" = "LOAD-ERROR" ] || fail_blocked=1
+    continue
+  fi
+
+  if [ "$nlines" != "1" ]; then
+    LINES+=("FAIL $C: printed $nlines RESULT-CLASS lines; the grammar allows exactly one")
+    fail=$((fail+1)); continue
+  fi
+
+  if [ "$got" = "$expected" ]; then
+    LINES+=("PASS $C: $got")
+    pass=$((pass+1))
+  else
+    LINES+=("FAIL $C: got '$got' expected '$expected'")
+    fail=$((fail+1))
+  fi
+
+  # ---- secondary checks (prereg §6's per-case state and detail requirements).
+  fb="$(field_after "$OUT" STORE-BEFORE)"; fa="$(field_after "$OUT" STORE-AFTER)"
+  disp="$(grep -m1 '^APPEND-DISPOSITION: ' "$OUT" | sed 's/^APPEND-DISPOSITION: //')"
+  det="$(grep -m1 '^DETAIL: ' "$OUT" | sed 's/^DETAIL: //')"
+  case "$C" in
+    V-J)
+      [ "$disp" = ":ALREADY-COMMITTED-IDENTICAL" ] || { LINES+=("FAIL V-J: append disposition '$disp' is not :ALREADY-COMMITTED-IDENTICAL"); fail=$((fail+1)); }
+      [ "$fa" = "$fb" ] || { LINES+=("FAIL V-J: frames $fb -> $fa (expected unchanged)"); fail=$((fail+1)); }
+      ;;
+    F-R|E-R)
+      [ "$fa" = "$((fb+1))" ] || { LINES+=("FAIL $C: frames $fb -> $fa (expected +1)"); fail=$((fail+1)); }
+      ;;
+    E-J|F-W)
+      [ "$fa" = "$fb" ] || { LINES+=("FAIL $C: frames $fb -> $fa (expected unchanged)"); fail=$((fail+1)); }
+      ;;
+  esac
+  if [ "$C" = "F-W" ]; then
+    case "$det" in
+      *ML0-RB-5*) LINES+=("      F-W detail names ML0-RB-5 (the re-signalled id)") ;;
+      *) LINES+=("FAIL F-W: detail does not name ML0-RB-5"); fail=$((fail+1)) ;;
+    esac
+  fi
+  LINES+=("      $C frames ${fb:-?} -> ${fa:-?}${disp:+  disposition $disp}")
+done
+
+# A BLOCKED case that was not expected LOAD-ERROR must make the run nonzero.
+blocked_unexpected="${fail_blocked:-0}"
+
+{
+for l in "${LINES[@]}"; do echo "$l"; done
+echo
+echo "P8-RUNNER: pass=$pass fail=$fail blocked=$blocked"
+} | tee "$OUT_DIR/SUMMARY.txt"
+
+# ---------------------------------------------------------------------------
+# Venue identity (prereg §8's first VOID condition is checked against this).
+
+{
+echo "VENUE IDENTITY"
+echo "date            : $(date -Is)"
+echo "sbcl            : $(sbcl --version)"
+echo "lane-dir        : $LANE_DIR"
+echo "prereg          : $PREREG"
+echo "prereg sha256   : $(sha256sum "$PREREG" 2>/dev/null | cut -d' ' -f1)"
+echo "prereg expected : $PREREG_SHA_EXPECTED"
+echo
+echo "sha256 of every file under the lane dir:"
+find "$LANE_DIR" -type f | sort | xargs sha256sum
+} > "$OUT_DIR/VENUE-IDENTITY.txt"
+
+if [ "$fail" -eq 0 ] && [ "$blocked_unexpected" -eq 0 ]; then
+  exit 0
+else
+  exit 1
+fi

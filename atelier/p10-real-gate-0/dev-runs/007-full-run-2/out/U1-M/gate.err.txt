@@ -1,0 +1,18 @@
+
+; file: /tmp/p10-rg0-20260915T152744/U1-M/mneme/memory-layer-0/ml0-mutant-overlay.lisp
+; in: DEFUN ML0-MINT-ACCOUNT-IDENTITY
+;     (SETF LISP-PLUS-MEMORY-LAYER0::*ML0-IDENTITY-SEAM-ARMED* NIL)
+; 
+; caught WARNING:
+;   undefined variable: LISP-PLUS-MEMORY-LAYER0::*ML0-IDENTITY-SEAM-ARMED*
+
+;     (AND (EQ LISP-PLUS-MEMORY-LAYER0::*ML0-MUTANT* :IDENTITY-MISMATCH)
+;          LISP-PLUS-MEMORY-LAYER0::*ML0-IDENTITY-SEAM-ARMED*)
+; 
+; caught WARNING:
+;   undefined variable: LISP-PLUS-MEMORY-LAYER0::*ML0-IDENTITY-SEAM-ARMED*
+; 
+; compilation unit finished
+;   Undefined variable:
+;     *ML0-IDENTITY-SEAM-ARMED*
+;   caught 2 WARNING conditions

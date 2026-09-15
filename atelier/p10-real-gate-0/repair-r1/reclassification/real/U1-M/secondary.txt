@@ -1,0 +1,3 @@
+SEC-OK U1-M: target injections = 1
+SEC-OK U1-M: [12] status is CLOSED with the literal note = walked every external fbound symbol's compiled lambda list
+SEC-OK U1-M: [12] is CLOSED

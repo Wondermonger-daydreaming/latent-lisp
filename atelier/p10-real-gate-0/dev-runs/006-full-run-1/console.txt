@@ -1,0 +1,1 @@
+P10-RUNNER: REFUSED — pinned subject list absent: /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith2/subjects/PINNED-SUBJECT-SHA256.txt

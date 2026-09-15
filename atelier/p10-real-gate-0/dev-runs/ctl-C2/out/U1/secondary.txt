@@ -1,0 +1,4 @@
+SEC-OK U1: interposer calls = 313
+SEC-OK U1: target injections = 1
+SEC-OK U1: [12] note is the literal = walked every external fbound symbol's compiled lambda list
+SEC-OK U1: INJECTED-INTROSPECTION-ERROR: ML0-WRITE printed

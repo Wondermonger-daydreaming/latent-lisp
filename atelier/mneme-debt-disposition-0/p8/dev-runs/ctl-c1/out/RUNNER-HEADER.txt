@@ -1,0 +1,12 @@
+P8 RUNNER — PREREG-P8-DELTA-0.md
+date            : 2026-09-15T13:54:31-03:00
+lane-dir        : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith/venue/mneme/memory-layer-0
+venue-root(cwd) : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith/venue
+out-dir         : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith/dev-runs/ctl-c1/out
+sbcl            : SBCL 2.4.6
+prereg          : /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/draft/PREREG-P8-DELTA-0.md
+prereg sha256   : 295bab9fc390dc0a1beac5cc85fbb361ed4c0bfe65f7ed7618f04e5bc4f81c98 (expected 295bab9fc390dc0a1beac5cc85fbb361ed4c0bfe65f7ed7618f04e5bc4f81c98)
+harness sha256  :
+    02a507f6e1eed09414654c53bbcf9a372af631bf4204868ffc8febdfe5a118e2  /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith/harness/p8-case.lisp
+    c9d53f64607ffb0a665a444c8453d27582908fe18aeb42e7df02165a710e6899  /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith/harness/p8-runner.sh
+    92c967bb631378e3fb8492bc142c64bd140b4007fa4b283346d3509e8db11137  /tmp/claude-1000/-home-gauss-Desktop-Claude-Code-Lab/a9455147-ea7d-42f0-8bf8-78425fb9c7d7/scratchpad/smith/harness/EXPECTATIONS-P8.txt

@@ -1,0 +1,1 @@
+B0-I: gate entry = interposer, NO target (counting control)

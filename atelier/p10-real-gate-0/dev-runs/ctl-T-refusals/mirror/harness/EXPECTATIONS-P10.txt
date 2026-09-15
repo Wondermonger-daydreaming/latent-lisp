@@ -1,0 +1,13 @@
+# EXPECTATIONS-P10.txt — PREREG-P10-RG-0 §3, one row per case, no others.
+# <CASE> <EXPECTED-CLASS>
+# EXPLORATORY = the runner records and prints the class; neither PASS nor FAIL,
+# and it does not count toward pass (prereg §3, M2-X).
+B0       GATE-GREEN
+B0-I     GATE-GREEN
+M1-C     BLOCKED-AT-LOADER
+M1-U     GATE-GREEN
+M1-U-I   GATE-GREEN
+M2-P     GATE-OPEN-F1
+M2-X     EXPLORATORY
+U1       GATE-GREEN
+U1-M     GATE-GREEN
