@@ -1,0 +1,9 @@
+LANGUAGE-A EMISSION PILOT — NL ARM TEMPLATE
+
+Answer the task using only the supplied finite source packet. Give the answer that the packet warrants, and state any material uncertainty that remains.
+
+TASK
+{{TASK}}
+
+SOURCE PACKET
+{{SOURCE_PACKET}}

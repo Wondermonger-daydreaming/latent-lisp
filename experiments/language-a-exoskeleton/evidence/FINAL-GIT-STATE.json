@@ -1,0 +1,17 @@
+{
+  "schema_version": "lae-git-seal/0.2",
+  "packet_construction_commit": "e96f17a85b9bf206edefa817c3523c9675646ffe",
+  "packet_construction_tree": "2513552825a8ad1859af710b7f8be661d5349435",
+  "packet_parent_authority_commit": "360bb1ff2ec13b039681986d3bcfc2b27e57f53c",
+  "remote": "origin",
+  "remote_branch": "origin/codex/language-a-emission-pilot-packet",
+  "remote_branch_after_packet_push": "e96f17a85b9bf206edefa817c3523c9675646ffe",
+  "push_scope": "dedicated successor branch only; main not merged",
+  "packet_worktree_after_push": "clean",
+  "evidence_seal_commit_resolution": "git rev-parse refs/heads/codex/language-a-emission-pilot-packet",
+  "evidence_seal_tree_resolution": "git rev-parse refs/heads/codex/language-a-emission-pilot-packet^{tree}",
+  "self_reference_limit": "The exact OID of the commit containing this record cannot be embedded in its own tree without changing that OID. The external final handoff records the resolved evidence-seal commit and tree.",
+  "live_provider_calls": 0,
+  "real_item_exposures": 0,
+  "pilot_verdicts": 0
+}
