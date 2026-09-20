@@ -1405,3 +1405,68 @@ experiment, implementation, adoption, or transport.*
    only — no mirror ferry.
 
 *— Claude Fable 5.1, custodian, 2026-09-01, 20:2x −03. Records only.*
+
+### ADDENDUM 25 (2026-09-17): THE P9 DISPOSITION — the named proof-comment sentence corrected and carried; the entry disposed at that scope and no wider; the audit's FAIL stands; the FRIGUS companion uncorrected
+
+*Records only, under Astra's ruling of 2026-09-17 (P9 DISPOSITION /0 r2 — ACCEPTED; lab record `corpus/voices/received/2026-09-17-141229-astra-p9-disposition-0-r2-ACCEPTED-finalization-and-lab-application-AUTHORIZED-VERBATIM.md`, sha256 `62c212ed…`), given under the owner's recorded word on this P9 succession (`corpus/voices/received/2026-09-17-135505-owner-word-astra-authority-and-heritage-over-sols-disposition-VERBATIM.md`) and carrying the owner's authorization to apply. The text was prepared as a review proposal under Astra's commission P9 DISPOSITION /0
+(2026-09-17, relayed through Tomás) and takes effect only by that ruling and the owner's authorization. Nothing here repairs,
+adopts, registers, transports, or reopens anything; this record performs no repair and makes no claim that the post-stranger
+repair disposition Sol II's §VI described is thereby complete. ADDENDUM 24 is not edited: its items 3–7 remain the record of the standing from 2026-09-01, and
+its line numbers — which other records cite — do not move.*
+
+1. **What is disposed.** ADDENDUM 24 item 4 (*The P9 claim-ceiling defect, OPEN*) and the fifth entry of item 6's terminal
+   sentence (*P9 CLAIM-CEILING DEFECT OPEN*), considered — as Sol II's terminal return §VI asked — together with the accepted
+   FRIGUS record. Nothing else in ADDENDUM 24 is disposed: the register (item 3), the BLOCKED and NOT-TESTED arms (item 5), and
+   every other entry of the terminal sentence stand as written.
+2. **What the evidence establishes.** The sentence "A caller outside the package cannot do this." was withdrawn from the header
+   comment of `mneme/memory-layer-0/ml0-consolidation-proof.lisp` in candidate `015c9d17d`, and replaced by the SPEC's own narrower
+   statement (package privacy is defense in depth, not the soundness boundary; what is closed is the supported route). The original
+   wording and its provenance are preserved in `atelier/mneme-debt-disposition-0/p9/ERRATUM-P9-0.md`. Astra accepted this on
+   2026-09-15 as a candidate correction (MNEME DEBT DISPOSITION /0, *CLOSED at its candidate-correction and bounded chair-run
+   evidence ceiling*; acceptance letter in that dossier's `acceptance/`). Her direct check: all 16 added or deleted lines are
+   full-line comments. Fable's retained SBCL evidence, which she did not rerun: 11 = 11 reader-level forms, IDENTICAL; the targeted
+   proof re-run, 35 checks, 0 failures. The corrected file (sha256 `72737382…`, git blob `706402cb…`) and one regenerated row of `FILE-MANIFEST.txt`
+   are carried in this lane: they reached lab `main` by commit `0f8602b6a` (2026-09-15) — candidate `015c9d17d` is not an ancestor
+   of `main`; the carried blob is byte-equal to the candidate's — and crossed publicly from subject commit `5a60190c…` (subject
+   tree `fa48e920…`) to mirror `a7c2d0ab…` (publication delta B2; PUBLISHED by Astra, 2026-09-16 UTC, adopted standing unchanged
+   by that act).
+3. **What the evidence does not establish.** The correction changes proof-comment text and repairs no runtime behavior. No
+   supported-path runtime semantic failure has been established. It proves no runtime property: no proof of runtime soundness,
+   universal correctness, or any property stronger than the recorded narrower result (all ten `#S` routes closed; durable
+   materialization rederives and validates). No independent re-execution of the form-identity check or the proof
+   re-run. No correction of the historical objects — the 61-file R5 object (that file at sha256 `6e83648e…`), the frozen
+   stranger-audit packets that carry the lane, and every public mirror tip from `9a56eabd…` (2026-08-22) up to but not including `a7c2d0ab…` carry
+   the disproven sentence unchanged, and they remain the evidence of why P9 exists; the pre-correction file is also kept at
+   `atelier/mneme-debt-disposition-0/p9/before/`. No correction of `ml0.lisp:3002` (item 5).
+4. **The register is unchanged.** ADDENDUM 24 item 3's row — *P9 FAIL · claim-ceiling violation in shipped proof comment;
+   supported runtime path remains sound* — stands as the strict stranger audit's finding on the audited object. A later correction
+   of the sentence does not convert a FAIL into a PASS, and "independently verified" remains forbidden.
+5. **The FRIGUS companion stays uncorrected, and says so.** `mneme/memory-layer-0/ml0.lisp:3002` still calls the cross-journal
+   case "future work"; the governing status is R4.1-F3 *ruled*, disposition A (same-store-only for /0, `ML0-MAT-3` kept,
+   Architecture 0.1 D4 unamended, Memory Layer /1 RESERVED and not built). The erratum is retained and the patch
+   `atelier/mneme-debt-disposition-0/p9/ml0-3002.patch` is supplied and UNAPPLIED, by Astra's 2026-09-15 ruling (§2): applying it
+   would change the implementation file's pinned byte identity. It is a source-comment defect, not a runtime semantic finding; it
+   is not to be described as corrected (Astra, the same §2). This record's own rule, under its ruling: a summary of this standing
+   keeps the companion beside ADDENDUM 24 item 5's arms.
+6. **STANDING AS DISPOSED** (supersedes, for current navigation, the fifth entry of ADDENDUM 24 item 6; that sentence remains
+   historical evidence of the standing from 2026-09-01 until this record): **ADOPTED AND PUBLISHED · STRICT STRANGER AUDIT
+   PERFORMED AND RECEIVED · STRANGER-AUDIT OBLIGATION DISCHARGED · BOUNDED INDEPENDENT EVIDENCE OBTAINED · P9 CLAIM-CEILING DEFECT
+   CORRECTED IN THE PROOF COMMENT IN CANDIDATE 015c9d17d AND CARRIED ON LAB `main` AND THE PUBLIC MIRROR — ENTRY DISPOSED AT THAT
+   SCOPE AND NO WIDER · P9 FAIL STANDS IN THE REGISTER · `ml0.lisp:3002` COMPANION COMMENT UNCORRECTED · NO SUPPORTED-PATH RUNTIME
+   SEMANTIC FAILURE ESTABLISHED.** This does not confer blanket "independently verified" status. The sentence is the recording
+   chair's under that ruling, not Sol II's. "Candidate" and "proof comment" are Astra's required words (acceptance of 2026-09-15,
+   §2); "at that scope and no wider" is this record's own qualifier and travels with them. No closure verb is used: what is
+   disposed is an entry, not the audit's finding.
+7. **Sites that become dated on application, deliberately not edited.** `atelier/mneme-debt-disposition-0/README.md`, whose
+   standing header is dated 2026-09-15 and already says the OPEN entry "stays until its authorized disposition is recorded"; and
+   `warrant-calculus/` — its extractions quote the 2026-09-01 sentence, and `LMP0-clauses-SA-ML0.md` pins this file as blob
+   `504be220…`, which this addendum makes historical. Those files are blob-pinned in `warrant-calculus/PROVENANCE.md` and
+   published; they are dated extractions and are not to be edited for this record.
+8. **WE ARE HERE:** the P9 entry is disposed at the scope of its named sentence; ADDENDUM 24 item 5's arms and item 5 above travel
+   with every summary. Not authorized here: ML/0 source repair, application of `ml0-3002.patch`, test-instrument repair, adoption
+   change, registration, experiment, ML/1 reopening, integration of any candidate branch, sentinel lowering, public transport.
+   P10 TRUTHFUL GATE /0 remains closed at its accepted candidate-repair and experimental-evidence ceiling, unmerged; its acceptance
+   (2026-09-16) supplied no authority for this entry. The sentinel remains RAISED; this entry reaches the lab by ordinary commit and push only
+   — no mirror ferry.
+
+*— Claude Fable 5.1, custodian, 2026-09-17. Records only.*

@@ -218,16 +218,32 @@ owner's and Sol's governance act. Neither word by itself discharges an audit obl
 
 #### ML0 audit standing and limits
 
-Audit standing recorded 2026-09-01; publicly carried at `716dc69` on 2026-09-03.
-Source: [Architecture Addendum 24](mneme/architecture/ARCHITECTURE-0-STATUS.md),
-items 3–7. Its terminal standing is quoted below with its mandatory limitations.
+Audit standing recorded 2026-09-01; publicly carried at `716dc69` on 2026-09-03. Its P9 entry was disposed
+at the scope of its named sentence 2026-09-17 under Astra's ruling of 2026-09-17 (P9 DISPOSITION /0 r2 — ACCEPTED; lab record `corpus/voices/received/2026-09-17-141229-astra-p9-disposition-0-r2-ACCEPTED-finalization-and-lab-application-AUTHORIZED-VERBATIM.md`, sha256 `62c212ed…`), given under the owner's recorded word on this P9 succession (`corpus/voices/received/2026-09-17-135505-owner-word-astra-authority-and-heritage-over-sols-disposition-VERBATIM.md`) and carrying the owner's authorization to apply.
+Source: [Architecture Addenda 24 and 25](mneme/architecture/ARCHITECTURE-0-STATUS.md) — Addendum 24,
+items 3–7, and Addendum 25, which disposes Addendum 24's P9 entry and changes nothing else. Sol II's terminal
+standing is quoted first; the standing as disposed follows it, in the recording chair's words under that ruling
+and not as a quotation; the mandatory limitations follow both.
 
+*Terminal standing as ruled 2026-09-01 (Sol II §V) — superseded for current navigation in its fifth entry only:*
+*ADOPTED AND PUBLISHED · STRICT STRANGER AUDIT PERFORMED AND RECEIVED ·
+STRANGER-AUDIT OBLIGATION DISCHARGED · BOUNDED INDEPENDENT EVIDENCE OBTAINED ·
+P9 CLAIM-CEILING DEFECT OPEN · NO SUPPORTED-PATH RUNTIME SEMANTIC FAILURE ESTABLISHED.*
+
+*Standing as disposed 2026-09-17:*
 **ADOPTED AND PUBLISHED · STRICT STRANGER AUDIT PERFORMED AND RECEIVED ·
 STRANGER-AUDIT OBLIGATION DISCHARGED · BOUNDED INDEPENDENT EVIDENCE OBTAINED ·
-P9 CLAIM-CEILING DEFECT OPEN · NO SUPPORTED-PATH RUNTIME SEMANTIC FAILURE ESTABLISHED.**
+P9 CLAIM-CEILING DEFECT CORRECTED IN THE PROOF COMMENT IN CANDIDATE 015c9d17d AND CARRIED ON LAB `main` AND
+THE PUBLIC MIRROR — ENTRY DISPOSED AT THAT SCOPE AND NO WIDER · P9 FAIL STANDS IN THE REGISTER ·
+`ml0.lisp:3002` COMPANION COMMENT UNCORRECTED · NO SUPPORTED-PATH RUNTIME SEMANTIC FAILURE ESTABLISHED.**
 
-This does not confer blanket "independently verified" status. **P9 FAIL remains OPEN**:
-the claim in `ml0-consolidation-proof.lisp:42` exceeded its warrant. The narrower recorded
+This does not confer blanket "independently verified" status. **P9 FAIL stands** as the strict stranger
+audit's finding on the adopted 61-file R5 object: the sentence at that object's
+`ml0-consolidation-proof.lisp:42` — "A caller outside the package cannot do this." — exceeded its warrant
+and was disproven by execution. The correction withdrew that sentence from the proof script's header comment
+(comment bytes only; original wording and provenance kept in
+[`ERRATUM-P9-0.md`](atelier/mneme-debt-disposition-0/p9/ERRATUM-P9-0.md)). The correction changes
+proof-comment text and repairs no runtime behavior. It proves no runtime property. The narrower recorded
 runtime result stands: all ten `#S` routes closed; durable materialization rederives and validates.
 No supported-path runtime semantic failure is established.
 
@@ -236,12 +252,16 @@ No supported-path runtime semantic failure is established.
 - **P3** direct act-journal/world-ledger measurement: **NOT TESTED**.
 - **P5** direct-versus-derived mutation arm: **NOT TESTED**.
 
+A separate accepted finding, from the FRIGUS same-root cold audit and not from the stranger seat: the companion
+source comment at **`ml0.lisp:3002`** ("future work") is **UNCORRECTED** — erratum retained, patch supplied and
+unapplied; the implementation file's bytes are unchanged.
+
 The proposition register is chair-corrected; the Phase-C documents were not auditor-authored.
 ML/0's adoption/publication status and implementation remain unchanged; its 61-file R5 object is
 not repaired by this record. No repair, reopening, registration, experiment, or transport is
 authorized here. The terminal sentence and these limits form one audit summary.
 
-#### Subsequent evidence — 2026-09-15; adopted standing unchanged
+#### Subsequent evidence — 2026-09-15; adopted standing unchanged on that date
 
 Two diagnostic commissions closed on this date, each an experimental dossier under `atelier/` with its frozen
 preregistration, retained failures, chair-run evidence and the ruling chair's acceptance as received bytes
@@ -252,7 +272,7 @@ adopted standing and limits; this note is a pointer to new evidence, not a repla
 MNEME DEBT DISPOSITION /0 is closed at its candidate-correction and bounded chair-run evidence ceiling. The P9
 proof-comment correction, accepted in candidate `015c9d17d`, is carried in this tree: `mneme/memory-layer-0/ml0-consolidation-proof.lisp`
 sha256 `72737382…` (comment bytes only; 11 = 11 reader-level forms; proof re-run 35/0) and one regenerated row of `FILE-MANIFEST.txt`;
-the R5 identity `6e83648e…` is historical, and this lane is no longer byte-identical to the original 61-file adopted object. Whether the adopted P9 OPEN entry is then amended is a distinct recorded disposition. The repaired P8 experiment refused the tested coherent provenance forgery at
+the R5 identity `6e83648e…` is historical, and this lane is no longer byte-identical to the original 61-file adopted object. Whether the adopted P9 OPEN entry is then amended is a distinct recorded disposition; it was recorded 2026-09-17 in Addendum 25 and is stated in the block above. The repaired P8 experiment refused the tested coherent provenance forgery at
 ML0-RB-5 through supported retrieval and the exported direct accessor. Its original strict-stranger supplement
 remains historically blocked; F-W exercised an internal pre-append function directly.
 
@@ -262,7 +282,7 @@ repairs are accepted; the real F1 behavior remains unchanged. Eight expectations
 exploratory: seven cases reached F1, one stopped at the loader, and one crashed earlier. This is chair-run
 evidence, not completion of MiniMax's untested arm.
 
-The accepted P9 candidate does not amend the adopted P9 OPEN entry. P3's additional direct act-journal/world-ledger
+The accepted P9 candidate did not itself amend the adopted P9 OPEN entry; the separate disposition of 2026-09-17 did, at the scope of the named sentence. P3's additional direct act-journal/world-ledger
 measurement and P5's additional direct-versus-derived mutation arm remain NOT TESTED. **NO SUPPORTED-PATH RUNTIME
 SEMANTIC FAILURE ESTABLISHED.** No blanket "independently verified" claim follows. The acceptance records
 distinguish Fable's retained Lisp execution from Astra's direct byte, source and shell checks.
