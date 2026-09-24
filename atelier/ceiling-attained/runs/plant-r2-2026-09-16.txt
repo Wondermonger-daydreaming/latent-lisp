@@ -1,0 +1,68 @@
+CEILING ATTAINED — routes to one number, a wrong policy that must fall short, and the size of its shortfall.
+mode: PLANT (teeth: route B runs the WRONG policy; its checks must read [CLOSED] because the shortfall — and its KL size — are the expected outcome)
+
+---- graph: unconstrained binary (anchor: C = 1 exactly)
+CEILING A1-stability |A1(L=400)-A1(L=800)|=0.000000000  (observed stability, NOT a bound)
+CEILING A2-scope: scan (1,64] step 1e-3 for the LAST sign change of D(W), then bisect — a root outside the interval, or one without a sign change, is not seen
+CEILING route=A1(count L=400 k=40) W=2.000000000 C=1.000000000
+CEILING route=A2(largest real root of D(W)) W=2.000000000 C=1.000000000
+CEILING route=B(App.4 PLANTED wrong ansatz: first edge of each row x2, renormalised) W*=2.000000000 rate=0.918295834 rows=(1.000000000) P=(1.000000000)
+CEILING agree=NIL delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.081704166
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+CEILING plant-vs-maximizer max|q_e - p*_e| on states with stationary mass = 0.166666667
+CEILING edges (from to len): 0->0/1 0->0/1
+CEILING q  (planted)   = 0.666666667 0.333333333
+CEILING p* (maximizer) = 0.500000000 0.500000000
+[CLOSED] PLANTED: the wrong ansatz falls SHORT of the ceiling (the tooth bites)  rate 0.918295834 < C 1.000000000 by 0.081704166
+[CLOSED] PLANTED: the shortfall EQUALS the average divergence from the maximizer per unit duration — C - R(q) = sum pi_i KL(q_i || p*_i) / mean duration  C - R(q) = 0.081704166 · KL-gap = 0.081704166 · |diff| = 0.000000000 < 1.0d-6
+[CLOSED] ANCHOR (arithmetic): the unconstrained binary source has C = 1 bit  C = 1.000000000
+
+---- graph: telegraph, Fig. 2 p. 4 (anchor from the page: C = 0.539)
+CEILING A1-stability |A1(L=400)-A1(L=800)|=0.000000000  (observed stability, NOT a bound)
+CEILING A2-scope: scan (1,64] step 1e-3 for the LAST sign change of D(W), then bisect — a root outside the interval, or one without a sign change, is not seen
+CEILING route=A1(count L=400 k=40) W=1.452900648 C=0.538936052
+CEILING route=A2(largest real root of D(W)) W=1.452900648 C=0.538936052
+CEILING route=B(App.4 PLANTED wrong ansatz: first edge of each row x2, renormalised) W*=1.452900648 rate=0.508452743 rows=(1.000000000 1.000000000) P=(0.170003724 0.829996276)
+CEILING agree=NIL delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.030483308
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+CEILING plant-vs-maximizer max|q_e - p*_e| on states with stationary mass = 0.169169545
+CEILING edges (from to len): 0->1/2 0->1/4 1->1/2 1->1/4 1->0/3 1->0/6
+CEILING q  (planted)   = 0.808496643 0.191503357 0.642896575 0.152278742 0.154461559 0.050363124
+CEILING p* (maximizer) = 0.678551713 0.321448287 0.473727030 0.224417299 0.227634174 0.074221497
+[CLOSED] PLANTED: the wrong ansatz falls SHORT of the ceiling (the tooth bites)  rate 0.508452743 < C 0.538936052 by 0.030483308
+[CLOSED] PLANTED: the shortfall EQUALS the average divergence from the maximizer per unit duration — C - R(q) = sum pi_i KL(q_i || p*_i) / mean duration  C - R(q) = 0.030483308 · KL-gap = 0.030483308 · |diff| = 0.000000000 < 1.0d-6
+[CLOSED] ANCHOR (the page, p. 4 — an external numerical reference at its printed precision): Shannon writes 'Solving this we find C = 0.539'  C = 0.538936052 vs 0.539 (|diff| = 0.000063948 < 5.0d-4)
+
+---- graph: two states, unequal lengths (no anchor; the routes must simply agree)
+CEILING A1-stability |A1(L=400)-A1(L=800)|=0.000000000  (observed stability, NOT a bound)
+CEILING A2-scope: scan (1,64] step 1e-3 for the LAST sign change of D(W), then bisect — a root outside the interval, or one without a sign change, is not seen
+CEILING route=A1(count L=400 k=40) W=1.324717957 C=0.405685231
+CEILING route=A2(largest real root of D(W)) W=1.324717957 C=0.405685231
+CEILING route=B(App.4 PLANTED wrong ansatz: first edge of each row x2, renormalised) W*=1.324717957 rate=0.373179887 rows=(1.000000000 1.000000000) P=(0.457658075 0.542341925)
+CEILING agree=NIL delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.032505345
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+CEILING plant-vs-maximizer max|q_e - p*_e| on states with stationary mass = 0.156144759
+CEILING edges (from to len): 0->1/1 1->0/2 1->1/3 0->0/5
+CEILING q  (planted)   = 0.860319418 0.725985050 0.274014950 0.139680582
+CEILING p* (maximizer) = 0.754877666 0.569840291 0.430159709 0.245122334
+[CLOSED] PLANTED: the wrong ansatz falls SHORT of the ceiling (the tooth bites)  rate 0.373179887 < C 0.405685231 by 0.032505345
+[CLOSED] PLANTED: the shortfall EQUALS the average divergence from the maximizer per unit duration — C - R(q) = sum pi_i KL(q_i || p*_i) / mean duration  C - R(q) = 0.032505345 · KL-gap = 0.032505345 · |diff| = 0.000000000 < 1.0d-6
+
+---- graph: golden ratio: all lengths 1, adjacency [[1 1] [1 0]] (anchor: C = log2 phi)
+CEILING A1-stability |A1(L=400)-A1(L=800)|=0.000000000  (observed stability, NOT a bound)
+CEILING A2-scope: scan (1,64] step 1e-3 for the LAST sign change of D(W), then bisect — a root outside the interval, or one without a sign change, is not seen
+CEILING route=A1(count L=400 k=40) W=1.618033989 C=0.694241914
+CEILING route=A2(largest real root of D(W)) W=1.618033989 C=0.694241914
+CEILING route=B(App.4 PLANTED wrong ansatz: first edge of each row x2, renormalised) W*=1.618033989 rate=0.637861431 rows=(1.000000000 1.000000000) P=(0.809016994 0.190983006)
+CEILING agree=NIL delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.056380482
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+CEILING plant-vs-maximizer max|q_e - p*_e| on states with stationary mass = 0.145898034
+CEILING edges (from to len): 0->0/1 0->1/1 1->0/1
+CEILING q  (planted)   = 0.763932023 0.236067977 1.000000000
+CEILING p* (maximizer) = 0.618033989 0.381966011 1.000000000
+[CLOSED] PLANTED: the wrong ansatz falls SHORT of the ceiling (the tooth bites)  rate 0.637861431 < C 0.694241914 by 0.056380482
+[CLOSED] PLANTED: the shortfall EQUALS the average divergence from the maximizer per unit duration — C - R(q) = sum pi_i KL(q_i || p*_i) / mean duration  C - R(q) = 0.056380482 · KL-gap = 0.056380482 · |diff| = 0.000000000 < 1.0d-6
+[CLOSED] ANCHOR (arithmetic): C = log2 phi for the golden-ratio graph  C = 0.694241914 vs log2 phi = 0.694241914
+
+ceiling-attained: 15 checks, 0 failures
+EXIT 0

@@ -1,0 +1,1 @@
+r0 lineage (the one shipped in parcel ed346f74): identity decided on TEXT after ? replacement — the reviewer showed (byte 737) a differing octet that decodes to a matching text. Superseded by r1 (hamming-lineage/), kept as history.

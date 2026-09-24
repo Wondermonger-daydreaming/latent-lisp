@@ -1,0 +1,3 @@
+SYNDROMES nonzero-syndromes=NIL bit-flips-applied=NIL blocks=24220
+RECEIVED SELF: NO (malformed codewords: not every form is a list of seven bits)
+EXIT 1

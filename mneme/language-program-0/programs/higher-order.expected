@@ -1,0 +1,10 @@
+add5 3            = 8
+add10 3           = 13
+both adders       = (6 11)
+shadowed n        = 2
+outer n intact    = 100
+lexical, not dynamic = 6
+evens squared sum = 220
+twice add5 on 0   = 10
+described         = ((1 odd) (2 even) (3 odd) (4 even))
+(1 "-" 16 "-" 81)

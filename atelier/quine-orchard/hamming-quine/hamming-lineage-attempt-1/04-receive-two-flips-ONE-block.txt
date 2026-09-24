@@ -1,0 +1,3 @@
+SYNDROMES corrected=1 of 15120 blocks
+RECEIVED SELF: NO (1 differing chars; a [7,4] code MIScorrects two errors in one block — only this identity check sees it)
+EXIT 1

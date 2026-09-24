@@ -1,0 +1,29 @@
+IDENTITY CAPTURE — PREDECESSOR
+the object currently pinned by warrant-calculus S15, as it stands on lab `main` BEFORE the landing
+
+path            : experiments/latent-lisp/mneme/verify-release.sh
+git blob        : fb99a6b64c77640b1dd81a8bf39f5673c22856a4
+file sha256     : ecb03c9d122cdf083b7bc72f5dd0eabd0527c8b2ae74ec47ad004851cab9b8d3
+line count      : 944
+carried by      : ad6c95e94d95deb408754e379d2ccf8cd625f497 (2026-08-23, RELEASE FLOOR ERRATUM /0 SUCCESSOR)
+lab main at draft time : 3a483c4da01c2f9fb9574cc926ae51c34bf79fa8
+lab main at landing    : 892605580c5b6e5c709ba95a19b5d0124a444865
+                         OBSERVED AT EXECUTION (receipt l.2, "starting HEAD:"). The same value is the
+                         landing commit's parent (receipt l.40).
+--list total lines  : 124
+--list '^both ' rows: 82
+--list '^full ' rows: 30
+enumeration         : ci 82 · full 112 (82 + 30), by the script's own rule (verify-release.sh:400-405)
+
+captured 2026-09-21 by PLINTH-II, read-only, from the committed blob via `git cat-file blob`.
+
+--- RECORD-KEEPER ADDENDUM (PLINTH-III) ---------------------------------------
+The one PENDING-AT-EXECUTION field above ("lab main at landing") is now filled from the receipt, as
+Astra's acceptance expressly permits (see LANDING-RECORD.md §0). Every other value in this capture is
+PLINTH-II's original, unchanged.
+
+OBSERVED AFTERWARDS BY THE RECORD-KEEPER (git, 2026-09-21 20:19:19 -0300):
+  git log -1 --format='%P' 931be1d1a  ->  892605580c5b6e5c709ba95a19b5d0124a444865
+  i.e. the store confirms the receipt's "starting HEAD" is the landing commit's sole parent.
+The predecessor blob is NOT deleted: it remains reachable at 892605580c5b6e5c709ba95a19b5d0124a444865
+and in the pin sites listed in PIN-SITES.md, which are preserved unedited.

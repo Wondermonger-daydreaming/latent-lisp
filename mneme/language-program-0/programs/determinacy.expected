@@ -1,0 +1,6 @@
+("plain determinate" admitted :determinate)
+("with a confidence 0.8" refused "K0E-33")
+("plain indeterminate" admitted :indeterminate)
+("an unknown mode" refused "K0E-2")
+admitted: 2 refused: 2
+("K0E-33" "K0E-2")

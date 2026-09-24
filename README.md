@@ -12,6 +12,48 @@ failures, and rulings. Its central wager is that a fluent system can be made to 
 check's costume: rhetoric is not evidence, production is not truth, and a witness must face the exact
 proposition it claims to support.
 
+## Write a program and run it
+
+Lisp+ now has a programming surface — **PROGRAM /0** (`mneme/language-program-0/`, candidate): user-defined
+functions with lexical scope and closure capture, functions as values, lists, `map`/`filter`/`fold` written in the
+language itself, and one command that reads a source file and prints a value or a located error.
+
+```sh
+bash mneme/language-program-0/lisp-plus-run.sh mneme/language-program-0/programs/higher-order.lp
+```
+
+```
+add5 3            = 8
+add10 3           = 13
+both adders       = (6 11)
+shadowed n        = 2
+outer n intact    = 100
+lexical, not dynamic = 6
+evens squared sum = 220
+twice add5 on 0   = 10
+described         = ((1 odd) (2 even) (3 odd) (4 even))
+(1 "-" 16 "-" 81)
+```
+
+A program is a file of forms; the last one's value is printed. Write your own:
+
+```lisp
+(define (make-adder n) (lambda (x) (+ x n)))     ; n is captured
+(define add5 (make-adder 5))
+(map add5 (list 1 2 3))                          ; → (6 7 8)
+```
+
+**The guide, with executable examples:** `mneme/language-program-0/README.md`. **The specification:**
+`mneme/language-program-0/PROGRAM-0-GRAMMAR-AND-SEMANTICS.md`. **Tests:** `bash mneme/language-program-0/run-selftest.sh`
+(94 checks). Limits, plainly: 1,000,000 evaluation steps and 4,000 nested calls per run, no tail-call elimination, no
+mutation, no error handling inside a program; `true`/`false` are the only booleans; the effect lanes are not loaded, so a
+program derives and never performs. SBCL 2.4.6 on Linux.
+
+Everything below this line is the governed construction the surface sits on — specifications, lanes, receipts, rulings.
+It is long by design; the language above is the door.
+
+---
+
 **Quick start:** from the repository root, under the tested environment below, run the small specimen:
 
 ```sh

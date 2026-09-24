@@ -1,0 +1,33 @@
+CEILING ATTAINED — two routes to one number, and a wrong ansatz that must fall short.
+mode: PLANT (teeth: route B runs the WRONG ansatz; its check must read [CLOSED] because the shortfall is the expected outcome)
+
+---- graph: unconstrained binary (anchor: C = 1 exactly)
+CEILING route=A1(count L=400 k=40) W=2.000000000 C=1.000000000
+CEILING route=A2(largest real root of D(W)) W=2.000000000 C=1.000000000
+CEILING route=B(App.4 PLANTED wrong ansatz p ∝ W^-2l) W*=2.000000000 rate=1.000000000 rows=(1.000000000) P=(1.000000000)
+CEILING agree=T delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.000000000
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+[OPEN]   PLANTED: the wrong ansatz falls SHORT of the ceiling (the tooth bites)  rate 1.000000000 < C 1.000000000 by 0.000000000
+[CLOSED] ANCHOR (arithmetic): the unconstrained binary source has C = 1 bit  C = 1.000000000
+
+---- graph: telegraph, Fig. 2 p. 4 (anchor from the page: C = 0.539)
+CEILING route=A1(count L=400 k=40) W=1.452900648 C=0.538936052
+CEILING route=A2(largest real root of D(W)) W=1.452900648 C=0.538936052
+CEILING route=B(App.4 PLANTED wrong ansatz p ∝ W^-2l) W*=1.452900648 rate=0.508625203 rows=(1.000000000 1.000000000) P=(0.230612825 0.769387175)
+CEILING agree=NIL delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.030310848
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+[CLOSED] PLANTED: the wrong ansatz falls SHORT of the ceiling (the tooth bites)  rate 0.508625203 < C 0.538936052 by 0.030310848
+[CLOSED] ANCHOR (the page, p. 4): Shannon writes 'Solving this we find C = 0.539'  C = 0.538936052 vs 0.539 (|diff| = 0.000063948 < 5.0d-4)
+
+---- graph: two states, unequal lengths (no anchor; the routes must simply agree)
+CEILING route=A1(count L=400 k=40) W=1.324717957 C=0.405685231
+CEILING route=A2(largest real root of D(W)) W=1.324717957 C=0.405685231
+CEILING route=B(App.4 PLANTED wrong ansatz p ∝ W^-2l) W*=1.324717957 rate=0.379205983 rows=(1.000000000 1.000000000) P=(0.413205686 0.586794314)
+CEILING agree=NIL delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.026479248
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+[CLOSED] PLANTED: the wrong ansatz falls SHORT of the ceiling (the tooth bites)  rate 0.379205983 < C 0.405685231 by 0.026479248
+
+ceiling-attained: 8 checks, 1 failures
+EXIT 1
+
+PRESERVED FAILED CONTROL (2026-09-16): the planted ansatz p ∝ W^-2l, row-normalised, COINCIDES with the true maximizer on the unconstrained binary graph (both edges have length 1, so any function of length alone is uniform) — rate 1.000 = C, the check read OPEN, exit 1. Not a defect of the gate: a degenerate plant. Corrected: the plant is now a SKEWED distribution (the first edge of each row weighted 2x before normalisation), which is wrong wherever a state has two choices, because the maximizer is unique.

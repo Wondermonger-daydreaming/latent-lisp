@@ -1,0 +1,259 @@
+;;;; ceiling.lisp — CEILING ATTAINED: a gate with two independent computations
+;;;;
+;;;;   sbcl --script atelier/ceiling-attained/ceiling.lisp            ; the gate
+;;;;   sbcl --script atelier/ceiling-attained/ceiling.lisp --plant    ; teeth: break route B on purpose
+;;;;
+;;;; Sentinel: ceiling-attained: N checks, M failures        exit 0 iff M = 0
+;;;;
+;;;; THE PAGE (Shannon 1948, read at sitting 11, 2026-09-16).  Appendix 4 (pp. 30–31) asks what
+;;;; distribution over a finite-state constraint graph maximizes the rate of generating
+;;;; information, ASSUMES a form ("Evidently for a maximum p = k exp l"), grinds the Lagrange
+;;;; multipliers to p_ij = (B_j/B_i) W^{-l_ij}, computes the rate, finds it equal to C, and closes:
+;;;;   "Hence the rate is C and as this could never be exceeded this is the maximum,
+;;;;    justifying the assumed solution."                                        (p. 31)
+;;;; The maximum is not shown from the inside; it is shown by ATTAINING a ceiling established
+;;;; elsewhere — Theorem 1 (p. 4) / Appendix 1 (p. 28): C = log W, W the largest real root of
+;;;; |sum_s W^{-b_ij^(s)} - delta_ij| = 0, equivalently the growth rate of the block count
+;;;; N_j(L) = sum N_i(L - b).  So the piece IS that grammar, executable:
+;;;;
+;;;;   route A1  count the blocks exactly (bignum recurrence, Appendix 1's difference equation)
+;;;;             and read the growth ratio  N(L)/N(L-1) -> W
+;;;;   route A2  the determinant: scan and bisect the LARGEST real root of D(W) = det(M(W) - I)
+;;;;   route B   Appendix 4's construction: W* with Perron eigenvalue of M(W*) = 1, B the
+;;;;             eigenvector, p_ij = (B_j/B_i) W*^{-l}, P the stationary law of p, and the RATE
+;;;;             = -sum P_i p_e log p_e / sum P_i p_e l_e   (an entropy rate, not a count)
+;;;;   CLOSED  iff  |C_A1 - C_A2| < delta  AND  |rate_B - C_A1| < delta   (delta frozen below)
+;;;;   INDEPENDENCE, at its honest size (r1, after the review of parcel ed346f74): A1 is the
+;;;;   PRINCIPAL combinatorial witness — the only route that never builds M(W).  A2 and B are
+;;;;   partially independent numerical cross-checks: the determinant's largest real root and the
+;;;;   Perron eigenvalue 1 describe the SAME spectral event on these graphs; what B adds is that
+;;;;   the construction, the stationary law and the entropy calculation work together to reach A1.
+;;;;   plus the planted control: a WRONG ansatz must fall short of C.  (Attempt 1 used p ∝ W^{-2l},
+;;;;   which COINCIDES with the maximizer when a state's edges share one length — the binary graph —
+;;;;   a degenerate plant, preserved in runs/plant-attempt-1-DEGENERATE-*.txt.  The plant is now a
+;;;;   SKEW: the first edge of each row weighted 2x before normalisation; wrong wherever a state has
+;;;;   two choices, since the maximizer is unique.)
+;;;;
+;;;; The honesty rule is the house's: an assumed form is licensed only by reaching a ceiling
+;;;; computed another way; the gate prints every number and never the sentence "obviously".
+;;;; External anchor, from the page and not from this code: the telegraph graph of Fig. 2,
+;;;; whose determinant Shannon writes out on p. 4 and solves: "we find C = 0.539".
+;;;;
+;;;; CANDIDATE; a toy of the atelier; nothing here is adopted.  — Claude Fable 5.1, 2026-09-16
+
+(setf *print-pretty* nil)
+(defparameter +delta+ 1d-6 "agreement tolerance between routes, in bits — frozen before any run")
+(defparameter +anchor-delta+ 5d-4 "half a unit in the third decimal: Shannon printed 0.539")
+
+;;; ---------------------------------------------------------------- graphs
+;;; an edge is (from to length label); states are 0..n-1
+(defparameter *graphs*
+  (list
+   (list :name "unconstrained binary (anchor: C = 1 exactly)" :states 1
+         :edges '((0 0 1 "0") (0 0 1 "1")))
+   (list :name "telegraph, Fig. 2 p. 4 (anchor from the page: C = 0.539)" :states 2
+         ;; state 0 = a space was last (only dot/dash allowed, both lead to state 1)
+         ;; state 1 = no space last (dot/dash stay; letter space 3 / word space 6 lead to state 0)
+         :edges '((0 1 2 "dot") (0 1 4 "dash")
+                  (1 1 2 "dot") (1 1 4 "dash") (1 0 3 "letter-space") (1 0 6 "word-space")))
+   (list :name "two states, unequal lengths (no anchor; the routes must simply agree)" :states 2
+         :edges '((0 1 1 "a") (1 0 2 "b") (1 1 3 "c") (0 0 5 "d")))
+   ;; r1 (the review of parcel ed346f74, Q3): ALL edges length 1, adjacency [[1 1] [1 0]] — the
+   ;; maximizer from state 0 is (1/phi, 1/phi^2), NOT uniform, though the lengths are equal: the
+   ;; destination factor B_j/B_i remains.  Anchor: C = log2 phi (arithmetic).
+   (list :name "golden ratio: all lengths 1, adjacency [[1 1] [1 0]] (anchor: C = log2 phi)" :states 2
+         :edges '((0 0 1 "a") (0 1 1 "b") (1 0 1 "c")))))
+
+(defun log2 (x) (/ (log x) (log 2d0)))
+
+;;; ---------------------------------------------------------------- route A1: count the blocks
+(defun count-blocks (g L)
+  "N_j(L) for every state j, all blocks starting in state 0, EXACT integers (Appendix 1)."
+  (let* ((n (getf g :states)) (edges (getf g :edges))
+         (table (make-array (list (1+ L) n) :initial-element 0)))
+    (setf (aref table 0 0) 1)
+    (loop for len from 1 to L do
+      (dolist (e edges)
+        (destructuring-bind (i j b label) e (declare (ignore label))
+          (when (<= b len)
+            (incf (aref table len j) (aref table (- len b) i))))))
+    (loop for j below n sum (aref table L j))))
+
+(defun route-a1 (g &key (L 400) (k 40))
+  "W from the growth of the exact count over the last K lengths; returns (values C W)."
+  (let* ((nl (count-blocks g L)) (nk (count-blocks g (- L k)))
+         (w (expt (/ (coerce nl 'double-float) (coerce nk 'double-float)) (/ 1d0 k))))
+    (values (log2 w) w)))
+
+;;; ---------------------------------------------------------------- shared: M(W)
+(defun matrix-m (g w)
+  "M_ij(W) = sum over edges i->j of W^{-length}."
+  (let* ((n (getf g :states)) (m (make-array (list n n) :initial-element 0d0)))
+    (dolist (e (getf g :edges) m)
+      (destructuring-bind (i j b label) e (declare (ignore label))
+        (incf (aref m i j) (expt (coerce w 'double-float) (- b)))))))
+
+;;; ---------------------------------------------------------------- route A2: the determinant
+(defun determinant (a)
+  "Gaussian elimination with partial pivoting; A is destroyed."
+  (let* ((n (array-dimension a 0)) (det 1d0))
+    (loop for c below n do
+      (let ((p c))
+        (loop for r from (1+ c) below n do (when (> (abs (aref a r c)) (abs (aref a p c))) (setf p r)))
+        (when (< (abs (aref a p c)) 1d-300) (return-from determinant 0d0))
+        (unless (= p c)
+          (loop for k below n do (rotatef (aref a c k) (aref a p k)))
+          (setf det (- det)))
+        (setf det (* det (aref a c c)))
+        (loop for r from (1+ c) below n do
+          (let ((f (/ (aref a r c) (aref a c c))))
+            (loop for k from c below n do (decf (aref a r k) (* f (aref a c k))))))))
+    det))
+
+(defun d-of-w (g w)
+  (let ((m (matrix-m g w)) (n (getf g :states)))
+    (loop for i below n do (decf (aref m i i) 1d0))
+    (determinant m)))
+
+(defun route-a2 (g &key (w-max 64d0) (step 1d-3))
+  "The LARGEST real root of D(W) = 0 on (1, w-max]: scan for the last sign change, then bisect."
+  (let ((last-lo nil) (last-hi nil))
+    (loop with prev-w = (+ 1d0 step) with prev-d = (d-of-w g (+ 1d0 step))
+          for w from (+ 1d0 (* 2 step)) to w-max by step
+          for d = (d-of-w g w)
+          do (when (or (zerop d) (/= (signum d) (signum prev-d)))
+               (setf last-lo prev-w last-hi w))
+             (setf prev-w w prev-d d))
+    (unless last-lo (return-from route-a2 (values nil nil)))
+    (let ((lo last-lo) (hi last-hi))
+      (loop repeat 200 do
+        (let* ((mid (/ (+ lo hi) 2)) (dm (d-of-w g mid)))
+          (if (= (signum dm) (signum (d-of-w g lo))) (setf lo mid) (setf hi mid))))
+      (let ((w (/ (+ lo hi) 2))) (values (log2 w) w)))))
+
+;;; ---------------------------------------------------------------- route B: Appendix 4
+(defun perron (m &key (iterations 5000))
+  "Perron eigenvalue and (normalized) eigenvector of a nonnegative matrix by power iteration."
+  (let* ((n (array-dimension m 0)) (v (make-array n :initial-element 1d0)) (lambda 0d0))
+    (loop repeat iterations do
+      (let ((nv (make-array n :initial-element 0d0)))
+        (loop for i below n do (loop for j below n do (incf (aref nv i) (* (aref m i j) (aref v j)))))
+        (let ((s (loop for i below n sum (aref nv i))))
+          (setf lambda s)
+          (loop for i below n do (setf (aref v i) (/ (aref nv i) s))))))
+    (values lambda v)))
+
+(defun route-b (g &key (planted nil))
+  "Appendix 4: find W* with rho(M(W*)) = 1; B its eigenvector; p_e = (B_j/B_i) W*^{-l};
+P stationary; rate = -sum P_i p_e log p_e / sum P_i p_e l_e.  With PLANTED, use the WRONG
+ansatz: the true weights with the FIRST edge of each row doubled, row-normalised — a skew,
+the control that must fall short (the maximizer is unique)."
+  (let ((lo 1d0) (hi 64d0))
+    (loop repeat 200 do
+      (let ((mid (/ (+ lo hi) 2)))
+        (if (> (perron (matrix-m g mid)) 1d0) (setf lo mid) (setf hi mid))))
+    (let* ((w (/ (+ lo hi) 2)) (n (getf g :states)) (edges (getf g :edges)))
+      (multiple-value-bind (rho b) (perron (matrix-m g w))
+        (declare (ignore rho))
+        ;; per-edge probabilities
+        (let* ((probs (mapcar (lambda (e)
+                                (destructuring-bind (i j l label) e (declare (ignore label))
+                                  (* (/ (aref b j) (aref b i)) (expt w (- l)))))
+                              edges))
+                 (pstar (copy-list probs)))   ; the maximizer, kept for the shortfall's explanation
+          (when planted                 ; the SKEW: double the first edge of each row
+            (let ((seen (make-array n :initial-element nil)))
+              (setf probs (loop for e in edges for p in probs
+                                collect (if (aref seen (first e)) p (progn (setf (aref seen (first e)) t) (* 2 p)))))))
+          (when planted                 ; row-normalise the wrong ansatz so it is a lawful chain
+            (let ((row-sums (make-array n :initial-element 0d0)))
+              (loop for e in edges for p in probs do (incf (aref row-sums (first e)) p))
+              (setf probs (loop for e in edges for p in probs collect (/ p (aref row-sums (first e)))))))
+          ;; row sums (must be 1 for the true construction — this is the fixed-point equation)
+          (let ((row-sums (make-array n :initial-element 0d0)) (trans (make-array (list n n) :initial-element 0d0)))
+            (loop for e in edges for p in probs do (incf (aref row-sums (first e)) p) (incf (aref trans (first e) (second e)) p))
+            ;; stationary law: power-iterate P <- P p
+            (let ((pv (make-array n :initial-element (/ 1d0 n))))
+              (loop repeat 5000 do
+                (let ((npv (make-array n :initial-element 0d0)))
+                  (loop for i below n do (loop for j below n do (incf (aref npv j) (* (aref pv i) (aref trans i j)))))
+                  (setf pv npv)))
+              (let ((num 0d0) (den 0d0) (kl 0d0) (maxdev 0d0))
+                (loop for e in edges for p in probs for ps in pstar do
+                  (let ((pst (aref pv (first e))) (l (third e)))
+                    (when (> p 0d0) (decf num (* pst p (log2 p))))
+                    (incf den (* pst p l))
+                    ;; the shortfall's measure (reviewer, next piece): sum_i pi_i KL(q_i || p*_i), per unit duration
+                    (when (> p 0d0) (incf kl (* pst p (log2 (/ p ps)))))
+                    ;; the degeneracy diagnostic (reviewer, Q3): did the plant perturb the optimum at all,
+                    ;; on states carrying stationary mass?
+                    (when (> pst 1d-12) (setf maxdev (max maxdev (abs (- p ps)))))))
+                (values (/ num den) w row-sums pv (/ kl den) maxdev probs pstar)))))))))
+
+;;; ---------------------------------------------------------------- the gate
+(defvar *checks* 0) (defvar *failures* 0)
+(defun check (label ok note)
+  (incf *checks*) (unless ok (incf *failures*))
+  (write-string (if ok "[CLOSED] " "[OPEN]   ")) (write-string label) (write-string "  ") (write-string note) (terpri)
+  (finish-output) ok)
+(defun f (x) (if x (format nil "~,9f" x) "NIL"))
+
+(defun run-graph (g &key plant)
+  (write-string "---- graph: ") (write-string (getf g :name)) (terpri)
+  (multiple-value-bind (ca1 wa1) (route-a1 g)
+    (multiple-value-bind (ca2 wa2) (route-a2 g)
+      (multiple-value-bind (rate wb rows pv klgap maxdev qs pstars) (route-b g :planted plant)
+        ;; observed stability of A1 between L=400 and L=800 — a DIAGNOSTIC, not an error bound
+        ;; (reviewer, Q4: two finite estimates can agree while sharing a bias)
+        (let ((ca1-800 (route-a1 g :L 800 :k 40)))
+          (format t "CEILING A1-stability |A1(L=400)-A1(L=800)|=~a  (observed stability, NOT a bound)~%" (f (abs (- ca1 ca1-800)))))
+        (format t "CEILING A2-scope: scan (1,64] step 1e-3 for the LAST sign change of D(W), then bisect — a root outside the interval, or one without a sign change, is not seen~%")
+        (format t "CEILING route=A1(count L=400 k=40) W=~a C=~a~%" (f wa1) (f ca1))
+        (format t "CEILING route=A2(largest real root of D(W)) W=~a C=~a~%" (f wa2) (f ca2))
+        (format t "CEILING route=B(App.4 ~a) W*=~a rate=~a rows=~a P=~a~%"
+                (if plant "PLANTED wrong ansatz: first edge of each row x2, renormalised" "p=(B_j/B_i)W^-l") (f wb) (f rate)
+                (map 'list #'f rows) (map 'list #'f pv))
+        (format t "CEILING agree=~a delta=~a |A1-A2|=~a |B-A1|=~a~%"
+                (if (and ca2 (< (abs (- ca1 ca2)) +delta+) (< (abs (- rate ca1)) +delta+)) "T" "NIL")
+                +delta+ (f (and ca2 (abs (- ca1 ca2)))) (f (abs (- rate ca1))))
+        (check "A1 = A2: the block count's growth and the determinant's largest real root name one number"
+               (and ca2 (< (abs (- ca1 ca2)) +delta+)) (format nil "|A1-A2| = ~a < ~a" (f (and ca2 (abs (- ca1 ca2)))) +delta+))
+        (if plant
+            (progn
+              (format t "CEILING plant-vs-maximizer max|q_e - p*_e| on states with stationary mass = ~a~%" (f maxdev))
+              (format t "CEILING edges (from to len): ~{~a~^ ~}~%" (mapcar (lambda (e) (format nil "~a->~a/~a" (first e) (second e) (third e))) (getf g :edges)))
+              (format t "CEILING q  (planted)   = ~{~a~^ ~}~%" (mapcar #'f qs))
+              (format t "CEILING p* (maximizer) = ~{~a~^ ~}~%" (mapcar #'f pstars))
+              (if (< maxdev 1d-9)
+                  (check "PLANTED: CONTROL DID NOT PERTURB THE OPTIMUM — the planted q equals the maximizer p* on every state with mass; this control is DEGENERATE and cannot bite (reported, never counted as a bite)"
+                         nil "degenerate control")
+                  (check "PLANTED: the wrong ansatz falls SHORT of the ceiling (the tooth bites)"
+                         (< rate (- ca1 1d-3)) (format nil "rate ~a < C ~a by ~a" (f rate) (f ca1) (f (- ca1 rate)))))
+              ;; the plant explains its own wound: C - R(q) = sum_i pi_i KL(q_i||p*_i) / sum_i pi_i sum_e q_e l_e
+              (check "PLANTED: the shortfall EQUALS the average divergence from the maximizer per unit duration — C - R(q) = sum pi_i KL(q_i || p*_i) / mean duration"
+                     (< (abs (- (- ca1 rate) klgap)) +delta+)
+                     (format nil "C - R(q) = ~a · KL-gap = ~a · |diff| = ~a < ~a" (f (- ca1 rate)) (f klgap) (f (abs (- (- ca1 rate) klgap))) +delta+)))
+            (progn
+              (check "B rows sum to 1: the fixed-point equation B_i = sum_j B_j W^-l_ij holds row by row"
+                     (every (lambda (r) (< (abs (- r 1d0)) 1d-9)) rows) (format nil "rows=~a" (map 'list #'f rows)))
+              (check "B = A1: Appendix 4's entropy RATE attains Appendix 1's growth CEILING — 'justifying the assumed solution'"
+                     (< (abs (- rate ca1)) +delta+) (format nil "|rate-C| = ~a < ~a" (f (abs (- rate ca1))) +delta+))))
+        (cond ((search "C = 1 exactly" (getf g :name))
+               (check "ANCHOR (arithmetic): the unconstrained binary source has C = 1 bit"
+                      (< (abs (- ca1 1d0)) +delta+) (format nil "C = ~a" (f ca1))))
+              ((search "0.539" (getf g :name))
+               (check "ANCHOR (the page, p. 4 — an external numerical reference at its printed precision): Shannon writes 'Solving this we find C = 0.539'"
+                      (< (abs (- ca1 0.539d0)) +anchor-delta+) (format nil "C = ~a vs 0.539 (|diff| = ~a < ~a)" (f ca1) (f (abs (- ca1 0.539d0))) +anchor-delta+)))
+              ((search "log2 phi" (getf g :name))
+               (let ((phi (/ (+ 1d0 (sqrt 5d0)) 2d0)))
+                 (check "ANCHOR (arithmetic): C = log2 phi for the golden-ratio graph"
+                        (< (abs (- ca1 (log2 phi))) +delta+) (format nil "C = ~a vs log2 phi = ~a" (f ca1) (f (log2 phi)))))))
+        (terpri)))))
+
+(let ((plant (member "--plant" (rest sb-ext:*posix-argv*) :test #'string=)))
+  (format t "~&CEILING ATTAINED — two routes to one number, and a wrong ansatz that must fall short.~%")
+  (format t "mode: ~a~%~%" (if plant "PLANT (teeth: route B runs the WRONG ansatz; its check must read [CLOSED] because the shortfall is the expected outcome)" "gate"))
+  (dolist (g *graphs*) (run-graph g :plant plant))
+  (format t "ceiling-attained: ~d checks, ~d failures~%" *checks* *failures*)
+  (finish-output)
+  (sb-ext:exit :code (if (zerop *failures*) 0 1)))

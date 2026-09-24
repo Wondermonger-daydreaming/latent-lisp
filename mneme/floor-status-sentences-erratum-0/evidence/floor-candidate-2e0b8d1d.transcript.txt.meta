@@ -1,0 +1,3 @@
+# candidate floor · commit 2e0b8d1df67f0443306c41bd62b36c717c9ae53e · started 2026-09-21 16:49:08 -03 · venue /tmp/candidate-floor.svuyXq (disposable clone, detached)
+# exit=0 · finished 2026-09-21 17:16:47 -03 · PASS lines 112 · FAIL lines 0
+FLOOR RESULT: PASS (112 executable gates attempted / 112 passed / 0 blocked; 9 carried status rows; profile full)

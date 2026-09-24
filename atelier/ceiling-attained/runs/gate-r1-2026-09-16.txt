@@ -1,0 +1,52 @@
+CEILING ATTAINED — two routes to one number, and a wrong ansatz that must fall short.
+mode: gate
+
+---- graph: unconstrained binary (anchor: C = 1 exactly)
+CEILING A1-stability |A1(L=400)-A1(L=800)|=0.000000000  (observed stability, NOT a bound)
+CEILING A2-scope: scan (1,64] step 1e-3 for the LAST sign change of D(W), then bisect — a root outside the interval, or one without a sign change, is not seen
+CEILING route=A1(count L=400 k=40) W=2.000000000 C=1.000000000
+CEILING route=A2(largest real root of D(W)) W=2.000000000 C=1.000000000
+CEILING route=B(App.4 p=(B_j/B_i)W^-l) W*=2.000000000 rate=1.000000000 rows=(1.000000000) P=(1.000000000)
+CEILING agree=T delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.000000000
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+[CLOSED] B rows sum to 1: the fixed-point equation B_i = sum_j B_j W^-l_ij holds row by row  rows=(1.000000000)
+[CLOSED] B = A1: Appendix 4's entropy RATE attains Appendix 1's growth CEILING — 'justifying the assumed solution'  |rate-C| = 0.000000000 < 1.0d-6
+[CLOSED] ANCHOR (arithmetic): the unconstrained binary source has C = 1 bit  C = 1.000000000
+
+---- graph: telegraph, Fig. 2 p. 4 (anchor from the page: C = 0.539)
+CEILING A1-stability |A1(L=400)-A1(L=800)|=0.000000000  (observed stability, NOT a bound)
+CEILING A2-scope: scan (1,64] step 1e-3 for the LAST sign change of D(W), then bisect — a root outside the interval, or one without a sign change, is not seen
+CEILING route=A1(count L=400 k=40) W=1.452900648 C=0.538936052
+CEILING route=A2(largest real root of D(W)) W=1.452900648 C=0.538936052
+CEILING route=B(App.4 p=(B_j/B_i)W^-l) W*=1.452900648 rate=0.538936052 rows=(1.000000000 1.000000000) P=(0.231865696 0.768134304)
+CEILING agree=T delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.000000000
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+[CLOSED] B rows sum to 1: the fixed-point equation B_i = sum_j B_j W^-l_ij holds row by row  rows=(1.000000000 1.000000000)
+[CLOSED] B = A1: Appendix 4's entropy RATE attains Appendix 1's growth CEILING — 'justifying the assumed solution'  |rate-C| = 0.000000000 < 1.0d-6
+[CLOSED] ANCHOR (the page, p. 4 — an external numerical reference at its printed precision): Shannon writes 'Solving this we find C = 0.539'  C = 0.538936052 vs 0.539 (|diff| = 0.000063948 < 5.0d-4)
+
+---- graph: two states, unequal lengths (no anchor; the routes must simply agree)
+CEILING A1-stability |A1(L=400)-A1(L=800)|=0.000000000  (observed stability, NOT a bound)
+CEILING A2-scope: scan (1,64] step 1e-3 for the LAST sign change of D(W), then bisect — a root outside the interval, or one without a sign change, is not seen
+CEILING route=A1(count L=400 k=40) W=1.324717957 C=0.405685231
+CEILING route=A2(largest real root of D(W)) W=1.324717957 C=0.405685231
+CEILING route=B(App.4 p=(B_j/B_i)W^-l) W*=1.324717957 rate=0.405685231 rows=(1.000000000 1.000000000) P=(0.430159709 0.569840291)
+CEILING agree=T delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.000000000
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+[CLOSED] B rows sum to 1: the fixed-point equation B_i = sum_j B_j W^-l_ij holds row by row  rows=(1.000000000 1.000000000)
+[CLOSED] B = A1: Appendix 4's entropy RATE attains Appendix 1's growth CEILING — 'justifying the assumed solution'  |rate-C| = 0.000000000 < 1.0d-6
+
+---- graph: golden ratio: all lengths 1, adjacency [[1 1] [1 0]] (anchor: C = log2 phi)
+CEILING A1-stability |A1(L=400)-A1(L=800)|=0.000000000  (observed stability, NOT a bound)
+CEILING A2-scope: scan (1,64] step 1e-3 for the LAST sign change of D(W), then bisect — a root outside the interval, or one without a sign change, is not seen
+CEILING route=A1(count L=400 k=40) W=1.618033989 C=0.694241914
+CEILING route=A2(largest real root of D(W)) W=1.618033989 C=0.694241914
+CEILING route=B(App.4 p=(B_j/B_i)W^-l) W*=1.618033989 rate=0.694241914 rows=(1.000000000 1.000000000) P=(0.723606798 0.276393202)
+CEILING agree=T delta=1.0d-6 |A1-A2|=0.000000000 |B-A1|=0.000000000
+[CLOSED] A1 = A2: the block count's growth and the determinant's largest real root name one number  |A1-A2| = 0.000000000 < 1.0d-6
+[CLOSED] B rows sum to 1: the fixed-point equation B_i = sum_j B_j W^-l_ij holds row by row  rows=(1.000000000 1.000000000)
+[CLOSED] B = A1: Appendix 4's entropy RATE attains Appendix 1's growth CEILING — 'justifying the assumed solution'  |rate-C| = 0.000000000 < 1.0d-6
+[CLOSED] ANCHOR (arithmetic): C = log2 phi for the golden-ratio graph  C = 0.694241914 vs log2 phi = 0.694241914
+
+ceiling-attained: 15 checks, 0 failures
+EXIT 0

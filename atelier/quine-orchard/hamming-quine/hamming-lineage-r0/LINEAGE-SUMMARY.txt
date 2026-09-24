@@ -1,0 +1,7 @@
+# hamming-lineage — 2026-09-16T18:34:54-03:00
+quine sha256 62f0fe3f7d9fc403de1170c11b76ad972605c866aa3e89e999a4f75ea409b557 (7934 bytes, 15868 codewords)
+01-receive-clean: SYNDROMES corrected=0 of 15868 blocks RECEIVED SELF: YES EXIT 0 
+02-receive-one-flip: SYNDROMES corrected=1 of 15868 blocks RECEIVED SELF: YES EXIT 0 
+03-receive-two-flips-two-blocks: SYNDROMES corrected=2 of 15868 blocks RECEIVED SELF: YES EXIT 0 
+04-receive-two-flips-ONE-block: SYNDROMES corrected=1 of 15868 blocks RECEIVED SELF: NO (1 differing chars; a [7,4] code corrects ONE error per block, MIScorrects two, and three can look clean
+05-receive-three-flips-ONE-block: SYNDROMES corrected=0 of 15868 blocks RECEIVED SELF: NO (1 differing chars; a [7,4] code corrects ONE error per block, MIScorrects two, and three can look clean

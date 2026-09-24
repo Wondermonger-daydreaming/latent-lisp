@@ -751,3 +751,38 @@ why an adversary who supplies that outside forges everything, and why the orchar
 now reads: *a fixed point can prove it agrees with itself; only a lineage with an exterior root
 can be caught lying about where it came from — and even then only by someone holding a root the
 liar did not hand them.*
+
+---
+
+## Specimen — `hamming-quine/` (2026-09-16, Fable 5.1, Only What It Read; the owner's pick, carte blanche)
+
+**What it is.** A quine (`hamming-quine.lisp` prints its own source byte for byte) that can also **transmit** itself as
+[7,4] Hamming codewords in Shannon's exact position convention (1948 p. 28: data X3 X5 X6 X7; X4, X2, X1 make α, β, γ
+even; *"the binary number αβγ then gives the subscript of the X_i that is incorrect"*) and **receive** such a transmission —
+correcting one flipped bit per block, COUNTING what it corrected, and answering whether the received text IS itself. The
+identity check needs no carried hash: a quine knows its source. Lineage: clean → 0 corrected / YES; one flip → 1 / YES;
+two flips in two blocks → 2 / YES; **two flips in ONE block → 1 (a MIScorrection) / NO**; **three flips in one block → 0
+(it looked clean) / NO**. The inner code's count is honest about what it did and not sufficient; only the identity check
+sees the last two. Transcripts in `hamming-quine/hamming-lineage/`.
+
+**How verified.** The fixed point was FOUND by `make.lisp` (`template.lisp` → `(format nil s s)`), verified in a fresh
+process and again by `cmp` (7,922 chars / 7,934 bytes, sha in `LINEAGE-SUMMARY.txt`). 15,868 codewords for 7,934 octets
+(= 2 per octet, by count). Every receive transcript carries its `EXIT` line.
+
+**Founding-lesson echo.** *Carried state vs regenerated state:* the received copy is carried; the self it is compared to is
+regenerated on the spot. Where `integrity` compares regeneration against a carried expectation, this compares a carried
+arrival against regeneration — and shows that a channel code's own success report cannot be the verdict.
+
+**One honest sentence.** Attempt 1's third-flip generation CRASHED before printing its verdict (an invalid UTF-8 octet in
+`octets-to-string`); a crash is not a refusal; the receiver now decodes with replacement, the fixed point changed twice,
+and the first quine with all five transcripts is preserved in `hamming-lineage-attempt-1/` with a dated CORRECTION.
+
+**r1 (same evening, after the review of parcel `ed346f74…`).** The mirror had a forgiving filter: identity was decided on TEXT after
+`?` replacement, which is many-to-one — an invalid octet at a literal `?` position (byte 737 of the r0 source) decoded to a matching
+text, and could arrive as VALID codewords with no syndrome. Reproduced on the receiver's own decode path, then repaired: identity is
+now decided on OCTETS; `differing-octets=` and `length-difference=` are reported apart; replacement characters are counted as a
+display diagnostic; the decoder's counts are `nonzero-syndromes=` / `bit-flips-applied=`, never "corrected". Three new specimens:
+gen 05 the COLLISION (first `?` → `0xFF` as valid codewords: syndromes 0, octets differ, NO — r0 would have said YES), gen 06 a
+truncation (length-difference −50, NO), gen 07 a malformed form (reported NO, not a crash). r0's lineage kept in `hamming-lineage-r0/`.
+Fourth fixed point of the day: 12,098 chars. *A message can differ from its source and become indistinguishable after the receiver's
+display transformation* — the specimen's third distinction, the reviewer's.

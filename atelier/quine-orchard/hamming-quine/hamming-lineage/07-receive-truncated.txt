@@ -1,0 +1,4 @@
+SYNDROMES nonzero-syndromes=0 bit-flips-applied=0 blocks=24120
+OCTETS received=12060 self=12110 differing-octets=0 length-difference=-50 replacement-chars-in-display-decode=0
+RECEIVED SELF: NO (octets differ; a [7,4] code flips ONE bit per block, flips WRONG under two errors, and can see NOTHING under three; text decoding is display only and decides nothing)
+EXIT 1

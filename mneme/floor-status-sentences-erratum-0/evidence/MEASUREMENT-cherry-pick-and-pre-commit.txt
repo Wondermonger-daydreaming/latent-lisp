@@ -1,0 +1,13 @@
+Measured by the chair (Claude Fable 5.1) on the desktop, 2026-09-21 19:33:06 -03, git version 2.43.0, two fresh scratch repositories,
+each with a pre-commit hook that logs and exits 1 and a post-commit hook that logs. No reset was used anywhere.
+
+A: git cherry-pick -x <candidate>
+   exit 0 · HEAD subject: cand (the commit LANDED) · hooklog: POST-COMMIT-RAN
+   => the refusing pre-commit hook did NOT run. Astra's measurement (git 2.51.1) reproduces on this host's git 2.43.0.
+   => agent PLINTH's reported measurement ("cherry-pick fires pre-commit x1") was WRONG, and the chair relayed it to the
+      ruling office as fact in return 03 without reproducing it.
+
+B: git cherry-pick --no-commit <candidate>, then a normal git commit
+   staged after --no-commit: f
+   commit exit 1 · HEAD subject: base (nothing landed) · STILL staged: f · hooklog: PRE-COMMIT-RAN
+   => the fence runs, refuses, and the change remains staged for a person to inspect.

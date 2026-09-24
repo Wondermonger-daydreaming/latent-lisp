@@ -1,0 +1,3 @@
+SYNDROMES corrected=1 of 15120 blocks
+RECEIVED SELF: YES
+EXIT 0

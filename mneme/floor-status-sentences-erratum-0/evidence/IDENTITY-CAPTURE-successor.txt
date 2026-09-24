@@ -1,0 +1,40 @@
+IDENTITY CAPTURE — SUCCESSOR
+the object as it stands on lab `main` AFTER the landing
+
+path            : experiments/latent-lisp/mneme/verify-release.sh
+git blob        : 8cbc50c772b5225d02caac6df38883bf7dcb437e
+file sha256     : 5df120b1723655bcf333dc181d43fa31289c53b378a6aba559c35251588a4b69
+line count      : 969  (+25 against the predecessor)
+reviewed as     : candidate 2e0b8d1df67f0443306c41bd62b36c717c9ae53e, branch candidate/floor-status-sentences-0
+carried by      : 931be1d1a816369b6701b13b756d4c70d6a4f19e
+                  OBSERVED AT EXECUTION (receipt l.38 "[main 931be1d1a] …", l.40 "landed: 931be1d1a816…").
+its parent      : 892605580c5b6e5c709ba95a19b5d0124a444865
+                  OBSERVED AT EXECUTION (receipt l.2 and l.40). Equals the predecessor capture's
+                  "lab main at landing" value, as that capture required.
+lab main after  : 931be1d1a816369b6701b13b756d4c70d6a4f19e at the moment the landing script exited
+                  (OBSERVED AT EXECUTION, receipt l.40, l.55, l.57).
+                  OBSERVED AFTERWARDS BY THE RECORD-KEEPER (git, 2026-09-21 20:19:19 -0300): `main` is now
+                  ef62aed700b2908a42a27a531444bd9de224e07f — one FURTHER local commit (the front-door
+                  ADDENDUM 9 and the preserved receipt) sits on top of the landing commit. `origin/main`
+                  is still 892605580c5b6e5c709ba95a19b5d0124a444865; `main` is 2 ahead. NOTHING PUSHED.
+--list total lines  : 124
+                      OBSERVED AT EXECUTION (receipt l.48-49). Read exactly: the script PRINTED
+                      "123 non-empty lines of 124 total" — 123 is the non-empty count; 124 is the total
+                      line count, which the script ASSERTS (`[ "$TOTAL" -eq 124 ]`, r1 l.360) and whose
+                      pass is witnessed by the run continuing and by l.49 "124 / 82 ci / 112 full …
+                      ALL CHECKED".
+--list '^both ' rows: 82   OBSERVED AT EXECUTION (receipt l.48, "both=82"; asserted r1 l.361)
+--list '^full ' rows: 30   OBSERVED AT EXECUTION (receipt l.48, "full-only=30"); both + full-only = 112,
+                           asserted == 112 (r1 l.362), witnessed by receipt l.48 "full=112" and l.49.
+captured at         : 2026-09-21 20:19:19 -0300  (`date`, first token of the writing command that produced this file)
+
+The blob, the file sha256 and the line count above are NOT pending: they are properties of the reviewed
+candidate object, measured read-only on 2026-09-21 by PLINTH-II via `git cat-file blob`, and r1 refuses to
+commit anything whose staged blob and file sha256 are not exactly these. Both were re-asserted after the
+landing: receipt l.43 (landed blob CHECKED) and l.44 (landed file sha256 CHECKED, via `sha256sum -c`).
+
+--- RECORD-KEEPER NOTE (PLINTH-III) -------------------------------------------
+Every field that PLINTH-II left as PENDING-AT-EXECUTION is now filled from observed output, as Astra's
+acceptance expressly permits (see LANDING-RECORD.md §0). No value in this file is predicted. Values are
+labelled either OBSERVED AT EXECUTION (the receipt, cited by line) or OBSERVED AFTERWARDS BY THE
+RECORD-KEEPER (git/store, with the time this file was written). Nothing here is inferred.

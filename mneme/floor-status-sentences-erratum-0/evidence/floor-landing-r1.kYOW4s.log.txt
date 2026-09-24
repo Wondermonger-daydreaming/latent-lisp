@@ -1,0 +1,61 @@
+=== PREFLIGHT
+starting HEAD: 892605580c5b6e5c709ba95a19b5d0124a444865
+From https://github.com/Wondermonger-daydreaming/Claude-Code-Lab
+ * branch                main       -> FETCH_HEAD
+sentinel        : PRESENT at tools/latent-lisp/SYNC-PAUSED
+                  (this is the STATE of the pause flag. It is NOT evidence that
+                   this landing's transport launch recorded WITHHELD — that is a
+                   separate, commit-bound check in POSTFLIGHT below.)
+chairs (sockets): 1
+chairs (ps)     : 1
+                  If either is >= 2, tools/chairs/lane-guard.sh will REFUSE the
+                  commit below unless a lane declares this path for the committing
+                  identity. The right answer is to close the chairs and re-run.
+                  Do NOT route around the fence.
+docked reply    : corpus/voices/received/originals/2026-09-21-183307-astra-side-reply-02-candidate-review-floor-ACCEPTED-demo-HOLD-VERBATIM.md.orig
+                  sha256 943767ba917c4347ec54123dd509b0676bc40bd7b8f1062734c70e8cc37f4eeb
+PREFLIGHT OK
+
+=== APPLY (no commit yet)
+--- INDEX VERIFICATION (this is a gate, not a printout)
+staged paths:
+experiments/latent-lisp/mneme/verify-release.sh
+staged blob : 8cbc50c772b5225d02caac6df38883bf7dcb437e
+ls-files -s : 100755 8cbc50c772b5225d02caac6df38883bf7dcb437e 0	experiments/latent-lisp/mneme/verify-release.sh
+working file sha256: reviewed value CHECKED
+INDEX OK — exactly one path, the reviewed blob, the reviewed bytes.
+
+=== COMMIT
+--- commit message to be used:
+    CANDIDATE floor-status-sentences-0: the ML/0 carried row and its comment block now carry the status stone's CURRENT standing (ADDENDUM 25 item 6, verbatim, 457 chars, checked programmatically) in place of the superseded 'stranger audit owed · no independent verification'; the old sentence kept as dated, quoted history; the strict stranger audit (discharged) explicitly separated from the stranger primitive-minimization audit (still OWED — those lines unchanged); travelling arms carried. Prose only: --list differs by exactly one line; enumeration 112/82 unchanged. NOT for main: the script's blob is pinned (warrant-calculus S15) — adoption needs the ruling office's word and the erratum-shaped evidence. Prepared by agent STYLUS, reviewed and committed by the chair.
+    
+    Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_0134go5uu3uiDzTNS6QeFJmr
+    
+    Source-Commit: 2e0b8d1df67f0443306c41bd62b36c717c9ae53e
+    Reviewed-By-Ruling-Office: review-accepted 2026-09-21, docked corpus/voices/received/originals/2026-09-21-183307-astra-side-reply-02-candidate-review-floor-ACCEPTED-demo-HOLD-VERBATIM.md.orig
+    Landing-Note: the original message's sentence "NOT for main" was true when the candidate was cut and is superseded by the review-acceptance recorded in the trailer above; the message is carried unedited.
+[main 931be1d1a] CANDIDATE floor-status-sentences-0: the ML/0 carried row and its comment block now carry the status stone's CURRENT standing (ADDENDUM 25 item 6, verbatim, 457 chars, checked programmatically) in place of the superseded 'stranger audit owed · no independent verification'; the old sentence kept as dated, quoted history; the strict stranger audit (discharged) explicitly separated from the stranger primitive-minimization audit (still OWED — those lines unchanged); travelling arms carried. Prose only: --list differs by exactly one line; enumeration 112/82 unchanged. NOT for main: the script's blob is pinned (warrant-calculus S15) — adoption needs the ruling office's word and the erratum-shaped evidence. Prepared by agent STYLUS, reviewed and committed by the chair.
+ 1 file changed, 31 insertions(+), 6 deletions(-)
+landed: 931be1d1a816369b6701b13b756d4c70d6a4f19e  (parent 892605580c5b6e5c709ba95a19b5d0124a444865, first-parent line)
+
+=== POSTFLIGHT
+a. landed blob = 8cbc50c772b5225d02caac6df38883bf7dcb437e  CHECKED
+b. landed file sha256 = 5df120b1723655bcf333dc181d43fa31289c53b378a6aba559c35251588a4b69  CHECKED
+c. git diff --name-only HEAD^ HEAD = experiments/latent-lisp/mneme/verify-release.sh  CHECKED
+d. Source-Commit and Reviewed-By-Ruling-Office trailers present  CHECKED
+e. bash -n experiments/latent-lisp/mneme/verify-release.sh  CHECKED
+f. --list: 123 non-empty lines of 124 total; both=82  full-only=30  full=112
+   124 / 82 ci / 112 full / new ml0 headline  ALL CHECKED
+g. transport
+   sentinel present            : yes
+   (sentinel presence is a STATE, not a record of this launch)
+   this launch recorded WITHHELD: YES — the durable event names 931be1d1a816369b6701b13b756d4c70d6a4f19e
+      {"schema":"latent-lisp/transport-record/1","event":"WITHHELD","source_commit":"931be1d1a816369b6701b13b756d4c70d6a4f19e","attempted_ref":"https://github.com/Wondermonger-daydreaming/latent-lisp.git#refs/heads/main","subject_subtree":"(none)","exit_code":0,"reason":"paused by sentinel tools/latent-lisp/SYNC-PAUSED","tool":"sync.sh","run_id":"20260921T230328Z-330960-145554993","utc_time":"2026-09-21T23:03:28Z"}
+h. origin/main still 892605580c5b6e5c709ba95a19b5d0124a444865 — main is ONE commit ahead. NOTHING PUSHED.
+
+=== LANDED 931be1d1a on main, first-parent, one path.
+    NOT pushed. The sentinel stays raised. No ferry, no publication, no pin edit.
+    STILL PENDING, and deliberately not done by this script:
+      · the companion erratum directory (see S15-ERRATUM-0-CONSOLIDATION-2026-09-21.md);
+      · pushing, which is your call.

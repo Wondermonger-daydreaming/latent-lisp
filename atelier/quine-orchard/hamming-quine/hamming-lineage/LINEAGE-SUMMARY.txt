@@ -1,0 +1,10 @@
+# hamming-lineage r1 — 2026-09-16T19:05:46-03:00
+quine sha256 febad396306eb46c218ac0ba450516aee6f43f0ef8bc44be8ca6148945cb93cf (12110 bytes, 24220 codewords); first literal ? at octet 731
+01-receive-clean: SYNDROMES nonzero-syndromes=0 bit-flips-applied=0 blocks=24220 OCTETS received=12110 self=12110 differing-octets=0 length-difference=0 replacement-chars-in-display-decode=0 RECEIVED SELF: YES (octet-equal) EXIT 0 
+02-receive-one-flip: SYNDROMES nonzero-syndromes=1 bit-flips-applied=1 blocks=24220 OCTETS received=12110 self=12110 differing-octets=0 length-difference=0 replacement-chars-in-display-decode=0 RECEIVED SELF: YES (octet-equal) EXIT 0 
+03-receive-two-flips-two-blocks: SYNDROMES nonzero-syndromes=2 bit-flips-applied=2 blocks=24220 OCTETS received=12110 self=12110 differing-octets=0 length-difference=0 replacement-chars-in-display-decode=0 RECEIVED SELF: YES (octet-equal) EXIT 0 
+04-receive-two-flips-ONE-block: SYNDROMES nonzero-syndromes=1 bit-flips-applied=1 blocks=24220 OCTETS received=12110 self=12110 differing-octets=1 length-difference=0 replacement-chars-in-display-decode=0 RECEIVED SELF: NO (octets differ; a [7,4] code flips ONE 
+05-receive-three-flips-ONE-block: SYNDROMES nonzero-syndromes=0 bit-flips-applied=0 blocks=24220 OCTETS received=12110 self=12110 differing-octets=1 length-difference=0 replacement-chars-in-display-decode=1 RECEIVED SELF: NO (octets differ; a [7,4] code flips ONE 
+06-receive-COLLISION: SYNDROMES nonzero-syndromes=0 bit-flips-applied=0 blocks=24220 OCTETS received=12110 self=12110 differing-octets=1 length-difference=0 replacement-chars-in-display-decode=1 RECEIVED SELF: NO (octets differ; a [7,4] code flips ONE 
+07-receive-truncated: SYNDROMES nonzero-syndromes=0 bit-flips-applied=0 blocks=24120 OCTETS received=12060 self=12110 differing-octets=0 length-difference=-50 replacement-chars-in-display-decode=0 RECEIVED SELF: NO (octets differ; a [7,4] code flips ON
+08-receive-malformed: SYNDROMES nonzero-syndromes=NIL bit-flips-applied=NIL blocks=24220 RECEIVED SELF: NO (malformed codewords: not every form is a list of seven bits) EXIT 1 

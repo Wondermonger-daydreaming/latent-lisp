@@ -1,0 +1,41 @@
+CEILING ATTAINED — routes to one number, a wrong policy that must fall short, and the size of its shortfall.
+mode: TRANSIENT (the chain started at a delta; the log B endpoint term shown at n = 1, 2, 5, 20, 100)
+
+---- transient: unconstrained binary (anchor: C = 1 exactly)
+CEILING transient: C=1.000000000  stationary shortfall C-R(q)=0.081704166  KL-rate=0.081704166  start=delta(state 0)
+CEILING n=  1  S_n=0.081704166  C·L_n−H_n=0.081704166  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=-0.000000000  S_n/L_n=0.081704166  endpoint/n=0.000000000
+CEILING n=  2  S_n=0.163408332  C·L_n−H_n=0.163408332  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=0.000000000  S_n/L_n=0.081704166  endpoint/n=0.000000000
+CEILING n=  5  S_n=0.408520830  C·L_n−H_n=0.408520830  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=-0.000000000  S_n/L_n=0.081704166  endpoint/n=0.000000000
+CEILING n= 20  S_n=1.634083319  C·L_n−H_n=1.634083319  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=0.000000000  S_n/L_n=0.081704166  endpoint/n=0.000000000
+CEILING n=100  S_n=8.170416595  C·L_n−H_n=8.170416595  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=0.000000000  S_n/L_n=0.081704166  endpoint/n=0.000000000
+[CLOSED] TRANSIENT: for every n the telescoped identity holds — S_n = C·L_n − H_n + (log2 B_start − E[log2 B_end]) within delta; the endpoint term is what remains at the two ends before the long-run rate settles  n in (1 2 5 20 100), delta 1.0d-6
+
+---- transient: telegraph, Fig. 2 p. 4 (anchor from the page: C = 0.539)
+CEILING transient: C=0.538936052  stationary shortfall C-R(q)=0.030483308  KL-rate=0.030483308  start=delta(state 0)
+CEILING n=  1  S_n=0.061279659  C·L_n−H_n=0.579682436  endpoint(log2 B_start − E[log2 B_end])=-0.518402777  S_n−rhs=0.000000000  S_n/L_n=0.025715269  endpoint/n=-0.518402777
+CEILING n=  2  S_n=0.144706907  C·L_n−H_n=0.556928000  endpoint(log2 B_start − E[log2 B_end])=-0.412221092  S_n−rhs=-0.000000000  S_n/L_n=0.028691887  endpoint/n=-0.206110546
+CEILING n=  5  S_n=0.383047539  C·L_n−H_n=0.813475029  endpoint(log2 B_start − E[log2 B_end])=-0.430427490  S_n−rhs=0.000000000  S_n/L_n=0.029750584  endpoint/n=-0.086085498
+CEILING n= 20  S_n=1.577984170  C·L_n−H_n=2.008256544  endpoint(log2 B_start − E[log2 B_end])=-0.430272374  S_n−rhs=-0.000000000  S_n/L_n=0.030302211  endpoint/n=-0.021513619
+CEILING n=100  S_n=7.950950198  C·L_n−H_n=8.381222572  endpoint(log2 B_start − E[log2 B_end])=-0.430272374  S_n−rhs=-0.000000000  S_n/L_n=0.030447195  endpoint/n=-0.004302724
+[CLOSED] TRANSIENT: for every n the telescoped identity holds — S_n = C·L_n − H_n + (log2 B_start − E[log2 B_end]) within delta; the endpoint term is what remains at the two ends before the long-run rate settles  n in (1 2 5 20 100), delta 1.0d-6
+
+---- transient: two states, unequal lengths (no anchor; the routes must simply agree)
+CEILING transient: C=0.405685231  stationary shortfall C-R(q)=0.032505345  KL-rate=0.032505345  start=delta(state 0)
+CEILING n=  1  S_n=0.048948955  C·L_n−H_n=0.048948955  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=-0.000000000  S_n/L_n=0.031403255  endpoint/n=0.000000000
+CEILING n=  2  S_n=0.120626089  C·L_n−H_n=0.120626089  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=-0.000000000  S_n/L_n=0.032314961  endpoint/n=0.000000000
+CEILING n=  5  S_n=0.306725622  C·L_n−H_n=0.306725622  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=-0.000000000  S_n/L_n=0.032383092  endpoint/n=0.000000000
+CEILING n= 20  S_n=1.256502208  C·L_n−H_n=1.256502208  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=-0.000000000  S_n/L_n=0.032477354  endpoint/n=0.000000000
+CEILING n=100  S_n=6.318638633  C·L_n−H_n=6.318638633  endpoint(log2 B_start − E[log2 B_end])=0.000000000  S_n−rhs=-0.000000000  S_n/L_n=0.032499775  endpoint/n=0.000000000
+[CLOSED] TRANSIENT: for every n the telescoped identity holds — S_n = C·L_n − H_n + (log2 B_start − E[log2 B_end]) within delta; the endpoint term is what remains at the two ends before the long-run rate settles  n in (1 2 5 20 100), delta 1.0d-6
+
+---- transient: golden ratio: all lengths 1, adjacency [[1 1] [1 0]] (anchor: C = log2 phi)
+CEILING transient: C=0.694241914  stationary shortfall C-R(q)=0.056380482  KL-rate=0.056380482  start=delta(state 0)
+CEILING n=  1  S_n=0.069690109  C·L_n−H_n=-0.094198176  endpoint(log2 B_start − E[log2 B_end])=0.163888284  S_n−rhs=-0.000000000  S_n/L_n=0.069690109  endpoint/n=0.163888284
+CEILING n=  2  S_n=0.122928615  C·L_n−H_n=-0.002270894  endpoint(log2 B_start − E[log2 B_end])=0.125199509  S_n−rhs=-0.000000000  S_n/L_n=0.061464307  endpoint/n=0.062599754
+CEILING n=  5  S_n=0.292678020  C·L_n−H_n=0.159992407  endpoint(log2 B_start − E[log2 B_end])=0.132685613  S_n−rhs=-0.000000000  S_n/L_n=0.058535604  endpoint/n=0.026537123
+CEILING n= 20  S_n=1.138377362  C·L_n−H_n=1.005788955  endpoint(log2 B_start − E[log2 B_end])=0.132588407  S_n−rhs=-0.000000000  S_n/L_n=0.056918868  endpoint/n=0.006629420
+CEILING n=100  S_n=5.648815956  C·L_n−H_n=5.516227548  endpoint(log2 B_start − E[log2 B_end])=0.132588407  S_n−rhs=-0.000000000  S_n/L_n=0.056488160  endpoint/n=0.001325884
+[CLOSED] TRANSIENT: for every n the telescoped identity holds — S_n = C·L_n − H_n + (log2 B_start − E[log2 B_end]) within delta; the endpoint term is what remains at the two ends before the long-run rate settles  n in (1 2 5 20 100), delta 1.0d-6
+
+ceiling-attained: 4 checks, 0 failures
+EXIT 0

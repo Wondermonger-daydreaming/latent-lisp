@@ -1,0 +1,4 @@
+SYNDROMES nonzero-syndromes=2 bit-flips-applied=2 blocks=24220
+OCTETS received=12110 self=12110 differing-octets=0 length-difference=0 replacement-chars-in-display-decode=0
+RECEIVED SELF: YES (octet-equal)
+EXIT 0
