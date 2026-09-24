@@ -313,42 +313,64 @@ symbol, `common-lisp:quote' (what the reader produces for the ' abbreviation)."
        (not (eq x 'quote))))
 
 (defun validate-source-datum (form)
-  (let ((seen (make-hash-table :test #'eq)) (nodes 0))
-    (labels ((walk (x)
-               (cond ((consp x)
-                      (when (gethash x seen)
-                        (fail "E-READ" "the form contains circular structure (a #n= label that refers to itself); the language has no value for it"))
-                      (setf (gethash x seen) t)
-                      (when (> (incf nodes) *max-source-nodes*)
-                        (fail "E-READ" "the form exceeds ~:d conses (*max-source-nodes*); refused as source" *max-source-nodes*))
-                      (walk (car x))
-                      (let ((tail (cdr x)))
-                        (cond ((null tail))
-                              ((consp tail) (walk-tail tail))
-                              (t (fail "E-READ" "dotted pair ~a: the language has proper lists only" (render-abbrev x))))))
-                     ((or (null x) (keywordp x) (realp x) (stringp x)))
+  "Walk FORM once. Two marks per cons — OPEN (on the current descent path) and
+DONE (fully validated) — so a node reached twice is a CYCLE only if it is still
+OPEN: `#1=(1 . #1#)' is refused, `(#1=(1 2) #1#)' (acyclic sharing) is admitted.
+The one admitted foreign symbol, `common-lisp:quote', is admitted only as the
+HEAD of a form; as a datum (`'cl:quote', `(list 'cl:quote)') it is refused like
+any other foreign symbol. (Both from Astra's inspection, 2026-09-24.)
+Structure (cycles, node count, the kind of every atom) is context-independent and
+cached by DONE; PLACEMENT is not. A shared cell first met as the start of a list
+(its car in head position) may later be met as a TAIL, where the same car is a
+datum. So the DONE shortcut re-checks the placement of the shared cell's car before
+it returns: acyclic sharing never changes which placements of `common-lisp:quote'
+are admitted (Astra's r4 review: '(#1=(cl:quote x) (tag . #1#)) was admitted)."
+  (let ((mark (make-hash-table :test #'eq)) (nodes 0))
+    (labels ((cycle () (fail "E-READ" "the form contains circular structure (a #n= label that refers to itself); the language has no value for it"))
+             (count-node ()
+               (when (> (incf nodes) *max-source-nodes*)
+                 (fail "E-READ" "the form exceeds ~:d conses (*max-source-nodes*); refused as source" *max-source-nodes*)))
+             (occurrence-ok (x head-position-p)
+               ;; the ONE context-sensitive rule, stated once: `common-lisp:quote' only as a head
+               (when (and (eq x 'quote) (not head-position-p))
+                 (fail "E-SYNTAX" "common-lisp:quote is admitted only as the head of a form, not as a datum")))
+             (atom-ok (x head-position-p)
+               (cond ((or (null x) (keywordp x) (realp x) (stringp x)))
                      ((symbolp x)
-                      (when (foreign-symbol-p x)
-                        (fail "E-SYNTAX" "~a is not a name of this language (a symbol of package ~a)"
-                              (render-foreign x) (package-name (symbol-package x)))))
+                      (cond ((eq x 'quote) (occurrence-ok x head-position-p))
+                            ((foreign-symbol-p x)
+                             (fail "E-SYNTAX" "~a is not a name of this language (a symbol of package ~a)"
+                                   (render-foreign x) (package-name (symbol-package x))))))
                      ((complexp x) (fail "E-READ" "complex numbers are not values of this language: ~a" x))
                      (t (fail "E-READ" "unsupported datum ~a (~a): the language has numbers, strings, keywords, symbols and proper lists"
                               (let ((*print-circle* t) (*print-length* 8) (*print-level* 3)) (prin1-to-string x))
                               (type-of x)))))
-             (walk-tail (tail)
-               ;; walk a cdr chain iteratively so a long list does not recurse
-               (loop
-                 (when (gethash tail seen)
-                   (fail "E-READ" "the form contains circular structure (a #n= label that refers to itself); the language has no value for it"))
-                 (setf (gethash tail seen) t)
-                 (when (> (incf nodes) *max-source-nodes*)
-                   (fail "E-READ" "the form exceeds ~:d conses (*max-source-nodes*); refused as source" *max-source-nodes*))
-                 (walk (car tail))
-                 (let ((next (cdr tail)))
-                   (cond ((null next) (return))
-                         ((consp next) (setf tail next))
-                         (t (fail "E-READ" "dotted pair ~a: the language has proper lists only" (render-abbrev tail))))))))
-      (walk form))
+             (walk-list (x)
+               ;; X is a cons. Walk the spine cell by cell: mark the cell OPEN, validate its
+               ;; car (descending into a cons that is not yet DONE), then the next cell. A cell
+               ;; met again while OPEN is on the current path — a cycle; a cell met again when
+               ;; DONE is sharing. All cells of the spine become DONE when the spine ends.
+               (let ((spine '()))
+                 (loop for tail = x then (cdr tail)
+                       for first = t then nil
+                       while (consp tail)
+                       do (case (gethash tail mark)
+                            (:open (cycle))
+                            (:done                     ; a shared, already validated tail: its STRUCTURE
+                             (occurrence-ok (car tail) first) ; is done, but its car is now in THIS position
+                             (return))
+                            (t (setf (gethash tail mark) :open) (count-node) (push tail spine)
+                               (let ((item (car tail)))
+                                 (if (consp item)
+                                     (case (gethash item mark)
+                                       (:open (cycle))
+                                       (:done nil)
+                                       (t (walk-list item)))
+                                     (atom-ok item first)))))
+                       finally (unless (null tail)
+                                 (fail "E-READ" "dotted pair ~a: the language has proper lists only" (render-abbrev x))))
+                 (dolist (cell spine) (setf (gethash cell mark) :done)))))
+      (if (consp form) (walk-list form) (atom-ok form nil)))
     form))
 
 (defun render-foreign (sym)

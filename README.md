@@ -45,7 +45,7 @@ A program is a file of forms; the last one's value is printed. Write your own:
 
 **The guide, with executable examples:** `mneme/language-program-0/README.md`. **The specification:**
 `mneme/language-program-0/PROGRAM-0-GRAMMAR-AND-SEMANTICS.md`. **Tests:** `bash mneme/language-program-0/run-selftest.sh`
-(94 checks). Limits, plainly: 1,000,000 evaluation steps and 4,000 nested calls per run, no tail-call elimination, no
+(125 checks). Limits, plainly: 1,000,000 evaluation steps and 4,000 nested calls per run, no tail-call elimination, no
 mutation, no error handling inside a program; `true`/`false` are the only booleans; the effect lanes are not loaded, so a
 program derives and never performs. SBCL 2.4.6 on Linux.
 
@@ -567,7 +567,7 @@ ablutions over every object.
 latent-lisp/
 ├── README.md                  # this page — the present-tense instrument panel
 ├── BUILD-CHRONICLE.md         # how it was built — the dated record, verbatim strata
-├── RECEIPTS.md                # index of the 27 root receipt/closure records; their bytes stay put
+├── RECEIPTS.md                # index of the 27 CD/0 receipt/closure records (23 relocated to receipts/canonical-datum-0/ on 2026-09-24, bytes unchanged; map in receipts/RELOCATION-MAP.md)
 ├── lisp-plus.asd              # the ASDF umbrella — a load container, NOT a semantic authority
 ├── mneme/                     # the instrument — Lisp+ and its lanes
 │   ├── README.md              #   reflex front door → status stone + MANIFEST
@@ -683,7 +683,7 @@ instruments warrant:
   twice-held differential corpus kept as evidence of two runs. **Only the snapshot was weighed, never the
   mirror's accumulated history** — no statement about repository size is made.
 - **Scope rider on every "verified" about bytes:** wherever this tree says hashes, manifests, or bytes were
-  "independently verified" (e.g. `CD0-ERRATA-INDEPENDENT-REVIEW-RECEIPT.md`), read *byte identity was
+  "independently verified" (e.g. `receipts/canonical-datum-0/CD0-ERRATA-INDEPENDENT-REVIEW-RECEIPT.md`), read *byte identity was
   checked by a second reader*. **Byte identity confers no semantic standing.** Semantic standing is
   conferred only by the adoption records and the floor, and none of it is independently verified.
 

@@ -50,13 +50,15 @@ empty source is lawful and has the value `()`.
 with a visited set and a node bound (`*max-source-nodes*`, 100,000 conses) — and refused if it holds
 anything the language has no value for: a dotted pair (`(1 . 2)`), a vector (`#(1 2)`), a
 character, a complex number, any other host object, or circular structure (`#1=(1 . #1#)`); each is
-**E-READ** at the form's location, in bounded time. This applies to quoted data too: `quote` cannot
+**E-READ** at the form's location, in bounded time. Acyclic *sharing* of a `#n=` label (`(#1=(1 2) #1#)`) is not a
+cycle and is admitted; the walk distinguishes a node still being traversed from one already validated. This applies to quoted data too: `quote` cannot
 smuggle a host object past the reader.
 
 **Foreign symbols.** The bindings above do not prevent the reader from producing a symbol of
 another package when a program writes one explicitly (`cl:eval`, `pkg::name`) or uses a reader
 abbreviation that expands to one (`` `x ``, `#'f`). **Exactly one foreign symbol is admitted:
-`common-lisp:quote`**, which the reader produces for the `'` abbreviation, and only as a head (§4.2).
+`common-lisp:quote`**, which the reader produces for the `'` abbreviation, and only as the **head** of a form (§4.2) — as a
+datum (`'cl:quote`, `(list 'cl:quote)`) it is refused like any other foreign symbol.
 Every other foreign symbol, in any position, quoted or not, is **E-SYNTAX** at source validation; so
 `(cl:if true 1 2)` is refused — special-form heads other than `quote` are recognised **only in the
 source namespace**. A prefix that names no package is a reader failure, **E-READ**. (Astra's
