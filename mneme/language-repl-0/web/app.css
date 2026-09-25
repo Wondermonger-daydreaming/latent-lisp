@@ -1,0 +1,134 @@
+/* REPL /0 workbench — layout and accents on top of WebTUI 0.1.10 (vendored, pinned).
+   Unlayered rules here take precedence over WebTUI's @layer rules by design. */
+
+:root {
+  --accent-value: #7ee787;
+  --accent-defined: #a5d6ff;
+  --accent-output: #79c0ff;
+  --accent-error: #ff7b72;
+  --accent-fault: #ffb454;
+  --accent-notice: #d2a8ff;
+}
+
+body {
+  word-break: normal;
+  overflow-wrap: anywhere;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 1lh 2ch;
+}
+
+h1, h2 { margin-bottom: 0.5lh; }
+.dim { color: var(--foreground2); }
+.small { font-size: 0.85em; }
+.k { color: var(--foreground2); }
+.line { color: var(--foreground0); }
+.line .k { margin-left: 1ch; }
+.line .k:first-child { margin-left: 0; }
+#status { color: var(--foreground0); font-weight: var(--font-weight-bold); }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38ch;
+  gap: 1lh 2ch;
+  margin-top: 1lh;
+}
+@media (max-width: 960px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+}
+aside > section + section { margin-top: 1lh; }
+
+/* editor */
+#editor {
+  display: block;
+  width: 100%;
+  min-height: 8lh;
+  margin: 0.5lh 0;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+  tab-size: 2;
+}
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 1ch 2ch; }
+#recall-line { min-height: 1lh; }
+
+.notice { margin-top: 0.5lh; padding: 0 1ch; border-left: 2px solid var(--accent-notice); }
+.notice-protocol { border-left-color: var(--accent-error); }
+.notice-incomplete { border-left-color: var(--accent-fault); }
+/* r3: an unknown outcome and a stale page are neither errors of the program nor refusals */
+.notice-unknown, .notice-stale { border-left: 3px double var(--accent-fault); }
+.badge-unknown, .badge-stale { --badge-color: var(--accent-fault); --badge-text: #000; }
+.refresh-inline { margin-left: 1ch; }
+#refresh-btn { margin-bottom: 0.5lh; }
+#notshown summary { cursor: pointer; }
+.session-divider { margin: 1lh 0; padding: 0 1ch; border-left: 3px double var(--accent-fault); color: var(--foreground1); }
+.badge-protocol { --badge-color: var(--accent-error); --badge-text: #000; }
+.badge-incomplete { --badge-color: var(--accent-fault); --badge-text: #000; }
+.badge-empty, .badge-info { --badge-color: var(--accent-notice); --badge-text: #000; }
+
+/* transcript */
+#transcript-box { margin-top: 1lh; }
+#reset-banner { --box-border-color: var(--accent-notice); margin-bottom: 1lh; }
+.entry { margin-top: 1lh; }
+.entry-value, .entry-defined { --box-border-color: var(--foreground2); }
+.entry-language-error { --box-border-color: var(--accent-error); }
+.entry-host-fault { --box-border-color: var(--accent-fault); }
+
+.entry-head { display: flex; justify-content: space-between; align-items: center; gap: 2ch; }
+.meta { color: var(--foreground2); }
+
+.block { margin-top: 0.5lh; }
+.block-label {
+  color: var(--foreground2);
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.05em;
+}
+.block pre { margin: 0; }
+.block-input pre.src { border-left: 2px solid var(--foreground2); }
+.block-output pre.out { border-left: 2px dashed var(--accent-output); }
+.block-value pre.value { border-left: 2px solid var(--accent-value); margin-top: 0.25lh; }
+
+.badge-value { --badge-color: var(--accent-value); --badge-text: #000; }
+.badge-defined { --badge-color: var(--accent-defined); --badge-text: #000; }
+.badge-error { --badge-color: var(--accent-error); --badge-text: #000; }
+.badge-fault { --badge-color: var(--accent-fault); --badge-text: #000; }
+
+.err-message { color: var(--foreground0); margin: 0.25lh 0; }
+.field { margin-top: 0.15lh; }
+.field > .k { display: inline-block; min-width: 13ch; }
+.diag { margin-top: 0.5lh; }
+.diag summary { cursor: pointer; color: var(--foreground2); }
+
+code { background-color: var(--background1); padding: 0 0.5ch; }
+
+/* lists without WebTUI's "- " marker */
+ul.plain li::before { content: none; }
+ul.inline-list { display: inline; }
+ul.inline-list li { display: inline; margin-right: 1ch; }
+
+/* history */
+#history { max-height: 22lh; overflow-y: auto; }
+#history li { margin: 0; }
+button.hist-item {
+  display: block;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  justify-content: flex-start;
+  padding: 0;
+  background: none;
+  background-image: none;
+  color: var(--foreground1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+button.hist-item:hover, button.hist-item:focus { color: var(--foreground0); background-color: var(--background1); }
+.hist-idx { color: var(--foreground2); }
+
+#reset-confirm { margin-top: 0.5lh; }
+#reset-question { color: var(--foreground0); margin-bottom: 0.5lh; }
+#reset-yes { --button-primary: var(--accent-error); }
+
+[hidden] { display: none !important; }

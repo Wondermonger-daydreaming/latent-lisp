@@ -1,0 +1,13 @@
+; REPL /0 — a short conversation (this file is the exact stdin of cli-session.txt)
+(define greeting "hello")
+(define (make-offset start)
+  (lambda (step) (+ start step)))
+(define from-ten (make-offset 10))
+(from-ten 5)
+(map from-ten (list 1 2 3))
+(filter even? (range 1 11))
+(fold + 0 (map square (range 1 6)))
+(from-ten "five")
+(fro-ten 1)
+(string-append greeting ", " (number->string (from-ten 32)))
+,names

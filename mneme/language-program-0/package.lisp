@@ -28,7 +28,7 @@
    ;; conditions
    #:program0-error #:program0-error-code #:program0-error-message
    #:program0-error-location #:program0-error-path #:program0-error-frames
-   #:render-program0-error
+   #:render-program0-error #:program0-incomplete-source
    ;; values
    #:closure #:closure-p #:primitive #:primitive-p
    #:refusal #:refusal-p #:refusal-kind #:refusal-requirement #:refusal-law

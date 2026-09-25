@@ -280,5 +280,32 @@
   (fails-with "a form over the source node bound is refused (small bound for the test)"
               "(list 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52)" "E-READ" :message-part "conses"))
 
+;;; ---- REPL /0 candidate (2026-09-25): the end of the text, as the reader sees it ----
+;;; An interactive reader must tell UNFINISHED input from MALFORMED input by the reader's
+;;; own verdict. Unfinished = the reader hit end-of-text inside a form: still E-READ, same
+;;; rendering, but of class program0-incomplete-source. And a source that ends in a #|…|#
+;;; comment is no longer refused as if a form were unfinished (the one behaviour change).
+(value-is "a source ending in a #|…|# comment runs (was E-READ before 2026-09-25)" "(+ 1 2) #| tail |#" "3")
+(value-is "a source that is only a #|…|# comment and a form after it" "#| head |# (* 6 7)" "42")
+(flet ((kind-of (text)
+         (multiple-value-bind (v e) (run text)
+           (declare (ignore v))
+           (cond ((null e) :no-error)
+                 ((not (string= (program0-error-code e) "E-READ")) :other-code)
+                 ((typep e 'program0-incomplete-source) :incomplete)
+                 (t :malformed)))))
+  (dolist (case '(("an unclosed paren is INCOMPLETE" "(define (f x) (+ x 1)" :incomplete)
+                  ("an unclosed string is INCOMPLETE" "(print \"abc" :incomplete)
+                  ("an unclosed |…| escape is INCOMPLETE" "(list a|b)" :incomplete)
+                  ("an unclosed #| comment is INCOMPLETE" "(+ 1 2) #| never closed" :incomplete)
+                  ("a lone quote at the end is INCOMPLETE" "(+ 1 2) '" :incomplete)
+                  ("a stray close paren is MALFORMED, not incomplete" "(+ 1 2))" :malformed)
+                  ("#. is MALFORMED, not incomplete" "#.(+ 1 2)" :malformed)
+                  ("a bad dot is MALFORMED, not incomplete" "(1 . )" :malformed)
+                  ("a complete form followed by an unfinished one is INCOMPLETE" "(+ 1 2) (list 1" :incomplete)))
+    (destructuring-bind (name text expected) case
+      (let ((got (kind-of text)))
+        (report (eq got expected) name (format nil "got ~a, expected ~a" got expected))))))
+
 (format t "~&program0 selftest: ~d passed, ~d failed~%" *passed* *failed*)
 (sb-ext:exit :code (if (zerop *failed*) 0 1))

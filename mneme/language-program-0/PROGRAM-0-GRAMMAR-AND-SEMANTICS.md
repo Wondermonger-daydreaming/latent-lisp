@@ -42,6 +42,15 @@ Whitespace and `;` comments between forms are skipped. Each top-level form is re
 **line and column** (1-based line, 0-based column) at which it starts; that is the location an
 error reports (§8). A reader failure is **E-READ** at the location of the form that failed.
 
+**The end of the text (REPL /0 candidate, 2026-09-25 — a change to this lane, disclosed there).**
+The reader distinguishes where the text ends. If it ends *between* forms — after whitespace, a `;`
+comment, or a `#|…|#` comment — reading is complete. (Until this change a source ending in a
+`#|…|#` comment was refused E-READ as if a form were unfinished; that was a defect.) If it ends
+*inside* a form — an unclosed parenthesis, string, `|…|` escape or `#` dispatch — the refusal is
+E-READ as before, rendered as before, and its condition is of the subclass
+`program0-incomplete-source`, so an interactive reader can tell *unfinished* from *malformed* by
+the reader's own verdict. A file runner sees no difference.
+
 **Difference from Many Acts /0, named:** an MA0 source is exactly ONE form (V-SHAPE). A
 PROGRAM /0 source is a **sequence of zero or more** top-level forms, evaluated in order (§5). An
 empty source is lawful and has the value `()`.

@@ -1,0 +1,39 @@
+Lisp+ REPL /0 (candidate) — PROGRAM /0 on SBCL 2.4.6 · session bf4152a0 (generation 1)
+Type Lisp+ forms. ,help for controls; Ctrl-D or ,quit to leave.
+in[1]> ; REPL /0 — a short conversation (this file is the exact stdin of cli-session.txt)
+in[1]> (define greeting "hello")
+; defined greeting
+in[2]> (define (make-offset start)
+   ..>   (lambda (step) (+ start step)))
+; defined make-offset
+in[3]> (define from-ten (make-offset 10))
+; defined from-ten
+in[4]> (from-ten 5)
+=> 15
+in[5]> (map from-ten (list 1 2 3))
+=> (11 12 13)
+in[6]> (filter even? (range 1 11))
+=> (2 4 6 8 10)
+in[7]> (fold + 0 (map square (range 1 6)))
+=> 55
+in[8]> (from-ten "five")
+lisp-plus: E-TYPE at in[8]:1:0
+  `+` needs numbers, got "five"
+  in: (+ start step)
+  within: (from-ten "five")
+  frames: lambda
+  (a value has the wrong kind for the operation)
+; session continues: what ran before the failure stays (nothing is rolled back); what came after it did not run.
+in[9]> (fro-ten 1)
+lisp-plus: E-UNBOUND at in[9]:1:0
+  unknown name `fro-ten`
+  in: fro-ten
+  within: (fro-ten 1)
+  (a name has no binding)
+; session continues: what ran before the failure stays (nothing is rolled back); what came after it did not run.
+in[10]> (string-append greeting ", " (number->string (from-ten 32)))
+=> "hello, 42"
+in[11]> ,names
+; bound in session bf4152a0: from-ten greeting make-offset
+in[11]> 
+; bye (session bf4152a0, 10 submissions)

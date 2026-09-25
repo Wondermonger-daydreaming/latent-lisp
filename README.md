@@ -12,6 +12,13 @@ failures, and rulings. Its central wager is that a fluent system can be made to 
 check's costume: rhetoric is not evidence, production is not truth, and a witness must face the exact
 proposition it claims to support.
 
+*How to read this page.* Several words above are this lab's own. **lane, witness, receipt, standing** (and its grades
+**CANDIDATE / REGISTERED / ADOPTED / PUBLISHED**), **sentinel, ferry, subject tree** are defined once, in the
+[Working vocabulary](#working-vocabulary-read-this-before-reading-the-table) table further down — and, as of this revision, so are
+**specimen, ruling, preserved failure** and **governed**. A lane name's **`/0`, `/1` …** suffix is a revision designation, not a version you
+can install and not a standing. The runnable thing is the next section; everything after it is the record of what was built, what it claims, and what it
+does not.
+
 ## Write a program and run it
 
 Lisp+ now has a programming surface — **PROGRAM /0** (`mneme/language-program-0/`, candidate): user-defined
@@ -35,6 +42,9 @@ described         = ((1 odd) (2 even) (3 odd) (4 even))
 (1 "-" 16 "-" 81)
 ```
 
+*(The labelled lines are printed by the program itself; the final unlabelled line is the value of the file's last form, which the
+runner prints.)*
+
 A program is a file of forms; the last one's value is printed. Write your own:
 
 ```lisp
@@ -45,9 +55,22 @@ A program is a file of forms; the last one's value is printed. Write your own:
 
 **The guide, with executable examples:** `mneme/language-program-0/README.md`. **The specification:**
 `mneme/language-program-0/PROGRAM-0-GRAMMAR-AND-SEMANTICS.md`. **Tests:** `bash mneme/language-program-0/run-selftest.sh`
-(125 checks). Limits, plainly: 1,000,000 evaluation steps and 4,000 nested calls per run, no tail-call elimination, no
+(136 checks). Limits, plainly: 1,000,000 evaluation steps and 4,000 nested calls per run, no tail-call elimination, no
 mutation, no error handling inside a program; `true`/`false` are the only booleans; the effect lanes are not loaded, so a
 program derives and never performs. SBCL 2.4.6 on Linux.
+
+## Work interactively
+
+**REPL /0** (`mneme/language-repl-0/`, candidate) keeps one session between submissions — define, build a closure, make a
+mistake, keep going — on the command line or in a local browser workbench:
+
+```sh
+bash mneme/language-repl-0/lisp-plus-repl.sh          # command line; ,help lists the controls
+bash mneme/language-repl-0/lisp-plus-repl.sh --web    # a local workbench at http://127.0.0.1:4917/
+```
+
+Submissions share one program frame, so redefining a name is `E-REDEFINE`, as in a file. The guide, the HTTP contract and
+the limits (no wall-clock bound, no rollback, no persisted history): `mneme/language-repl-0/README.md`.
 
 Everything below this line is the governed construction the surface sits on — specifications, lanes, receipts, rulings.
 It is long by design; the language above is the door.
@@ -226,6 +249,11 @@ unresolved finding is unchanged* — never that a semantic question is resolved.
 | **stranger audit owed** | a required review by a sufficiently corpus-independent hand that has not yet been discharged |
 | **same-family** | work by hands sharing this corpus and institutional frame; useful cross-reading, not independence |
 | **subject tree** | the exact committed subtree selected as cargo, distinct from a working directory or repository history |
+| **specimen** | a small runnable file kept as evidence of one property (this page's own is `mneme/readme-specimen.lisp`); it demonstrates, it does not certify |
+| **ruling** | a decision filed in-tree that sets, holds, or refuses a standing; cited by path, never restated (see *Where authority and limits live*) |
+| **preserved failure** | a recorded failed check retained as evidence; later repair does not erase the earlier result or by itself settle its standing (LCI0 carries four FAILs requiring an authorial ruling) |
+| **governed** | subject to a declared procedure and its required records, rather than established by a bare push or edit |
+| **/0, /1 …** | a revision designation within a named specification or lane, such as "Memory Layer /0" or "PROGRAM /0"; not an installable package version or a standing |
 
 ### The lanes and where they stand
 

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en" data-webtui-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="lisp-plus-token" content="__LISP_PLUS_TOKEN__">
+<title>Lisp+ REPL /0 workbench</title>
+<link rel="stylesheet" href="/vendor/webtui-css-0.1.10/full.css">
+<link rel="stylesheet" href="/app.css">
+<script src="/app.js" defer></script>
+</head>
+<body>
+
+<header id="top" box-="double">
+  <h1>Lisp+ REPL /0 <span class="dim">local workbench</span></h1>
+  <p class="line">
+    <span class="k">session</span> <code id="s-id">…</code>
+    <span class="k">generation</span> <span id="s-gen">…</span>
+    <span class="k">started</span> <span id="s-started">…</span>
+    <span class="k">submissions</span> <span id="s-subs">…</span>
+  </p>
+  <p class="line">
+    <span class="k">status</span>
+    <span id="status" role="status" aria-live="polite" aria-atomic="true">loading session…</span>
+  </p>
+  <p class="line dim" id="runtime">runtime: …</p>
+</header>
+
+<div class="layout">
+  <main id="work">
+    <section id="editor-box" box-="round" aria-labelledby="editor-label">
+      <label id="editor-label" for="editor"><span is-="badge" variant-="background2">next input</span></label>
+      <textarea id="editor" rows="7" spellcheck="false" autocomplete="off" autocapitalize="off"
+        aria-describedby="keys" placeholder="(define (make-adder n) (lambda (x) (+ x n)))"></textarea>
+      <div class="row">
+        <button id="submit-btn" type="button" size-="small">Submit</button>
+        <span id="keys" class="dim">Ctrl+Enter or Cmd+Enter submits · Enter inserts a newline · Alt+Up / Alt+Down recall earlier submissions (newest first)</span>
+      </div>
+      <p id="recall-line" class="dim small" aria-live="polite"></p>
+      <div id="notice" role="status" aria-live="polite" hidden></div>
+    </section>
+
+    <section id="transcript-box" aria-labelledby="transcript-h">
+      <h2 id="transcript-h">Transcript</h2>
+      <div id="reset-banner" box-="double" role="status" aria-live="polite" hidden></div>
+      <p id="transcript-empty" class="dim">Nothing evaluated in this view yet.</p>
+      <div id="transcript"></div>
+    </section>
+  </main>
+
+  <aside id="side">
+    <section box-="round" aria-labelledby="names-h">
+      <h2 id="names-h">Names <span class="dim">bound in this session</span></h2>
+      <ul id="names" marker-="bullet"></ul>
+      <p id="names-empty" class="dim">(none yet)</p>
+    </section>
+
+    <section box-="round" aria-labelledby="history-h">
+      <h2 id="history-h">History <span class="dim">newest first</span></h2>
+      <p class="dim small">Kept by this page only (the server keeps none); lost on reload. Click one to copy it into the editor; it is not submitted.</p>
+      <ul id="history" class="plain"></ul>
+      <p id="history-empty" class="dim">(nothing submitted yet)</p>
+    </section>
+
+    <section box-="round" aria-labelledby="reset-h">
+      <h2 id="reset-h">Session</h2>
+      <button id="refresh-btn" type="button" size-="small" variant-="background2">Refresh session (read-only)</button>
+      <button id="reset-btn" type="button" size-="small" variant-="background2">Reset session…</button>
+      <div id="reset-confirm" hidden>
+        <p id="reset-question"></p>
+        <div class="row">
+          <button id="reset-yes" type="button" size-="small" variant-="foreground0">Yes, reset</button>
+          <button id="reset-no" type="button" size-="small" variant-="background2">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section box-="round">
+      <details id="notshown">
+      <summary><strong>What this workbench does not show</strong></summary>
+      <p class="dim small">The server does not supply these, so the page does not invent them:</p>
+      <ul>
+        <li>steps used (only the step budget is known)</li>
+        <li>per-form values of a multi-form submission: only the last form's result is shown</li>
+        <li>positions inside a form: an error cites its submission's location and the failing expression, not the line inside a closure's body where that expression was defined</li>
+        <li>what happened to a request whose answer never arrived: the page says "outcome unknown" and offers a read-only refresh</li>
+        <li>types beyond <code>kind</code></li>
+        <li>provenance or evidence fields of any kind</li>
+        <li>timings per form: elapsed is for the whole submission</li>
+        <li>prelude and primitive names (Names lists user bindings only)</li>
+        <li>any server-side history: there is none; this page's history is local and lost on reload</li>
+      </ul>
+      </details>
+    </section>
+  </aside>
+</div>
+
+</body>
+</html>

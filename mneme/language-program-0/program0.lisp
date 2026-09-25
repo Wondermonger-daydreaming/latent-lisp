@@ -107,15 +107,26 @@ the language refuses before the host does.")
    (source   :initarg :source   :reader program0-error-source   :initform nil))
   (:report (lambda (c s) (write-string (render-program0-error c) s))))
 
-(defun fail (code fmt &rest args)
+(define-condition program0-incomplete-source (program0-error) ()
+  (:documentation "An E-READ refusal whose cause is that the reader reached the END OF THE
+TEXT inside a form — an unclosed parenthesis, string, `|…|' escape or `#' dispatch. It
+IS a program0-error with code E-READ and renders exactly as one; a file runner sees no
+difference. The subclass exists so an interactive reader (REPL /0) can tell input that
+is merely unfinished from input that is malformed, using the reader's own verdict
+rather than a second parser. (REPL /0 candidate, 2026-09-25.)"))
+
+(defun fail-as (class code fmt &rest args)
   (assert (assoc code +error-codes+ :test #'string=) () "unknown error code ~a" code)
-  (error 'program0-error
+  (error class
          :code code
          :message (apply #'format nil fmt args)
          :location *current-location*
          :path (subseq *form-path* 0 (min 3 (length *form-path*)))
          :frames *frames*
          :source *source-name*))
+
+(defun fail (code fmt &rest args)
+  (apply #'fail-as 'program0-error code fmt args))
 
 ;;; ===========================================================================
 ;;; §3 — values.
@@ -267,6 +278,9 @@ shadowing, and it is the only way a name is ever rebound."
              (loop while (and (< i n) (char/= (char text i) #\Newline)) do (incf i)))
             (t (return i))))))
 
+(defvar +eof+ (make-symbol "END-OF-SOURCE")
+  "Returned by the reader only at end of text between forms; never a datum a source can write.")
+
 (defun read-source-forms (text &key (source-name "<source>"))
   "→ list of (form line . column). TEXT is the whole source. The bindings are
 the law (MANY-ACTS-0-GRAMMAR.md §1b): `*read-eval*' NIL kills `#.' at the
@@ -285,10 +299,20 @@ reader; `*package*' is the source namespace so every symbol is homed there."
                (*form-path* '())
                (*frames* '()))
           (multiple-value-bind (form next)
-              (handler-case (read-from-string text t nil :start start)
+              ;; EOF-ERROR-P NIL: the reader returns +EOF+ only when the text ends BETWEEN
+              ;; forms (after whitespace or a #|…|# comment that %skip-blank does not skip);
+              ;; it still signals END-OF-FILE when the text ends INSIDE a form. Until
+              ;; 2026-09-25 this was T, so a source ending in a #|…|# comment was refused
+              ;; E-READ as if a form were unfinished (REPL /0 candidate; disclosed there).
+              (handler-case (read-from-string text nil +eof+ :start start)
+                (end-of-file (c)
+                  (fail-as 'program0-incomplete-source
+                           "E-READ" "the text ends inside the form starting here (an unclosed parenthesis, string, |…| escape or # dispatch) [~a]"
+                           (type-of c)))
                 (error (c)
                   (fail "E-READ" "the reader refused the form starting here: ~a [~a]"
                         (remove #\Newline (princ-to-string c)) (type-of c))))
+            (when (eq form +eof+) (return (nreverse forms)))
             (validate-source-datum form)
             (push (cons form loc) forms)
             (setf index next)))))))
