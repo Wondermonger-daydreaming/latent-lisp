@@ -1,0 +1,1083 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://latent-lisp.local/schemas/preauthorship.schema.json",
+  "title": "Language-A pre-authorship schema bundle",
+  "schema_version": "lae-preauthorship-schema-bundle/1.0.0",
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?[+-][0-9]{2}:[0-9]{2}$"
+    },
+    "stable-id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*:[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "record-envelope": {
+      "type": "object",
+      "properties": {
+        "schema_version": {"type": "string"},
+        "record_id": {"$ref": "#/$defs/stable-id"},
+        "record_digest": {"$ref": "#/$defs/digest"},
+        "canonical_byte_length": {"type": "integer", "minimum": 2},
+        "actor_id": {"$ref": "#/$defs/stable-id"},
+        "event_time": {"$ref": "#/$defs/timestamp"},
+        "predecessor_digest": {
+          "oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+        },
+        "parent_versions": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/version-ref"},
+          "uniqueItems": true
+        },
+        "bounded_unknowns": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "synthetic_taint_id": {
+          "oneOf": [{"$ref": "#/$defs/stable-id"}, {"type": "null"}]
+        }
+      },
+      "required": [
+        "schema_version", "record_id", "record_digest", "canonical_byte_length",
+        "actor_id", "event_time", "predecessor_digest", "parent_versions",
+        "bounded_unknowns", "synthetic_taint_id"
+      ]
+    },
+    "version-ref": {
+      "type": "object",
+      "properties": {
+        "record_id": {"$ref": "#/$defs/stable-id"},
+        "schema_version": {"type": "string", "minLength": 5},
+        "record_digest": {"$ref": "#/$defs/digest"}
+      },
+      "required": ["record_id", "schema_version", "record_digest"],
+      "additionalProperties": false
+    },
+    "byte-binding": {
+      "type": "object",
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/stable-id"},
+        "byte_role": {
+          "enum": [
+            "task", "source-component", "source-manifest", "visible-rendering",
+            "declaration", "receipt", "witness", "lawful-example", "failing-example",
+            "dossier", "handoff-entry", "doctrine", "authority", "custody",
+            "design-input"
+          ]
+        },
+        "storage_path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+        },
+        "byte_length": {"type": "integer", "minimum": 0},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "media_type": {"type": "string", "minLength": 3},
+        "encoding": {"enum": ["utf-8", "binary", "us-ascii"]}
+      },
+      "required": [
+        "artifact_id", "byte_role", "storage_path", "byte_length", "sha256",
+        "media_type", "encoding"
+      ],
+      "additionalProperties": false
+    },
+    "locator": {
+      "type": "object",
+      "properties": {
+        "locator_id": {"$ref": "#/$defs/stable-id"},
+        "locator_type": {
+          "enum": ["byte-range", "line-range", "page-range", "record-id", "table-cell", "media-time-range"]
+        },
+        "start": {"type": "string", "minLength": 1},
+        "end": {"type": "string", "minLength": 1},
+        "label": {"type": ["string", "null"]},
+        "component_sha256": {"$ref": "#/$defs/digest"}
+      },
+      "required": ["locator_id", "locator_type", "start", "end", "label", "component_sha256"],
+      "additionalProperties": false
+    },
+    "profile-measurement": {
+      "type": "object",
+      "properties": {
+        "status": {"enum": ["observed", "not-observed", "unadjudicated", "not-applicable"]},
+        "value": {"type": ["string", "number", "boolean", "null"]},
+        "evidence_records": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}}
+      },
+      "required": ["status", "value", "evidence_records"],
+      "additionalProperties": false
+    },
+    "odr-43-exact-decision": {
+      "type": "object",
+      "properties": {
+        "decision_kind": {"const": "item-author-identities"},
+        "item_author_actor_ids": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}, "minItems": 1, "uniqueItems": true},
+        "assignments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "actor_id": {"$ref": "#/$defs/stable-id"},
+              "families": {"type": "array", "items": {"enum": ["bounded-support", "scope-and-version", "conflict-and-residue", "notation-neutral-transfer"]}, "minItems": 1, "uniqueItems": true},
+              "access_scope": {"type": "array", "items": {"enum": ["item-draft-repository", "source-packet", "freezer-dossier", "no-key-access"]}, "minItems": 1, "uniqueItems": true},
+              "model_and_tool_disclosure_refs": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}}
+            },
+            "required": ["actor_id", "families", "access_scope", "model_and_tool_disclosure_refs"],
+            "additionalProperties": false
+          }
+        },
+        "separate_freezer_or_overlap_auditor_actor_ids": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}, "minItems": 1, "uniqueItems": true},
+        "prior_exposure_declaration_refs": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}, "minItems": 1}
+      },
+      "required": [
+        "decision_kind", "item_author_actor_ids", "assignments",
+        "separate_freezer_or_overlap_auditor_actor_ids",
+        "prior_exposure_declaration_refs"
+      ],
+      "additionalProperties": false
+    },
+    "odr-60-exact-decision": {
+      "type": "object",
+      "properties": {
+        "decision_kind": {"const": "role-allocation-policy"},
+        "positive_conclusion_minimum": {"type": "integer", "minimum": 8},
+        "insufficiency_minimum": {"type": "integer", "minimum": 8},
+        "closed_class_trap_minimum": {"type": "integer", "minimum": 8},
+        "role_overlap_policy": {"enum": ["disallowed", "allowed-with-explicit-multi-role-declaration"]},
+        "independent_instantiation_rule": {"type": "string", "minLength": 1},
+        "family_allocations": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "properties": {
+              "family": {"enum": ["bounded-support", "scope-and-version", "conflict-and-residue", "notation-neutral-transfer"]},
+              "positive_conclusion": {"type": "integer", "minimum": 0},
+              "insufficiency": {"type": "integer", "minimum": 0},
+              "closed_class_trap": {"type": "integer", "minimum": 0}
+            },
+            "required": ["family", "positive_conclusion", "insufficiency", "closed_class_trap"],
+            "additionalProperties": false
+          }
+        },
+        "closed_trap_vocabulary": {
+          "const": [
+            "unsupported-assertion", "scope-extension", "version-laundering",
+            "receipt-as-truth", "self-certified-verification",
+            "erased-unresolved-residue", "unnamed-effectful-procedure",
+            "confidence-without-admissible-basis"
+          ]
+        },
+        "distinctness_evidence_rule": {"type": "string", "minLength": 1}
+      },
+      "required": [
+        "decision_kind", "positive_conclusion_minimum", "insufficiency_minimum",
+        "closed_class_trap_minimum", "role_overlap_policy",
+        "independent_instantiation_rule", "family_allocations",
+        "closed_trap_vocabulary", "distinctness_evidence_rule"
+      ],
+      "additionalProperties": false
+    },
+    "item-record": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-item-record/1.0.0"},
+            "item_id": {"$ref": "#/$defs/stable-id"},
+            "family": {"enum": ["bounded-support", "scope-and-version", "conflict-and-residue", "notation-neutral-transfer"]},
+            "task_bytes": {"$ref": "#/$defs/byte-binding"},
+            "source_packet": {"$ref": "#/$defs/version-ref"},
+            "renderings": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}, "uniqueItems": true},
+            "transfer": {"type": "boolean"},
+            "sham_designated": {"type": "boolean"},
+            "commission_actor_ids": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}, "minItems": 1, "uniqueItems": true},
+            "ancestry": {"$ref": "#/$defs/version-ref"},
+            "prior_exposure": {"$ref": "#/$defs/version-ref"},
+            "exclusion_receipt": {"$ref": "#/$defs/version-ref"},
+            "lexical_collision_receipt": {"$ref": "#/$defs/version-ref"},
+            "semantic_overlap_receipt": {"$ref": "#/$defs/version-ref"},
+            "freezer_decision": {"oneOf": [{"$ref": "#/$defs/version-ref"}, {"type": "null"}]},
+            "draft_state": {"enum": ["draft", "candidate", "freezer-accepted", "frozen"]}
+          },
+          "required": [
+            "item_id", "family", "task_bytes", "source_packet", "renderings", "transfer",
+            "sham_designated", "commission_actor_ids", "ancestry", "prior_exposure",
+            "exclusion_receipt", "lexical_collision_receipt", "semantic_overlap_receipt",
+            "freezer_decision", "draft_state"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "source-packet-manifest": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-source-packet-manifest/1.0.0"},
+            "source_packet_id": {"$ref": "#/$defs/stable-id"},
+            "manifest_bytes": {"$ref": "#/$defs/byte-binding"},
+            "state": {"enum": ["draft", "candidate", "freezer-accepted", "frozen"]},
+            "title": {"type": "string", "minLength": 1},
+            "creator": {"type": "string", "minLength": 1},
+            "publication_or_retrieval_date": {"type": "string", "minLength": 1},
+            "version_or_edition": {"type": "string", "minLength": 1},
+            "license_or_permission": {"type": "string", "minLength": 1},
+            "components": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}, "minItems": 1, "uniqueItems": true},
+            "canonical_order": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}, "minItems": 1, "uniqueItems": true},
+            "bounds": {
+              "type": "object",
+              "properties": {
+                "temporal": {"type": "string", "minLength": 1},
+                "corpus": {"type": "string", "minLength": 1},
+                "jurisdictional": {"type": "string", "minLength": 1},
+                "version": {"type": "string", "minLength": 1},
+                "procedure": {"type": "string", "minLength": 1},
+                "evidentiary": {"type": "string", "minLength": 1}
+              },
+              "required": ["temporal", "corpus", "jurisdictional", "version", "procedure", "evidentiary"],
+              "additionalProperties": false
+            },
+            "source_completeness": {
+              "type": "object",
+              "properties": {
+                "intentionally_included": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                "intentionally_excluded": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                "finite_enough_basis": {"type": "string", "minLength": 1}
+              },
+              "required": ["intentionally_included", "intentionally_excluded", "finite_enough_basis"],
+              "additionalProperties": false
+            },
+            "effectful_procedures": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "transformation_records": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}}
+          },
+          "required": [
+            "source_packet_id", "manifest_bytes", "state", "title", "creator",
+            "publication_or_retrieval_date", "version_or_edition", "license_or_permission",
+            "components", "canonical_order", "bounds", "source_completeness",
+            "effectful_procedures", "transformation_records"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "source-component": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-source-component/1.0.0"},
+            "component_id": {"$ref": "#/$defs/stable-id"},
+            "source_packet_id": {"$ref": "#/$defs/stable-id"},
+            "component_bytes": {"$ref": "#/$defs/byte-binding"},
+            "title": {"type": "string", "minLength": 1},
+            "creator": {"type": "string", "minLength": 1},
+            "version_or_edition": {"type": "string", "minLength": 1},
+            "license_or_permission": {"type": "string", "minLength": 1},
+            "locators": {"type": "array", "items": {"$ref": "#/$defs/locator"}, "minItems": 1},
+            "transformations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "state": {"enum": ["draft", "candidate", "freezer-accepted", "frozen"]}
+          },
+          "required": [
+            "component_id", "source_packet_id", "component_bytes", "title", "creator",
+            "version_or_edition", "license_or_permission", "locators", "transformations", "state"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "arm-rendering": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-arm-rendering/1.0.0"},
+            "rendering_id": {"$ref": "#/$defs/stable-id"},
+            "item_id": {"$ref": "#/$defs/stable-id"},
+            "item_task_sha256": {"$ref": "#/$defs/digest"},
+            "source_packet": {"$ref": "#/$defs/version-ref"},
+            "arm": {"enum": ["NL", "PERSONA", "SCAFFOLD", "LANG-A", "SHAM"]},
+            "visible_bytes": {"$ref": "#/$defs/byte-binding"},
+            "prompt_template": {"$ref": "#/$defs/version-ref"},
+            "wrapper_obligation": {"$ref": "#/$defs/version-ref"},
+            "generated_by": {"$ref": "#/$defs/stable-id"},
+            "parity_leak_receipt": {"$ref": "#/$defs/version-ref"},
+            "state": {"enum": ["draft", "candidate", "freezer-accepted", "frozen"]}
+          },
+          "required": [
+            "rendering_id", "item_id", "item_task_sha256", "source_packet", "arm", "visible_bytes",
+            "prompt_template", "wrapper_obligation", "generated_by",
+            "parity_leak_receipt", "state"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "ancestry-declaration": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-ancestry-declaration/1.0.0"},
+            "subject_id": {"$ref": "#/$defs/stable-id"},
+            "subject_bytes_sha256": {"$ref": "#/$defs/digest"},
+            "declaration_bytes": {"$ref": "#/$defs/byte-binding"},
+            "input_artifacts": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}},
+            "read_event_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true},
+            "people": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}},
+            "models_and_tools": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "repositories_templates_examples": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "transmission_event_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}},
+            "known_contamination": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}},
+            "declaration_standing": {"enum": ["self-report", "external-custody", "mixed"]}
+          },
+          "required": [
+            "subject_id", "subject_bytes_sha256", "declaration_bytes", "input_artifacts", "read_event_digests", "people",
+            "models_and_tools", "repositories_templates_examples", "transmission_event_digests",
+            "known_contamination", "declaration_standing"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "prior-exposure-declaration": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-prior-exposure-declaration/1.0.0"},
+            "subject_id": {"$ref": "#/$defs/stable-id"},
+            "subject_bytes_sha256": {"$ref": "#/$defs/digest"},
+            "declaration_bytes": {"$ref": "#/$defs/byte-binding"},
+            "exposures": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "recipient_actor_id": {"$ref": "#/$defs/stable-id"},
+                  "exposure_type": {"enum": ["target", "target-equivalent", "grader", "adjudicator", "validator-feedback", "public", "other"]},
+                  "artifact": {"$ref": "#/$defs/version-ref"},
+                  "event_digest": {"$ref": "#/$defs/digest"},
+                  "at": {"$ref": "#/$defs/timestamp"}
+                },
+                "required": ["recipient_actor_id", "exposure_type", "artifact", "event_digest", "at"],
+                "additionalProperties": false
+              }
+            },
+            "declaration_standing": {"enum": ["self-report", "external-custody", "mixed"]},
+            "separation_status": {"enum": ["not-certified", "contaminated", "unknown-bounded", "bounded-no-observed-exposure"]},
+            "external_custodian_actor_id": {"oneOf": [{"$ref": "#/$defs/stable-id"}, {"type": "null"}]}
+          },
+          "required": [
+            "subject_id", "subject_bytes_sha256", "declaration_bytes", "exposures", "declaration_standing",
+            "separation_status", "external_custodian_actor_id"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "exclusion-taint-record": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-exclusion-taint-record/1.0.0"},
+            "subject_ids": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}, "minItems": 1, "uniqueItems": true},
+            "subject_sha256s": {"type": "array", "items": {"$ref": "#/$defs/digest"}, "minItems": 1, "uniqueItems": true},
+            "identity_bindings": {"type": "array", "items": {"$ref": "#/$defs/byte-binding"}, "minItems": 1},
+            "disposition": {"enum": ["cleared", "excluded", "permanently-tainted", "rejected"]},
+            "reason_class": {"enum": ["no-listed-exclusion", "public-fixture", "cd0-lci0-vector", "p2a-material", "harness-control", "grader-calibration", "target-exposed", "validator-feedback", "unknown-overlap", "synthetic-mutation", "construct-validity-specimen"]},
+            "semantic_derivatives_excluded": {"const": true},
+            "preserved_append_only": {"const": true},
+            "basis_event_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}}
+          },
+          "required": [
+            "subject_ids", "subject_sha256s", "identity_bindings", "disposition", "reason_class",
+            "semantic_derivatives_excluded", "preserved_append_only", "basis_event_digests"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "lexical-collision-receipt": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-lexical-collision-receipt/1.0.0"},
+            "candidate_id": {"$ref": "#/$defs/stable-id"},
+            "candidate_sha256": {"$ref": "#/$defs/digest"},
+            "excluded_corpora": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}, "minItems": 1},
+            "algorithms": {"type": "array", "items": {"enum": ["exact-bytes", "normalized-ngram", "identifier", "distinctive-phrase", "numeric-tuple", "source-locator", "structural-signature"]}, "minItems": 1, "uniqueItems": true},
+            "query_bytes": {"$ref": "#/$defs/byte-binding"},
+            "matches": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}},
+            "disposition": {"enum": ["pass", "fail", "unknown"]},
+            "reviewer_actor_id": {"$ref": "#/$defs/stable-id"}
+          },
+          "required": ["candidate_id", "candidate_sha256", "excluded_corpora", "algorithms", "query_bytes", "matches", "disposition", "reviewer_actor_id"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "semantic-overlap-receipt": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-semantic-overlap-receipt/1.0.0"},
+            "candidate_id": {"$ref": "#/$defs/stable-id"},
+            "candidate_sha256": {"$ref": "#/$defs/digest"},
+            "excluded_corpora": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}, "minItems": 1},
+            "methods": {"type": "array", "items": {"enum": ["blinded-human", "declared-model", "embedding-retrieval"]}, "minItems": 1, "uniqueItems": true},
+            "query_set_bytes": {"$ref": "#/$defs/byte-binding"},
+            "threshold_rule": {"type": "string", "minLength": 1},
+            "candidate_matches": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}},
+            "decisions": {"type": "array", "items": {"enum": ["exclude", "return", "retain-bounded", "unknown"]}},
+            "disposition": {"enum": ["pass", "fail", "unknown"]},
+            "reviewer_actor_id": {"$ref": "#/$defs/stable-id"},
+            "self_certified_non_overlap": {"const": false}
+          },
+          "required": [
+            "candidate_id", "candidate_sha256", "excluded_corpora", "methods", "query_set_bytes", "threshold_rule",
+            "candidate_matches", "decisions", "disposition", "reviewer_actor_id",
+            "self_certified_non_overlap"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "catchability-witness": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-catchability-witness/1.0.0"},
+            "visibility": {"const": "freezer-only"},
+            "item_id": {"$ref": "#/$defs/stable-id"},
+            "item_task_sha256": {"$ref": "#/$defs/digest"},
+            "proposed_role": {"enum": ["closed-class-trap", "positive-conclusion"]},
+            "lawful_artifact_bytes": {"$ref": "#/$defs/byte-binding"},
+            "failing_artifact_bytes": {"$ref": "#/$defs/byte-binding"},
+            "witness_explanation_bytes": {"$ref": "#/$defs/byte-binding"},
+            "source_locators": {"type": "array", "items": {"$ref": "#/$defs/locator"}, "minItems": 1},
+            "proposed_scorable_opportunity_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "created_before_any_target_exposure": {"const": true},
+            "permanent_taint_record": {"$ref": "#/$defs/version-ref"},
+            "dossier_id": {"$ref": "#/$defs/stable-id"}
+          },
+          "required": [
+            "visibility", "item_id", "item_task_sha256", "proposed_role", "lawful_artifact_bytes",
+            "failing_artifact_bytes", "witness_explanation_bytes", "source_locators",
+            "proposed_scorable_opportunity_ids", "created_before_any_target_exposure",
+            "permanent_taint_record", "dossier_id"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "item-freezer-dossier": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-item-freezer-dossier/1.0.0"},
+            "visibility": {"const": "freezer-only"},
+            "item_id": {"$ref": "#/$defs/stable-id"},
+            "item_task_sha256": {"$ref": "#/$defs/digest"},
+            "dossier_bytes": {"$ref": "#/$defs/byte-binding"},
+            "proposed_role_memberships": {"type": "array", "items": {"enum": ["positive-conclusion", "deliberate-insufficiency", "closed-class-trap"]}, "uniqueItems": true},
+            "expected_answer_artifacts": {"type": "array", "items": {"$ref": "#/$defs/byte-binding"}},
+            "proposed_opportunity_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "proposed_trap_classes": {"type": "array", "items": {"enum": ["unsupported-assertion", "scope-extension", "version-laundering", "receipt-as-truth", "self-certified-verification", "erased-unresolved-residue", "unnamed-effectful-procedure", "confidence-without-admissible-basis"]}, "uniqueItems": true},
+            "catchability_witness_ids": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}, "uniqueItems": true},
+            "lawful_and_failing_examples": {"type": "array", "items": {"$ref": "#/$defs/byte-binding"}},
+            "ancestry_deliberation": {"$ref": "#/$defs/version-ref"},
+            "prior_exposure_deliberation": {"$ref": "#/$defs/version-ref"},
+            "exclusion_and_overlap_deliberations": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}},
+            "draft_state": {"enum": ["draft", "candidate"]}
+          },
+          "required": [
+            "visibility", "item_id", "item_task_sha256", "dossier_bytes", "proposed_role_memberships",
+            "expected_answer_artifacts", "proposed_opportunity_ids", "proposed_trap_classes",
+            "catchability_witness_ids", "lawful_and_failing_examples", "ancestry_deliberation",
+            "prior_exposure_deliberation", "exclusion_and_overlap_deliberations", "draft_state"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "freezer-decision-record": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-freezer-decision-record/1.0.0"},
+            "item": {"$ref": "#/$defs/version-ref"},
+            "dossier": {"$ref": "#/$defs/version-ref"},
+            "decision": {"enum": ["accepted", "rejected", "returned"]},
+            "resulting_state": {"enum": ["candidate", "freezer-accepted"]},
+            "reviewer_actor_id": {"$ref": "#/$defs/stable-id"},
+            "rationale_bytes": {"$ref": "#/$defs/byte-binding"},
+            "preserve_rejected_predecessor": {"const": true},
+            "supersedes_record_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}
+          },
+          "required": [
+            "item", "dossier", "decision", "resulting_state", "reviewer_actor_id",
+            "rationale_bytes", "preserve_rejected_predecessor", "supersedes_record_digest"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "key-author-input-manifest": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-key-author-input-manifest/1.0.0"},
+            "handoff_id": {"$ref": "#/$defs/stable-id"},
+            "handoff_state": {"const": "frozen"},
+            "item_bank_digest": {"$ref": "#/$defs/digest"},
+            "freezer_actor_id": {"$ref": "#/$defs/stable-id"},
+            "accepted_at": {"$ref": "#/$defs/timestamp"},
+            "entries": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "artifact_kind": {"enum": ["frozen-item", "frozen-rendering", "source-packet-manifest", "source-component", "controlling-scoring-doctrine", "authority-identity", "neutral-custody-receipt"]},
+                  "record": {"$ref": "#/$defs/version-ref"},
+                  "bytes": {"$ref": "#/$defs/byte-binding"}
+                },
+                "required": ["artifact_kind", "record", "bytes"],
+                "additionalProperties": false
+              }
+            },
+            "authority_identities": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}, "minItems": 1}
+          },
+          "required": [
+            "handoff_id", "handoff_state", "item_bank_digest", "freezer_actor_id",
+            "accepted_at", "entries", "authority_identities"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "handoff-public-artifact": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-handoff-public-artifact/1.0.0"},
+            "handoff_artifact_kind": {"enum": ["controlling-scoring-doctrine", "authority-identity", "neutral-custody-receipt"]},
+            "public_bytes": {"$ref": "#/$defs/byte-binding"},
+            "item_specific_content": {"const": false},
+            "freezer_only_content": {"const": false},
+            "mutable_bank_data": {"const": false}
+          },
+          "required": [
+            "handoff_artifact_kind", "public_bytes", "item_specific_content",
+            "freezer_only_content", "mutable_bank_data"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "owner-decision-record": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-owner-decision-record/1.0.0"},
+            "decision_id": {"enum": ["ODR-43", "ODR-60"]},
+            "status": {"enum": ["unresolved", "adopted", "rejected", "superseded"]},
+            "exact_decision": {
+              "oneOf": [
+                {"$ref": "#/$defs/odr-43-exact-decision"},
+                {"$ref": "#/$defs/odr-60-exact-decision"},
+                {"type": "null"}
+              ]
+            },
+            "allowed_domain": {
+              "type": "object",
+              "properties": {
+                "domain_kind": {"enum": ["actor-and-access-manifest", "allocation-policy"]},
+                "constraints": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1}
+              },
+              "required": ["domain_kind", "constraints"],
+              "additionalProperties": false
+            },
+            "rationale": {"type": ["string", "null"]},
+            "controlling_authority": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "artifact_sha256": {"$ref": "#/$defs/digest"},
+                  "section": {"type": "string", "minLength": 1},
+                  "standing": {"enum": ["controlling-authority", "scoped-authorial-erratum", "accepted-authorial-review"]}
+                },
+                "required": ["artifact_sha256", "section", "standing"],
+                "additionalProperties": false
+              }
+            },
+            "deciding_actor": {"oneOf": [{"$ref": "#/$defs/stable-id"}, {"type": "null"}]},
+            "role_shared_root_disclosure": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "roles": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                    "shared_roots": {"type": "array", "items": {"type": "string", "minLength": 1}},
+                    "bounded_unknowns": {"type": "array", "items": {"type": "string", "minLength": 1}}
+                  },
+                  "required": ["roles", "shared_roots", "bounded_unknowns"],
+                  "additionalProperties": false
+                },
+                {"type": "null"}
+              ]
+            },
+            "dependencies": {"type": "array", "items": {"type": "string", "minLength": 1}},
+            "adoption_timestamp": {"oneOf": [{"$ref": "#/$defs/timestamp"}, {"type": "null"}]},
+            "exact_executable_gate": {"enum": ["preauthorship.item-author-role-access-manifest", "preauthorship.item-bank-role-allocation-validator"]}
+          },
+          "required": [
+            "decision_id", "status", "exact_decision", "allowed_domain", "rationale",
+            "controlling_authority", "deciding_actor", "role_shared_root_disclosure",
+            "dependencies", "adoption_timestamp", "exact_executable_gate"
+          ]
+        },
+        {
+          "if": {"properties": {"status": {"const": "unresolved"}}},
+          "then": {
+            "properties": {
+              "exact_decision": {"type": "null"},
+              "rationale": {"type": "null"},
+              "deciding_actor": {"type": "null"},
+              "role_shared_root_disclosure": {"type": "null"},
+              "adoption_timestamp": {"type": "null"}
+            }
+          },
+          "else": {
+            "if": {"properties": {"status": {"const": "adopted"}}},
+            "then": {
+              "properties": {
+                "exact_decision": {"type": "object", "minProperties": 1},
+                "rationale": {"type": "string", "minLength": 1},
+                "deciding_actor": {"$ref": "#/$defs/stable-id"},
+                "role_shared_root_disclosure": {"type": "object"},
+                "adoption_timestamp": {"$ref": "#/$defs/timestamp"}
+              }
+            }
+          }
+        },
+        {
+          "if": {"properties": {"decision_id": {"const": "ODR-43"}}},
+          "then": {"properties": {"exact_decision": {"oneOf": [{"$ref": "#/$defs/odr-43-exact-decision"}, {"type": "null"}]}}},
+          "else": {"properties": {"exact_decision": {"oneOf": [{"$ref": "#/$defs/odr-60-exact-decision"}, {"type": "null"}]}}}
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "opportunity-record": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-opportunity-record/1.0.0"},
+            "visibility": {"const": "private-key-only-after-frozen-handoff"},
+            "opportunity_id": {"$ref": "#/$defs/stable-id"},
+            "item": {"$ref": "#/$defs/version-ref"},
+            "source_packet": {"$ref": "#/$defs/version-ref"},
+            "source_components": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}, "minItems": 1, "uniqueItems": true},
+            "source_locators": {"type": "array", "items": {"$ref": "#/$defs/locator"}, "minItems": 1},
+            "original_task_scope_bytes": {"$ref": "#/$defs/byte-binding"},
+            "keyed_unit": {"$ref": "#/$defs/version-ref"},
+            "answerability_class": {"enum": ["supported", "genuine-insufficiency", "not-applicable", "zero-opportunity"]},
+            "required_supported_conclusion_bytes": {"oneOf": [{"$ref": "#/$defs/byte-binding"}, {"type": "null"}]},
+            "lawful_uncertainty_bytes": {"$ref": "#/$defs/byte-binding"},
+            "necessary_qualification_bytes": {"$ref": "#/$defs/byte-binding"},
+            "allowed_alternative_dispositions": {"type": "array", "items": {"enum": ["supported-conclusion", "bounded-uncertainty", "lawful-abstention", "not-applicable"]}, "minItems": 1, "uniqueItems": true},
+            "not_applicable_justification": {"type": ["string", "null"]},
+            "zero_opportunity_justification": {"type": ["string", "null"]},
+            "parent_opportunity": {"oneOf": [{"$ref": "#/$defs/version-ref"}, {"type": "null"}]},
+            "hierarchical_scope": {"enum": ["root-task", "child-unit"]},
+            "denominator_inclusion": {"type": "boolean"},
+            "declaring_key_author_actor_id": {"$ref": "#/$defs/stable-id"},
+            "independent_key_audit_or_freezer_receipt": {"$ref": "#/$defs/version-ref"}
+          },
+          "required": [
+            "visibility", "opportunity_id", "item", "source_packet", "source_components", "source_locators",
+            "original_task_scope_bytes", "keyed_unit", "answerability_class",
+            "required_supported_conclusion_bytes", "lawful_uncertainty_bytes",
+            "necessary_qualification_bytes", "allowed_alternative_dispositions",
+            "not_applicable_justification", "zero_opportunity_justification", "parent_opportunity", "hierarchical_scope",
+            "denominator_inclusion", "declaring_key_author_actor_id",
+            "independent_key_audit_or_freezer_receipt"
+          ]
+        },
+        {
+          "if": {"properties": {"answerability_class": {"const": "not-applicable"}}},
+          "then": {
+            "properties": {
+              "not_applicable_justification": {"type": "string", "minLength": 1},
+              "zero_opportunity_justification": {"type": "null"},
+              "required_supported_conclusion_bytes": {"type": "null"},
+              "denominator_inclusion": {"const": false}
+            }
+          },
+          "else": {
+            "if": {"properties": {"answerability_class": {"const": "zero-opportunity"}}},
+            "then": {
+              "properties": {
+                "not_applicable_justification": {"type": "null"},
+                "zero_opportunity_justification": {"type": "string", "minLength": 1},
+                "required_supported_conclusion_bytes": {"type": "null"},
+                "denominator_inclusion": {"const": false}
+              }
+            },
+            "else": {
+              "properties": {
+                "not_applicable_justification": {"type": "null"},
+                "zero_opportunity_justification": {"type": "null"},
+                "denominator_inclusion": {"const": true}
+              },
+              "allOf": [
+                {
+                  "if": {"properties": {"answerability_class": {"const": "supported"}}},
+                  "then": {"properties": {"required_supported_conclusion_bytes": {"$ref": "#/$defs/byte-binding"}}},
+                  "else": {"properties": {"required_supported_conclusion_bytes": {"type": "null"}}}
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "keyed-unit-record": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-keyed-unit-record/1.0.0"},
+            "visibility": {"const": "private-key-only-after-frozen-handoff"},
+            "unit_id": {"$ref": "#/$defs/stable-id"},
+            "item": {"$ref": "#/$defs/version-ref"},
+            "parent_task_scope_bytes": {"$ref": "#/$defs/byte-binding"},
+            "parent_unit": {"oneOf": [{"$ref": "#/$defs/version-ref"}, {"type": "null"}]},
+            "child_unit_ids": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}, "uniqueItems": true},
+            "materiality": {"enum": ["material", "optional-context"]},
+            "obligation_status": {"enum": ["required", "optional", "not-applicable"]},
+            "overlap_rule": {"enum": ["disjoint", "overlap-no-double-count", "hierarchical-covered-by-parent"]},
+            "denominator_inclusion": {"type": "boolean"},
+            "source_packet": {"$ref": "#/$defs/version-ref"},
+            "source_components": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}, "minItems": 1, "uniqueItems": true},
+            "source_locators": {"type": "array", "items": {"$ref": "#/$defs/locator"}, "minItems": 1},
+            "coverage_relations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "related_unit_id": {"$ref": "#/$defs/stable-id"},
+                  "relation": {"enum": ["covers", "partially-covers", "does-not-cover"]}
+                },
+                "required": ["related_unit_id", "relation"],
+                "additionalProperties": false
+              }
+            },
+            "granularity_selection_status": {"const": "owner-choice-deferred"}
+          },
+          "required": [
+            "visibility", "unit_id", "item", "parent_task_scope_bytes", "parent_unit",
+            "child_unit_ids", "materiality", "obligation_status", "overlap_rule",
+            "denominator_inclusion", "source_packet", "source_components", "source_locators",
+            "coverage_relations", "granularity_selection_status"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "future-score-profile-record": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-future-score-profile-record/1.0.0"},
+            "implementation_status": {"const": "schema-capacity-only-deferred"},
+            "call_id": {"$ref": "#/$defs/stable-id"},
+            "item": {"$ref": "#/$defs/version-ref"},
+            "key_version": {"$ref": "#/$defs/version-ref"},
+            "opportunity_records": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}},
+            "opportunity_set_declaration": {
+              "type": "object",
+              "properties": {
+                "disposition": {"enum": ["declared-opportunities", "explicit-zero-opportunity", "unadjudicated"]},
+                "justification": {"type": ["string", "null"]}
+              },
+              "required": ["disposition", "justification"],
+              "additionalProperties": false
+            },
+            "structural_validity": {
+              "type": "object",
+              "properties": {
+                "status": {"enum": ["valid", "invalid", "unadjudicated", "not-applicable"]},
+                "validator_event_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}
+              },
+              "required": ["status", "validator_event_digest"],
+              "additionalProperties": false
+            },
+            "substantive_discharge": {
+              "type": "object",
+              "properties": {
+                "status": {"enum": ["complete", "partial", "none", "unadjudicated", "not-applicable"]},
+                "discharged_opportunity_ids": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}, "uniqueItems": true},
+                "undischarged_opportunity_ids": {"type": "array", "items": {"$ref": "#/$defs/stable-id"}, "uniqueItems": true},
+                "evidence_spans": {"type": "array", "items": {"$ref": "#/$defs/locator"}}
+              },
+              "required": ["status", "discharged_opportunity_ids", "undischarged_opportunity_ids", "evidence_spans"],
+              "additionalProperties": false
+            },
+            "truncation_position": {
+              "type": "object",
+              "properties": {
+                "provider_declared_truncation": {"type": "boolean"},
+                "token_cap_termination": {"type": "boolean"},
+                "apparent_self_truncation": {"type": "boolean"},
+                "last_discharged_opportunity_id": {"oneOf": [{"$ref": "#/$defs/stable-id"}, {"type": "null"}]},
+                "first_undischarged_material_opportunity_id": {"oneOf": [{"$ref": "#/$defs/stable-id"}, {"type": "null"}]},
+                "evidence_spans": {"type": "array", "items": {"$ref": "#/$defs/locator"}},
+                "source_bindings": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}},
+                "key_bindings": {"type": "array", "items": {"$ref": "#/$defs/version-ref"}}
+              },
+              "required": [
+                "provider_declared_truncation", "token_cap_termination", "apparent_self_truncation",
+                "last_discharged_opportunity_id", "first_undischarged_material_opportunity_id",
+                "evidence_spans", "source_bindings", "key_bindings"
+              ],
+              "additionalProperties": false
+            },
+            "anti_taxidermy_profile": {
+              "type": "object",
+              "properties": {
+                "keyed_completeness": {"$ref": "#/$defs/profile-measurement"},
+                "key_conditioned_refusal": {"$ref": "#/$defs/profile-measurement"},
+                "unlawful_abstention": {"$ref": "#/$defs/profile-measurement"},
+                "utility": {"$ref": "#/$defs/profile-measurement"},
+                "truncation": {"$ref": "#/$defs/profile-measurement"},
+                "over_bounding": {"$ref": "#/$defs/profile-measurement"},
+                "procedural_substitution": {"$ref": "#/$defs/profile-measurement"},
+                "positive_conclusion_defect": {"$ref": "#/$defs/profile-measurement"},
+                "substantive_discharge_status": {"$ref": "#/$defs/profile-measurement"},
+                "scope_granularity_coverage": {"$ref": "#/$defs/profile-measurement"}
+              },
+              "required": [
+                "keyed_completeness", "key_conditioned_refusal", "unlawful_abstention", "utility",
+                "truncation", "over_bounding", "procedural_substitution", "positive_conclusion_defect",
+                "substantive_discharge_status", "scope_granularity_coverage"
+              ],
+              "additionalProperties": false
+            },
+            "descriptive_composite": {
+              "oneOf": [
+                {"type": "null"},
+                {
+                  "type": "object",
+                  "properties": {
+                    "descriptive_only": {"const": true},
+                    "gating": {"const": false},
+                    "all_components_displayed": {"const": true},
+                    "value": {"type": ["string", "number"]}
+                  },
+                  "required": ["descriptive_only", "gating", "all_components_displayed", "value"],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "thresholds_selected": {"const": false}
+          },
+          "required": [
+            "implementation_status", "call_id", "item", "key_version", "opportunity_records", "opportunity_set_declaration",
+            "structural_validity", "substantive_discharge", "truncation_position",
+            "anti_taxidermy_profile", "descriptive_composite", "thresholds_selected"
+          ]
+        },
+        {
+          "if": {"properties": {"opportunity_records": {"maxItems": 0}}},
+          "then": {
+            "properties": {
+              "opportunity_set_declaration": {
+                "properties": {"disposition": {"const": "unadjudicated"}, "justification": {"type": "null"}}
+              },
+              "substantive_discharge": {"properties": {"status": {"const": "unadjudicated"}}}
+            }
+          },
+          "else": {
+            "properties": {
+              "opportunity_set_declaration": {
+                "properties": {
+                  "disposition": {"enum": ["declared-opportunities", "explicit-zero-opportunity"]}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {"properties": {"opportunity_set_declaration": {"properties": {"disposition": {"const": "explicit-zero-opportunity"}}}}},
+          "then": {"properties": {"opportunity_set_declaration": {"properties": {"justification": {"type": "string", "minLength": 1}}}}},
+          "else": {"properties": {"opportunity_set_declaration": {"properties": {"justification": {"type": "null"}}}}}
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "construct-validity-specimen-record": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-construct-validity-specimen-record/1.0.0"},
+            "specimen_id": {"enum": ["TXD-01", "TXD-02", "TXD-03", "TXD-04", "TXD-05", "TXD-06", "TXD-07", "TXD-08", "TXD-09", "TXD-10"]},
+            "specimen_class": {"enum": ["excision", "refusal-substitution", "false-abstention", "truncation-escape", "over-bounding", "procedural-fog", "scope-narrowing", "validator-lawful-language-a-evacuation", "fluent-hollow-versus-clumsy-complete", "concise-complete-versus-excision"]},
+            "identity_only": {"const": true},
+            "full_behavior_implemented": {"const": false},
+            "standing": {"const": "declared-future-freeze-quality-obligation"},
+            "permanent_taint_id": {"$ref": "#/$defs/stable-id"},
+            "design_note_bytes": {"$ref": "#/$defs/byte-binding"},
+            "prohibited_destinations": {
+              "type": "array",
+              "items": {"enum": ["target-bank", "key-author-input", "private-score-key", "grader-calibration", "held-out-experimental-material"]},
+              "minItems": 5,
+              "maxItems": 5,
+              "uniqueItems": true
+            },
+            "deferred_obligations": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1}
+          },
+          "required": [
+            "specimen_id", "specimen_class", "identity_only", "full_behavior_implemented",
+            "standing", "permanent_taint_id", "design_note_bytes", "prohibited_destinations",
+            "deferred_obligations"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "future-branch-receipt-riders": {
+      "allOf": [
+        {"$ref": "#/$defs/record-envelope"},
+        {
+          "type": "object",
+          "properties": {
+            "schema_version": {"const": "lae-future-branch-receipt-riders/1.0.0"},
+            "implementation_status": {"const": "deferred-no-branch-receipt-created"},
+            "branch": {"enum": ["B-HARM", "B-INTERACTION", "B-NOTATION", "B-SCAFFOLD", "B-NULL", "B-INCONCLUSIVE"]},
+            "anti_taxidermy_profile_by_declared_stratum": {"const": true},
+            "key_declaration_dependency": {"const": true},
+            "key_conditioned_refusal_abstention_disclosure": {"const": true},
+            "no_aggregation_or_compensation_rider": {"const": true},
+            "named_harmed_dimension_and_stratum": {"type": ["string", "null"]},
+            "pilot_scale_fixed_subject_ceiling": {"const": true},
+            "b_notation_all_gates_clear_against_scaffold": {"enum": ["required-when-b-notation", "not-applicable"]},
+            "thresholds_selected": {"const": false}
+          },
+          "required": [
+            "implementation_status", "branch", "anti_taxidermy_profile_by_declared_stratum",
+            "key_declaration_dependency", "key_conditioned_refusal_abstention_disclosure",
+            "no_aggregation_or_compensation_rider", "named_harmed_dimension_and_stratum",
+            "pilot_scale_fixed_subject_ceiling", "b_notation_all_gates_clear_against_scaffold",
+            "thresholds_selected"
+          ]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "lineage-event": {
+      "type": "object",
+      "properties": {
+        "schema_version": {"const": "lae-lineage-event/1.0.0"},
+        "event_id": {"$ref": "#/$defs/stable-id"},
+        "event_type": {"enum": ["actor", "artifact", "read", "transmission", "ancestry", "prior-exposure", "exclusion", "correction", "successor", "rejection"]},
+        "record_digest": {"$ref": "#/$defs/digest"},
+        "canonical_byte_length": {"type": "integer", "minimum": 2},
+        "actor_id": {"$ref": "#/$defs/stable-id"},
+        "event_time": {"$ref": "#/$defs/timestamp"},
+        "predecessor_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "causal_predecessor_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true},
+        "parent_artifact_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true},
+        "basis_event_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true},
+        "input_artifact_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true},
+        "bounded_unknowns": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "chronology_basis": {"enum": ["observed", "declared-causal", "imported-original"]},
+        "subject_id": {"$ref": "#/$defs/stable-id"},
+        "action": {"enum": ["declared", "created", "read", "transmitted", "ancestry-declared", "exposure-declared", "excluded", "corrected", "succeeded", "rejected"]},
+        "standing": {"enum": ["observed", "declared", "self-report", "external-custody", "imported-reviewed-evidence", "bounded-unknown", "rejected-preserved"]},
+        "artifact_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "artifact_id": {"$ref": "#/$defs/stable-id"},
+              "artifact_event_digest": {"$ref": "#/$defs/digest"},
+              "artifact_version": {"type": "string", "minLength": 5},
+              "byte_length": {"type": "integer", "minimum": 0},
+              "sha256": {"$ref": "#/$defs/digest"}
+            },
+            "required": ["artifact_id", "artifact_event_digest", "artifact_version", "byte_length", "sha256"],
+            "additionalProperties": false
+          }
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dimension": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+              "value": {"type": ["string", "number", "boolean", "null"]},
+              "bound": {"enum": ["exact", "declared", "unknown", "not-certified"]}
+            },
+            "required": ["dimension", "value", "bound"],
+            "additionalProperties": false
+          }
+        },
+        "supersedes_event_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "rejection_preserved": {"type": "boolean"}
+      },
+      "required": [
+        "schema_version", "event_id", "event_type", "record_digest",
+        "canonical_byte_length", "actor_id", "event_time", "predecessor_digest",
+        "causal_predecessor_digests", "parent_artifact_digests", "basis_event_digests",
+        "input_artifact_digests", "bounded_unknowns", "chronology_basis", "subject_id",
+        "action", "standing", "artifact_refs", "claims", "supersedes_event_digest",
+        "rejection_preserved"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

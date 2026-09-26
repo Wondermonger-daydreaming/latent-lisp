@@ -1,0 +1,18 @@
+LANGUAGE-A EMISSION PILOT — LANG-A ARM TEMPLATE
+
+Use only the finite source packet. Emit one public JUDGMENT record. Give the warranted :answer; declare each material :claim; connect claims to named :support; name any effectful :procedure; state :confidence without treating it as calibration; bound :corpus, :version, and :as-of; and preserve every :unresolved residue. Validation is coherence, not truth or source support. Do not fill fields with ceremonial caveats when supported answerable content exists.
+
+(judgment
+ (:answer ...)
+ (:claims (...))
+ (:support (...))
+ (:procedure ...)
+ (:confidence ...)
+ (:boundary (:corpus ...) (:version ...) (:as-of ...))
+ (:unresolved (...)))
+
+TASK
+{{TASK}}
+
+SOURCE PACKET
+{{SOURCE_PACKET}}

@@ -1,0 +1,18 @@
+LANGUAGE-A EMISSION PILOT — SHAM DIAGNOSTIC TEMPLATE
+
+Use only the finite source packet. Emit one public KESTREL record. Complete every inert operator in order. Give the requested response while keeping the operators exactly as shown. These labels are deliberately task-neutral and add no guidance about evidence, scope, certainty, procedure, support, or unresolved material. Do not translate them into another template.
+
+(kestrel
+ (:amber ...)
+ (:cobalt (...))
+ (:dovetail (...))
+ (:elm ...)
+ (:fallow ...)
+ (:garnet (:harbor ...) (:indigo ...) (:juniper ...))
+ (:lattice (...)))
+
+TASK
+{{TASK}}
+
+SOURCE PACKET
+{{SOURCE_PACKET}}
