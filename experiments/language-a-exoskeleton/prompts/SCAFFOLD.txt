@@ -1,0 +1,17 @@
+LANGUAGE-A EMISSION PILOT — SCAFFOLD ARM TEMPLATE
+
+Use only the finite source packet. Complete each prose-labeled part. Give the warranted answer; list each material claim; connect each claim to named packet support; name any effectful procedure used; state confidence without treating it as calibration; bound corpus, version, and time; and preserve every unresolved residue in the record. A receipt or coherent form is not truth or source support. Do not fill a part with ceremonial caveats when supported answerable content exists.
+
+Answer:
+Claims:
+Support:
+Procedure:
+Confidence:
+Boundaries:
+Unresolved residue:
+
+TASK
+{{TASK}}
+
+SOURCE PACKET
+{{SOURCE_PACKET}}

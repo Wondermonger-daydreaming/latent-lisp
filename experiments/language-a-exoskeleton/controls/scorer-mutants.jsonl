@@ -1,0 +1,9 @@
+{"mutant_id":"insert-unsupported","mutation":{"unsupported_assertions":1},"must_increase":"unsupported_assertions"}
+{"mutant_id":"scope-widening","mutation":{"scope_errors":1},"must_increase":"scope_errors"}
+{"mutant_id":"version-swap","mutation":{"version_errors":1},"must_increase":"version_errors"}
+{"mutant_id":"residue-deletion","mutation":{"residue_erasures":1},"must_increase":"residue_erasures"}
+{"mutant_id":"wholesale-deletion","mutation":{"emitted_answerable_units":0},"must_set_coupled_defect":true}
+{"mutant_id":"blanket-uncertainty","mutation":{"over_bounding":true},"must_set_coupled_defect":true}
+{"mutant_id":"truncation","mutation":{"truncation":true},"must_set_coupled_defect":true}
+{"mutant_id":"omitted-answerable-content","mutation":{"omitted_supported_conclusion":true},"must_set_coupled_defect":true}
+{"mutant_id":"procedural-caveat-substitution","mutation":{"procedural_caveat_substitution":true},"must_set_coupled_defect":true}

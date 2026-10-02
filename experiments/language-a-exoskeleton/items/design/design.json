@@ -1,0 +1,28 @@
+{
+  "schema_version": "lae-design/0.2",
+  "design_version": "PROPOSED-24x3-v0.2",
+  "status": "proposed-pre-exposure-owner-disposition-unresolved",
+  "families": [
+    {"family_id": "bounded-support", "item_count": 6, "sham_item_count": 2},
+    {"family_id": "scope-and-version", "item_count": 6, "sham_item_count": 2},
+    {"family_id": "conflict-and-residue", "item_count": 6, "sham_item_count": 2},
+    {"family_id": "notation-neutral-transfer", "item_count": 6, "sham_item_count": 2}
+  ],
+  "subject_slots": ["SYNTHETIC-SUBJECT-1", "SYNTHETIC-SUBJECT-2", "SYNTHETIC-SUBJECT-3"],
+  "subject_slots_are_placeholders": true,
+  "core_arms": ["NL", "PERSONA", "SCAFFOLD", "LANG-A"],
+  "sham_arm": "SHAM",
+  "positive_conclusion_minimum": 8,
+  "deliberate_insufficiency_minimum": 8,
+  "trap_minimum": 8,
+  "fixed_margins": {"delta": 0.10, "epsilon": 0.05, "harm": 0.10, "family_interaction": 0.15},
+  "scheduled_call_ceiling": 312,
+  "transport_retry_ceiling": 32,
+  "attempted_call_ceiling": 344,
+  "output_token_cap": 768,
+  "output_token_ceiling": 264192,
+  "spend_ceiling_usd": "8.00",
+  "randomization_seed_label": "LAE-PROPOSED-DESIGN-SEED-v0.2",
+  "regeneration_rule": "All schedules, counts, census floors, and manifests are regenerated from this record before freeze.",
+  "permitted_adjustment": "Before exposure only, within Errata 0.1 section 5.4 and after owner design disposition."
+}

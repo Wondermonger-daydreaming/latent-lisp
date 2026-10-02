@@ -1,0 +1,12 @@
+{
+  "schema_version": "lae-branch-rules/0.2",
+  "primary_estimand": "unweighted mean of paired per-call burden differences across frozen item-by-fixed-subject cells",
+  "primary_contrasts": {"D_N": "LANG-A minus SCAFFOLD", "D_S": "SCAFFOLD minus PERSONA", "D_P": "PERSONA minus NL"},
+  "secondary_estimand": "pooled opportunity-weighted burden difference; never branch-determining",
+  "margins": {"delta": 0.10, "epsilon": 0.05, "harm": 0.10, "family_interaction": 0.15},
+  "bootstrap": {"unit": "item", "strata": "family", "retain": "all subject and arm observations", "fixed_subject_strata": true, "resample_opportunities": false, "seed": 1729, "iterations": 800},
+  "precedence": ["B-HARM", "B-INTERACTION", "B-NOTATION", "B-SCAFFOLD", "B-NULL", "B-INCONCLUSIVE"],
+  "evaluate_all_predicates": true,
+  "owner_harm_gates": "unresolved; see operator/owner-slots.json",
+  "pilot_scale_only": true
+}

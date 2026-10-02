@@ -1,0 +1,102 @@
+{
+  "schema_version": "lae-final-cleanup-and-disk-custody/1.0.0",
+  "recording_phase": "tracked-pre-push-cleanup-contract",
+  "recording_boundary": "A file inside a Git tree cannot contain that tree's own hash, and it cannot truthfully attest to worktree removal or remote verification that occurs after the containing commit. Exact post-commit identities and cleanup results are therefore command-verified and reported in the final external handoff.",
+  "task_worktree_path": "/tmp/latent-lisp-language-a-preauthorship-repair",
+  "task_generated_temporary_paths": [
+    "/tmp/latent-lisp-language-a-preauthorship-repair",
+    "/tmp/lae-preauthorship-verification-run-1.log",
+    "/tmp/lae-preauthorship-verification-run-2.log",
+    "/tmp/lae-preauthorship-verification-run-3.log",
+    "/tmp/lae-preauthorship-verification-run-4.log",
+    "/tmp/lae-preauthorship-verification-run-5.log",
+    "/tmp directories created and automatically removed by verify-pilot.sh mktemp"
+  ],
+  "paths_removed": {
+    "after_authority_remote_verification": [
+      "/home/gauss/Codex-Lab/latent-lisp/ANTI-TAXIDERMY-CONSTRUCT-VALIDITY-NOTE.md",
+      "/home/gauss/Codex-Lab/latent-lisp/ANTI-TAXIDERMY-CONSTRUCT-VALIDITY-NOTE.md:Zone.Identifier",
+      "/home/gauss/Codex-Lab/latent-lisp/LANGUAGE-A-PILOT-OWNER-FREEZE-WORK-DOCKET.md",
+      "/home/gauss/Codex-Lab/latent-lisp/LANGUAGE-A-PILOT-OWNER-FREEZE-WORK-DOCKET.md:Zone.Identifier",
+      "/home/gauss/Codex-Lab/latent-lisp/POST-DE-CORROBORATIONE-PROGRAM-RULING-ERRATA-0.1.md",
+      "/home/gauss/Codex-Lab/latent-lisp/POST-DE-CORROBORATIONE-PROGRAM-RULING.md"
+    ],
+    "after_final_evidence_closure": [
+      "task-worktree cache and bytecode paths",
+      "/tmp/lae-preauthorship-verification-run-1.log",
+      "/tmp/lae-preauthorship-verification-run-2.log",
+      "/tmp/lae-preauthorship-verification-run-3.log",
+      "/tmp/lae-preauthorship-verification-run-4.log",
+      "/tmp/lae-preauthorship-verification-run-5.log",
+      "/tmp/latent-lisp-language-a-preauthorship-repair",
+      "stale Git worktree metadata created for the task worktree"
+    ]
+  },
+  "paths_deliberately_retained": [
+    {
+      "path": "/home/gauss/Codex-Lab/latent-lisp",
+      "reason": "primary checkout preserved"
+    },
+    {
+      "path": "/tmp/latent-lisp-language-a-pilot",
+      "reason": "pre-existing reviewed-packet worktree; not created by this repair task"
+    },
+    {
+      "path": "all other worktrees reported by git worktree list",
+      "reason": "unrelated user worktrees"
+    },
+    {
+      "path": "experiments/language-a-exoskeleton/evidence/preauthorship-repair/FAILED-VERIFICATION-ATTEMPTS.json",
+      "reason": "required append-only failed-attempt evidence"
+    },
+    {
+      "path": "all artifacts cited by the final construction manifest and ledgers",
+      "reason": "tracked evidence and authority custody"
+    }
+  ],
+  "cache_and_detritus_classes_removed": [
+    "__pycache__ directories",
+    "*.pyc and *.pyo",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    "coverage files and htmlcov",
+    "temporary schema-validation output",
+    "scratch JSON and JSONL streams",
+    "temporary manifests",
+    "temporary archives and extracts",
+    "temporary replay and mutation directories",
+    "editor swap and backup files",
+    "Windows Zone.Identifier files",
+    "untracked verification logs"
+  ],
+  "original_checkout_status_before_cleanup": {
+    "branch": "codex/de-corroboratione-acceptance-merge",
+    "head": "360bb1ff2ec13b039681986d3bcfc2b27e57f53c",
+    "tracked_changes": [],
+    "untracked_task_inputs": [
+      "ANTI-TAXIDERMY-CONSTRUCT-VALIDITY-NOTE.md",
+      "ANTI-TAXIDERMY-CONSTRUCT-VALIDITY-NOTE.md:Zone.Identifier",
+      "LANGUAGE-A-PILOT-OWNER-FREEZE-WORK-DOCKET.md",
+      "LANGUAGE-A-PILOT-OWNER-FREEZE-WORK-DOCKET.md:Zone.Identifier",
+      "POST-DE-CORROBORATIONE-PROGRAM-RULING-ERRATA-0.1.md",
+      "POST-DE-CORROBORATIONE-PROGRAM-RULING.md"
+    ]
+  },
+  "original_checkout_status_after_cleanup": {
+    "value": null,
+    "standing": "post-push-command-verification-required"
+  },
+  "final_successor_branch": "codex/language-a-emission-pilot-preauthorship-repair",
+  "local_final_commit": null,
+  "local_final_tree": null,
+  "remote_final_commit": null,
+  "remote_final_tree": null,
+  "local_remote_identity_result": "post-push-command-verification-required",
+  "final_tracked_changed_file_inventory": "evidence/preauthorship-repair/CHANGED-FILE-INVENTORY.json",
+  "final_worktree_cleanliness_before_removal": "post-commit-command-verification-required",
+  "worktree_removal_result": "post-push-command-verification-required",
+  "git_worktree_prune_result": "post-removal-command-verification-required",
+  "unrelated_user_files_or_worktrees_deleted": false,
+  "post_commit_attestation_channel": "final external handoff after remote ref, remote tree, remote blobs, primary checkout, worktree list, and disk paths are rechecked"
+}

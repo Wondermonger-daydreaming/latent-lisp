@@ -1,0 +1,1 @@
+{"decision_id":"ODR-43","legacy_record":{"required":"owner-supplied people and role overlaps","slot_id":"role-assignments","status":"unresolved"},"observation":"coarse status string has no typed actor/access decision","reviewed_commit":"f5f0e4a6972f9b321167e5aef6c5c47c70d56e3e","schema_version":"lae-legacy-owner-observation/1.0.0","source_path":"operator/owner-slots.json"}
