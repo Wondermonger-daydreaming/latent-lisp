@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# lisp-plus-repl.sh — THE ONE COMMAND for REPL /0 (candidate).
+# lisp-plus-repl.sh — THE ONE COMMAND for REPL /0 (ADOPTED AND PUBLISHED at public commit a9fc64ae).
 #
 #   bash mneme/language-repl-0/lisp-plus-repl.sh                  command-line REPL
 #   bash mneme/language-repl-0/lisp-plus-repl.sh --web [--port N]  browser workbench on

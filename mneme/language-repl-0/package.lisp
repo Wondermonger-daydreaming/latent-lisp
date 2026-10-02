@@ -1,6 +1,6 @@
-;;;; package.lisp — REPL /0: an interactive session over PROGRAM /0 (CANDIDATE).
+;;;; package.lisp — REPL /0: an interactive session over PROGRAM /0 (ADOPTED AND PUBLISHED at public commit a9fc64ae).
 ;;;;
-;;;; STANDING: CANDIDATE. Loading or running this lane adopts nothing and changes
+;;;; STANDING: ADOPTED AND PUBLISHED (ruled 2026-10-02) for the exact accepted object at public commit a9fc64ae (tree 11ee4de5). Loading or running this lane adopts nothing and changes
 ;;;; no other lane's standing (Owner Ruling 6 §3 B1: standing attaches to object
 ;;;; identities and explicit dispositions, never to a path).
 ;;;;

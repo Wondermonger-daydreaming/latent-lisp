@@ -1,4 +1,4 @@
-// test-browser.mjs — REPL /0's defining sequence THROUGH A REAL BROWSER (CANDIDATE).
+// test-browser.mjs — REPL /0's defining sequence THROUGH A REAL BROWSER (ADOPTED AND PUBLISHED at public commit a9fc64ae).
 //
 // Starts the real workbench with the one command (`lisp-plus-repl.sh --web`), opens it in
 // headless Chromium, and does what a person does: types into the editor, presses keys,

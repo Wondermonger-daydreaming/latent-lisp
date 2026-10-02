@@ -21,7 +21,7 @@ does not.
 
 ## Write a program and run it
 
-Lisp+ now has a programming surface — **PROGRAM /0** (`mneme/language-program-0/`, candidate): user-defined
+Lisp+ now has a programming surface — **PROGRAM /0** (`mneme/language-program-0/`, ADOPTED AND PUBLISHED at public commit `a9fc64ae`): user-defined
 functions with lexical scope and closure capture, functions as values, lists, `map`/`filter`/`fold` written in the
 language itself, and one command that reads a source file and prints a value or a located error.
 
@@ -61,7 +61,7 @@ program derives and never performs. SBCL 2.4.6 on Linux.
 
 ## Work interactively
 
-**REPL /0** (`mneme/language-repl-0/`, candidate) keeps one session between submissions — define, build a closure, make a
+**REPL /0** (`mneme/language-repl-0/`, ADOPTED AND PUBLISHED at public commit `a9fc64ae`) keeps one session between submissions — define, build a closure, make a
 mistake, keep going — on the command line or in a local browser workbench:
 
 ```sh

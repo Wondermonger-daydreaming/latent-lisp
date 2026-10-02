@@ -1,4 +1,4 @@
-;;;; main.lisp — REPL /0's entry point (CANDIDATE). Run it through the one command:
+;;;; main.lisp — REPL /0's entry point (ADOPTED AND PUBLISHED at public commit a9fc64ae). Run it through the one command:
 ;;;;
 ;;;;   bash mneme/language-repl-0/lisp-plus-repl.sh                 the command-line REPL
 ;;;;   bash mneme/language-repl-0/lisp-plus-repl.sh --web [--port N] the browser workbench

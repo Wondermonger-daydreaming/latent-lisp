@@ -1,4 +1,4 @@
-;;;; repl0.lisp — REPL /0's SESSION ENGINE (CANDIDATE). UI-independent.
+;;;; repl0.lisp — REPL /0's SESSION ENGINE (ADOPTED AND PUBLISHED at public commit a9fc64ae). UI-independent.
 ;;;;
 ;;;; A SESSION is one PROGRAM /0 program frame that outlives a single submission.
 ;;;; A SUBMISSION is a piece of source text. SUBMIT reads it with PROGRAM /0's reader

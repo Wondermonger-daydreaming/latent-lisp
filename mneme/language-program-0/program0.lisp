@@ -1,6 +1,6 @@
-;;;; program0.lisp — PROGRAM /0: the programming surface of Lisp+ (CANDIDATE).
+;;;; program0.lisp — PROGRAM /0: the programming surface of Lisp+ (ADOPTED AND PUBLISHED at public commit a9fc64ae).
 ;;;;
-;;;; STANDING: CANDIDATE (see package.lisp). Running this adopts nothing.
+;;;; STANDING: ADOPTED AND PUBLISHED at public commit a9fc64ae (see package.lisp). Running this adopts nothing.
 ;;;;
 ;;;; WHAT THIS IS. Until tonight a "Lisp+ program" was one of two things: a
 ;;;; Common Lisp script that calls the lanes' packages (mneme/readme-specimen.lisp),

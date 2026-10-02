@@ -1,4 +1,4 @@
-;;;; repl0-web.lisp — REPL /0's local browser workbench server (CANDIDATE).
+;;;; repl0-web.lisp — REPL /0's local browser workbench server (ADOPTED AND PUBLISHED at public commit a9fc64ae).
 ;;;;
 ;;;; One SBCL process, one listening socket on 127.0.0.1, one session engine (repl0.lisp)
 ;;;; — the same engine, reader and evaluator the command line uses. The page (web/) is
@@ -385,7 +385,7 @@ Host/Origin/Content-Length/token header is refused (ambiguity is never resolved 
         (finish-output *error-output*)
         (return-from run-web 1)))
     (sb-bsd-sockets:socket-listen socket 16)
-    (format t "Lisp+ REPL /0 workbench (candidate) — open http://127.0.0.1:~d/~%~
+    (format t "Lisp+ REPL /0 workbench — open http://127.0.0.1:~d/~%~
                session ~a (generation ~d) · listening on 127.0.0.1 only · Ctrl-C stops the server~%"
             port (session-id (server-session server)) (session-generation (server-session server)))
     (finish-output)

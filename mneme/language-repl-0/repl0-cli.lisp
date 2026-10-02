@@ -1,4 +1,4 @@
-;;;; repl0-cli.lisp — REPL /0's command-line client (CANDIDATE).
+;;;; repl0-cli.lisp — REPL /0's command-line client (ADOPTED AND PUBLISHED at public commit a9fc64ae).
 ;;;;
 ;;;; A terminal loop over the session engine: read a line, append it to the pending
 ;;;; text, ask the engine. If the READER says the text ends inside a form, prompt for
@@ -64,7 +64,7 @@ the last form's, as in a file. Errors never end the session.")
   (finish-output stream))
 
 (defun banner (session stream)
-  (format stream "Lisp+ REPL /0 (candidate) — PROGRAM /0 on SBCL ~a · session ~a (generation ~d)~%~
+  (format stream "Lisp+ REPL /0 — PROGRAM /0 on SBCL ~a · session ~a (generation ~d)~%~
                   Type Lisp+ forms. ,help for controls; Ctrl-D or ,quit to leave.~%"
           (lisp-implementation-version) (session-id session) (session-generation session))
   (finish-output stream))

@@ -1,4 +1,4 @@
-;;;; repl0-selftest.lisp — REPL /0's focused checks (CANDIDATE).
+;;;; repl0-selftest.lisp — REPL /0's focused checks (ADOPTED AND PUBLISHED at public commit a9fc64ae).
 ;;;;
 ;;;;   bash mneme/language-repl-0/run-selftest.sh     (exit 0 iff every check passed)
 ;;;;

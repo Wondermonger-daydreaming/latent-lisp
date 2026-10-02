@@ -1,4 +1,4 @@
-Lisp+ REPL /0 (candidate) — PROGRAM /0 on SBCL 2.4.6 · session bf4152a0 (generation 1)
+Lisp+ REPL /0 — PROGRAM /0 on SBCL 2.4.6 · session bf4152a0 (generation 1)
 Type Lisp+ forms. ,help for controls; Ctrl-D or ,quit to leave.
 in[1]> ; REPL /0 — a short conversation (this file is the exact stdin of cli-session.txt)
 in[1]> (define greeting "hello")

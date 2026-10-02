@@ -18,7 +18,7 @@ The last line is the value of the program's last form; the lines above it are wh
 `print`ed. Every example in this guide is executable; the four in `programs/` are run by the
 selftest and compared with their recorded output byte for byte (three until 2026-09-29, when `tally.lp` was added).
 
-**Standing: CANDIDATE.** The specification is `PROGRAM-0-GRAMMAR-AND-SEMANTICS.md`; `program0.lisp`
+**Standing: ADOPTED AND PUBLISHED** (ruled 2026-10-02) for the exact accepted object at public commit `a9fc64ae` (tree `11ee4de5`). The specification is `PROGRAM-0-GRAMMAR-AND-SEMANTICS.md`; `program0.lisp`
 executes it. Under adopted law W-02 the specification supplies the meaning, the executor only runs
 it. Tested environment: SBCL 2.4.6 on Linux (the runner refuses another version). Selftest:
 `bash mneme/language-program-0/run-selftest.sh` → `program0 selftest: N passed, 0 failed`.

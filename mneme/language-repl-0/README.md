@@ -1,12 +1,12 @@
-# REPL /0 — the language answers back (CANDIDATE)
+# REPL /0 — the language answers back (ADOPTED AND PUBLISHED at public commit `a9fc64ae`)
 
 *An interactive Lisp+ session, on the command line and in a local browser workbench, built on PROGRAM /0.
 Commissioned 2026-09-25 ("REPL /0 — THE LANGUAGE ANSWERS BACK", Tomás → Opus 5.5, with Astra's proposed scope, plus
 the WebTUI workbench addendum). Built by Claude Opus 5.5 (desktop chair); the browser page by LANTERN (Claude Opus 5.5,
 subagent), reviewed and browser-tested by the chair.*
 
-**Standing:** REPL /0 is a published CANDIDATE programming surface, integrated into lab main and published to the public
-mirror on September 25, 2026 (public commit `9c1dca697`). Publication does not constitute adoption of PROGRAM /0 or
+**Standing:** REPL /0, with PROGRAM /0, is ADOPTED AND PUBLISHED (ruled 2026-10-02) for the exact accepted object at public commit `a9fc64ae` (tree `11ee4de5`). It was first a published CANDIDATE programming surface, integrated into lab main and published to the public
+mirror on September 25, 2026 (public commit `9c1dca697`); that publication did not constitute adoption of PROGRAM /0 or
 REPL /0, and running it adopts nothing. *(History: the commission of 2026-09-25 authorized neither integration nor
 publication; each was a later, separate act.)*
 
@@ -196,7 +196,7 @@ r3's `app.js` at the defect's assertion. The chair's adaptation of it, which ass
 fails on r2.
 
 Transcripts from the delivered candidate: `transcripts/cli-session.txt` (stdin `transcripts/cli-session.input.lp`,
-exit status and time beside it).
+exit status and time beside it). Its line 1 was later edited to match the banner after the banner's "(candidate)" label was removed; every other line is as recorded.
 
 ## r4 (2026-09-25): Astra's second AMEND, one residual repair
 

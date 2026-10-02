@@ -26,7 +26,7 @@
 ;;;; language's own reader under the reader law; the only evaluation is
 ;;;; lisp-plus-program0:evaluate.
 ;;;;
-;;;; CANDIDATE. Running this adopts nothing.
+;;;; ADOPTED AND PUBLISHED at public commit a9fc64ae (see package.lisp). Running this adopts nothing.
 
 (unless (string= (lisp-implementation-version) "2.4.6")
   (format *error-output* "~&lisp-plus: this runner is declared for SBCL 2.4.6 only; observed ~a. No portability is claimed.~%"

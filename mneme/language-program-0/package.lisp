@@ -1,6 +1,6 @@
-;;;; package.lisp — PROGRAM /0: the programming surface of Lisp+ (CANDIDATE).
+;;;; package.lisp — PROGRAM /0: the programming surface of Lisp+ (ADOPTED AND PUBLISHED at public commit a9fc64ae).
 ;;;;
-;;;; STANDING: CANDIDATE. Loading or running this lane adopts nothing and changes
+;;;; STANDING: ADOPTED AND PUBLISHED (ruled 2026-10-02) for the exact accepted object at public commit a9fc64ae (tree 11ee4de5). Loading or running this lane adopts nothing and changes
 ;;;; no other lane's standing. Standing attaches to immutable object identities
 ;;;; and explicit dispositions, never to a filename or directory (Owner Ruling 6
 ;;;; §3 B1; MANY-ACTS-0-STANDING.md). This file's path confers no standing on

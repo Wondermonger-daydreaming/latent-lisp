@@ -1,6 +1,6 @@
 # PROGRAM /0 — grammar and semantics of the Lisp+ programming surface
 
-**Standing: CANDIDATE.** This document is the specification of the lane; `program0.lisp` is its
+**Standing: ADOPTED AND PUBLISHED** (ruled 2026-10-02) for the exact accepted object at public commit `a9fc64ae` (tree `11ee4de5`). This document is the specification of the lane; `program0.lisp` is its
 reference executor. Under adopted law **W-02** (semantic-jurisdiction doctrine, Disposition
 Instrument /0 C.1, adopted 2026-08-12 — `languagehood-and-succession-charter-0/RULING-R0.19-OWNER-DISPOSITION-INSTRUMENT-0-ADOPTED-2026-08-12.md`),
 *the host executes the judge but does not supply the normative meaning of Lisp+ forms*, and

@@ -1,8 +1,8 @@
-# REPL /0 — the local workbench's HTTP contract (CANDIDATE)
+# REPL /0 — the local workbench's HTTP contract (ADOPTED AND PUBLISHED at public commit `a9fc64ae`)
 
 *The one contract between the browser page (`web/`) and the Lisp+ runtime (`repl0-web.lisp`). The page may rely on nothing
-the server does not state here; the server sends nothing the runtime does not supply. Standing: CANDIDATE — part of the
-REPL /0 candidate; adopts nothing.*
+the server does not state here; the server sends nothing the runtime does not supply. Standing: ADOPTED AND PUBLISHED
+(ruled 2026-10-02) — part of the exact accepted REPL /0 object at public commit `a9fc64ae` (tree `11ee4de5`); adopts nothing.*
 
 ## Origin and fence
 
