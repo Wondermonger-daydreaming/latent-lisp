@@ -110,7 +110,8 @@
   (list :obj
         "index" (nullable (result-index r))
         "status" (string-downcase (symbol-name (result-status r)))
-        "forms" (nullable (result-forms r))
+        ;; WEB-API-0.md: `forms` is "null for empty/incomplete" on the wire; the engine's own count may stay 0.
+        "forms" (if (member (result-status r) '(:empty :incomplete)) :null (nullable (result-forms r)))
         "value" (nullable (result-value r))
         "kind" (nullable (result-kind r))
         "output" (or (result-output r) "")

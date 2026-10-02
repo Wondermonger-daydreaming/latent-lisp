@@ -42,6 +42,16 @@ Whitespace and `;` comments between forms are skipped. Each top-level form is re
 **line and column** (1-based line, 0-based column) at which it starts; that is the location an
 error reports (§8). A reader failure is **E-READ** at the location of the form that failed.
 
+**A source file that is not UTF-8 (2026-09-30).** The runner (§9) decodes a source file as UTF-8
+before any form is read. If the file's bytes are not valid UTF-8, the whole file is refused,
+**E-READ**, exit 2: nothing is evaluated, nothing is written to stdout, and the diagnostic is not
+labelled a host fault. It names the file and claims no form location, because no form was read: no
+`file:line:column`, and no `in:`, `within:` or `frames:` lines. It may give the byte offset of the
+first invalid sequence where that is reliably available. Only a decoding failure is refused this way;
+another failure to read the file (a file the process may not open, for example) is not E-READ. Valid
+UTF-8 beyond ASCII is read as before. (Decided by the owner on 2026-09-30; his answer, verbatim:
+"E-READ, exit 2 (Recommended)".)
+
 **The end of the text (REPL /0 candidate, 2026-09-25 — a change to this lane, disclosed there).**
 The reader distinguishes where the text ends. If it ends *between* forms — after whitespace, a `;`
 comment, or a `#|…|#` comment — reading is complete. (Until this change a source ending in a
@@ -73,9 +83,53 @@ Every other foreign symbol, in any position, quoted or not, is **E-SYNTAX** at s
 source namespace**. A prefix that names no package is a reader failure, **E-READ**. (Astra's
 qualification of 2026-09-23 and her review of 2026-09-24, both recorded.)
 
+**Host packages are not written by reading (2026-09-29).** A *host package* is every package in
+the image except `lisp-plus-program0.source` and `KEYWORD`, where keyword values live, so a new
+keyword is still an ordinary value. Every read runs with the host packages locked, and the guard
+unlocks exactly the packages it locked, whatever the read's outcome. So the reader's own interning
+cannot add a symbol to a host package. A name the host package does not already have never becomes
+a foreign symbol. The reader refuses it, **E-READ**, before it exists, whether it is written as
+`pkg::name`, inside `pkg::( … )`, or in a `#+`/`#-` feature expression. An existing foreign symbol is
+read and refused at validation as above.
+
+What is measured is the reader's own interning: one fresh name into every host package and each
+route above, in the selftest. The guard restores the packages it locked. It does not undo other host
+changes, so it relies on the reader running no host code that the source chooses. That is why
+`#S` is refused (below).
+
+Until this change such a name was interned first and refused afterwards, and distinct names
+accumulated in `CL-USER` and in this implementation's own packages. Three behaviours changed:
+
+1. `(cl-user::zzq 1)` is E-READ, not E-SYNTAX. The locked packages already gave E-READ for this
+   (`cl::zzq`).
+2. `#+cl-user::zzq 1` and `#-cl-user::zzq 42` are refused. They were the values `()` and 42.
+3. `(list cl-user::zzq`, unfinished, is malformed (E-READ), not `program0-incomplete-source`.
+
+Still true: the source namespace and `KEYWORD` grow with the names a program writes, refused or not.
+The lock window is process-wide, so no other thread may intern while a read runs; the runner and
+the REPL server are single-threaded. This is not a sandbox.
+
+**`#S` is refused before anything is constructed (2026-09-29).** A source is read with the lane's
+own readtable. It is a copy of the standard readtable in which an active `#S` or `#s` is refused,
+**E-READ** at the form's location, at the dispatch itself: before the form after it is read, so no
+host structure's constructor or slot initform runs, and its name is never read. The host's global
+`*readtable*` is not modified, and every other syntax is the standard readtable's.
+
+Reader-suppressed text is unchanged: `#+(or) #s(x)` and `#-sbcl #S(zzq)` read as nothing, and
+`#+sbcl 1 #-sbcl #s(zzq)` reads as 1.
+
+Before this change, `#s(pkg::name …)` naming a structure the host already has was **built during
+the read**, running its constructor and slot initforms, and then refused as an unsupported datum.
+That was E-READ too; the message has changed. Unfinished active `#S` (`#s(`, `(list #s`) was
+`program0-incomplete-source` and is now malformed (E-READ).
+
+`#S` was the only standard dispatch, apart from `#.` (dead above), that calls a host function the
+source names. That rests on a reading of the standard `#` dispatch table of SBCL 2.4.6, not on a proof.
+
 ## 2. Values
 
-A value is exactly one of:
+A value is one of the kinds below. Only the two booleans belong to two kinds at once: they are also keywords (see the
+boolean row).
 
 | kind | written as | notes |
 |---|---|---|
@@ -83,7 +137,7 @@ A value is exactly one of:
 | string | `"text"` | literal only; `string-append`, `string?`, `number->string`, `print` |
 | keyword | `:mode`, `:determinate` | self-evaluating; used to address Kernel /0 schemas |
 | symbol | obtained only by `(quote name)` / `'name` | prints lowercase |
-| boolean | `true`, `false` | two distinct values; **nothing else is a boolean** (§4.4) |
+| boolean | `true`, `false` (also `:true`, `:false`) | two distinct values; **nothing else is a boolean** (§4.4). They are the keywords `:true` and `:false`, kept as aliases: `(eq? :true true)` is true, `:true` renders as `true`, and `boolean?` and `keyword?` both answer true for either. No other keyword is a boolean: `(if :maybe 1 2)` is E-TYPE. (Clarified 2026-09-29 as the candidate's proposal, per Astra's review vote. **Decided by the owner 2026-09-30: the aliases are kept.**) |
 | empty list | `()` | a value; **not** a boolean, **not** a name (`nil` is E-UNBOUND) |
 | list | `(1 2 3)` | proper lists only; `cons` refuses a non-list second argument (E-TYPE) |
 | function | `#<function name>`, `#<primitive +>` | closures (§4.3) and primitives (§5) — first-class values |
@@ -92,6 +146,8 @@ A value is exactly one of:
 
 Values print in this syntax (`render`). Functions, refusals and host values print as `#<…>`
 descriptions that the reader would refuse, so printed output can never be mistaken for source.
+The layout of a float's rendering (how many digits, whether an exponent is used) is not specified
+at /0.
 
 ## 3. Names and environments
 
@@ -138,6 +194,17 @@ refused at source validation (§1). The closed set:
 
 A special form with the wrong number or shape of parts is **E-SYNTAX**.
 
+**The clarification card (2026-10-01).** The rules marked **Card 1** to **Card 6**, here and in
+§5.1, record six choices the earlier text left open. Astra (GPT-6) recommended them as one coherent
+/0 choice, in the table at
+`corpus/voices/received/originals/2026-09-30-220019-astra-program-repl-0-dossier-r2-disposition/02-OWNER-DECISION.md`.
+Decided by the owner on 2026-10-01; his answer, verbatim: "Accept all six as recommended (Recommended)".
+
+**Card 2:** `begin`, `lambda`, `let` and each `cond` clause require a body form, and `cond` requires a
+clause. The named omissions, `(begin)`, `(cond)`, `(cond (true))`, `(lambda (x))` and
+`(let ((x 1)))`, are E-SYNTAX (for `(cond)`, not E-TYPE). **Card 3:** `(define (f x x) x)` and
+`(lambda (x x) x)` are E-SYNTAX when evaluated, before any call (not E-REDEFINE).
+
 **4.3 Functions and application.** A **closure** is (parameters, body, defining frame, name).
 Applying a closure to arguments: the count must equal the parameter count (**E-ARITY**, naming
 the function); a fresh frame whose parent is the closure's **defining** frame binds each
@@ -158,14 +225,30 @@ If the value of `f` is not a function, **E-TYPE**.
 **5.1 Primitives** (bound in the root frame; each checks its arguments and fails with the codes
 of §8; no host condition escapes as a host condition):
 
-- arithmetic: `+ - * / quotient mod abs max min` — numbers only (E-TYPE); division by a zero of
-  any number type (`0`, `0.0`) and every host arithmetic condition (overflow, underflow, invalid
-  operation) are **E-ARITH**, located; `quotient`/`mod` integers only
-- comparison: `= < > <= >=` (numbers, variadic, chained); `equal?` (structural); `eq?`
+- arithmetic: `+ - * / quotient mod abs max min` — numbers only (E-TYPE); `/` by a zero of any
+  number type (`0`, `0.0`) is **E-ARITH**, located. `quotient`/`mod` take integers only, checked
+  before the zero: a float zero there is E-TYPE (`(mod 5 0.0)`), an integer zero E-ARITH
+  (`(mod 5 0)`). Every host arithmetic condition that the host actually **signals** (overflow,
+  underflow, invalid operation) is **E-ARITH**, located. This does not require the host to trap
+  every floating-point exception: a result it returns without signalling, such as an underflow to
+  `0.0`, is a value, not a breach. A synthetic signalled condition may witness the handler, labelled
+  as synthetic, never as a natural underflow. **Card 1:** `max` and `min` take one or more numbers,
+  so zero arguments is E-ARITY.
+- comparison: `= < > <= >=` (numbers, variadic, chained); `equal?` (structural); `eq?`. **Card 6:**
+  `eq?` identity is guaranteed for symbols, keywords, booleans and the empty list, so `(eq? () ())`
+  is true. Identity guarantees for numbers, strings, nonempty lists, functions, refusals and other
+  host values are unspecified at /0: neither answer is promised. `equal?` compares numbers
+  numerically across representations, strings by their characters, and proper lists recursively:
+  `(equal? 1 1.0)` is true and `(equal? 1 2.0)` is false. On symbols, keywords, booleans and the
+  empty list, `equal?` applies the corresponding scalar identity; no portable identity promise is
+  added for functions or host objects.
 - booleans: `not`
 - lists: `cons car cdr list length append reverse null? pair? list?` — `car`/`cdr` of `()` is
-  E-TYPE, never a silent value
-- kinds: `number? integer? boolean? symbol? string? function? keyword? host-value? refused?`
+  E-TYPE, never a silent value. These are list operations: a string is not a list (`(length "abc")`
+  is E-TYPE). **Card 1:** `append` takes zero or more lists, so zero returns `()`. **Card 4:**
+  `(pair? ())` is false, and `(list? ())` is true.
+- kinds: `number? integer? boolean? symbol? string? function? keyword? host-value? refused?`.
+  **Card 5:** `integer?` recognizes integer representation: `3` is true, and `3.0` is false.
 - strings/output: `string-append number->string print` — `print` writes its arguments separated
   by spaces (strings unquoted) and a newline, and returns its last argument
 - the Kernel /0 bridge (§7): `kernel0/determinacy kernel0/determinacy-mode refusal-requirement
@@ -198,17 +281,31 @@ host's; if the host nonetheless exhausts storage first, that too is reported as 
 longer than the depth limit are refused, not processed. The numbers are policy. Changing them is
 a change to this document.
 
+**Erratum (2026-09-30).** This section's meaning is unchanged: a step budget of N admits N steps.
+The reference executor had admitted N−1, refusing the N-th; the repair of 2026-09-30 (dossier r2)
+corrects it to admit N.
+
 ## 7. The bridges and the boundaries
 
 **7.1 Kernel /0, a derivation.** `(kernel0/determinacy k v …)` calls
 `lisp-plus-kernel0:make-determinacy` with the keyword arguments as given. If the kernel
 constructs the record, the value is a **host value** of kind `determinacy`;
 `kernel0/determinacy-mode` returns its mode through the kernel's own accessor. If the kernel
-signals a `kernel0-condition`, the value is a **refusal** carrying the kernel's `kind`,
+signals a `kernel0-condition`, the value is a **refusal** carrying a `kind` (below), the kernel's
 `requirement` id (e.g. `"K0E-33"`), `law` text, offending field and value. A refusal is not an
 error of this language: the program asked the kernel and this is the answer, and `refused?`,
-`refusal-requirement`, `refusal-law` let the program compute over it. Constructing a record
-performs nothing.
+`refusal-requirement`, `refusal-law`, `refusal-kind` let the program compute over it.
+Constructing a record performs nothing.
+
+A refusal's **kind** is an opaque identifier of its category. `refusal-kind` returns it as a string,
+the same text as the *kind* in the refusal's rendering (`#<refused kind requirement R>`, §2). It is
+not a portable name of any host class, and /0 promises nothing about its spelling beyond that
+agreement.
+
+**The accessors take their operand by kind.** `kernel0/determinacy-mode` needs a determinacy host
+value; `refusal-requirement`, `refusal-law` and `refusal-kind` need a refusal. Any other operand,
+a function included, is **E-TYPE**, not E-BOUNDARY: §7.2's E-BOUNDARY concerns the arguments of a
+Kernel /0 constructor.
 
 **7.2 The durable-data boundary.** Only keywords, numbers, strings and proper lists of those may
 be handed to a Kernel /0 constructor. A closure, a primitive, a refusal or a host value in that
@@ -241,6 +338,9 @@ One condition, `program0-error`, with a **closed** code vocabulary:
 An error carries: the code; a message; the **location** `file:line:column` of the top-level form
 under evaluation; the innermost forms being evaluated (up to three, innermost first); and the
 user-function **frames** (innermost first). The runner prints all of these to stderr and exits 2.
+The one exception is the file-level E-READ of §1 (a source file that is not UTF-8): it names the
+file and carries no form location, forms or frames. The wording of a message, including any host text it
+quotes (an E-READ message may quote the host reader's), is not specified.
 **Limitation, named:** positions are per top-level form, not per sub-form.
 
 ## 9. The runner
@@ -249,11 +349,30 @@ user-function **frames** (innermost first). The runner prints all of these to st
 `sbcl --control-stack-size 64MB --script mneme/language-program-0/run.lisp <program.lp>`) reads
 the file under §1, evaluates its forms in order in a fresh program frame (§3.3), prints to stdout
 the rendered value of the **last** form (a definition prints as `; defined name`), and exits:
-`0` value · `2` language error (stderr) · `3` usage (no file / no such file) · `1` host fault (a
-condition that is none of §8 — an implementation defect, named as such). Stdout carries only the
+`0` value · `2` language error (stderr) · `3` usage (no file / no such file / a directory) · `1`
+host fault (a condition that is none of §8 — an implementation defect, named as such). Stdout carries only the
 program's `print` output and its final value; load chatter goes to stderr. User expressions are
 never handed to `cl:eval`. Declared environment: SBCL 2.4.6 on Linux; the runner refuses any
 other SBCL version.
+
+**A directory is usage (2026-09-30).** A path that names a directory, with or without a trailing
+slash, is refused as usage before any read of it is attempted: exit 3, nothing on stdout, and a
+diagnostic on stderr that names the path and uses the word *directory*, not labelled a host fault.
+(Decided by the owner on 2026-09-30; his answer, verbatim: "Usage error, exit 3 (Recommended)".)
+A source file that is not UTF-8 is E-READ, exit 2 (§1).
+
+**The argument is a file path (2026-09-30).** The runner reads its argument as the host's native file path, and no
+character in it is special: a path containing `?`, `*` or `[` names the file it spells, and is run, refused as usage
+or refused as a directory like any other. (Decided by the owner on 2026-09-30; his answer, verbatim: "Fix it in r2 as
+F-6 (Recommended)".)
+
+**Two runner limitations, recorded (2026-10-01; Astra's r2 disposition §4, items 1–2).** Nothing above is redefined.
+- **An unreadable file.** A file the runner may not read (permission denied) exits `1` today, with the host-fault
+  wording. This is an exception to the explanation of exit `1` above: it is an acknowledged runner
+  limitation, and that wording does not prove an implementation defect. It is not E-READ (§1), and the general
+  taxonomy of filesystem errors is not settled at /0; a future usage/IO policy may refine it.
+- **An empty argument.** `""` exits `3`, as usage. Its diagnostic calls it a directory, and that imprecise wording is
+  a recorded diagnostic limitation.
 
 ## 10. Not in this lane (so nobody infers it)
 

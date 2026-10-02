@@ -41,5 +41,29 @@ bash "$CMD" --bogus > "$TMP/out" 2> "$TMP/err"; r=$?
 grep -q 'kernel0 foundations smoke: PASS' "$TMP/err" 2>/dev/null; run '(+ 1 2)\n'
 ! grep -q 'kernel0' "$TMP/out" && grep -q 'kernel0' "$TMP/err" && ok "load chatter goes to stderr; stdout is the session" || bad "streams"
 
+# 2026-09-30 (RALLY, Astra's disposition of dossier r0): only where the process boundary matters.
+# RE14: ,help through the one command. The banner names ,help and ,quit, so the check looks for the
+# three controls only the help text names, and for the next form still being in[1].
+run ',help\n(car 5)\n'
+[ "$(rc)" = 0 ] && has ',names' && has ',reset' && has ',cancel' && has 'E-TYPE at in[1]:1:0' && ! has 'E-READ' && ok ",help lists the controls, reaches no Lisp+ and counts nothing (the next form is in[1]); exit 0" || bad "help" "rc=$(rc)"
+
+# G-A through the process: a code the one command had not shown recovering, then an earlier binding answers.
+run '(define k 5)\n(/ k 0)\n(+ k 1)\n'
+[ "$(rc)" = 0 ] && has 'E-ARITH at in[2]:1:0' && has '=> 6' && ok "E-ARITH, then a submission reading the earlier binding succeeds, same session; exit 0" || bad "recover-arith" "rc=$(rc)"
+
+# RE15: the packages of the image main.lisp builds. NOT the one command itself (lisp-plus-repl.sh runs
+# main.lisp with --script): a fresh sbcl with the launcher's runtime flags, argv reset to the
+# command-line REPL, and a TEST-ONLY exit hook that lists every package when the session ends at EOF.
+# Names from each lane's package.lisp at candidate 12379a8cf (act0, act1 + its loader, many-acts0 x2, core0).
+printf '' | sbcl --noinform --control-stack-size 64MB --non-interactive --no-sysinit --no-userinit \
+  --eval '(setf sb-ext:*posix-argv* (list "sbcl"))' \
+  --eval '(push (lambda () (dolist (p (list-all-packages)) (format *error-output* "~&PKG ~a~%" (package-name p)))) sb-ext:*exit-hooks*)' \
+  --load "$HERE/main.lisp" > "$TMP/out" 2> "$TMP/err"; r=$?
+pk() { grep -qxF "PKG $1" "$TMP/err"; }
+[ "$r" = 0 ] && has '; bye' && pk LISP-PLUS-REPL0 && pk LISP-PLUS-PROGRAM0 && pk LISP-PLUS-KERNEL0 \
+  && ! pk LISP-PLUS-LANGUAGE-ACT0 && ! pk LISP-PLUS-LANGUAGE-ACT1 && ! pk LISP-PLUS-LANGUAGE-ACT1-LOADER \
+  && ! pk LISP-PLUS-MANY-ACTS0 && ! pk LISP-PLUS-MANY-ACTS0.PROGRAM && ! pk LISP-PLUS-CORE0 \
+  && ok "main.lisp's image (test-only exit hook): no act0, act1, many-acts0 or core0 package; REPL, PROGRAM /0, Kernel /0 present" || bad "image-packages" "rc=$r"
+
 echo "repl0 test-cli: $pass passed, $fail failed"
 [ "$fail" -eq 0 ]

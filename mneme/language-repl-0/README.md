@@ -3,8 +3,12 @@
 *An interactive Lisp+ session, on the command line and in a local browser workbench, built on PROGRAM /0.
 Commissioned 2026-09-25 ("REPL /0 — THE LANGUAGE ANSWERS BACK", Tomás → Opus 5.5, with Astra's proposed scope, plus
 the WebTUI workbench addendum). Built by Claude Opus 5.5 (desktop chair); the browser page by LANTERN (Claude Opus 5.5,
-subagent), reviewed and browser-tested by the chair. **Standing: CANDIDATE.** Running it adopts nothing; this lane is
-not integrated into lab `main` and not published — the commission authorizes neither.*
+subagent), reviewed and browser-tested by the chair.*
+
+**Standing:** REPL /0 is a published CANDIDATE programming surface, integrated into lab main and published to the public
+mirror on September 25, 2026 (public commit `9c1dca697`). Publication does not constitute adoption of PROGRAM /0 or
+REPL /0, and running it adopts nothing. *(History: the commission of 2026-09-25 authorized neither integration nor
+publication; each was a later, separate act.)*
 
 ## Run it
 
@@ -59,13 +63,16 @@ is named here, not built. To start over, reset explicitly (`,reset`, or the Rese
 
 ## Errors and what happens to state (no rollback is implemented)
 
-| what failed | what happened |
-|---|---|
-| the reader refused the text | nothing of the submission was evaluated; the session is unchanged |
-| a form raised a language error | forms before it took effect and stay; its own effects up to the failure stay (e.g. a `define` inside a top-level `begin`); later forms did not run |
-| a host fault (a defect of this implementation) | the same, reported as `HOST FAULT … a defect of the implementation, not of your program` — never confused with a language error |
+The rows are phases, not error codes: a submission is read and validated whole before any of its forms runs.
 
-In every case the session continues and the next submission is evaluated normally. The diagnostic is PROGRAM /0's
+| the phase that failed | what happened |
+|---|---|
+| reading or source validation refused the text: E-READ, or E-SYNTAX for a symbol that is not a name of the language (PROGRAM /0 §1) | nothing of the submission was evaluated, not even the forms before the refused one: after `(define a1 1) (cl:eval 1)`, `a1` is unbound; the session is unchanged |
+| evaluation: a form raised a language error (any code, including E-SYNTAX for a malformed form such as `(if 1)`) | forms before it took effect and stay; its own effects up to the failure stay (e.g. a `define` inside a top-level `begin`); later forms did not run |
+| evaluation: a host fault (a defect of this implementation) | the same, reported as `HOST FAULT … a defect of the implementation, not of your program` — never confused with a language error |
+
+In every case the session continues and the next submission is evaluated normally, except after a defect that damages
+the session frame itself: then nothing is promised (`WEB-API-0.md`, server failures). The diagnostic is PROGRAM /0's
 own. Its location is the **submission location**, the line and column of the submitted top-level form
 (`lisp-plus: E-TYPE at in[5]:1:0`), with the **failing expression** named separately. A closure's body does not carry
 the place it was defined, so an error inside it cites the submission that called it, not the definition's line.
@@ -84,8 +91,12 @@ reaches Lisp+.
 ## The language boundary
 
 User text reaches the language only as a string handed to `run-source`. Nothing in this lane calls `cl:read` or
-`cl:eval` on it. That is a claim about **evaluation**, not about **host reader side effects**: PROGRAM /0's reader can
-intern a package-qualified name into an unlocked host package before refusing it (see the observations below). The reader law is PROGRAM /0's: `*read-eval*` NIL (`#.(sb-ext:quit)` is E-READ; the process lives),
+`cl:eval` on it. That is a claim about **evaluation**. For **host reader side effects**, what is measured since 2026-09-29
+is this. The reader's own interning adds no symbol to a host package: a name the host lacks is refused E-READ before it
+exists (see the observations below). An active `#s( … )` is refused E-READ at the dispatch, before any host
+constructor or slot initform runs; until then it built the named host structure during the read. Both are documented
+in PROGRAM /0's specification §1. One remains: the language's own namespace and `KEYWORD` grow with the names a
+program writes. The reader law is PROGRAM /0's: `*read-eval*` NIL (`#.(sb-ext:quit)` is E-READ; the process lives),
 and a package namespace that uses nothing (`eval`, `load` and `quit` are unbound names; `cl:eval` and
 `sb-ext:quit` are refused). As with the file runner, nothing that performs effects is loaded: no core0, act0, act1 or
 many-acts0.
@@ -121,7 +132,8 @@ success. A success must carry a whole session; a submit must carry a status-appr
 *replacement* session. Anything short of that is OUTCOME UNKNOWN: text and transcript are kept, busy is released, and
 a refresh is offered. An invalid refresh answer says REFRESH FAILED and leaves the last valid display. A stale refusal
 whose session snapshot is unusable stays a refusal but does not replace the display. Legitimate empty values are not
-rejected: `(quote ||)` renders as `""`, and so does `(define || 5)`'s name.
+rejected: `(quote ||)` renders as the empty string (JSON `""`: no characters, not two quotation marks), and so does
+`(define || 5)`'s name.
 
 **Acting on the session the page shows (r3).** Submit and reset carry the page's session id
 (`X-Lisp-Plus-Session`), and the server compares it before any mutation. A stale page, one where another tab reset
@@ -132,7 +144,8 @@ session, and you act again deliberately. A reset confirmation is bound to the se
 terminals or HTTP. The command line (`repl0-cli.lisp`) and the server (`repl0-web.lisp`) are two clients of the same
 engine, in the same kind of SBCL image. The HTTP contract is `WEB-API-0.md`.
 
-**The fence** (each item is code in `repl0-web.lisp` and a check in `test-web.sh`):
+**The fence** (each item is code in `repl0-web.lisp` and a check in `test-web.sh`, except the last, which is inspected,
+not checked):
 
 - The server binds 127.0.0.1 only.
 - Host must be `127.0.0.1:<port>` or `localhost:<port>` (else 421, the DNS-rebinding fence). A foreign Origin gets
@@ -141,12 +154,16 @@ engine, in the same kind of SBCL image. The HTTP contract is `WEB-API-0.md`.
   (else 403).
 - There is no CORS: no `OPTIONS`, no `Access-Control-*` header.
 - Only fixed paths and methods are served (404 / 405). Bodies are capped at 64 KiB (413), must be text/plain (415) and
-  strict UTF-8 (400); chunked bodies are refused (400). Headers are capped at 16 KiB (431). **The whole request, header
-  and body, must arrive within 10 s** (408), checked on every byte, and each single read times out after 2 s. (r1: in
-  r0 the 10 s was per *read*, so a client trickling its header held the single thread for 23.7 s; now it holds it for
-  at most the deadline, measured at 9.7 s.)
+  strict UTF-8 (400); chunked bodies are refused (400). The header block, from the request line's first byte through
+  the empty line that ends it, CRLFs included, is capped at 16,384 bytes (431; the rule is in `WEB-API-0.md`). **The
+  whole request, header and body, must arrive within 10 s** (408), checked on every byte, and each single read times
+  out after 2 s. (r1: in r0 the 10 s was per *read*, so a client trickling its header held the single thread for
+  23.7 s; now it holds it for at most the deadline, measured at 9.7 s.)
 - Every response carries a strict CSP, nosniff, no-referrer and no-store.
-- The server is single-threaded: one request at a time.
+- The server is single-threaded: one request at a time. This is an **inspected architectural assumption**, not a
+  checked one: `run-web` serves each accepted connection to the end before it accepts the next, and the lane's code
+  starts no thread. The trickle check in `test-web.sh` bounds how long one client can hold the server; it would also
+  pass on a concurrent server, so it does not prove this.
 
 **WebTUI, pinned.** `web/vendor/webtui-css-0.1.10/full.css` is `dist/full.css` from the npm package `@webtui/css`
 0.1.10: tarball sha512 `iovJnGDbhi0vaaOjpG+i56HGKx5hHls8JhhQxwPTl5b5ddce7PO+r7F+S4EObYjQlaa1RfClahkmpiNF+R8y8w==` (equal
@@ -161,13 +178,13 @@ Run from the latent-lisp root. Each command exits 0 iff all its checks pass.
 
 | command | checks | what it drives |
 |---|---|---|
-| `bash mneme/language-repl-0/run-selftest.sh` | 68 | the engine in-process: persistence, closure capture across submissions, forward reference, multiline, incomplete vs malformed, error recovery and state, budget, language boundary, host-fault classification, **the reset detector** (on the real engine and on a planted resetting engine, which it must fail), session = concatenated file, CLI via streams (multiline, EOF, controls, `,cancel` inside a string), the reader-verdict helper, the submission-boundary example (session keeps `kept`; the concatenated file refuses), JSON escaping |
-| `bash mneme/language-repl-0/test-cli.sh` | 9 | the one command as a real process on a pipe: exit codes, EOF inside a form (discarded, not run), `#.(sb-ext:quit :unix-status 7)` refused, usage error, stdout/stderr split |
-| `bash mneme/language-repl-0/test-web.sh` | 48 | the real server: the defining sequence over HTTP, reset, every fence refusal, a client trickling its request over 24 s (must not hold the server past the deadline), and the session precondition (428 missing, 409 stale, a pre-reset id refused, nothing evaluated or reset) |
-| `node mneme/language-repl-0/test-browser.mjs` | 59 | a real headless Chromium: the defining sequence typed and clicked, multi-line with Enter, incomplete kept, print as text, history recall, reset cancel/confirm, no horizontal scroll at 800 px, zero CSP violations and page errors; then r3: a submit and a reset that **complete on the server and lose or corrupt their answer** (Playwright intercepts after the real request), and **two tabs** (a stale confirmation, a stale submission); then r4: her two exact bodies after the real request (reset
+| `bash mneme/language-repl-0/run-selftest.sh` | 118 | the engine in-process: persistence, closure capture across submissions, forward reference, multiline, incomplete vs malformed, error recovery and state, budget, language boundary, host-fault classification, **the reset detector** (on the real engine and on a planted resetting engine, which it must fail), session = concatenated file, CLI via streams (multiline, EOF, controls, `,cancel` inside a string), the reader-verdict helper, the submission-boundary example (session keeps `kept`; the concatenated file refuses), JSON escaping; since 2026-09-29, §13 the reader seam through the engine and the CLI (5), §14 active `#S` refused before construction (3); 2026-09-30 (r1): +30, recovery for all nine codes (exact code, a later success, an earlier binding answering) with a planted reset engine that must fail, per-submission budget renewal, `,help`, the HOST FAULT wording, unbound `load`/`quit`, the absent act/many-acts packages, the empty-symbol rendering, and labelled fault injection of the host-fault, interrupted and 500 serializations; then +10, one tooth per recovery row (each row alone must pass on the real engine and fail on a planted resetting one); r2: +2, RE6 as its two submissions, and a validation-phase refusal whose earlier form did not run |
+| `bash mneme/language-repl-0/test-cli.sh` | 12 | the one command as a real process on a pipe: exit codes, EOF inside a form (discarded, not run), `#.(sb-ext:quit :unix-status 7)` refused, usage error, stdout/stderr split; r1: +3, `,help`, E-ARITH then success, the image's packages |
+| `bash mneme/language-repl-0/test-web.sh` | 119 | the real server: the defining sequence over HTTP, reset, every fence refusal, a client trickling its request over 24 s (must not hold the server past the deadline), and the session precondition (428 missing, 409 stale, a pre-reset id refused, nothing evaluated or reset); r1: +60, the four headers on every response kind, favicon `204`, `431`, the per-read and whole-request timeouts (`408` or a closed connection), the runtime, result, error and session fields, the refusal bodies, the default port 4917; r2: +11, `forms` is null (not 0) on the wire for empty and incomplete input with the session unchanged, and the header block at exactly 16,384 bytes (served) and 16,385 (`431`) |
+| `node mneme/language-repl-0/test-browser.mjs` | 61 | a real headless Chromium: the defining sequence typed and clicked, multi-line with Enter, incomplete kept, print as text, history recall, reset cancel/confirm, no horizontal scroll at 800 px, zero CSP violations and page errors; then r3: a submit and a reset that **complete on the server and lose or corrupt their answer** (Playwright intercepts after the real request), and **two tabs** (a stale confirmation, a stale submission); then r4: her two exact bodies after the real request (reset
 `{}`, submit `{"result":{"status":"value"}}`), an invalid refresh, a stale refusal with an unusable snapshot, and a
-legitimate empty value. A test tool, not a dependency: needs `playwright@1.55.0` and its `chromium-headless-shell` |
-| `bash mneme/language-program-0/run-selftest.sh` | 136 | PROGRAM /0's own gate (125 before; +11 for the reader change below) |
+legitimate empty value. r2: +2, `(define || 5)`'s name renders as the empty string. A test tool, not a dependency: needs `playwright@1.55.0` and its `chromium-headless-shell` |
+| `bash mneme/language-program-0/run-selftest.sh` | 389 | PROGRAM /0's own gate (125 before; +11 for the reader change below; 2026-09-29: +1 `tally.lp`, +18 the reader seam, +1 `#:x`, +8 active `#S` refused before construction); 2026-09-30 (r1): +135, the spec's remaining obligations, every primitive and prelude function, the README's literal examples, all nine codes through the runner, the pinned defaults, and labelled fault injection of the version refusal and exit 1; then +19, the predicates' false branches and the remaining argument refusals, and the `refusal-kind` check corrected to test the primitive; r2: +43, a budget of N admits N steps, a directory is usage, a file that is not UTF-8 is E-READ with nothing evaluated, the runner's argument is a native path (`?`, `*`, `[`, `\`) and diagnostics spell the file's name as its path does, the README's `plain`/`confident` examples run literally, and the clarified `mod`/`quotient`, string and accessor refusals; closing (2026-10-01): +20, the six accepted clarification rules (§36); successor (2026-10-01): +8, every `cond` clause's shape checked on entry, branches still lazy, and Card 3's evaluation-time phase (§37) |
 
 Mutants each gate was seen to fail on: the reader's EOF flag reverted (PROGRAM /0 gate: 1 FAIL); a planted env reset
 (reset detector FAILS); a CLI that evaluates pending text at EOF (test-cli: 1 FAIL); the token check disabled
@@ -228,8 +245,9 @@ chair, and no outside reviewer has yet run this candidate.
 `language-program-0/program0.lisp` now reads with `eof-error-p` NIL and a private end marker. A source ending in a
 `#|…|#` comment is no longer refused as unfinished; that was a defect. A text that ends inside a form still gets E-READ,
 rendered identically, but its condition is now of the exported subclass `program0-incomplete-source`. `fail` became a
-call to the new `fail-as`. Documented in `PROGRAM-0-GRAMMAR-AND-SEMANTICS.md` §1. The three program files and their
-recorded outputs are unchanged, and the selftest compares them byte for byte. The engine reads four PROGRAM /0
+call to the new `fail-as`. Documented in `PROGRAM-0-GRAMMAR-AND-SEMANTICS.md` §1. The three program files of that date and their
+recorded outputs were unchanged by it, and the selftest compares them byte for byte (a fourth, `tally.lp`, was added on
+2026-09-29). The engine reads four PROGRAM /0
 internals read-only (`env-table`, `program0-error-source`, `render-abbrev`, `+error-codes+`), named in `repl0.lisp`.
 
 ## Remaining limitations
@@ -253,20 +271,29 @@ internals read-only (`env-table`, `program0-error-source`, `render-abbrev`, `+er
 
 ## Observations handed on, not acted on
 
-- **The reader can intern into an unlocked host package before refusing.** `(cl-user::zzq-probe-one 1)` is refused
+- **The reader can intern into an unlocked host package before refusing: RESOLVED 2026-09-29.** PROGRAM /0's reader
+  now reads with every host package locked. A package-qualified name the host does not already have is refused E-READ
+  before it exists, and refused names no longer accumulate. See `../language-program-0/PROGRAM-0-GRAMMAR-AND-SEMANTICS.md`
+  §1, "Host packages are not written by reading", program0 selftest §14 and repl0 selftest §13. *History, as written on
+  2026-09-25:* `(cl-user::zzq-probe-one 1)` is refused
   (E-SYNTAX), but the CL reader has already interned `ZZQ-PROBE-ONE` in `CL-USER`. Locked packages (`SB-EXT`, `CL`)
   refuse at the reader and nothing is interned. No host code runs and nothing is evaluated, but a name appears in a host
   package. The file runner shares the reader, so this predates REPL /0, and fixing it would change PROGRAM /0's reader
   law. Reproduced 2026-09-25, in-process, with `find-symbol` before and after.
 
-- **`:true` is `true`.** PROGRAM /0 represents its booleans as the keywords `:true` and `:false`, and keywords are also
-  program values. So `(if :true 1 2)` ⇒ 1 and `(equal? :false false)` ⇒ true. This predates REPL /0; it is a question
-  for the language, not the REPL.
+- **`:true` is `true` (a proposed clarification, 2026-09-29).** PROGRAM /0's booleans are the keywords `:true` and `:false`,
+  so `(if :true 1 2)` ⇒ 1 and `(equal? :false false)` ⇒ true. The candidate keeps them as aliases, as Astra's review voted, and
+  states this in the specification (§2, the boolean row). The owner decided on 2026-09-30 to keep them. *First observed 2026-09-25, as a question for the
+  language, not the REPL.*
 - **One PROGRAM /0 check is counted but not printed.** The "strings and print" check runs inside a `let` that binds
-  `*standard-output*` to a broadcast stream, which swallows its own `ok` line. The gate therefore prints 124 `ok` lines
-  for 125 passes on unchanged `main` (135 for 136 here). This predates REPL /0; the published test was left alone.
-- **If this candidate is ever integrated,** the root README's "(125 checks)" becomes stale (136). The root README was
-  deliberately not touched here: its one pending change (the accepted +15 blob at `68b52fe6a`) awaits its own crossing.
+  `*standard-output*` to a broadcast stream, which swallows its own `ok` line. The gate therefore prints one fewer `ok`
+  line than it passes. *History, 2026-09-25:* 124 for 125 on `main`, and 135 for 136 in this candidate as delivered. *Now,
+  2026-09-29:* 163 for 164. *2026-09-30 (r1):* 317 for 318. *r2:* 360 for 361. *Closing:* 380 for 381. *Successor:* 388 for 389. This predates REPL /0; the test itself was left alone.
+- **Historical root-README note.** During candidate preparation, the root README's "(125 checks)" was expected to become
+  stale (136); it was deliberately left untouched while its accepted +15 blob at `68b52fe6a` awaited its own crossing.
+  At public-mirror commit `9c1dca6971409634833664111b4331d4c7f8102a`, the root README already says "(136 checks)". (The
+  REPL /0 candidate was integrated and published with README B2 on 2026-09-25; this candidate's own counts are in the
+  verification table above.)
 
 ## Files
 

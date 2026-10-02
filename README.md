@@ -55,7 +55,7 @@ A program is a file of forms; the last one's value is printed. Write your own:
 
 **The guide, with executable examples:** `mneme/language-program-0/README.md`. **The specification:**
 `mneme/language-program-0/PROGRAM-0-GRAMMAR-AND-SEMANTICS.md`. **Tests:** `bash mneme/language-program-0/run-selftest.sh`
-(136 checks). Limits, plainly: 1,000,000 evaluation steps and 4,000 nested calls per run, no tail-call elimination, no
+(389 checks). Limits, plainly: 1,000,000 evaluation steps and 4,000 nested calls per run, no tail-call elimination, no
 mutation, no error handling inside a program; `true`/`false` are the only booleans; the effect lanes are not loaded, so a
 program derives and never performs. SBCL 2.4.6 on Linux.
 

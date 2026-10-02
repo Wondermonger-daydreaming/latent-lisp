@@ -1,0 +1,15 @@
+words: 10 distinct: 3
+4 #### rose
+3 ### is
+3 ### a
+how many rose? 4 how many tulip? 0
+7 ####### 6
+3 ### 3
+3 ### 1
+3 ### 2
+2 ## 5
+2 ## 4
+mean roll: 39/10 most common: ((6 7))
+even?: ((false 8) (true 12))
+low (1-3) vs high (4-6): ((low 9) (high 11))
+((rose 4) (is 3) (a 3))

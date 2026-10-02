@@ -7,8 +7,9 @@
 ;;;; the value of its last top-level form to stdout, and exits:
 ;;;;   0  a value was produced (definitions print as `; defined <name>`)
 ;;;;   2  a LANGUAGE error — printed to stderr with code, file:line:column, the
-;;;;      forms under evaluation and the user-function frames
-;;;;   3  usage: no file, or the file does not exist
+;;;;      forms under evaluation and the user-function frames; a file that is not
+;;;;      UTF-8 is E-READ naming the file, with no location, forms or frames
+;;;;   3  usage: no file, the file does not exist, or the path names a directory
 ;;;;   1  a HOST fault: a condition that is not one of the language's own — a
 ;;;;      defect of this implementation, not of the program; the host type is named
 ;;;;
@@ -49,9 +50,17 @@
       (format *error-output* "usage: sbcl --script run.lisp <program.lp>~%")
       (finish-output *error-output*)
       (sb-ext:exit :code 3))
-    (let ((path (probe-file arg)))
+    ;; The argument is the host's native file path (spec §9, F-6, 2026-09-30): no character in it is special, so
+    ;; `?', `*', `[' and `\' name the file they spell and are never read as a Lisp wildcard or escape.
+    (let ((path (probe-file (sb-ext:parse-native-namestring arg))))
       (unless path
         (format *error-output* "lisp-plus: no such file: ~a~%" arg)
+        (finish-output *error-output*)
+        (sb-ext:exit :code 3))
+      ;; A directory is usage (spec §9, 2026-09-30), refused here before any open or read of it. PROBE-FILE
+      ;; returns a directory's truename in directory form (no name, no type), with or without a trailing slash.
+      (when (and (null (pathname-name path)) (null (pathname-type path)))
+        (format *error-output* "lisp-plus: ~a is a directory, not a program file~%" arg)
         (finish-output *error-output*)
         (sb-ext:exit :code 3))
       (handler-case

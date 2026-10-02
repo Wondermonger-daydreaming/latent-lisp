@@ -18,6 +18,10 @@ REPL /0 candidate; adopts nothing.*
   (answered `204 No Content`: there is no icon, said explicitly). Anything else → `404`.
   Methods other than those listed → `405`. Request bodies over 65,536 bytes → `413`. The whole request (header and
   body) must arrive within 10 s, each read within 2 s → `408` or a closed connection.
+- **The header block** is every byte from the first byte of the request line through the CRLF CRLF that ends it: the
+  request line, each header line, every CRLF and the terminating empty line all count. At most 16,384 bytes are
+  admitted: a block of at most 16,384 bytes is read, and a longer one → `431`.
+  The body is not counted here; its bound is the 65,536 bytes above.
 - Every response carries `Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self';
   img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'`, `X-Content-Type-Options: nosniff`,
   `Referrer-Policy: no-referrer`, `Cache-Control: no-store`. **So the page may use no inline `<script>`, no inline `<style>`,
@@ -28,7 +32,7 @@ REPL /0 candidate; adopts nothing.*
 | Method + path | Body | Answer |
 |---|---|---|
 | `GET /api/session` | — | `200` `{ "session": Session, "runtime": Runtime }` |
-| `POST /api/submit` | the source text, `Content-Type: text/plain;charset=utf-8`, UTF-8, ≤ 65,536 bytes; header `X-Lisp-Plus-Session: <the id the page shows>` | `200` `{ "session": Session, "result": Result }` — **always 200** for anything the language said (value, definition, incomplete input, language error, host fault, interruption); non-200 only for protocol refusals |
+| `POST /api/submit` | the source text, `Content-Type: text/plain;charset=utf-8`, UTF-8, ≤ 65,536 bytes; header `X-Lisp-Plus-Session: <the id the page shows>` | `200` `{ "session": Session, "result": Result }` — **200** whenever the server constructs this answer, for anything the language said (value, definition, incomplete input, language error, host fault, interruption); non-200 only for protocol refusals and server failures (below) |
 | `POST /api/reset` | empty; header `X-Lisp-Plus-Session: <the id the confirmation named>` | `200` `{ "session": Session, "runtime": Runtime }` — a **new** session (new `id`, `generation` + 1, no user bindings) |
 
 **Session precondition (r3).** Submit and reset compare `X-Lisp-Plus-Session` with the current session BEFORE any
@@ -42,6 +46,12 @@ the mutation had begun. **Anything else — no answer, an unreadable or non-JSON
 is an UNKNOWN outcome**: the page keeps the text, never resends, and offers a read-only `GET /api/session`, which shows
 the current state but cannot identify which request produced it (r3, Astra's AMEND). **A 2xx whose body is valid JSON but not
 the shape this contract states is also UNKNOWN** (r4): the page validates every answer before it changes anything.
+
+**A server failure is not a language outcome.** If building or sending an answer fails after the mutation began (for
+example, a session snapshot that cannot be built from a damaged frame), the server answers `500`
+`{ "error": "server defect: …", "before_mutation": false }` when it can still send one; otherwise no answer arrives,
+which is UNKNOWN. `false` promises no rollback and no safe replay, and this contract does not promise that a later
+request succeeds after such a failure.
 
 ## Session
 
@@ -82,7 +92,8 @@ the shape this contract states is also UNKNOWN** (r4): the page validates every 
     "in": "(+ y 1)" | null, "within": ["…"], "frames": ["f", "g"], "explanation": "a name has no binding",
     "text": "<the full diagnostic exactly as the command line prints it>" }`.
   - `"host-fault"` — a condition that is not the language's own: a defect of the implementation, not of the program.
-    `fault` = `{ "type": "…", "message": "…" }`.
+    `fault` = `{ "type": "…", "message": "…" }`, both host text (the condition's type and its report); their spelling
+    and wording are not specified.
   - `"interrupted"` — evaluation was interrupted (Ctrl-C reaches the command line; the page renders it if it ever
     arrives). `fault` carries the message; what ran before stays.
 - `index` — this submission's number in the session (1, 2, …); its source name is `in[<index>]`. An error's

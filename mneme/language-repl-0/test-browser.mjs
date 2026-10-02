@@ -334,6 +334,39 @@ await page.screenshot({ path: join(OUT, 'workbench-r3-stale.png'), fullPage: fal
 });
 if (pageB) await pageB.close();
 
+// ---- r2 (TELLTALE, Claude Opus 5.5, subagent of the laptop chair; R2-WORK-ORDER items 9 and 14): RE17 ----
+// REPL README (r4): "Legitimate empty values are not rejected: `(quote ||)` renders as `""`, and so does
+// `(define || 5)`'s name." Astra (r1 disposition): RE17 "concerns an empty rendered string, represented by
+// JSON "", not two quotation-mark characters in the rendered value." WEB-API-0.md, defined: "`value` is the
+// name defined (`kind` null)". Two checks: what the page RECEIVES (the real answer's body, parsed, compared
+// with ===) and what it DISPLAYS. web/app.js shows a definition's name as the text of the <code> after the
+// DEFINED badge (renderResultBlock, the defined branch, through str(r.value)); for "" that text is empty.
+// Placed before the whole-run checks so they cover it. It refreshes first, so it acts on the current session
+// whatever the scenarios above left.
+await scenario('r2 RE17', async () => {
+  await page.click('#refresh-btn');
+  await page.waitForFunction(() => /REFRESHED|REFRESH FAILED/.test(document.getElementById('notice').textContent), null, { timeout: 15000 });
+  const nK = await entries().count();
+  const answer = page.waitForResponse((r) => r.url().endsWith('/api/submit') && r.request().method() === 'POST', { timeout: 15000 });
+  await page.fill('#editor', '(define || 5)');
+  await page.press('#editor', 'Control+Enter');
+  const resp = await answer;
+  const raw = await resp.text();
+  let r = null;
+  try { r = JSON.parse(raw).result; } catch (_) { r = null; }
+  ok(resp.status() === 200 && r !== null && typeof r === 'object' && r.status === 'defined' && r.value === '' && r.kind === null,
+     'RE17 browser, received: (define || 5) answers status defined, value "" (JSON "", the empty text, not the two characters ""), kind null',
+     raw.slice(0, 400));
+  await page.waitForFunction((n) => document.querySelectorAll('#transcript article').length > n || !document.getElementById('notice').hidden, nK, { timeout: 15000 });
+  const entry = lastEntry();
+  const name = entry.locator('.block-defined .result-head code');
+  const shown = (await name.count()) === 1 ? await name.textContent() : null;
+  ok((await entries().count()) === nK + 1 && (await entry.textContent()).includes('DEFINED') && shown === ''
+     && (await noticeText()).indexOf('OUTCOME UNKNOWN') === -1,
+     'RE17 browser, displayed: a DEFINED entry whose name is the empty text (not the two characters ""), and no OUTCOME UNKNOWN',
+     JSON.stringify({ shown, entries: await entries().count(), expected: nK + 1, notice: await noticeText() }));
+});
+
 // the whole run, from the browser's side
 const csp = await page.evaluate(() => window.__csp);
 ok(csp.length === 0, 'no Content-Security-Policy violation (whole run)', JSON.stringify(csp));

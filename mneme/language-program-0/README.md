@@ -15,8 +15,8 @@ agree for 1..50?      = true
 ```
 
 The last line is the value of the program's last form; the lines above it are what the program
-`print`ed. Every example in this guide is executable; the three in `programs/` are run by the
-selftest and compared with their recorded output byte for byte.
+`print`ed. Every example in this guide is executable; the four in `programs/` are run by the
+selftest and compared with their recorded output byte for byte (three until 2026-09-29, when `tally.lp` was added).
 
 **Standing: CANDIDATE.** The specification is `PROGRAM-0-GRAMMAR-AND-SEMANTICS.md`; `program0.lisp`
 executes it. Under adopted law W-02 the specification supplies the meaning, the executor only runs
@@ -184,7 +184,7 @@ lisp-plus: E-UNBOUND at err.lp:4:0
 Codes: `E-READ E-SYNTAX E-UNBOUND E-REDEFINE E-ARITY E-TYPE E-ARITH E-BUDGET E-BOUNDARY` — the
 closed list is in the specification §8. Locations are the line and column of the **top-level form**;
 the innermost forms and the user-function frames are printed beneath. Exit codes: `0` value ·
-`2` language error · `3` usage · `1` host fault (an implementation defect, labelled as such).
+`2` language error · `3` usage · `1` host fault (an implementation defect, labelled as such; an unreadable file is a recorded exception, specification §9).
 
 ## 8. Execution limits, plainly
 
@@ -201,7 +201,9 @@ the innermost forms and the user-function frames are printed beneath. Exit codes
 - **Reader:** `#.` is dead; a package-qualified symbol like `cl:eval` is not a name (`E-SYNTAX`),
   quoted or not, and `cl:if` is not an `if`; dotted pairs, vectors, characters and circular `#1=`
   structure are refused at the source (`E-READ`, cycle-safe); `(/ 1 0.0)` and float overflow are
-  `E-ARITH`; user code is never handed to `cl:eval`.
+  `E-ARITH`; user code is never handed to `cl:eval`. Reading never adds a symbol to a host
+  package (2026-09-29): a qualified name the host does not already have, like `cl-user::zzq`, is
+  refused at the reader (`E-READ`) before it exists (grammar §1).
 
 ## 9. Files
 
@@ -211,7 +213,7 @@ the innermost forms and the user-function frames are printed beneath. Exit codes
 | `package.lisp` · `program0.lisp` | the executor: reader under the law, frames, evaluator, primitives, Kernel /0 bridge |
 | `prelude.lp` | the library, in Lisp+ |
 | `run.lisp` · `lisp-plus-run.sh` | the one command |
-| `programs/*.lp` · `programs/*.expected` | three programs and their recorded outputs |
+| `programs/*.lp` · `programs/*.expected` | four programs and their recorded outputs (`tally.lp`: a frequency counter) |
 | `program0-selftest.lisp` · `run-selftest.sh` | the focused tests |
 
 Governance, rulings and the rest of the construction: the repository `README.md` and

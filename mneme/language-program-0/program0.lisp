@@ -281,10 +281,74 @@ shadowing, and it is the only way a name is ever rebound."
 (defvar +eof+ (make-symbol "END-OF-SOURCE")
   "Returned by the reader only at end of text between forms; never a datum a source can write.")
 
+;;; ---- the source readtable: #S is refused before anything is constructed ------
+;;; `#S(name …)' makes the CL reader call the named structure's constructor, with its
+;;; slot initforms, DURING the read, before the language can refuse the object. So the
+;;; source is read with its own readtable: a copy of the STANDARD readtable (never the
+;;; global one, which is not modified) whose only difference is the #S dispatch (`#s' is
+;;; the same sub-character). Active #S is refused at once, before the form after it is
+;;; read. Under *read-suppress* (`#+(or) #s(x)') the standard SHARP-S runs, so
+;;; suppressed text reads exactly as before. (Astra's review vote of 2026-09-29;
+;;; Claude Opus 5.5.)
+
+(defparameter *standard-sharp-s* (get-dispatch-macro-character #\# #\S (copy-readtable nil))
+  "The standard readtable's #S dispatch function, for reader-suppressed text.")
+
+(defun %refuse-sharp-s (stream sub-char numarg)
+  (if *read-suppress*
+      (funcall *standard-sharp-s* stream sub-char numarg)
+      (error 'sb-int:simple-reader-error :stream stream
+             :format-control "#~a structure syntax is not part of this language; it is refused before the form after it is read, so no host constructor runs"
+             :format-arguments (list sub-char))))
+
+(defparameter *source-readtable*
+  (let ((readtable (copy-readtable nil)))
+    (set-dispatch-macro-character #\# #\S '%refuse-sharp-s readtable)
+    readtable)
+  "The readtable a source is read with: the standard one except #S. Bound only around the read.")
+
+(defun %call-with-host-packages-locked (thunk)
+  "Call THUNK (one CL read) with every HOST package locked, so that reading can intern
+only into the source namespace and KEYWORD: the language's own names and its keyword
+values. A host package is every package in the image except those two. A
+package-qualified name that would CREATE a symbol in a host package (`cl-user::x',
+`pkg::( … )', a `#+'/`#-' feature expression; `#s(…)' is refused earlier, by
+*source-readtable*) is refused by
+SBCL's package lock, PACKAGE-LOCKED-ERROR, which read-source-forms reports as E-READ,
+before the symbol exists. A symbol that already exists reads as before and is judged
+by validate-source-datum. Until 2026-09-29 such a name was interned first and refused
+afterwards (E-SYNTAX); see PROGRAM-0-GRAMMAR-AND-SEMANTICS.md §1.
+Only the packages this call locked are unlocked again, on every exit (unwind-protect).
+Interrupts are deferred while locking and unlocking, so a Ctrl-C cannot leave the window
+open; the read itself stays interruptible.
+SBCL 2.4.6 ONLY (the lane refuses other versions). `sb-impl::*ignored-package-locks*' is
+an internal of that version. SB-EXT:WITHOUT-PACKAGE-LOCKS binds it to T, which would
+switch the guard off, so it is rebound to its default, :INVALID, for the read.
+ASSUMPTION: the lock window is GLOBAL. Package locks are process-wide, not per thread,
+so no other thread may intern into a host package while a read is in progress. The file
+runner and the REPL server are single-threaded.
+(Reader seam repair, Claude Opus 5.5, 2026-09-29.)"
+  (let ((source (find-package '#:lisp-plus-program0.source))
+        (keyword (find-package '#:keyword))
+        (locked '()))
+    (sb-sys:without-interrupts
+      (unwind-protect
+           (progn
+             (dolist (p (list-all-packages))
+               (unless (or (eq p source) (eq p keyword) (sb-ext:package-locked-p p))
+                 (sb-ext:lock-package p)
+                 (push p locked)))
+             (let ((sb-impl::*ignored-package-locks* :invalid))
+               (sb-sys:with-local-interrupts (funcall thunk))))
+        (dolist (p locked) (sb-ext:unlock-package p))))))
+
 (defun read-source-forms (text &key (source-name "<source>"))
   "→ list of (form line . column). TEXT is the whole source. The bindings are
 the law (MANY-ACTS-0-GRAMMAR.md §1b): `*read-eval*' NIL kills `#.' at the
-reader; `*package*' is the source namespace so every symbol is homed there."
+reader; `*package*' is the source namespace so every symbol is homed there.
+Each read runs inside %call-with-host-packages-locked, so the reader's own interning
+cannot add a symbol to a host package, and with *readtable* bound to
+*source-readtable*, so an active #S is refused before any constructor runs (2026-09-29)."
   (let ((*read-eval* nil)
         (*package* (find-package '#:lisp-plus-program0.source))
         (*read-default-float-format* 'double-float)
@@ -304,7 +368,10 @@ reader; `*package*' is the source namespace so every symbol is homed there."
               ;; it still signals END-OF-FILE when the text ends INSIDE a form. Until
               ;; 2026-09-25 this was T, so a source ending in a #|…|# comment was refused
               ;; E-READ as if a form were unfinished (REPL /0 candidate; disclosed there).
-              (handler-case (read-from-string text nil +eof+ :start start)
+              (handler-case (%call-with-host-packages-locked
+                             (lambda ()
+                               (let ((*readtable* *source-readtable*))
+                                 (read-from-string text nil +eof+ :start start))))
                 (end-of-file (c)
                   (fail-as 'program0-incomplete-source
                            "E-READ" "the text ends inside the form starting here (an unclosed parenthesis, string, |…| escape or # dispatch) [~a]"
@@ -362,6 +429,12 @@ are admitted (Astra's r4 review: '(#1=(cl:quote x) (tag . #1#)) was admitted)."
                (cond ((or (null x) (keywordp x) (realp x) (stringp x)))
                      ((symbolp x)
                       (cond ((eq x 'quote) (occurrence-ok x head-position-p))
+                            ;; an uninterned symbol (#:x) has no package to name; until 2026-09-29
+                            ;; the message below asked for its package's name and the refusal
+                            ;; became a HOST FAULT (exit 1)
+                            ((null (symbol-package x))
+                             (fail "E-SYNTAX" "#:~(~a~) is not a name of this language (an uninterned symbol)"
+                                   (symbol-name x)))
                             ((foreign-symbol-p x)
                              (fail "E-SYNTAX" "~a is not a name of this language (a symbol of package ~a)"
                                    (render-foreign x) (package-name (symbol-package x))))))
@@ -430,7 +503,7 @@ the ' abbreviation and which is the one admitted foreign symbol (§1). So
   sym)
 
 (defun tick ()
-  (when (>= (incf *steps*) *step-budget*)
+  (when (> (incf *steps*) *step-budget*)
     (fail "E-BUDGET" "step budget exhausted: ~:d evaluation steps is this run's ceiling (*step-budget*)" *step-budget*)))
 
 (defun proper-list-p (x)
@@ -523,10 +596,13 @@ including recursive ones, before using them."
         ;; (cond (test body...)... (else body...)) — a clause must fire
         ((string= head "COND")
          (arity 1 nil)
+         ;; Check every clause's outer shape before evaluating any test or body.
+         ;; This does not validate or evaluate expressions inside those clauses.
+         (dolist (clause args)
+           (unless (and (proper-list-p clause) (>= (length clause) 2))
+             (fail "E-SYNTAX" "each `cond` clause is (test body...), got ~a" (render-abbrev clause))))
          (dolist (clause args
                          (fail "E-TYPE" "`cond` fell through: no clause held and there is no `else`"))
-           (unless (and (proper-list-p clause) (>= (length clause) 2))
-             (fail "E-SYNTAX" "each `cond` clause is (test body...), got ~a" (render-abbrev clause)))
            (let ((test (first clause)))
              (if (and (symbolp test) test (string= (symbol-name test) "ELSE"))
                  (return (evaluate-body (rest clause) env))
@@ -832,6 +908,20 @@ a host backtrace."
         (fail "E-BUDGET" "the host ran out of stack or heap before the language's own ceiling spoke; the program is refused")))
     (values value definedp count)))
 
+(defun source-file-name (pathname)
+  "The file's name as its path spells it (spec §9, F-6): the native namestring of the file part. FILE-NAMESTRING
+would write a Lisp namestring, escaping `?', `*', `[' and `\\'. RUN-FILE uses this one name both for the error
+location and for the file-level E-READ's message."
+  (sb-ext:native-namestring (make-pathname :directory nil :defaults pathname)))
+
 (defun run-file (pathname &key (env (make-global-environment)))
-  (run-source (read-file-text pathname) env
-              :source-name (file-namestring pathname)))
+  (run-source (handler-case (read-file-text pathname)
+                ;; A source file that is not UTF-8 is E-READ at the file (spec §1, 2026-09-30). Only SBCL's
+                ;; stream DECODING error, and only around this file's read, is caught; any other failure to read it
+                ;; propagates as before. No form was read, so no location, forms or frames are claimed; the stream
+                ;; gives no reliable byte offset of the bad octets, so none is given.
+                (sb-int:stream-decoding-error ()
+                  (let ((*current-location* nil) (*form-path* '()) (*frames* '()))
+                    (fail "E-READ" "~a is not valid UTF-8, so no form of it was read" (source-file-name pathname)))))
+              env
+              :source-name (source-file-name pathname)))
