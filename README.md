@@ -16,8 +16,8 @@ proposition it claims to support.
 **CANDIDATE / REGISTERED / ADOPTED / PUBLISHED**), **sentinel, ferry, subject tree** are defined once, in the
 [Working vocabulary](#working-vocabulary-read-this-before-reading-the-table) table further down — and, as of this revision, so are
 **specimen, ruling, preserved failure** and **governed**. A lane name's **`/0`, `/1` …** suffix is a revision designation, not a version you
-can install and not a standing. The runnable thing is the next section; everything after it is the record of what was built, what it claims, and what it
-does not.
+can install and not a standing. The two programming entry points follow; the material below them records what was built,
+what it claims, and what it does not.
 
 ## Write a program and run it
 
@@ -215,7 +215,7 @@ uniqueness is **open** (not asserted).
 
 ---
 
-## Current state — START HERE (2026-08-28)
+## Current state — START HERE (2026-10-02)
 
 **The language is Lisp+. Mneme is its memory-and-continuity layer.** (Relation sealed:
 `mneme/architecture/ARCHITECTURE-0-STATUS.md`.) As laid out on disk, `mneme/` holds the whole construction.
@@ -271,6 +271,8 @@ unresolved finding is unchanged* — never that a semantic question is resolved.
 | `mneme/public-sufficiency-0/` | the governance of *this mirror*: what may be published, how transport is recorded, what "published" means | LIVE lane; publication authorization **B (blanket-current, bounded)** ruled 2026-08-18; transport sentinel raised |
 | `mneme/language-act-1/` | One Act /1 — perform *across* process death | **ADOPTED 2026-08-22** at lab commit `aeeefa40` (owner act, ceilings verbatim; Sol I ruled ADOPTION-ELIGIBLE on a cold audit that terminated BLOCK on venue plus a same-family capable-venue execution supplement; record `mneme/language-act-1/ADOPTION-RECORD-2026-08-22.md`; floor row `act1\|ADOPTED`). Ceilings: not "independently verified"; 27-symbol ML/0 coupling is version-bound debt |
 | `mneme/memory-layer-0/` | Memory Layer /0 — the language's durable account of its own act (write / retrieve / consolidate under *ISSUED(evidence, act) ⇏ OCCURRED(act)*) | **ADOPTED AND PUBLISHED** (2026-08-22); [current audit standing and mandatory limits](#ml0-audit-standing-and-limits) |
+| [`mneme/language-program-0/`](mneme/language-program-0/README.md) | PROGRAM /0 — file programs, lexical closures, and higher-order functions | **ADOPTED AND PUBLISHED** (ruled 2026-10-02; exact accepted object at public commit `a9fc64ae`, tree `11ee4de5`; standing recorded in the linked lane README) |
+| [`mneme/language-repl-0/`](mneme/language-repl-0/README.md) | REPL /0 — persistent submissions over PROGRAM /0, on the command line or in a local browser workbench | **ADOPTED AND PUBLISHED** (ruled 2026-10-02; exact accepted object at public commit `a9fc64ae`, tree `11ee4de5`; standing recorded in the linked lane README) |
 | `mneme/integration-baseline-0/` | authority index · claim ceiling · supersession map | CLOSED by owner ruling 2026-08-03 — historical, never edited |
 | `mneme/lci0/` · `canonical-datum/` | Located Claim Identity /0 · Canonical Datum /0 | CLOSED + FROZEN; LCI0 algebraic-law audit carries 4 preserved FAILs, "authorial ruling required" |
 | `mneme/language-a/` | Language-A emission materials (public lane only) | ARCHIVED, banked 295/312 — not re-run |
@@ -375,14 +377,16 @@ the lab awaiting its own authorization; see *On this mirror* at the end.
 
 ### The three front-door commands
 
-Run from the repository root. These are the canonical entry points, not a promise that every venue can
-green every one; the public-mirror and aggregate-floor distinction above is load-bearing.
+Run from the repository root. These are the construction stack's load, verify, and demonstrate entry points;
+PROGRAM /0 and REPL /0 use the [file runner](#write-a-program-and-run-it) and [interactive entry points](#work-interactively)
+above and are not registered in this aggregate floor. Not every venue can green every command;
+the public-mirror and aggregate-floor distinction above is load-bearing.
 
 ```sh
-# 1. LOAD — the whole current construction into one image (ASDF umbrella `lisp-plus`)
+# 1. LOAD — the ASDF construction stack into one image (umbrella `lisp-plus`)
 bash mneme/load-lisp-plus.sh
 
-# 2. VERIFY — the canonical aggregate release floor over every principal lane
+# 2. VERIFY — the canonical aggregate release floor over its registered lanes
 bash mneme/verify-release.sh                  # full floor, 112 gates (long)
 bash mneme/verify-release.sh --profile ci     # light profile, 82 gates; names everything it omits
 bash mneme/verify-release.sh --list           # the gate table, running nothing
@@ -397,7 +401,8 @@ supported subsystem load orders — and the one composition that is refused rath
 double-loading Canonical Datum /0 — are exhibited by `bash mneme/load-order-matrix.sh` (16 orders, each in
 a fresh image, observed by trace).
 
-**Loading is not adoption. A green floor is not a verdict on meaning.**
+**Loading or running adopts nothing. Publication and adoption are separate acts.
+A green floor is not a verdict on meaning.**
 
 ### The crossing has a witness protocol — dry-run cargo (2026-08-27)
 
@@ -450,7 +455,8 @@ integration receipt and the archived rulings of 2026-08-26/27/28), which are not
 
 | you want | read |
 |---|---|
-| the live WE-ARE-HERE of the whole construction | `mneme/architecture/ARCHITECTURE-0-STATUS.md` (its *last* addendum/postscript) |
+| the construction's standing and succession record (WE-ARE-HERE) | `mneme/architecture/ARCHITECTURE-0-STATUS.md` (latest public addendum: 2026-09-17; read alongside the lane records below) |
+| PROGRAM /0 and REPL /0 current standing (ruled 2026-10-02) | [PROGRAM /0 lane README](mneme/language-program-0/README.md) · [REPL /0 lane README](mneme/language-repl-0/README.md) |
 | who ruled what, and with what standing | `mneme/integration-baseline-0/AUTHORITY-INDEX.md` · `mneme/RULING-*.md` · each lane's `*-RETURN.md` / `ADOPTION-*.md` |
 | what may and may not be claimed | `mneme/integration-baseline-0/CLAIM-CEILING-0.md` |
 | which old records are superseded or historical | `mneme/integration-baseline-0/SUPERSESSION-MAP.md` |
@@ -616,6 +622,8 @@ latent-lisp/
 │   ├── public-sufficiency-0/  #   the governance of this mirror's publication
 │   ├── language-act-1/        #   One Act /1 — ADOPTED 2026-08-22 (registered 08-20)
 │   ├── memory-layer-0/        #   Memory Layer /0 — ADOPTED AND PUBLISHED 2026-08-22 (registered 2026-08-21)
+│   ├── language-program-0/    #   PROGRAM /0 — ADOPTED AND PUBLISHED (ruled 2026-10-02); file runner
+│   ├── language-repl-0/       #   REPL /0 — ADOPTED AND PUBLISHED (ruled 2026-10-02); CLI + browser workbench
 │   ├── release-floor-erratum-0/ # documentary correction lane for the current floor
 │   ├── lci0/ · spec/ · language-a/ · RULING-*.md
 │   ├── latent-mvp/            #   FOSSIL — v0/v1 kernel + the seven-law conformance walk
