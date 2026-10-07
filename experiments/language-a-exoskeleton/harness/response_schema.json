@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:language-a-emission-pilot:response:0.2",
+  "type": "object",
+  "required": ["call_id", "provider_request_id", "model_id_returned", "started_at", "completed_at", "status", "finish_reason", "raw_response_path", "raw_response_bytes", "raw_response_sha256", "usage", "price_table_version", "billed_cost_usd", "latency_ms", "operator_actor_id", "anomalies"],
+  "properties": {
+    "status": {"enum": ["completed", "transport-failure", "refused", "truncated"]},
+    "raw_response_bytes": {"type": "integer", "minimum": 0},
+    "anomalies": {"type": "array"}
+  },
+  "additionalProperties": true
+}

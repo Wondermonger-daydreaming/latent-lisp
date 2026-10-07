@@ -1,0 +1,41 @@
+{
+  "schema_version": "lae-preauthorship-verification-runs/1.0.0",
+  "command": "experiments/language-a-exoskeleton/verify-pilot.sh",
+  "network_mode": "off",
+  "fresh_runs": [
+    {
+      "run_id": "verification-attempt:full-004-sealed-successor",
+      "completed_at": "2026-07-16T00:58:05.789935610-03:00",
+      "exit_code": 0,
+      "output_byte_length": 440,
+      "output_sha256": "384256bc266b4770fd2081149216176b2233f748e06bebb6e9e66dda796876c1",
+      "floors_passed": 12,
+      "result": "pass"
+    },
+    {
+      "run_id": "verification-attempt:full-005-sealed-fresh-repetition",
+      "completed_at": "2026-07-16T00:59:19.458129286-03:00",
+      "exit_code": 0,
+      "output_byte_length": 440,
+      "output_sha256": "384256bc266b4770fd2081149216176b2233f748e06bebb6e9e66dda796876c1",
+      "floors_passed": 12,
+      "result": "pass"
+    }
+  ],
+  "outputs_byte_identical": true,
+  "output_lines": [
+    "PASS  mneme-existing-floor",
+    "PASS  design-reproduction",
+    "PASS  packet-unit-and-mutation-tests",
+    "PASS  preauthorship-unit-tests",
+    "PASS  preauthorship-schema-lineage-mutations",
+    "PASS  synthetic-precision-replay",
+    "PASS  claim-ceiling-lint",
+    "PASS  manifest-lineage-protected",
+    "PASS  key-open-denial",
+    "PASS  unresolved-owner-exposure-refusal",
+    "PASS  p2a-absent",
+    "PASS  zero-network-and-exposure-census",
+    "ALL PILOT PACKET FLOORS HOLD — 12/12 network-off checks green."
+  ]
+}
