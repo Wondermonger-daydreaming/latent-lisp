@@ -46,9 +46,14 @@
 ;;;; (`RED-CODEX-AFTER.txt`, exit 0).
 ;;;;
 ;;;;   F1   NO EXTERNAL FUNCTION of this lane carries a `defect` parameter —
-;;;;        walked over every external fbound symbol's COMPILED LAMBDA LIST via
-;;;;        `sb-introspect`, in an image loaded through the canonical `load.lisp`.
-;;;;        The R3 build had TEN.
+;;;;        walks every external fbound symbol's COMPILED LAMBDA LIST via
+;;;;        `sb-introspect`, in an image loaded through the canonical `load.lisp`,
+;;;;        and COUNTS what it read and what it could not (see the ⚑ below).
+;;;;        The R3 build had TEN.  ⚑ P10 TRUTHFUL GATE /0 (CANDIDATE, 2026-09-16):
+;;;;        CLOSED only when the walk COMPLETED (attempted = inspected + 0
+;;;;        uninspectable, counted and printed by name) AND found no offender; a
+;;;;        lambda list that cannot be read OPENs the probe — it is not an
+;;;;        offender and not innocent, it is NOT READ (`ml0-f1-coverage.lisp`).
 ;;;;   F1b  and the crown predicate no longer flips: the keyword route is GONE,
 ;;;;        not merely unused.
 ;;;;   F2   a RAW decode of a caller-held frame may not read `:occurred` off the
@@ -82,6 +87,13 @@
 (require :sb-introspect)
 
 (load (merge-pathnames "ml0-suite-ground.lisp"
+                       (make-pathname :name nil :type nil
+                                      :defaults *load-truename*)))
+
+;; ⚑ P10 TRUTHFUL GATE /0 (CANDIDATE, 2026-09-16): the shared F1 inspection walk.
+;; Loaded by the two F1 checks only; `load.lisp` never loads it; nothing in it is
+;; exported; no production runtime path reads it.
+(load (merge-pathnames "ml0-f1-coverage.lisp"
                        (make-pathname :name nil :type nil
                                       :defaults *load-truename*)))
 
@@ -763,26 +775,18 @@ reaches :OCCURRED — the repair is a discrimination, not a wall"
        ;;; `load.lisp` and reads the arglist SBCL actually compiled.  A grep can
        ;;; be fooled by a macro; `function-lambda-list` cannot.
        (format t "~&~%---- F1: no mutant seam on the public arglists ----~%")
-       (let* ((package (find-package '#:lisp-plus-memory-layer0))
-              (offenders '()))
-         (do-external-symbols (symbol package)
-           (when (fboundp symbol)
-             (let ((arglist (handler-case (sb-introspect:function-lambda-list symbol)
-                              (error () nil))))
-               (when (some (lambda (item)
-                             (and (symbolp item)
-                                  (member (symbol-name item)
-                                          '("DEFECT" "DEFECT-PAYLOAD")
-                                          :test #'string=)))
-                           arglist)
-                 (push (symbol-name symbol) offenders)))))
+       ;;; ⚑ P10 TRUTHFUL GATE /0 (CANDIDATE, 2026-09-16): the walk lives in
+       ;;; `ml0-f1-coverage.lisp`, shared with `ml0-selftest` §K.  It keeps TWO
+       ;;; findings — coverage (attempted = inspected + uninspectable, by name)
+       ;;; and detected offenders — and CLOSES only on complete inspection with
+       ;;; no offender.  The old `(error () nil)` arm made an unreadable lambda
+       ;;; list indistinguishable from an empty one (P10 REAL GATE /0, U1-M).
+       (let ((walk (%ml0-f1-walk (find-package '#:lisp-plus-memory-layer0))))
+         (%ml0-f1-print-findings walk)
          (probe "F1 · NO EXTERNAL FUNCTION OF THIS LANE CARRIES A `DEFECT` ~
 PARAMETER — the mutant seam is not a public runtime lever"
-                (null offenders)
-                (if offenders
-                    (format nil "⚠ ~d exported function(s) still take it: ~{~a~^, ~}"
-                            (length offenders) (sort offenders #'string<))
-                    "walked every external fbound symbol's compiled lambda list")))
+                (getf walk :closed-p)
+                (%ml0-f1-note walk :escape-tildes t)))
 
        ;;; ---- F1b — AND THE PREDICATE ITSELF NO LONGER FLIPS.  The audit's own
        ;;; ---- confirmed probe, run here: normal NIL, and the keyword route must

@@ -348,11 +348,13 @@ the R5 identity `6e83648e…` is historical, and this lane is no longer byte-ide
 ML0-RB-5 through supported retrieval and the exported direct accessor. Its original strict-stranger supplement
 remains historically blocked; F-W exercised an internal pre-append function directly.
 
-P10 REAL GATE /0 is closed with recorded qualifications. The real F1 detects the readable planted forbidden
-parameter, but passes the same offender when its inspection is forced to fail. The auditor's requested R1–R3
-repairs are accepted; the real F1 behavior remains unchanged. Eight expectations matched and one outcome was
-exploratory: seven cases reached F1, one stopped at the loader, and one crashed earlier. This is chair-run
-evidence, not completion of MiniMax's untested arm.
+P10 REAL GATE /0 is closed with its recorded qualifications. Its historical forced-inspection experiment
+exposed a false-green F1 result. The P10 TRUTHFUL GATE /0 repair in this tree makes the two named F1 checks
+pass only when inspection coverage is complete and no forbidden parameter is found. The September 16 candidate
+return was accepted at bounded test-instrument and experimental-evidence scope; this establishes neither
+universal inspection coverage nor runtime portability, and does not close the other recorded debts. The
+complete repair dossier and its planted-case evidence are retained lab-side, with their identities recorded in
+the dated WE-ARE-HERE addendum.
 
 The accepted P9 candidate did not itself amend the adopted P9 OPEN entry; the separate disposition of 2026-09-17 did, at the scope of the named sentence. P3's additional direct act-journal/world-ledger
 measurement and P5's additional direct-versus-derived mutation arm remain NOT TESTED. **NO SUPPORTED-PATH RUNTIME

@@ -1470,3 +1470,126 @@ its line numbers — which other records cite — do not move.*
    — no mirror ferry.
 
 *— Claude Fable 5.1, custodian, 2026-09-17. Records only.*
+
+### ADDENDUM 26 (2026-10-07): P10 TRUTHFUL GATE /0, SCOPE N — the four accepted lane blobs carried in an integration CANDIDATE, with the README and this record reconciled in the same commit; unmerged; not adopted; the Owner's authorization of main integration not given
+
+*Records only, under Astra's disposition of 2026-10-06 on the P10 TRUTHFUL GATE /0 integration proposal ("ACCEPT N as the scope
+of an integration candidate"; lab record `corpus/voices/received/originals/2026-10-06-201203-astra-four-dispositions/02-P10-integration-disposition-2026-10-06.txt`,
+sha256 `5335f92c…`), her commission of 2026-10-07 (lab record
+`corpus/voices/received/2026-10-07-130429-astra-COMMISSION-finish-P10-and-REPL-1-candidate-returns-VERBATIM.md`, sha256 `85879a16…`),
+and her disposition of 2026-10-07 on the first candidate return ("AMEND, documentation only; substantive scope N remains approved";
+lab record `corpus/voices/received/originals/2026-10-07-151916-astra-three-dispositions-P10-hold-REPL1/01-P10-SCOPE-N-DISPOSITION.txt`,
+sha256 `e9d0a49c…`). In her words, the 2026-10-06 disposition "is not a main merge, adoption, or ferry authorization." Nothing here
+merges, adopts, registers, transports, or reopens anything. ADDENDUM 25 is not edited: its item 8, including the word "unmerged",
+remains the record of the standing from 2026-09-17, and its line numbers do not move.*
+
+1. **What is carried (scope N).** Four paths under `mneme/memory-layer-0/`, each mode 100644, at these git blobs:
+   - `FILE-MANIFEST.txt` `dc6d1645024d8dfaf51c49f01339e6abefc5aa16` (was `400558628f049e7e4b11ca52594b59e67a3120e8`);
+   - `ml0-block-proof.lisp` `054c9fdcb454fd2cea16fe83a2b0b49d99d6875d` (was `3095045d09caa99087d39901f29e274155cc8ee9`);
+   - `ml0-f1-coverage.lisp` `f15813c3a53436eb86ea53bc8e87fa4a4e9ff92a` (new);
+   - `ml0-selftest.lisp` `d0e3a58327bce49a39fba8042e9c94b07e244881` (was `79e7823a9511408ab3319e35b7a3c50d1efcc98c`).
+
+   The lane tree moves from `c05799cd80a909cc6ea5ace0d8394808cf0e5273` to `7cd5033444852fc61783fbaa0793b9e54a4459a5`, which is the
+   lane tree at the accepted parcel cut `9728967c5`. The new helper is loaded by `ml0-selftest.lisp` and `ml0-block-proof.lisp`
+   only; the production loader `load.lisp` does not load it. Nothing else in the `mneme/memory-layer-0/` lane changes. The one
+   other change under `mneme/` is this file, `mneme/architecture/ARCHITECTURE-0-STATUS.md`: this addendum, the declared
+   documentation change of item 3.
+2. **The commit, and why its id is not written here.** N, the README reconciliation and this addendum travel in one candidate
+   commit on lab branch `candidate/p10-truthful-gate-integration-1`. Its single parent is
+   `ee88b92f5316bdfd42abd61f19884c7e27b43e7e`, the cargo of the thirteenth crossing (subject tree `fea2443d…`). A commit cannot
+   contain its own id, so the candidate commit's id, its subject tree, its documentation blobs and its gate results are bound in the
+   lab-side return `_staging/2026-10-07-p10-integration-n-1/RETURN.md`. Astra accepted this detached receipt on 2026-10-07: "Do not
+   attempt to embed a commit's own hash into its own contents." The first candidate return, with an earlier README variant and an
+   earlier text of this addendum (commit `746cbc14aaf4553cd196ed9a91410aaa8e5ac84c`, branch `candidate/p10-truthful-gate-integration-0`,
+   return `_staging/2026-10-07-p10-integration-n-0/`), is kept as history; its four lane blobs are the ones carried here. An
+   integration of this candidate into lab `main` would be a later commit and a separate act (item 6).
+3. **Documentation reconciled in the same commit.** Two documentation files change with N: this file, by this addendum, and the
+   root `README.md`. In the README the whole five-sentence P10 paragraph, from "P10 REAL GATE /0 is closed with recorded
+   qualifications." through "not completion of MiniMax's untested arm.", is replaced by Astra's paragraph of 2026-10-06, verbatim.
+   That is the variant she chose on 2026-10-07: "Use variant B: the approved replacement paragraph replaces the entire old
+   five-sentence P10 paragraph." In her words, the replacement "does not edit the old experiment's transcripts or its recorded
+   outcome", and "Historical REAL GATE outcomes and the strict-stranger qualification remain in their dated records and elsewhere in
+   the README; do not erase those records." The historical records that carry the old F1 note are not edited.
+4. **The September 16 result, as a dated quotation.** Astra, 2026-09-16, accepting the P10 TRUTHFUL GATE /0 candidate return (lab
+   record `corpus/voices/received/originals/2026-09-16-181010-astra-p10-truthful-gate-0-acceptance.md`, sha256 `a69e4c52…`, on lab
+   `main` and on the dossier branch):
+   "P10 TRUTHFUL GATE /0 candidate: the two named checks distinguish completed clean inspection, detected forbidden parameters and
+   incomplete inspection; the tested introspection failures propagate to non-success without misclassifying successful empty
+   lambda lists. Production runtime and adopted standing are unchanged."
+   That sentence describes a candidate on 2026-09-16, at its accepted candidate-repair and experimental-evidence ceiling. It is
+   not an integration claim or an adoption claim, and quoting it here does not make it one. The act recorded here is a later and
+   different one: on 2026-10-07 the same four lane blobs were placed in an integration candidate on a later base, under the
+   2026-10-06 disposition, and its documentation was amended under the 2026-10-07 disposition. That candidate integrates nothing
+   by being recorded.
+5. **The repair dossier stays lab-side, under two identities.** `atelier/p10-truthful-gate-0/` is not in this tree. It is kept on
+   lab branch `candidate/p10-truthful-gate-0` (tip `8d893412ab00e157643cc8c20a1590ab072a2b81`), at path
+   `experiments/latent-lisp/atelier/p10-truthful-gate-0/`:
+   - tip tree `89c5205bacd034036fe6b695802172fa51563887`: the dossier as retained. It is the reviewed cut's dossier plus the
+     dated closure, the archived acceptance letter and its checksum row, as the acceptance's relay action asked ("archive this
+     acceptance verbatim and append a dated closure to the candidate dossier, retaining the reviewed cut and evidence
+     identities");
+   - accepted-cut tree `08c318810dc7014b51a119cab7d3c48adfc2d153`: the dossier as it stood at the accepted parcel cut
+     `9728967c59770e4cd023c59f600a312093d4fab4`.
+
+   In Astra's words, the cost "is accepted and must be disclosed: the narrow public object provides the repaired checks, while
+   the complete planted-case harness and retained failure evidence remain lab-side."
+6. **Authorization, as it stands on 2026-10-07.** Astra's side: her disposition "supplies Astra-side approval of the specified
+   integration scope, subject to binding the final candidate." Her amendment letter of 2026-10-07 "authorizes the bounded candidate
+   amendment. It supplies no Owner authorization of main integration, adoption, public crossing, PR action or sentinel lowering."
+   The Owner's side: "The Owner's knowing authorization of main integration remains separate." **It has not been given.** This
+   candidate is unmerged. In her words, integration "does not retroactively change the originally adopted object's identity or
+   adopt the changed lane. An adoption claim would need its own named act and the Owner's half." Main integration, adoption,
+   publication and any ferry are separate acts.
+7. **What stays as recorded.** The claim stays narrow: the two named F1 checks pass only after complete inspection finds no
+   forbidden parameter, and incomplete inspection is non-success. This establishes neither universal inspection coverage nor
+   runtime portability (whether any consumer builds the lane under another compiler policy was not checked), and it closes none
+   of the other recorded debts. Production runtime is unchanged. In Astra's words: "The adopted P-register, P9's OPEN entry,
+   historical strict-stranger limits, and the “NO SUPPORTED-PATH RUNTIME SEMANTIC FAILURE ESTABLISHED” finding remain as
+   recorded." ADDENDUM 24 item 5's arms (the P10 real-gate injected-failure arm NOT TESTED BY THE STRICT STRANGER among them) and
+   ADDENDUM 25 item 5's `ml0.lisp:3002` companion travel with every summary. **NO SUPPORTED-PATH RUNTIME SEMANTIC FAILURE
+   ESTABLISHED.** "Independently verified" remains forbidden.
+8. **Evidence, and the floor still owed.** The checks that accompany this candidate were executed on 2026-10-07, on the same
+   host and by the same model lineage as the implementing chair, against the then-candidate subject
+   `28c906f0ab2544023398e21f0c04898bc5e47df7` (the first candidate's). That subject differs from this commit's only in the two
+   documentation files of item 3; every other byte of the subject is identical. The two named F1 checks and the nine ML/0 rows of
+   the release floor were run on it. The 22 planted cases were re-executed against it, with 22/22 matched expectations; their
+   applicability to this documentation successor is carried by byte identity of the tested lane and pinned dependencies. None of
+   these is a fresh execution of the later whole subject, and matched expectations are not 22 successful gate verdicts. The
+   results are in the lab-side returns named in item 2. Nine ML/0 rows are not the complete release floor. The full release-floor
+   run is owed at the eventual final integration pin.
+9. **WE ARE HERE:** scope N of P10 TRUTHFUL GATE /0 is prepared as an integration candidate, unmerged, with the README
+   reconciliation and this addendum in the same commit. Not authorized here: main integration (it awaits the Owner's knowing
+   authorization), adoption change, registration, ML/0 source repair, application of `ml0-3002.patch`, experiment, ML/1
+   reopening, publication of the dossier or of any subset of it, sentinel lowering, public transport. The sentinel remains RAISED.
+   This entry exists on the candidate branch only; it reaches lab `main` only by the separate integration act, and the public
+   mirror only by a later owner-launched crossing.
+
+*— Claude Opus 5.5 (SPLICER, a builder for the lab's chair), 2026-10-07. Records only.*
+
+### ADDENDUM 27 (2026-10-13): P10 TRUTHFUL GATE /0, SCOPE N — merged into lab `main` on the Owner's ballot, through a commit that ran the full release floor before `main` was advanced to it; not adopted; not published
+
+*Records only, under the Owner's ballot of 2026-10-13 (lab record `_staging/2026-10-13-p10-integration-commission/E-OWNER-BALLOT-CAST.md`,
+commit `4a7cf640d`): line 1, "Yes, integrate", by the procedure "merge onto today's main → full floor on that exact commit → fast-forward
+main only if PASS; no adoption, no publication, sentinel stays up"; line 2, this addendum inside the integration commit. Commissioned by
+Astra's LISP+/MNEME commission of 2026-10-09 §8 (lab record `corpus/voices/received/2026-10-13-143139-astra-lisp-mneme-commission-2026-10-09.md`).
+ADDENDUM 26 is not edited: its item 9 ("unmerged", "This entry exists on the candidate branch only") remains the true record of the
+standing on 2026-10-07, and its line numbers do not move.*
+
+1. **What changed.** The commit that carries this addendum merges the Astra-accepted candidate
+   `candidate/p10-truthful-gate-integration-1` (`210fb6bfde2604e29ab11912e3d8e94359f60606`, unchanged) into lab `main`. Its delta against
+   the `main` it was made on is the candidate's own six-path delta (the four lane blobs ADDENDUM 26 item 1 names, the README, and this
+   file), with one deviation: this file also carries this addendum.
+2. **The floor.** Under the Owner's procedure, the full release floor (`mneme/verify-release.sh`, profile full) is run on the exact commit
+   carrying this addendum, and lab `main` is fast-forwarded to it only on `FLOOR RESULT: PASS` at the governing count. This file cannot name
+   its own commit; the commit, its tree and the floor's result are bound in the detached receipt
+   `_staging/2026-10-13-p10-integration-commission/B-INTEGRATION-RECEIPT.md`. An earlier floor on the prepared object `4f2ce2ef…` (112/112)
+   is evidence for that object only.
+3. **What this is not.** Not an adoption (P10's standing changes only by a separate act of Astra's and the Owner's); not a registration; not a
+   publication: the sentinel `tools/latent-lisp/SYNC-PAUSED` remains RAISED, and the public mirror stays at its crossing-13 tip until a later
+   owner-launched crossing. Not an ML/0 source repair; `ml0-3002.patch` not applied; ML/1 not reopened. The claim stays at its accepted size:
+   the two named checks distinguish completed clean inspection, detected forbidden parameters, and incomplete inspection. NO SUPPORTED-PATH
+   RUNTIME SEMANTIC FAILURE ESTABLISHED.
+4. **WE ARE HERE:** scope N of P10 TRUTHFUL GATE /0 is in lab `main`, unadopted and unpublished. The public mirror still carries the
+   pre-repair F1 checks.
+
+*— Claude Opus 5.5 (the desktop chair "Woke Before The Herald"), 2026-10-13. Records only.*

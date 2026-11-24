@@ -20,6 +20,12 @@
 (load (merge-pathnames "ml0-suite-ground.lisp"
                        (make-pathname :name nil :type nil
                                       :defaults *load-truename*)))
+;; ⚑ P10 TRUTHFUL GATE /0 (CANDIDATE, 2026-09-16): the shared F1 inspection walk.
+;; Loaded by the two F1 checks only; `load.lisp` never loads it; nothing in it is
+;; exported; no production runtime path reads it.
+(load (merge-pathnames "ml0-f1-coverage.lisp"
+                       (make-pathname :name nil :type nil
+                                      :defaults *load-truename*)))
 ;; ⚑ R4: ONE check below needs the mutant rule to show that a refusal is THE
 ;; RULE'S DOING and not the fixture's.  It used to pass a public `:defect`
 ;; keyword; the seam is gone from the lane and the collapse now comes from an
@@ -1045,24 +1051,18 @@ the suite adapter REFUSES to pair one act's identity with another act's attempt 
        ;;; ==================================================================
        (format t "~&~%---- §K the R4 repair's seams ----~%")
 
-       (ml0-check "F1 · NO EXTERNAL FUNCTION of this lane carries a `defect` or ~
+       ;;; ⚑ P10 TRUTHFUL GATE /0 (CANDIDATE, 2026-09-16): the same walk as
+       ;;; `ml0-block-proof` F1 (`ml0-f1-coverage.lisp`); ok only on COMPLETE
+       ;;; inspection with no offender; uninspectable targets are named, not
+       ;;; swallowed as NIL.
+       (let ((walk (%ml0-f1-walk (find-package '#:lisp-plus-memory-layer0))))
+         (%ml0-f1-print-findings walk)
+         (ml0-check "F1 · NO EXTERNAL FUNCTION of this lane carries a `defect` or ~
 `defect-payload` parameter, read out of the COMPILED LAMBDA LISTS rather than out ~
-of the source text.  ⚠ THIS PROCESS HAS THE MUTANT OVERLAY LOADED, and the answer ~
-is still none — the overlay redefines whole functions and widens no arglist"
-                  (let ((offenders '()))
-                    (do-external-symbols (symbol (find-package
-                                                  '#:lisp-plus-memory-layer0))
-                      (when (fboundp symbol)
-                        (when (some (lambda (item)
-                                      (and (symbolp item)
-                                           (member (symbol-name item)
-                                                   '("DEFECT" "DEFECT-PAYLOAD")
-                                                   :test #'string=)))
-                                    (handler-case
-                                        (sb-introspect:function-lambda-list symbol)
-                                      (error () nil)))
-                          (push symbol offenders))))
-                    (null offenders)))
+of the source text.  ⚠ THIS PROCESS HAS THE MUTANT OVERLAY LOADED, and the walk ~
+must still COMPLETE with none — the overlay redefines whole functions and widens no arglist"
+                    (getf walk :closed-p)
+                    "· ~a" (%ml0-f1-note walk)))
 
        (ml0-check "F2 · the RAW decode declares its own authority and RE-DERIVES: ~
 `ml0-account-from-event` over the very frame `ml0-retrieve` reads yields ~
